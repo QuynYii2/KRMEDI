@@ -129,14 +129,6 @@
             top: 45%;
         }
 
-        .krm-tieuDe-findDoctor {
-            width: 430px;
-            background: linear-gradient(90deg, #F2994A, #F2C94C);
-            /*background-color: #F2994A;*/
-            color: white;
-            border-radius: 0 0 120px 120px;
-            font-size: 24px;
-        }
 
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css">
@@ -1434,7 +1426,8 @@
         </div>
         <div class="container">
             <div class="">
-                <div class="titleServiceHomeNew d-flex justify-content-between align-items-center">{{__('home.Chuyên khoa khám')}}
+                <div
+                    class="titleServiceHomeNew d-flex justify-content-between align-items-center">{{__('home.Chuyên khoa khám')}}
                     <a class="pc-hidden" href="{{route('home.specialist')}}">{{__('home.see more')}}</a>
                 </div>
                 <div class="mainServiceHomeNew row container">
@@ -1448,21 +1441,92 @@
                         @endphp
                         <div class="col-md-2 p-2 d-none {{ $showDesktop == true ? 'd-md-block' : 'd-sm-block' }}">
                             <a href="{{route('home.specialist.department',$departmentItem->id)}}">
-                                <div class="border-HomeNew">
-                                    <div class="align-items-center ">
-                                        <div class="d-flex justify-content-center align-content-center"><img loading="lazy" src="{{$departmentItem->thumbnail}}" alt="thumbnail"></div>
-                                        <span>
-                                            @if(locationHelper() == 'vi')
-                                                {{ ($departmentItem->name ?? __('home.no name') ) }}
-                                            @else
-                                                {{ ($departmentItem->name_en  ?? __('home.no name') ) }}
-                                            @endif
-                                        </span>
+                                <div class="align-items-center krm-border-chuyen-khoa">
+                                    <div class="d-flex justify-content-center align-content-center krm-img-chuyen-khoa">
+                                        <img loading="lazy" src="{{$departmentItem->thumbnail}}" alt="thumbnail"
+                                             class="krm-icon-chuyen-khoa">
+                                    </div>
+                                    <div class="d-flex align-content-center justify-content-center">
+                                            <span style="height: 40px;">
+                                                @if(locationHelper() == 'vi')
+                                                    {{ ($departmentItem->name ?? __('home.no name') ) }}
+                                                @else
+                                                    {{ ($departmentItem->name_en  ?? __('home.no name') ) }}
+                                                @endif
+                                            </span>
                                     </div>
                                 </div>
                             </a>
                         </div>
                     @endforeach
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bg-tuyen-dung">
+        <div class="container pb-5 mt-4">
+            <div id="recruitment-homeNew">
+                <div class="title-recruitment--homeNew">
+                    <div class="krm-title-recruitment">{{ __('home.Recruitment') }}</div>
+                    <div class="space-gach">|</div>
+                    <a href="#">{{ __('home.See all') }} <i class="fa-solid fa-chevron-right pl-2"></i></a>
+                </div>
+                <div class="d-md-flex main-recruitment--homeNew justify-content-between">
+                    <div class="col-md-3">
+                        <div class="border-radius-homeNew">
+                            <div>
+                                <img src="{{asset('img/homeNew-img/Container.png')}}" alt="">
+                            </div>
+                            <div class="krm-name-recruitment">
+                                Dental treatments
+                            </div>
+                            <div class="krm-describe-recruitment">
+                                Lorem ipsum dolor sit amet consecte tur adipiscing elit semper dalaracc lacus vel facilisis volutpat est velitolm.
+                            </div>
+                            <style>
+                                #arrow-container {
+                                    position: relative;
+                                    display: inline-block;
+                                    cursor: pointer;
+                                }
+
+                                .arrow {
+                                    position: absolute;
+                                    top: 50%;
+                                    left: 0;
+                                    transform: translateY(-50%);
+                                    font-size: 20px;
+                                    color: #383736;
+                                    transition: 0.2s ease-in;
+                                }
+
+                                .line {
+                                    position: absolute;
+                                    top: 50%;
+                                    left: 20px;
+                                    width: 0;
+                                    height: 2px;
+                                    background-color: #383736;
+                                    transition: 0.2s ease-in;
+                                }
+
+                                #arrow-container:hover .arrow {
+                                    left: 10px;
+                                }
+
+                                #arrow-container:hover .line {
+                                    width: 20px;
+                                }
+                            </style>
+                            <div>
+                                Learn more <a id="arrow-container">
+                                    <span class="arrow">⟶</span>
+                                    <span class="line"></span>
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1623,209 +1687,6 @@
                 </div>
             </div>
         </div>
-    </div>
-
-
-
-    <div class="banner1 m-0">
-        <img loading="lazy" src="{{asset('img/icons_logo/Rectangle 23814.png')}}" alt="">
-    </div>
-    <div class="container pb-5 mt-4">
-        <div id="recruitment-homeNew" class="">
-            <div class="title-recruitment--homeNew">
-                <span>{{ __('home.Recruitment') }}</span>
-                <p>{{ __('home.Hire staffs cheaper, find your staffs faster') }}</p>
-            </div>
-            <div class="d-md-flex main-recruitment--homeNew justify-content-between">
-                <div class="col-md-6 col-12 pl-0 main-card--homeNew">
-                    <div class="d-flex content-recruitment--homeNew">
-                        <div class="col-md-3 col-4 p-0">
-                            <img loading="lazy" src="{{asset('img/icons_logo/image 1.jpeg')}}" alt=""/>
-                        </div>
-                        <div class="col-md-9 col-8 text-title--card">
-                            <span>
-                                {{ __('home.Nhận liền tay voucher khám online trị giá 250k từ Phòng khám Med247') }}
-                            </span>
-                            <div class="content__item__describe">
-                                {{ __('home.Chiều qua, nhận được cuộc gọi của một đồng nghiệp, hỏi ý kiến về một cô gái bị mù mắt sau khi được tiêm chất làm đầy. Dù đã có ...') }}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-flex content-recruitment--homeNew">
-                        <div class="col-md-3 col-4 p-0">
-                            <img loading="lazy" src="{{asset('img/icons_logo/image 1.jpeg')}}" alt=""/>
-                        </div>
-                        <div class="col-md-9 col-8 text-title--card">
-                            <span>
-                                {{ __('home.Nhận liền tay voucher khám online trị giá 250k từ Phòng khám Med247') }}
-                            </span>
-                            <div class="content__item__describe">
-                                {{ __('home.Chiều qua, nhận được cuộc gọi của một đồng nghiệp, hỏi ý kiến về một cô gái bị mù mắt sau khi được tiêm chất làm đầy. Dù đã có ...') }}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-flex content-recruitment--homeNew">
-                        <div class="col-md-3 col-4 p-0">
-                            <img loading="lazy" src="{{asset('img/icons_logo/image 1.jpeg')}}" alt=""/>
-                        </div>
-                        <div class="col-md-9 col-8 text-title--card">
-                            <span>
-                                {{ __('home.Nhận liền tay voucher khám online trị giá 250k từ Phòng khám Med247') }}
-                            </span>
-                            <div class="content__item__describe">
-                                {{ __('home.Chiều qua, nhận được cuộc gọi của một đồng nghiệp, hỏi ý kiến về một cô gái bị mù mắt sau khi được tiêm chất làm đầy. Dù đã có ...') }}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-flex content-recruitment--homeNew">
-                        <div class="col-md-3 col-4 p-0">
-                            <img loading="lazy" src="{{asset('img/icons_logo/image 1.jpeg')}}" alt=""/>
-                        </div>
-                        <div class="col-md-9 col-8 text-title--card">
-                            <span>
-                                {{ __('home.Nhận liền tay voucher khám online trị giá 250k từ Phòng khám Med247') }}
-                            </span>
-                            <div class="content__item__describe">
-                                {{ __('home.Chiều qua, nhận được cuộc gọi của một đồng nghiệp, hỏi ý kiến về một cô gái bị mù mắt sau khi được tiêm chất làm đầy. Dù đã có ...') }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-5 main-title-card--homeNew col-12">
-                    <div class="w-100">
-                        <div class="describe-item d-md-flex">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="mr-4" width="64" height="64"
-                                 viewBox="0 0 64 64"
-                                 fill="none">
-                                <g clip-path="url(#clip0_5901_81337)">
-                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                          d="M50.1316 51.9878L39.6232 41.4926C39.4078 41.2775 39.3844 40.9542 39.5123 40.6781C39.6402 40.4018 39.9007 40.2353 40.2051 40.2353H45.0993L45.0992 17.2473C45.0992 16.4066 45.7851 15.7207 46.6258 15.7207H54.8008C55.6414 15.7207 56.3273 16.4068 56.3273 17.2473L56.3276 40.2353H61.2218C61.5262 40.2353 61.7867 40.4017 61.9144 40.6781C62.0423 40.9543 62.0006 41.2606 61.8036 41.4927L51.2949 51.988C51.1309 52.1517 50.9452 52.2572 50.7132 52.2572C50.4815 52.2571 50.2957 52.1518 50.1316 51.9878Z"
-                                          fill="#B9EA6A"/>
-                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                          d="M50.1315 51.9878L48.8374 50.6955L59.3035 40.2426L59.3095 40.2353H61.2217C61.526 40.2353 61.7865 40.4017 61.9143 40.6781C62.0422 40.9543 62.0004 41.2606 61.8034 41.4927L51.2948 51.988C51.1308 52.1517 50.945 52.2572 50.713 52.2572C50.4814 52.2571 50.2957 52.1518 50.1315 51.9878ZM53.802 15.7207C53.8185 15.8105 53.8273 15.9028 53.8273 15.9973L53.8275 40.2355H56.3277L56.3274 17.2475C56.3274 16.407 55.6415 15.7208 54.8009 15.7208L53.802 15.7207Z"
-                                          fill="#A1E42C"/>
-                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                          d="M20.2045 61.1951L6.75042 47.758C6.47467 47.4825 6.44479 47.0687 6.60842 46.7151C6.77204 46.3615 7.10554 46.1482 7.49529 46.1482H13.7615L13.7614 16.7162C13.7614 15.6398 14.6397 14.7617 15.7159 14.7617H26.1825C27.2588 14.7617 28.137 15.6401 28.137 16.7162L28.1373 46.1482H34.4037C34.7933 46.1482 35.1269 46.3613 35.2905 46.7151C35.4543 47.0688 35.4008 47.4608 35.1487 47.7581L21.6943 61.1952C21.4843 61.405 21.2464 61.54 20.9495 61.54C20.6524 61.5398 20.4147 61.4051 20.2045 61.1951Z"
-                                          fill="#B9EA6A"/>
-                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                          d="M20.2046 61.1952L19.0674 60.0595C19.1109 60.0246 19.1531 59.9863 19.1943 59.9452L32.6486 46.508C32.7414 46.3987 32.8073 46.2766 32.8453 46.1482H34.4038C34.7934 46.1482 35.127 46.3613 35.2906 46.7151C35.4544 47.0688 35.4009 47.4608 35.1488 47.7581L21.6944 61.1953C21.4844 61.4051 21.2465 61.5401 20.9496 61.5401C20.6525 61.54 20.4148 61.4052 20.2046 61.1952ZM25.5054 14.7617C25.5904 14.9805 25.6373 15.2181 25.6373 15.4662L25.6375 46.1483H28.1375L28.1373 16.7163C28.1373 15.6402 27.2591 14.7618 26.1828 14.7618L25.5054 14.7617Z"
-                                          fill="#A1E42C"/>
-                                    <path
-                                        d="M34.3339 34.7853C41.7284 27.3909 41.7284 15.4021 34.3339 8.00767C26.9395 0.613234 14.9507 0.613234 7.55629 8.00767C0.161856 15.4021 0.161856 27.3909 7.55629 34.7853C14.9507 42.1797 26.9395 42.1797 34.3339 34.7853Z"
-                                        fill="#FCDD2E"/>
-                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                          d="M20.9496 2.45898C31.4085 2.45898 39.8871 10.9376 39.8871 21.3965C39.8871 31.8554 31.4085 40.334 20.9496 40.334C20.5433 40.334 20.1406 40.3196 19.7407 40.2945C29.6361 39.671 37.4693 31.4491 37.4693 21.3965C37.4693 11.3439 29.6361 3.12211 19.7407 2.49848C20.1406 2.47323 20.5435 2.45898 20.9496 2.45898Z"
-                                          fill="#FBD307"/>
-                                    <path
-                                        d="M20.9497 36.2968C29.1784 36.2968 35.849 29.6261 35.849 21.3974C35.849 13.1687 29.1784 6.49805 20.9497 6.49805C12.721 6.49805 6.05029 13.1687 6.05029 21.3974C6.05029 29.6261 12.721 36.2968 20.9497 36.2968Z"
-                                        fill="#FBD307"/>
-                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                          d="M20.9497 6.49805C21.3567 6.49805 21.7597 6.51505 22.1584 6.54705C14.4952 7.16242 8.46792 13.5757 8.46792 21.3974C8.46792 29.219 14.4952 35.6324 22.1584 36.2478C21.7597 36.2798 21.3567 36.2968 20.9497 36.2968C12.7209 36.2968 6.05029 29.6262 6.05029 21.3974C6.05029 13.1688 12.721 6.49805 20.9497 6.49805Z"
-                                          fill="#F9C301"/>
-                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                          d="M26.1723 16.9921C26.4214 17.7817 25.9834 18.6237 25.1938 18.8729C24.4042 19.1221 23.562 18.6841 23.3129 17.8944C23.2028 17.5452 22.9292 17.2286 22.5504 16.9908C22.122 16.7218 21.5675 16.5617 20.9495 16.5617C20.2223 16.5617 19.5783 16.7886 19.125 17.1554C18.7607 17.4503 18.5352 17.8316 18.5352 18.2291C18.5352 18.6266 18.7605 19.0079 19.125 19.3028C19.5783 19.6696 20.2224 19.8966 20.9495 19.8966C22.3842 19.8966 23.6974 20.3788 24.6608 21.1583C25.713 22.0098 26.3639 23.2124 26.3639 24.5641C26.3639 25.9158 25.713 27.1183 24.6608 27.9698C24.0463 28.4671 23.2894 28.8432 22.4495 29.0506V29.6291C22.4495 30.4574 21.7779 31.1291 20.9495 31.1291C20.1212 31.1291 19.4495 30.4574 19.4495 29.6291V29.0502C18.9239 28.9202 18.4309 28.7239 17.9854 28.4733C17.0632 27.9546 16.3352 27.1938 15.9194 26.2878C15.5764 25.5371 15.9069 24.6503 16.6577 24.3073C17.4084 23.9643 18.2952 24.2948 18.6382 25.0456C18.7834 25.3622 19.07 25.6461 19.4502 25.8599C19.8664 26.0941 20.3827 26.2314 20.9495 26.2314C21.6767 26.2314 22.3208 26.0046 22.774 25.6377C23.1384 25.3428 23.3639 24.9616 23.3639 24.5641C23.3639 24.1664 23.1384 23.7852 22.774 23.4903C22.3207 23.1236 21.6767 22.8966 20.9495 22.8966C19.5149 22.8966 18.2017 22.4143 17.2383 21.6348C16.186 20.7833 15.5352 19.5808 15.5352 18.2291C15.5352 16.8773 16.186 15.6748 17.2383 14.8233C17.8528 14.3261 18.6097 13.9498 19.4495 13.7426V13.1641C19.4495 12.3357 20.1212 11.6641 20.9495 11.6641C21.7779 11.6641 22.4495 12.3357 22.4495 13.1641V13.7442C23.066 13.8976 23.6389 14.1423 24.1442 14.4596C25.1194 15.0718 25.8459 15.9572 26.1723 16.9921Z"
-                                          fill="#F4F8F8"/>
-                                </g>
-                                <defs>
-                                    <clipPath id="clip0_5901_81337">
-                                        <rect width="64" height="64" fill="white"/>
-                                    </clipPath>
-                                </defs>
-                            </svg>
-                            <div class="title-re">
-                                <span>{{ __('home.HIRE CHEAPER') }}</span>
-                                <p>{{ __('home.Only 500000vnđ, you can hire your staffs.') }}</p>
-                            </div>
-                        </div>
-                        <div class="describe-item d-md-flex">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="mr-4" width="64" height="64"
-                                 viewBox="0 0 64 64"
-                                 fill="none">
-                                <g clip-path="url(#clip0_5901_81351)">
-                                    <path
-                                        d="M59.7812 38.6884H58.5312C60.8613 38.6884 62.75 36.7996 62.75 34.4696C62.75 32.1396 60.8613 30.2509 58.5312 30.2509H49.7261L52.5353 19.7667C53.1383 17.5162 51.8026 15.2029 49.5521 14.5999C47.3016 13.9969 44.9884 15.3325 44.3853 17.583L43.3493 21.4492C41.9584 26.6409 37.2537 30.2509 31.879 30.2509H22.75V59.0009H29.9375L30.875 60.2509C32.6455 62.6115 35.4241 64.0009 38.375 64.0009H54.7812C57.1113 64.0009 59 62.1121 59 59.7821C59 57.4521 57.1113 55.5634 54.7812 55.5634H57.2812C59.6113 55.5634 61.5 53.6746 61.5 51.3446C61.5 49.0146 59.6113 47.1259 57.2812 47.1259H59.7812C62.1113 47.1259 64 45.2371 64 42.9071C64 40.5771 62.1113 38.6884 59.7812 38.6884Z"
-                                        fill="#FFDECF"/>
-                                    <path
-                                        d="M61.5 51.3438C61.5 49.0138 59.6113 47.125 57.2812 47.125H22.75V59H29.9375L30.875 60.25C32.6455 62.6106 35.4241 64 38.375 64H54.7812C57.1113 64 59 62.1112 59 59.7812C59 57.4513 57.1113 55.5625 54.7812 55.5625H57.2812C59.6113 55.5625 61.5 53.6737 61.5 51.3438Z"
-                                        fill="#FFCDBE"/>
-                                    <path
-                                        d="M16.9496 1.15125C16.9442 1.137 16.9386 1.12275 16.9328 1.10863C16.6558 0.435 16.0065 0 15.2782 0C15.2776 0 15.277 0 15.2763 0C14.5473 0.00075 13.8981 0.43725 13.6222 1.112C13.6173 1.12363 13.6127 1.1355 13.6082 1.14725L9.85322 11.0064C9.5461 11.8129 9.95085 12.7155 10.7572 13.0228C11.5637 13.3298 12.4665 12.9251 12.7736 12.1188L13.3255 10.6696H17.2015L17.7466 12.1143C17.9827 12.74 18.5773 13.1255 19.2087 13.1255C19.392 13.1255 19.5785 13.093 19.7602 13.0244C20.5676 12.7196 20.9751 11.8183 20.6703 11.0109L16.9496 1.15125ZM14.5157 7.5445L15.2725 5.55763L16.0222 7.5445H14.5157Z"
-                                        fill="#613393"/>
-                                    <path
-                                        d="M5.77612 3.125C6.639 3.125 7.33862 2.42537 7.33862 1.5625C7.33862 0.699625 6.639 0 5.77612 0H1.5625C0.699625 0 0 0.6995 0 1.5625V11.5625C0 12.4254 0.699625 13.125 1.5625 13.125H5.77612C6.639 13.125 7.33862 12.4254 7.33862 11.5625C7.33862 10.6996 6.639 10 5.77612 10H3.125V8.125H5.46537C6.32837 8.125 7.02787 7.4255 7.02787 6.5625C7.02787 5.6995 6.32837 5 5.46537 5H3.125V3.125H5.77612Z"
-                                        fill="#613393"/>
-                                    <path
-                                        d="M43.9774 0.27847C43.2541 -0.192155 42.2863 0.0122198 41.8155 0.735595L39.955 3.5936L38.0711 0.70847C37.5994 -0.0140302 36.6311 -0.21753 35.9086 0.25447C35.186 0.72622 34.9828 1.69447 35.4546 2.41697L38.3935 6.91785L38.3821 11.559C38.38 12.422 39.0779 13.1232 39.9408 13.1253H39.9446C40.8058 13.1253 41.5049 12.4283 41.5071 11.5667L41.5185 6.92035L44.4346 2.44072C44.9053 1.71722 44.7006 0.749345 43.9774 0.27847Z"
-                                        fill="#613393"/>
-                                    <path
-                                        d="M29.6304 5.18651C28.4605 4.75501 27.3675 4.28614 26.9759 4.11539C26.8678 4.01051 26.8584 3.87876 26.8725 3.78014C26.9078 3.53451 27.1164 3.33689 27.445 3.23789C28.6153 2.88514 29.5028 3.46389 29.6809 3.59351C30.1428 4.16564 30.9599 4.34776 31.6323 3.98877C32.3934 3.58214 32.6807 2.63539 32.274 1.87426C31.7352 0.865765 29.2918 -0.582235 26.5438 0.24564C25.0475 0.696265 23.9883 1.88051 23.7794 3.33601C23.5823 4.70926 24.1779 6.03064 25.3339 6.78427C25.4029 6.82927 25.4754 6.86876 25.5507 6.90227C25.6088 6.92827 26.992 7.54389 28.5492 8.11827C29.1327 8.33352 29.73 8.71114 29.656 9.12539C29.593 9.47801 29.0943 9.99989 28.2235 9.99989C27.3194 9.99989 26.4524 9.63889 25.9044 9.03414C25.3249 8.39464 24.3367 8.34601 23.6974 8.92552C23.0579 9.50502 23.0093 10.4931 23.5888 11.1325C24.7362 12.3986 26.4254 13.1248 28.2235 13.1248C30.4792 13.1248 32.3754 11.6738 32.7324 9.67452C33.0029 8.15789 32.3303 6.18239 29.6304 5.18651Z"
-                                        fill="#613393"/>
-                                    <path
-                                        d="M24.625 62.75H15.875C14.8395 62.75 14 61.9105 14 60.875V28.375C14 27.3395 14.8395 26.5 15.875 26.5H24.625C25.6605 26.5 26.5 27.3395 26.5 28.375V60.875C26.5 61.9105 25.6605 62.75 24.625 62.75Z"
-                                        fill="#FF7D47"/>
-                                    <path
-                                        d="M14 47.125V60.875C14 61.9105 14.8395 62.75 15.875 62.75H24.625C25.6605 62.75 26.5 61.9105 26.5 60.875V47.125H14Z"
-                                        fill="#FF405C"/>
-                                </g>
-                                <defs>
-                                    <clipPath id="clip0_5901_81351">
-                                        <rect width="64" height="64" fill="white"/>
-                                    </clipPath>
-                                </defs>
-                            </svg>
-                            <div class="title-re">
-                                <span>{{ __('home.EASY TO FIND STAFFS') }}</span>
-                                <p>{{ __("home.Through us, find your staffs more easier") }}!</p>
-                            </div>
-                        </div>
-                        <div class="describe-item d-md-flex">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="mr-4" width="64" height="64"
-                                 viewBox="0 0 64 64"
-                                 fill="none">
-                                <g clip-path="url(#clip0_5901_81312)">
-                                    <path
-                                        d="M52.5858 30.9291L58.7968 26.2173L52.5858 21.4929L56.1512 14.5512L48.5039 13.0142L48.7055 5.20315L41.159 7.13071L37.959 0L32 5.03937L26.0409 0L22.8409 7.13071L15.2945 5.19055L15.496 13.0142L7.84879 14.5512L11.4141 21.4929L5.20312 26.2173L11.4141 30.9291L7.84879 37.8835L15.496 39.4205L15.2945 47.2315L22.8409 45.3039L26.0409 52.4347L32 47.3953L37.959 52.4347L41.159 45.3039L48.7055 47.2315L48.5039 39.4205L56.1512 37.8835L52.5858 30.9291Z"
-                                        fill="#FFD15C"/>
-                                    <path
-                                        d="M22.8409 45.3042L15.2944 47.2318L15.4708 40.1641L13.9842 42.8097L5.83301 57.2349L15.1432 54.6523L17.7259 64.0003L24.3905 52.2208L25.2472 50.6837L22.8409 45.3042Z"
-                                        fill="#FF7058"/>
-                                    <path
-                                        d="M50.0031 42.3429L48.5165 39.6973L48.7055 47.2311L41.159 45.3036L38.8535 50.4311L39.7228 51.9681L46.526 63.9996L49.1086 54.6516L58.4189 57.2343L50.0031 42.3429Z"
-                                        fill="#FF7058"/>
-                                    <path
-                                        d="M25.2471 50.6837L24.3904 52.2208L22.0345 46.9798L13.8203 49.0837L13.9841 42.8097L15.4707 40.1641L15.2943 47.2318L22.8408 45.3042L25.2471 50.6837Z"
-                                        fill="#F1543F"/>
-                                    <path
-                                        d="M50.1795 49.0831L41.9653 46.9792L39.7228 51.9681L38.8535 50.4311L41.159 45.3036L48.7055 47.2311L48.5165 39.6973L50.0031 42.3429L50.1795 49.0831Z"
-                                        fill="#F1543F"/>
-                                    <path
-                                        d="M31.9999 42.9093C41.1914 42.9093 48.6425 35.4356 48.6425 26.2164C48.6425 16.9971 41.1914 9.52344 31.9999 9.52344C22.8085 9.52344 15.3574 16.9971 15.3574 26.2164C15.3574 35.4356 22.8085 42.9093 31.9999 42.9093Z"
-                                        fill="#F8B64C"/>
-                                    <path
-                                        d="M28.0317 34.8101L21.7451 28.5109L24.6554 25.5881L28.0317 28.9771L39.3451 17.6133L42.2554 20.5361L28.0317 34.8101Z"
-                                        fill="#F2F2F2"/>
-                                </g>
-                                <defs>
-                                    <clipPath id="clip0_5901_81312">
-                                        <rect width="64" height="64" fill="white"/>
-                                    </clipPath>
-                                </defs>
-                            </svg>
-                            <div class="title-re">
-                                <span>{{ __('home.BETTER MATCHING RATE') }}</span>
-                                <p>{{ __('home.Through us, you can hire right person') }}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-auto p-2 button-bottom-right">
-                        <button class="btn-see-all ">{{ __('home.Visit') }}</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="banner1 m-0">
-        <img loading="lazy" src="{{asset('img/icons_logo/Rectangle 23818.png')}}" alt="" style="">
     </div>
 
     <div class="">

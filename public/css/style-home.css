@@ -408,17 +408,30 @@
     font-weight: 800;
     line-height: normal;
   }
-  .container #recruitment-homeNew .title-recruitment--homeNew span {
-    color: var(--Black, #000);
+  .container #recruitment-homeNew .title-recruitment--homeNew {
+    display: flex;
+    align-items: center;
+    padding: 80px 0px 8px 0px;
+  }
+  .container #recruitment-homeNew .title-recruitment--homeNew .krm-title-recruitment {
+    color: var(--Black, #ffffff);
     font-style: normal;
+    font-size: 24px;
     font-weight: 800;
     line-height: normal;
   }
-  .container #recruitment-homeNew .title-recruitment--homeNew p {
-    color: var(--Grey-Dark, #929292);
+  .container #recruitment-homeNew .title-recruitment--homeNew .space-gach {
+    padding: 0 24px;
+    color: white;
+    font-size: 24px;
+    font-weight: 100;
+  }
+  .container #recruitment-homeNew .title-recruitment--homeNew a {
+    color: var(--Grey-Dark, #ffffff);
     font-style: normal;
+    font-size: 16px;
+    font-weight: 600;
     line-height: normal;
-    padding-bottom: 21px;
   }
   .container #recruitment-homeNew .main-recruitment--homeNew .main-card--homeNew {
     height: 500px;
@@ -573,6 +586,35 @@
     font-weight: 800;
     line-height: normal;
   }
+  .container .krm-icon-chuyen-khoa {
+    width: 60px;
+    height: 60px;
+    border-radius: 50px;
+    margin: 12px;
+  }
+  .container .krm-border-chuyen-khoa {
+    border: 1px solid #D6D6D6;
+    border-radius: 16px;
+    padding: 24px;
+    background: #FFFFFF;
+  }
+  .container .krm-border-chuyen-khoa:hover {
+    border-radius: 24px;
+    border: 1px solid var(--secon1, #088180);
+    background: var(--White, #FFF);
+    box-shadow: 0 8px 14px 0 rgba(0, 0, 0, 0.25);
+  }
+  .container .krm-border-chuyen-khoa .krm-img-chuyen-khoa {
+    background-image: radial-gradient(circle at center, rgba(255, 193, 7, 0.3098039216) 5%, #FFFFFF 55%, #FFFFFF 0%);
+  }
+  .container .krm-tieuDe-findDoctor {
+    width: 430px;
+    background: linear-gradient(90deg, #F2994A, #F2C94C);
+    /*background-color: #F2994A;*/
+    color: white;
+    border-radius: 0 0 120px 120px;
+    font-size: 24px;
+  }
   .container .titleServiceHomeNew {
     color: #000;
     font-style: normal;
@@ -638,6 +680,30 @@
     min-height: 1400px;
     display: flex;
     align-items: center;
+  }
+  .bg-tuyen-dung {
+    background: linear-gradient(#088180, rgba(8, 129, 128, 0.0117647059));
+  }
+  .bg-tuyen-dung .border-radius-homeNew {
+    border-radius: 8px;
+    border: 1px solid var(--Light, #EAEAEA);
+    background: var(--White, #FFF);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    padding: 16px;
+  }
+  .bg-tuyen-dung .border-radius-homeNew:hover {
+    border: 1px solid #088180;
+    box-shadow: 0 8px 14px 0 rgba(0, 0, 0, 0.25);
+  }
+  .bg-tuyen-dung .border-radius-homeNew .krm-name-recruitment {
+    color: #007E85;
+    font-size: 18px;
+    font-weight: 800;
+  }
+  .bg-tuyen-dung .border-radius-homeNew .krm-describe-recruitment {
+    margin: 8px 0;
+    font-size: 14px;
+    font-weight: 600;
   }
 }
 .max-3-line-content {

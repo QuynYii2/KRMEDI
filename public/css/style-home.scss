@@ -174,7 +174,7 @@
         }
     }
     .bg-homeNew {
-        background: linear-gradient( #FBF3EA, #FFFFFF);
+        background: linear-gradient(#FBF3EA, #FFFFFF);
     }
     .container {
         .justify-content-between.mt-homeNew {
@@ -538,18 +538,31 @@
 
         #recruitment-homeNew {
             .title-recruitment--homeNew {
-                span {
-                    color: var(--Black, #000);
+                display: flex;
+                align-items: center;
+                padding: 80px 0px 8px 0px;
+
+                .krm-title-recruitment {
+                    color: var(--Black, #ffffff);
                     font-style: normal;
+                    font-size: 24px;
                     font-weight: 800;
                     line-height: normal;
                 }
 
-                p {
-                    color: var(--Grey-Dark, #929292);
+                .space-gach {
+                    padding: 0 24px;
+                    color: white;
+                    font-size: 24px;
+                    font-weight: 100;
+                }
+
+                a {
+                    color: var(--Grey-Dark, #ffffff);
                     font-style: normal;
+                    font-size: 16px;
+                    font-weight: 600;
                     line-height: normal;
-                    padding-bottom: 21px;
                 }
 
             }
@@ -640,7 +653,6 @@
 
                 }
             }
-
 
 
             .describe-item {
@@ -767,6 +779,41 @@
             }
         }
 
+
+        .krm-icon-chuyen-khoa {
+            width: 60px;
+            height: 60px;
+            border-radius: 50px;
+            margin: 12px;
+        }
+
+        .krm-border-chuyen-khoa {
+            border: 1px solid #D6D6D6;
+            border-radius: 16px;
+            padding: 24px;
+            background: #FFFFFF;
+
+            &:hover {
+                border-radius: 24px;
+                border: 1px solid var(--secon1, #088180);
+                background: var(--White, #FFF);
+                box-shadow: 0 8px 14px 0 rgba(0, 0, 0, 0.25);
+            }
+
+            .krm-img-chuyen-khoa {
+                background-image: radial-gradient(circle at center, #ffc1074f 5%, #FFFFFF 55%, #FFFFFF 0%);
+            }
+        }
+
+        .krm-tieuDe-findDoctor {
+            width: 430px;
+            background: linear-gradient(90deg, #F2994A, #F2C94C);
+            /*background-color: #F2994A;*/
+            color: white;
+            border-radius: 0 0 120px 120px;
+            font-size: 24px;
+        }
+
         .titleServiceHomeNew {
             color: #000;
             //font-size: 32px;
@@ -789,9 +836,11 @@
                     flex-shrink: 0;
                     margin-bottom: 14px;
                     overflow: hidden;
+
                     .krm-select-bt {
                         height: 70px;
                     }
+
                     &:hover {
                         border-radius: 24px;
                         border: 1px solid var(--secon1, #088180);
@@ -854,6 +903,30 @@
         min-height: 1400px;
         display: flex;
         align-items: center;
+    }
+    .bg-tuyen-dung {
+        background: linear-gradient(#088180, #08818003);
+        .border-radius-homeNew {
+            border-radius: 8px;
+            border: 1px solid var(--Light, #EAEAEA);
+            background: var(--White, #FFF);
+            box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+            padding: 16px;
+            &:hover {
+                border: 1px solid #088180;
+                box-shadow: 0 8px 14px 0 rgba(0, 0, 0, 0.25);
+            }
+            .krm-name-recruitment {
+                color: #007E85;
+                font-size: 18px;
+                font-weight: 800;
+            }
+            .krm-describe-recruitment {
+                margin: 8px 0;
+                font-size: 14px;
+                font-weight: 600;
+            }
+        }
     }
 }
 
