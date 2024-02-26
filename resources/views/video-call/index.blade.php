@@ -167,6 +167,8 @@
         });
 
         //#6 - Set and get back tracks for local user
+        console.log('uid')
+        console.log(config.uid, {{ $agora_chat->uid }});
         [config.uid, localTracks.audioTrack, localTracks.videoTrack] = await Promise.all([
             client.join(config.appid, config.channel, config.token || null, config.uid || null),
             AgoraRTC.createMicrophoneAudioTrack(),
@@ -198,7 +200,7 @@
 
     let handleUserJoined = async (user, mediaType) => {
         console.log('Handle user joined')
-
+        console.log(user);
         //#11 - Add user to list of remote users
         remoteTracks[user.uid] = user
 
