@@ -62,7 +62,7 @@
     username.value = '{{ Auth::user()->name ?? 'default name' }}';
 
     //#1
-    let client = AgoraRTC.createClient({mode: 'live', codec: "h264", role: 'host'})
+    let client = AgoraRTC.createClient({mode: 'rtc', codec: "h264", role: 'host'})
 
     //#2
     let config = {

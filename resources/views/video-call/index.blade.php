@@ -62,7 +62,7 @@
     username.value = '{{ Auth::user()->name ?? 'default name' }}';
 
     //#1
-    let client = AgoraRTC.createClient({mode: 'rtc', codec: "h264", role: 'host'})
+    let client = AgoraRTC.createClient({mode: 'live', codec: "h264", role: 'host'})
 
     //#2
     let config = {
@@ -87,12 +87,13 @@
     //#5 - Set remote tracks to store other users
     let remoteTracks = {}
 
-    document.getElementById('join-btn').addEventListener('click', async () => {
-        // config.uid = document.getElementById('username').value
+    async function showCall() {
         await joinStreams()
         document.getElementById('join-wrapper').style.display = 'none'
         document.getElementById('footer').style.display = 'flex'
-    })
+    }
+
+    showCall();
 
     document.getElementById('mic-btn').addEventListener('click', async () => {
         //Check if what the state of muted currently is
