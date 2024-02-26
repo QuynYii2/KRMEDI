@@ -10,7 +10,7 @@ return [
     'symptoms' => 'Triệu chứng',
     'Name' => 'Tên',
     'WHAT’S FREE' => 'Miễn phí',
-    'See all' => 'Nhìn thấy tất cả',
+    'See all' => 'Xem tất cả',
     'Free today' => 'Hôm nay miễn phí',
     'Free with mission' => 'Miễn phí với nhiệm vụ',
     'Discounted service' => 'Dịch vụ giảm giá',
