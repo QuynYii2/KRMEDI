@@ -15,10 +15,17 @@
 <body>
 
 <main>
-
-
-    <!-- <div id="users-list"></div> -->
-
+    @php
+        $role_name = null;
+        if (Auth::check()){
+            $user = Auth::user();
+            $user_id = $user->id;
+            $role_user = \App\Models\RoleUser::where('user_id', $user_id)->first();
+            $role = \App\Models\Role::find($role_user->role_id);
+            $role_name = $role->name;
+        }
+    @endphp
+        <!-- <div id="users-list"></div> -->
     <div id="join-wrapper">
         <input id="username" type="text" placeholder="Enter your name..."/>
         <button id="join-btn">Bắt đầu</button>
@@ -48,7 +55,6 @@
 </main>
 
 <script src="https://download.agora.io/sdk/release/AgoraRTC_N.js"></script>
-{{--<script src='{{ asset('agora-video/script.js') }}'></script>--}}
 
 <script>
     let username = document.getElementById('username');
@@ -56,7 +62,7 @@
     username.value = '{{ Auth::user()->name ?? 'default name' }}';
 
     //#1
-    let client = AgoraRTC.createClient({mode: 'rtc', codec: "vp8"})
+    let client = AgoraRTC.createClient({mode: 'rtc', codec: "h264", role: '{{ $role_name ?? '' }}'})
 
     //#2
     let config = {
@@ -81,7 +87,6 @@
     //#5 - Set remote tracks to store other users
     let remoteTracks = {}
 
-
     document.getElementById('join-btn').addEventListener('click', async () => {
         // config.uid = document.getElementById('username').value
         await joinStreams()
@@ -101,9 +106,7 @@
             await localTracks.audioTrack.setMuted(false)
             localTrackState.audioTrackMuted = false
             document.getElementById('mic-btn').style.backgroundColor = '#1f1f1f8e'
-
         }
-
     })
 
 
@@ -119,9 +122,7 @@
             await localTracks.videoTrack.setMuted(false)
             localTrackState.videoTrackMuted = false
             document.getElementById('camera-btn').style.backgroundColor = '#1f1f1f8e'
-
         }
-
     })
 
 
@@ -142,7 +143,6 @@
         document.getElementById('footer').style.display = 'none'
         document.getElementById('user-streams').innerHTML = ''
         document.getElementById('join-wrapper').style.display = 'block'
-
     })
 
 
@@ -150,10 +150,8 @@
     let joinStreams = async () => {
         //Is this place hear strategicly or can I add to end of method?
 
-
         client.on("user-published", handleUserJoined);
         client.on("user-left", handleUserLeft);
-
 
         client.enableAudioVolumeIndicator(); // Triggers the "volume-indicator" callback event every two seconds.
         client.on("volume-indicator", function (evt) {
@@ -165,8 +163,6 @@
                 } else {
                     document.getElementById(`volume-${speaker}`).src = '{{ asset('img/assets-video-call/volume-off.svg') }}'
                 }
-
-
             }
         });
 
@@ -194,13 +190,11 @@
         //#8 - Player user stream in div
         localTracks.videoTrack.play(`stream-${config.uid}`)
 
-
         //#9 Add user to user list of names/ids
 
         //#10 - Publish my local video tracks to entire channel so everyone can see it
         await client.publish([localTracks.audioTrack, localTracks.videoTrack])
     }
-
 
     let handleUserJoined = async (user, mediaType) => {
         console.log('Handle user joined')
@@ -210,7 +204,6 @@
 
         //#12 Subscribe ro remote users
         await client.subscribe(user, mediaType)
-
 
         if (mediaType === 'video') {
             let player = document.getElementById(`video-wrapper-${user.uid}`)
@@ -225,16 +218,12 @@
                       </div>`
             document.getElementById('user-streams').insertAdjacentHTML('beforeend', player);
             user.videoTrack.play(`stream-${user.uid}`)
-
-
         }
-
 
         if (mediaType === 'audio') {
             user.audioTrack.play();
         }
     }
-
 
     let handleUserLeft = (user) => {
         console.log('Handle user left!')
@@ -242,8 +231,6 @@
         delete remoteTracks[user.uid]
         document.getElementById(`video-wrapper-${user.uid}`).remove()
     }
-
-
 </script>
 </body>
 </html>

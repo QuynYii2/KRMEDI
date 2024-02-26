@@ -25,7 +25,7 @@ return [
     'Đặt lịch khám bệnh' => 'Schedule a medical examination',
     'Thuốc online' => 'Online medicine',
 
-        'Khám từ xa' => 'Remote examination',
+    'Khám từ xa' => 'Remote examination',
     'Tư vẫn sức khoẻ' => 'Health counseling',
     'Y tế gần bạn' => 'Health near you',
     'Chuyên khoa khám' => 'Specialized examination',
@@ -92,7 +92,7 @@ return [
     'It is a long established fact that a reader will be distracted' => 'It is a long established fact that a reader will be distracted',
     'your email address' => 'your email address',
 
-        'Buy online' => 'Buy online',
+    'Buy online' => 'Buy online',
     "Don't struggle finding, we are always ready for you" => "Don't struggle finding, we are always ready for you",
     'Popular' => 'Popular',
     'Recommended' => 'Recommended',
