@@ -1,0 +1,85 @@
+.label-input {
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.text-weight {
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.inputCheckAddress[type=checkbox] {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+}
+
+.labelCheckAddress {
+    cursor: pointer;
+    text-indent: -9999px;
+    width: 50px;
+    height: 25px;
+    background: grey;
+    display: block;
+    border-radius: 100px;
+    position: relative;
+}
+
+.labelCheckAddress:after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 15px;
+    height: 15px;
+    background: #fff;
+    border-radius: 90px;
+    transition: 0.3s;
+}
+
+.inputCheckAddress:checked + .labelCheckAddress {
+    background: #36CA68;
+}
+
+.inputCheckAddress:checked + .labelCheckAddress:after {
+    left: calc(100% - 5px);
+    transform: translateX(-100%);
+}
+
+.labelCheckAddress:active:after {
+    width: 130px;
+}
+
+.text-select-method {
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.method-detail {
+    padding: 12px 16px;
+    margin: 12px 0;
+    align-self: stretch;
+    border: 1px solid rgba(204, 204, 204, 0.74);
+    border-radius: 12px;
+}
+
+.normal {
+    font-style: normal;
+    line-height: normal;
+}
+
+.text-price, .value-price {
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.total-price {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.value-total-price {
+    color: #45C3D2;
+    font-size: 24px;
+    font-weight: 600;
+}

@@ -1,0 +1,89 @@
+.ui-widget.ui-widget-content {
+    width: 100%;
+}
+
+.checkbox-button {
+    display: inline-block;
+    position: relative;
+    /*padding-left: 30px;*/
+    cursor: pointer;
+}
+
+.checkbox-button input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.checkbox-button label {
+    display: flex;
+    width: 74px;
+    height: 32px;
+    /*padding: 11px 50px;*/
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 8px;
+    position: relative;
+    background-color: #3498db;
+    color: #fff;
+    transition: background-color 0.3s ease;
+}
+
+.checkbox-button input:checked + label {
+    background-color: #2ecc71;
+    color: #fff;
+}
+
+.background-map {
+    background: url("{{asset('img/svg/map.png')}}") no-repeat;
+    overflow: hidden !important;
+    min-height: 1000px;
+    width: 100%;
+    height: 100%;
+}
+
+.background-modal {
+    background: #FFFFFF;
+    max-height: 820px;
+    overflow-y: scroll;
+    margin: 20px;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.border-button-close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.border-button-close span {
+    padding: 0 5px;
+    border-radius: 32px;
+    background: #FFF;
+}
+
+.gm-style-iw {
+    padding: 0 !important;
+}
+
+button.gm-ui-hover-effect {
+    top: 10px !important;
+    right: 10px !important;
+    border-radius: 20px !important;
+    background: white !important;
+}
+
+.background-modal {
+    max-width: 400px;
+}
+
+.button-follow {
+    max-height: 30px;
+}

@@ -1,0 +1,12 @@
+.w-icon-px {
+    width: 14px;
+}
+
+.avatar-user {
+    vertical-align: middle;
+    border-radius: 50% !important;
+    border: 1px solid #cccccc;
+}
+.input-group-text {
+    height: 100%;
+}

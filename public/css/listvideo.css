@@ -1,0 +1,10 @@
+.user-avt {
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    max-width: 100px;
+}
+
+video {
+    max-width: 50%;
+    height: auto;
+}

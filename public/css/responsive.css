@@ -1,0 +1,22 @@
+
+/*tablets*/
+@media screen and(max-width: 768px) {
+    .section1 .section1__side{
+        display: none;
+    }
+    header .header{
+        display: none;
+    }
+}
+/*mobiles*/
+@media screen and(max-width: 480px) {
+    .section1 .section1__side{
+        display: none;
+    }
+    header .header{
+        display: none;
+    }
+    header .header-mobile{
+
+    }
+}

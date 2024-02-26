@@ -1,0 +1,56 @@
+.btn-send {
+    background: #45C3D2 !important;
+    color: #fff !important;
+}
+
+.btn-send:hover {
+    background: rgba(69, 195, 210, 0.66) !important;
+}
+
+.fa-2xl {
+    cursor: pointer;
+}
+
+@media (max-width: 575px) {
+    .avt-user-review {
+        border: 1px solid #ccc;
+        border-radius: 50%;
+        width: 40px;
+    }
+    .name-user-review {
+        font-size: 12px;
+    }
+    .time p, .time{
+        font-size: 10px;
+    }
+    .cmt.flex-column button {
+        font-size: 12px;
+    }
+    .list-title .list--doctor p {
+        font-size: 24px;
+    }
+}
+@media (min-width: 576px) {
+    .avt-user-review {
+        border: 1px solid #ccc;
+        border-radius: 50%;
+        width: 80px;
+    }
+    .name-user-review {
+        font-size: 24px;
+    }
+    .time p, .time{
+        font-size: 14px;
+    }
+    .cmt.flex-column button {
+        font-size: 16px;
+    }
+    .list-title .list--doctor p {
+        font-size: 32px;
+    }
+}
+
+
+.checked {
+    color: #FFCF26;
+}

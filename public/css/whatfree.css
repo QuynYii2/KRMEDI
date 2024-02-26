@@ -1,0 +1,6 @@
+.text-short-description {
+    max-height: calc(3 * (2.2em));
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: pre-line;
+}
