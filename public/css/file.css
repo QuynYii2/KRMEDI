@@ -1,0 +1,1101 @@
+.input-quantity {
+  font-size: 24px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.header .header-detail {
+  height: 100px;
+  align-items: center;
+}
+.header .header-detail--left {
+  align-items: end;
+}
+.header .header-detail--left .logo {
+  height: 42px;
+}
+.header .header-detail--left .logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.header .header-detail--left .back {
+  font-size: 24px;
+  font-weight: 800;
+  color: rgb(69, 195, 210);
+}
+.header .header-detail--center a {
+  font-size: 16px;
+  color: black;
+  font-weight: 500;
+}
+.header .header-detail--center a.active {
+  text-decoration: revert;
+  color: rgb(69, 195, 210);
+}
+.header .header-detail--center a:hover {
+  text-decoration: revert;
+  color: rgb(69, 195, 210);
+}
+.header .header-detail--right {
+  align-items: center;
+  justify-content: right;
+}
+.header .header-detail--right .option {
+  width: 120px;
+  height: 52px;
+  background: #45C3D2;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+}
+.header .header-detail--right .option a {
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+}
+.header .header-detail--right .user {
+  width: 40px;
+  height: 40px;
+}
+.header .header-detail--right .user img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.banner {
+  margin-top: 100px;
+  margin-bottom: 40px;
+}
+.banner img {
+  height: auto;
+  width: 100%;
+  object-fit: cover;
+}
+
+.cmt-review {
+  border-radius: 8px;
+  border: 0.5px solid var(--Light, #EAEAEA);
+  background: var(--White-Light, #F3F3F3);
+  display: flex;
+  height: 197px;
+  padding: 8px 16px 20px 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  align-self: stretch;
+  width: 100%;
+}
+
+.recruitment-details--text--line {
+  border: 1px solid #BFBFBF;
+  margin: 16px 0;
+}
+
+.recruitment-details--text div, .recruitment-details--text p, .recruitment-details--text span, .recruitment-details--text h1, .recruitment-details--text h2, .recruitment-details--text h3, .recruitment-details--text h4, .recruitment-details--text h5, .recruitment-details--text h6 {
+  color: #000;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.recruitment-details--title {
+  font-size: 32px;
+  font-weight: 800;
+  margin-top: 20px;
+  color: black;
+}
+.recruitment-details--content {
+  margin: 30px 0;
+}
+.recruitment-details--content--left .img-main {
+  width: 100%;
+  height: 441px;
+  object-fit: cover;
+  margin-bottom: 16px;
+}
+.recruitment-details--content--left .img-main img {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+}
+.recruitment-details--content--left .list {
+  overflow-x: auto;
+  display: flex;
+}
+.recruitment-details--content--left .list .item {
+  height: 79px;
+  margin-right: 16px;
+}
+.recruitment-details--content--left .list .item img {
+  width: 140px;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid rgb(234, 234, 234);
+}
+.recruitment-details--content--right {
+  height: fit-content;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(234, 234, 234);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.recruitment-details--content--right .form-1 .div .title {
+  font-size: 16px;
+  font-weight: 700;
+}
+.recruitment-details--content--right .form-1 .div .text-wrapper {
+  border: none;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px 5px 10px;
+  background: rgb(234, 234, 234);
+  border-radius: 8px;
+}
+.recruitment-details--content--right .form-1 .div-2 {
+  margin: 24px 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid rgb(191, 191, 191);
+  width: 100%;
+}
+.recruitment-details--content--right .form-1 .div-2 .image {
+  width: 57px;
+  height: 57px;
+  object-fit: cover;
+}
+.recruitment-details--content--right .form-1 .div-2 .text-wrapper-2 {
+  color: #000;
+  font-size: 24px;
+  font-weight: 800;
+}
+.recruitment-details--content--right .form-1 .div-3 {
+  display: inline-flex;
+  flex-direction: column;
+  width: 100%;
+}
+.recruitment-details--content--right .form-1 .div-3 .div-4 {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 32px;
+}
+.recruitment-details--content--right .form-1 .div-3 .div-4 .img-wrapper {
+  display: inline-flex;
+  align-items: flex-start;
+  padding: 8px;
+  background: rgb(69, 195, 210);
+  border-radius: 37px;
+}
+.recruitment-details--content--right .form-1 .div-3 .div-4 .img-wrapper .img {
+  width: 24px;
+  height: 24px;
+}
+.recruitment-details--content--right .form-1 .div-3 .div-4 .div-5 .text-wrapper-3 {
+  color: rgb(146, 146, 146);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+}
+.recruitment-details--content--right .form-1 .div-3 .div-4 .div-5 .text-wrapper-4 {
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 20px;
+  letter-spacing: 0em;
+}
+.recruitment-details--content--right .form-1 .div-7 {
+  margin-top: 24px;
+}
+.recruitment-details--content--right .form-1 .div-7 .div-wrapper {
+  border: none;
+  display: flex;
+  padding: 11px 0;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(214, 214, 214);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 800;
+  text-align: center;
+  width: 47%;
+}
+.recruitment-details--content--right .form-1 .div-7 .text-wrapper-5 {
+  border: none;
+  padding: 11px 0;
+  width: 47%;
+  border-radius: 8px;
+  background: var(--secon1, #088180);
+  color: var(--White, #FFF);
+  text-align: center;
+  font-size: 14px;
+  font-weight: 800;
+}
+.recruitment-details--content--right .form-2 .div .text-wrapper {
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 30px;
+  margin-bottom: 16px;
+}
+.recruitment-details--content--right .form-2 .div .div-2 {
+  gap: 33px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgb(191, 191, 191);
+  width: 100%;
+}
+.recruitment-details--content--right .form-2 .div .div-2 .div-wrapper {
+  height: 56px;
+  width: 56px;
+  background-color: #f3f3f3;
+  border-radius: 8px;
+  line-height: 56px;
+  text-align: center;
+  cursor: pointer;
+}
+.recruitment-details--content--right .form-2 .div .div-2 .div-wrapper .text-wrapper-2 {
+  font-size: 16px;
+  font-weight: 800;
+  text-align: center;
+}
+.recruitment-details--content--right .form-2 .div .div-2 .div-wrapper:hover {
+  background: rgb(69, 195, 210);
+  color: white;
+  border-radius: 8px;
+}
+.recruitment-details--content--right .form-2 .div .div-2 .div-wrapper.active {
+  background: rgb(69, 195, 210);
+  color: white;
+  border-radius: 8px;
+}
+.recruitment-details--content--right .form-2 .div .div-2 .div-wrapper i {
+  font-size: 25px;
+  font-weight: 800;
+}
+.recruitment-details--content--right .form-2 .div .div-2 button {
+  border: none;
+  padding: 0;
+}
+.recruitment-details--content--right .form-2 .div-3 {
+  margin-top: 16px;
+}
+.recruitment-details--content--right .form-2 .div-3 .text-wrapper {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+.recruitment-details--content--right .form-2 .div-4 .div-5 {
+  margin-bottom: 10px;
+}
+.recruitment-details--content--right .form-2 .div-4 .div-5 .text-wrapper-3 {
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 20px;
+  text-align: left;
+  margin-bottom: 5px;
+}
+.recruitment-details--content--right .form-2 .div-4 .div-5 .frame-wrapper {
+  background: #f3f3f3;
+  border-radius: 8px;
+  border: 1px solid rgb(191, 191, 191);
+  color: rgb(146, 146, 146);
+  font-size: 16px;
+  width: 100%;
+  padding: 16px;
+}
+.recruitment-details--content--right .form-2 .div-7 {
+  margin-top: 24px;
+}
+.recruitment-details--content--right .form-2 .div-7 .div-wrapper {
+  border: none;
+  display: flex;
+  padding: 11px 0;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(214, 214, 214);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 800;
+  text-align: center;
+  width: 47%;
+}
+.recruitment-details--content--right .form-2 .div-7 .text-wrapper-5 {
+  border: none;
+  padding: 11px 0;
+  width: 47%;
+  border-radius: 8px;
+  background: var(--secon1, #088180);
+  color: var(--White, #FFF);
+  text-align: center;
+  font-size: 14px;
+  font-weight: 800;
+}
+.recruitment-details--text hr {
+  border: 1px solid rgb(191, 191, 191);
+  margin: 16px 0;
+}
+
+.medicine {
+  margin-top: 30px;
+}
+.medicine-list {
+  margin-top: 20px;
+}
+.medicine-list--filter .filter {
+  border: 1px solid rgb(234, 234, 234);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 32px;
+}
+.medicine-list--filter .filter-header {
+  margin-bottom: 24px;
+}
+.medicine-list--filter .filter-header .text-wrapper {
+  font-size: 16px;
+  font-weight: 800;
+}
+.medicine-list--filter .filter-header i {
+  color: rgb(146, 146, 146);
+}
+.medicine-list--filter .filter-body .item {
+  margin-bottom: 8px;
+}
+.medicine-list--filter .filter-body .item input {
+  background: rgb(69, 195, 210);
+  border: 1.5px solid rgb(69, 195, 210);
+  margin-right: 20px;
+}
+.medicine-list--filter .filter-body .item .text-all {
+  font-size: 16px;
+  font-weight: 800;
+}
+.medicine-list--filter .filter-body .item .text {
+  color: rgb(146, 146, 146);
+  font-size: 16px;
+}
+.medicine-list--filter .price {
+  border: 1px solid rgb(234, 234, 234);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  padding: 16px;
+}
+.medicine-list--filter .price .text-wrapper {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 24px;
+}
+.medicine-list--filter .price .price-input {
+  display: flex;
+  margin: 30px 0;
+}
+.medicine-list--filter .price .price-input .field input {
+  border-radius: 8px;
+  border: 1px solid rgb(191, 191, 191);
+  background: rgb(243, 243, 243);
+}
+.medicine-list--filter .price .price-input .separator {
+  color: rgb(191, 191, 191);
+}
+
+.medicine-search {
+  align-items: center;
+}
+.medicine-search--left .title {
+  font-size: 16px;
+  font-weight: 600;
+}
+.medicine-search--center .search-box {
+  position: relative;
+}
+.medicine-search--center .search-box input {
+  width: 100%;
+  padding-left: 15%;
+  height: 48px;
+  background: rgb(247, 247, 247);
+  font-size: 14px;
+  font-weight: 400;
+  color: rgb(98, 98, 100);
+  border-radius: 8px;
+  border: none;
+}
+.medicine-search--center .search-box i {
+  position: absolute;
+  left: 30px;
+  top: 15px;
+}
+.medicine-search--center .shopping-bag {
+  position: relative;
+  height: auto;
+  width: 48px;
+  background: rgb(247, 247, 247);
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 20px;
+  border: none;
+  padding: 8px;
+}
+.medicine-search--center .shopping-bag:focus {
+  border: none;
+}
+.medicine-search--center .shopping-bag .fa-bag-shopping {
+  font-size: 32px;
+}
+.medicine-search--center .text-wrapper {
+  position: absolute;
+  top: 5px;
+  right: 0px;
+  color: white;
+  background: rgb(255, 0, 0);
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 600;
+  height: 18px;
+  width: 18px;
+  text-align: center;
+}
+.medicine-search--right .div-wrapper {
+  height: 48px;
+  background: rgb(66, 66, 66);
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+}
+.medicine-search--right .div-wrapper button {
+  border-radius: 8px;
+  background: rgb(66, 66, 66);
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+}
+.medicine-search--right .div-wrapper a {
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+}
+
+.product-item {
+  margin-bottom: 30px;
+  padding: 16px;
+  border: 1px solid rgb(234, 234, 234);
+  border-radius: 16px;
+}
+.product-item .img-pro {
+  margin-bottom: 10px;
+  position: relative;
+}
+.product-item .img-pro img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.product-item .img-pro i {
+  font-size: 24px;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.product-item .img-pro #bi-heart-fill {
+  color: rgb(255, 0, 0);
+}
+.product-item .content-pro {
+  padding: 0 10px;
+}
+.product-item .content-pro .name-pro a {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 800;
+  -webkit-line-clamp: 1;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.product-item .content-pro .location-pro {
+  margin: 5px 0;
+  font-size: 16px;
+}
+.product-item .content-pro .location-pro p {
+  margin-left: 5px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+.product-item .content-pro .price-pro {
+  font-size: 24px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+.clinics-list .clinics-header {
+  margin-bottom: 16px;
+}
+.clinics-list .clinics-header .near {
+  font-size: 18px;
+  font-weight: 800;
+}
+.clinics-list .clinics-header a {
+  font-weight: 600;
+  color: black;
+}
+.clinics-list .margin-bottom-32 {
+  margin-bottom: 32px;
+}
+
+.clinic-search {
+  margin-bottom: 40px;
+  align-items: center;
+}
+.clinic-search--left .title {
+  font-size: 16px;
+  font-weight: 600;
+}
+.clinic-search--center .search-box {
+  position: relative;
+}
+.clinic-search--center .search-box input {
+  width: 100%;
+  padding-left: 15%;
+  height: 48px;
+  background: rgb(247, 247, 247);
+  font-size: 14px;
+  font-weight: 400;
+  color: rgb(98, 98, 100);
+  border-radius: 8px;
+  border: none;
+}
+.clinic-search--center .search-box i {
+  position: absolute;
+  left: 30px;
+  top: 15px;
+}
+.clinic-search--center .shopping-bag {
+  position: relative;
+  height: auto;
+  width: 48px;
+  background: rgb(247, 247, 247);
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 20px;
+  border: none;
+}
+.clinic-search--center .shopping-bag:focus {
+  border: none;
+}
+.clinic-search--center .shopping-bag .fa-bag-shopping {
+  font-size: 32px;
+}
+.clinic-search--center .text-wrapper {
+  position: absolute;
+  top: 5px;
+  right: 0px;
+  color: white;
+  background: rgb(255, 0, 0);
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 600;
+  height: 18px;
+  width: 18px;
+  text-align: center;
+}
+.clinic-search--right .div-wrapper {
+  height: 48px;
+  background: rgb(66, 66, 66);
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+}
+.clinic-search--right .div-wrapper a {
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+}
+
+.over-x-hidden {
+  overflow-x: hidden;
+}
+
+.button-visitStore {
+  border-radius: 8px;
+  background: var(--Grey-Light, #D6D6D6);
+  display: flex;
+  padding: 11px 50px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex: 1 0 0;
+  border: 0;
+}
+
+.button-buyNow {
+  border-radius: 8px;
+  background: var(--secon1, #088180);
+  display: flex;
+  padding: 11px 50px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex: 1 0 0;
+  border: 0;
+}
+
+.clinic-item {
+  border: 1px solid rgb(234, 234, 234);
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  display: grid;
+  gap: 8px;
+  height: 100%;
+}
+.clinic-item a {
+  font-size: 18px;
+  font-weight: 800;
+  color: black;
+}
+.clinic-item .time {
+  font-size: 12px;
+  font-weight: 500;
+}
+.clinic-item .time p {
+  color: rgb(69, 195, 210);
+}
+.clinic-item .location {
+  text-transform: capitalize;
+  font-size: 16px;
+  font-weight: 600;
+}
+.clinic-item .location i {
+  font-size: 16px;
+}
+.clinic-item .location span {
+  color: rgb(69, 195, 210);
+}
+.clinic-item .service {
+  text-transform: capitalize;
+  font-size: 16px;
+  font-weight: 600;
+}
+.clinic-item .star i {
+  color: rgb(255, 193, 7);
+}
+.clinic-item .img-detail .img-item {
+  height: 80px;
+}
+.clinic-item .img-detail .img-item img {
+  width: 80px !important;
+  height: 80px !important;
+  object-fit: cover;
+}
+
+.other-clinics .title {
+  font-size: 48px;
+  font-weight: 800;
+  margin: 44px 0;
+}
+
+.detail-clinics iframe {
+  width: 100%;
+  height: 80vh;
+}
+
+.modalCreatPrescription .title {
+  width: 100%;
+  margin-bottom: 10px;
+}
+.modalCreatPrescription .title p {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgb(146, 146, 146);
+}
+.modalCreatPrescription input {
+  padding: 20px 16px;
+  border-radius: 8px;
+  background: rgb(243, 243, 243);
+  border: 1px solid rgb(191, 191, 191);
+  height: 56px;
+  width: 100%;
+}
+.modalCreatPrescription select {
+  border-radius: 8px;
+  height: 56px;
+  width: 100%;
+  padding: 10px;
+  background: rgb(243, 243, 243);
+  border: 1px solid rgb(191, 191, 191);
+  color: #929292;
+}
+.modalCreatPrescription .add-img label {
+  width: 220px;
+  height: 220px;
+  border-radius: 8px;
+  border: 2px dashed rgb(146, 146, 146);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.modalCreatPrescription .add-img label i {
+  color: rgb(146, 146, 146);
+  font-size: 60px;
+}
+.modalCreatPrescription .add-img label img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.medicine-list--item .tabMystore {
+  border-bottom: none;
+}
+.medicine-list--item .tabMystore .nav-item a {
+  width: 100% !important;
+  background: white !important;
+  border: none;
+}
+.medicine-list--item .tabMystore .nav-item a.active {
+  border-bottom: 3px solid !important;
+}
+
+.rv_item-1 {
+  padding: 10px;
+  border-bottom: 1px solid rgb(214, 214, 214);
+}
+.rv_item-1 .rv-header--left {
+  align-items: center;
+}
+.rv_item-1 .rv-header--left .avt {
+  border-radius: 30px;
+}
+.rv_item-1 .rv-header--left .avt img {
+  width: 32px;
+  height: 32px;
+  border-radius: 20px;
+  object-fit: cover;
+}
+.rv_item-1 .rv-header--left p {
+  font-weight: 800;
+}
+.rv_item-1 .rv-header--right {
+  display: flex;
+  align-self: flex-end;
+  font-size: 14px;
+  font-weight: 400;
+  align-items: center;
+}
+.rv_item-1 .rv-header--right p {
+  color: #000;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.rv_item-1 .content {
+  font-size: 16px;
+}
+
+.pagination {
+  margin-top: 20px;
+}
+
+/* tab-booking */
+.button-follow {
+  display: flex;
+  padding: 4px 10px 5px 10px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 8px;
+  background: #EAEAEA;
+}
+
+.text-follow-12 {
+  color: #414141;
+  text-align: center;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+}
+
+.border-button-address {
+  border-radius: 45px;
+  background: var(--secon1, #45C3D2);
+  display: flex;
+  padding: 8px;
+  align-items: flex-start;
+  gap: 10px;
+  color: #FFFFFF;
+}
+
+.font-weight-800 {
+  font-weight: 800;
+}
+
+.font-weight-600 {
+  font-weight: 600;
+}
+
+.font-weight-400 {
+  font-weight: 400;
+}
+
+.avt-24 {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.border-booking-sv {
+  border-radius: 8px;
+  background: #F3F3F3;
+  display: flex;
+  padding: 8px;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.button-booking-sv {
+  display: flex;
+  width: 74px;
+  height: 32px;
+  padding: 11px 50px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 8px;
+  background: var(--secon1, #45C3D2);
+}
+
+/* select date */
+section {
+  margin-top: 20px;
+}
+
+.ui-datepicker-calendar tbody tr td .ui-state-default {
+  border: none;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--Black, #000);
+  text-align: center;
+  font-style: normal;
+  line-height: normal;
+}
+
+@media only screen and (max-width: 639px) {
+  .flex-container {
+    margin-top: 30px;
+  }
+}
+.spin-me {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.flex-container-morning, .flex-container-afternoon {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.master-container-slots.fade-in {
+  animation: fadein 1s;
+}
+
+.master-container-slots.fade-out {
+  animation: fadeout 0.5s;
+}
+
+.item .button {
+  width: 95%;
+}
+
+@media only screen and (min-width: 640px) {
+  .item .button {
+    margin-left: 10%;
+    /*width: 100%;*/
+    margin-right: 10%;
+  }
+}
+.form-submit {
+  /*width: 100%;*/
+  margin-top: 50px;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeout {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+.button-apply-booking {
+  display: flex;
+  padding: 11px 50px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex: 1 0 0;
+  border-radius: 8px;
+  background: #45C3D2;
+}
+
+.button-Reset-booking {
+  display: flex;
+  padding: 11px 50px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex: 1 0 0;
+  border-radius: 8px;
+  background: #D6D6D6;
+}
+
+.item button {
+  border-radius: 8px;
+  background: #F3F3F3;
+  color: #929292;
+  display: flex;
+  width: 65px;
+  padding: 6px 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.text-overflow {
+  display: -webkit-box;
+  line-height: 1.3;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 25px;
+}
+
+/* doctor information */
+@media (max-width: 575px) {
+  #show_inf #inf-doctor #img_info {
+    width: 100%;
+    margin: 0;
+  }
+  #show_inf #inf-doctor #img_info #doc {
+    margin-bottom: 32px;
+  }
+  #show_inf #inf-doctor #img_info #qr_code {
+    display: flex;
+    padding: 24px 67px 24px 66px;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    border-radius: 8px;
+    border: 1px solid #EAEAEA;
+  }
+  #show_inf #inf-doctor #img_info #qr_code p {
+    color: #000;
+    font-size: 18px;
+    font-weight: 800;
+  }
+  #show_inf #inf-doctor #about {
+    width: 100%;
+  }
+  #show_inf #inf-doctor #about h5 {
+    font-size: 18px;
+    font-weight: 800;
+  }
+  #show_inf #inf-doctor #about .dess {
+    margin-top: 8px;
+    display: flex;
+  }
+  #show_inf #inf-doctor #about .dess p {
+    color: #929292;
+    font-size: 14px;
+    font-weight: 400;
+  }
+  #show_inf #inf-doctor #about .dess span {
+    color: #000;
+    font-size: 14px;
+    font-weight: 800;
+    margin-left: 8px;
+  }
+  #show_inf #inf-doctor #about .dess span div, #show_inf #inf-doctor #about .dess span p, #show_inf #inf-doctor #about .dess span span, #show_inf #inf-doctor #about .dess span h1, #show_inf #inf-doctor #about .dess span h2, #show_inf #inf-doctor #about .dess span h3, #show_inf #inf-doctor #about .dess span h4, #show_inf #inf-doctor #about .dess span h5, #show_inf #inf-doctor #about .dess span h6 {
+    color: #000;
+    font-size: 14px;
+    font-weight: 800;
+    margin-left: 8px;
+  }
+  #show_inf #review {
+    margin-top: 24px;
+  }
+}
+@media (min-width: 576px) {
+  #show_inf #inf-doctor #img_info {
+    width: 100%;
+    margin-right: 15px;
+  }
+  #show_inf #inf-doctor #img_info #doc {
+    margin-bottom: 32px;
+  }
+  #show_inf #inf-doctor #img_info #qr_code {
+    display: flex;
+    padding: 24px 67px 24px 66px;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    border-radius: 8px;
+    border: 1px solid #EAEAEA;
+  }
+  #show_inf #inf-doctor #img_info #qr_code p {
+    color: #000;
+    font-size: 32px;
+    font-weight: 800;
+  }
+  #show_inf #inf-doctor #about {
+    width: 100%;
+    margin-left: 15px;
+  }
+  #show_inf #inf-doctor #about h5 {
+    font-size: 48px;
+    font-weight: 800;
+  }
+  #show_inf #inf-doctor #about .dess {
+    margin-top: 24px;
+    display: flex;
+  }
+  #show_inf #inf-doctor #about .dess p {
+    color: #929292;
+    font-size: 24px;
+    font-weight: 400;
+  }
+  #show_inf #inf-doctor #about .dess span {
+    color: #000;
+    font-size: 24px;
+    font-weight: 800;
+    margin-left: 10px;
+  }
+  #review {
+    margin-top: 40px;
+  }
+}
+/* end doctor information */
+
+/*# sourceMappingURL=file.css.map */

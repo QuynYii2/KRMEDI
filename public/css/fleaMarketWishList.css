@@ -1,0 +1,217 @@
+@media (max-width: 575px) {
+  #showMyProduct .product-item-wishlist {
+    display: flex;
+    padding: 8px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    border-radius: 16px;
+    border: 1px solid var(--secon1, #088180);
+    background: var(--White, #FFF);
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    margin-bottom: 30px;
+  }
+  #showMyProduct .product-item-wishlist .img-pro-wishlist img {
+    border-radius: 8px;
+    background: lightgray 50%/cover no-repeat;
+    height: 237px;
+    object-fit: cover;
+  }
+  #showMyProduct .product-item-wishlist .content-pro-wishlist {
+    width: 100%;
+  }
+  #showMyProduct .product-item-wishlist .content-pro-wishlist a.name-product--wishlist {
+    color: #000000;
+    font-size: 14px;
+    font-weight: 800;
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 42px;
+  }
+  #showMyProduct .product-item-wishlist .content-pro-wishlist .location-pro-wishlist {
+    color: var(--Grey-Dark, #929292);
+    text-align: center;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+  #showMyProduct .product-item-wishlist .content-pro-wishlist .location-pro-wishlist p {
+    color: #000;
+    font-weight: 800;
+    margin-left: 4px;
+  }
+  #showMyProduct .product-item-wishlist .content-pro-wishlist .price-pro-wishlist {
+    color: #000;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+  #showMyProduct .product-item-wishlist .content-pro-wishlist .edit-button-wishList {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+  }
+  #showMyProduct .product-item-wishlist .content-pro-wishlist .edit-button-wishList button {
+    background: none;
+    border: none;
+    color: var(--secon1, #088180);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+    cursor: pointer;
+  }
+  #showMyProduct .product-item-wishlist .content-pro-wishlist .edit-button-wishList button:hover {
+    color: var(--secon2, #04BF9D);
+  }
+  #showMyProduct .product-item-wishlist .content-pro-wishlist .edit-button-wishList a {
+    display: flex;
+    padding: 11px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 8px;
+    background: var(--Grey-Light, #D6D6D6);
+    color: var(--Grey-Dark, #929292);
+    text-align: center;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+  #showMyProduct .product-item-wishlist .content-pro-wishlist .edit-button-wishList form button {
+    margin-top: 8px;
+    border-radius: 8px;
+    background: var(--secon1, #088180);
+    display: flex;
+    padding: 11px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex: 1 0 0;
+    color: var(--White, #FFF);
+    text-align: center;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+  .img-pro-wishList2 img {
+    padding: 8px !important;
+    border-radius: 26px !important;
+    height: 200px !important;
+    object-fit: cover;
+  }
+  .content-pro-wishList2 {
+    padding: 12px !important;
+  }
+}
+@media (min-width: 576px) {
+  #showMyProduct .product-item-wishlist {
+    display: flex;
+    padding: 8px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    border-radius: 16px;
+    border: 1px solid var(--secon1, #088180);
+    background: var(--White, #FFF);
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    margin-bottom: 30px;
+  }
+  #showMyProduct .product-item-wishlist .img-pro-wishlist img {
+    border-radius: 8px;
+    background: lightgray 50%/cover no-repeat;
+    height: 237px;
+    object-fit: cover;
+  }
+  #showMyProduct .product-item-wishlist .content-pro-wishlist {
+    width: 100%;
+  }
+  #showMyProduct .product-item-wishlist .content-pro-wishlist a.name-product--wishlist {
+    color: #000000;
+    font-size: 18px;
+    font-weight: 800;
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 54px;
+  }
+  #showMyProduct .product-item-wishlist .content-pro-wishlist .location-pro-wishlist {
+    color: var(--Grey-Dark, #929292);
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+  #showMyProduct .product-item-wishlist .content-pro-wishlist .location-pro-wishlist p {
+    color: #000;
+    font-weight: 800;
+    margin-left: 4px;
+  }
+  #showMyProduct .product-item-wishlist .content-pro-wishlist .price-pro-wishlist {
+    color: #000;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+  #showMyProduct .product-item-wishlist .content-pro-wishlist .edit-button-wishList {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: 24px;
+  }
+  #showMyProduct .product-item-wishlist .content-pro-wishlist .edit-button-wishList button {
+    background: none;
+    border: none;
+    color: var(--secon1, #088180);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+    cursor: pointer;
+  }
+  #showMyProduct .product-item-wishlist .content-pro-wishlist .edit-button-wishList button:hover {
+    color: var(--secon2, #04BF9D);
+  }
+  #showMyProduct .product-item-wishlist .content-pro-wishlist .edit-button-wishList a {
+    display: flex;
+    padding: 11px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 8px;
+    background: var(--Grey-Light, #D6D6D6);
+    color: var(--Grey-Dark, #929292);
+    text-align: center;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+  #showMyProduct .product-item-wishlist .content-pro-wishlist .edit-button-wishList form button {
+    border-radius: 8px;
+    background: var(--secon1, #088180);
+    display: flex;
+    padding: 11px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex: 1 0 0;
+    color: var(--White, #FFF);
+    text-align: center;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+}
+
+/*# sourceMappingURL=fleaMarketWishList.css.map */

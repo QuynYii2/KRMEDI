@@ -1,0 +1,652 @@
+@charset "UTF-8";
+@media (max-width: 480px) {
+  .container {
+    max-width: 480px;
+    width: 100%;
+  }
+  .container .item-information .nav-header--homeNew ul.nav-fill, .container #find-doctor--homeNew .nav-header--homeNew ul.nav-fill, .container .align-center .nav-header--homeNew ul.nav-fill {
+    width: 100%;
+  }
+}
+@media (min-width: 780px) {
+  .container {
+    width: 100%;
+  }
+  .container .item-information .nav-header--homeNew ul.nav-fill, .container #find-doctor--homeNew .nav-header--homeNew ul.nav-fill, .container .align-center .nav-header--homeNew ul.nav-fill {
+    width: 50%;
+  }
+  .container .dots-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+  }
+  .container .dots-container .dot {
+    cursor: pointer;
+    margin: 12px;
+    width: 10px;
+    height: 10px;
+    color: #333;
+    border-radius: 50%;
+    background-color: #088180;
+    opacity: 0.35;
+  }
+  .container .dots-container .dot.active {
+    border: 8px solid rgba(8, 129, 128, 0.53);
+    opacity: 1;
+  }
+  .container body h1 {
+    text-align: center;
+  }
+  .container .slide-container {
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    max-width: 1440px;
+    margin: auto;
+    position: relative;
+  }
+  .container .slide-container .slide {
+    display: none;
+    width: 100%;
+  }
+  .container .slide-container .slide.fade {
+    animation: fade 0.5s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
+  }
+  .container .slide-container .slide img {
+    width: 100%;
+  }
+}
+@media all {
+  .background-image_HomeNew {
+    background: url("../img/homeNew-img/background/Icon_Dark_fleaMarket.png") no-repeat 135%;
+    background-size: 1054px 845px;
+    min-height: 880px;
+    display: flex;
+    align-items: center;
+  }
+  .background-image_HomeNew .product-item {
+    border-radius: 25px;
+    background: #088180;
+    padding: 0;
+  }
+  .background-image_HomeNew .product-item .img-pro img {
+    border-radius: 24px 24px 0 100px;
+    height: 300px;
+    object-fit: cover;
+  }
+  .background-image_HomeNew .product-item .img-pro i {
+    display: flex;
+    padding: 8px;
+    align-items: flex-start;
+    gap: 10px;
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    border-radius: 51px;
+    background: #EAEAEA;
+  }
+  .background-image_HomeNew .product-item .location-pro {
+    color: #FFFFFF;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+  .background-image_HomeNew .product-item .prices-pro {
+    color: #FFFFFF;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+  .background-image_HomeNew .product-item .SeeDetail {
+    display: flex;
+    padding: 16px 40px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 86px 0 36px 0;
+    width: 70%;
+    background: #FFFFFF;
+    border: 0;
+  }
+  .background-image_HomeNew .product-item .img_product--homeNew img {
+    border-radius: 24px 24px 100px 0 !important;
+    background: lightgray 50%/cover no-repeat;
+    height: 300px !important;
+  }
+  .background-image_HomeNew .product-item .content-pro .name-product a {
+    color: #FFFFFF;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+    min-height: 50px;
+  }
+  .bg-homeNew {
+    background: var(--White-Light, #F3F3F3);
+  }
+  .container .justify-content-between.mt-homeNew {
+    margin-top: 150px;
+  }
+  .container .justify-content-between.mt-homeNew .title-homeNew {
+    color: #333;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    text-transform: capitalize;
+    width: 100%;
+  }
+  .container .justify-content-between.mt-homeNew .title-homeNew .text-title--new1 {
+    color: #007E85;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    text-transform: capitalize;
+  }
+  .container .justify-content-between.mt-homeNew .title-homeNew .text-title--new2 {
+    color: #6EAB36;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    text-transform: capitalize;
+  }
+  .container .justify-content-between.mt-homeNew .content_homeNew {
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 0.8px;
+    text-transform: capitalize;
+  }
+  .container .justify-content-between.mt-homeNew .img-container {
+    position: relative;
+    overflow: hidden;
+  }
+  .container .justify-content-between.mt-homeNew .img-doctor__homeNew {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  .container .justify-content-between.mt-homeNew .img-doctor__homeNew img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: relative;
+    z-index: 0;
+    transition: transform 0.5s;
+  }
+  .container .justify-content-between.mt-homeNew .img-doctor__homeNew img:hover {
+    transform: scale(1.1);
+  }
+  .container .justify-content-between.mt-homeNew .img-doctor__homeNew img::before, .container .justify-content-between.mt-homeNew .img-doctor__homeNew img::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover; /* Chọn kiểu fill cho hình nền */
+    transition: transform 0.5s;
+  }
+  .container .justify-content-between.mt-homeNew .img-doctor__homeNew img::before {
+    z-index: 0; /* Đặt z-index để hình nền phía trước hiển thị phía dưới */
+    transform-origin: center; /* Đặt điểm trung tâm cho transform */
+    transform: scale(1); /* Ban đầu có kích thước bằng 1 */
+  }
+  .container .justify-content-between.mt-homeNew .img-doctor__homeNew img::after {
+    background-image: url("/public/img/homeNew-img/Vector.png");
+    z-index: -1; /* Đặt z-index để hình nền phía sau hiển thị phía dưới cùng */
+    transform-origin: center; /* Đặt điểm trung tâm cho transform */
+    transform: scale(0.9); /* Ban đầu có kích thước nhỏ hơn 1 */
+  }
+  .container .align-center .title-whatFree--homeNew {
+    text-align: center;
+  }
+  .container .align-center .title-whatFree--homeNew span {
+    color: var(--Black, #000);
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+  .container .align-center .nav-header--homeNew li.nav-item a.nav-link {
+    color: var(--Grey-Dark, #929292);
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    padding: 0;
+  }
+  .container .align-center .nav-header--homeNew li.nav-item a.nav-link.active {
+    color: var(--secon1, #088180);
+    text-align: center;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+  .container #myTabContent .product-item {
+    border-radius: 25px;
+    background: #088180;
+    padding: 0;
+  }
+  .container #myTabContent .product-item .img-pro img {
+    border-radius: 24px 24px 0px 100px;
+    height: 300px;
+    object-fit: cover;
+  }
+  .container #myTabContent .product-item .img-pro i {
+    display: flex;
+    padding: 8px;
+    align-items: flex-start;
+    gap: 10px;
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    border-radius: 51px;
+    background: var(--Light, #EAEAEA);
+  }
+  .container #myTabContent .product-item .img-pro .icon-chuyen-khoa {
+    display: flex;
+    padding: 8px;
+    align-items: flex-start;
+    gap: 10px;
+    position: absolute;
+    left: 15px;
+    bottom: 0;
+    border-radius: 51px;
+    background: var(--Light, #EAEAEA);
+  }
+  .container #myTabContent .product-item .img-pro .icon-chuyen-khoa img {
+    width: 30px;
+    height: 30px;
+    border-radius: 22px;
+  }
+  .container #myTabContent .product-item .content-pro .name-product a {
+    color: var(--White, #FFF);
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+    min-height: 24px;
+  }
+  .container #myTabContent .product-item .content-pro .location-pro p {
+    margin: 0;
+    color: var(--White, #FFF);
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+  }
+  .container #myTabContent .product-item .content-pro .price-pro {
+    color: var(--White, #FFF);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+  .container #myTabContent .product-item:hover {
+    border-radius: 25px;
+    background: #088180;
+    box-shadow: 0px 8px 10px 0px rgba(0, 0, 0, 0.25);
+  }
+  .container #myTabContent .card-homeNew {
+    display: flex;
+    padding: 16px;
+    align-items: flex-start;
+    gap: 10px;
+    border-radius: 25px;
+    border: 1px solid var(--White-Light, #F3F3F3);
+    background: var(--White, #FFF);
+    transition: all 0.1s ease;
+  }
+  .container #myTabContent .card-homeNew .content__item {
+    padding: 0;
+  }
+  .container #myTabContent .card-homeNew .content__item__img {
+    width: 100%;
+    height: 216px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  .container #myTabContent .card-homeNew .content__item__title {
+    margin-top: 24px;
+    color: #007E85;
+    font-feature-settings: "clig" off, "liga" off;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 34px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .container #myTabContent .card-homeNew .content__item__describe {
+    color: #555;
+    font-feature-settings: "clig" off, "liga" off;
+    margin-top: 12px;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 30px;
+  }
+  .container #myTabContent .card-homeNew .content__item__describe p {
+    display: -webkit-box;
+    line-height: 1.3;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .container #myTabContent .card-homeNew .content__item-link {
+    text-align: justify;
+    font-feature-settings: "clig" off, "liga" off;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 18px;
+    position: relative;
+    display: inline-block;
+    color: #088180; /* Màu chữ của Learn more */
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .container #myTabContent .card-homeNew .content__item-link:hover {
+    color: #088180; /* Màu chữ khi hover */
+  }
+  .container #myTabContent .card-homeNew .content__item-link::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    transform: translate(0%, -100%);
+    display: block;
+    width: 30px; /* Điều chỉnh độ dài của đường */
+    height: 2px; /* Điều chỉnh độ rộng của đường */
+    background-color: #088180; /* Màu của đường */
+    transition: width 0.5s;
+    opacity: 0; /* Ẩn đường ban đầu */
+  }
+  .container #myTabContent .card-homeNew .content__item-link:hover::after {
+    width: 50px; /* Điều chỉnh chiều dài của đường khi hover */
+    opacity: 1; /* Hiển thị đường khi hover */
+  }
+  .container #myTabContent .card-homeNew:hover {
+    border-radius: 24px;
+    border: 1px solid var(--secon1, #088180);
+    background: var(--White, #FFF);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  }
+  .container #map-location .text-map--homeNew h3 {
+    color: var(--Black, #1A202C);
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 800 !important;
+    line-height: normal;
+  }
+  .container #map-location .text-map--homeNew p {
+    color: var(--Grey-Dark, #929292);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+  }
+  .container #find-doctor--homeNew .title-findDoctor--homeNew {
+    color: var(--Black, #000);
+    text-align: center;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+  .container #recruitment-homeNew .title-recruitment--homeNew span {
+    color: var(--Black, #000);
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+  .container #recruitment-homeNew .title-recruitment--homeNew p {
+    color: var(--Grey-Dark, #929292);
+    font-style: normal;
+    line-height: normal;
+    padding-bottom: 21px;
+  }
+  .container #recruitment-homeNew .main-recruitment--homeNew .main-card--homeNew {
+    height: 500px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .container #recruitment-homeNew .main-recruitment--homeNew .main-card--homeNew .border-flea-market .card-body-fleaMarket--homeNew {
+    margin: 12px 0;
+  }
+  .container #recruitment-homeNew .main-recruitment--homeNew .main-card--homeNew .img-fleaMarket--homeNew {
+    height: 188px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  .container #recruitment-homeNew .main-recruitment--homeNew .main-card--homeNew .title-div-flea-market--homeNew {
+    color: #000;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 800;
+    display: -webkit-box;
+    line-height: 1.3;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 63px;
+  }
+  .container #recruitment-homeNew .main-recruitment--homeNew .main-card--homeNew .card-text--homeNew {
+    color: var(--Black, #000);
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+  .container #recruitment-homeNew .main-recruitment--homeNew .main-card--homeNew .price-fleaMarket--homeNew {
+    color: #000;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+  .container #recruitment-homeNew .main-recruitment--homeNew .button-bottom-right {
+    bottom: 0;
+    position: absolute;
+    right: 0;
+  }
+  .container #recruitment-homeNew .content-recruitment--homeNew {
+    border-radius: 12px;
+    border: 1px solid var(--Light, #EAEAEA);
+    background: var(--White, #FFF);
+    padding: 8px;
+    gap: 12px;
+    align-self: stretch;
+    margin-bottom: 21px;
+  }
+  .container #recruitment-homeNew .content-recruitment--homeNew img {
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid var(--Light, #EAEAEA);
+    background: var(--White, #FFF);
+  }
+  .container #recruitment-homeNew .content-recruitment--homeNew .text-title--card {
+    padding: 8px;
+  }
+  .container #recruitment-homeNew .content-recruitment--homeNew .text-title--card span {
+    color: var(--Grey-Balck, #424242);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+  .container #recruitment-homeNew .describe-item {
+    margin-bottom: 20px;
+  }
+  .container #recruitment-homeNew .describe-item span {
+    color: var(--Black, #1A202C);
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+    padding-bottom: 8px;
+  }
+  .container #recruitment-homeNew .describe-item p {
+    color: var(--Grey-Dark, #929292);
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    padding-bottom: 40px;
+  }
+  .container .item-information .title-findProduct--homeNew, .container #find-doctor--homeNew .title-findProduct--homeNew {
+    text-align: center;
+  }
+  .container .item-information .title-findProduct--homeNew span, .container #find-doctor--homeNew .title-findProduct--homeNew span {
+    color: var(--Black, #000);
+    text-align: center;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+  .container .item-information .title-findProduct--homeNew p, .container #find-doctor--homeNew .title-findProduct--homeNew p {
+    color: var(--Grey-Dark, #929292);
+    text-align: center;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+  }
+  .container .item-information #myTabContent .product-item .location-pro, .container #find-doctor--homeNew #myTabContent .product-item .location-pro {
+    color: var(--White, #FFF);
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+  .container .item-information #myTabContent .product-item .prices-pro, .container #find-doctor--homeNew #myTabContent .product-item .prices-pro {
+    color: var(--White, #FFF);
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+  .container .item-information #myTabContent .product-item .SeeDetail, .container #find-doctor--homeNew #myTabContent .product-item .SeeDetail {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 70%;
+    background: var(--White, #FFF);
+    border: 0;
+  }
+  .container .item-information #myTabContent .product-item .img_product--homeNew img, .container #find-doctor--homeNew #myTabContent .product-item .img_product--homeNew img {
+    background: lightgray 50%/cover no-repeat;
+  }
+  .container .item-information #myTabContent .product-item .content-pro .name-product a, .container #find-doctor--homeNew #myTabContent .product-item .content-pro .name-product a {
+    color: var(--White, #FFF);
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+  .container .item-information .nav-header--homeNew ul.nav-fill li.nav-item a.nav-link, .container #find-doctor--homeNew .nav-header--homeNew ul.nav-fill li.nav-item a.nav-link {
+    color: var(--Grey-Dark, #929292);
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+  .container .item-information .nav-header--homeNew ul.nav-fill li.nav-item a.nav-link.active, .container #find-doctor--homeNew .nav-header--homeNew ul.nav-fill li.nav-item a.nav-link.active {
+    color: var(--secon1, #088180);
+    text-align: center;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+  .container .titleServiceHomeNew {
+    color: #000;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+  .container .mainServiceHomeNew {
+    margin-top: 16px;
+  }
+  .container .mainServiceHomeNew .col-md-6 .border-HomeNew, .container .mainServiceHomeNew .col-md-4 .border-HomeNew {
+    border-radius: 24px;
+    border: 1px solid #F3F3F3;
+    background: var(--White, #FFF);
+    display: flex;
+    padding: 18px 8px;
+    align-items: center;
+    flex-shrink: 0;
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+  .container .mainServiceHomeNew .col-md-6 .border-HomeNew .krm-select-bt, .container .mainServiceHomeNew .col-md-4 .border-HomeNew .krm-select-bt {
+    height: 70px;
+  }
+  .container .mainServiceHomeNew .col-md-6 .border-HomeNew:hover, .container .mainServiceHomeNew .col-md-4 .border-HomeNew:hover {
+    border-radius: 24px;
+    border: 1px solid var(--secon1, #088180);
+    background: var(--White, #FFF);
+    box-shadow: 0 8px 14px 0 rgba(0, 0, 0, 0.25);
+  }
+  .container .mainServiceHomeNew .col-md-6 .border-HomeNew img, .container .mainServiceHomeNew .col-md-4 .border-HomeNew img {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    border-radius: 50px;
+    margin-right: 24px;
+    object-fit: cover;
+  }
+  .container .mainServiceHomeNew .col-md-6 .border-HomeNew .svg-container, .container .mainServiceHomeNew .col-md-4 .border-HomeNew .svg-container {
+    position: relative;
+    right: 80px;
+    top: -45px;
+  }
+  .container .mainServiceHomeNew .col-md-6 .border-HomeNew .svg-containerNho, .container .mainServiceHomeNew .col-md-4 .border-HomeNew .svg-containerNho {
+    position: relative;
+    right: 160px;
+    top: -35px;
+  }
+  .container .mainServiceHomeNew span {
+    color: #000;
+    font-style: normal;
+    font-weight: 800;
+    max-height: 60px;
+    display: -webkit-box;
+    line-height: 1.3;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .background-image_HomeNew--departments {
+    background: url(../img/homeNew-img/background/Icon.png) no-repeat 100% 100%;
+    background-size: 884px 1250px;
+    min-height: 1400px;
+    display: flex;
+    align-items: center;
+  }
+}
+.max-3-line-content {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 70px;
+}
+
+/*# sourceMappingURL=style-home.css.map */

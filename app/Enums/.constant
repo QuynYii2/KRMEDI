@@ -1,0 +1,12 @@
+<?php declare(strict_types=1);
+
+namespace App\Enums;
+
+use BenSampo\Enum\Enum;
+
+final class Constants extends Enum
+{
+    const GG_KEY = '';
+    const KEY_PROJECT = 'ILVietnam';
+    const Option = 1;
+}
