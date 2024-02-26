@@ -102,7 +102,6 @@
         }
     })
 
-
     document.getElementById('camera-btn').addEventListener('click', async () => {
         //Check if what the state of muted currently is
         //Disable button
@@ -117,7 +116,6 @@
             document.getElementById('camera-btn').style.backgroundColor = '#1f1f1f8e'
         }
     })
-
 
     document.getElementById('leave-btn').addEventListener('click', async () => {
         //Loop threw local tracks and stop them so unpublish event gets triggered, then set to undefined
@@ -138,12 +136,14 @@
         document.getElementById('join-wrapper').style.display = 'block'
     })
 
-
     //Method will take all my info and set user stream in frame
     let joinStreams = async () => {
         //Is this place hear strategicly or can I add to end of method?
-
+        console.log('Start join stream!')
         client.on("user-published", handleUserJoined);
+        client.on("user-joined", function (event) {
+            console.log('Join user')
+        })
         client.on("user-left", handleUserLeft);
 
         client.enableAudioVolumeIndicator(); // Triggers the "volume-indicator" callback event every two seconds.
