@@ -125,7 +125,7 @@
     min-height: 50px;
   }
   .bg-homeNew {
-    background: var(--White-Light, #F3F3F3);
+    background: linear-gradient(#FBF3EA, #FFFFFF);
   }
   .container .justify-content-between.mt-homeNew {
     margin-top: 150px;
