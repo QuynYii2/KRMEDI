@@ -87,14 +87,6 @@
     //#5 - Set remote tracks to store other users
     let remoteTracks = {}
 
-    async function showCall() {
-        await joinStreams()
-        document.getElementById('join-wrapper').style.display = 'none'
-        document.getElementById('footer').style.display = 'flex'
-    }
-
-    showCall();
-
     document.getElementById('mic-btn').addEventListener('click', async () => {
         //Check if what the state of muted currently is
         //Disable button
@@ -234,6 +226,14 @@
         delete remoteTracks[user.uid]
         document.getElementById(`video-wrapper-${user.uid}`).remove()
     }
+
+    window.addEventListener('load', async () => {
+        await joinStreams();
+        const joinWrapper = document.querySelector('#join-wrapper');
+        const footer = document.querySelector('#footer');
+        joinWrapper.style.display = 'none';
+        footer.style.display = 'flex';
+    });
 </script>
 </body>
 </html>
