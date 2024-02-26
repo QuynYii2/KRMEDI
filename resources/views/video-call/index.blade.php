@@ -62,7 +62,7 @@
     username.value = '{{ Auth::user()->name ?? 'default name' }}';
 
     //#1
-    let client = AgoraRTC.createClient({mode: 'live', codec: "h264", role: 'host'})
+    let client = AgoraRTC.createClient({mode: 'rtc', codec: "h264", role: 'host'})
 
     //#2
     let config = {
@@ -142,7 +142,7 @@
         console.log('Start join stream!')
         client.on("user-published", handleUserJoined);
         client.on("user-joined", function (event) {
-            console.log('Join user')
+            console.log(event)
         })
         client.on("user-left", handleUserLeft);
 
