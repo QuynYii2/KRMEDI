@@ -53,7 +53,7 @@ return [
     'Khám chuyên khoa' => 'Khám chuyên khoa',
     'Đặt lịch khám bệnh' => 'Đặt lịch khám bệnh',
     'Thuốc online' => 'Thuốc online',
-        'Khám từ xa' => 'Khám từ xa',
+    'Khám từ xa' => 'Khám từ xa',
     'Tư vẫn sức khoẻ' => 'Tư vấn sức khỏe',
     'Y tế gần bạn' => 'Y tế gần bạn',
     'Chuyên khoa khám' => 'Chuyên khoa khám',
@@ -117,7 +117,7 @@ return [
     'It is a long established fact that a reader will be distracted' => 'Một thực tế đã được chứng minh từ lâu là người đọc sẽ bị phân tâm',
     'your email address' => 'địa chỉ email của bạn',
 
-        'Buy online' => 'Mua trực tuyến',
+    'Buy online' => 'Mua trực tuyến',
     "Don't struggle finding, we are always ready for you" => "Đừng vất vả tìm kiếm, chúng tôi luôn sẵn sàng giúp đỡ bạn",
     'Popular' => 'Phổ biến',
     'Recommended' => 'Khuyến khích',
