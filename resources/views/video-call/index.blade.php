@@ -143,7 +143,88 @@
         client.on("user-published", handleUserJoined);
         client.on("user-joined", function (event) {
             console.log(event)
-        })
+        });
+
+        client.on("channel-media-relay-event", (event) => {
+            console.log("channel-media-relay-event");
+        });
+
+        client.on("channel-media-relay-state", (event) => {
+            console.log("channel-media-relay-state");
+        });
+
+        client.on("connection-state-change", (event) => {
+            console.log("connection-state-change");
+        });
+
+        client.on("crypt-error", (event) => {
+            console.log("crypt-error");
+        });
+
+        client.on("exception", (event) => {
+            console.log("exception");
+        });
+
+        client.on("is-using-cloud-proxy", (event) => {
+            console.log("is-using-cloud-proxy");
+        });
+
+        client.on("join-fallback-to-proxy", (event) => {
+            console.log("join-fallback-to-proxy");
+        });
+
+        client.on("live-streaming-error", (event) => {
+            console.log("live-streaming-error");
+        });
+
+        client.on("live-streaming-warning", (event) => {
+            console.log("live-streaming-warning");
+        });
+
+        client.on("media-reconnect-end", (event) => {
+            console.log("media-reconnect-end");
+        });
+
+        client.on("media-reconnect-start", (event) => {
+            console.log("media-reconnect-start");
+        });
+
+        client.on("network-quality", (event) => {
+            console.log("network-quality");
+        });
+
+        client.on("published-user-list", (event) => {
+            console.log("published-user-list");
+        });
+
+        client.on("stream-fallback", (event) => {
+            console.log("stream-fallback");
+        });
+
+        client.on("stream-type-changed", (event) => {
+            console.log("stream-type-changed");
+        });
+
+        client.on("token-privilege-did-expire", (event) => {
+            console.log("token-privilege-did-expire");
+        });
+
+        client.on("token-privilege-will-expire", (event) => {
+            console.log("token-privilege-will-expire");
+        });
+
+        client.on("user-info-updated", (event) => {
+            console.log("user-info-updated");
+        });
+
+        client.on("user-unpublished", (event) => {
+            console.log("user-unpublished");
+        });
+
+        client.on("volume-indicator", (event) => {
+            console.log("volume-indicator");
+        });
+
         client.on("user-left", handleUserLeft);
 
         client.enableAudioVolumeIndicator(); // Triggers the "volume-indicator" callback event every two seconds.
@@ -160,8 +241,7 @@
         });
 
         //#6 - Set and get back tracks for local user
-        console.log('uid')
-        console.log(config.uid, {{ $agora_chat->uid }});
+        console.log('uid', config.uid, {{ $agora_chat->uid }});
         [config.uid, localTracks.audioTrack, localTracks.videoTrack] = await Promise.all([
             client.join(config.appid, config.channel, config.token || null, config.uid || null),
             AgoraRTC.createMicrophoneAudioTrack(),
