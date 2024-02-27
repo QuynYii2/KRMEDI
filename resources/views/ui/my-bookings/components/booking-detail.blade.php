@@ -54,7 +54,7 @@
         @endif
     </div>
     @php
-        $surveys = \App\Models\SurveyAnswerUser::where('booking_id', $booking->id)
+        $surveyByBooking = \App\Models\SurveyAnswerUser::where('booking_id', $booking->id)
                         ->where('user_id', $id)
                         ->get();
         $arraySurvey = [];
