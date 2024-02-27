@@ -150,12 +150,20 @@
                        $member = 'Người dùng';
                     } elseif (Auth::user()->member == 'DOCTORS') {
                         $member = 'Bác sĩ';
+                    }elseif (Auth::user()->member == 'THERAPISTS') {
+                        $member = 'Nhà trị liệu';
+                    }elseif (Auth::user()->member == 'ESTHETICIANS') {
+                        $member = 'Chuyên viên thẩm mỹ';
+                    }elseif (Auth::user()->member == 'NURSES') {
+                        $member = 'Y tá';
                     } elseif (Auth::user()->$member == 'PHAMACISTS') {
                         $member = 'Dược sỹ';
                     } elseif (Auth::user()->member == 'HOSPITALS') {
                         $member = 'Chủ Bệnh viện';
-                    } elseif(Auth::user()->member == 'CLINICS') {
+                    } elseif (Auth::user()->member == 'CLINICS') {
                         $member = 'chủ phòng khám';
+                    }elseif (Auth::user()->member == 'PHARMACIES') {
+                        $member = 'Nhà thuốc';
                     } else {
                          $member = 'Người dùng';
                     }
