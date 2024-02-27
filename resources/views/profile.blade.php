@@ -158,6 +158,8 @@
                         $member = 'Chủ Bệnh viện';
                     } elseif(Auth::user()->member == 'CLINICS') {
                         $member = 'chủ phòng khám';
+                    } else {
+                         $member = 'Người dùng';
                     }
                 @endphp
                 <div class="card-header py-3">
