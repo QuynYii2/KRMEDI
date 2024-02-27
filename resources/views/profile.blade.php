@@ -132,6 +132,14 @@
                 </div>
             </div>
 
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <h3 class="text-center bold">My QrCode</h3>
+                    <div class="text-center">
+                        {!! $qrCodes !!}
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="col-lg-8 order-lg-1">

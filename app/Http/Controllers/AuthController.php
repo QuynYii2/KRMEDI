@@ -215,6 +215,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         try {
+            $callback_url = $request->input('call_back_url');
             $loginRequest = $request->input('email');
             $password = $request->input('password');
 
@@ -273,6 +274,10 @@ class AuthController extends Controller
 
                 $role_user = DB::table('role_users')->where('user_id', $user->id)->first();
                 $roleNames = Role::where('id', $role_user->role_id)->pluck('name');
+
+                if ($callback_url) {
+                    return redirect($callback_url);
+                }
 
                 if ($roleNames->contains('DOCTORS') || $roleNames->contains('PHAMACISTS') || $roleNames->contains('THERAPISTS') || $roleNames->contains('ESTHETICIANS') || $roleNames->contains('NURSES') || $roleNames->contains('PHARMACEUTICAL COMPANIES') || $roleNames->contains('HOSPITALS') || $roleNames->contains('CLINICS') || $roleNames->contains('PHARMACIES') || $roleNames->contains('SPAS') || $roleNames->contains('OTHERS') || $roleNames->contains('ADMIN')) {
                     return redirect(route('admin.home'));

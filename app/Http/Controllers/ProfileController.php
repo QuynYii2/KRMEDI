@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use QrCode;
 
 class ProfileController extends Controller
 {
@@ -31,8 +32,10 @@ class ProfileController extends Controller
         $nations = Nation::all();
         $doctor = User::where('id', Auth::user()->id)->first();
         $departments = DoctorDepartment::where('status', DoctorDepartmentStatus::ACTIVE)->get();
-        return view('profile',
-            compact('roles', 'roleItem', 'isAdmin', 'socialUser', 'nations', 'doctor', 'departments'));
+        $url = route('web.users.my.bookings.detail', Auth::user()->id);
+        $qrCodes = QrCode::size(300)->generate($url);
+        return view('profile', compact('roles', 'roleItem', 'isAdmin',
+            'socialUser', 'nations', 'doctor', 'departments', 'qrCodes'));
     }
 
     public function infoUser($userId)
