@@ -1,4 +1,4 @@
-<div class="p-3 border">
+<div class="p-3 m-2 border">
     <div class="row">
         @php
             $clinic = \App\Models\Clinic::find($booking->clinic_id);
@@ -52,12 +52,5 @@
                 <input disabled type="text" class="form-control" id="member_family_id" value="{{ $family->name }}">
             </div>
         @endif
-    </div>
-    <div class="form-group">
-        <input disabled class="form-check-input" {{ $booking->is_result == 1 ? 'checked' : '' }} type="checkbox"
-               id="is_result">
-        <label class="form-check-label" for="is_result">
-            Result
-        </label>
     </div>
 </div>

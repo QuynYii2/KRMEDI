@@ -296,17 +296,16 @@ class UserApi extends Controller
     {
         $bookings = null;
         $now = Carbon::now()->addHours(7);
-        $startDay = Carbon::parse($now)->startOfDay();
-        $endDay = Carbon::parse($now)->endOfDay();
+        $startDay = $now->copy()->startOfDay();
+        $endDay = $now->copy()->endOfDay();
+
         if (Auth::check()) {
             $business = Clinic::where('user_id', Auth::user()->id)->first();
             if ($business){
                 $bookings = Booking::where('clinic_id', $business->id)
                     ->where('user_id', $id)
-                    ->where('status', BookingStatus::PENDING)
-                    ->orWhere('status', BookingStatus::APPROVED)
-                    ->where('check_in', '>=', $startDay)
-                    ->where('check_in', '=<', $endDay)
+                    ->whereIn('status', [BookingStatus::PENDING, BookingStatus::APPROVED])
+                    ->whereBetween('check_in', [$startDay, $endDay])
                     ->orderBy('id', 'desc')
                     ->get();
             }
