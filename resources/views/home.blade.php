@@ -1600,7 +1600,13 @@
                         <div>
                             <img src="{{$newEvens->first()->thumbnail}}" class="krm-img-news" alt="??">
                         </div>
-                        <div class="krm-title-news">{!! $newEvens->first()->title !!}</div>
+                        <div class="krm-title-news">
+                            @if(locationHelper() == 'vi')
+                                {!! $newEvens->first()->title !!}
+                            @else
+                                {!! $newEvens->first()->title_en !!}
+                            @endif
+                        </div>
                     </a>
 
                 </div>
@@ -1610,8 +1616,19 @@
                         <div class="d-flex mb-3">
                             <div class="col-md-4"><img src="{{$news->thumbnail}}" alt="11" class="krm-img-sub-news"></div>
                             <div class="col-md-8 p-0">
-                                <div class="krm-title-sub-news">{!! $news->title !!}</div>
-                                <div class="krm-description-sub-news">{!! $news->short_description !!}</div>
+                                <div class="krm-title-sub-news">
+                                    @if(locationHelper() == 'vi')
+                                        {!! $news->title !!}
+                                    @else
+                                        {!! $news->title_en !!}
+                                    @endif</div>
+                                <div class="krm-description-sub-news">
+                                    @if(locationHelper() == 'vi')
+                                        {!! $news->short_description !!}
+                                    @else
+                                        {!! $news->short_description_en !!}
+                                    @endif
+                                </div>
                             </div>
                         </div>
                         </a>
