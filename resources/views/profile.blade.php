@@ -150,9 +150,13 @@
                        $member = 'Người dùng';
                     } elseif (Auth::user()->member == 'DOCTORS') {
                         $member = 'Bác sĩ';
-                    } elseif (Auth::user()->member == 'HOSPITALS') {
+                    }
+                    elseif (Auth::user()->$member == 'PHAMACISTS') {
+                        $member = 'Dược sỹ';
+                    }
+                    elseif (Auth::user()->member == 'HOSPITALS') {
                         $member = 'Chủ Bệnh viện';
-                    } else {
+                    } elseif(Auth::user()->member == 'CLINICS') {
                         $member = 'chủ phòng khám';
                     }
                 @endphp
@@ -167,7 +171,8 @@
                             {{$member}}
                         @else
                             ADMIN
-                        @endif</h6>
+                        @endif
+                    </h6>
                 </div>
 
                 <div class="card-body">
