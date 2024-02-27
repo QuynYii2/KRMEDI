@@ -145,7 +145,6 @@
         <div class="col-lg-8 order-lg-1">
 
             <div class="card shadow mb-4">
-                @dd(Auth::user())
                 @php
                     if (Auth::user()->member == 'PAITENTS') {
                        $member = 'Người dùng';
