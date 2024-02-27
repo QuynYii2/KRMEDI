@@ -147,7 +147,7 @@
             <div class="card shadow mb-4">
                 @dd(Auth::user())
                 @php
-                    if (Auth::user()->member == 'NORMAL') {
+                    if (Auth::user()->member == 'PAITENTS') {
                        $member = 'Người dùng';
                     } elseif (Auth::user()->member == 'DOCTORS') {
                         $member = 'Bác sĩ';
