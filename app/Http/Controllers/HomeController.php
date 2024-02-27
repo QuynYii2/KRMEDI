@@ -6,6 +6,7 @@ use App\Enums\BookingStatus;
 use App\Enums\CouponApplyStatus;
 use App\Enums\CouponStatus;
 use App\Enums\MessageStatus;
+use App\Enums\NewEventStatus;
 use App\Enums\online_medicine\OnlineMedicineStatus;
 use App\Enums\ProductStatus;
 use App\Enums\ReviewStatus;
@@ -17,6 +18,7 @@ use App\Models\Chat;
 use App\Models\Clinic;
 use App\Models\Coupon;
 use App\Models\CouponApply;
+use App\Models\NewEvent;
 use App\Models\online_medicine\ProductMedicine;
 use App\Models\ProductInfo;
 use App\Models\Question;
@@ -39,7 +41,8 @@ class HomeController extends Controller
             setCookie('accessToken', null);
         }
         $coupons = Coupon::where('status', CouponStatus::ACTIVE)->paginate(6);
-        $products = ProductMedicine::where('status', OnlineMedicineStatus::APPROVED)->paginate(12);
+        $products = ProductMedicine::where('status', OnlineMedicineStatus::APPROVED)->orderBy('id',
+            'desc')->paginate(4);
         $productsFlea = ProductInfo::where('status', ProductStatus::ACTIVE)->get();
         $medicines = ProductMedicine::where('product_medicines.status', OnlineMedicineStatus::APPROVED)
             ->leftJoin('users', 'product_medicines.user_id', '=', 'users.id')
@@ -50,7 +53,8 @@ class HomeController extends Controller
         $questions = Question::withCount('answers')->where('status', QuestionStatus::APPROVED)->orderBy('answers_count',
             'desc') // Order by answer_count in descending order
         ->take(5)->get();
-        return view('home', compact('coupons', 'products', 'medicines', 'productsFlea', 'questions'));
+        $newEvens = NewEvent::where('status', NewEventStatus::ACTIVE)->orderBy('id', 'desc')->limit(4)->get();
+        return view('home', compact('coupons', 'products', 'medicines', 'productsFlea', 'questions', 'newEvens'));
     }
 
     public function specialist()

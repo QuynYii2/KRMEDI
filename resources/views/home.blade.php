@@ -140,7 +140,7 @@
     @include('layouts.partials.header')
 
     <script src="{{ asset('build/assets/app.dba56e22.js') }}"></script>
-    <div class="container d-flex pb-md-5 mt-200 mt-70">
+    <div class="container d-md-flex pb-md-5 mt-200 mt-70">
         <div class="col-md-6 justify-content-center d-flex">
             <div class="slide-container position-relative">
                 <div class="slide">
@@ -176,7 +176,7 @@
         </div>
         <div class="col-md-6">
             <div class="mainServiceHomeNew row">
-                <div class="col-md-4">
+                <div class="mb-md-3 col-6 col-md-4">
                     <a href="#">
                         <div class="border-HomeNew align-items-center justify-content-center">
                             <div class="">
@@ -285,7 +285,7 @@
                         </div>
                     </a>
                 </div>
-                <div class="col-md-4">
+                <div class="mb-md-3 col-6 col-md-4">
                     <a href="{{route('home.specialist')}}">
                         <div class="border-HomeNew align-items-center justify-content-center">
                             <div class="">
@@ -511,7 +511,7 @@
                         </div>
                     </a>
                 </div>
-                <div class="col-md-4">
+                <div class="mb-md-3 col-6 col-md-4">
                     <a href="{{route('medicine')}}">
                         <div class="border-HomeNew align-items-center justify-content-center">
                             <div class="">
@@ -802,7 +802,7 @@
                         </div>
                     </a>
                 </div>
-                <div class="col-md-4">
+                <div class="mb-md-3 col-6 col-md-4">
                     <a href="{{route('examination.mentoring')}}">
                         <div class="border-HomeNew align-items-center justify-content-center">
                             <div class="">
@@ -841,7 +841,7 @@
                         </div>
                     </a>
                 </div>
-                <div class="col-md-4">
+                <div class="mb-md-3 col-6 col-md-4">
                     <a href="{{route('clinic')}}">
                         <div class="border-HomeNew align-items-center justify-content-center">
                             <div class="">
@@ -1032,8 +1032,8 @@
                         </div>
                     </a>
                 </div>
-                <div class="col-md-4">
-                    <a href="{{ route('examination.index') }}">
+                <div class="mb-md-3 col-6 col-md-4">
+                    <a href="{{ route('home.specialist') }}">
                         <div class="border-HomeNew align-items-center justify-content-center">
                             <div class="">
                                 <div class="d-flex justify-content-center krm-select-bt">
@@ -1315,9 +1315,7 @@
                             $doctors = \App\Models\User::where('member', \App\Enums\TypeUser::DOCTORS)->paginate(12);
                         @endphp
                         <div class="row">
-
                             @foreach($doctors as $doctor)
-                                {{--                                @dd($doctor)--}}
                                 @if($doctor == '')
                                     <h1 class="d-flex align-items-center justify-content-center mt-4">{{ __('home.null') }}</h1>
                                 @else
@@ -1333,7 +1331,7 @@
                                     <div class="col-md-3 col-6">
                                         <div class="">
                                             <div class="product-item">
-                                                <div class="img-pro justify-content-center d-flex">
+                                                <div style="min-height: 170px" class="img-pro justify-content-center d-flex">
                                                     <img loading="lazy" src="{{$doctor->avt}}" alt="">
                                                     <a class="button-heart button-doctor-heart"
                                                        data-doctor="{{$doctor->id}}"
@@ -1439,7 +1437,7 @@
                         @php
                             $showDesktop = $index > 5;
                         @endphp
-                        <div class="col-md-2 p-2 d-none {{ $showDesktop == true ? 'd-md-block' : 'd-sm-block' }}">
+                        <div class="col-md-2 col-6 p-2 d-none {{ $showDesktop == true ? 'd-md-block' : 'd-sm-block' }}">
                             <a href="{{route('home.specialist.department',$departmentItem->id)}}">
                                 <div class="align-items-center krm-border-chuyen-khoa">
                                     <div class="d-flex justify-content-center align-content-center krm-img-chuyen-khoa">
@@ -1484,49 +1482,140 @@
                                 Lorem ipsum dolor sit amet consecte tur adipiscing elit semper dalaracc lacus vel facilisis volutpat est velitolm.
                             </div>
                             <style>
-                                #arrow-container {
-                                    position: relative;
-                                    display: inline-block;
-                                    cursor: pointer;
-                                }
 
-                                .arrow {
-                                    position: absolute;
-                                    top: 50%;
-                                    left: 0;
-                                    transform: translateY(-50%);
-                                    font-size: 20px;
-                                    color: #383736;
-                                    transition: 0.2s ease-in;
-                                }
-
-                                .line {
-                                    position: absolute;
-                                    top: 50%;
-                                    left: 20px;
-                                    width: 0;
-                                    height: 2px;
-                                    background-color: #383736;
-                                    transition: 0.2s ease-in;
-                                }
-
-                                #arrow-container:hover .arrow {
-                                    left: 10px;
-                                }
-
-                                #arrow-container:hover .line {
-                                    width: 20px;
-                                }
                             </style>
-                            <div>
-                                Learn more <a id="arrow-container">
-                                    <span class="arrow">⟶</span>
+                            <div class="d-flex align-content-center">
+                                <div class="show-learn-more">Learn more</div> <a id="arrow-container" class="ml-2">
                                     <span class="line"></span>
+                                    <span class="arrow">⟶</span>
                                 </a>
                             </div>
 
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="container pb-5 mt-4">
+            <div id="recruitment-homeNew">
+                <div class="title-recruitment--homeNew">
+                    <div class="krm-title-recruitment">{{ __('home.Buy online') }}</div>
+                    <div class="space-gach">|</div>
+                    <a href="{{route('medicine')}}">{{ __('home.See all') }} <i class="fa-solid fa-chevron-right pl-2"></i></a>
+                </div>
+                <div class="tab-pane fade show active" id="popularProduct" role="tabpanel"
+                     aria-labelledby="popularProduct-tab">
+                    <div class="row">
+                        @if($products == '')
+                            <h1 class="d-flex align-items-center justify-content-center mt-4">{{ __('home.null') }}</h1>
+                        @else
+                            @foreach($products as $product)
+                                @php
+                                    $isFavourite = null;
+                                    if (Auth::check()){
+                                        $isFavourite = \App\Models\WishList::where('user_id', Auth::user()->id)
+                                                            ->where('product_id', $product->id)
+                                                            ->where('type_product', \App\Enums\TypeProductCart::MEDICINE)
+                                                            ->first();
+                                    }
+                                    $class = !$isFavourite ? 'bi-heart' : 'bi-heart-fill text-danger';
+                                            $isSoldOut = $product->quantity == 0;
+                                @endphp
+                                <div class="col-md-3 col-6">
+                                    <div class="">
+                                        <div class="product-item {{ $isSoldOut ? 'sold-out-overlay' : '' }} krm-hover-buy-online">
+                                            <div class="img-pro justify-content-center d-flex img_product--homeNew">
+                                                <img style="min-height: 169px;" loading="lazy" src="{{$product->thumbnail}}" alt="">
+                                                <a class="button-heart button-product-heart"
+                                                   data-product="{{$product->id}}"
+                                                   data-isFavourite="{{ $isFavourite ? 1 : 0 }}">
+                                                    <i class="bi {{ $class }}"></i>
+                                                </a>
+                                                <div class="{{ $isSoldOut ? 'sold-out-overlay-text' : 'd-none' }} ">
+                                                    <h1 class="sold-out">{{__('home.Sold Out')}}</h1>
+                                                </div>
+                                            </div>
+                                            <div class="content-pro p-md-3 p-2">
+                                                <div class="">
+                                                    <div class="name-product" style="height: auto">
+                                                        <a class="name-product--fleaMarket max-3-line-content"
+                                                           href="{{ route('medicine.detail', $product->id) }}">{{$product->name}}</a>
+                                                    </div>
+                                                    <div class="location-pro">
+                                                        @php
+                                                            if (locationHelper() == 'vi'){
+                                                                $addressP = Province::find($product->province_id)->name ?? 'Ha Noi';
+                                                            } else{
+                                                                $addressP = Province::find($product->province_id)->name_en ?? 'Ha Noi';
+                                                            }
+                                                        @endphp
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="21"
+                                                             height="21" viewBox="0 0 21 21" fill="none">
+                                                            <g clip-path="url(#clip0_5506_14919)">
+                                                                <path
+                                                                    d="M4.66602 12.8382C3.12321 13.5188 2.16602 14.4673 2.16602 15.5163C2.16602 17.5873 5.89698 19.2663 10.4993 19.2663C15.1017 19.2663 18.8327 17.5873 18.8327 15.5163C18.8327 14.4673 17.8755 13.5188 16.3327 12.8382M15.4993 7.59961C15.4993 10.986 11.7493 12.5996 10.4993 15.0996C9.24935 12.5996 5.49935 10.986 5.49935 7.59961C5.49935 4.83819 7.73793 2.59961 10.4993 2.59961C13.2608 2.59961 15.4993 4.83819 15.4993 7.59961ZM11.3327 7.59961C11.3327 8.05985 10.9596 8.43294 10.4993 8.43294C10.0391 8.43294 9.66602 8.05985 9.66602 7.59961C9.66602 7.13937 10.0391 6.76628 10.4993 6.76628C10.9596 6.76628 11.3327 7.13937 11.3327 7.59961Z"
+                                                                    stroke="white" stroke-width="2"
+                                                                    stroke-linecap="round"
+                                                                    stroke-linejoin="round"/>
+                                                            </g>
+                                                            <defs>
+                                                                <clipPath id="clip0_5506_14919">
+                                                                    <rect width="20" height="20" fill="white"
+                                                                          transform="translate(0.5 0.933594)"/>
+                                                                </clipPath>
+                                                            </defs>
+                                                        </svg> &nbsp; {{$addressP}}
+                                                    </div>
+                                                    <div class="prices-pro">
+                                                        {{number_format($product->price, 0, ',', '.') }} {{$product->price_unit ?? 'VND'}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-end">
+                                                <div class="SeeDetail">
+                                                    <a href="{{ route('flea.market.product.detail', $product->id) }}"
+                                                       target="_blank">{{ __('home.See details') }}</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container pb-5 mt-4">
+        <div id="recruitment-homeNew">
+            <div class="title-recruitment--homeNew">
+                <div class="krm-title-recruitment text-black">{{ __('home.Recruitment') }}</div>
+                <div class="space-gach text-black">|</div>
+                <a class="mau-chu-dao" href="{{route('index.new')}}">{{ __('home.See all') }} <i class="fa-solid fa-chevron-right pl-2 mau-chu-dao"></i></a>
+            </div>
+            <div class="d-md-flex main-recruitment--homeNew justify-content-between">
+                <div class="col-md-7 p-0">
+                    <a href="{{route('detail.new',$newEvens->first()->id)}}">
+                        <div>
+                            <img src="{{$newEvens->first()->thumbnail}}" class="krm-img-news" alt="??">
+                        </div>
+                        <div class="krm-title-news">{!! $newEvens->first()->title !!}</div>
+                    </a>
+
+                </div>
+                <div class="col-md-5">
+                    @foreach($newEvens as $news)
+                        <a href="{{route('detail.new',$news->id)}}">
+                        <div class="d-flex mb-3">
+                            <div class="col-md-4"><img src="{{$news->thumbnail}}" alt="11" class="krm-img-sub-news"></div>
+                            <div class="col-md-8 p-0">
+                                <div class="krm-title-sub-news">{!! $news->title !!}</div>
+                                <div class="krm-description-sub-news">{!! $news->short_description !!}</div>
+                            </div>
+                        </div>
+                        </a>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -1689,625 +1778,625 @@
         </div>
     </div>
 
-    <div class="">
-        <div class="background-image_HomeNew" id="find-doctor--homeNew">
-            <div class="container pb-5 mt-4">
-                <div class="pc-hidden tt-flea">
-                    Flea market
-                </div>
-                <div class="carousel pc-hidden">
-                    @foreach($productsFlea as $product)
-                        <div class="product-itemFlea">
-                            <div class="img-proFlea justify-content-center d-flex">
-                                <img loading="lazy" src="{{$product->thumbnail}}" alt="">
-                                <a class="button-heart" data-favorite="0">
-                                    <i class="bi-heart bi"
-                                       data-product-id="${product.id}"
-                                       onclick="addProductToWishList(${product.id})"></i>
-                                </a>
-                            </div>
-                            <div class="content-proFlea p-md-3 p-2">
-                                <div class="">
-                                    <div class="name-productFlea" style="min-height: 55px">
-                                        <a class="name-product--fleaMarket max-3-line-content"
-                                           href="{{ route('flea.market.product.detail', $product->id) }}"
-                                           target="_blank">
-                                            @if(locationHelper() == 'vi')
-                                                {{ ($product->name ?? __('home.no name') ) }}
-                                            @else
-                                                {{ ($product->name_en  ?? __('home.no name') ) }}
-                                            @endif</a>
-                                    </div>
-                                    <div class="location-proFlea">
-                                        @php
-                                            if (locationHelper() == 'vi'){
-                                                $addressP = Province::find($product->province_id)->name ?? 'Ha Noi';
-                                            } else{
-                                                $addressP = Province::find($product->province_id)->name_en ?? 'Ha Noi';
-                                            }
-                                        @endphp
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="21"
-                                             height="21" viewBox="0 0 21 21" fill="none">
-                                            <g clip-path="url(#clip0_5506_14919)">
-                                                <path
-                                                    d="M4.66602 12.8382C3.12321 13.5188 2.16602 14.4673 2.16602 15.5163C2.16602 17.5873 5.89698 19.2663 10.4993 19.2663C15.1017 19.2663 18.8327 17.5873 18.8327 15.5163C18.8327 14.4673 17.8755 13.5188 16.3327 12.8382M15.4993 7.59961C15.4993 10.986 11.7493 12.5996 10.4993 15.0996C9.24935 12.5996 5.49935 10.986 5.49935 7.59961C5.49935 4.83819 7.73793 2.59961 10.4993 2.59961C13.2608 2.59961 15.4993 4.83819 15.4993 7.59961ZM11.3327 7.59961C11.3327 8.05985 10.9596 8.43294 10.4993 8.43294C10.0391 8.43294 9.66602 8.05985 9.66602 7.59961C9.66602 7.13937 10.0391 6.76628 10.4993 6.76628C10.9596 6.76628 11.3327 7.13937 11.3327 7.59961Z"
-                                                    stroke="white" stroke-width="2"
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"/>
-                                            </g>
-                                            <defs>
-                                                <clipPath id="clip0_5506_14919">
-                                                    <rect width="20" height="20" fill="white"
-                                                          transform="translate(0.5 0.933594)"/>
-                                                </clipPath>
-                                            </defs>
-                                        </svg> &nbsp; {{$addressP}}
-                                    </div>
-                                    <div class="prices-proFlea">
-                                        {{number_format($product->price, 0, ',', '.') }} {{$product->price_unit ?? 'VND'}}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-end">
-                                <div class="SeeDetailFlea">
-                                    <a href="{{ route('flea.market.product.detail', $product->id) }}"
-                                       target="_blank">{{ __('home.See details') }}</a>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
+{{--    <div class="">--}}
+{{--        <div class="background-image_HomeNew" id="find-doctor--homeNew">--}}
+{{--            <div class="container pb-5 mt-4">--}}
+{{--                <div class="pc-hidden tt-flea">--}}
+{{--                    Flea market--}}
+{{--                </div>--}}
+{{--                <div class="carousel pc-hidden">--}}
+{{--                    @foreach($productsFlea as $product)--}}
+{{--                        <div class="product-itemFlea">--}}
+{{--                            <div class="img-proFlea justify-content-center d-flex">--}}
+{{--                                <img loading="lazy" src="{{$product->thumbnail}}" alt="">--}}
+{{--                                <a class="button-heart" data-favorite="0">--}}
+{{--                                    <i class="bi-heart bi"--}}
+{{--                                       data-product-id="${product.id}"--}}
+{{--                                       onclick="addProductToWishList(${product.id})"></i>--}}
+{{--                                </a>--}}
+{{--                            </div>--}}
+{{--                            <div class="content-proFlea p-md-3 p-2">--}}
+{{--                                <div class="">--}}
+{{--                                    <div class="name-productFlea" style="min-height: 55px">--}}
+{{--                                        <a class="name-product--fleaMarket max-3-line-content"--}}
+{{--                                           href="{{ route('flea.market.product.detail', $product->id) }}"--}}
+{{--                                           target="_blank">--}}
+{{--                                            @if(locationHelper() == 'vi')--}}
+{{--                                                {{ ($product->name ?? __('home.no name') ) }}--}}
+{{--                                            @else--}}
+{{--                                                {{ ($product->name_en  ?? __('home.no name') ) }}--}}
+{{--                                            @endif</a>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="location-proFlea">--}}
+{{--                                        @php--}}
+{{--                                            if (locationHelper() == 'vi'){--}}
+{{--                                                $addressP = Province::find($product->province_id)->name ?? 'Ha Noi';--}}
+{{--                                            } else{--}}
+{{--                                                $addressP = Province::find($product->province_id)->name_en ?? 'Ha Noi';--}}
+{{--                                            }--}}
+{{--                                        @endphp--}}
+{{--                                        <svg xmlns="http://www.w3.org/2000/svg" width="21"--}}
+{{--                                             height="21" viewBox="0 0 21 21" fill="none">--}}
+{{--                                            <g clip-path="url(#clip0_5506_14919)">--}}
+{{--                                                <path--}}
+{{--                                                    d="M4.66602 12.8382C3.12321 13.5188 2.16602 14.4673 2.16602 15.5163C2.16602 17.5873 5.89698 19.2663 10.4993 19.2663C15.1017 19.2663 18.8327 17.5873 18.8327 15.5163C18.8327 14.4673 17.8755 13.5188 16.3327 12.8382M15.4993 7.59961C15.4993 10.986 11.7493 12.5996 10.4993 15.0996C9.24935 12.5996 5.49935 10.986 5.49935 7.59961C5.49935 4.83819 7.73793 2.59961 10.4993 2.59961C13.2608 2.59961 15.4993 4.83819 15.4993 7.59961ZM11.3327 7.59961C11.3327 8.05985 10.9596 8.43294 10.4993 8.43294C10.0391 8.43294 9.66602 8.05985 9.66602 7.59961C9.66602 7.13937 10.0391 6.76628 10.4993 6.76628C10.9596 6.76628 11.3327 7.13937 11.3327 7.59961Z"--}}
+{{--                                                    stroke="white" stroke-width="2"--}}
+{{--                                                    stroke-linecap="round"--}}
+{{--                                                    stroke-linejoin="round"/>--}}
+{{--                                            </g>--}}
+{{--                                            <defs>--}}
+{{--                                                <clipPath id="clip0_5506_14919">--}}
+{{--                                                    <rect width="20" height="20" fill="white"--}}
+{{--                                                          transform="translate(0.5 0.933594)"/>--}}
+{{--                                                </clipPath>--}}
+{{--                                            </defs>--}}
+{{--                                        </svg> &nbsp; {{$addressP}}--}}
+{{--                                    </div>--}}
+{{--                                    <div class="prices-proFlea">--}}
+{{--                                        {{number_format($product->price, 0, ',', '.') }} {{$product->price_unit ?? 'VND'}}--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                            <div class="d-flex justify-content-end">--}}
+{{--                                <div class="SeeDetailFlea">--}}
+{{--                                    <a href="{{ route('flea.market.product.detail', $product->id) }}"--}}
+{{--                                       target="_blank">{{ __('home.See details') }}</a>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    @endforeach--}}
+{{--                </div>--}}
 
-                <div class="tab-content mt-4 header-pc" id="myTabContent">
-                    <div class="tab-pane fade show active" id="popularProduct" role="tabpanel"
-                         aria-labelledby="popularProduct-tab">
-                        <div id="cCarousel">
-                            <div style="z-index: 0;" class="arrow" id="prevFlea"><i
-                                    class="fa-solid fa-chevron-left"></i></div>
-                            <div style="z-index: 0;" class="arrow" id="nextFlea"><i
-                                    class="fa-solid fa-chevron-right"></i></div>
-                            <div id="carousel-vp">
-                                <div id="cCarousel-inner">
-                                    @if($productsFlea == '')
-                                        <h1 class="d-flex align-items-center justify-content-center mt-4">{{ __('home.null') }}</h1>
-                                    @else
-                                        @foreach($productsFlea as $product)
-                                            @php
-                                                $isFavourite = null;
-                                                if (Auth::check()){
-                                                    $isFavourite = \App\Models\WishList::where('user_id', Auth::user()->id)
-                                                                        ->where('product_id', $product->id)
-                                                                        ->where('type_product', \App\Enums\TypeProductCart::FLEA_MARKET)
-                                                                        ->first();
-                                                }
+{{--                <div class="tab-content mt-4 header-pc" id="myTabContent">--}}
+{{--                    <div class="tab-pane fade show active" id="popularProduct" role="tabpanel"--}}
+{{--                         aria-labelledby="popularProduct-tab">--}}
+{{--                        <div id="cCarousel">--}}
+{{--                            <div style="z-index: 0;" class="arrow" id="prevFlea"><i--}}
+{{--                                    class="fa-solid fa-chevron-left"></i></div>--}}
+{{--                            <div style="z-index: 0;" class="arrow" id="nextFlea"><i--}}
+{{--                                    class="fa-solid fa-chevron-right"></i></div>--}}
+{{--                            <div id="carousel-vp">--}}
+{{--                                <div id="cCarousel-inner">--}}
+{{--                                    @if($productsFlea == '')--}}
+{{--                                        <h1 class="d-flex align-items-center justify-content-center mt-4">{{ __('home.null') }}</h1>--}}
+{{--                                    @else--}}
+{{--                                        @foreach($productsFlea as $product)--}}
+{{--                                            @php--}}
+{{--                                                $isFavourite = null;--}}
+{{--                                                if (Auth::check()){--}}
+{{--                                                    $isFavourite = \App\Models\WishList::where('user_id', Auth::user()->id)--}}
+{{--                                                                        ->where('product_id', $product->id)--}}
+{{--                                                                        ->where('type_product', \App\Enums\TypeProductCart::FLEA_MARKET)--}}
+{{--                                                                        ->first();--}}
+{{--                                                }--}}
 
-                                                $class = !$isFavourite ? 'bi-heart' : 'bi-heart-fill text-danger';
-                                                $isSoldOut = $product->quantity == 0
-                                            @endphp
-                                            <div class="cCarousel-item {{ $isSoldOut ? 'sold-out-overlay' : '' }}">
-                                                <div class="product-item">
-                                                    <div
-                                                        class="img-pro justify-content-center h-auto d-flex img_product--homeNew">
-                                                        <img loading="lazy" src="{{$product->thumbnail}}" alt="">
-                                                        <a class="button-heart button-flea-market-heart"
-                                                           data-product="{{$product->id}}"
-                                                           data-isFavourite="{{ $isFavourite ? 1 : 0 }}">
-                                                            <i class="bi {{ $class }}"></i>
-                                                        </a>
-                                                        <div
-                                                            class="{{ $isSoldOut ? 'sold-out-overlay-text' : 'd-none' }} ">
-                                                            <h1 class="sold-out">{{__('home.Sold Out')}}</h1>
-                                                        </div>
-                                                    </div>
-                                                    <div class="content-pro p-md-3 p-2">
-                                                        <div class="">
-                                                            <div class="name-product" style="min-height: 48px">
-                                                                <a class="name-product--fleaMarket max-3-line-content"
-                                                                   href="{{ route('flea.market.product.detail', $product->id) }}">{{$product->name}}</a>
-                                                            </div>
-                                                            <div class="location-pro">
-                                                                @php
-                                                                    if (locationHelper() == 'vi'){
-                                                                    $addressP = Province::find($product->province_id)->name ?? 'Ha Noi';
-                                                                } else{
-                                                                    $addressP = Province::find($product->province_id)->name_en ?? 'Ha Noi';
-                                                                }
-                                                                @endphp
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="21"
-                                                                     height="21" viewBox="0 0 21 21" fill="none">
-                                                                    <g clip-path="url(#clip0_5506_14919)">
-                                                                        <path
-                                                                            d="M4.66602 12.8382C3.12321 13.5188 2.16602 14.4673 2.16602 15.5163C2.16602 17.5873 5.89698 19.2663 10.4993 19.2663C15.1017 19.2663 18.8327 17.5873 18.8327 15.5163C18.8327 14.4673 17.8755 13.5188 16.3327 12.8382M15.4993 7.59961C15.4993 10.986 11.7493 12.5996 10.4993 15.0996C9.24935 12.5996 5.49935 10.986 5.49935 7.59961C5.49935 4.83819 7.73793 2.59961 10.4993 2.59961C13.2608 2.59961 15.4993 4.83819 15.4993 7.59961ZM11.3327 7.59961C11.3327 8.05985 10.9596 8.43294 10.4993 8.43294C10.0391 8.43294 9.66602 8.05985 9.66602 7.59961C9.66602 7.13937 10.0391 6.76628 10.4993 6.76628C10.9596 6.76628 11.3327 7.13937 11.3327 7.59961Z"
-                                                                            stroke="white" stroke-width="2"
-                                                                            stroke-linecap="round"
-                                                                            stroke-linejoin="round"/>
-                                                                    </g>
-                                                                    <defs>
-                                                                        <clipPath id="clip0_5506_14919">
-                                                                            <rect width="20" height="20" fill="white"
-                                                                                  transform="translate(0.5 0.933594)"/>
-                                                                        </clipPath>
-                                                                    </defs>
-                                                                </svg> &nbsp; {{$addressP}}
-                                                            </div>
-                                                            <div class="prices-pro">
-                                                                {{number_format($product->price, 0, ',', '.') }} {{$product->price_unit ?? 'VND'}}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="d-flex justify-content-end">
-                                                        <div class="SeeDetail">
-                                                            <a href="{{ route('flea.market.product.detail', $product->id) }}"
-                                                               target="_blank">{{ __('home.See details') }}</a>
-                                                        </div>
-                                                    </div>
+{{--                                                $class = !$isFavourite ? 'bi-heart' : 'bi-heart-fill text-danger';--}}
+{{--                                                $isSoldOut = $product->quantity == 0--}}
+{{--                                            @endphp--}}
+{{--                                            <div class="cCarousel-item {{ $isSoldOut ? 'sold-out-overlay' : '' }}">--}}
+{{--                                                <div class="product-item">--}}
+{{--                                                    <div--}}
+{{--                                                        class="img-pro justify-content-center h-auto d-flex img_product--homeNew">--}}
+{{--                                                        <img loading="lazy" src="{{$product->thumbnail}}" alt="">--}}
+{{--                                                        <a class="button-heart button-flea-market-heart"--}}
+{{--                                                           data-product="{{$product->id}}"--}}
+{{--                                                           data-isFavourite="{{ $isFavourite ? 1 : 0 }}">--}}
+{{--                                                            <i class="bi {{ $class }}"></i>--}}
+{{--                                                        </a>--}}
+{{--                                                        <div--}}
+{{--                                                            class="{{ $isSoldOut ? 'sold-out-overlay-text' : 'd-none' }} ">--}}
+{{--                                                            <h1 class="sold-out">{{__('home.Sold Out')}}</h1>--}}
+{{--                                                        </div>--}}
+{{--                                                    </div>--}}
+{{--                                                    <div class="content-pro p-md-3 p-2">--}}
+{{--                                                        <div class="">--}}
+{{--                                                            <div class="name-product" style="min-height: 48px">--}}
+{{--                                                                <a class="name-product--fleaMarket max-3-line-content"--}}
+{{--                                                                   href="{{ route('flea.market.product.detail', $product->id) }}">{{$product->name}}</a>--}}
+{{--                                                            </div>--}}
+{{--                                                            <div class="location-pro">--}}
+{{--                                                                @php--}}
+{{--                                                                    if (locationHelper() == 'vi'){--}}
+{{--                                                                    $addressP = Province::find($product->province_id)->name ?? 'Ha Noi';--}}
+{{--                                                                } else{--}}
+{{--                                                                    $addressP = Province::find($product->province_id)->name_en ?? 'Ha Noi';--}}
+{{--                                                                }--}}
+{{--                                                                @endphp--}}
+{{--                                                                <svg xmlns="http://www.w3.org/2000/svg" width="21"--}}
+{{--                                                                     height="21" viewBox="0 0 21 21" fill="none">--}}
+{{--                                                                    <g clip-path="url(#clip0_5506_14919)">--}}
+{{--                                                                        <path--}}
+{{--                                                                            d="M4.66602 12.8382C3.12321 13.5188 2.16602 14.4673 2.16602 15.5163C2.16602 17.5873 5.89698 19.2663 10.4993 19.2663C15.1017 19.2663 18.8327 17.5873 18.8327 15.5163C18.8327 14.4673 17.8755 13.5188 16.3327 12.8382M15.4993 7.59961C15.4993 10.986 11.7493 12.5996 10.4993 15.0996C9.24935 12.5996 5.49935 10.986 5.49935 7.59961C5.49935 4.83819 7.73793 2.59961 10.4993 2.59961C13.2608 2.59961 15.4993 4.83819 15.4993 7.59961ZM11.3327 7.59961C11.3327 8.05985 10.9596 8.43294 10.4993 8.43294C10.0391 8.43294 9.66602 8.05985 9.66602 7.59961C9.66602 7.13937 10.0391 6.76628 10.4993 6.76628C10.9596 6.76628 11.3327 7.13937 11.3327 7.59961Z"--}}
+{{--                                                                            stroke="white" stroke-width="2"--}}
+{{--                                                                            stroke-linecap="round"--}}
+{{--                                                                            stroke-linejoin="round"/>--}}
+{{--                                                                    </g>--}}
+{{--                                                                    <defs>--}}
+{{--                                                                        <clipPath id="clip0_5506_14919">--}}
+{{--                                                                            <rect width="20" height="20" fill="white"--}}
+{{--                                                                                  transform="translate(0.5 0.933594)"/>--}}
+{{--                                                                        </clipPath>--}}
+{{--                                                                    </defs>--}}
+{{--                                                                </svg> &nbsp; {{$addressP}}--}}
+{{--                                                            </div>--}}
+{{--                                                            <div class="prices-pro">--}}
+{{--                                                                {{number_format($product->price, 0, ',', '.') }} {{$product->price_unit ?? 'VND'}}--}}
+{{--                                                            </div>--}}
+{{--                                                        </div>--}}
+{{--                                                    </div>--}}
+{{--                                                    <div class="d-flex justify-content-end">--}}
+{{--                                                        <div class="SeeDetail">--}}
+{{--                                                            <a href="{{ route('flea.market.product.detail', $product->id) }}"--}}
+{{--                                                               target="_blank">{{ __('home.See details') }}</a>--}}
+{{--                                                        </div>--}}
+{{--                                                    </div>--}}
 
 
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="banner1 m-0">
-        <img loading="lazy" src="{{asset('img/Rectangle 23815.png')}}" alt="">
-    </div>
-    <div class="bg-homeNew">
-        <div class="container pb-5 pt-3">
-            <div id="find-doctor--homeNew" class="item-information">
-                <div class="title-findProduct--homeNew">
-                    <span class="py-3 text-center">{{ __('home.Buy online') }}</span>
-                    <p>{{ __("home.Don't struggle finding, we are always ready for you") }}</p>
-                </div>
-                <div class="d-flex nav-header--homeNew justify-content-center mt-3">
-                    <ul class="nav nav-pills nav-fill d-flex justify-content-between">
-                        <li class="nav-item">
-                            <a class="nav-link active font-14-mobi" id="popularProduct-tab" data-toggle="tab"
-                               href="#popularProduct"
-                               role="tab" aria-controls="popularProduct"
-                               aria-selected="true">{{ __('home.Popular') }}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link font-14-mobi" id="recommended-tab" data-toggle="tab" href="#recommended"
-                               role="tab" aria-controls="recommended"
-                               aria-selected="false">{{ __('home.Recommended') }}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link font-14-mobi" id="newProducts-tab" data-toggle="tab" href="#newProducts"
-                               role="tab" aria-controls="newProducts"
-                               aria-selected="true">{{ __('home.New product') }}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link font-14-mobi" id="hotDeal-tab" data-toggle="tab" href="#hotDeal"
-                               role="tab" aria-controls="hotDeal"
-                               aria-selected="true">{{ __('home.Hot deal') }}
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                     fill="none">
-                                    <g clip-path="url(#clip0_5435_17445)">
-                                        <path
-                                            d="M22.8428 12.5865C22.6738 12.2145 22.6738 11.7865 22.8428 11.4145L23.7378 9.44552C24.0708 8.71252 24.0858 7.86552 23.7778 7.12252C23.4688 6.37852 22.8608 5.78952 22.1068 5.50752L20.0828 4.74752C19.6988 4.60352 19.3968 4.30252 19.2538 3.91852L18.4938 1.89452C18.2118 1.14052 17.6228 0.532519 16.8788 0.223519C16.1378 -0.0844809 15.2888 -0.0694809 14.5558 0.263519L12.5868 1.15852C12.2138 1.32852 11.7858 1.32852 11.4148 1.15852L9.44477 0.263519C8.71277 -0.0704809 7.86377 -0.0854809 7.12177 0.223519C6.37777 0.531519 5.78877 1.14052 5.50677 1.89452L4.74677 3.91852C4.60377 4.30252 4.30177 4.60352 3.91777 4.74752L1.89377 5.50752C1.13977 5.78952 0.53077 6.37852 0.22277 7.12252C-0.0852295 7.86552 -0.0702295 8.71252 0.262771 9.44552L1.15777 11.4145C1.32677 11.7865 1.32677 12.2145 1.15777 12.5865L0.262771 14.5555C-0.0702295 15.2885 -0.0852295 16.1355 0.22277 16.8785C0.53177 17.6225 1.13977 18.2115 1.89377 18.4935L3.91777 19.2535C4.30177 19.3975 4.60377 19.6985 4.74677 20.0825L5.50677 22.1065C5.78877 22.8605 6.37777 23.4685 7.12177 23.7775C7.47677 23.9245 7.85677 23.9985 8.23677 23.9985C8.64977 23.9985 9.06277 23.9115 9.44477 23.7375L11.4138 22.8425C11.7868 22.6725 12.2148 22.6725 12.5858 22.8425L14.5548 23.7375C15.2868 24.0715 16.1358 24.0855 16.8778 23.7775C17.6218 23.4685 18.2108 22.8605 18.4928 22.1065L19.2528 20.0825C19.3968 19.6985 19.6978 19.3965 20.0818 19.2535L22.1058 18.4935C22.8598 18.2115 23.4678 17.6225 23.7768 16.8785C24.0848 16.1355 24.0698 15.2885 23.7368 14.5555L22.8428 12.5865Z"
-                                            fill="#F44336"/>
-                                        <path
-                                            d="M13.414 9.70072C12.537 8.82372 11.109 8.82372 10.232 9.70072C9.35497 10.5777 9.35497 12.0057 10.232 12.8827L11.646 14.2967C12.084 14.7347 12.661 14.9547 13.237 14.9547C13.813 14.9547 14.389 14.7347 14.828 14.2967C15.705 13.4197 15.705 11.9917 14.828 11.1147L13.414 9.70072ZM13.768 13.2357C13.475 13.5287 13 13.5287 12.707 13.2357L11.293 11.8217C11.001 11.5297 11.001 11.0527 11.293 10.7607C11.439 10.6137 11.631 10.5417 11.823 10.5417C12.015 10.5417 12.207 10.6137 12.353 10.7607L13.767 12.1747C14.06 12.4677 14.06 12.9437 13.768 13.2357Z"
-                                            fill="#FAFAFA"/>
-                                        <path
-                                            d="M8.81781 12.1768C8.52481 11.8838 8.04981 11.8838 7.75681 12.1768C7.46381 12.4698 7.46381 12.9448 7.75681 13.2378L8.99381 14.4748L7.93281 15.5368L6.69481 14.2988C6.40181 14.0058 5.92681 14.0058 5.63381 14.2988C5.34081 14.5918 5.34081 15.0668 5.63381 15.3598L9.16981 18.8958C9.31581 19.0418 9.50781 19.1158 9.69981 19.1158C9.89181 19.1158 10.0838 19.0428 10.2298 18.8958C10.5228 18.6028 10.5228 18.1278 10.2298 17.8348L8.99281 16.5978L10.0538 15.5358L11.2908 16.7728C11.4368 16.9188 11.6288 16.9928 11.8208 16.9928C12.0128 16.9928 12.2048 16.9198 12.3508 16.7728C12.6438 16.4798 12.6438 16.0048 12.3508 15.7118L8.81781 12.1768Z"
-                                            fill="#FAFAFA"/>
-                                        <path
-                                            d="M18.3631 9.70152L15.3571 6.69552L15.8871 6.16552C16.1801 5.87252 16.1801 5.39752 15.8871 5.10452C15.5941 4.81152 15.1191 4.81152 14.8261 5.10452L13.7671 6.16452L13.7651 6.16552L13.7641 6.16652L12.7041 7.22752C12.4111 7.52052 12.4111 7.99552 12.7041 8.28852C12.8501 8.43451 13.0431 8.50852 13.2341 8.50852C13.4261 8.50852 13.6181 8.43552 13.7641 8.28852L14.2941 7.75752L17.3001 10.7635C17.4461 10.9095 17.6381 10.9835 17.8301 10.9835C18.0221 10.9835 18.2141 10.9105 18.3601 10.7635C18.6561 10.4695 18.6561 9.99452 18.3631 9.70152Z"
-                                            fill="#FAFAFA"/>
-                                        <path
-                                            d="M13.025 11.436L11.964 12.497L12.706 13.239C12.852 13.385 13.044 13.459 13.236 13.459C13.428 13.459 13.62 13.386 13.766 13.239C14.058 12.947 14.058 12.47 13.766 12.178L13.025 11.436ZM19.834 4.62695L16.561 7.89995L18.364 9.70295C18.657 9.99595 18.657 10.471 18.364 10.764C18.218 10.91 18.026 10.984 17.834 10.984C17.642 10.984 17.45 10.911 17.304 10.764L15.5 8.95995L14.085 10.375L14.827 11.117C15.704 11.994 15.704 13.422 14.827 14.299C14.389 14.737 13.812 14.957 13.236 14.957C12.66 14.957 12.084 14.737 11.645 14.299L10.903 13.557L10.549 13.911L12.352 15.714C12.645 16.007 12.645 16.482 12.352 16.775C12.206 16.921 12.014 16.995 11.822 16.995C11.63 16.995 11.438 16.922 11.292 16.775L10.055 15.538L8.994 16.6L10.231 17.837C10.524 18.13 10.524 18.605 10.231 18.898C10.085 19.044 9.893 19.118 9.701 19.118C9.509 19.118 9.317 19.045 9.171 18.898L7.368 17.095L4.625 19.838C4.673 19.916 4.714 19.999 4.746 20.086L5.506 22.11C5.788 22.864 6.377 23.472 7.121 23.781C7.476 23.928 7.856 24.002 8.236 24.002C8.649 24.002 9.062 23.915 9.444 23.741L11.413 22.846C11.6 22.761 11.8 22.719 12 22.719C12.2 22.719 12.4 22.761 12.585 22.846L14.554 23.741C14.935 23.915 15.349 24.002 15.762 24.002C16.142 24.002 16.522 23.928 16.878 23.781C17.622 23.472 18.211 22.864 18.493 22.11L19.253 20.086C19.397 19.702 19.698 19.4 20.082 19.257L22.106 18.497C22.86 18.215 23.468 17.626 23.777 16.882C24.085 16.139 24.07 15.292 23.737 14.559L22.842 12.59C22.673 12.218 22.673 11.79 22.842 11.418L23.737 9.44895C24.07 8.71595 24.085 7.86895 23.777 7.12595C23.468 6.38195 22.86 5.79295 22.106 5.51095L20.082 4.75095C19.995 4.71495 19.912 4.67495 19.834 4.62695Z"
-                                            fill="#D43A2F"/>
-                                        <path
-                                            d="M14.0863 10.373L13.0253 11.434L13.7673 12.176C14.0593 12.468 14.0593 12.944 13.7673 13.237C13.6203 13.383 13.4293 13.457 13.2373 13.457C13.0453 13.457 12.8533 13.384 12.7073 13.237L11.9653 12.495L10.9043 13.556L11.6463 14.298C12.0843 14.736 12.6613 14.956 13.2373 14.956C13.8133 14.956 14.3893 14.736 14.8283 14.298C15.7053 13.421 15.7053 11.993 14.8283 11.116L14.0863 10.373Z"
-                                            fill="#DADADA"/>
-                                        <path
-                                            d="M10.5511 13.9082L7.36914 17.0902L9.17214 18.8932C9.31814 19.0392 9.51014 19.1132 9.70214 19.1132C9.89414 19.1132 10.0861 19.0402 10.2321 18.8932C10.5251 18.6002 10.5251 18.1252 10.2321 17.8322L8.99514 16.5952L10.0561 15.5332L11.2931 16.7702C11.4391 16.9162 11.6311 16.9902 11.8231 16.9902C12.0151 16.9902 12.2071 16.9172 12.3531 16.7702C12.6461 16.4772 12.6461 16.0022 12.3531 15.7092L10.5511 13.9082Z"
-                                            fill="#DADADA"/>
-                                        <path
-                                            d="M16.561 7.89844L15.5 8.95844L17.303 10.7614C17.449 10.9074 17.641 10.9814 17.833 10.9814C18.025 10.9814 18.217 10.9084 18.363 10.7614C18.656 10.4684 18.656 9.99344 18.363 9.70044L16.561 7.89844Z"
-                                            fill="#DADADA"/>
-                                    </g>
-                                    <defs>
-                                        <clipPath id="clip0_5435_17445">
-                                            <rect width="24" height="24" fill="white"/>
-                                        </clipPath>
-                                    </defs>
-                                </svg>
-                            </a>
-                        </li>
+{{--                                                </div>--}}
+{{--                                            </div>--}}
+{{--                                        @endforeach--}}
+{{--                                    @endif--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
+{{--    <div class="banner1 m-0">--}}
+{{--        <img loading="lazy" src="{{asset('img/Rectangle 23815.png')}}" alt="">--}}
+{{--    </div>--}}
+{{--    <div class="bg-homeNew">--}}
+{{--        <div class="container pb-5 pt-3">--}}
+{{--            <div id="find-doctor--homeNew" class="item-information">--}}
+{{--                <div class="title-findProduct--homeNew">--}}
+{{--                    <span class="py-3 text-center">{{ __('home.Buy online') }}</span>--}}
+{{--                    <p>{{ __("home.Don't struggle finding, we are always ready for you") }}</p>--}}
+{{--                </div>--}}
+{{--                <div class="d-flex nav-header--homeNew justify-content-center mt-3">--}}
+{{--                    <ul class="nav nav-pills nav-fill d-flex justify-content-between">--}}
+{{--                        <li class="nav-item">--}}
+{{--                            <a class="nav-link active font-14-mobi" id="popularProduct-tab" data-toggle="tab"--}}
+{{--                               href="#popularProduct"--}}
+{{--                               role="tab" aria-controls="popularProduct"--}}
+{{--                               aria-selected="true">{{ __('home.Popular') }}</a>--}}
+{{--                        </li>--}}
+{{--                        <li class="nav-item">--}}
+{{--                            <a class="nav-link font-14-mobi" id="recommended-tab" data-toggle="tab" href="#recommended"--}}
+{{--                               role="tab" aria-controls="recommended"--}}
+{{--                               aria-selected="false">{{ __('home.Recommended') }}</a>--}}
+{{--                        </li>--}}
+{{--                        <li class="nav-item">--}}
+{{--                            <a class="nav-link font-14-mobi" id="newProducts-tab" data-toggle="tab" href="#newProducts"--}}
+{{--                               role="tab" aria-controls="newProducts"--}}
+{{--                               aria-selected="true">{{ __('home.New product') }}</a>--}}
+{{--                        </li>--}}
+{{--                        <li class="nav-item">--}}
+{{--                            <a class="nav-link font-14-mobi" id="hotDeal-tab" data-toggle="tab" href="#hotDeal"--}}
+{{--                               role="tab" aria-controls="hotDeal"--}}
+{{--                               aria-selected="true">{{ __('home.Hot deal') }}--}}
+{{--                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"--}}
+{{--                                     fill="none">--}}
+{{--                                    <g clip-path="url(#clip0_5435_17445)">--}}
+{{--                                        <path--}}
+{{--                                            d="M22.8428 12.5865C22.6738 12.2145 22.6738 11.7865 22.8428 11.4145L23.7378 9.44552C24.0708 8.71252 24.0858 7.86552 23.7778 7.12252C23.4688 6.37852 22.8608 5.78952 22.1068 5.50752L20.0828 4.74752C19.6988 4.60352 19.3968 4.30252 19.2538 3.91852L18.4938 1.89452C18.2118 1.14052 17.6228 0.532519 16.8788 0.223519C16.1378 -0.0844809 15.2888 -0.0694809 14.5558 0.263519L12.5868 1.15852C12.2138 1.32852 11.7858 1.32852 11.4148 1.15852L9.44477 0.263519C8.71277 -0.0704809 7.86377 -0.0854809 7.12177 0.223519C6.37777 0.531519 5.78877 1.14052 5.50677 1.89452L4.74677 3.91852C4.60377 4.30252 4.30177 4.60352 3.91777 4.74752L1.89377 5.50752C1.13977 5.78952 0.53077 6.37852 0.22277 7.12252C-0.0852295 7.86552 -0.0702295 8.71252 0.262771 9.44552L1.15777 11.4145C1.32677 11.7865 1.32677 12.2145 1.15777 12.5865L0.262771 14.5555C-0.0702295 15.2885 -0.0852295 16.1355 0.22277 16.8785C0.53177 17.6225 1.13977 18.2115 1.89377 18.4935L3.91777 19.2535C4.30177 19.3975 4.60377 19.6985 4.74677 20.0825L5.50677 22.1065C5.78877 22.8605 6.37777 23.4685 7.12177 23.7775C7.47677 23.9245 7.85677 23.9985 8.23677 23.9985C8.64977 23.9985 9.06277 23.9115 9.44477 23.7375L11.4138 22.8425C11.7868 22.6725 12.2148 22.6725 12.5858 22.8425L14.5548 23.7375C15.2868 24.0715 16.1358 24.0855 16.8778 23.7775C17.6218 23.4685 18.2108 22.8605 18.4928 22.1065L19.2528 20.0825C19.3968 19.6985 19.6978 19.3965 20.0818 19.2535L22.1058 18.4935C22.8598 18.2115 23.4678 17.6225 23.7768 16.8785C24.0848 16.1355 24.0698 15.2885 23.7368 14.5555L22.8428 12.5865Z"--}}
+{{--                                            fill="#F44336"/>--}}
+{{--                                        <path--}}
+{{--                                            d="M13.414 9.70072C12.537 8.82372 11.109 8.82372 10.232 9.70072C9.35497 10.5777 9.35497 12.0057 10.232 12.8827L11.646 14.2967C12.084 14.7347 12.661 14.9547 13.237 14.9547C13.813 14.9547 14.389 14.7347 14.828 14.2967C15.705 13.4197 15.705 11.9917 14.828 11.1147L13.414 9.70072ZM13.768 13.2357C13.475 13.5287 13 13.5287 12.707 13.2357L11.293 11.8217C11.001 11.5297 11.001 11.0527 11.293 10.7607C11.439 10.6137 11.631 10.5417 11.823 10.5417C12.015 10.5417 12.207 10.6137 12.353 10.7607L13.767 12.1747C14.06 12.4677 14.06 12.9437 13.768 13.2357Z"--}}
+{{--                                            fill="#FAFAFA"/>--}}
+{{--                                        <path--}}
+{{--                                            d="M8.81781 12.1768C8.52481 11.8838 8.04981 11.8838 7.75681 12.1768C7.46381 12.4698 7.46381 12.9448 7.75681 13.2378L8.99381 14.4748L7.93281 15.5368L6.69481 14.2988C6.40181 14.0058 5.92681 14.0058 5.63381 14.2988C5.34081 14.5918 5.34081 15.0668 5.63381 15.3598L9.16981 18.8958C9.31581 19.0418 9.50781 19.1158 9.69981 19.1158C9.89181 19.1158 10.0838 19.0428 10.2298 18.8958C10.5228 18.6028 10.5228 18.1278 10.2298 17.8348L8.99281 16.5978L10.0538 15.5358L11.2908 16.7728C11.4368 16.9188 11.6288 16.9928 11.8208 16.9928C12.0128 16.9928 12.2048 16.9198 12.3508 16.7728C12.6438 16.4798 12.6438 16.0048 12.3508 15.7118L8.81781 12.1768Z"--}}
+{{--                                            fill="#FAFAFA"/>--}}
+{{--                                        <path--}}
+{{--                                            d="M18.3631 9.70152L15.3571 6.69552L15.8871 6.16552C16.1801 5.87252 16.1801 5.39752 15.8871 5.10452C15.5941 4.81152 15.1191 4.81152 14.8261 5.10452L13.7671 6.16452L13.7651 6.16552L13.7641 6.16652L12.7041 7.22752C12.4111 7.52052 12.4111 7.99552 12.7041 8.28852C12.8501 8.43451 13.0431 8.50852 13.2341 8.50852C13.4261 8.50852 13.6181 8.43552 13.7641 8.28852L14.2941 7.75752L17.3001 10.7635C17.4461 10.9095 17.6381 10.9835 17.8301 10.9835C18.0221 10.9835 18.2141 10.9105 18.3601 10.7635C18.6561 10.4695 18.6561 9.99452 18.3631 9.70152Z"--}}
+{{--                                            fill="#FAFAFA"/>--}}
+{{--                                        <path--}}
+{{--                                            d="M13.025 11.436L11.964 12.497L12.706 13.239C12.852 13.385 13.044 13.459 13.236 13.459C13.428 13.459 13.62 13.386 13.766 13.239C14.058 12.947 14.058 12.47 13.766 12.178L13.025 11.436ZM19.834 4.62695L16.561 7.89995L18.364 9.70295C18.657 9.99595 18.657 10.471 18.364 10.764C18.218 10.91 18.026 10.984 17.834 10.984C17.642 10.984 17.45 10.911 17.304 10.764L15.5 8.95995L14.085 10.375L14.827 11.117C15.704 11.994 15.704 13.422 14.827 14.299C14.389 14.737 13.812 14.957 13.236 14.957C12.66 14.957 12.084 14.737 11.645 14.299L10.903 13.557L10.549 13.911L12.352 15.714C12.645 16.007 12.645 16.482 12.352 16.775C12.206 16.921 12.014 16.995 11.822 16.995C11.63 16.995 11.438 16.922 11.292 16.775L10.055 15.538L8.994 16.6L10.231 17.837C10.524 18.13 10.524 18.605 10.231 18.898C10.085 19.044 9.893 19.118 9.701 19.118C9.509 19.118 9.317 19.045 9.171 18.898L7.368 17.095L4.625 19.838C4.673 19.916 4.714 19.999 4.746 20.086L5.506 22.11C5.788 22.864 6.377 23.472 7.121 23.781C7.476 23.928 7.856 24.002 8.236 24.002C8.649 24.002 9.062 23.915 9.444 23.741L11.413 22.846C11.6 22.761 11.8 22.719 12 22.719C12.2 22.719 12.4 22.761 12.585 22.846L14.554 23.741C14.935 23.915 15.349 24.002 15.762 24.002C16.142 24.002 16.522 23.928 16.878 23.781C17.622 23.472 18.211 22.864 18.493 22.11L19.253 20.086C19.397 19.702 19.698 19.4 20.082 19.257L22.106 18.497C22.86 18.215 23.468 17.626 23.777 16.882C24.085 16.139 24.07 15.292 23.737 14.559L22.842 12.59C22.673 12.218 22.673 11.79 22.842 11.418L23.737 9.44895C24.07 8.71595 24.085 7.86895 23.777 7.12595C23.468 6.38195 22.86 5.79295 22.106 5.51095L20.082 4.75095C19.995 4.71495 19.912 4.67495 19.834 4.62695Z"--}}
+{{--                                            fill="#D43A2F"/>--}}
+{{--                                        <path--}}
+{{--                                            d="M14.0863 10.373L13.0253 11.434L13.7673 12.176C14.0593 12.468 14.0593 12.944 13.7673 13.237C13.6203 13.383 13.4293 13.457 13.2373 13.457C13.0453 13.457 12.8533 13.384 12.7073 13.237L11.9653 12.495L10.9043 13.556L11.6463 14.298C12.0843 14.736 12.6613 14.956 13.2373 14.956C13.8133 14.956 14.3893 14.736 14.8283 14.298C15.7053 13.421 15.7053 11.993 14.8283 11.116L14.0863 10.373Z"--}}
+{{--                                            fill="#DADADA"/>--}}
+{{--                                        <path--}}
+{{--                                            d="M10.5511 13.9082L7.36914 17.0902L9.17214 18.8932C9.31814 19.0392 9.51014 19.1132 9.70214 19.1132C9.89414 19.1132 10.0861 19.0402 10.2321 18.8932C10.5251 18.6002 10.5251 18.1252 10.2321 17.8322L8.99514 16.5952L10.0561 15.5332L11.2931 16.7702C11.4391 16.9162 11.6311 16.9902 11.8231 16.9902C12.0151 16.9902 12.2071 16.9172 12.3531 16.7702C12.6461 16.4772 12.6461 16.0022 12.3531 15.7092L10.5511 13.9082Z"--}}
+{{--                                            fill="#DADADA"/>--}}
+{{--                                        <path--}}
+{{--                                            d="M16.561 7.89844L15.5 8.95844L17.303 10.7614C17.449 10.9074 17.641 10.9814 17.833 10.9814C18.025 10.9814 18.217 10.9084 18.363 10.7614C18.656 10.4684 18.656 9.99344 18.363 9.70044L16.561 7.89844Z"--}}
+{{--                                            fill="#DADADA"/>--}}
+{{--                                    </g>--}}
+{{--                                    <defs>--}}
+{{--                                        <clipPath id="clip0_5435_17445">--}}
+{{--                                            <rect width="24" height="24" fill="white"/>--}}
+{{--                                        </clipPath>--}}
+{{--                                    </defs>--}}
+{{--                                </svg>--}}
+{{--                            </a>--}}
+{{--                        </li>--}}
 
-                    </ul>
-                </div>
-                <div class="tab-content mt-4" id="myTabContent">
-                    <div class="tab-pane fade show active" id="popularProduct" role="tabpanel"
-                         aria-labelledby="popularProduct-tab">
-                        <div class="row">
-                            @if($products == '')
-                                <h1 class="d-flex align-items-center justify-content-center mt-4">{{ __('home.null') }}</h1>
-                            @else
-                                @foreach($products as $product)
-                                    @php
-                                        $isFavourite = null;
-                                        if (Auth::check()){
-                                            $isFavourite = \App\Models\WishList::where('user_id', Auth::user()->id)
-                                                                ->where('product_id', $product->id)
-                                                                ->where('type_product', \App\Enums\TypeProductCart::MEDICINE)
-                                                                ->first();
-                                        }
+{{--                    </ul>--}}
+{{--                </div>--}}
+{{--                <div class="tab-content mt-4" id="myTabContent">--}}
+{{--                    <div class="tab-pane fade show active" id="popularProduct" role="tabpanel"--}}
+{{--                         aria-labelledby="popularProduct-tab">--}}
+{{--                        <div class="row">--}}
+{{--                            @if($products == '')--}}
+{{--                                <h1 class="d-flex align-items-center justify-content-center mt-4">{{ __('home.null') }}</h1>--}}
+{{--                            @else--}}
+{{--                                @foreach($products as $product)--}}
+{{--                                    @php--}}
+{{--                                        $isFavourite = null;--}}
+{{--                                        if (Auth::check()){--}}
+{{--                                            $isFavourite = \App\Models\WishList::where('user_id', Auth::user()->id)--}}
+{{--                                                                ->where('product_id', $product->id)--}}
+{{--                                                                ->where('type_product', \App\Enums\TypeProductCart::MEDICINE)--}}
+{{--                                                                ->first();--}}
+{{--                                        }--}}
 
-                                        $class = !$isFavourite ? 'bi-heart' : 'bi-heart-fill text-danger';
-                                                $isSoldOut = $product->quantity == 0;
-                                    @endphp
-                                    <div class="col-md-3 col-6">
-                                        <div class="">
-                                            <div class="product-item {{ $isSoldOut ? 'sold-out-overlay' : '' }}">
-                                                <div
-                                                    class="img-pro justify-content-center d-flex img_product--homeNew">
-                                                    <img loading="lazy" src="{{$product->thumbnail}}" alt="">
-                                                    <a class="button-heart button-product-heart"
-                                                       data-product="{{$product->id}}"
-                                                       data-isFavourite="{{ $isFavourite ? 1 : 0 }}">
-                                                        <i class="bi {{ $class }}"></i>
-                                                    </a>
-                                                    <div class="{{ $isSoldOut ? 'sold-out-overlay-text' : 'd-none' }} ">
-                                                        <h1 class="sold-out">{{__('home.Sold Out')}}</h1>
-                                                    </div>
-                                                </div>
-                                                <div class="content-pro p-md-3 p-2">
-                                                    <div class="">
-                                                        <div class="name-product" style="height: auto">
-                                                            <a class="name-product--fleaMarket max-3-line-content"
-                                                               href="{{ route('medicine.detail', $product->id) }}">{{$product->name}}</a>
-                                                        </div>
-                                                        <div class="location-pro">
-                                                            @php
-                                                                if (locationHelper() == 'vi'){
-                                                                    $addressP = Province::find($product->province_id)->name ?? 'Ha Noi';
-                                                                } else{
-                                                                    $addressP = Province::find($product->province_id)->name_en ?? 'Ha Noi';
-                                                                }
-                                                            @endphp
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="21"
-                                                                 height="21" viewBox="0 0 21 21" fill="none">
-                                                                <g clip-path="url(#clip0_5506_14919)">
-                                                                    <path
-                                                                        d="M4.66602 12.8382C3.12321 13.5188 2.16602 14.4673 2.16602 15.5163C2.16602 17.5873 5.89698 19.2663 10.4993 19.2663C15.1017 19.2663 18.8327 17.5873 18.8327 15.5163C18.8327 14.4673 17.8755 13.5188 16.3327 12.8382M15.4993 7.59961C15.4993 10.986 11.7493 12.5996 10.4993 15.0996C9.24935 12.5996 5.49935 10.986 5.49935 7.59961C5.49935 4.83819 7.73793 2.59961 10.4993 2.59961C13.2608 2.59961 15.4993 4.83819 15.4993 7.59961ZM11.3327 7.59961C11.3327 8.05985 10.9596 8.43294 10.4993 8.43294C10.0391 8.43294 9.66602 8.05985 9.66602 7.59961C9.66602 7.13937 10.0391 6.76628 10.4993 6.76628C10.9596 6.76628 11.3327 7.13937 11.3327 7.59961Z"
-                                                                        stroke="white" stroke-width="2"
-                                                                        stroke-linecap="round"
-                                                                        stroke-linejoin="round"/>
-                                                                </g>
-                                                                <defs>
-                                                                    <clipPath id="clip0_5506_14919">
-                                                                        <rect width="20" height="20" fill="white"
-                                                                              transform="translate(0.5 0.933594)"/>
-                                                                    </clipPath>
-                                                                </defs>
-                                                            </svg> &nbsp; {{$addressP}}
-                                                        </div>
-                                                        <div class="prices-pro">
-                                                            {{number_format($product->price, 0, ',', '.') }} {{$product->price_unit ?? 'VND'}}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex justify-content-end">
-                                                    <div class="SeeDetail">
-                                                        <a href="{{ route('flea.market.product.detail', $product->id) }}"
-                                                           target="_blank">{{ __('home.See details') }}</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @endif
-                        </div>
-                        <div class="pagination mt-4 d-flex align-items-center justify-content-center">
-                            {{ $products->links() }}
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="recommended" role="tabpanel" aria-labelledby="recommended-tab">
-                        <div class="row">
-                            @if($products == '')
-                                <h1 class="d-flex align-items-center justify-content-center mt-4">{{ __('home.null') }}</h1>
-                            @else
-                                @foreach($products as $product)
-                                    @php
-                                        $isFavourite = null;
-                                        if (Auth::check()){
-                                            $isFavourite = \App\Models\WishList::where('user_id', Auth::user()->id)
-                                                                ->where('product_id', $product->id)
-                                                                ->where('type_product', \App\Enums\TypeProductCart::MEDICINE)
-                                                                ->first();
-                                        }
+{{--                                        $class = !$isFavourite ? 'bi-heart' : 'bi-heart-fill text-danger';--}}
+{{--                                                $isSoldOut = $product->quantity == 0;--}}
+{{--                                    @endphp--}}
+{{--                                    <div class="col-md-3 col-6">--}}
+{{--                                        <div class="">--}}
+{{--                                            <div class="product-item {{ $isSoldOut ? 'sold-out-overlay' : '' }}">--}}
+{{--                                                <div--}}
+{{--                                                    class="img-pro justify-content-center d-flex img_product--homeNew">--}}
+{{--                                                    <img loading="lazy" src="{{$product->thumbnail}}" alt="">--}}
+{{--                                                    <a class="button-heart button-product-heart"--}}
+{{--                                                       data-product="{{$product->id}}"--}}
+{{--                                                       data-isFavourite="{{ $isFavourite ? 1 : 0 }}">--}}
+{{--                                                        <i class="bi {{ $class }}"></i>--}}
+{{--                                                    </a>--}}
+{{--                                                    <div class="{{ $isSoldOut ? 'sold-out-overlay-text' : 'd-none' }} ">--}}
+{{--                                                        <h1 class="sold-out">{{__('home.Sold Out')}}</h1>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="content-pro p-md-3 p-2">--}}
+{{--                                                    <div class="">--}}
+{{--                                                        <div class="name-product" style="height: auto">--}}
+{{--                                                            <a class="name-product--fleaMarket max-3-line-content"--}}
+{{--                                                               href="{{ route('medicine.detail', $product->id) }}">{{$product->name}}</a>--}}
+{{--                                                        </div>--}}
+{{--                                                        <div class="location-pro">--}}
+{{--                                                            @php--}}
+{{--                                                                if (locationHelper() == 'vi'){--}}
+{{--                                                                    $addressP = Province::find($product->province_id)->name ?? 'Ha Noi';--}}
+{{--                                                                } else{--}}
+{{--                                                                    $addressP = Province::find($product->province_id)->name_en ?? 'Ha Noi';--}}
+{{--                                                                }--}}
+{{--                                                            @endphp--}}
+{{--                                                            <svg xmlns="http://www.w3.org/2000/svg" width="21"--}}
+{{--                                                                 height="21" viewBox="0 0 21 21" fill="none">--}}
+{{--                                                                <g clip-path="url(#clip0_5506_14919)">--}}
+{{--                                                                    <path--}}
+{{--                                                                        d="M4.66602 12.8382C3.12321 13.5188 2.16602 14.4673 2.16602 15.5163C2.16602 17.5873 5.89698 19.2663 10.4993 19.2663C15.1017 19.2663 18.8327 17.5873 18.8327 15.5163C18.8327 14.4673 17.8755 13.5188 16.3327 12.8382M15.4993 7.59961C15.4993 10.986 11.7493 12.5996 10.4993 15.0996C9.24935 12.5996 5.49935 10.986 5.49935 7.59961C5.49935 4.83819 7.73793 2.59961 10.4993 2.59961C13.2608 2.59961 15.4993 4.83819 15.4993 7.59961ZM11.3327 7.59961C11.3327 8.05985 10.9596 8.43294 10.4993 8.43294C10.0391 8.43294 9.66602 8.05985 9.66602 7.59961C9.66602 7.13937 10.0391 6.76628 10.4993 6.76628C10.9596 6.76628 11.3327 7.13937 11.3327 7.59961Z"--}}
+{{--                                                                        stroke="white" stroke-width="2"--}}
+{{--                                                                        stroke-linecap="round"--}}
+{{--                                                                        stroke-linejoin="round"/>--}}
+{{--                                                                </g>--}}
+{{--                                                                <defs>--}}
+{{--                                                                    <clipPath id="clip0_5506_14919">--}}
+{{--                                                                        <rect width="20" height="20" fill="white"--}}
+{{--                                                                              transform="translate(0.5 0.933594)"/>--}}
+{{--                                                                    </clipPath>--}}
+{{--                                                                </defs>--}}
+{{--                                                            </svg> &nbsp; {{$addressP}}--}}
+{{--                                                        </div>--}}
+{{--                                                        <div class="prices-pro">--}}
+{{--                                                            {{number_format($product->price, 0, ',', '.') }} {{$product->price_unit ?? 'VND'}}--}}
+{{--                                                        </div>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="d-flex justify-content-end">--}}
+{{--                                                    <div class="SeeDetail">--}}
+{{--                                                        <a href="{{ route('flea.market.product.detail', $product->id) }}"--}}
+{{--                                                           target="_blank">{{ __('home.See details') }}</a>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                @endforeach--}}
+{{--                            @endif--}}
+{{--                        </div>--}}
+{{--                        <div class="pagination mt-4 d-flex align-items-center justify-content-center">--}}
+{{--                            {{ $products->links() }}--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <div class="tab-pane fade" id="recommended" role="tabpanel" aria-labelledby="recommended-tab">--}}
+{{--                        <div class="row">--}}
+{{--                            @if($products == '')--}}
+{{--                                <h1 class="d-flex align-items-center justify-content-center mt-4">{{ __('home.null') }}</h1>--}}
+{{--                            @else--}}
+{{--                                @foreach($products as $product)--}}
+{{--                                    @php--}}
+{{--                                        $isFavourite = null;--}}
+{{--                                        if (Auth::check()){--}}
+{{--                                            $isFavourite = \App\Models\WishList::where('user_id', Auth::user()->id)--}}
+{{--                                                                ->where('product_id', $product->id)--}}
+{{--                                                                ->where('type_product', \App\Enums\TypeProductCart::MEDICINE)--}}
+{{--                                                                ->first();--}}
+{{--                                        }--}}
 
-                                        $class = !$isFavourite ? 'bi-heart' : 'bi-heart-fill text-danger';
-                                    @endphp
-                                    <div class="col-md-3 col-6">
-                                        <div class="">
-                                            <div class="product-item">
-                                                <div
-                                                    class="img-pro justify-content-center d-flex img_product--homeNew">
-                                                    <img loading="lazy" src="{{$product->thumbnail}}" alt="">
-                                                    <a class="button-heart button-product-heart"
-                                                       data-product="{{$product->id}}"
-                                                       data-isFavourite="{{ $isFavourite ? 1 : 0 }}">
-                                                        <i class="bi {{ $class }}"></i>
-                                                    </a>
-                                                </div>
-                                                <div class="content-pro p-md-3 p-2">
-                                                    <div class="">
-                                                        <div class="name-product" style="height: auto">
-                                                            <a class="name-product--fleaMarket max-3-line-content"
-                                                               href="{{ route('examination.doctor_info', $product->id) }}">{{$product->name}}</a>
-                                                        </div>
-                                                        <div class="location-pro">
-                                                            @php
-                                                                if (locationHelper() == 'vi'){
-                                                                    $addressP = Province::find($product->province_id)->name ?? 'Ha Noi';
-                                                                } else{
-                                                                    $addressP = Province::find($product->province_id)->name_en ?? 'Ha Noi';
-                                                                }
-                                                            @endphp
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="21"
-                                                                 height="21" viewBox="0 0 21 21" fill="none">
-                                                                <g clip-path="url(#clip0_5506_14919)">
-                                                                    <path
-                                                                        d="M4.66602 12.8382C3.12321 13.5188 2.16602 14.4673 2.16602 15.5163C2.16602 17.5873 5.89698 19.2663 10.4993 19.2663C15.1017 19.2663 18.8327 17.5873 18.8327 15.5163C18.8327 14.4673 17.8755 13.5188 16.3327 12.8382M15.4993 7.59961C15.4993 10.986 11.7493 12.5996 10.4993 15.0996C9.24935 12.5996 5.49935 10.986 5.49935 7.59961C5.49935 4.83819 7.73793 2.59961 10.4993 2.59961C13.2608 2.59961 15.4993 4.83819 15.4993 7.59961ZM11.3327 7.59961C11.3327 8.05985 10.9596 8.43294 10.4993 8.43294C10.0391 8.43294 9.66602 8.05985 9.66602 7.59961C9.66602 7.13937 10.0391 6.76628 10.4993 6.76628C10.9596 6.76628 11.3327 7.13937 11.3327 7.59961Z"
-                                                                        stroke="white" stroke-width="2"
-                                                                        stroke-linecap="round"
-                                                                        stroke-linejoin="round"/>
-                                                                </g>
-                                                                <defs>
-                                                                    <clipPath id="clip0_5506_14919">
-                                                                        <rect width="20" height="20" fill="white"
-                                                                              transform="translate(0.5 0.933594)"/>
-                                                                    </clipPath>
-                                                                </defs>
-                                                            </svg> &nbsp; {{$addressP}}
-                                                        </div>
-                                                        <div class="prices-pro">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="21"
-                                                                 height="21" viewBox="0 0 21 21" fill="none">
-                                                                <g clip-path="url(#clip0_5506_14923)">
-                                                                    <path
-                                                                        d="M10.4993 5.93294V10.9329L13.8327 12.5996M18.8327 10.9329C18.8327 15.5353 15.1017 19.2663 10.4993 19.2663C5.89698 19.2663 2.16602 15.5353 2.16602 10.9329C2.16602 6.33057 5.89698 2.59961 10.4993 2.59961C15.1017 2.59961 18.8327 6.33057 18.8327 10.9329Z"
-                                                                        stroke="white" stroke-width="2"
-                                                                        stroke-linecap="round"
-                                                                        stroke-linejoin="round"/>
-                                                                </g>
-                                                                <defs>
-                                                                    <clipPath id="clip0_5506_14923">
-                                                                        <rect width="20" height="20" fill="white"
-                                                                              transform="translate(0.5 0.933594)"/>
-                                                                    </clipPath>
-                                                                </defs>
-                                                            </svg>
-                                                            &nbsp;{{number_format($product->price, 0, ',', '.') }} {{$product->price_unit ?? 'VND'}}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex justify-content-end">
-                                                    <div class="SeeDetail">
-                                                        <a href="{{ route('flea.market.product.detail', $product->id) }}"
-                                                           target="_blank">{{ __('home.See details') }}</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @endif
-                        </div>
-                        <div class="pagination mt-4 d-flex align-items-center justify-content-center">
-                            {{ $products->links() }}
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="newProducts" role="tabpanel" aria-labelledby="newProducts-tab">
-                        <div class="row">
-                            @if($products == '')
-                                <h1 class="d-flex align-items-center justify-content-center mt-4">{{ __('home.null') }}</h1>
-                            @else
-                                @foreach($products as $product)
-                                    @php
-                                        $isFavourite = null;
-                                        if (Auth::check()){
-                                            $isFavourite = \App\Models\WishList::where('user_id', Auth::user()->id)
-                                                                ->where('product_id', $product->id)
-                                                                ->where('type_product', \App\Enums\TypeProductCart::MEDICINE)
-                                                                ->first();
-                                        }
+{{--                                        $class = !$isFavourite ? 'bi-heart' : 'bi-heart-fill text-danger';--}}
+{{--                                    @endphp--}}
+{{--                                    <div class="col-md-3 col-6">--}}
+{{--                                        <div class="">--}}
+{{--                                            <div class="product-item">--}}
+{{--                                                <div--}}
+{{--                                                    class="img-pro justify-content-center d-flex img_product--homeNew">--}}
+{{--                                                    <img loading="lazy" src="{{$product->thumbnail}}" alt="">--}}
+{{--                                                    <a class="button-heart button-product-heart"--}}
+{{--                                                       data-product="{{$product->id}}"--}}
+{{--                                                       data-isFavourite="{{ $isFavourite ? 1 : 0 }}">--}}
+{{--                                                        <i class="bi {{ $class }}"></i>--}}
+{{--                                                    </a>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="content-pro p-md-3 p-2">--}}
+{{--                                                    <div class="">--}}
+{{--                                                        <div class="name-product" style="height: auto">--}}
+{{--                                                            <a class="name-product--fleaMarket max-3-line-content"--}}
+{{--                                                               href="{{ route('examination.doctor_info', $product->id) }}">{{$product->name}}</a>--}}
+{{--                                                        </div>--}}
+{{--                                                        <div class="location-pro">--}}
+{{--                                                            @php--}}
+{{--                                                                if (locationHelper() == 'vi'){--}}
+{{--                                                                    $addressP = Province::find($product->province_id)->name ?? 'Ha Noi';--}}
+{{--                                                                } else{--}}
+{{--                                                                    $addressP = Province::find($product->province_id)->name_en ?? 'Ha Noi';--}}
+{{--                                                                }--}}
+{{--                                                            @endphp--}}
+{{--                                                            <svg xmlns="http://www.w3.org/2000/svg" width="21"--}}
+{{--                                                                 height="21" viewBox="0 0 21 21" fill="none">--}}
+{{--                                                                <g clip-path="url(#clip0_5506_14919)">--}}
+{{--                                                                    <path--}}
+{{--                                                                        d="M4.66602 12.8382C3.12321 13.5188 2.16602 14.4673 2.16602 15.5163C2.16602 17.5873 5.89698 19.2663 10.4993 19.2663C15.1017 19.2663 18.8327 17.5873 18.8327 15.5163C18.8327 14.4673 17.8755 13.5188 16.3327 12.8382M15.4993 7.59961C15.4993 10.986 11.7493 12.5996 10.4993 15.0996C9.24935 12.5996 5.49935 10.986 5.49935 7.59961C5.49935 4.83819 7.73793 2.59961 10.4993 2.59961C13.2608 2.59961 15.4993 4.83819 15.4993 7.59961ZM11.3327 7.59961C11.3327 8.05985 10.9596 8.43294 10.4993 8.43294C10.0391 8.43294 9.66602 8.05985 9.66602 7.59961C9.66602 7.13937 10.0391 6.76628 10.4993 6.76628C10.9596 6.76628 11.3327 7.13937 11.3327 7.59961Z"--}}
+{{--                                                                        stroke="white" stroke-width="2"--}}
+{{--                                                                        stroke-linecap="round"--}}
+{{--                                                                        stroke-linejoin="round"/>--}}
+{{--                                                                </g>--}}
+{{--                                                                <defs>--}}
+{{--                                                                    <clipPath id="clip0_5506_14919">--}}
+{{--                                                                        <rect width="20" height="20" fill="white"--}}
+{{--                                                                              transform="translate(0.5 0.933594)"/>--}}
+{{--                                                                    </clipPath>--}}
+{{--                                                                </defs>--}}
+{{--                                                            </svg> &nbsp; {{$addressP}}--}}
+{{--                                                        </div>--}}
+{{--                                                        <div class="prices-pro">--}}
+{{--                                                            <svg xmlns="http://www.w3.org/2000/svg" width="21"--}}
+{{--                                                                 height="21" viewBox="0 0 21 21" fill="none">--}}
+{{--                                                                <g clip-path="url(#clip0_5506_14923)">--}}
+{{--                                                                    <path--}}
+{{--                                                                        d="M10.4993 5.93294V10.9329L13.8327 12.5996M18.8327 10.9329C18.8327 15.5353 15.1017 19.2663 10.4993 19.2663C5.89698 19.2663 2.16602 15.5353 2.16602 10.9329C2.16602 6.33057 5.89698 2.59961 10.4993 2.59961C15.1017 2.59961 18.8327 6.33057 18.8327 10.9329Z"--}}
+{{--                                                                        stroke="white" stroke-width="2"--}}
+{{--                                                                        stroke-linecap="round"--}}
+{{--                                                                        stroke-linejoin="round"/>--}}
+{{--                                                                </g>--}}
+{{--                                                                <defs>--}}
+{{--                                                                    <clipPath id="clip0_5506_14923">--}}
+{{--                                                                        <rect width="20" height="20" fill="white"--}}
+{{--                                                                              transform="translate(0.5 0.933594)"/>--}}
+{{--                                                                    </clipPath>--}}
+{{--                                                                </defs>--}}
+{{--                                                            </svg>--}}
+{{--                                                            &nbsp;{{number_format($product->price, 0, ',', '.') }} {{$product->price_unit ?? 'VND'}}--}}
+{{--                                                        </div>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="d-flex justify-content-end">--}}
+{{--                                                    <div class="SeeDetail">--}}
+{{--                                                        <a href="{{ route('flea.market.product.detail', $product->id) }}"--}}
+{{--                                                           target="_blank">{{ __('home.See details') }}</a>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                @endforeach--}}
+{{--                            @endif--}}
+{{--                        </div>--}}
+{{--                        <div class="pagination mt-4 d-flex align-items-center justify-content-center">--}}
+{{--                            {{ $products->links() }}--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <div class="tab-pane fade" id="newProducts" role="tabpanel" aria-labelledby="newProducts-tab">--}}
+{{--                        <div class="row">--}}
+{{--                            @if($products == '')--}}
+{{--                                <h1 class="d-flex align-items-center justify-content-center mt-4">{{ __('home.null') }}</h1>--}}
+{{--                            @else--}}
+{{--                                @foreach($products as $product)--}}
+{{--                                    @php--}}
+{{--                                        $isFavourite = null;--}}
+{{--                                        if (Auth::check()){--}}
+{{--                                            $isFavourite = \App\Models\WishList::where('user_id', Auth::user()->id)--}}
+{{--                                                                ->where('product_id', $product->id)--}}
+{{--                                                                ->where('type_product', \App\Enums\TypeProductCart::MEDICINE)--}}
+{{--                                                                ->first();--}}
+{{--                                        }--}}
 
-                                        $class = !$isFavourite ? 'bi-heart' : 'bi-heart-fill text-danger';
-                                    @endphp
-                                    <div class="col-md-3 col-6">
-                                        <div class="">
-                                            <div class="product-item">
-                                                <div
-                                                    class="img-pro justify-content-center d-flex img_product--homeNew">
-                                                    <img loading="lazy" src="{{$product->thumbnail}}" alt="">
-                                                    <a class="button-heart button-product-heart"
-                                                       data-product="{{$product->id}}"
-                                                       data-isFavourite="{{ $isFavourite ? 1 : 0 }}">
-                                                        <i class="bi {{ $class }}"></i>
-                                                    </a>
-                                                </div>
-                                                <div class="content-pro p-md-3 p-2">
-                                                    <div class="">
-                                                        <div class="name-product" style="height: auto">
-                                                            <a class="name-product--fleaMarket max-3-line-content"
-                                                               href="{{ route('examination.doctor_info', $product->id) }}">{{$product->name}}</a>
-                                                        </div>
-                                                        <div class="location-pro">
-                                                            @php
-                                                                if (locationHelper() == 'vi'){
-                                                                    $addressP = Province::find($product->province_id)->name ?? 'Ha Noi';
-                                                                } else{
-                                                                    $addressP = Province::find($product->province_id)->name_en ?? 'Ha Noi';
-                                                                }
-                                                            @endphp
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="21"
-                                                                 height="21" viewBox="0 0 21 21" fill="none">
-                                                                <g clip-path="url(#clip0_5506_14919)">
-                                                                    <path
-                                                                        d="M4.66602 12.8382C3.12321 13.5188 2.16602 14.4673 2.16602 15.5163C2.16602 17.5873 5.89698 19.2663 10.4993 19.2663C15.1017 19.2663 18.8327 17.5873 18.8327 15.5163C18.8327 14.4673 17.8755 13.5188 16.3327 12.8382M15.4993 7.59961C15.4993 10.986 11.7493 12.5996 10.4993 15.0996C9.24935 12.5996 5.49935 10.986 5.49935 7.59961C5.49935 4.83819 7.73793 2.59961 10.4993 2.59961C13.2608 2.59961 15.4993 4.83819 15.4993 7.59961ZM11.3327 7.59961C11.3327 8.05985 10.9596 8.43294 10.4993 8.43294C10.0391 8.43294 9.66602 8.05985 9.66602 7.59961C9.66602 7.13937 10.0391 6.76628 10.4993 6.76628C10.9596 6.76628 11.3327 7.13937 11.3327 7.59961Z"
-                                                                        stroke="white" stroke-width="2"
-                                                                        stroke-linecap="round"
-                                                                        stroke-linejoin="round"/>
-                                                                </g>
-                                                                <defs>
-                                                                    <clipPath id="clip0_5506_14919">
-                                                                        <rect width="20" height="20" fill="white"
-                                                                              transform="translate(0.5 0.933594)"/>
-                                                                    </clipPath>
-                                                                </defs>
-                                                            </svg> &nbsp; {{$addressP}}
-                                                        </div>
-                                                        <div class="prices-pro">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="21"
-                                                                 height="21" viewBox="0 0 21 21" fill="none">
-                                                                <g clip-path="url(#clip0_5506_14923)">
-                                                                    <path
-                                                                        d="M10.4993 5.93294V10.9329L13.8327 12.5996M18.8327 10.9329C18.8327 15.5353 15.1017 19.2663 10.4993 19.2663C5.89698 19.2663 2.16602 15.5353 2.16602 10.9329C2.16602 6.33057 5.89698 2.59961 10.4993 2.59961C15.1017 2.59961 18.8327 6.33057 18.8327 10.9329Z"
-                                                                        stroke="white" stroke-width="2"
-                                                                        stroke-linecap="round"
-                                                                        stroke-linejoin="round"/>
-                                                                </g>
-                                                                <defs>
-                                                                    <clipPath id="clip0_5506_14923">
-                                                                        <rect width="20" height="20" fill="white"
-                                                                              transform="translate(0.5 0.933594)"/>
-                                                                    </clipPath>
-                                                                </defs>
-                                                            </svg>
-                                                            &nbsp;{{number_format($product->price, 0, ',', '.') }} {{$product->price_unit ?? 'VND'}}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex justify-content-end">
-                                                    <div class="SeeDetail">
-                                                        <a href="{{ route('flea.market.product.detail', $product->id) }}"
-                                                           target="_blank">{{ __('home.See details') }}</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @endif
-                        </div>
-                        <div class="pagination mt-4 d-flex align-items-center justify-content-center">
-                            {{ $products->links() }}
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="hotDeal" role="tabpanel" aria-labelledby="hotDeal-tab">
-                        <div class="row">
-                            @if($products == '')
-                                <h1 class="d-flex align-items-center justify-content-center mt-4">{{ __('home.null') }}</h1>
-                            @else
-                                @foreach($products as $product)
-                                    @php
-                                        $isFavourite = null;
-                                        if (Auth::check()){
-                                            $isFavourite = \App\Models\WishList::where('user_id', Auth::user()->id)
-                                                                ->where('product_id', $product->id)
-                                                                ->where('type_product', \App\Enums\TypeProductCart::MEDICINE)
-                                                                ->first();
-                                        }
+{{--                                        $class = !$isFavourite ? 'bi-heart' : 'bi-heart-fill text-danger';--}}
+{{--                                    @endphp--}}
+{{--                                    <div class="col-md-3 col-6">--}}
+{{--                                        <div class="">--}}
+{{--                                            <div class="product-item">--}}
+{{--                                                <div--}}
+{{--                                                    class="img-pro justify-content-center d-flex img_product--homeNew">--}}
+{{--                                                    <img loading="lazy" src="{{$product->thumbnail}}" alt="">--}}
+{{--                                                    <a class="button-heart button-product-heart"--}}
+{{--                                                       data-product="{{$product->id}}"--}}
+{{--                                                       data-isFavourite="{{ $isFavourite ? 1 : 0 }}">--}}
+{{--                                                        <i class="bi {{ $class }}"></i>--}}
+{{--                                                    </a>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="content-pro p-md-3 p-2">--}}
+{{--                                                    <div class="">--}}
+{{--                                                        <div class="name-product" style="height: auto">--}}
+{{--                                                            <a class="name-product--fleaMarket max-3-line-content"--}}
+{{--                                                               href="{{ route('examination.doctor_info', $product->id) }}">{{$product->name}}</a>--}}
+{{--                                                        </div>--}}
+{{--                                                        <div class="location-pro">--}}
+{{--                                                            @php--}}
+{{--                                                                if (locationHelper() == 'vi'){--}}
+{{--                                                                    $addressP = Province::find($product->province_id)->name ?? 'Ha Noi';--}}
+{{--                                                                } else{--}}
+{{--                                                                    $addressP = Province::find($product->province_id)->name_en ?? 'Ha Noi';--}}
+{{--                                                                }--}}
+{{--                                                            @endphp--}}
+{{--                                                            <svg xmlns="http://www.w3.org/2000/svg" width="21"--}}
+{{--                                                                 height="21" viewBox="0 0 21 21" fill="none">--}}
+{{--                                                                <g clip-path="url(#clip0_5506_14919)">--}}
+{{--                                                                    <path--}}
+{{--                                                                        d="M4.66602 12.8382C3.12321 13.5188 2.16602 14.4673 2.16602 15.5163C2.16602 17.5873 5.89698 19.2663 10.4993 19.2663C15.1017 19.2663 18.8327 17.5873 18.8327 15.5163C18.8327 14.4673 17.8755 13.5188 16.3327 12.8382M15.4993 7.59961C15.4993 10.986 11.7493 12.5996 10.4993 15.0996C9.24935 12.5996 5.49935 10.986 5.49935 7.59961C5.49935 4.83819 7.73793 2.59961 10.4993 2.59961C13.2608 2.59961 15.4993 4.83819 15.4993 7.59961ZM11.3327 7.59961C11.3327 8.05985 10.9596 8.43294 10.4993 8.43294C10.0391 8.43294 9.66602 8.05985 9.66602 7.59961C9.66602 7.13937 10.0391 6.76628 10.4993 6.76628C10.9596 6.76628 11.3327 7.13937 11.3327 7.59961Z"--}}
+{{--                                                                        stroke="white" stroke-width="2"--}}
+{{--                                                                        stroke-linecap="round"--}}
+{{--                                                                        stroke-linejoin="round"/>--}}
+{{--                                                                </g>--}}
+{{--                                                                <defs>--}}
+{{--                                                                    <clipPath id="clip0_5506_14919">--}}
+{{--                                                                        <rect width="20" height="20" fill="white"--}}
+{{--                                                                              transform="translate(0.5 0.933594)"/>--}}
+{{--                                                                    </clipPath>--}}
+{{--                                                                </defs>--}}
+{{--                                                            </svg> &nbsp; {{$addressP}}--}}
+{{--                                                        </div>--}}
+{{--                                                        <div class="prices-pro">--}}
+{{--                                                            <svg xmlns="http://www.w3.org/2000/svg" width="21"--}}
+{{--                                                                 height="21" viewBox="0 0 21 21" fill="none">--}}
+{{--                                                                <g clip-path="url(#clip0_5506_14923)">--}}
+{{--                                                                    <path--}}
+{{--                                                                        d="M10.4993 5.93294V10.9329L13.8327 12.5996M18.8327 10.9329C18.8327 15.5353 15.1017 19.2663 10.4993 19.2663C5.89698 19.2663 2.16602 15.5353 2.16602 10.9329C2.16602 6.33057 5.89698 2.59961 10.4993 2.59961C15.1017 2.59961 18.8327 6.33057 18.8327 10.9329Z"--}}
+{{--                                                                        stroke="white" stroke-width="2"--}}
+{{--                                                                        stroke-linecap="round"--}}
+{{--                                                                        stroke-linejoin="round"/>--}}
+{{--                                                                </g>--}}
+{{--                                                                <defs>--}}
+{{--                                                                    <clipPath id="clip0_5506_14923">--}}
+{{--                                                                        <rect width="20" height="20" fill="white"--}}
+{{--                                                                              transform="translate(0.5 0.933594)"/>--}}
+{{--                                                                    </clipPath>--}}
+{{--                                                                </defs>--}}
+{{--                                                            </svg>--}}
+{{--                                                            &nbsp;{{number_format($product->price, 0, ',', '.') }} {{$product->price_unit ?? 'VND'}}--}}
+{{--                                                        </div>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="d-flex justify-content-end">--}}
+{{--                                                    <div class="SeeDetail">--}}
+{{--                                                        <a href="{{ route('flea.market.product.detail', $product->id) }}"--}}
+{{--                                                           target="_blank">{{ __('home.See details') }}</a>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                @endforeach--}}
+{{--                            @endif--}}
+{{--                        </div>--}}
+{{--                        <div class="pagination mt-4 d-flex align-items-center justify-content-center">--}}
+{{--                            {{ $products->links() }}--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <div class="tab-pane fade" id="hotDeal" role="tabpanel" aria-labelledby="hotDeal-tab">--}}
+{{--                        <div class="row">--}}
+{{--                            @if($products == '')--}}
+{{--                                <h1 class="d-flex align-items-center justify-content-center mt-4">{{ __('home.null') }}</h1>--}}
+{{--                            @else--}}
+{{--                                @foreach($products as $product)--}}
+{{--                                    @php--}}
+{{--                                        $isFavourite = null;--}}
+{{--                                        if (Auth::check()){--}}
+{{--                                            $isFavourite = \App\Models\WishList::where('user_id', Auth::user()->id)--}}
+{{--                                                                ->where('product_id', $product->id)--}}
+{{--                                                                ->where('type_product', \App\Enums\TypeProductCart::MEDICINE)--}}
+{{--                                                                ->first();--}}
+{{--                                        }--}}
 
-                                        $class = !$isFavourite ? 'bi-heart' : 'bi-heart-fill text-danger';
-                                    @endphp
-                                    <div class="col-md-3 col-6">
-                                        <div class="">
-                                            <div class="product-item">
-                                                <div
-                                                    class="img-pro justify-content-center d-flex img_product--homeNew">
-                                                    <img loading="lazy" src="{{$product->thumbnail}}" alt="">
-                                                    <a class="button-heart button-product-heart"
-                                                       data-product="{{$product->id}}"
-                                                       data-isFavourite="{{ $isFavourite ? 1 : 0 }}">
-                                                        <i class="bi {{ $class }}"></i>
-                                                    </a>
-                                                </div>
-                                                <div class="content-pro p-md-3 p-2">
-                                                    <div class="">
-                                                        <div class="name-product" style="height: auto">
-                                                            <a class="name-product--fleaMarket max-3-line-content"
-                                                               href="{{ route('examination.doctor_info', $product->id) }}">{{$product->name}}</a>
-                                                        </div>
-                                                        <div class="location-pro">
-                                                            @php
-                                                                if (locationHelper() == 'vi'){
-                                                                    $addressP = Province::find($product->province_id)->name ?? 'Ha Noi';
-                                                                } else{
-                                                                    $addressP = Province::find($product->province_id)->name_en ?? 'Ha Noi';
-                                                                }
-                                                            @endphp
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="21"
-                                                                 height="21" viewBox="0 0 21 21" fill="none">
-                                                                <g clip-path="url(#clip0_5506_14919)">
-                                                                    <path
-                                                                        d="M4.66602 12.8382C3.12321 13.5188 2.16602 14.4673 2.16602 15.5163C2.16602 17.5873 5.89698 19.2663 10.4993 19.2663C15.1017 19.2663 18.8327 17.5873 18.8327 15.5163C18.8327 14.4673 17.8755 13.5188 16.3327 12.8382M15.4993 7.59961C15.4993 10.986 11.7493 12.5996 10.4993 15.0996C9.24935 12.5996 5.49935 10.986 5.49935 7.59961C5.49935 4.83819 7.73793 2.59961 10.4993 2.59961C13.2608 2.59961 15.4993 4.83819 15.4993 7.59961ZM11.3327 7.59961C11.3327 8.05985 10.9596 8.43294 10.4993 8.43294C10.0391 8.43294 9.66602 8.05985 9.66602 7.59961C9.66602 7.13937 10.0391 6.76628 10.4993 6.76628C10.9596 6.76628 11.3327 7.13937 11.3327 7.59961Z"
-                                                                        stroke="white" stroke-width="2"
-                                                                        stroke-linecap="round"
-                                                                        stroke-linejoin="round"/>
-                                                                </g>
-                                                                <defs>
-                                                                    <clipPath id="clip0_5506_14919">
-                                                                        <rect width="20" height="20" fill="white"
-                                                                              transform="translate(0.5 0.933594)"/>
-                                                                    </clipPath>
-                                                                </defs>
-                                                            </svg> &nbsp; {{$addressP}}
-                                                        </div>
-                                                        <div class="prices-pro">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="21"
-                                                                 height="21" viewBox="0 0 21 21" fill="none">
-                                                                <g clip-path="url(#clip0_5506_14923)">
-                                                                    <path
-                                                                        d="M10.4993 5.93294V10.9329L13.8327 12.5996M18.8327 10.9329C18.8327 15.5353 15.1017 19.2663 10.4993 19.2663C5.89698 19.2663 2.16602 15.5353 2.16602 10.9329C2.16602 6.33057 5.89698 2.59961 10.4993 2.59961C15.1017 2.59961 18.8327 6.33057 18.8327 10.9329Z"
-                                                                        stroke="white" stroke-width="2"
-                                                                        stroke-linecap="round"
-                                                                        stroke-linejoin="round"/>
-                                                                </g>
-                                                                <defs>
-                                                                    <clipPath id="clip0_5506_14923">
-                                                                        <rect width="20" height="20" fill="white"
-                                                                              transform="translate(0.5 0.933594)"/>
-                                                                    </clipPath>
-                                                                </defs>
-                                                            </svg>
-                                                            &nbsp; {{number_format($product->price, 0, ',', '.') }} {{$product->price_unit ?? 'VND'}}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex justify-content-end">
-                                                    <div class="SeeDetail">
-                                                        <a href="{{ route('flea.market.product.detail', $product->id) }}"
-                                                           target="_blank">{{ __('home.See details') }}</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @endif
-                        </div>
-                        <div class="pagination mt-4 d-flex align-items-center justify-content-center">
-                            {{ $products->links() }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+{{--                                        $class = !$isFavourite ? 'bi-heart' : 'bi-heart-fill text-danger';--}}
+{{--                                    @endphp--}}
+{{--                                    <div class="col-md-3 col-6">--}}
+{{--                                        <div class="">--}}
+{{--                                            <div class="product-item">--}}
+{{--                                                <div--}}
+{{--                                                    class="img-pro justify-content-center d-flex img_product--homeNew">--}}
+{{--                                                    <img loading="lazy" src="{{$product->thumbnail}}" alt="">--}}
+{{--                                                    <a class="button-heart button-product-heart"--}}
+{{--                                                       data-product="{{$product->id}}"--}}
+{{--                                                       data-isFavourite="{{ $isFavourite ? 1 : 0 }}">--}}
+{{--                                                        <i class="bi {{ $class }}"></i>--}}
+{{--                                                    </a>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="content-pro p-md-3 p-2">--}}
+{{--                                                    <div class="">--}}
+{{--                                                        <div class="name-product" style="height: auto">--}}
+{{--                                                            <a class="name-product--fleaMarket max-3-line-content"--}}
+{{--                                                               href="{{ route('examination.doctor_info', $product->id) }}">{{$product->name}}</a>--}}
+{{--                                                        </div>--}}
+{{--                                                        <div class="location-pro">--}}
+{{--                                                            @php--}}
+{{--                                                                if (locationHelper() == 'vi'){--}}
+{{--                                                                    $addressP = Province::find($product->province_id)->name ?? 'Ha Noi';--}}
+{{--                                                                } else{--}}
+{{--                                                                    $addressP = Province::find($product->province_id)->name_en ?? 'Ha Noi';--}}
+{{--                                                                }--}}
+{{--                                                            @endphp--}}
+{{--                                                            <svg xmlns="http://www.w3.org/2000/svg" width="21"--}}
+{{--                                                                 height="21" viewBox="0 0 21 21" fill="none">--}}
+{{--                                                                <g clip-path="url(#clip0_5506_14919)">--}}
+{{--                                                                    <path--}}
+{{--                                                                        d="M4.66602 12.8382C3.12321 13.5188 2.16602 14.4673 2.16602 15.5163C2.16602 17.5873 5.89698 19.2663 10.4993 19.2663C15.1017 19.2663 18.8327 17.5873 18.8327 15.5163C18.8327 14.4673 17.8755 13.5188 16.3327 12.8382M15.4993 7.59961C15.4993 10.986 11.7493 12.5996 10.4993 15.0996C9.24935 12.5996 5.49935 10.986 5.49935 7.59961C5.49935 4.83819 7.73793 2.59961 10.4993 2.59961C13.2608 2.59961 15.4993 4.83819 15.4993 7.59961ZM11.3327 7.59961C11.3327 8.05985 10.9596 8.43294 10.4993 8.43294C10.0391 8.43294 9.66602 8.05985 9.66602 7.59961C9.66602 7.13937 10.0391 6.76628 10.4993 6.76628C10.9596 6.76628 11.3327 7.13937 11.3327 7.59961Z"--}}
+{{--                                                                        stroke="white" stroke-width="2"--}}
+{{--                                                                        stroke-linecap="round"--}}
+{{--                                                                        stroke-linejoin="round"/>--}}
+{{--                                                                </g>--}}
+{{--                                                                <defs>--}}
+{{--                                                                    <clipPath id="clip0_5506_14919">--}}
+{{--                                                                        <rect width="20" height="20" fill="white"--}}
+{{--                                                                              transform="translate(0.5 0.933594)"/>--}}
+{{--                                                                    </clipPath>--}}
+{{--                                                                </defs>--}}
+{{--                                                            </svg> &nbsp; {{$addressP}}--}}
+{{--                                                        </div>--}}
+{{--                                                        <div class="prices-pro">--}}
+{{--                                                            <svg xmlns="http://www.w3.org/2000/svg" width="21"--}}
+{{--                                                                 height="21" viewBox="0 0 21 21" fill="none">--}}
+{{--                                                                <g clip-path="url(#clip0_5506_14923)">--}}
+{{--                                                                    <path--}}
+{{--                                                                        d="M10.4993 5.93294V10.9329L13.8327 12.5996M18.8327 10.9329C18.8327 15.5353 15.1017 19.2663 10.4993 19.2663C5.89698 19.2663 2.16602 15.5353 2.16602 10.9329C2.16602 6.33057 5.89698 2.59961 10.4993 2.59961C15.1017 2.59961 18.8327 6.33057 18.8327 10.9329Z"--}}
+{{--                                                                        stroke="white" stroke-width="2"--}}
+{{--                                                                        stroke-linecap="round"--}}
+{{--                                                                        stroke-linejoin="round"/>--}}
+{{--                                                                </g>--}}
+{{--                                                                <defs>--}}
+{{--                                                                    <clipPath id="clip0_5506_14923">--}}
+{{--                                                                        <rect width="20" height="20" fill="white"--}}
+{{--                                                                              transform="translate(0.5 0.933594)"/>--}}
+{{--                                                                    </clipPath>--}}
+{{--                                                                </defs>--}}
+{{--                                                            </svg>--}}
+{{--                                                            &nbsp; {{number_format($product->price, 0, ',', '.') }} {{$product->price_unit ?? 'VND'}}--}}
+{{--                                                        </div>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="d-flex justify-content-end">--}}
+{{--                                                    <div class="SeeDetail">--}}
+{{--                                                        <a href="{{ route('flea.market.product.detail', $product->id) }}"--}}
+{{--                                                           target="_blank">{{ __('home.See details') }}</a>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                @endforeach--}}
+{{--                            @endif--}}
+{{--                        </div>--}}
+{{--                        <div class="pagination mt-4 d-flex align-items-center justify-content-center">--}}
+{{--                            {{ $products->links() }}--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
     @php
         $addresses = \App\Models\Clinic::all();
         $coordinatesArray = $addresses->toArray();
