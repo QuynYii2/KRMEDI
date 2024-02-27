@@ -51,7 +51,7 @@ return [
     'Event' => 'Sự kiện',
     'Clinics/Pharmacies' => 'Phòng khám/Nhà thuốc',
     'Khám chuyên khoa' => 'Khám chuyên khoa',
-    'Đặt lịch khám bệnh' => 'Đặt lịch khám bệnh',
+    'Đặt lịch khám bệnh' => 'Đặt lịch khám',
     'Thuốc online' => 'Thuốc online',
     'Khám từ xa' => 'Khám từ xa',
     'Tư vẫn sức khoẻ' => 'Tư vấn sức khỏe',
