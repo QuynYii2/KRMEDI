@@ -2,14 +2,20 @@
 
 namespace App\Http\Controllers\restapi;
 
+use App\Enums\BookingStatus;
 use App\Enums\Constants;
 use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
+use App\Models\Clinic;
 use App\Models\Role;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class UserApi extends Controller
 {
@@ -284,5 +290,26 @@ class UserApi extends Controller
             return response('Success!', 200);
         }
         return response('Key?', 201);
+    }
+
+    public function showBooking(Request $request, $id)
+    {
+        $bookings = null;
+        $now = Carbon::now()->addHours(7);
+        $startDay = $now->copy()->startOfDay();
+        $endDay = $now->copy()->endOfDay();
+
+        if (Auth::check()) {
+            $business = Clinic::where('user_id', Auth::user()->id)->first();
+            if ($business){
+                $bookings = Booking::where('clinic_id', $business->id)
+                    ->where('user_id', $id)
+                    ->whereIn('status', [BookingStatus::PENDING, BookingStatus::APPROVED])
+                    ->whereBetween('check_in', [$startDay, $endDay])
+                    ->orderBy('id', 'desc')
+                    ->get();
+            }
+        }
+        return view('ui.my-bookings.show-booking-by-qrcode', compact('bookings', 'id'));
     }
 }

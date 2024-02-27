@@ -87,6 +87,13 @@
     //#5 - Set remote tracks to store other users
     let remoteTracks = {}
 
+    document.getElementById('join-btn').addEventListener('click', async () => {
+        // config.uid = document.getElementById('username').value
+        await joinStreams()
+        document.getElementById('join-wrapper').style.display = 'none'
+        document.getElementById('footer').style.display = 'flex'
+    })
+
     document.getElementById('mic-btn').addEventListener('click', async () => {
         //Check if what the state of muted currently is
         //Disable button
@@ -102,6 +109,7 @@
         }
     })
 
+
     document.getElementById('camera-btn').addEventListener('click', async () => {
         //Check if what the state of muted currently is
         //Disable button
@@ -116,6 +124,7 @@
             document.getElementById('camera-btn').style.backgroundColor = '#1f1f1f8e'
         }
     })
+
 
     document.getElementById('leave-btn').addEventListener('click', async () => {
         //Loop threw local tracks and stop them so unpublish event gets triggered, then set to undefined
@@ -136,16 +145,12 @@
         document.getElementById('join-wrapper').style.display = 'block'
     })
 
+
     //Method will take all my info and set user stream in frame
     let joinStreams = async () => {
         //Is this place hear strategicly or can I add to end of method?
-        console.log('Start join stream!')
+
         client.on("user-published", handleUserJoined);
-
-        client.on("user-joined", function (event) {
-            console.log("user-joined", event)
-        });
-
         client.on("user-left", handleUserLeft);
 
         client.enableAudioVolumeIndicator(); // Triggers the "volume-indicator" callback event every two seconds.
@@ -162,7 +167,8 @@
         });
 
         //#6 - Set and get back tracks for local user
-        console.log('uid', config.uid, {{ $agora_chat->uid }});
+        console.log('uid')
+        console.log(config.uid, {{ $agora_chat->uid }});
         [config.uid, localTracks.audioTrack, localTracks.videoTrack] = await Promise.all([
             client.join(config.appid, config.channel, config.token || null, config.uid || null),
             AgoraRTC.createMicrophoneAudioTrack(),
@@ -227,14 +233,6 @@
         delete remoteTracks[user.uid]
         document.getElementById(`video-wrapper-${user.uid}`).remove()
     }
-
-    window.addEventListener('load', async () => {
-        await joinStreams();
-        const joinWrapper = document.querySelector('#join-wrapper');
-        const footer = document.querySelector('#footer');
-        joinWrapper.style.display = 'none';
-        footer.style.display = 'flex';
-    });
 </script>
 </body>
 </html>
