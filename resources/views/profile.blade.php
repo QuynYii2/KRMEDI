@@ -145,16 +145,15 @@
         <div class="col-lg-8 order-lg-1">
 
             <div class="card shadow mb-4">
+                @dd(Auth::user())
                 @php
                     if (Auth::user()->member == 'NORMAL') {
                        $member = 'Người dùng';
                     } elseif (Auth::user()->member == 'DOCTORS') {
                         $member = 'Bác sĩ';
-                    }
-                    elseif (Auth::user()->$member == 'PHAMACISTS') {
+                    } elseif (Auth::user()->$member == 'PHAMACISTS') {
                         $member = 'Dược sỹ';
-                    }
-                    elseif (Auth::user()->member == 'HOSPITALS') {
+                    } elseif (Auth::user()->member == 'HOSPITALS') {
                         $member = 'Chủ Bệnh viện';
                     } elseif(Auth::user()->member == 'CLINICS') {
                         $member = 'chủ phòng khám';
@@ -628,7 +627,8 @@
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label for="experienceHospital">{{ __('home.EXPERIENCE') }}</label>
-                                        <input class="form-control" type="number" id="experienceHospital" name="experienceHospital"
+                                        <input class="form-control" type="number" id="experienceHospital"
+                                               name="experienceHospital"
                                                placeholder="{{ __('home.EXPERIENCE') }}">
                                     </div>
                                     <div class="form-group col-md-6">
