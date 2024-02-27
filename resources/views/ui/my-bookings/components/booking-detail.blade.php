@@ -16,7 +16,7 @@
         <div class="form-group col-md-3">
             <label for="check_out">Check Out</label>
             <input disabled type="text" class="form-control" id="check_out"
-                   value="{{ \Carbon\Carbon::parse($booking->check_out)->format('s:i:H d-m-Y') }}">
+                   value="{{ $booking->check_out ? \Carbon\Carbon::parse($booking->check_out)->format('s:i:H d-m-Y') : '' }}">
         </div>
     </div>
     @php
@@ -52,5 +52,52 @@
                 <input disabled type="text" class="form-control" id="member_family_id" value="{{ $family->name }}">
             </div>
         @endif
+    </div>
+    @php
+        $surveys = \App\Models\SurveyAnswerUser::where('booking_id', $booking->id)
+                        ->where('user_id', $id)
+                        ->get();
+        $arraySurvey = [];
+        foreach ($surveyByBooking as $survey) {
+            $parts = explode('-', $survey->result, 2);
+            $idQuestion = $parts[0];
+
+            $question = \App\Models\SurveyQuestion::find($idQuestion)->toArray();
+
+            if ($question['type'] === \App\Enums\SurveyType::TEXT) {
+                $question['answers'] = $parts[1];
+                array_push($arraySurvey, $question);
+                continue;
+            }
+
+            $idAnswer = $parts[1];
+            $idAnswer = explode(',', $idAnswer);
+            $answers = \App\Models\SurveyAnswer::whereIn('id', $idAnswer)->get()->toArray();
+            $question['answers'] = $answers;
+
+            array_push($arraySurvey, $question);
+        }
+    @endphp
+    <div class="row">
+        <h3>{{ __('home.cau hoi khao sat') }}</h3>
+    </div>
+    <div class="row">
+
+        @foreach($arraySurvey as $survey)
+            <div class="col-sm-6">
+                {{ $survey['question'] }}
+            </div>
+            @if($survey['type'] === \App\Enums\SurveyType::TEXT)
+                <div class="col-sm-6">
+                    {{ $survey['answers'] }}
+                </div>
+            @else
+                <div class="col-sm-6">
+                    @foreach($survey['answers'] as $answer)
+                        {{ $answer['answer'] . ' - ' }}
+                    @endforeach
+                </div>
+            @endif
+        @endforeach
     </div>
 </div>
