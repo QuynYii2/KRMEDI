@@ -1613,8 +1613,8 @@
                 <div class="col-md-5">
                     @foreach($newEvens as $news)
                         <a href="{{route('detail.new',$news->id)}}">
-                        <div class="d-flex mb-3">
-                            <div class="col-md-4"><img src="{{$news->thumbnail}}" alt="11" class="krm-img-sub-news"></div>
+                        <div class="d-flex mb-3 krm-border-news-event">
+                            <div class="col-md-4 pl-0"><img src="{{$news->thumbnail}}" alt="11" class="krm-img-sub-news"></div>
                             <div class="col-md-8 p-0">
                                 <div class="krm-title-sub-news">
                                     @if(locationHelper() == 'vi')

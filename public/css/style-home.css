@@ -774,6 +774,17 @@
   object-fit: cover;
 }
 
+.krm-border-news-event {
+  border: 1px solid white;
+  padding: 8px;
+}
+.krm-border-news-event:hover {
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.2509803922);
+  border: 1px solid #088180;
+  border-radius: 12px;
+  padding: 8px;
+}
+
 .krm-title-sub-news {
   font-size: 16px;
   font-weight: 800;

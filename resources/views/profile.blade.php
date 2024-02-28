@@ -148,13 +148,21 @@
                 @php
                     if (Auth::user()->member == 'PAITENTS') {
                        $member = 'Người dùng';
+                    } elseif (Auth::user()->member == 'NORMAL') {
+                       $member = 'Người dùng';
+                    } elseif (Auth::user()->member == 'PHARMACEUTICAL COMPANIES') {
+                       $member = 'Công ty dược phẩm';
+                    } elseif (Auth::user()->member == 'SPAS') {
+                       $member = 'SPAS';
+                    } elseif (Auth::user()->member == 'OTHERS') {
+                       $member = 'OTHERS';
                     } elseif (Auth::user()->member == 'DOCTORS') {
                         $member = 'Bác sĩ';
-                    }elseif (Auth::user()->member == 'THERAPISTS') {
+                    } elseif (Auth::user()->member == 'THERAPISTS') {
                         $member = 'Nhà trị liệu';
-                    }elseif (Auth::user()->member == 'ESTHETICIANS') {
+                    } elseif (Auth::user()->member == 'ESTHETICIANS') {
                         $member = 'Chuyên viên thẩm mỹ';
-                    }elseif (Auth::user()->member == 'NURSES') {
+                    } elseif (Auth::user()->member == 'NURSES') {
                         $member = 'Y tá';
                     } elseif (Auth::user()->$member == 'PHAMACISTS') {
                         $member = 'Dược sỹ';
@@ -162,7 +170,7 @@
                         $member = 'Chủ Bệnh viện';
                     } elseif (Auth::user()->member == 'CLINICS') {
                         $member = 'chủ phòng khám';
-                    }elseif (Auth::user()->member == 'PHARMACIES') {
+                    } elseif (Auth::user()->member == 'PHARMACIES') {
                         $member = 'Nhà thuốc';
                     } else {
                          $member = 'Người dùng';

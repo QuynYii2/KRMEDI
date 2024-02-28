@@ -28,7 +28,7 @@
                                 @if(locationHelper() == 'vi')
                                     {!! $newEvent->short_description !!}
                                 @else
-                                    {!! $newEvent->short_description_en !!}!!}
+                                    {!! $newEvent->short_description_en !!}
                                 @endif
                             </div>
                             <div class="text-gray body-news mt-3">
