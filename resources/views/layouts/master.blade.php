@@ -167,6 +167,10 @@
 <script type="module">
     import {initializeApp} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import {getMessaging, getToken, onMessage} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging.js";
+    import {
+        collection, query, where, onSnapshot, doc,
+        addDoc, getDoc, getDocs, getFirestore
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyAW-1uaHUA8tAaA3IQD9ypNkbVzFji88bE",
@@ -174,11 +178,13 @@
         projectId: "chat-firebase-de134",
         storageBucket: "chat-firebase-de134.appspot.com",
         messagingSenderId: "867778569957",
+        databaseURL: 'https://chat-firebase-de134.firebaseio.com',
         appId: "1:867778569957:web:7f3a6b87d83cefd8e8d60c"
     };
 
     const app = initializeApp(firebaseConfig);
     const messaging = getMessaging();
+    const database = getFirestore(app);
 
     const key_pair_fire_base = 'BIKdl-B84phF636aS0ucw5k-KoGPnivJW4L_a9GNf7gyrWBZt--O9KcEzvsLl3h-3_Ld0rT8YFTsuupknvguW9s';
     getToken(messaging, {vapidKey: key_pair_fire_base}).then((currentToken) => {
@@ -226,10 +232,19 @@
 
     onMessage(messaging, (payload) => {
         console.log('Message received. ', payload);
-        const isFromFirebase = true;
-        callAlert(payload, isFromFirebase);
+        // const isFromFirebase = true;
+        // callAlert(payload, isFromFirebase);
     });
 
+    const usersCollection = collection(database, "users");
+
+    getDocs(usersCollection).then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            console.log(`${doc.id} => ${JSON.stringify(doc.data())}`);
+        });
+    }).catch((error) => {
+        console.error("Error getting documents: ", error);
+    });
 </script>
 <script>
     $(document).ready(function () {

@@ -48,4 +48,15 @@ return [
         'client_secret' => env('KAKAO_CLIENT_SECRET'),
         'redirect' => env('KAKAO_REDIRECT_URI')
     ],
+
+    'firebase' => [
+        'api_key' => '',
+        'auth_domain' => '',
+        'database_url' => '',
+        'secret' => '',
+        'storage_bucket' => '',
+        'project_id' => '',
+        'app_id' => '',
+        'messaging_sender_id' => ''
+    ],
 ];
