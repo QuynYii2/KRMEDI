@@ -146,14 +146,26 @@
 
             <div class="card shadow mb-4">
                 @php
-                    if (Auth::user()->member == 'NORMAL') {
+                    if (Auth::user()->member == 'PAITENTS') {
                        $member = 'Người dùng';
                     } elseif (Auth::user()->member == 'DOCTORS') {
                         $member = 'Bác sĩ';
+                    }elseif (Auth::user()->member == 'THERAPISTS') {
+                        $member = 'Nhà trị liệu';
+                    }elseif (Auth::user()->member == 'ESTHETICIANS') {
+                        $member = 'Chuyên viên thẩm mỹ';
+                    }elseif (Auth::user()->member == 'NURSES') {
+                        $member = 'Y tá';
+                    } elseif (Auth::user()->$member == 'PHAMACISTS') {
+                        $member = 'Dược sỹ';
                     } elseif (Auth::user()->member == 'HOSPITALS') {
                         $member = 'Chủ Bệnh viện';
-                    } else {
+                    } elseif (Auth::user()->member == 'CLINICS') {
                         $member = 'chủ phòng khám';
+                    }elseif (Auth::user()->member == 'PHARMACIES') {
+                        $member = 'Nhà thuốc';
+                    } else {
+                         $member = 'Người dùng';
                     }
                 @endphp
                 <div class="card-header py-3">
@@ -167,7 +179,8 @@
                             {{$member}}
                         @else
                             ADMIN
-                        @endif</h6>
+                        @endif
+                    </h6>
                 </div>
 
                 <div class="card-body">
@@ -621,7 +634,8 @@
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label for="experienceHospital">{{ __('home.EXPERIENCE') }}</label>
-                                        <input class="form-control" type="number" id="experienceHospital" name="experienceHospital"
+                                        <input class="form-control" type="number" id="experienceHospital"
+                                               name="experienceHospital"
                                                placeholder="{{ __('home.EXPERIENCE') }}">
                                     </div>
                                     <div class="form-group col-md-6">
