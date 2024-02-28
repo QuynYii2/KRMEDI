@@ -50,8 +50,75 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.textcomplete/1.8.0/jquery.textcomplete.js"></script>
+    <script src="{{ asset('constants.js') }}" type="module"></script>
     @includeWhen(Auth::check(),'components.head.chat-message' )
+    <script type="module">
+        import {initializeApp} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import {getMessaging, getToken, onMessage} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging.js";
 
+        const firebaseConfig = {
+            apiKey: "AIzaSyAW-1uaHUA8tAaA3IQD9ypNkbVzFji88bE",
+            authDomain: "chat-firebase-de134.firebaseapp.com",
+            projectId: "chat-firebase-de134",
+            storageBucket: "chat-firebase-de134.appspot.com",
+            messagingSenderId: "867778569957",
+            databaseURL: 'https://chat-firebase-de134.firebaseio.com',
+            appId: "1:867778569957:web:7f3a6b87d83cefd8e8d60c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const messaging = getMessaging();
+
+        const key_pair_fire_base = 'BIKdl-B84phF636aS0ucw5k-KoGPnivJW4L_a9GNf7gyrWBZt--O9KcEzvsLl3h-3_Ld0rT8YFTsuupknvguW9s';
+        getToken(messaging, {vapidKey: key_pair_fire_base}).then((currentToken) => {
+            if (currentToken) {
+                console.log('token: ', currentToken);
+                saveToken(currentToken);
+            } else {
+                console.log('No registration token available. Request permission to generate one.');
+            }
+        }).catch((err) => {
+            console.log('An error occurred while retrieving token. ', err);
+        });
+
+        let accessToken = `Bearer ` + token;
+        let headers = {
+            'Authorization': accessToken
+        };
+
+        async function saveToken(token) {
+            @if(Auth::check() && (!Auth::user()->token_firebase || Auth::user()->token_firebase == '' || Auth::user()->token_firebase == null))
+                await callSaveToken(token);
+            @endif
+        }
+
+        async function callSaveToken(token) {
+            let saveTokenUrl = `{{ route('api.user.save.token') }}`;
+
+            let data = {
+                'token_firebase': token,
+                'user_id': '{{ Auth::check() ? Auth::user()->id : '' }}'
+            };
+            await $.ajax({
+                url: saveTokenUrl,
+                method: "POST",
+                headers: headers,
+                data: data,
+                success: function (response) {
+                    console.log(response)
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        onMessage(messaging, (payload) => {
+            console.log('Message received. ', payload);
+            // const isFromFirebase = true;
+            // callAlert(payload, isFromFirebase);
+        });
+    </script>
 </head>
 
 <style>
@@ -163,89 +230,6 @@
 
 </body>
 @include('components.head.tinymce-config')
-
-<script type="module">
-    import {initializeApp} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import {getMessaging, getToken, onMessage} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging.js";
-    import {
-        collection, query, where, onSnapshot, doc,
-        addDoc, getDoc, getDocs, getFirestore
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyAW-1uaHUA8tAaA3IQD9ypNkbVzFji88bE",
-        authDomain: "chat-firebase-de134.firebaseapp.com",
-        projectId: "chat-firebase-de134",
-        storageBucket: "chat-firebase-de134.appspot.com",
-        messagingSenderId: "867778569957",
-        databaseURL: 'https://chat-firebase-de134.firebaseio.com',
-        appId: "1:867778569957:web:7f3a6b87d83cefd8e8d60c"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const messaging = getMessaging();
-    const database = getFirestore(app);
-
-    const key_pair_fire_base = 'BIKdl-B84phF636aS0ucw5k-KoGPnivJW4L_a9GNf7gyrWBZt--O9KcEzvsLl3h-3_Ld0rT8YFTsuupknvguW9s';
-    getToken(messaging, {vapidKey: key_pair_fire_base}).then((currentToken) => {
-        if (currentToken) {
-            console.log('token: ', currentToken);
-            saveToken(currentToken);
-        } else {
-            console.log('No registration token available. Request permission to generate one.');
-        }
-    }).catch((err) => {
-        console.log('An error occurred while retrieving token. ', err);
-    });
-
-    let accessToken = `Bearer ` + token;
-    let headers = {
-        'Authorization': accessToken
-    };
-
-    async function saveToken(token) {
-        @if(Auth::check() && (!Auth::user()->token_firebase || Auth::user()->token_firebase == '' || Auth::user()->token_firebase == null))
-            await callSaveToken(token);
-        @endif
-    }
-
-    async function callSaveToken(token) {
-        let saveTokenUrl = `{{ route('api.user.save.token') }}`;
-
-        let data = {
-            'token_firebase': token,
-            'user_id': '{{ Auth::check() ? Auth::user()->id : '' }}'
-        };
-        await $.ajax({
-            url: saveTokenUrl,
-            method: "POST",
-            headers: headers,
-            data: data,
-            success: function (response) {
-                console.log(response)
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        });
-    }
-
-    onMessage(messaging, (payload) => {
-        console.log('Message received. ', payload);
-        // const isFromFirebase = true;
-        // callAlert(payload, isFromFirebase);
-    });
-
-    const usersCollection = collection(database, "users");
-
-    getDocs(usersCollection).then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            console.log(`${doc.id} => ${JSON.stringify(doc.data())}`);
-        });
-    }).catch((error) => {
-        console.error("Error getting documents: ", error);
-    });
-</script>
 <script>
     $(document).ready(function () {
         $('.btn_close_m').click(function () {

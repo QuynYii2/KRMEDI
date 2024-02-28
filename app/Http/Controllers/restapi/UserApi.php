@@ -268,6 +268,13 @@ class UserApi extends Controller
         }
     }
 
+    public function getUserFromEmail(Request $request)
+    {
+        $email = $request->input('email');
+        $user = User::where('email', $email)->first();
+        return response()->json($user);
+    }
+
     /* Temporary function */
     public function logout()
     {
@@ -301,7 +308,7 @@ class UserApi extends Controller
 
         if (Auth::check()) {
             $business = Clinic::where('user_id', Auth::user()->id)->first();
-            if ($business){
+            if ($business) {
                 $bookings = Booking::where('clinic_id', $business->id)
                     ->where('user_id', $id)
                     ->whereIn('status', [BookingStatus::PENDING, BookingStatus::APPROVED])
