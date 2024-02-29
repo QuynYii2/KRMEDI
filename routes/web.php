@@ -364,6 +364,7 @@ Route::middleware(['user.active'])->group(function () {
 
             Route::group(['prefix' => 'chat'], function () {
                 Route::get('index', [ChatMessageController::class, 'index'])->name('api.backend.connect.chat.index');
+                Route::get('show', [ChatMessageController::class, 'show'])->name('api.backend.connect.chat.show');
 
                 Route::get('getListUserWasConnect', [
                     WidgetChatController::class,
@@ -553,6 +554,9 @@ Route::group(['prefix' => 'zalo-service'], function () {
     Route::get('callback', [ZaloController::class, 'getParameter'])->name('zalo.service.callback');
     Route::get('token', [ZaloController::class, 'getToken'])->name('zalo.service.token');
     Route::get('follower', [ZaloController::class, 'getFollower'])->name('zalo.service.follower');
+    // Get follower information
     Route::get('profile', [ZaloController::class, 'getProfile'])->name('zalo.service.profile');
     Route::get('send-message-text', [ZaloController::class, 'sendMessage'])->name('zalo.service.send.message.text');
+    // Send follower invitation to get information
+    Route::get('send-follower-invitation', [ZaloController::class, 'sendInvitation'])->name('zalo.service.send.invitation');
 });

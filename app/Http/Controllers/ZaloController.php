@@ -109,18 +109,64 @@ class ZaloController extends Controller
         return $response->getDecodedBody();
     }
 
+    public function sendInvitation(Request $request)
+    {
+        try {
+            $user_id = $request->input('user_zalo');
+            $title = $request->input('title');
+            $subtitle = $request->input('subtitle');
+            $image_url = $request->input('image_url');
+
+            return $this->sendInvitationContent($user_id, $title, $subtitle, $image_url);
+        } catch (\Exception $e) {
+            // Exception handling code
+            return response()->json(['error' => 'An error occurred while sending the invitation: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function sendInvitationContent($user_id, $title, $subtitle, $image_url)
+    {
+        try {
+            $msgBuilder = new MessageBuilder(MessageBuilder::MSG_TYPE_REQUEST_USER_INFO);
+            $msgBuilder->withUserId($user_id);
+
+            $element = array(
+                "title" => $title ?? "OA Chatbot",
+                "subtitle" => $subtitle ?? "Đang yêu cầu thông tin từ bạn",
+                "image_url" => $image_url ?? "https://stc-oa-chat-adm.zdn.vn/images/request-info-banner.png"
+            );
+            $msgBuilder->addElement($element);
+
+            $msgText = $msgBuilder->build();
+
+            $zalo = $this->main();
+            $accessToken = $_COOKIE['access_token_zalo'] ?? null;
+
+            // send request
+            $response = $zalo->post(ZaloEndPoint::API_OA_SEND_CONSULTATION_MESSAGE_V3, $accessToken, $msgText);
+            return $response->getDecodedBody();
+        } catch (\Exception $e) {
+            // Exception handling code
+            return response()->json(['error' => 'An error occurred while sending the invitation: ' . $e->getMessage()], 500);
+        }
+    }
+
     /* Get profile */
     public function getProfile(Request $request)
     {
-        $user_id = $request->input('user_zalo');
-        $data = ['data' => json_encode(array(
-            'user_id' => $user_id
-        ))];
-        $zalo = $this->main();
-        $accessToken = $_COOKIE['access_token_zalo'] ?? null;
-        $response = $zalo->get(ZaloEndPoint::API_OA_GET_USER_PROFILE, $accessToken, $data);
-        $result = $response->getDecodedBody();
-        return $result;
+        try {
+            $user_id = $request->input('user_zalo');
+            $data = ['data' => json_encode(array(
+                'user_id' => $user_id
+            ))];
+            $zalo = $this->main();
+            $accessToken = $_COOKIE['access_token_zalo'] ?? null;
+            $response = $zalo->get(ZaloEndPoint::API_OA_GET_USER_PROFILE, $accessToken, $data);
+            $result = $response->getDecodedBody();
+            return $result;
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred while retrieving the profile: ' . $e->getMessage()], 500);
+        }
     }
 
     private function getLoginUrlOA()
