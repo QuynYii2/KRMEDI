@@ -8,13 +8,11 @@
             display: flex;
             flex-flow: column wrap;
             justify-content: space-between;
-            width: 100%;
-            max-width: 867px;
             margin: 0 10px 25px 10px;
-            height: calc(100% - 50px);
             border: var(--border);
             border-radius: 5px;
-            min-height: 500px;
+            max-height: 500px;
+            overflow: scroll;
             background: var(--msger-bg);
             box-shadow: 0 15px 15px -5px rgba(0, 0, 0, 0.2);
         }
@@ -178,14 +176,22 @@
                         <p class="text-center">No message</p>
                     </main>
 
-                    <form class="msger-inputarea">
-                        <input type="text" class="msger-input" placeholder="Enter your message..." id="msger-input">
+                    <div class="msger-inputarea">
+                        <input type="text" class="msger-input" placeholder="Enter your message..." id="msger-input"
+                               onkeypress="supSendMessage()">
                         <button type="button" class="msger-send-btn">Send</button>
-                    </form>
+                    </div>
                 </section>
             </div>
         </div>
     </div>
+    <script>
+        function supSendMessage() {
+            if (event.keyCode === 13 && !event.shiftKey) {
+                $('.msger-send-btn').trigger('click');
+            }
+        }
+    </script>
     <script type="module">
         import {firebaseConfig} from '{{ asset('constants.js') }}';
         import {initializeApp} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -194,6 +200,7 @@
             getDocs,
             updateDoc,
             doc,
+            onSnapshot,
             setDoc,
             getFirestore,
             where,
@@ -273,18 +280,15 @@
             }
         }
 
-        getDocs(usersCollection).then((querySnapshot) => {
+        const unsubscribe = onSnapshot(usersCollection, (querySnapshot) => {
             querySnapshot.forEach((doc) => {
                 let res = doc.data();
-                let role = res.role;
-                if (role === 'DOCTORS') {
-                    list_user.push(res)
-                }
+                list_user.push(res);
             });
             renderUser();
             getMessageFirebase();
-        }).catch((error) => {
-            console.error("Error getting documents: ", error);
+        }, (error) => {
+            console.error("Error getting: ", error);
         });
 
         let new_message = `<p class="read">A new message</p>
@@ -327,6 +331,8 @@
             }
             $('#list-user').empty().append(html);
         }
+
+        btnSendMessage();
 
         function btnSendMessage() {
             let msger_input = $('#msger-input');
@@ -379,12 +385,11 @@
                 let email = $(this).data('email');
 
                 let conversationID = getConversationID(id);
-                console.log(conversationID);
                 const messagesCollectionRef = collection(database, `chats/${conversationID}/messages`);
 
                 let html = ``;
 
-                getDocs(messagesCollectionRef).then((querySnapshot) => {
+                const unsubscribe = onSnapshot(messagesCollectionRef, (querySnapshot) => {
                     let list_message = [];
 
                     querySnapshot.forEach((doc) => {
@@ -393,13 +398,12 @@
                     });
 
                     renderMessage(list_message, html);
-                }).catch((error) => {
-                    console.error("Error getting documents: ", error);
+                }, (error) => {
+                    console.error("Error getting: ", error);
                 });
 
                 renderLayOutChat(email, id);
             })
-            btnSendMessage();
         }
 
         function renderMessage(list_message, html) {
