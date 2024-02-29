@@ -240,10 +240,7 @@
 
         let current_user, list_user = [];
 
-        let name = getCookie('is_login');
-        if (!name) {
-            login();
-        }
+        login();
 
         async function login() {
             await signInWithEmailAndPassword(auth, `{{ Auth::user()->email }}`, '123456')
