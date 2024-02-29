@@ -281,7 +281,6 @@ class BackendCouponController extends Controller
         $coupon->code = $code;
         $coupon->thumbnail = $thumbnail;
         $coupon->clinic_id = $clinic_id;
-        dd($coupon);
 
 
         $success = $coupon->save();
