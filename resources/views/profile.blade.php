@@ -33,7 +33,7 @@
             <div class="card shadow mb-4">
                 <div class="card-profile-image mt-4 d-flex justify-content-center">
                     <img loading="lazy" class="avatar-user" src="{{ Auth::user()->avt }}" alt=""
-                         style="max-width: 100px; max-height: 100px">
+                         style="width: 100px; height: 100px; object-fit: cover;">
                 </div>
                 <div class="card-body">
 
@@ -146,36 +146,24 @@
 
             <div class="card shadow mb-4">
                 @php
-                    if (Auth::user()->member == \App\Enums\TypeUser::PAITENTS) {
-                       $member = 'Người dùng';
-                    } elseif (Auth::user()->member == \App\Enums\TypeUser::NORMAL_PEOPLE) {
-                       $member = 'Người dùng';
-                    } elseif (Auth::user()->member == \App\Enums\TypeUser::PHARMACEUTICAL_COMPANIES) {
-                       $member = 'Công ty dược phẩm';
-                    } elseif (Auth::user()->member == \App\Enums\TypeUser::SPAS) {
-                       $member = 'SPAS';
-                    } elseif (Auth::user()->member == \App\Enums\TypeUser::OTHERS) {
-                       $member = 'OTHERS';
-                    } elseif (Auth::user()->member == \App\Enums\TypeUser::DOCTORS) {
-                        $member = 'Bác sĩ';
-                    } elseif (Auth::user()->member == \App\Enums\TypeUser::THERAPISTS) {
-                        $member = 'Nhà trị liệu';
-                    } elseif (Auth::user()->member == \App\Enums\TypeUser::ESTHETICIANS) {
-                        $member = 'Chuyên viên thẩm mỹ';
-                    } elseif (Auth::user()->member == \App\Enums\TypeUser::NURSES) {
-                        $member = 'Y tá';
-                    } elseif (Auth::user()->$member == \App\Enums\TypeUser::PHAMACISTS) {
-                        $member = 'Dược sỹ';
-                    } elseif (Auth::user()->member == \App\Enums\TypeUser::HOSPITALS) {
-                        $member = 'Chủ Bệnh viện';
-                    } elseif (Auth::user()->member == \App\Enums\TypeUser::CLINICS) {
-                        $member = 'chủ phòng khám';
-                    } elseif (Auth::user()->member == \App\Enums\TypeUser::PHARMACIES) {
-                        $member = 'Nhà thuốc';
-                    } else {
-                         $member = 'Người dùng';
-                    }
+                    $memberMappings = [
+                        \App\Enums\TypeUser::PAITENTS => 'Người dùng',
+                        \App\Enums\TypeUser::NORMAL_PEOPLE => 'Người dùng',
+                        \App\Enums\TypeUser::PHARMACEUTICAL_COMPANIES => 'Công ty dược phẩm',
+                        \App\Enums\TypeUser::SPAS => 'SPAS',
+                        \App\Enums\TypeUser::OTHERS => 'OTHERS',
+                        \App\Enums\TypeUser::DOCTORS => 'Bác sĩ',
+                        \App\Enums\TypeUser::THERAPISTS => 'Nhà trị liệu',
+                        \App\Enums\TypeUser::ESTHETICIANS => 'Chuyên viên thẩm mỹ',
+                        \App\Enums\TypeUser::NURSES => 'Y tá',
+                        \App\Enums\TypeUser::PHAMACISTS => 'Dược sỹ',
+                        \App\Enums\TypeUser::HOSPITALS => 'Chủ Bệnh viện',
+                        \App\Enums\TypeUser::CLINICS => 'chủ phòng khám',
+                        \App\Enums\TypeUser::PHARMACIES => 'Nhà thuốc',
+                    ];
+                    $member = $memberMappings[Auth::user()->member] ?? 'Người dùng';
                 @endphp
+
                 <div class="card-header py-3">
                     @php
                         $roleUser = \App\Models\RoleUser::where('user_id',Auth::user()->id)->first();
@@ -192,7 +180,6 @@
                 </div>
 
                 <div class="card-body">
-
                     <form method="POST" action="{{ route('profile.update') }}" autocomplete="off"
                           enctype="multipart/form-data">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -386,58 +373,26 @@
                                         <input class="form-control" id="workplace" type="text" name="workplace" required
                                                value="{{$doctor->workplace}}">
                                     </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-sm-4"><label
                                             for="specialty">{{ __('home.chuyên môn việt') }}</label>
                                         <input type="text" class="form-control" id="specialty" name="specialty"
                                                value="{{$doctor->specialty}}">
                                     </div>
-                                    <div class="col-sm-4"><label
-                                            for="specialty_en">{{ __('home.chuyên môn anh') }}</label>
-                                        <input type="text" class="form-control" id="specialty_en" name="specialty_en"
-                                               value="{{$doctor->specialty_en}}"></div>
-                                    <div class="col-sm-4"><label
-                                            for="specialty_laos">{{ __('home.chuyên môn lào') }}</label>
-                                        <input type="text" class="form-control" id="specialty_laos"
-                                               name="specialty_laos"
-                                               value="{{$doctor->specialty_laos}}"></div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-4">
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
                                         <label for="service">{{ __('home.Dịch vụ cung cấp việt') }}</label>
                                         <textarea class="form-control" name="service"
-                                                  id="service">{{$doctor->service}}</textarea>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <label for="service_en">{{ __('home.Dịch vụ cung cấp anh') }}</label>
-                                        <textarea class="form-control" name="service_en"
-                                                  id="service_en">{{$doctor->service_en}}</textarea>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <label for="service_laos">{{ __('home.Dịch vụ cung cấp lào') }}</label>
-                                        <textarea class="form-control" name="service_laos"
-                                                  id="service_laos">{{$doctor->service_laos}}</textarea>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <label for="service_price">{{ __('home.Giá dịch vụ việt') }}</label>
-                                        <input class="form-control" type="number" name="service_price"
-                                               id="service_price"
-                                               value="{{$doctor->service_price}}">
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <label for="service_price_en">{{ __('home.Giá dịch vụ anh') }}</label>
-                                        <input class="form-control" type="number" name="service_price_en"
-                                               id="service_price_en"
-                                               value="{{$doctor->service_price_en}}">
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <label for="service_price_laos">{{ __('home.Giá dịch vụ lào') }}</label>
-                                        <input class="form-control" type="number" name="service_price_laos"
-                                               id="service_price_laos"
-                                               value="{{$doctor->service_price_laos}}">
+                                                  id="service">
+                                            @if(locationHelper() == 'vi')
+                                                {{$doctor->service ?? ''}}
+                                            @else
+                                                {{ $doctor->service_en ?? ''}}
+                                            @endif
+                                        </textarea>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -577,6 +532,12 @@
                                         <input type="number" class="form-control" id="year_of_experience"
                                                name="year_of_experience"
                                                value="{{$doctor->year_of_experience}}">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label for="service_price">{{ __('home.Giá dịch vụ việt') }}</label>
+                                        <input class="form-control" type="number" name="service_price"
+                                               id="service_price"
+                                               value="{{$doctor->service_price}}">
                                     </div>
                                 </div>
                                 <div class="row">

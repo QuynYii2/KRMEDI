@@ -73,6 +73,8 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
+        $translate = new TranslateController();
+
         $request->validate([
             'username' => 'required|string',
             'name' => 'required|string|max:255',
@@ -153,30 +155,34 @@ class ProfileController extends Controller
         $user->commune_id = $commune_id[0];
         $user->workplace = $request->input('workplace') ?? '';
         $user->identifier = $request->input('identifier') ?? '';
-        $user->specialty = $request->input('specialty');
-        $user->specialty_en = $request->input('specialty_en');
-        $user->specialty_laos = $request->input('specialty_laos');
+        $specialty = $request->input('specialty');
 
-        $user->detail_address = $request->input('detail_address');
-        $user->detail_address_en = $request->input('detail_address_en');
-        $user->detail_address_laos = $request->input('detail_address_laos');
+        $user->specialty = $specialty;
+        $user->specialty_en = $translate->translateText($specialty, 'en');
+        $user->specialty_laos = $translate->translateText($specialty, 'lo');
+
+
+        $detail_address = $request->input('detail_address');
+        $user->detail_address = $detail_address;
+        $user->detail_address_en = $translate->translateText($detail_address, 'en');
+        $user->detail_address_laos = $translate->translateText($detail_address, 'lo');
         $user->year_of_experience = $request->input('year_of_experience');
 
-        $user->service = $request->input('service');
-        $user->service_en = $request->input('service_en');
-        $user->service_laos = $request->input('service_laos');
+        $service = $request->input('service');
+        $user->service = $service;
+        $user->service_en = $translate->translateText($service, 'en');
+        $user->service_laos = $translate->translateText($service, 'lo');
 
-        $user->service_price = $request->input('service_price');
-        $user->service_price_en = $request->input('service_price_en');
-        $user->service_price_laos = $request->input('service_price_laos');
-
+        $service_price = $request->input('service_price');
+        $user->service_price = $service_price;
+        $user->service_price_en = $translate->translateText($service_price, 'en');
+        $user->service_price_laos = $translate->translateText($service_price, 'lo');
         $user->time_working_1 = $request->input('time_working_1');
         $user->time_working_2 = $request->input('time_working_2');
         $user->prescription = $request->has('prescription') ? (int)$request->input('prescription') : 0;
         $user->medical_history = $request->input('medical_history');
 
         $user->free = $request->has('free') ? (int)$request->input('free') : 0;
-//        dd($user->prescription, $user->free);
         if ($request->hasFile('avt')) {
             $item = $request->file('avt');
             $itemPath = $item->store('license', 'public');
