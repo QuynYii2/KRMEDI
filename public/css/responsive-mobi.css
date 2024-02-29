@@ -767,10 +767,14 @@ img {
   /* NEW HOME */
   .background-image_HomeNew--departments .container #map-location .clip-path-container {
     height: 700px;
+    background-color: #088180;
+    clip-path: polygon(0% 0%, 101% 0%, 100% 84%, 0% 101%);
+    border-radius: 50px;
+    border-bottom: 20px solid #088180;
   }
   .background-image_HomeNew--departments .container #map-location .clip-path-container #allAddressesMap {
-    border-radius: 24px;
-    clip-path: polygon(0% 0%, 100% 0%, 100% 84%, 0% 100%, 0% 80%);
+    border-radius: 50px;
+    clip-path: polygon(0% 0%, 100% 0%, 100% 84%, 0% 101%, 0% 80%);
   }
   .container #find-doctor--homeNew .title-findProduct--homeNew span {
     font-size: 48px;

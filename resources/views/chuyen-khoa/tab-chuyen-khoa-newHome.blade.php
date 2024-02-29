@@ -16,39 +16,52 @@
                         </div>
                     </div>
                 @else
-                    <style>
-                        .krm-border-chuyen-khoa-list {
-                            border: 1px solid #D6D6D6;
-                            border-radius: 16px;
-                            padding: 24px;
-                            background: #FFFFFF;
-                        }
-                        .krm-img-chuyen-khoa-list {
-                            background-image: radial-gradient(circle at center, rgba(255, 193, 7, 0.3098039216) 5%, #FFFFFF 55%, #FFFFFF 0%);
-                        }
-                        .krm-img-chuyen-khoa-list img {
-                            width: 60px;
-                            height: 60px;
-                            border-radius: 50px;
-                            margin: 12px;
-                        }
-                    </style>
+{{--                    <style>--}}
+{{--                        .krm-border-chuyen-khoa-list {--}}
+{{--                            border: 1px solid #D6D6D6;--}}
+{{--                            border-radius: 16px;--}}
+{{--                            padding: 24px;--}}
+{{--                            background: #FFFFFF;--}}
+{{--                        }--}}
+{{--                        .krm-img-chuyen-khoa-list {--}}
+{{--                            background-image: radial-gradient(circle at center, rgba(255, 193, 7, 0.3098039216) 5%, #FFFFFF 55%, #FFFFFF 0%);--}}
+{{--                        }--}}
+{{--                        .krm-img-chuyen-khoa-list img {--}}
+{{--                            width: 60px;--}}
+{{--                            height: 60px;--}}
+{{--                            border-radius: 50px;--}}
+{{--                            margin: 12px;--}}
+{{--                        }--}}
+{{--                    </style>--}}
                     @foreach($departments as $departmentItem)
-                        <div class="col-md-2 col-6 mb-3">
+                        <div class="col-md-4">
                             <a href="{{route('home.specialist.department',$departmentItem->id)}}">
-                                <div class="align-items-center krm-border-chuyen-khoa-list">
-                                    <div class="d-flex justify-content-center align-content-center krm-img-chuyen-khoa-list">
-                                        <img loading="lazy" src="{{$departmentItem->thumbnail}}" alt="thumbnail"
-                                             class="krm-icon-chuyen-khoa">
+                                <div class="border-HomeNew">
+                                    <div class="w-75 d-flex align-items-center ">
+                                        <img src="{{$departmentItem->thumbnail}}" alt="thumbnail">
+                                        <span>
+                                            @if(locationHelper() == 'vi')
+                                                {{$departmentItem->name ?? ''}}
+                                            @else
+                                                {{ $departmentItem->name_en  ?? ''}}
+                                            @endif
+                                        </span>
                                     </div>
-                                    <div class="d-flex align-content-center justify-content-center">
-                                            <span style="height: 40px;">
-                                                @if(locationHelper() == 'vi')
-                                                    {{ ($departmentItem->name ?? __('home.no name') ) }}
-                                                @else
-                                                    {{ ($departmentItem->name_en  ?? __('home.no name') ) }}
-                                                @endif
-                                            </span>
+                                    <div class="svg-containerNho">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                             fill="none">
+                                            <path opacity="0.5" fill-rule="evenodd" clip-rule="evenodd"
+                                                  d="M16.6666 0H7.3333V7.33268L0 7.33268V16.666H7.3333V24H16.6666V16.666H24V7.33268L16.6666 7.33268V0Z"
+                                                  fill="#D8F6FF"/>
+                                        </svg>
+                                    </div>
+                                    <div class="svg-container">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"
+                                             fill="none">
+                                            <path opacity="0.5" fill-rule="evenodd" clip-rule="evenodd"
+                                                  d="M41.6667 0H18.3333V18.3327H0V41.666H18.3333V60H41.6667V41.666H60V18.3327H41.6667V0Z"
+                                                  fill="#D8F6FF"/>
+                                        </svg>
                                     </div>
                                 </div>
                             </a>
