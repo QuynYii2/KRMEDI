@@ -6,6 +6,7 @@ use App\Enums\CouponStatus;
 use App\Enums\TypeCoupon;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\TranslateController;
 use App\Models\Clinic;
 use App\Models\Coupon;
 use App\Models\Role;
@@ -182,6 +183,7 @@ class BackendCouponController extends Controller
 
     private function saveCoupon($coupon, $request)
     {
+        $translate = new TranslateController();
         $title = $request->input('title');
         $description = $request->input('description');
         $short_description = $request->input('short_description');
@@ -235,11 +237,23 @@ class BackendCouponController extends Controller
 
         $coupon->title = $title;
         $coupon->condition = $condition;
+        $coupon->condition_en = $translate->translateText($condition, 'en') ?? '';
+
         $coupon->conduct = $conduct;
+        $coupon->conduct_en = $translate->translateText($conduct, 'en') ?? '';
+
         $coupon->description = $description;
+        $coupon->description_en = $translate->translateText($description, 'en') ?? '';
+
         $coupon->short_description = $short_description;
+        $coupon->short_description_en = $translate->translateText($short_description, 'en') ?? '';
+
         $coupon->instruction = $instruction;
+        $coupon->instruction_en = $translate->translateText($instruction, 'en') ?? '';
+
         $coupon->website = $website;
+        $coupon->website_en = $translate->translateText($website, 'en') ?? '';
+
 
 
         $coupon->startDate = $startDate;
