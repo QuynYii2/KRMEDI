@@ -273,11 +273,12 @@
 
         function getConversationID(userUid) {
             let id = current_user.uid;
-            if (userUid <= id) {
-                return `${userUid}_${id}`;
-            } else {
-                return `${id}_${userUid}`;
-            }
+            // if (userUid <= id) {
+            //     return `${userUid}_${id}`;
+            // } else {
+            //     return `${id}_${userUid}`;
+            // }
+            return `${userUid}_${id}`;
         }
 
         const unsubscribe = onSnapshot(usersCollection, (querySnapshot) => {
