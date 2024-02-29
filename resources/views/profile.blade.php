@@ -146,31 +146,31 @@
 
             <div class="card shadow mb-4">
                 @php
-                    if (Auth::user()->member == 'PAITENTS') {
+                    if (Auth::user()->member == \App\Enums\TypeUser::PAITENTS) {
                        $member = 'Người dùng';
-                    } elseif (Auth::user()->member == 'NORMAL') {
+                    } elseif (Auth::user()->member == \App\Enums\TypeUser::NORMAL_PEOPLE) {
                        $member = 'Người dùng';
-                    } elseif (Auth::user()->member == 'PHARMACEUTICAL COMPANIES') {
+                    } elseif (Auth::user()->member == \App\Enums\TypeUser::PHARMACEUTICAL_COMPANIES) {
                        $member = 'Công ty dược phẩm';
-                    } elseif (Auth::user()->member == 'SPAS') {
+                    } elseif (Auth::user()->member == \App\Enums\TypeUser::SPAS) {
                        $member = 'SPAS';
-                    } elseif (Auth::user()->member == 'OTHERS') {
+                    } elseif (Auth::user()->member == \App\Enums\TypeUser::OTHERS) {
                        $member = 'OTHERS';
-                    } elseif (Auth::user()->member == 'DOCTORS') {
+                    } elseif (Auth::user()->member == \App\Enums\TypeUser::DOCTORS) {
                         $member = 'Bác sĩ';
-                    } elseif (Auth::user()->member == 'THERAPISTS') {
+                    } elseif (Auth::user()->member == \App\Enums\TypeUser::THERAPISTS) {
                         $member = 'Nhà trị liệu';
-                    } elseif (Auth::user()->member == 'ESTHETICIANS') {
+                    } elseif (Auth::user()->member == \App\Enums\TypeUser::ESTHETICIANS) {
                         $member = 'Chuyên viên thẩm mỹ';
-                    } elseif (Auth::user()->member == 'NURSES') {
+                    } elseif (Auth::user()->member == \App\Enums\TypeUser::NURSES) {
                         $member = 'Y tá';
-                    } elseif (Auth::user()->$member == 'PHAMACISTS') {
+                    } elseif (Auth::user()->$member == \App\Enums\TypeUser::PHAMACISTS) {
                         $member = 'Dược sỹ';
-                    } elseif (Auth::user()->member == 'HOSPITALS') {
+                    } elseif (Auth::user()->member == \App\Enums\TypeUser::HOSPITALS) {
                         $member = 'Chủ Bệnh viện';
-                    } elseif (Auth::user()->member == 'CLINICS') {
+                    } elseif (Auth::user()->member == \App\Enums\TypeUser::CLINICS) {
                         $member = 'chủ phòng khám';
-                    } elseif (Auth::user()->member == 'PHARMACIES') {
+                    } elseif (Auth::user()->member == \App\Enums\TypeUser::PHARMACIES) {
                         $member = 'Nhà thuốc';
                     } else {
                          $member = 'Người dùng';
@@ -184,7 +184,7 @@
                     @endphp
                     <h6 class="m-0 font-weight-bold text-primary">{{ __('home.My Account') }}
                         : @if($roleName->name != 'ADMIN')
-                            {{$member}}
+                            {{$member ?? 'Người dùng'}}
                         @else
                             ADMIN
                         @endif
