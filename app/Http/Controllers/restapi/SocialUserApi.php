@@ -82,6 +82,20 @@ class SocialUserApi extends Controller
         $socialUser->google_review = $request->input('google_review');
 
         $socialUser->other = $request->input('other');
+//        // Kiểm tra và xử lý các liên kết mạng xã hội
+//        foreach ($linkChecks as $field => $pattern) {
+//            $value = $request->input($field);
+//            // Kiểm tra định dạng URL
+//            if (!preg_match($pattern, $value)) {
+//                // Nếu không phù hợp, bạn có thể xử lý theo ý muốn, ví dụ:
+//                return response()->json(['error' => 'Invalid URL format for ' . $field], 400);
+//                // hoặc
+//                // throw new Exception('Invalid URL format for ' . $field);
+//            }
+//
+//            // Gán giá trị vào đối tượng $socialUser
+//            $socialUser->{$field} = $value;
+//        }
 
         $socialUser->status = SocialUserStatus::ACTIVE;
 
