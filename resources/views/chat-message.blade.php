@@ -246,7 +246,6 @@
         }
 
         async function login() {
-            console.log(123)
             await signInWithEmailAndPassword(auth, `{{ Auth::user()->email }}`, '123456')
                 .then((userCredential) => {
                     current_user = userCredential.user;
