@@ -69,6 +69,10 @@ class ZaloController extends Controller
             setCookie('access_token_zalo', $array['access_token'], $expiration_time, '/');
             setCookie('refresh_token_zalo', $array['refresh_token'], $expiration_time, '/');
         }
+        if (session('zalo_intended_url')) {
+            return redirect(session('zalo_intended_url'));
+        }
+
         return redirect(route('home'));
     }
 
@@ -93,7 +97,8 @@ class ZaloController extends Controller
     {
         $user_id = $request->input('user_zalo');
         $message = $request->input('message');
-        return $this->sendMessageText($user_id, $message);
+        $this->sendMessageText($user_id, $message);
+        return back();
     }
 
     public function sendMessageText($user_id, $message)
@@ -106,7 +111,11 @@ class ZaloController extends Controller
         $zalo = $this->main();
         $accessToken = $_COOKIE['access_token_zalo'] ?? null;
         $response = $zalo->post(ZaloEndPoint::API_OA_SEND_CONSULTATION_MESSAGE_V3, $accessToken, $msgText);
-        return $response->getDecodedBody();
+        if ($response->getDecodedBody()['error'] != 0) {
+            //Err
+            toast('Something went wrong', 'error', 'top-left');
+        }
+        toast('Successfully', 'success', 'top-left');
     }
 
     public function sendInvitation(Request $request)
@@ -211,5 +220,41 @@ class ZaloController extends Controller
                 'status' => 500,
             ];
         }
+    }
+
+    public function manageFollower()
+    {
+        if ($this->access_token == null) {
+            //Logged to OA
+            session()->put('zalo_intended_url', request()->url());
+            return $this->getAuthCode();
+        }
+
+        $followers = $this->getFollower()['data']['followers'] ?? [];
+
+        $follower_info = [];
+
+        foreach ($followers as $follower) {
+            $user_id = $follower['user_id'];
+            $request = new Request();
+            $request->merge(['user_zalo' => $user_id]);
+            $result = $this->getProfile($request);
+
+            if ($result instanceof \Illuminate\Http\JsonResponse) {
+                $follower_info[] = [
+                    'isBanned' => true,
+                    'display_name' => 'Banned User',
+                    'user_id' => $follower['user_id']
+                ];
+
+                continue;
+            }
+    
+            if (isset($result['data']) && is_array($result['data'])) {
+                $follower_info[] = $result['data'];
+            }
+        }
+
+        return view('admin.user.zalo')->with(compact('follower_info'));
     }
 }
