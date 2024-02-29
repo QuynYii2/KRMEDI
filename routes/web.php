@@ -554,6 +554,9 @@ Route::group(['prefix' => 'zalo-service'], function () {
     Route::get('callback', [ZaloController::class, 'getParameter'])->name('zalo.service.callback');
     Route::get('token', [ZaloController::class, 'getToken'])->name('zalo.service.token');
     Route::get('follower', [ZaloController::class, 'getFollower'])->name('zalo.service.follower');
+    // Get follower information
     Route::get('profile', [ZaloController::class, 'getProfile'])->name('zalo.service.profile');
     Route::get('send-message-text', [ZaloController::class, 'sendMessage'])->name('zalo.service.send.message.text');
+    // Send follower invitation to get information
+    Route::get('send-follower-invitation', [ZaloController::class, 'sendInvitation'])->name('zalo.service.send.invitation');
 });

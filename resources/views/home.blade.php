@@ -1596,15 +1596,15 @@
             </div>
             <div class="d-md-flex main-recruitment--homeNew justify-content-between">
                 <div class="col-md-7 p-0">
-                    <a href="{{route('detail.new',$newEvens->first()->id)}}">
+                    <a href="{{route('detail.new',$newEvens->first()->id ?? 0)}}">
                         <div>
-                            <img src="{{$newEvens->first()->thumbnail}}" class="krm-img-news" alt="??">
+                            <img src="{{$newEvens->first()->thumbnail ?? '#'}}" class="krm-img-news" alt="??">
                         </div>
                         <div class="krm-title-news">
                             @if(locationHelper() == 'vi')
-                                {!! $newEvens->first()->title !!}
+                                {!! $newEvens->first()->title ?? '' !!}
                             @else
-                                {!! $newEvens->first()->title_en !!}
+                                {!! $newEvens->first()->title_en ?? '' !!}
                             @endif
                         </div>
                     </a>
