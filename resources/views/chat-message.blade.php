@@ -14,6 +14,7 @@
             height: calc(100% - 50px);
             border: var(--border);
             border-radius: 5px;
+            min-height: 500px;
             background: var(--msger-bg);
             box-shadow: 0 15px 15px -5px rgba(0, 0, 0, 0.2);
         }
@@ -166,49 +167,19 @@
                 <section class="msger">
                     <header class="msger-header">
                         <div class="msger-header-title">
-                            <i class="fas fa-comment-alt"></i> SimpleChat
+                            <i class="fas fa-comment-alt"></i> <span id="chat_to_user">Open chat</span>
                         </div>
                         <div class="msger-header-options">
                             <span><i class="fas fa-cog"></i></span>
                         </div>
                     </header>
 
-                    <main class="msger-chat">
-                        <div class="msg left-msg">
-                            <div class="msg-img"
-                                 style="background-image: url(https://image.flaticon.com/icons/svg/327/327779.svg)"></div>
-
-                            <div class="msg-bubble">
-                                <div class="msg-info">
-                                    <div class="msg-info-name">BOT</div>
-                                    <div class="msg-info-time">12:45</div>
-                                </div>
-
-                                <div class="msg-text">
-                                    Hi, welcome to SimpleChat! Go ahead and send me a message. 😄
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="msg right-msg">
-                            <div class="msg-img"
-                                 style="background-image: url(https://image.flaticon.com/icons/svg/145/145867.svg)"></div>
-
-                            <div class="msg-bubble">
-                                <div class="msg-info">
-                                    <div class="msg-info-name">Sajad</div>
-                                    <div class="msg-info-time">12:46</div>
-                                </div>
-
-                                <div class="msg-text">
-                                    You can change your name in JS section!
-                                </div>
-                            </div>
-                        </div>
+                    <main class="msger-chat" id="main_chat_area">
+                        <p class="text-center">No message</p>
                     </main>
 
                     <form class="msger-inputarea">
-                        <input type="text" class="msger-input" placeholder="Enter your message...">
+                        <input type="text" class="msger-input" placeholder="Enter your message..." id="msger-input">
                         <button type="button" class="msger-send-btn">Send</button>
                     </form>
                 </section>
@@ -341,7 +312,7 @@
                     show = offline;
                 }
 
-                html = html + `<div class="card p-1 m-1 user_connect" data-id="${res.id}">
+                html = html + `<div class="card p-1 m-1 user_connect" data-id="${res.id}" data-email="${email}">
                     <div class="d-flex justify-content-between align-items-center">
                         <b class="">${email}</b>
                         <span class="d-flex align-items-center justify-content-between ml-2">
@@ -357,9 +328,19 @@
             $('#list-user').empty().append(html);
         }
 
-        async function sendMessage(chatUser, msg, type) {
+        function btnSendMessage() {
+            let msger_input = $('#msger-input');
+            $('.msger-send-btn').click(function () {
+                let msg = msger_input.val();
+                let toUser = $(this).data('to_user');
+                sendMessage(toUser, msg, 'text');
+                msger_input.val('');
+            })
+        }
+
+        async function sendMessage(chatUserID, msg, type) {
             const time = Date.now().toString();
-            const receiverId = chatUser.id;
+            const receiverId = chatUserID;
 
             const message = {
                 toId: receiverId,
@@ -371,43 +352,101 @@
                 sent: time
             };
 
-            const ref = collection(database, `chats/${getConversationID(chatUser.id)}/messages/`);
+            let conversationID = getConversationID(chatUserID);
+
+            const ref = collection(database, `chats/${conversationID}/messages/`);
 
             try {
                 await setDoc(doc(ref, time), message);
                 // await sendPushNotification(chatUser, type === 'text' ? msg : 'image');
                 // await updateLastMessage(chatUser, message);
+                console.log(message)
                 console.log('Message sent successfully');
             } catch (error) {
                 console.error('Error sending message:', error);
             }
         }
 
+        function renderLayOutChat(email, id) {
+            $('#chat_to_user').text(email);
+            $('.msger-send-btn').data('to_user', id);
+            $('#msger-input').val('');
+        }
 
         function getMessageFirebase() {
             $('.user_connect').click(function () {
                 let id = $(this).data('id');
-                let conversationID = getConversationID(id);
+                let email = $(this).data('email');
 
+                let conversationID = getConversationID(id);
+                console.log(conversationID);
                 const messagesCollectionRef = collection(database, `chats/${conversationID}/messages`);
 
                 let html = ``;
 
-                let list_message = [];
                 getDocs(messagesCollectionRef).then((querySnapshot) => {
+                    let list_message = [];
+
                     querySnapshot.forEach((doc) => {
-                        list_message.push(doc);
+                        console.log(doc.data())
+                        list_message.push(doc.data());
                     });
+
+                    renderMessage(list_message, html);
                 }).catch((error) => {
                     console.error("Error getting documents: ", error);
                 });
-                console.log(list_message);
-                renderMessage(html);
+
+                renderLayOutChat(email, id);
             })
+            btnSendMessage();
         }
 
-        function renderMessage(html) {
+        function renderMessage(list_message, html) {
 
+            if (list_message.length > 0) {
+                for (let i = 0; i < list_message.length; i++) {
+                    let message = list_message[i];
+
+                    let time = formatDate(message.sent);
+
+                    if (message.fromId === current_user.uid) {
+                        html = html + `<div class="msg right-msg">
+                            <div class="msg-img"
+                                 style="background-image: url(https://image.flaticon.com/icons/svg/145/145867.svg)"></div>
+
+                            <div class="msg-bubble">
+                                <div class="msg-info">
+                                    <div class="msg-info-name">Me</div>
+                                    <div class="msg-info-time">${time}</div>
+                                </div>
+
+                                <div class="msg-text">
+                                    ${message.msg}
+                                </div>
+                            </div>
+                        </div>`;
+                    } else {
+                        html = html + `<div class="msg left-msg">
+                            <div class="msg-img"
+                                 style="background-image: url(https://image.flaticon.com/icons/svg/327/327779.svg)"></div>
+
+                            <div class="msg-bubble">
+                                <div class="msg-info">
+                                    <div class="msg-info-name">You</div>
+                                    <div class="msg-info-time">${time}</div>
+                                </div>
+
+                                <div class="msg-text">
+                                    ${message.msg}
+                                </div>
+                            </div>
+                        </div>`;
+                    }
+                }
+            }
+
+            $('#main_chat_area').empty().append(html);
         }
     </script>
     <script>
@@ -437,7 +476,10 @@
             return root.querySelector(selector);
         }
 
-        function formatDate(date) {
+        function formatDate(timestamp) {
+            const date = new Date(parseInt(timestamp));
+
+            console.log(date);
             const h = "0" + date.getHours();
             const m = "0" + date.getMinutes();
 
