@@ -221,6 +221,9 @@
         import {
             collection,
             getDocs,
+            updateDoc,
+            doc,
+            setDoc,
             getFirestore,
             where,
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -231,18 +234,18 @@
             signOut
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
+        const app = initializeApp(firebaseConfig);
+        const database = getFirestore(app);
         const auth = getAuth();
 
-        /*.collection("users")
-.where("name", "==", "")
-*/
-
-        let current_user;
+        let current_user, list_user = [];
 
         async function login() {
             await signInWithEmailAndPassword(auth, `{{ Auth::user()->email }}`, '123456')
                 .then((userCredential) => {
                     current_user = userCredential.user;
+                    let uid = current_user.uid;
+                    setOnline(uid, true)
                 })
                 .catch((error) => {
                     const errorCode = error.code;
@@ -250,6 +253,8 @@
                     registerUser();
                 });
         }
+
+        login();
 
         async function registerUser() {
             await createUserWithEmailAndPassword(auth, `{{ Auth::user()->email }}`, '123456')
@@ -262,19 +267,51 @@
                 });
         }
 
-        const app = initializeApp(firebaseConfig);
-        const database = getFirestore(app);
+        async function logout() {
+            let uid = current_user.uid;
+            await signOut(auth).then(() => {
+                setOnline(uid, false)
+                current_user = null;
+            }).catch((error) => {
+                // An error happened.
+            });
+        }
+
+        async function setOnline(uid, isOnline) {
+            try {
+                await updateDoc(doc(database, 'users', uid), {
+                    'is_online': isOnline,
+                    'last_active': Date.now(),
+                });
+                console.log('Status updated successfully', isOnline);
+            } catch (error) {
+                console.error('Error updating active status:', error);
+            }
+        }
 
         const usersCollection = collection(database, "users");
+
+        const chatsCollection = collection(database, "chats");
+
+        function getConversationID(userUid) {
+            let id = current_user.uid;
+            if (userUid <= id) {
+                return `${userUid}_${id}`;
+            } else {
+                return `${id}_${userUid}`;
+            }
+        }
 
         getDocs(usersCollection).then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
                 let res = doc.data();
                 let role = res.role;
                 if (role === 'DOCTORS') {
-                    renderUser(res);
+                    list_user.push(res)
                 }
             });
+            renderUser();
+            getMessageFirebase();
         }).catch((error) => {
             console.error("Error getting documents: ", error);
         });
@@ -289,21 +326,22 @@
         let online = 'color: green';
         let offline = 'color: grey';
 
-        async function renderUser(res) {
+        async function renderUser() {
             let html = ``;
+            for (let i = 0; i < list_user.length; i++) {
+                let res = list_user[i];
+                let email = res.email;
 
-            let email = res.email;
+                let is_online = res.is_online;
 
-            let is_online = res.is_online;
+                let show;
+                if (is_online === true) {
+                    show = online;
+                } else {
+                    show = offline;
+                }
 
-            let show;
-            if (is_online === true) {
-                show = online;
-            } else {
-                show = offline;
-            }
-
-            html = html + `<div class="card p-1 m-1">
+                html = html + `<div class="card p-1 m-1 user_connect" data-id="${res.id}">
                     <div class="d-flex justify-content-between align-items-center">
                         <b class="">${email}</b>
                         <span class="d-flex align-items-center justify-content-between ml-2">
@@ -315,19 +353,60 @@
                     </div>
                 </div>`;
 
-            $('#list-user').append(html);
+            }
+            $('#list-user').empty().append(html);
+        }
+
+        async function sendMessage(chatUser, msg, type) {
+            const time = Date.now().toString();
+            const receiverId = chatUser.id;
+
+            const message = {
+                toId: receiverId,
+                msg: msg,
+                read: '',
+                type: type,
+                fromId: current_user.uid,
+                readUsers: {[current_user.uid]: true, [receiverId]: false},
+                sent: time
+            };
+
+            const ref = collection(database, `chats/${getConversationID(chatUser.id)}/messages/`);
+
+            try {
+                await setDoc(doc(ref, time), message);
+                // await sendPushNotification(chatUser, type === 'text' ? msg : 'image');
+                // await updateLastMessage(chatUser, message);
+                console.log('Message sent successfully');
+            } catch (error) {
+                console.error('Error sending message:', error);
+            }
         }
 
 
-        function logout() {
-            signOut(auth).then(() => {
-                // Sign-out successful.
-            }).catch((error) => {
-                // An error happened.
-            });
+        function getMessageFirebase() {
+            $('.user_connect').click(function () {
+                let id = $(this).data('id');
+                let conversationID = getConversationID(id);
+
+                const messagesCollectionRef = collection(database, `chats/${conversationID}/messages`);
+
+                let html = ``;
+
+                let list_message = [];
+                getDocs(messagesCollectionRef).then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        list_message.push(doc);
+                    });
+                }).catch((error) => {
+                    console.error("Error getting documents: ", error);
+                });
+                console.log(list_message);
+                renderMessage(html);
+            })
         }
 
-        function renderMessage() {
+        function renderMessage(html) {
 
         }
     </script>
