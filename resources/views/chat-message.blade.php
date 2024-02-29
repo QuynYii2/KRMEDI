@@ -191,6 +191,28 @@
                 $('.msger-send-btn').trigger('click');
             }
         }
+
+        function setCookie(name, value, hours) {
+            var expires = 5;
+            if (hours) {
+                var date = new Date();
+                date.setTime(date.getTime() + (hours * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        function getCookie(name) {
+            let cookies = document.cookie.split(';').map(cookie => cookie.trim());
+            for (let i = 0; i < cookies.length; i++) {
+                let cookie = cookies[i];
+                if (cookie.startsWith(name + '=')) {
+                    return cookie.substring(name.length + 1);
+                }
+            }
+            return null;
+        }
+
     </script>
     <script type="module">
         import {firebaseConfig} from '{{ asset('constants.js') }}';
@@ -218,12 +240,19 @@
 
         let current_user, list_user = [];
 
+        let name = getCookie('is_login');
+        if (!name) {
+            login();
+        }
+
         async function login() {
+            console.log(123)
             await signInWithEmailAndPassword(auth, `{{ Auth::user()->email }}`, '123456')
                 .then((userCredential) => {
                     current_user = userCredential.user;
                     let uid = current_user.uid;
-                    setOnline(uid, true)
+                    setOnline(uid, true);
+                    setCookie("is_login", true, 1);
                 })
                 .catch((error) => {
                     const errorCode = error.code;
@@ -231,8 +260,6 @@
                     registerUser();
                 });
         }
-
-        login();
 
         async function registerUser() {
             await createUserWithEmailAndPassword(auth, `{{ Auth::user()->email }}`, '123456')
