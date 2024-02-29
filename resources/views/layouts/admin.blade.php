@@ -45,6 +45,8 @@
     <!-- Template Main CSS File -->
     <link href="{{ asset('admin/css/style.css') }}" rel="stylesheet">
 
+    @yield('page-style')
+
 </head>
 
 <style>
@@ -680,6 +682,11 @@
                                 <i class="bi bi-circle"></i><span>{{ __('home.Create User') }}</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="{{ route('view.admin.user.zalo') }}">
+                                <i class="bi bi-circle"></i><span>{{ __('admin.zalo-oa-follower') }}</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <!-- End Admin User Nav -->
@@ -851,6 +858,14 @@
 
 <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.11.2/dist/echo.iife.js"></script>
+
+@yield('page-script')
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>
 
 <script>
     let currentId = '{{ Auth::check() ? Auth::user()->id : '' }}';

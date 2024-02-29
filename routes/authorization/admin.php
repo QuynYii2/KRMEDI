@@ -9,6 +9,7 @@ use App\Http\Controllers\restapi\admin\AdminUserApi;
 use App\Http\Controllers\restapi\admin\AminServiceClinicApi;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ShortVideoController;
+use App\Http\Controllers\ZaloController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,6 +28,7 @@ Route::group(['prefix' => 'user'], function () {
     Route::get('list', [AdminUserController::class, 'list'])->name('view.admin.user.list');
     Route::get('detail/{id}', [AdminUserController::class, 'detail'])->name('view.admin.user.detail');
     Route::get('create', [AdminUserController::class, 'create'])->name('view.admin.user.create');
+    Route::get('zalo-oa', [ZaloController::class, 'manageFollower'])->name('view.admin.user.zalo');
 });
 
 /* Admin review */
