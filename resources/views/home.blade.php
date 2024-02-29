@@ -1620,9 +1620,9 @@
                 <div class="col-md-5">
                     @foreach($newEvens as $news)
                         <a href="{{route('detail.new',$news->id)}}">
-                            <div class="d-flex mb-3">
-                                <div class="col-md-4"><img src="{{$news->thumbnail}}" alt="11" class="krm-img-sub-news">
-                                </div>
+                            <div class="d-flex mb-3 krm-border-news-event">
+                                <div class="col-md-4 pl-0"><img src="{{$news->thumbnail}}" alt="11"
+                                                                class="krm-img-sub-news"></div>
                                 <div class="col-md-8 p-0">
                                     <div class="krm-title-sub-news">
                                         @if(locationHelper() == 'vi')
@@ -1654,9 +1654,11 @@
                         <h2>{{ __('home.Clinics/Pharmacies') }}</h2>
                         <p>{{ __('home.Find your suitable clinics/pharmacies and book now') }}!</p>
                     </div>
-                    <div class="d-flex clip-path-container">
-                        <div id="allAddressesMap" class="p-2 w-100">
+                    <div>
+                        <div class="d-flex clip-path-container">
+                            <div id="allAddressesMap" class="p-2 w-100">
 
+                            </div>
                         </div>
                     </div>
                     <div id="" class="w-100 d-md-flex">
