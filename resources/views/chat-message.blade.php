@@ -302,6 +302,7 @@
         function getConversationID(userUid) {
             let id = current_user.uid;
 
+            let hash_value;
             String.prototype.hashCode = function () {
                 let hash = 0,
                     i, chr;
@@ -314,11 +315,13 @@
                 return hash;
             }
 
-            if (userUid.hashCode() <= id.hashCode()) {
-                return `${userUid}_${id}`;
+            if (id.hashCode() <= userUid.hashCode()) {
+                hash_value = `${id}_${userUid}`;
             } else {
-                return `${id}_${userUid}`;
+                hash_value = `${userUid}_${id}`;
             }
+            console.log(hash_value)
+            return hash_value;
         }
 
         const unsubscribe = onSnapshot(usersCollection, (querySnapshot) => {
