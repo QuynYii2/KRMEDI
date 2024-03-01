@@ -421,8 +421,10 @@
         }
 
         function renderLayOutChat(email, id) {
+            let btn_message = $('.msger-send-btn');
             $('#chat_to_user').text(email);
-            $('.msger-send-btn').data('to_user', id);
+            btn_message.data('to_user', id);
+            btn_message.data('to_email', email);
             $('#msger-input').val('');
         }
 
