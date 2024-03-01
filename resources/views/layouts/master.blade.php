@@ -54,7 +54,11 @@
     @includeWhen(Auth::check(),'components.head.chat-message' )
     <script type="module">
         import {initializeApp} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import {getMessaging, getToken, onMessage} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging.js";
+        import {
+            getMessaging,
+            getToken,
+            onMessage
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAW-1uaHUA8tAaA3IQD9ypNkbVzFji88bE",
@@ -115,8 +119,27 @@
 
         onMessage(messaging, (payload) => {
             console.log('Message received. ', payload);
-            // const isFromFirebase = true;
-            // callAlert(payload, isFromFirebase);
+            if (!window.Notification) {
+                console.log('Browser does not support notifications.');
+            } else {
+                if (Notification.permission === 'granted') {
+                    let notify = new Notification('KRMEDI Notification', {
+                        body: payload.notification.title + ': ' + payload.notification.body
+                    });
+                } else {
+                    Notification.requestPermission().then(function (p) {
+                        if (p === 'granted') {
+                            let notify = new Notification('KRMEDI Notification', {
+                                body: payload.notification.title + ': ' + payload.notification.body
+                            });
+                        } else {
+                            console.log('User blocked notifications.');
+                        }
+                    }).catch(function (err) {
+                        console.error(err);
+                    });
+                }
+            }
         });
     </script>
 </head>

@@ -45,7 +45,6 @@ class MainController extends Controller
         return $hasRole;
     }
 
-
     function vn_to_str($str)
     {
 
@@ -281,5 +280,12 @@ class MainController extends Controller
                 }
             }
         }
+    }
+
+    public function getRoleUser($id)
+    {
+        $roleUser = RoleUser::where('user_id', $id)->first();
+        $role = Role::find($roleUser->role_id);
+        return $role->name;
     }
 }
