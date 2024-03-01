@@ -10,6 +10,7 @@ use Zalo\Builder\MessageBuilder;
 use Zalo\Util\PKCEUtil;
 use Zalo\Zalo;
 use Zalo\ZaloEndPoint;
+use Illuminate\Support\Str;
 
 class ZaloController extends Controller
 {
@@ -19,6 +20,7 @@ class ZaloController extends Controller
     protected $app_redirect = 'https%3A%2F%2Fkrmedi.vn%2Fzalo-service%2Fcallback';
     protected $app_url_permission = 'https://oauth.zaloapp.com/v4/oa/permission';
     protected $app_url_token = 'https://oauth.zaloapp.com/v4/oa/access_token';
+    protected $auth_zalo_app = 'https://oauth.zaloapp.com/v4/permission';
 
     public function __construct()
     {
@@ -256,5 +258,71 @@ class ZaloController extends Controller
         }
 
         return view('admin.user.zalo')->with(compact('follower_info'));
+    }
+
+    // Tạo code verifier
+    public function generateCodeVerifier()
+    {
+        try {
+            return PKCEUtil::genCodeVerifier();
+        } catch (\Exception $e) {
+            // Handle the exception
+            // Log the error, display an error message, or perform any necessary actions
+            throw new \Exception("Failed to generate code verifier: " . $e->getMessage());
+        }
+    }
+
+    // Tạo code challenge từ code verifier
+    public function generateCodeChallenge($codeVerifier)
+    {
+        try {
+            return PKCEUtil::genCodeChallenge($codeVerifier);
+        } catch (\Exception $e) {
+            // Handle the exception
+            // Log the error, display an error message, or perform any necessary actions
+            throw new \Exception("Failed to generate code challenge: " . $e->getMessage());
+        }
+    }
+
+    public function getAuthZaloUrl($codeChallenge, $state)
+    {
+        try {
+            $zalo = $this->main();
+            $helper = $zalo->getRedirectLoginHelper();
+            $callbackUrl = route('login.zalo.callback');
+            $loginUrl = $helper->getLoginUrl($callbackUrl, $codeChallenge, $state);
+            return $loginUrl;
+        } catch (\Exception $e) {
+            // Handle the exception
+            throw new \Exception("Failed to get Zalo authentication URL: " . $e->getMessage());
+        }
+    }
+
+    public function getUserAccessToken($codeVerifier)
+    {
+        try {
+            $zalo = $this->main();
+            $helper = $zalo->getRedirectLoginHelper();
+            $zaloToken = $helper->getZaloToken($codeVerifier);
+            $accessToken = $zaloToken->getAccessToken();
+            return $accessToken;
+        } catch (\Exception $e) {
+            // Handle the exception
+            throw new \Exception("Failed to retrieve user access token: " . $e->getMessage());
+        }
+    }
+
+    public function getUserInformation($userAccessToken)
+    {
+        try {
+            $zalo = $this->main();
+            $params = ['fields' => 'id,name,picture'];
+            $response = $zalo->get(ZaloEndPoint::API_GRAPH_ME, $userAccessToken, $params);
+            $result = $response->getDecodedBody(); // result
+            return $result;
+        } catch (\Exception $e) {
+            // Handle the exception
+            throw new \Exception("Failed to retrieve user information: " . $e->getMessage());
+        }
     }
 }

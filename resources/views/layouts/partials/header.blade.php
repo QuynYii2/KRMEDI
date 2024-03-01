@@ -325,8 +325,8 @@
                                 <a href="{{ route('login.google') }}" class="login-with-btn">
                                     <img src="{{asset('img/icons_logo/google_logo.png')}}" alt=""/>
                                 </a>
-                                <a type="button" class="login-with-btn">
-                                    <img src="{{asset('img/icons_logo/apple_logo.png')}}" alt=""/>
+                                <a href="{{ route('login.zalo') }}" type="button" class="login-with-btn">
+                                    <img src="{{asset('img/icons_logo/zalo_logo.png')}}" alt=""/>
                                 </a>
                                 <a href="{{ route('login.kakao') }}" class="login-with-btn">
                                     <img src="{{asset('img/icons_logo/kakao-talk_logo.png')}}" alt=""/>
@@ -552,8 +552,8 @@
                                 <a href="{{ route('login.google') }}" class="login-with-btn">
                                     <img src="{{asset('img/icons_logo/google_logo.png')}}" alt=""/>
                                 </a>
-                                <a type="button" class="login-with-btn">
-                                    <img src="{{asset('img/icons_logo/apple_logo.png')}}" alt=""/>
+                                <a href="{{ route('login.zalo') }}" type="button" class="login-with-btn">
+                                    <img src="{{asset('img/icons_logo/zalo_logo.png')}}" alt=""/>
                                 </a>
                                 <a href="{{ route('login.kakao') }}" class="login-with-btn">
                                     <img src="{{asset('img/icons_logo/kakao-talk_logo.png')}}" alt=""/>

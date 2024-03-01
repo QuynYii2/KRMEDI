@@ -94,6 +94,9 @@ Route::middleware(['user.active'])->group(function () {
     /* KakaoTalk */
     Route::get('/login-kakao', [AuthSocialController::class, 'getKakaoSignInUrl'])->name('login.kakao');
     Route::get('/login-kakao-callback', [AuthSocialController::class, 'loginKakaoCallback'])->name('login.facebook.kakao');
+    /* Facebook */
+    Route::get('/login-zalo', [AuthSocialController::class, 'getZaloSignInUrl'])->name('login.zalo');
+    Route::get('/login-zalo-callback', [AuthSocialController::class, 'loginZaloCallback'])->name('login.zalo.callback');
 
     Route::get('/login-role', [AuthSocialController::class, 'chooseRole'])->name('login.social.choose.role');
     /* End login social */

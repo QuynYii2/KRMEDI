@@ -17,6 +17,13 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthSocialController extends Controller
 {
+    private $zaloService;
+
+    public function __construct()
+    {
+        $this->zaloService = new ZaloController();
+    }
+
     public function getGoogleSignInUrl()
     {
         try {
@@ -393,6 +400,77 @@ class AuthSocialController extends Controller
         } catch (\Exception $exception) {
             toast('Error, Please try again!', 'error', 'top-left');
             return back();
+        }
+    }
+
+    public function getZaloSignInUrl()
+    {
+        try {
+            $codeVerifier = $this->zaloService->generateCodeVerifier();
+            $codeChallenge = $this->zaloService->generateCodeChallenge($codeVerifier);
+            $signInUrl = $this->zaloService->getAuthZaloUrl($codeChallenge, $codeVerifier); //(Challenge, State)
+            return redirect($signInUrl);
+        } catch (\Exception $e) {
+            // Handle the exception
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function loginZaloCallback(Request $request)
+    {
+        try {
+            $code = $request->input('code');
+            $state = $request->input('state');
+            $codeChallenge = $request->input('code_challenge');
+    
+            $accessToken = $this->zaloService->getUserAccessToken($state);
+            $zaloUser = $this->zaloService->getUserInformation($accessToken);
+
+            if ($zaloUser['id'] == null || $zaloUser['name'] == null) {
+                return redirect()->route('login')->with('error', 'Error');
+            }
+
+            $existingUser = User::where('provider_id', $zaloUser['id'])->first();
+
+            $password = (new MainController())->generateRandomString(8);
+            $passwordHash = Hash::make($password);
+
+            if ($existingUser) {
+                auth()->login($existingUser, true);
+                $token = JWTAuth::fromUser($existingUser);
+                setcookie("accessToken", $token, time() + 3600 * 24);
+                if (!$existingUser->provider_name) {
+                    return redirect(route('profile'));
+                }
+            } else {
+                $newUser = new User;
+                $newUser->provider_name = "zalo";
+                $newUser->provider_id = $zaloUser['id'];
+                $newUser->name = $zaloUser['name'];
+                $newUser->email = 'zalo' . (new MainController())->generateRandomString(8) . '@gmail.com';
+                $newUser->phone = '';
+                $newUser->username = '';
+                $newUser->address_code = "";
+                $newUser->password = $passwordHash;
+                $newUser->type = "OTHERS";
+                $newUser->email_verified_at = now();
+                $newUser->avt = $zaloUser['picture']['data']['url'] ?? '';
+
+                $newUser->abouts = '';
+                $newUser->abouts_en = '';
+                $newUser->abouts_lao = '';
+
+                $newUser->save();
+
+                auth()->login($newUser, true);
+                $token = JWTAuth::fromUser($newUser);
+                setcookie("accessToken", $token, time() + 3600 * 24);
+            }
+
+            toast('Register success!', 'success', 'top-left');
+            return redirect()->route('login.social.choose.role');
+        } catch (\Exception $exception) {
+            return $exception;
         }
     }
 }
