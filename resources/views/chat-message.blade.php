@@ -316,9 +316,9 @@
             }
 
             if (id.hashCode() <= userUid.hashCode()) {
-                hash_value = `${userUid}_${id}`;
-            } else {
                 hash_value = `${id}_${userUid}`;
+            } else {
+                hash_value = `${userUid}_${id}`;
             }
             console.log(hash_value)
             return hash_value;
