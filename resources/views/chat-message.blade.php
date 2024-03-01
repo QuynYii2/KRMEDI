@@ -478,7 +478,12 @@
                     let count = list_message.length;
                     if (count > 0) {
                         let last_message = list_message[count - 1];
-                        let html = setMessage(last_message.msg);
+
+                        let is_read;
+
+                        is_read = last_message.fromId === current_user.uid;
+
+                        let html = setMessage(last_message.msg, is_read);
                         $('.show_last_message_' + id).empty().append(html);
                     } else {
                         $('.show_last_message_' + id).empty().append(un_message);
@@ -724,11 +729,17 @@
             }
         }
 
-        function setMessage(msg, count) {
+        function setMessage(msg, is_read, count) {
+            let log;
+            if (is_read === true) {
+                log = 'read';
+            } else {
+                log = 'unread';
+            }
             let number = `<p class="number">
                             <span class="p-1 new-message">${count}</span>
                         </p>`;
-            return `<p class="read">${msg}</p> ${count ? number : ''}`;
+            return `<p class="${log}">${msg}</p> ${count ? number : ''}`;
         }
     </script>
     <script>
