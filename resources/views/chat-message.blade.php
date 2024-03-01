@@ -242,7 +242,8 @@
         const auth = getAuth();
 
         let current_user, list_user = [],
-            current_role = `{{ (new \App\Http\Controllers\MainController())->getRoleUser(Auth::user()->id)}}`;
+            current_role = `{{ (new \App\Http\Controllers\MainController())->getRoleUser(Auth::user()->id)}}`,
+            user_chat;
 
         login();
 
@@ -384,12 +385,13 @@
             $('.msger-send-btn').click(function () {
                 let msg = msger_input.val();
                 let toUser = $(this).data('to_user');
-                sendMessage(toUser, msg, 'text');
+                let to_email = $(this).data('to_email');
+                sendMessage(toUser, to_email, msg, 'text');
                 msger_input.val('');
             })
         }
 
-        async function sendMessage(chatUserID, msg, type) {
+        async function sendMessage(chatUserID, to_email, msg, type) {
             const time = Date.now().toString();
             const receiverId = chatUserID;
 
@@ -409,9 +411,9 @@
 
             try {
                 await setDoc(doc(ref, time), message);
-                // await sendPushNotification(chatUser, type === 'text' ? msg : 'image');
+                await pushNotification(to_email, msg);
                 await updateLastMessage(chatUserID, message);
-                console.log(message)
+                await saveMessage(`{{ Auth::user()->email }}`, to_email, message);
                 console.log('Message sent successfully');
             } catch (error) {
                 console.error('Error sending message:', error);
@@ -431,7 +433,7 @@
                 let role = $(this).data('role');
 
                 let conversationID = getConversationID(id);
-                console.log(conversationID);
+
                 const messagesCollectionRef = collection(database, `chats/${conversationID}/messages`);
 
                 let html = ``;
@@ -567,7 +569,6 @@
             }
         }
 
-
         async function updateLastMessage(chatUserID, lastMessage) {
             const callType = _getTypeFromString(lastMessage.type);
             let updatedMessage = JSON.parse(JSON.stringify(lastMessage));
@@ -622,7 +623,51 @@
             }
         }
 
+        function getTokenUser() {
 
+        }
+
+        async function pushNotification(to_email, msg) {
+
+            const body = {
+                "to": to_email,
+                "notification": {
+                    "title": `{{ Auth::user()->username }}`,
+                    "body": msg,
+                    "android_channel_id": "chats"
+                },
+            };
+
+            const notification = {
+                "title": `{{ Auth::user()->username }}`,
+                "body": msg,
+                "android_channel_id": "chats"
+            };
+
+            const data = {
+                email: to_email,
+                data: notification,
+                notification: notification
+            };
+
+            let sendNotiUrl = `{{ route('restapi.mobile.fcm.send') }}`
+            await $.ajax({
+                url: sendNotiUrl,
+                method: 'POST',
+                data: data,
+                success: function (response) {
+                    console.log(response)
+                },
+                error: function (error) {
+                    console.log(error.responseJSON.message);
+                }
+            });
+        }
+
+
+        async function saveMessage(from_email, to_email, message) {
+
+        }
     </script>
     <script>
         let accessToken = `Bearer ` + token;
