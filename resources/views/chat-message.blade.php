@@ -149,11 +149,11 @@
             background-color: red
         }
 
-        .read {
+        .unread {
             color: #000;
         }
 
-        .unread {
+        .read {
             color: gray;
         }
     </style>
@@ -350,11 +350,6 @@
             console.error("Error getting: ", error);
         });
 
-        let new_message = `<p class="read">A new message</p>
-                        <p class="number">
-                            <span class="p-1 new-message">1</span>
-                        </p>`;
-
         let un_message = `<p class="unread">Not connected!</p>`;
 
         let online = 'color: green';
@@ -369,6 +364,7 @@
                 let is_online = res.is_online;
 
                 let show;
+
                 if (is_online === true) {
                     show = online;
                 } else {
@@ -383,7 +379,7 @@
                                         <i style="font-size: 10px; ${show}" class="fa-solid fa-circle"></i>
                                     </span>
                                 </div>
-                                <div class="small d-flex justify-content-between align-items-center">
+                                <div class="small d-flex justify-content-between align-items-center show_last_message_${res.id}">
                                     ${un_message}
                                 </div>
                             </div>`;
@@ -478,6 +474,16 @@
                     });
 
                     renderMessage(list_message, html);
+
+                    let count = list_message.length;
+                    if (count > 0) {
+                        let last_message = list_message[count - 1];
+                        let html = setMessage(last_message.msg);
+                        $('.show_last_message_' + id).empty().append(html);
+                    } else {
+                        $('.show_last_message_' + id).empty().append(un_message);
+                    }
+
                 }, (error) => {
                     console.error("Error getting: ", error);
                 });
@@ -706,6 +712,23 @@
                     console.log(error);
                 }
             });
+        }
+
+        async function updateMessageReadStatus(message) {
+            try {
+                const chatMessageCollection = collection(database, `chats/${getConversationID(message.fromId)}/messages/`);
+                const chatDocRef = doc(chatMessageCollection, message.sent)
+                await setDoc(chatDocRef, {'read': Date.now()});
+            } catch (error) {
+                console.error('Error updating message read status:', error);
+            }
+        }
+
+        function setMessage(msg, count) {
+            let number = `<p class="number">
+                            <span class="p-1 new-message">${count}</span>
+                        </p>`;
+            return `<p class="read">${msg}</p> ${count ? number : ''}`;
         }
     </script>
     <script>
