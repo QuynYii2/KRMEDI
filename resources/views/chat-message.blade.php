@@ -169,7 +169,7 @@
                             <i class="fas fa-comment-alt"></i> <span id="chat_to_user">Open chat</span>
                         </div>
                         <div class="msger-header-options">
-                            <span><i class="fas fa-cog"></i></span>
+
                         </div>
                     </header>
 
@@ -212,6 +212,20 @@
                 }
             }
             return null;
+        }
+
+        function appendNotPrescription() {
+            let html = ` <button type="button" class="btn btn-warning">
+                                <i class="fa-solid fa-prescription"></i>
+                            </button>`;
+            $('.msger-header-options').empty().append(html);
+        }
+
+        function appendRePrescription() {
+            let html = ` <button type="button" class="btn btn-success">
+                                <i class="fa-solid fa-prescription"></i>
+                            </button>`;
+            $('.msger-header-options').empty().append(html);
         }
 
     </script>
@@ -436,6 +450,21 @@
 
                 let conversationID = getConversationID(id);
 
+                if (role === '{{ \App\Enums\Role::PHAMACISTS }}' ||
+                    role === '{{ \App\Enums\Role::DOCTORS }}' ||
+                    role === '{{ \App\Enums\Role::CLINICS }}' ||
+                    role === '{{ \App\Enums\Role::HOSPITALS }}') {
+                    /* Đoạn này sẽ kiểm tra xem có đơn thuoc chưa
+                    * Neu chưa có, sẽ hiện nut cảnh báo tạo đơn
+                    * Nếu có rồi, sẽ hiện nút tạo đơn lại
+                    * */
+                    appendNotPrescription();
+                } else {
+                    $('.msger-header-options').empty()
+                }
+
+                console.log(role);
+
                 const messagesCollectionRef = collection(database, `chats/${conversationID}/messages`);
 
                 let html = ``;
@@ -625,21 +654,7 @@
             }
         }
 
-        function getTokenUser() {
-
-        }
-
         async function pushNotification(to_email, msg) {
-
-            const body = {
-                "to": to_email,
-                "notification": {
-                    "title": `{{ Auth::user()->username }}`,
-                    "body": msg,
-                    "android_channel_id": "chats"
-                },
-            };
-
             const notification = {
                 "title": `{{ Auth::user()->username }}`,
                 "body": msg,
@@ -666,9 +681,31 @@
             });
         }
 
-
         async function saveMessage(from_email, to_email, message) {
+            let saveMessageUrl = `{{ route('api.backend.messages.save') }}`
 
+            const data = {
+                from_user_email: from_email,
+                to_user_email: to_email,
+                content: message.msg
+            };
+
+            const headers = {
+                'Authorization': `Bearer ${token}`
+            };
+
+            await $.ajax({
+                url: saveMessageUrl,
+                method: 'POST',
+                data: data,
+                headers: headers,
+                success: function (response) {
+                    console.log(response)
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
         }
     </script>
     <script>
@@ -701,7 +738,6 @@
         function formatDate(timestamp) {
             const date = new Date(parseInt(timestamp));
 
-            console.log(date);
             const h = "0" + date.getHours();
             const m = "0" + date.getMinutes();
 
