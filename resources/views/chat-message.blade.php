@@ -8,11 +8,12 @@
             display: flex;
             flex-flow: column wrap;
             justify-content: space-between;
+            width: 100%;
+            max-width: 867px;
             margin: 0 10px 25px 10px;
+            height: calc(100% - 50px);
             border: var(--border);
             border-radius: 5px;
-            max-height: 500px;
-            overflow: scroll;
             background: var(--msger-bg);
             box-shadow: 0 15px 15px -5px rgba(0, 0, 0, 0.2);
         }
@@ -225,7 +226,9 @@
             onSnapshot,
             setDoc,
             getFirestore,
+            getDoc,
             where,
+            query,
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import {
             getAuth,
@@ -238,7 +241,8 @@
         const database = getFirestore(app);
         const auth = getAuth();
 
-        let current_user, list_user = [];
+        let current_user, list_user = [],
+            current_role = `{{ (new \App\Http\Controllers\MainController())->getRoleUser(Auth::user()->id)}}`;
 
         login();
 
@@ -247,6 +251,7 @@
                 .then((userCredential) => {
                     current_user = userCredential.user;
                     let uid = current_user.uid;
+
                     setOnline(uid, true);
                     setCookie("is_login", true, 1);
                 })
@@ -296,12 +301,24 @@
 
         function getConversationID(userUid) {
             let id = current_user.uid;
-            // if (userUid <= id) {
-            //     return `${userUid}_${id}`;
-            // } else {
-            //     return `${id}_${userUid}`;
-            // }
-            return `${userUid}_${id}`;
+
+            String.prototype.hashCode = function () {
+                let hash = 0,
+                    i, chr;
+                if (this.length === 0) return hash;
+                for (i = 0; i < this.length; i++) {
+                    chr = this.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + chr;
+                    hash |= 0;
+                }
+                return hash;
+            }
+
+            if (userUid.hashCode() <= id.hashCode()) {
+                return `${userUid}_${id}`;
+            } else {
+                return `${id}_${userUid}`;
+            }
         }
 
         const unsubscribe = onSnapshot(usersCollection, (querySnapshot) => {
@@ -340,17 +357,18 @@
                     show = offline;
                 }
 
-                html = html + `<div class="card p-1 m-1 user_connect" data-id="${res.id}" data-email="${email}">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <b class="">${email}</b>
-                        <span class="d-flex align-items-center justify-content-between ml-2">
-                            <i style="font-size: 10px; ${show}" class="fa-solid fa-circle"></i>
-                        </span>
-                    </div>
-                    <div class="small d-flex justify-content-between align-items-center">
-                        ${un_message}
-                    </div>
-                </div>`;
+                html = html + `<div class="card p-1 m-1 user_connect" data-id="${res.id}"
+                                   data-role="${res.role}" data-email="${email}">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <b class="">${email}</b>
+                                    <span class="d-flex align-items-center justify-content-between ml-2">
+                                        <i style="font-size: 10px; ${show}" class="fa-solid fa-circle"></i>
+                                    </span>
+                                </div>
+                                <div class="small d-flex justify-content-between align-items-center">
+                                    ${un_message}
+                                </div>
+                            </div>`;
 
             }
             $('#list-user').empty().append(html);
@@ -389,7 +407,7 @@
             try {
                 await setDoc(doc(ref, time), message);
                 // await sendPushNotification(chatUser, type === 'text' ? msg : 'image');
-                // await updateLastMessage(chatUser, message);
+                await updateLastMessage(chatUserID, message);
                 console.log(message)
                 console.log('Message sent successfully');
             } catch (error) {
@@ -407,8 +425,10 @@
             $('.user_connect').click(function () {
                 let id = $(this).data('id');
                 let email = $(this).data('email');
+                let role = $(this).data('role');
 
                 let conversationID = getConversationID(id);
+                console.log(conversationID);
                 const messagesCollectionRef = collection(database, `chats/${conversationID}/messages`);
 
                 let html = ``;
@@ -427,6 +447,13 @@
                 });
 
                 renderLayOutChat(email, id);
+
+                let user = {
+                    role: role,
+                    id: id
+                };
+
+                initialChatRoom(user);
             })
         }
 
@@ -476,6 +503,123 @@
 
             $('#main_chat_area').empty().append(html);
         }
+
+        async function initialChatRoom(user) {
+            const currentChatRoom = await getChatGroup(user);
+            const targetChannelType = user.role;
+            let myChannelType;
+
+            if (current_role !== '{{ \App\Enums\Role::PHAMACISTS }}' &&
+                current_role !== '{{ \App\Enums\Role::DOCTORS }}' &&
+                current_role !== '{{ \App\Enums\Role::CLINICS }}' &&
+                current_role !== '{{ \App\Enums\Role::HOSPITALS }}') {
+                myChannelType = user.role;
+            } else {
+                myChannelType = current_role;
+            }
+
+            if (currentChatRoom === null) {
+                const chatRoomInfo = {
+                    userIds: [current_user.uid, user.id],
+                    groupId: getConversationID(user.id),
+                    createdBy: current_user.uid,
+                    unreadMessageCount: {[current_user.uid]: 0, [user.id]: 0},
+                    createdAt: new Date().getTime().toString(),
+                    channelTypes: [
+                        `${current_user.uid}_${targetChannelType}`,
+                        `${user.id}_${myChannelType}`
+                    ]
+                };
+                await createChatRoom(user, chatRoomInfo);
+            }
+        }
+
+        async function createChatRoom(chatUser, chatRoom) {
+            try {
+                const chatMessageCollection = collection(database, 'chats');
+                const chatDocRef = doc(chatMessageCollection, getConversationID(chatUser.id));
+                await setDoc(chatDocRef, chatRoom, {merge: true});
+                console.log("Chat room created successfully.");
+            } catch (error) {
+                console.error("Error creating chat room:", error);
+            }
+        }
+
+        async function getChatGroup(chatUser) {
+            try {
+                const chatMessageCollection = collection(database, 'chats');
+                const chatDocSnapshot = await doc(chatMessageCollection, getConversationID(chatUser.id));
+
+                if (chatDocSnapshot.exists) {
+                    const data = chatDocSnapshot.data();
+                    console.log("Chat group data:", data);
+                    return data;
+                } else {
+                    console.log("Chat group does not exist.");
+                    return null;
+                }
+            } catch (error) {
+                console.error("Error getting chat group:", error);
+                return null;
+            }
+        }
+
+
+        async function updateLastMessage(chatUserID, lastMessage) {
+            const callType = _getTypeFromString(lastMessage.type);
+            let updatedMessage = JSON.parse(JSON.stringify(lastMessage));
+
+            if (callType !== "") {
+                updatedMessage.msg = callType;
+            }
+
+            try {
+                const chatMessageCollection = collection(database, 'chats');
+                const chatDocRef = doc(chatMessageCollection, getConversationID(chatUserID));
+                if (updatedMessage && updatedMessage.msg) {
+                    await setDoc(chatDocRef, {lastMessage: updatedMessage}, {merge: true});
+                    console.log("Chat set successfully.");
+                } else {
+                    throw new Error("Invalid or missing updated message data.");
+                }
+            } catch (error) {
+                console.error("Error set chat:", error);
+            }
+
+            // await countUnreadMessages(chatUserID, updatedMessage);
+        }
+
+        function _getTypeFromString(name) {
+            return name;
+        }
+
+        async function countUnreadMessages(chatUserID, message) {
+            try {
+                const chatMessageCollection = collection(database, 'chats');
+                const chatDocRef = doc(chatMessageCollection, getConversationID(chatUserID));
+                const messagesRef = collection(chatDocRef, "messages");
+
+                const chatDocSnapshot = await getDoc(chatDocRef);
+                const chatDocData = chatDocSnapshot.data();
+
+                if (chatDocData) {
+                    const unreadUserId = chatDocData.lastMessage?.fromId === chatUserID ? message.fromId : chatUserID;
+
+                    const unreadSnapshot = await getDocs(query(messagesRef, where(`readUsers.${unreadUserId}`, "==", false)));
+                    const unreadCount = unreadSnapshot.size;
+
+                    await chatDocRef.set({
+                        unreadMessageCount: {[chatUserID]: 0, [unreadUserId]: unreadCount}
+                    }, {merge: true});
+                } else {
+                    console.log("Chat room not found.");
+                }
+            } catch (error) {
+                console.error("Error counting unread messages:", error);
+            }
+        }
+
+
     </script>
     <script>
         let accessToken = `Bearer ` + token;
