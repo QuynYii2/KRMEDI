@@ -124,13 +124,13 @@
             } else {
                 if (Notification.permission === 'granted') {
                     let notify = new Notification('KRMEDI Notification', {
-                        body: payload.title + ': ' + payload.body
+                        body: payload.notification.title + ': ' + payload.notification.body
                     });
                 } else {
                     Notification.requestPermission().then(function (p) {
                         if (p === 'granted') {
                             let notify = new Notification('KRMEDI Notification', {
-                                body: payload.title + ': ' + payload.body
+                                body: payload.notification.title + ': ' + payload.notification.body
                             });
                         } else {
                             console.log('User blocked notifications.');
