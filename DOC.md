@@ -12,6 +12,7 @@
 11. composer require patrickschur/language-detection
 12. composer require stichoza/google-translate-php
 13. cp app/Enums/.constant app/Enums/Constants.php
+14. composer require zaloplatform/zalo-php-sdk
 
 [//]: # (Pusher để đẩy thông báo khi có người gọi đến)
 1. composer require pusher/pusher-php-server

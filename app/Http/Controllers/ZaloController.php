@@ -3,14 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Constants;
+use App\Models\ZaloFollower;
+use Exception;
 use GuzzleHttp\Client;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use Throwable;
 use Zalo\Builder\MessageBuilder;
 use Zalo\Util\PKCEUtil;
 use Zalo\Zalo;
 use Zalo\ZaloEndPoint;
-use Illuminate\Support\Str;
 
 class ZaloController extends Controller
 {
@@ -226,38 +228,92 @@ class ZaloController extends Controller
 
     public function manageFollower()
     {
-        if ($this->access_token == null) {
-            //Logged to OA
-            session()->put('zalo_intended_url', request()->url());
-            return $this->getAuthCode();
+        $syncStatus = session('sync_status');
+
+        try {
+            $follower_info = ZaloFollower::latest('updated_at')->get();
+
+            return view('admin.user.zalo')->with(compact('follower_info'));
+        } catch (Throwable $e) {
+            toast($e->getMessage(), 'error', 'top-left');
+            return back();
         }
+    }
 
-        $followers = $this->getFollower()['data']['followers'] ?? [];
-
-        $follower_info = [];
-
-        foreach ($followers as $follower) {
-            $user_id = $follower['user_id'];
-            $request = new Request();
-            $request->merge(['user_zalo' => $user_id]);
-            $result = $this->getProfile($request);
-
-            if ($result instanceof \Illuminate\Http\JsonResponse) {
-                $follower_info[] = [
-                    'isBanned' => true,
-                    'display_name' => 'Banned User',
-                    'user_id' => $follower['user_id']
-                ];
-
-                continue;
+    public function syncFollower()
+    {
+        try {
+            if ($this->access_token == null) {
+                //Logged to OA
+                session()->put('zalo_intended_url', request()->url());
+                return $this->getAuthCode();
             }
-    
-            if (isset($result['data']) && is_array($result['data'])) {
-                $follower_info[] = $result['data'];
+
+            $followers = $this->getFollower()['data']['followers'] ?? [];
+
+            foreach ($followers as $follower) {
+                $user_id = $follower['user_id'];
+                $request = new Request();
+                $request->merge(['user_zalo' => $user_id]);
+
+                try {
+                    $result = $this->getProfile($request);
+
+                    if ($result instanceof JsonResponse) {
+                        throw new Exception('An error occurred while getting the profile.');
+                    }
+
+                    if (isset($result['data']['shared_info']) && is_array($result['data']['shared_info'])) {
+                        $sharedInfo = $result['data']['shared_info'];
+                        $name = $sharedInfo['name'] ?? $result['data']['display_name'];
+                        $address = $sharedInfo['address'] ?? '';
+                        $district = $sharedInfo['district'] ?? '';
+                        $city = $sharedInfo['city'] ?? '';
+
+                        $addressString = $address . '</br>' . $district . '</br>' . $city;
+
+                        $phone = $sharedInfo['phone'] ?? null;
+                        // Check if the string is a regular expression
+                        if ($phone && preg_match('/^\d{11}$/', $phone)) {
+                            $convertedPhone = '0' . substr($phone, 2);
+                        } else {
+                            $convertedPhone = $phone;
+                        }
+                    } else {
+                        $name = $result['data']['display_name'];
+                        $addressString = '';
+                        $convertedPhone = null;
+                    }
+
+                    ZaloFollower::updateOrCreate(
+                        ['user_id' => $user_id],
+                        [
+                            'avatar' => $result['data']['avatar'],
+                            'name' => $name,
+                            'user_id_by_app' => $result['data']['user_id_by_app'],
+                            'phone' => $convertedPhone,
+                            'address' => $addressString,
+                            'extend' => null
+                        ]
+                    );
+                } catch (Throwable $e) {
+                    // Handle the exception for profile retrieval
+                    ZaloFollower::updateOrCreate(
+                        ['user_id' => $user_id],
+                        [
+                            'name' => 'Banned User',
+                            'user_id' => $user_id
+                        ]
+                    );
+                }
             }
+
+            toast('Sync successfully', 'success', 'top-left');
+            return back()->with('sync_status', 'success');
+        } catch (Throwable $e) {
+            toast('Fail to sync', 'error', 'top-left');
+            return back()->with('sync_status', 'error');
         }
-
-        return view('admin.user.zalo')->with(compact('follower_info'));
     }
 
     // Tạo code verifier

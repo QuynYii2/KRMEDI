@@ -422,7 +422,7 @@ class AuthSocialController extends Controller
             $code = $request->input('code');
             $state = $request->input('state');
             $codeChallenge = $request->input('code_challenge');
-    
+
             $accessToken = $this->zaloService->getUserAccessToken($state);
             $zaloUser = $this->zaloService->getUserInformation($accessToken);
 
@@ -439,35 +439,36 @@ class AuthSocialController extends Controller
                 auth()->login($existingUser, true);
                 $token = JWTAuth::fromUser($existingUser);
                 setcookie("accessToken", $token, time() + 3600 * 24);
+
+                toast('Register logged in!', 'success', 'top-left');
                 if (!$existingUser->provider_name) {
                     return redirect(route('profile'));
                 }
             } else {
-                $newUser = new User;
-                $newUser->provider_name = "zalo";
-                $newUser->provider_id = $zaloUser['id'];
-                $newUser->name = $zaloUser['name'];
-                $newUser->email = 'zalo' . (new MainController())->generateRandomString(8) . '@gmail.com';
-                $newUser->phone = '';
-                $newUser->username = '';
-                $newUser->address_code = "";
-                $newUser->password = $passwordHash;
-                $newUser->type = "OTHERS";
-                $newUser->email_verified_at = now();
-                $newUser->avt = $zaloUser['picture']['data']['url'] ?? '';
-
-                $newUser->abouts = '';
-                $newUser->abouts_en = '';
-                $newUser->abouts_lao = '';
-
-                $newUser->save();
+                $newUser = User::create([
+                    'provider_name' => 'zalo',
+                    'provider_id' => $zaloUser['id'],
+                    'name' => $zaloUser['name'],
+                    'email' => 'zalo' . (new MainController())->generateRandomString(8) . '@gmail.com',
+                    'phone' => '',
+                    'username' => '',
+                    'address_code' => '',
+                    'password' => $passwordHash,
+                    'type' => 'OTHERS',
+                    'email_verified_at' => now(),
+                    'avt' => $zaloUser['picture']['data']['url'] ?? '',
+                    'abouts' => '',
+                    'abouts_en' => '',
+                    'abouts_lao' => '',
+                ]);
 
                 auth()->login($newUser, true);
                 $token = JWTAuth::fromUser($newUser);
                 setcookie("accessToken", $token, time() + 3600 * 24);
+
+                toast('Register success!', 'success', 'top-left');
             }
 
-            toast('Register success!', 'success', 'top-left');
             return redirect()->route('login.social.choose.role');
         } catch (\Exception $exception) {
             return $exception;
