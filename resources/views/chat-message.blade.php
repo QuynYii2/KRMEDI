@@ -149,11 +149,11 @@
             background-color: red
         }
 
-        .read {
+        .unread {
             color: #000;
         }
 
-        .unread {
+        .read {
             color: gray;
         }
     </style>
@@ -169,7 +169,7 @@
                             <i class="fas fa-comment-alt"></i> <span id="chat_to_user">Open chat</span>
                         </div>
                         <div class="msger-header-options">
-                            <span><i class="fas fa-cog"></i></span>
+
                         </div>
                     </header>
 
@@ -214,6 +214,20 @@
             return null;
         }
 
+        function appendNotPrescription() {
+            let html = ` <button type="button" class="btn btn-warning">
+                                <i class="fa-solid fa-prescription"></i>
+                            </button>`;
+            $('.msger-header-options').empty().append(html);
+        }
+
+        function appendRePrescription() {
+            let html = ` <button type="button" class="btn btn-success">
+                                <i class="fa-solid fa-prescription"></i>
+                            </button>`;
+            $('.msger-header-options').empty().append(html);
+        }
+
     </script>
     <script type="module">
         import {firebaseConfig} from '{{ asset('constants.js') }}';
@@ -242,7 +256,8 @@
         const auth = getAuth();
 
         let current_user, list_user = [],
-            current_role = `{{ (new \App\Http\Controllers\MainController())->getRoleUser(Auth::user()->id)}}`;
+            current_role = `{{ (new \App\Http\Controllers\MainController())->getRoleUser(Auth::user()->id)}}`,
+            user_chat;
 
         login();
 
@@ -335,11 +350,6 @@
             console.error("Error getting: ", error);
         });
 
-        let new_message = `<p class="read">A new message</p>
-                        <p class="number">
-                            <span class="p-1 new-message">1</span>
-                        </p>`;
-
         let un_message = `<p class="unread">Not connected!</p>`;
 
         let online = 'color: green';
@@ -354,6 +364,7 @@
                 let is_online = res.is_online;
 
                 let show;
+
                 if (is_online === true) {
                     show = online;
                 } else {
@@ -368,7 +379,7 @@
                                         <i style="font-size: 10px; ${show}" class="fa-solid fa-circle"></i>
                                     </span>
                                 </div>
-                                <div class="small d-flex justify-content-between align-items-center">
+                                <div class="small d-flex justify-content-between align-items-center show_last_message_${res.id}">
                                     ${un_message}
                                 </div>
                             </div>`;
@@ -384,12 +395,13 @@
             $('.msger-send-btn').click(function () {
                 let msg = msger_input.val();
                 let toUser = $(this).data('to_user');
-                sendMessage(toUser, msg, 'text');
+                let to_email = $(this).data('to_email');
+                sendMessage(toUser, to_email, msg, 'text');
                 msger_input.val('');
             })
         }
 
-        async function sendMessage(chatUserID, msg, type) {
+        async function sendMessage(chatUserID, to_email, msg, type) {
             const time = Date.now().toString();
             const receiverId = chatUserID;
 
@@ -409,9 +421,9 @@
 
             try {
                 await setDoc(doc(ref, time), message);
-                // await sendPushNotification(chatUser, type === 'text' ? msg : 'image');
+                await pushNotification(to_email, msg);
                 await updateLastMessage(chatUserID, message);
-                console.log(message)
+                await saveMessage(`{{ Auth::user()->email }}`, to_email, message);
                 console.log('Message sent successfully');
             } catch (error) {
                 console.error('Error sending message:', error);
@@ -419,8 +431,10 @@
         }
 
         function renderLayOutChat(email, id) {
+            let btn_message = $('.msger-send-btn');
             $('#chat_to_user').text(email);
-            $('.msger-send-btn').data('to_user', id);
+            btn_message.data('to_user', id);
+            btn_message.data('to_email', email);
             $('#msger-input').val('');
         }
 
@@ -431,7 +445,22 @@
                 let role = $(this).data('role');
 
                 let conversationID = getConversationID(id);
-                console.log(conversationID);
+
+                if (role === '{{ \App\Enums\Role::PHAMACISTS }}' ||
+                    role === '{{ \App\Enums\Role::DOCTORS }}' ||
+                    role === '{{ \App\Enums\Role::CLINICS }}' ||
+                    role === '{{ \App\Enums\Role::HOSPITALS }}') {
+                    /* Đoạn này sẽ kiểm tra xem có đơn thuoc chưa
+                    * Neu chưa có, sẽ hiện nut cảnh báo tạo đơn
+                    * Nếu có rồi, sẽ hiện nút tạo đơn lại
+                    * */
+                    appendNotPrescription();
+                } else {
+                    $('.msger-header-options').empty()
+                }
+
+                console.log(role);
+
                 const messagesCollectionRef = collection(database, `chats/${conversationID}/messages`);
 
                 let html = ``;
@@ -445,6 +474,21 @@
                     });
 
                     renderMessage(list_message, html);
+
+                    let count = list_message.length;
+                    if (count > 0) {
+                        let last_message = list_message[count - 1];
+
+                        let is_read;
+
+                        is_read = last_message.fromId === current_user.uid;
+
+                        let html = setMessage(last_message.msg, is_read);
+                        $('.show_last_message_' + id).empty().append(html);
+                    } else {
+                        $('.show_last_message_' + id).empty().append(un_message);
+                    }
+
                 }, (error) => {
                     console.error("Error getting: ", error);
                 });
@@ -567,7 +611,6 @@
             }
         }
 
-
         async function updateLastMessage(chatUserID, lastMessage) {
             const callType = _getTypeFromString(lastMessage.type);
             let updatedMessage = JSON.parse(JSON.stringify(lastMessage));
@@ -622,7 +665,82 @@
             }
         }
 
+        async function pushNotification(to_email, msg) {
+            const notification = {
+                "title": `{{ Auth::user()->username }}`,
+                "body": msg,
+                "android_channel_id": "chats"
+            };
 
+            const data = {
+                email: to_email,
+                data: notification,
+                notification: notification
+            };
+
+            let sendNotiUrl = `{{ route('restapi.mobile.fcm.send') }}`
+            await $.ajax({
+                url: sendNotiUrl,
+                method: 'POST',
+                data: data,
+                success: function (response) {
+                    console.log(response)
+                },
+                error: function (error) {
+                    console.log(error.responseJSON.message);
+                }
+            });
+        }
+
+        async function saveMessage(from_email, to_email, message) {
+            let saveMessageUrl = `{{ route('api.backend.messages.save') }}`
+
+            const data = {
+                from_user_email: from_email,
+                to_user_email: to_email,
+                content: message.msg
+            };
+
+            const headers = {
+                'Authorization': `Bearer ${token}`
+            };
+
+            await $.ajax({
+                url: saveMessageUrl,
+                method: 'POST',
+                data: data,
+                headers: headers,
+                success: function (response) {
+                    console.log(response)
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        async function updateMessageReadStatus(message) {
+            try {
+                const chatMessageCollection = collection(database, `chats/${getConversationID(message.fromId)}/messages/`);
+                const chatDocRef = doc(chatMessageCollection, message.sent)
+                await setDoc(chatDocRef, {'read': Date.now()});
+            } catch (error) {
+                console.error('Error updating message read status:', error);
+            }
+        }
+
+        function setMessage(msg, is_read, count) {
+            let log;
+            if (is_read === true) {
+                log = 'read';
+            } else {
+                log = 'unread';
+            }
+            let number = `<p class="number">
+                            <span class="p-1 new-message">${count}</span>
+                        </p>`;
+            return `<p class="${log}">${msg}</p> ${count ? number : ''}`;
+        }
     </script>
     <script>
         let accessToken = `Bearer ` + token;
@@ -654,7 +772,6 @@
         function formatDate(timestamp) {
             const date = new Date(parseInt(timestamp));
 
-            console.log(date);
             const h = "0" + date.getHours();
             const m = "0" + date.getMinutes();
 

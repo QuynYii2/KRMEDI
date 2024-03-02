@@ -111,6 +111,7 @@ Route::group(['prefix' => 'booking'], function () {
 
 Route::group(['prefix' => 'messages'], function () {
     Route::post('/create', [MessageApi::class, 'create'])->name('api.backend.messages.create');
+    Route::post('/save', [MessageApi::class, 'saveMessage'])->name('api.backend.messages.save');
 });
 
 /* Cart api */
