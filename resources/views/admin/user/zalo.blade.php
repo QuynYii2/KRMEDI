@@ -9,7 +9,24 @@
     <div class="">
         <!-- Page Heading -->
         <h1 class="h3 mb-4 text-gray-800">List Zalo OA follower User</h1>
-        <br>
+        <hr>
+
+        <div class="d-flex justify-content-center">
+            <button id="syncButton" type="button" class="btn btn-primary" onclick="syncData()"><i
+                    class="fa-solid fa-rotate"></i> Sync
+                data</button>
+            {{-- <button style="display: none" class="btn btn-primary" type="button" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Synchronizing...
+            </button> --}}
+        </div>
+
+        @if (session('syncStatus') == 'success')
+            <div class="alert alert-success">Sync successfully</div>
+        @elseif(session('syncStatus') == 'error')
+            <div class="alert alert-danger">Fail to sync</div>
+        @endif
+
         <table class="table" id="tableListZaloFollower">
             <thead>
                 <tr>
@@ -36,7 +53,7 @@
                             @endif
                         </td>
                         <td class="text-center">
-                            {{ $info['shared_info']['name'] ?? $info['display_name'] }}
+                            {{ $info['name'] ?? '' }}
                         </td>
                         <td class="text-center">
                             {{ $info['user_id'] ?? '' }}
@@ -45,37 +62,18 @@
                             {{ $info['user_id_by_app'] ?? '' }}
                         </td>
                         <td class="text-center">
-                            @php
-                                $phone = $info['shared_info']['phone'] ?? '';
-
-                                // Check if the string is a regular expression
-                                if (preg_match('/^\d{11}$/', $phone)) {
-                                    // Convert the regular expression to the desired format
-                                    $convert = '0' . substr($phone, 2);
-
-                                    $convertedPhone = $convert;
-                                } else {
-                                    $convertedPhone = $phone;
-                                }
-                            @endphp
                             <a type="button" data-bs-toggle="modal" data-bs-target="#sendMessageModal"
                                 data-toggle="tooltip" data-placement="top"
-                                title="{{ __('admin.send-message-to') }}: {{ $convertedPhone ?? '' }}"
-                                onclick="setModalUserId('{{ $info['user_id'] ?? 0 }}', '{{ $convertedPhone ?? '' }}')">{{ $convertedPhone ?? '' }}</a>
+                                title="{{ __('admin.send-message-to') }}: {{ $info['phone'] ?? '' }}"
+                                onclick="setModalUserId('{{ $info['user_id'] ?? 0 }}', '{{ $info['phone'] ?? '' }}')">{{ $info['phone'] ?? '' }}</a>
                         </td>
                         <td class="text-center">
-                            @if (isset($info['shared_info']))
-                                {!! $info['shared_info']['address'] .
-                                    '</br>' .
-                                    $info['shared_info']['district'] .
-                                    '</br>' .
-                                    $info['shared_info']['city'] !!}
-                            @endif
+                            {!! $info['address'] ?? '' !!}
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7">Empty data</td>
+                        <td colspan="7" class="text-center">Empty data</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -90,13 +88,14 @@
                 <input type="hidden" name="user_zalo" id="hidden-user-id">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">{{ __('admin.send-message-to') }} <span id="phone-title">...</span>
+                        <h5 class="modal-title" id="staticBackdropLabel">{{ __('admin.send-message-to') }} <span
+                                id="phone-title">...</span>
                             {{ __('admin.through-zalo-oa') }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <label for="message" class="form-label">{{ __('admin.message') }}</label>
-                        <input type="text" class="form-control" id="message" name="message" required/>
+                        <input type="text" class="form-control" id="message" name="message" required />
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary"
@@ -122,6 +121,38 @@
         function setModalUserId(userId, phone) {
             $('#hidden-user-id').val(userId);
             $('#phone-title').text(phone);
+        }
+    </script>
+
+    <script>
+        function syncData() {
+            var syncButton = $('#syncButton');
+            var originalHtml = syncButton.html();
+
+            syncButton.prop('disabled', true).html(
+                '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Synchronizing...'
+            );
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('admin.sync.user.zalo') }}',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    var table = $('#tableListZaloFollower').DataTable();
+                    table.destroy();
+                    $('#tableListZaloFollower').load(location.href + ' #tableListZaloFollower');
+                    $('#tableListZaloFollower').DataTable();
+                    toastr.success('Sync follower successfully', 'Success');
+                },
+                error: function(xhr, status, error) {
+                    toastr.success('Failed to sync: ' + error, 'Error');
+                },
+                complete: function() {
+                    syncButton.prop('disabled', false).html(originalHtml);
+                }
+            });
         }
     </script>
 @endsection
