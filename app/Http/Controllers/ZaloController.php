@@ -8,8 +8,10 @@ use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Throwable;
 use Zalo\Builder\MessageBuilder;
+use Zalo\FileUpload\ZaloFile;
 use Zalo\Util\PKCEUtil;
 use Zalo\Zalo;
 use Zalo\ZaloEndPoint;
@@ -24,9 +26,12 @@ class ZaloController extends Controller
     protected $app_url_token = 'https://oauth.zaloapp.com/v4/oa/access_token';
     protected $auth_zalo_app = 'https://oauth.zaloapp.com/v4/permission';
 
+    private $zalo;
+
     public function __construct()
     {
         $this->access_token = $_COOKIE['access_token_zalo'] ?? null;
+        $this->zalo = $this->main();
     }
 
     /* Create new zalo */
@@ -89,9 +94,8 @@ class ZaloController extends Controller
                 'count' => 50
             ])
         ];
-        $zalo = $this->main();
-        $accessToken = $_COOKIE['access_token_zalo'] ?? null;
-        $response = $zalo->get(ZaloEndPoint::API_OA_GET_LIST_FOLLOWER, $accessToken, $data);
+
+        $response = $this->zalo->get(ZaloEndPoint::API_OA_GET_LIST_FOLLOWER, $this->access_token, $data);
 
         return $response->getDecodedBody();
     }
@@ -99,12 +103,78 @@ class ZaloController extends Controller
     /* Send message */
     public function sendMessage(Request $request)
     {
-        $user_id = $request->input('user_zalo');
-        $message = $request->input('message');
-        $this->sendMessageText($user_id, $message);
+        $validator = Validator::make($request->all(), [
+            'message_type' => 'required|in:text,file,photo',
+            'message' => $request->input('message_type') === 'text' ? 'required' : '',
+            'file_attached' => 'required_if:message_type,file|file|mimes:pdf,doc,docx|max:5120', // Max 5MB as zalo requirement
+            'photoMessage' => $request->input('message_type') === 'photo' && $request->input('photo_type') === 'image' ? 'required' : '',
+            'photo_attached' => $request->input('message_type') === 'photo' && $request->input('photo_type') === 'image' ? 'required|file|image|mimes:jpg,png|max:1024' : '',
+            'gif_attached' => $request->input('message_type') === 'photo' && $request->input('photo_type') === 'gif' ? 'required|file|mimes:gif|max:5120' : ''
+        ]);
+
+        if ($validator->fails()) {
+            toast($validator->errors()->first(), 'error', 'top-left');
+            return back();
+        }
+
+        $userId = $request->input('user_zalo');
+        switch ($request->input('message_type')) {
+            case 'text':
+                $message = $request->input('message');
+                $this->sendMessageText($userId, $message);
+                break;
+            case 'file':
+                //Save file -> get URL -> get token -> send msg ft token with uploaded file from zalo
+                if ($request->hasFile('file_attached')) {
+                    $item = $request->file('file_attached');
+                    $itemPath = $item->store('zalo_file', 'public');
+                    $itemUrl = url('storage/' . $itemPath);
+                    $filePayloadToken = $this->uploadFile($itemUrl, $this->access_token);
+
+                    $this->sendMessageFile($userId, $filePayloadToken);
+                    toast('Successfully', 'success', 'top-left');
+                } else {
+                    toast('Something went wrong', 'error', 'top-left');
+                }
+                break;
+            case 'photo':
+                $message = $request->input('photoMessage');
+                if ($request->input('photo_type') === 'image') {
+                    //PNG + JPG
+                    if ($request->hasFile('photo_attached')) {
+                        $item = $request->file('photo_attached');
+                        $itemPath = $item->store('zalo_image', 'public');
+                        $itemUrl = url('storage/' . $itemPath);
+                        $attachmentId = $this->uploadImage($itemUrl, $this->access_token);
+
+                        $this->sendMessageWithImage($userId, $message, $attachmentId);
+                        toast('Successfully', 'success', 'top-left');
+                    } else {
+                        toast('Something went wrong', 'error', 'top-left');
+                    }
+                } elseif ($request->input('photo_type') === 'gif') {
+                    //GIF
+                    if ($request->hasFile('gif_attached')) {
+                        $item = $request->file('gif_attached');
+                        $itemPath = $item->store('zalo_gif', 'public');
+                        $itemUrl = url('storage/' . $itemPath);
+                        $attachmentId = $this->uploadGif($itemUrl, $this->access_token);
+
+                        $this->sendMessageWithGif($userId, $attachmentId);
+                        toast('Successfully', 'success', 'top-left');
+                    } else {
+                        toast('Something went wrong', 'error', 'top-left');
+                    }
+                }
+                break;
+            default:
+                toast('Something went wrong', 'error', 'top-left');
+                return back();
+        }
         return back();
     }
 
+    // Gửi tin nhắn dạng văn bản
     public function sendMessageText($user_id, $message)
     {
         $msgBuilder = new MessageBuilder(MessageBuilder::MSG_TYPE_TXT);
@@ -112,9 +182,7 @@ class ZaloController extends Controller
         $msgBuilder->withText($message);
 
         $msgText = $msgBuilder->build();
-        $zalo = $this->main();
-        $accessToken = $_COOKIE['access_token_zalo'] ?? null;
-        $response = $zalo->post(ZaloEndPoint::API_OA_SEND_CONSULTATION_MESSAGE_V3, $accessToken, $msgText);
+        $response = $this->zalo->post(ZaloEndPoint::API_OA_SEND_CONSULTATION_MESSAGE_V3, $this->access_token, $msgText);
         if ($response->getDecodedBody()['error'] != 0) {
             //Err
             toast('Something went wrong', 'error', 'top-left');
@@ -152,11 +220,8 @@ class ZaloController extends Controller
 
             $msgText = $msgBuilder->build();
 
-            $zalo = $this->main();
-            $accessToken = $_COOKIE['access_token_zalo'] ?? null;
-
             // send request
-            $response = $zalo->post(ZaloEndPoint::API_OA_SEND_CONSULTATION_MESSAGE_V3, $accessToken, $msgText);
+            $response = $this->zalo->post(ZaloEndPoint::API_OA_SEND_CONSULTATION_MESSAGE_V3, $this->access_token, $msgText);
             return $response->getDecodedBody();
         } catch (\Exception $e) {
             // Exception handling code
@@ -172,9 +237,8 @@ class ZaloController extends Controller
             $data = ['data' => json_encode(array(
                 'user_id' => $user_id
             ))];
-            $zalo = $this->main();
-            $accessToken = $_COOKIE['access_token_zalo'] ?? null;
-            $response = $zalo->get(ZaloEndPoint::API_OA_GET_USER_PROFILE, $accessToken, $data);
+
+            $response = $this->zalo->get(ZaloEndPoint::API_OA_GET_USER_PROFILE, $this->access_token, $data);
             $result = $response->getDecodedBody();
             return $result;
         } catch (\Exception $e) {
@@ -343,8 +407,7 @@ class ZaloController extends Controller
     public function getAuthZaloUrl($codeChallenge, $state)
     {
         try {
-            $zalo = $this->main();
-            $helper = $zalo->getRedirectLoginHelper();
+            $helper = $this->zalo->getRedirectLoginHelper();
             $callbackUrl = route('login.zalo.callback');
             $loginUrl = $helper->getLoginUrl($callbackUrl, $codeChallenge, $state);
             return $loginUrl;
@@ -357,8 +420,7 @@ class ZaloController extends Controller
     public function getUserAccessToken($codeVerifier)
     {
         try {
-            $zalo = $this->main();
-            $helper = $zalo->getRedirectLoginHelper();
+            $helper = $this->zalo->getRedirectLoginHelper();
             $zaloToken = $helper->getZaloToken($codeVerifier);
             $accessToken = $zaloToken->getAccessToken();
             return $accessToken;
@@ -371,14 +433,110 @@ class ZaloController extends Controller
     public function getUserInformation($userAccessToken)
     {
         try {
-            $zalo = $this->main();
             $params = ['fields' => 'id,name,picture'];
-            $response = $zalo->get(ZaloEndPoint::API_GRAPH_ME, $userAccessToken, $params);
+            $response = $this->zalo->get(ZaloEndPoint::API_GRAPH_ME, $userAccessToken, $params);
             $result = $response->getDecodedBody(); // result
             return $result;
         } catch (\Exception $e) {
             // Handle the exception
             throw new \Exception("Failed to retrieve user information: " . $e->getMessage());
         }
+    }
+
+    //Upload file to zalo
+    public function uploadFile($filePath)
+    {
+        try {
+            $data = array('file' => new ZaloFile($filePath));
+            $response = $this->zalo->post(ZaloEndpoint::API_OA_UPLOAD_FILE, $this->access_token, $data);
+            $result = $response->getDecodedBody(); // result
+            return $result['data']['token'];
+        } catch (\Exception $e) {
+            // Handle the exception
+            throw new \Exception("Failed to upload file: " . $e->getMessage());
+        }
+    }
+
+    //Upload photo(image) to zalo
+    public function uploadImage($filePath)
+    {
+        try {
+            $data = array('file' => new ZaloFile($filePath));
+            $response = $this->zalo->post(ZaloEndpoint::API_OA_UPLOAD_PHOTO, $this->access_token, $data);
+            $result = $response->getDecodedBody(); // result
+            return $result['data']['attachment_id'];
+        } catch (\Exception $e) {
+            // Handle the exception
+            throw new \Exception("Failed to upload file: " . $e->getMessage());
+        }
+    }
+
+    //Upload photo(gif) to zalo
+    public function uploadGif($filePath)
+    {
+        try {
+            $data = array('file' => new ZaloFile($filePath));
+            $response = $this->zalo->post(ZaloEndpoint::API_OA_UPLOAD_GIF, $this->access_token, $data);
+            $result = $response->getDecodedBody(); // result
+            return $result['data']['attachment_id'];
+        } catch (\Exception $e) {
+            // Handle the exception
+            throw new \Exception("Failed to upload file: " . $e->getMessage());
+        }
+    }
+
+    //Gửi tin nhắn dạng file
+    public function sendMessageFile($userId, $payloadToken)
+    {
+        $msgBuilder = new MessageBuilder('file');
+        $msgBuilder->withUserId($userId);
+        $msgBuilder->withFileToken($payloadToken);
+        $msgFile = $msgBuilder->build();
+        $response = $this->zalo->post(ZaloEndPoint::API_OA_SEND_CONSULTATION_MESSAGE_V3, $this->access_token, $msgFile);
+        $result = $response->getDecodedBody(); // result
+        if ($result['error'] != 0) {
+            //Err
+            toast('Something went wrong', 'error', 'top-left');
+        }
+        toast('Successfully', 'success', 'top-left');
+    }
+
+    //Gửi tin nhắn Tư vấn đính kèm hình ảnh
+    public function sendMessageWithImage($userId, $message, $attachmentId)
+    {
+        $msgBuilder = new MessageBuilder(MessageBuilder::MSG_TYPE_MEDIA);
+        $msgBuilder->withUserId($userId);
+        $msgBuilder->withText($message);
+        $msgBuilder->withAttachment($attachmentId);
+
+        $msgImage = $msgBuilder->build();
+
+        // send request
+        $response = $this->zalo->post(ZaloEndPoint::API_OA_SEND_CONSULTATION_MESSAGE_V3, $this->access_token, $msgImage);
+        $result = $response->getDecodedBody();
+        if ($result['error'] != 0) {
+            //Err
+            toast('Something went wrong', 'error', 'top-left');
+        }
+        toast('Successfully', 'success', 'top-left');
+    }
+
+    //Gửi tin nhắn dạng Gif
+    public function sendMessageWithGif($userId, $attachmentId)
+    {
+        $msgBuilder = new MessageBuilder('media');
+        $msgBuilder->withUserId($userId);
+        $msgBuilder->withAttachment($attachmentId);
+        $msgBuilder->withMediaType('gif');
+        $msgBuilder->withMediaSize(120, 120); //Default
+        $msgImage = $msgBuilder->build();
+
+        $response = $this->zalo->post(ZaloEndpoint::API_OA_SEND_CONSULTATION_MESSAGE_V3, $this->access_token, $msgImage);
+        $result = $response->getDecodedBody(); // result
+        if ($result['error'] != 0) {
+            //Err
+            toast('Something went wrong', 'error', 'top-left');
+        }
+        toast('Successfully', 'success', 'top-left');
     }
 }

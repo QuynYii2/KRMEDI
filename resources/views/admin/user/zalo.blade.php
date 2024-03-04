@@ -80,22 +80,84 @@
         </table>
     </div>
     <!-- Modal -->
-    <form id="sendMsgZalo" method="POST" action="{{ route('zalo.service.send.message.text') }}">
+    <form id="sendMsgZalo" method="POST" action="{{ route('zalo.service.send.message.text') }}"
+        enctype="multipart/form-data">
+        @csrf
+        <input type="hidden" name="user_zalo" id="hidden-user-id">
+
         <div class="modal fade" id="sendMessageModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
             aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
-                @csrf
-                <input type="hidden" name="user_zalo" id="hidden-user-id">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="staticBackdropLabel">{{ __('admin.send-message-to') }} <span
-                                id="phone-title">...</span>
-                            {{ __('admin.through-zalo-oa') }}</h5>
+                                id="phone-title">...</span> {{ __('admin.through-zalo-oa') }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <label for="message" class="form-label">{{ __('admin.message') }}</label>
-                        <input type="text" class="form-control" id="message" name="message" required />
+                        <div class="d-flex justify-content-between">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="message_type" id="textType"
+                                    value="text" checked>
+                                <label class="form-check-label" for="textType">
+                                    Textual form
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="message_type" id="fileType"
+                                    value="file">
+                                <label class="form-check-label" for="fileType">
+                                    File attached
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="message_type" id="photoType"
+                                    value="photo">
+                                <label class="form-check-label" for="photoType">
+                                    Photo attached
+                                </label>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <label class="form-label">{{ __('admin.message') }}</label>
+
+                        <div id="textContent" class="mt-3">
+                            <input type="text" class="form-control" id="message" name="message">
+                        </div>
+                        <div id="fileContent" class="mt-3" style="display: none;">
+                            <input type="file" class="form-control" accept=".pdf,.doc,.docx" id="file_attached"
+                                name="file_attached" />
+                        </div>
+                        <div id="photoContent" class="mt-3" style="display: none;">
+                            <div class="d-flex justify-content-center">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="photo_type" id="imageType"
+                                        value="image" checked>
+                                    <label class="form-check-label" for="imageType">
+                                        Image attached
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="photo_type" id="gifType"
+                                        value="gif">
+                                    <label class="form-check-label" for="gifType">
+                                        Gif attached
+                                    </label>
+                                </div>
+                            </div>
+                            <input type="text" class="form-control" id="photoMessage" name="photoMessage"
+                                placeholder="Enter attached message">
+                            <br>
+                            <div id="imageContent">
+                                <input type="file" class="form-control" accept=".jpg,.png" id="photo_attached"
+                                    name="photo_attached" />
+                            </div>
+                            <div id="gifContent" style="display: none;">
+                                <input type="file" class="form-control" accept=".gif" id="gif_attached"
+                                    name="gif_attached" />
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary"
@@ -154,5 +216,38 @@
                 }
             });
         }
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('input[name="message_type"]').change(function() {
+                var selectedOption = $('input[name="message_type"]:checked').val();
+
+                // Hide all content sections
+                $('#textContent, #fileContent, #photoContent').hide();
+
+                // Show the selected content section
+                if (selectedOption === 'text') {
+                    $('#textContent').show();
+                } else if (selectedOption === 'file') {
+                    $('#fileContent').show();
+                } else if (selectedOption === 'photo') {
+                    $('#photoContent').show();
+                }
+            });
+        });
+
+        $('input[name="photo_type"]').change(function() {
+            var selectedValue = $('input[name="photo_type"]:checked').val();
+
+            // Hide all content sections
+            $('#imageContent, #gifContent').hide();
+
+            if (selectedValue === 'image') {
+                $('#imageContent').show();
+            } else if (selectedValue === 'gif') {
+                $('#gifContent').show();
+            }
+        });
     </script>
 @endsection
