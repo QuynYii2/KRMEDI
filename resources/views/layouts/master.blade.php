@@ -397,6 +397,14 @@
         });
     }
 </script>
+<script>
+    function userFollowZaloOA(res)
+    {
+        const userId = res.userId;
+        console.log(res);
+    }
+</script>
 </html>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://sp.zalo.me/plugins/sdk.js"></script>
