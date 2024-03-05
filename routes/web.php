@@ -580,51 +580,50 @@ Route::group(['prefix' => 'products'], function () {
     Route::group(['prefix' => 'qr-code'], function () {
         Route::get('/doctor-info/{id}', [DoctorInfoController::class, 'showFromQrCode'])->name('qr.code.show.doctor.info');
     });
+});
 
 
+/* Admin */
+Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
+    require_once __DIR__ . '/admin.php';
+});
 
-    /* Admin */
-    Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
-        require_once __DIR__ . '/admin.php';
-    });
+/* Business */
+Route::group(['prefix' => 'api', 'middleware' => ['business']], function () {
+    require_once __DIR__ . '/permission/business.php';
+});
 
-    /* Business */
-    Route::group(['prefix' => 'api', 'middleware' => ['business']], function () {
-        require_once __DIR__ . '/permission/business.php';
-    });
+/* Medical */
+Route::group(['prefix' => 'api', 'middleware' => ['medical']], function () {
+    require_once __DIR__ . '/permission/medical.php';
+});
 
-    /* Medical */
-    Route::group(['prefix' => 'api', 'middleware' => ['medical']], function () {
-        require_once __DIR__ . '/permission/medical.php';
-    });
+/* Normal */
+Route::group(['prefix' => 'api', 'middleware' => 'normal'], function () {
+    require_once __DIR__ . '/permission/normal.php';
+});
 
-    /* Normal */
-    Route::group(['prefix' => 'api', 'middleware' => 'normal'], function () {
-        require_once __DIR__ . '/permission/normal.php';
-    });
+/* Authenticate */
+Route::group(['prefix' => 'api', 'middleware' => 'jwt'], function () {
+    require_once __DIR__ . '/backend.php';
+});
 
-    /* Authenticate */
-    Route::group(['prefix' => 'api', 'middleware' => 'jwt'], function () {
-        require_once __DIR__ . '/backend.php';
-    });
+/* Free api */
+Route::group(['prefix' => ''], function () {
+    require_once __DIR__ . '/restapi.php';
+});
 
-    /* Free api */
-    Route::group(['prefix' => ''], function () {
-        require_once __DIR__ . '/restapi.php';
-    });
+/* Route maps */
+Route::get('explore', [MapController::class, 'explore'])->name('explore.list');
+Route::get('/info-user/{id}', [ProfileController::class, 'infoUser'])->name('info.user');
+Route::get('/department', [DoctorInfoController::class, 'listDepartment'])->name('list.department');
 
-    /* Route maps */
-    Route::get('explore', [MapController::class, 'explore'])->name('explore.list');
-    Route::get('/info-user/{id}', [ProfileController::class, 'infoUser'])->name('info.user');
-    Route::get('/department', [DoctorInfoController::class, 'listDepartment'])->name('list.department');
-
-    Route::get('/upload-form', [ImportController::class, 'showForm'])->name('upload.form');
-    Route::post('/import-excel', [ImportController::class, 'importExcel'])->name('import.excel');
-    /*Download*/
-    Route::group(['prefix' => 'download'], function () {
-        Route::get('', [DownloadController::class, 'getDownload'])->name('user.download');
-        Route::get('file/{id}', [DownloadController::class, 'downloadFile'])->name('user.download.file');
-    });
+Route::get('/upload-form', [ImportController::class, 'showForm'])->name('upload.form');
+Route::post('/import-excel', [ImportController::class, 'importExcel'])->name('import.excel');
+/*Download*/
+Route::group(['prefix' => 'download'], function () {
+    Route::get('', [DownloadController::class, 'getDownload'])->name('user.download');
+    Route::get('file/{id}', [DownloadController::class, 'downloadFile'])->name('user.download.file');
 });
 Route::get('test/translate', [MainApi::class, 'translateLanguage']);
 Route::group(['prefix' => 'zalo-service'], function () {

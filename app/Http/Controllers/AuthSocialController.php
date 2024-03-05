@@ -320,8 +320,8 @@ class AuthSocialController extends Controller
                 return back();
             }
 
-            $user->provider_name = '';
-            $user->provider_id = '';
+            // $user->provider_name = '';
+            // $user->provider_id = '';
             $user->name = $name;
             $user->last_name = $lastname;
             $user->email = $email;
