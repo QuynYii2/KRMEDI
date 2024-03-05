@@ -15,6 +15,7 @@ use App\Http\Controllers\backend\BackendWishListController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\BookingResultController;
 use App\Http\Controllers\CalcViewQuestionController;
+use App\Http\Controllers\ChatMessageController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ClinicController;
@@ -506,7 +507,18 @@ Route::middleware(['user.active'])->group(function () {
     Route::group(['prefix' => 'products'], function () {
         Route::get('', [ProductInfoController::class, 'index'])->name('product.list');
 
-    });
+
+Route::group(['prefix' => 'messages'], function () {
+    Route::get('/chat', [ChatMessageController::class, 'index'])->name('chat.message.show');
+//    Route::get('/search', [BackendProductInfoController::class, 'search'])->name('backend.products.search');
+});
+
+// QrCode
+Route::group(['prefix' => 'qr-code'], function () {
+    Route::get('/doctor-info/{id}', [DoctorInfoController::class, 'showFromQrCode'])->name('qr.code.show.doctor.info');
+});
+
+
 
     /* Admin */
     Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
