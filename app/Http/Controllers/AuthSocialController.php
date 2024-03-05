@@ -441,7 +441,7 @@ class AuthSocialController extends Controller
                 setcookie("accessToken", $token, time() + 3600 * 24);
 
                 toast('Register logged in!', 'success', 'top-left');
-                if (!$existingUser->provider_name) {
+                if ($existingUser->provider_name) {
                     return redirect(route('profile'));
                 }
             } else {
