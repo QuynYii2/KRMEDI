@@ -39,10 +39,11 @@ class ZaloFollowerController extends Controller
 
             $existedFollower = ZaloFollower::where('user_id', $userId)->first();
 
-            if ($existedFollower) {
+            if (!$existedFollower) {
                 //Create
-                $zaloUser = ZaloFollower::create(
+                $existedFollower = ZaloFollower::create(
                     [
+                        'user_id' => $userId,
                         'avatar' => url($currentUser->avt),
                         'name' => $currentUser->name . ' ' . $currentUser->last_name,
                         'user_id_by_app' => isset($currentUser->provider_id) && $currentUser->provider_id != null ? $currentUser->provider_id : null,
@@ -58,21 +59,17 @@ class ZaloFollowerController extends Controller
                 if ($currentUser->provider_id) {
                     $existedFollower->user_id_by_app = $currentUser->provider_id;
                 }
+                if ($currentUser->phone) {
+                    $existedFollower->phone = $currentUser->phone;
+                }
+                if ($currentUser->detail_address) {
+                    $existedFollower->address = $currentUser->detail_address;
+                }
+                $existedFollower->extend = null;
+                $existedFollower->save();
             }
 
-            $zaloUser = ZaloFollower::updateOrCreate(
-                ['user_id' => $userId],
-                [
-                    'avatar' => url($currentUser->avt),
-                    'name' => $currentUser->name . ' ' . $currentUser->last_name,
-                    'user_id_by_app' => isset($currentUser->provider_name) && $currentUser->provider_name == 'zalo' ? $currentUser->provider_id : '',
-                    'phone' => $currentUser->phone ?? null,
-                    'address' => $currentUser->detail_address ?? null,
-                    'extend' => null
-                ]
-            );
-
-            return response()->json(['error' => 0, 'user' => $zaloUser->name]);
+            return response()->json(['error' => 0, 'user' => $existedFollower->name]);
         } catch (\Exception $e) {
             return response()->json(['error' => 1, 'message' => $e->getMessage()]);
         }
