@@ -34,6 +34,9 @@ class ZaloController extends Controller
     {
         $this->access_token = $_COOKIE['access_token_zalo'] ?? null;
         $this->zalo = $this->main();
+        // if ($this->access_token == null) {
+        //     $this->getAuthCode();
+        // }
     }
 
     /* Create new zalo */

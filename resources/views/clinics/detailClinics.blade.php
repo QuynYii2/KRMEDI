@@ -116,7 +116,9 @@
                         <div class="d-flex justify-content-between mt-md-2">
                             <div class="fs-18px">{{$bookings->name}}</div>
                             <div class="button-follow fs-12p ">
-                                <a class="text-follow-12" href="">{{ __('home.FOLLOW') }}</a>
+                                <div style="margin-left: 10px;margin-top: 20px;">
+                                    <div class="zalo-follow-only-button" data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
+                                </div>
                             </div>
                         </div>
                         <div class="d-flex mt-md-2">
@@ -320,6 +322,22 @@
                 if ('{{ !Auth::check() }}') {
                     alert('{{ __('home.Please login to continue') }}');
                     return;
+                }
+
+                let followed = await fetch('{{ route('zalo-follower.show', Auth::user()->id) }}', {
+                    method: 'GET',
+                    headers: {
+                        "Authorization": accessToken
+                    },
+                });
+
+                if (followed.ok) {
+                    followed = await followed.json();
+                    console.log(followed.error)
+                    if (followed.error != 0) {
+                        alert('Bạn chưa follow phòng khám này');
+                        return;
+                    }
                 }
 
                 let response = await fetch('{{ route('api.survey.get-by-department', $bookings->department) }}', {
