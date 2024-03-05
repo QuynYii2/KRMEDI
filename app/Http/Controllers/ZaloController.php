@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Zalo\Builder\MessageBuilder;
 use Zalo\FileUpload\ZaloFile;
 use Zalo\Util\PKCEUtil;
@@ -544,19 +545,19 @@ class ZaloController extends Controller
     //API check user login = zalo existed?
     public function userExisted($app_id)
     {
-        $user = User::where('provider_name', 'zalo')->where('provider_id', $app_id)->first();
-
-        if ($user) {
-            $responseData = [
-                'infoUser' => $user,
-                'error' => 0,
-            ];
-        } else {
-            $responseData = [
-                'infoUser' => "Not found user",
-                'error' => 404,
-            ];
+        try {
+            $user = User::where('provider_name', 'zalo')->where('provider_id', $app_id)->first();
+    
+            if ($user) {
+                $token = JWTAuth::fromUser($user);
+                $user->token = $token;
+                $user->save();
+                return response()->json($user);
+            }
+    
+            throw new \Exception('User not found');
+        } catch (\Exception $e) {
+            return response()->json(['error' => 1, 'message' => $e->getMessage()], 404);
         }
-        return response()->json($responseData);
     }
 }

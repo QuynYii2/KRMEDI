@@ -35,6 +35,8 @@ class AuthController extends Controller
             $commune_id = $request->input('commune_id');
             $address_detail = $request->input('address');
             $time_work = $request->input('time_work');
+            $provider_name = $request->input('provider_name') ?? "";
+            $provider_id = $request->input('provider_id') ?? "";
 
             $address = $request->input('combined_address');
             $representative = $request->input('representative');
@@ -142,6 +144,8 @@ class AuthController extends Controller
             $user->address_code = '';
             $user->type = $type;
             $user->member = $member;
+            $user->provider_id = $provider_id;
+            $user->provider_name = $provider_name;
             $user->abouts = 'default';
             $user->abouts_en = 'default';
             $user->abouts_lao = 'default';
