@@ -29,20 +29,30 @@ class ZaloFollowerController extends Controller
      */
     public function store(Request $request)
     {
-        $userId = $request->userId;
-        $currentUser = Auth::user();
-        dd($currentUser);
-        ZaloFollower::updateOrCreate(
-            ['user_id' => $userId],
-            [
-                'avatar' => url($currentUser->avt),
-                'name' => $currentUser->name . ' ' . $currentUser->last_name,
-                'user_id_by_app' => null,
-                'phone' => $currentUser->phone,
-                'address' => "",
-                'extend' => null
-            ]
-        );
+        try {
+            $userId = $request->userId;
+            $currentUser = Auth::user();
+    
+            if (!$currentUser) {
+                throw new \Exception("User not authenticated");
+            }
+    
+            $zaloUser = ZaloFollower::updateOrCreate(
+                ['user_id' => $userId],
+                [
+                    'avatar' => url($currentUser->avt),
+                    'name' => $currentUser->name . ' ' . $currentUser->last_name,
+                    'user_id_by_app' => isset($currentUser->provider_name) && $currentUser->provider_name == 'zalo' ? $currentUser->provider_id : null,
+                    'phone' => $currentUser->phone ?? null,
+                    'address' => $currentUser->detail_address ?? null,
+                    'extend' => null
+                ]
+            );
+    
+            return response()->json(['error' => 0, 'user' => $zaloUser->name]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 1, 'message' => $e->getMessage()]);
+        }
     }
 
     /**

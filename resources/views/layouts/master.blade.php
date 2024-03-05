@@ -405,7 +405,6 @@
     function userFollowZaloOA(res)
     {
         const userId = res.userId;
-        console.log(userId)
         if (userId) {
             $.ajax({
                 url: " {{ route('zalo-follower.store') }} ",
@@ -415,10 +414,14 @@
                 },
                 data: { userId: userId },
                 success: function (response) {
-                    console.log(response)
+                    if (response.error == 0) {
+                        toastr.success("Thank you " + response.user + " for following", 'Success');
+                    }
                 },
-                error: function (error) {
-                    console.log(error);
+                error: function (xhr, status, error) {
+                    // Handle error response
+                    var errorMessage = xhr.responseJSON.message;
+                    toastr.error(errorMessage, 'Error');
                 }
             });
         }

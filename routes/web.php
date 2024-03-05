@@ -554,76 +554,76 @@ Route::middleware(['user.active'])->group(function () {
     Route::group(['prefix' => 'route-ui', 'middleware' => 'jwt'], function () {
         require_once __DIR__ . '/authorization/auth.php';
     });
+});
 
-    /* List Api*/
-    /* Auth */
-    Route::group(['prefix' => 'auth'], function () {
-        Route::post('/login', [LoginController::class, 'login'])->name('api.user.login');
-        Route::post('/logout', [LoginController::class, 'logout'])->name('api.user.logout');
-        Route::post('/save-token', [LoginController::class, 'saveTokenFireBase'])->name('api.user.save.token');
-        Route::post('/register', [RegisterController::class, 'register'])->name('api.user.register');
-        Route::get('/logout-all', [UserApi::class, 'logout']);
-        Route::post('/open-key', [UserApi::class, 'calcPoint'])->name('api.user.open');
+/* List Api*/
+/* Auth */
+Route::group(['prefix' => 'auth'], function () {
+    Route::post('/login', [LoginController::class, 'login'])->name('api.user.login');
+    Route::post('/logout', [LoginController::class, 'logout'])->name('api.user.logout');
+    Route::post('/save-token', [LoginController::class, 'saveTokenFireBase'])->name('api.user.save.token');
+    Route::post('/register', [RegisterController::class, 'register'])->name('api.user.register');
+    Route::get('/logout-all', [UserApi::class, 'logout']);
+    Route::post('/open-key', [UserApi::class, 'calcPoint'])->name('api.user.open');
+});
+/* Product */
+Route::group(['prefix' => 'products'], function () {
+    Route::get('', [ProductInfoController::class, 'index'])->name('product.list');
+
+
+    Route::group(['prefix' => 'messages'], function () {
+        Route::get('/chat', [ChatMessageController::class, 'index'])->name('chat.message.show');
+        //    Route::get('/search', [BackendProductInfoController::class, 'search'])->name('backend.products.search');
     });
-    /* Product */
-    Route::group(['prefix' => 'products'], function () {
-        Route::get('', [ProductInfoController::class, 'index'])->name('product.list');
 
-
-        Route::group(['prefix' => 'messages'], function () {
-            Route::get('/chat', [ChatMessageController::class, 'index'])->name('chat.message.show');
-            //    Route::get('/search', [BackendProductInfoController::class, 'search'])->name('backend.products.search');
-        });
-
-        // QrCode
-        Route::group(['prefix' => 'qr-code'], function () {
-            Route::get('/doctor-info/{id}', [DoctorInfoController::class, 'showFromQrCode'])->name('qr.code.show.doctor.info');
-        });
+    // QrCode
+    Route::group(['prefix' => 'qr-code'], function () {
+        Route::get('/doctor-info/{id}', [DoctorInfoController::class, 'showFromQrCode'])->name('qr.code.show.doctor.info');
+    });
 
 
 
-        /* Admin */
-        Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
-            require_once __DIR__ . '/admin.php';
-        });
+    /* Admin */
+    Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
+        require_once __DIR__ . '/admin.php';
+    });
 
-        /* Business */
-        Route::group(['prefix' => 'api', 'middleware' => ['business']], function () {
-            require_once __DIR__ . '/permission/business.php';
-        });
+    /* Business */
+    Route::group(['prefix' => 'api', 'middleware' => ['business']], function () {
+        require_once __DIR__ . '/permission/business.php';
+    });
 
-        /* Medical */
-        Route::group(['prefix' => 'api', 'middleware' => ['medical']], function () {
-            require_once __DIR__ . '/permission/medical.php';
-        });
+    /* Medical */
+    Route::group(['prefix' => 'api', 'middleware' => ['medical']], function () {
+        require_once __DIR__ . '/permission/medical.php';
+    });
 
-        /* Normal */
-        Route::group(['prefix' => 'api', 'middleware' => 'normal'], function () {
-            require_once __DIR__ . '/permission/normal.php';
-        });
+    /* Normal */
+    Route::group(['prefix' => 'api', 'middleware' => 'normal'], function () {
+        require_once __DIR__ . '/permission/normal.php';
+    });
 
-        /* Authenticate */
-        Route::group(['prefix' => 'api', 'middleware' => 'jwt'], function () {
-            require_once __DIR__ . '/backend.php';
-        });
+    /* Authenticate */
+    Route::group(['prefix' => 'api', 'middleware' => 'jwt'], function () {
+        require_once __DIR__ . '/backend.php';
+    });
 
-        /* Free api */
-        Route::group(['prefix' => ''], function () {
-            require_once __DIR__ . '/restapi.php';
-        });
+    /* Free api */
+    Route::group(['prefix' => ''], function () {
+        require_once __DIR__ . '/restapi.php';
+    });
 
-        /* Route maps */
-        Route::get('explore', [MapController::class, 'explore'])->name('explore.list');
-        Route::get('/info-user/{id}', [ProfileController::class, 'infoUser'])->name('info.user');
-        Route::get('/department', [DoctorInfoController::class, 'listDepartment'])->name('list.department');
+    /* Route maps */
+    Route::get('explore', [MapController::class, 'explore'])->name('explore.list');
+    Route::get('/info-user/{id}', [ProfileController::class, 'infoUser'])->name('info.user');
+    Route::get('/department', [DoctorInfoController::class, 'listDepartment'])->name('list.department');
 
-        Route::get('/upload-form', [ImportController::class, 'showForm'])->name('upload.form');
-        Route::post('/import-excel', [ImportController::class, 'importExcel'])->name('import.excel');
-        /*Download*/
-        Route::group(['prefix' => 'download'], function () {
-            Route::get('', [DownloadController::class, 'getDownload'])->name('user.download');
-            Route::get('file/{id}', [DownloadController::class, 'downloadFile'])->name('user.download.file');
-        });
+    Route::get('/upload-form', [ImportController::class, 'showForm'])->name('upload.form');
+    Route::post('/import-excel', [ImportController::class, 'importExcel'])->name('import.excel');
+    /*Download*/
+    Route::group(['prefix' => 'download'], function () {
+        Route::get('', [DownloadController::class, 'getDownload'])->name('user.download');
+        Route::get('file/{id}', [DownloadController::class, 'downloadFile'])->name('user.download.file');
     });
 });
 Route::get('test/translate', [MainApi::class, 'translateLanguage']);
