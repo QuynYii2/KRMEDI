@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Constants;
+use App\Models\User;
 use App\Models\ZaloFollower;
 use Exception;
 use GuzzleHttp\Client;
@@ -538,5 +539,24 @@ class ZaloController extends Controller
             toast('Something went wrong', 'error', 'top-left');
         }
         toast('Successfully', 'success', 'top-left');
+    }
+
+    //API check user login = zalo existed?
+    public function userExisted($app_id)
+    {
+        $user = User::where('provider_id', $app_id)->first();
+
+        if ($user) {
+            $responseData = [
+                'infoUser' => $user,
+                'error' => 0,
+            ];
+        } else {
+            $responseData = [
+                'infoUser' => "Not found user",
+                'error' => 404,
+            ];
+        }
+        return response()->json($responseData);
     }
 }

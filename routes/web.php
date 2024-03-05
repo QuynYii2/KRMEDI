@@ -614,6 +614,7 @@ Route::group(['prefix' => ''], function () {
 });
 
 /* Route maps */
+Route::get('/checkZaloSocialApi/{app_id}', [ZaloController::class, 'userExisted'])->name('zalo.user.existed');
 Route::get('explore', [MapController::class, 'explore'])->name('explore.list');
 Route::get('/info-user/{id}', [ProfileController::class, 'infoUser'])->name('info.user');
 Route::get('/department', [DoctorInfoController::class, 'listDepartment'])->name('list.department');
