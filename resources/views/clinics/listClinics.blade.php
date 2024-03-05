@@ -198,7 +198,9 @@
                                         </span>
                                         <span>/ {{ __('home.Dental Clinic') }}</span>
                                 </div>
-                                <div class="zalo-follow-only-button" data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
+                                @if (Auth::check())
+                                    <div class="zalo-follow-only-button" data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
+                                @endif
                             </div>
                             </div>
                             </div>

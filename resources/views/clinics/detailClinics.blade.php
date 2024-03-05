@@ -598,7 +598,7 @@
             }
 
             function createSlotsDom(formSubmit, morning, afternoon, arr) {
-                [9, 10, 11, 12, 1, 2, 3, 4, 5].map((e) => {
+                [9, 10, 11, 12, 1, 2, 3, 4, 5].forEach((e) => {
                     const div = document.createElement('div');
                     div.setAttribute('class', 'item');
 
@@ -620,7 +620,7 @@
                         formSubmit.classList.remove('disabled');
                     }
 
-                    if (!arr.filter(r => r == e).length) {
+                    if (Array.isArray(arr) && !arr.includes(e)) {
                         anchor.setAttribute('disabled', 'true');
                     }
 
@@ -663,7 +663,7 @@
                             morning.innerHTML = '';
                             afternoon.innerHTML = '';
                             prom.then((payload) => {
-                                Object.keys(payload).map((e) => {
+                                Object.keys(payload).forEach((e) => {
                                     const cachedKeys = Object.keys(cachedData);
                                     if (!cachedKeys.includes(e)) {
                                         cachedData[e] = payload[e];
