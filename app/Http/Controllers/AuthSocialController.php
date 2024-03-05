@@ -441,9 +441,7 @@ class AuthSocialController extends Controller
                 setcookie("accessToken", $token, time() + 3600 * 24);
 
                 toast('Register logged in!', 'success', 'top-left');
-                if ($existingUser->provider_name) {
-                    return redirect(route('profile'));
-                }
+                return redirect(route('home'));
             } else {
                 $newUser = User::create([
                     'provider_name' => 'zalo',
@@ -469,9 +467,8 @@ class AuthSocialController extends Controller
                 setcookie("accessToken", $token, time() + 3600 * 24);
 
                 toast('Register success!', 'success', 'top-left');
+                return redirect()->route('login.social.choose.role');
             }
-
-            return redirect()->route('login.social.choose.role');
         } catch (\Exception $exception) {
             return $exception;
         }
