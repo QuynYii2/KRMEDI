@@ -477,45 +477,4 @@ class AuthSocialController extends Controller
         }
     }
 
-    //API register new user from zalo
-    public function zaloRegister(Request $request)
-    {
-        try {
-            $app_id = $request->app_id;
-            $name = $request->name;
-            $avatar_url = $request->avatar_url ?? '';
-
-            if (is_null($app_id) || is_null($name)) {
-                throw new \Exception('app_id and name are required');
-            }
-
-            $password = (new MainController())->generateRandomString(8);
-            $passwordHash = Hash::make($password);
-    
-            $newUser = User::create([
-                'provider_name' => 'zalo',
-                'provider_id' => $app_id,
-                'name' => $name,
-                'email' => 'zalo' . (new MainController())->generateRandomString(8) . '@gmail.com',
-                'phone' => '',
-                'username' => '',
-                'address_code' => '',
-                'password' => $passwordHash,
-                'type' => 'OTHERS',
-                'email_verified_at' => now(),
-                'avt' => $avatar_url ?? '',
-                'abouts' => '',
-                'abouts_en' => '',
-                'abouts_lao' => '',
-            ]);
-    
-            if (!$newUser) {
-                throw new \Exception('Failed to create user');
-            }
-    
-            return response()->json($newUser);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 1, 'message' => $e->getMessage()], 404);
-        }
-    }
 }
