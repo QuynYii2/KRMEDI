@@ -21,7 +21,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ClinicController;
 use App\Http\Controllers\connect\AgoraChatController;
 use App\Http\Controllers\connect\CallVideoController;
-use App\Http\Controllers\connect\ChatMessageController;
+use App\Http\Controllers\connect\ChatMessageController as ConnectChatMessageController;
 use App\Http\Controllers\connect\WidgetChatController;
 use App\Http\Controllers\DoctorInfoController;
 use App\Http\Controllers\DoctorReviewController;
@@ -67,6 +67,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
 Route::middleware(['user.active'])->group(function () {
     Route::get('/lang/{locale}', [MainController::class, 'setLanguage'])->name('language');
     Route::get('test-noti', [\App\Http\Controllers\AlertNotificationController::class, 'pushNoti'])->name('noti.push');
@@ -78,7 +79,6 @@ Route::middleware(['user.active'])->group(function () {
         Route::get('/specialist-detail/{id}', [HomeController::class, 'specialistDetail'])->name('home.specialist.detail');
         Route::get('/booking-detail/{id}', [HomeController::class, 'bookingDetailSpecialist'])->name('home.specialist.booking.detail');
         Route::post('/specialist-review/{id}', [HomeController::class, 'specialistReview'])->name('home.specialist.review');
-
     });
 
     Route::post('/login', [AuthController::class, 'login'])->name('loginProcess');
@@ -102,8 +102,10 @@ Route::middleware(['user.active'])->group(function () {
     Route::get('/login-role', [AuthSocialController::class, 'chooseRole'])->name('login.social.choose.role');
     /* End login social */
 
-    Route::post('forget-password/send',
-        [ProfileController::class, 'handleForgetPassword'])->name('user.forget.password.send');
+    Route::post(
+        'forget-password/send',
+        [ProfileController::class, 'handleForgetPassword']
+    )->name('user.forget.password.send');
     Route::post('forget-password/check', [ProfileController::class, 'checkOTP'])->name('user.forget.password.check');
     Route::post('check-valid-otp', [ProfileController::class, 'checkValidOTP'])->name('user.forget.password.check.valid.otp');
     Route::post('change-password', [ProfileController::class, 'changePassword'])->name('user.forget.password.change.password');
@@ -134,43 +136,71 @@ Route::middleware(['user.active'])->group(function () {
         Route::get('/users', [BackendWishListController::class, 'getAllByUserID'])->name('api.backend.wish.lists.users');
         Route::get('/detail/{id}', [BackendWishListController::class, 'detail'])->name('api.backend.wish.lists.detail');
         Route::post('/create', [BackendWishListController::class, 'create'])->name('api.backend.wish.lists.create');
-        Route::POST('/update/{id}',
-            [BackendWishListController::class, 'update'])->name('api.backend.wish.lists.update');
-        Route::POST('/update-medical',
-            [BackendWishListController::class, 'updateMedical'])->name('api.backend.wish.lists.medical.update');
-        Route::get('/reget',
-            [BackendWishListController::class, 'reGet'])->name('api.backend.wish.lists.reGet');
-        Route::delete('/delete/{id}',
-            [BackendWishListController::class, 'delete'])->name('api.backend.wish.lists.delete');
-        Route::delete('/delete-list',
-            [BackendWishListController::class, 'deleteMultil'])->name('api.backend.wish.lists.delete.listId');
+        Route::POST(
+            '/update/{id}',
+            [BackendWishListController::class, 'update']
+        )->name('api.backend.wish.lists.update');
+        Route::POST(
+            '/update-medical',
+            [BackendWishListController::class, 'updateMedical']
+        )->name('api.backend.wish.lists.medical.update');
+        Route::get(
+            '/reget',
+            [BackendWishListController::class, 'reGet']
+        )->name('api.backend.wish.lists.reGet');
+        Route::delete(
+            '/delete/{id}',
+            [BackendWishListController::class, 'delete']
+        )->name('api.backend.wish.lists.delete');
+        Route::delete(
+            '/delete-list',
+            [BackendWishListController::class, 'deleteMultil']
+        )->name('api.backend.wish.lists.delete.listId');
     });
 
     Route::group(['prefix' => 'examination'], function () {
         Route::get('/index', [ExaminationController::class, 'index'])->name('examination.index');
         Route::get('/doctor-info/{id}', [ExaminationController::class, 'infoDoctor'])->name('examination.doctor_info');
-        Route::get('/chat-with-doctor/{id}',
-            [ExaminationController::class, 'chatWithDoctor'])->name('examination.doctor_info.chat');
+        Route::get(
+            '/chat-with-doctor/{id}',
+            [ExaminationController::class, 'chatWithDoctor']
+        )->name('examination.doctor_info.chat');
         Route::get('/best-doctor', [ExaminationController::class, 'bestDoctor'])->name('examination.best_doctor');
         Route::get('/new-doctor', [ExaminationController::class, 'newDoctor'])->name('examination.new_doctor');
-        Route::get('/available-doctor',
-            [ExaminationController::class, 'availableDoctor'])->name('examination.available_doctor');
-        Route::get('/find-my-medicine',
-            [ExaminationController::class, 'findMyMedicine'])->name('examination.findmymedicine');
-        Route::get('/best-pharmacists',
-            [ExaminationController::class, 'bestPharmacists'])->name('examination.bestpharmacists');
-        Route::get('/new-pharmacists',
-            [ExaminationController::class, 'newPharmacists'])->name('examination.newpharmacists');
-        Route::get('/available-pharmacists',
-            [ExaminationController::class, 'availablePharmacists'])->name('examination.availablepharmacists');
-        Route::get('/hot-deal-medicine',
-            [ExaminationController::class, 'hotDealMedicine'])->name('examination.hotdealmedicine');
+        Route::get(
+            '/available-doctor',
+            [ExaminationController::class, 'availableDoctor']
+        )->name('examination.available_doctor');
+        Route::get(
+            '/find-my-medicine',
+            [ExaminationController::class, 'findMyMedicine']
+        )->name('examination.findmymedicine');
+        Route::get(
+            '/best-pharmacists',
+            [ExaminationController::class, 'bestPharmacists']
+        )->name('examination.bestpharmacists');
+        Route::get(
+            '/new-pharmacists',
+            [ExaminationController::class, 'newPharmacists']
+        )->name('examination.newpharmacists');
+        Route::get(
+            '/available-pharmacists',
+            [ExaminationController::class, 'availablePharmacists']
+        )->name('examination.availablepharmacists');
+        Route::get(
+            '/hot-deal-medicine',
+            [ExaminationController::class, 'hotDealMedicine']
+        )->name('examination.hotdealmedicine');
         Route::get('/new-medicine', [ExaminationController::class, 'newMedicine'])->name('examination.newmedicine');
         Route::get('/recommended', [ExaminationController::class, 'recommended'])->name('examination.recommended');
-        Route::get('/category/{id}',
-            [ExaminationController::class, 'findByCategory'])->name('examination.findByCategory');
-        Route::get('/my-personal-doctor',
-            [ExaminationController::class, 'myPersonalDoctor'])->name('examination.mypersonaldoctor');
+        Route::get(
+            '/category/{id}',
+            [ExaminationController::class, 'findByCategory']
+        )->name('examination.findByCategory');
+        Route::get(
+            '/my-personal-doctor',
+            [ExaminationController::class, 'myPersonalDoctor']
+        )->name('examination.mypersonaldoctor');
     });
 
     Route::group(['prefix' => 'questions'], function () {
@@ -183,18 +213,24 @@ Route::middleware(['user.active'])->group(function () {
 
     Route::group(['prefix' => 'pharmacies'], function () {
         Route::get('/list-pharmacies', [PharmaciesController::class, 'index'])->name('api.pharmacies.list');
-        Route::get('/detail-pharmacies/{id}',
-            [PharmaciesController::class, 'detailPharmacies'])->name('api.pharmacies.detail');
+        Route::get(
+            '/detail-pharmacies/{id}',
+            [PharmaciesController::class, 'detailPharmacies']
+        )->name('api.pharmacies.detail');
     });
 
     Route::group(['prefix' => 'mentoring'], function () {
         Route::get('', [ExaminationController::class, 'mentoring'])->name('examination.mentoring');
         Route::get('detail/{id}', [ExaminationController::class, 'showMentoring'])->name('examination.mentoring.show');
         Route::post('search', [ExaminationController::class, 'searchMentoring'])->name('examination.mentoring.search');
-        Route::get('/ask-a-question',
-            [ExaminationController::class, 'createMentoring'])->name('examination.mentoring.create');
-        Route::get('/calc-view-comment/{id}',
-            [CalcViewQuestionController::class, 'calcView'])->name('examination.mentoring.calc.view');
+        Route::get(
+            '/ask-a-question',
+            [ExaminationController::class, 'createMentoring']
+        )->name('examination.mentoring.create');
+        Route::get(
+            '/calc-view-comment/{id}',
+            [CalcViewQuestionController::class, 'calcView']
+        )->name('examination.mentoring.calc.view');
     });
 
     Route::group(['prefix' => 'medicine'], function () {
@@ -204,9 +240,10 @@ Route::middleware(['user.active'])->group(function () {
         Route::get('search', [MedicineController::class, 'searchOnlineMedicine'])->name('medicine.search');
         Route::post('list', [MedicineController::class, 'searchOnlineMedicineNoPaginate'])->name('medicine.list');
         Route::get('list/{id}', [MedicineController::class, 'getIngredientsByMedicineId'])->name('medicine.get-ingredients-by-medicine-id');
-        Route::post('get-name-location',
-            [MedicineController::class, 'getLocationByUserId'])->name('medicine.get.name.location.by.user');
-
+        Route::post(
+            'get-name-location',
+            [MedicineController::class, 'getLocationByUserId']
+        )->name('medicine.get.name.location.by.user');
     });
 
     Route::group(['prefix' => 'clinic'], function () {
@@ -214,7 +251,6 @@ Route::middleware(['user.active'])->group(function () {
         Route::get('/detail/{id}', [ClinicController::class, 'detail'])->name('clinic.detail');
         Route::post('/create', [ClinicController::class, 'store'])->name('clinic.booking.store');
         Route::get('/showNear/{id}', [ClinicController::class, 'showNear'])->name('clinic.booking.showNear');
-
     });
     Route::group(['prefix' => 'product'], function () {
         Route::get('/lists', [BackendProductInfoController::class, 'index'])->name('backend.products.list');
@@ -243,23 +279,32 @@ Route::middleware(['user.active'])->group(function () {
         Route::get('review', [FleaMarketController::class, 'review'])->name('flea.market.review');
         Route::get('sell-product', [FleaMarketController::class, 'sellProduct'])->name('flea.market.sell.product');
         Route::get('edit-product/{id}', [FleaMarketController::class, 'editProduct'])->name('flea.market.edit.product');
-        Route::get('product-detail/{id}',
-            [FleaMarketController::class, 'productDetail'])->name('flea.market.product.detail');
+        Route::get(
+            'product-detail/{id}',
+            [FleaMarketController::class, 'productDetail']
+        )->name('flea.market.product.detail');
         Route::get('shop-info/{id}', [FleaMarketController::class, 'ShopInfo'])->name('flea.market.product.shop.info');
-        Route::get('review-store',
-            [ReviewStoreController::class, 'ReviewStore'])->name('flea.market.product.review.store');
-        Route::get('create-review-store',
-            [ReviewStoreController::class, 'createReviewStore'])->name('flea.market.product.create.review.store');
-        Route::post('create-review/{id}',
-            [ReviewStoreController::class, 'createReview'])->name('flea.market.product.create.review');
-
+        Route::get(
+            'review-store',
+            [ReviewStoreController::class, 'ReviewStore']
+        )->name('flea.market.product.review.store');
+        Route::get(
+            'create-review-store',
+            [ReviewStoreController::class, 'createReviewStore']
+        )->name('flea.market.product.create.review.store');
+        Route::post(
+            'create-review/{id}',
+            [ReviewStoreController::class, 'createReview']
+        )->name('flea.market.product.create.review');
     });
     Route::group(['prefix' => 'what-free'], function () {
         Route::get('/', [WhatFreeToDay::class, 'index'])->name('what.free');
         Route::get('/to-day', [WhatFreeToDay::class, 'toDay'])->name('what.free.to.day');
         Route::get('/wit-mission', [WhatFreeToDay::class, 'withMission'])->name('what.free.with.mission');
-        Route::get('/discounted-sevice',
-            [WhatFreeToDay::class, 'discountedSevice'])->name('what.free.discounted.service');
+        Route::get(
+            '/discounted-sevice',
+            [WhatFreeToDay::class, 'discountedSevice']
+        )->name('what.free.discounted.service');
         Route::get('/detail/{id}', [WhatFreeToDay::class, 'detail'])->name('what.free.detail');
         Route::get('/campaign', [WhatFreeToDay::class, 'campaign'])->name('what.free.campaign');
 
@@ -273,8 +318,10 @@ Route::middleware(['user.active'])->group(function () {
 
         Route::get('web/chat-unseen', [HomeController::class, 'listMessageUnseen'])->name('admin.list.chat.unseen');
 
-        Route::post('/save-user-login-social',
-            [AuthSocialController::class, 'saveUser'])->name('save.user.login.social');
+        Route::post(
+            '/save-user-login-social',
+            [AuthSocialController::class, 'saveUser']
+        )->name('save.user.login.social');
 
         Route::get('profile', [ProfileController::class, 'index'])->name('profile');
         Route::put('profile-update', [ProfileController::class, 'update'])->name('profile.update');
@@ -287,8 +334,10 @@ Route::middleware(['user.active'])->group(function () {
 
         Route::group(['prefix' => 'checkout'], function () {
             Route::get('/', [CheckoutController::class, 'index'])->name('user.checkout.index');
-            Route::get('/return-checkout',
-                [CheckoutController::class, 'returnCheckout'])->name('return.checkout.payment');
+            Route::get(
+                '/return-checkout',
+                [CheckoutController::class, 'returnCheckout']
+            )->name('return.checkout.payment');
             Route::post('/imm', [CheckoutController::class, 'checkoutByImm'])->name('user.checkout.imm');
             Route::post('/vnpay', [CheckoutController::class, 'checkoutByVNPay'])->name('user.checkout.vnpay');
         });
@@ -310,16 +359,22 @@ Route::middleware(['user.active'])->group(function () {
 
         Route::group(['prefix' => 'reviews-doctor'], function () {
             Route::get('admin/list', [DoctorReviewController::class, 'index'])->name('view.reviews.doctor.index');
-            Route::get('admin/detail/{id}',
-                [DoctorReviewController::class, 'detail'])->name('view.reviews.doctor.detail');
+            Route::get(
+                'admin/detail/{id}',
+                [DoctorReviewController::class, 'detail']
+            )->name('view.reviews.doctor.detail');
         });
 
         Route::group(['prefix' => 'service-clinics'], function () {
             Route::get('list', [ServiceClinicController::class, 'getListService'])->name('user.service.clinics.list');
-            Route::get('detail/{id}',
-                [ServiceClinicController::class, 'detailService'])->name('user.service.clinics.detail');
-            Route::get('create',
-                [ServiceClinicController::class, 'createService'])->name('user.service.clinics.create');
+            Route::get(
+                'detail/{id}',
+                [ServiceClinicController::class, 'detailService']
+            )->name('user.service.clinics.detail');
+            Route::get(
+                'create',
+                [ServiceClinicController::class, 'createService']
+            )->name('user.service.clinics.create');
         });
 
         Route::group(['prefix' => 'topics-videos'], function () {
@@ -342,11 +397,15 @@ Route::middleware(['user.active'])->group(function () {
 
                 Route::post("/createMeeting", [CallVideoController::class, 'createMeeting'])->name("createMeeting");
 
-                Route::post("/validateMeeting",
-                    [CallVideoController::class, 'validateMeeting'])->name("validateMeeting");
+                Route::post(
+                    "/validateMeeting",
+                    [CallVideoController::class, 'validateMeeting']
+                )->name("validateMeeting");
 
-                Route::get("/handle-change-status-download-record/{roomName}",
-                    [CallVideoController::class, 'changeStatusQueueDownloadRecord'])->name("download.change.status");
+                Route::get(
+                    "/handle-change-status-download-record/{roomName}",
+                    [CallVideoController::class, 'changeStatusQueueDownloadRecord']
+                )->name("download.change.status");
 
                 Route::get("/meeting/{meetingId}", function ($meetingId) {
 
@@ -363,7 +422,6 @@ Route::middleware(['user.active'])->group(function () {
                 Route::post("/agora/call", [AgoraChatController::class, 'handleCallVideo'])->name('agora.call');
                 Route::get("agora/joinMeeting", [AgoraChatController::class, 'joinMeeting'])->name("agora.joinMeeting");
                 Route::get("agora/update-token", [AgoraChatController::class, 'saveTokenByUserId'])->name("agora.update-token");
-
             });
 
             Route::group(['prefix' => 'chat'], function () {
@@ -378,8 +436,10 @@ Route::middleware(['user.active'])->group(function () {
                     WidgetChatController::class,
                     'getMessageByUserId'
                 ])->name('api.backend.connect.chat.getMessageByUserId');
-                Route::get('seen-message/{id}',
-                    [WidgetChatController::class, 'handleSeenMessage'])->name('api.backend.connect.chat.seen-message');
+                Route::get(
+                    'seen-message/{id}',
+                    [WidgetChatController::class, 'handleSeenMessage']
+                )->name('api.backend.connect.chat.seen-message');
             });
         });
         /* User view points */
@@ -457,8 +517,10 @@ Route::middleware(['user.active'])->group(function () {
 
     /* QrCode */
     Route::group(['prefix' => 'qr-code'], function () {
-        Route::get('/doctor-info/{id}',
-            [DoctorInfoController::class, 'showFromQrCode'])->name('qr.code.show.doctor.info');
+        Route::get(
+            '/doctor-info/{id}',
+            [DoctorInfoController::class, 'showFromQrCode']
+        )->name('qr.code.show.doctor.info');
     });
 
     Route::group(['prefix' => 'my-bookings'], function () {
@@ -508,59 +570,60 @@ Route::middleware(['user.active'])->group(function () {
         Route::get('', [ProductInfoController::class, 'index'])->name('product.list');
 
 
-Route::group(['prefix' => 'messages'], function () {
-    Route::get('/chat', [ChatMessageController::class, 'index'])->name('chat.message.show');
-//    Route::get('/search', [BackendProductInfoController::class, 'search'])->name('backend.products.search');
-});
+        Route::group(['prefix' => 'messages'], function () {
+            Route::get('/chat', [ChatMessageController::class, 'index'])->name('chat.message.show');
+            //    Route::get('/search', [BackendProductInfoController::class, 'search'])->name('backend.products.search');
+        });
 
-// QrCode
-Route::group(['prefix' => 'qr-code'], function () {
-    Route::get('/doctor-info/{id}', [DoctorInfoController::class, 'showFromQrCode'])->name('qr.code.show.doctor.info');
-});
+        // QrCode
+        Route::group(['prefix' => 'qr-code'], function () {
+            Route::get('/doctor-info/{id}', [DoctorInfoController::class, 'showFromQrCode'])->name('qr.code.show.doctor.info');
+        });
 
 
 
-    /* Admin */
-    Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
-        require_once __DIR__ . '/admin.php';
-    });
+        /* Admin */
+        Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
+            require_once __DIR__ . '/admin.php';
+        });
 
-    /* Business */
-    Route::group(['prefix' => 'api', 'middleware' => ['business']], function () {
-        require_once __DIR__ . '/permission/business.php';
-    });
+        /* Business */
+        Route::group(['prefix' => 'api', 'middleware' => ['business']], function () {
+            require_once __DIR__ . '/permission/business.php';
+        });
 
-    /* Medical */
-    Route::group(['prefix' => 'api', 'middleware' => ['medical']], function () {
-        require_once __DIR__ . '/permission/medical.php';
-    });
+        /* Medical */
+        Route::group(['prefix' => 'api', 'middleware' => ['medical']], function () {
+            require_once __DIR__ . '/permission/medical.php';
+        });
 
-    /* Normal */
-    Route::group(['prefix' => 'api', 'middleware' => 'normal'], function () {
-        require_once __DIR__ . '/permission/normal.php';
-    });
+        /* Normal */
+        Route::group(['prefix' => 'api', 'middleware' => 'normal'], function () {
+            require_once __DIR__ . '/permission/normal.php';
+        });
 
-    /* Authenticate */
-    Route::group(['prefix' => 'api', 'middleware' => 'jwt'], function () {
-        require_once __DIR__ . '/backend.php';
-    });
+        /* Authenticate */
+        Route::group(['prefix' => 'api', 'middleware' => 'jwt'], function () {
+            require_once __DIR__ . '/backend.php';
+        });
 
-    /* Free api */
-    Route::group(['prefix' => ''], function () {
-        require_once __DIR__ . '/restapi.php';
-    });
+        /* Free api */
+        Route::group(['prefix' => ''], function () {
+            require_once __DIR__ . '/restapi.php';
+        });
 
-    /* Route maps */
-    Route::get('explore', [MapController::class, 'explore'])->name('explore.list');
-    Route::get('/info-user/{id}', [ProfileController::class, 'infoUser'])->name('info.user');
-    Route::get('/department', [DoctorInfoController::class, 'listDepartment'])->name('list.department');
+        /* Route maps */
+        Route::get('explore', [MapController::class, 'explore'])->name('explore.list');
+        Route::get('/info-user/{id}', [ProfileController::class, 'infoUser'])->name('info.user');
+        Route::get('/department', [DoctorInfoController::class, 'listDepartment'])->name('list.department');
 
-    Route::get('/upload-form', [ImportController::class, 'showForm'])->name('upload.form');
-    Route::post('/import-excel', [ImportController::class, 'importExcel'])->name('import.excel');
-    /*Download*/
-    Route::group(['prefix' => 'download'], function () {
-        Route::get('', [DownloadController::class, 'getDownload'])->name('user.download');
-        Route::get('file/{id}', [DownloadController::class, 'downloadFile'])->name('user.download.file');
+        Route::get('/upload-form', [ImportController::class, 'showForm'])->name('upload.form');
+        Route::post('/import-excel', [ImportController::class, 'importExcel'])->name('import.excel');
+        /*Download*/
+        Route::group(['prefix' => 'download'], function () {
+            Route::get('', [DownloadController::class, 'getDownload'])->name('user.download');
+            Route::get('file/{id}', [DownloadController::class, 'downloadFile'])->name('user.download.file');
+        });
     });
 });
 Route::get('test/translate', [MainApi::class, 'translateLanguage']);
@@ -574,4 +637,6 @@ Route::group(['prefix' => 'zalo-service'], function () {
     Route::post('send-message-text', [ZaloController::class, 'sendMessage'])->name('zalo.service.send.message.text');
     // Send follower invitation to get information
     Route::get('send-follower-invitation', [ZaloController::class, 'sendInvitation'])->name('zalo.service.send.invitation');
+
+    Route::resource('zalo-follower', 'ZaloFollowerController');
 });

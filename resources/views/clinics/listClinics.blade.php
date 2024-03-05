@@ -191,11 +191,16 @@
                                  </div>
                                     <span class="distance"> - ${distance.toFixed(2)} Km</span>
                             </div>
-                            <div class="time-working">
-                                 <span class="color-timeWorking">
-                                    <span class="fs-14 font-weight-600">${formattedOpenDate} - ${formattedCloseDate}</span>
-                                    </span>
-                                    <span>/ {{ __('home.Dental Clinic') }}</span>
+                            <div class="d-flex justify-content-between">
+                                <div class="time-working">
+                                    <span class="color-timeWorking">
+                                        <span class="fs-14 font-weight-600">${formattedOpenDate} - ${formattedCloseDate}</span>
+                                        </span>
+                                        <span>/ {{ __('home.Dental Clinic') }}</span>
+                                </div>
+                                @if (Auth::check())
+                                    <div class="zalo-follow-only-button" data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
+                                @endif
                             </div>
                             </div>
                             </div>

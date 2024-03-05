@@ -209,7 +209,7 @@
                     toastr.success('Sync follower successfully', 'Success');
                 },
                 error: function(xhr, status, error) {
-                    toastr.success('Failed to sync: ' + error, 'Error');
+                    toastr.error('Failed to sync: ' + error, 'Error');
                 },
                 complete: function() {
                     syncButton.prop('disabled', false).html(originalHtml);
