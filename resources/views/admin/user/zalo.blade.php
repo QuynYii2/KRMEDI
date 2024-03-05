@@ -13,8 +13,7 @@
 
         <div class="d-flex justify-content-center">
             <button id="syncButton" type="button" class="btn btn-primary" onclick="syncData()"><i
-                    class="fa-solid fa-rotate"></i> Sync
-                data</button>
+                    class="fa-solid fa-rotate"></i> Sync data</button>
             {{-- <button style="display: none" class="btn btn-primary" type="button" disabled>
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                 Synchronizing...
@@ -204,8 +203,9 @@
                 success: function(response) {
                     var table = $('#tableListZaloFollower').DataTable();
                     table.destroy();
-                    $('#tableListZaloFollower').load(location.href + ' #tableListZaloFollower');
-                    $('#tableListZaloFollower').DataTable();
+                    $('#tableListZaloFollower').load(location.href + ' #tableListZaloFollower', function() {
+                        $(this).find('table').DataTable();
+                    });
                     toastr.success('Sync follower successfully', 'Success');
                 },
                 error: function(xhr, status, error) {

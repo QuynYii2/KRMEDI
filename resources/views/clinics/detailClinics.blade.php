@@ -117,7 +117,9 @@
                             <div class="fs-18px">{{$bookings->name}}</div>
                             <div class="button-follow fs-12p ">
                                 <div style="margin-left: 10px;margin-top: 20px;">
-                                    <div class="zalo-follow-only-button" data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
+                                    @if (Auth::check())
+                                        <div class="zalo-follow-only-button" data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -324,7 +326,8 @@
                     return;
                 }
 
-                let followed = await fetch('{{ route('zalo-follower.show', Auth::user()->id) }}', {
+                //Check user followed
+                let followed = await fetch('{{ route('zalo-follower.show', Auth::user()->id ?? 0) }}', {
                     method: 'GET',
                     headers: {
                         "Authorization": accessToken
@@ -339,6 +342,7 @@
                         return;
                     }
                 }
+                //Check user followed
 
                 let response = await fetch('{{ route('api.survey.get-by-department', $bookings->department) }}', {
                     method: 'GET',
@@ -350,118 +354,120 @@
                 if (response.ok) {
                     response = await response.json();
                 }
+                
+                modalToggleQuestion();
 
-                if (response.length === 0) {
-                    modalToggleQuestion();
-                    return;
-                }
+                // if (response.length === 0) {
+                //     modalToggleQuestion();
+                //     return;
+                // }
 
-                var html = `<form method="post" action="{{route('clinic.booking.store')}}" class="p-3">
-                @csrf`
+                // var html = `<form method="post" action="{{route('clinic.booking.store')}}" class="p-3">
+                // @csrf`
 
-                response.forEach((item) => {
-                    const idQuestion = item.id;
+                // response.forEach((item) => {
+                //     const idQuestion = item.id;
 
-                    let typeQuestion = item.type;
-                    if (typeQuestion === '{{ \App\Enums\SurveyType::TEXT }}') {
-                        html += `<div class="form-group">`
-                        html += `<label for="exampleInputEmail1">${item.question}</label>`;
-                        html += `<input type="text" class="form-control" data-id-question="${idQuestion}" data-type="text-answer" name="survey[${idQuestion}]" placeholder="{{ __('home.Nhập vào câu trả lời') }}">`;
-                        html += `</div>`;
-                    } else {
-                        if (typeQuestion === '{{ \App\Enums\SurveyType::MULTIPLE }}') {
-                            typeQuestion = 'checkbox';
-                        }
-                        if (typeQuestion === '{{ \App\Enums\SurveyType::RADIO }}') {
-                            typeQuestion = 'radio';
-                        }
-                        html += `<div class="form-group">`
-                        html += `<label class="form-check-label" for="exampleInputEmail1">${item.question}</label>`;
+                //     let typeQuestion = item.type;
+                //     if (typeQuestion === '{{ \App\Enums\SurveyType::TEXT }}') {
+                //         html += `<div class="form-group">`
+                //         html += `<label for="exampleInputEmail1">${item.question}</label>`;
+                //         html += `<input type="text" class="form-control" data-id-question="${idQuestion}" data-type="text-answer" name="survey[${idQuestion}]" placeholder="{{ __('home.Nhập vào câu trả lời') }}">`;
+                //         html += `</div>`;
+                //     } else {
+                //         if (typeQuestion === '{{ \App\Enums\SurveyType::MULTIPLE }}') {
+                //             typeQuestion = 'checkbox';
+                //         }
+                //         if (typeQuestion === '{{ \App\Enums\SurveyType::RADIO }}') {
+                //             typeQuestion = 'radio';
+                //         }
+                //         html += `<div class="form-group">`
+                //         html += `<label class="form-check-label" for="exampleInputEmail1">${item.question}</label>`;
 
-                        item.survey_answers.forEach((answer) => {
+                //         item.survey_answers.forEach((answer) => {
 
-                            html += `<div class="form-check">`;
+                //             html += `<div class="form-check">`;
 
-                            html += `<input type="${typeQuestion}" data-type="${typeQuestion}-answer" class=form-check-input data-id-question="${idQuestion}" data-id-answer="${answer.id}"
-                                     name="survey-answer-${idQuestion}">`;
-                            html += `<label class="form-check-label" for="exampleInputEmail1">${answer.answer}</label>`;
+                //             html += `<input type="${typeQuestion}" data-type="${typeQuestion}-answer" class=form-check-input data-id-question="${idQuestion}" data-id-answer="${answer.id}"
+                //                      name="survey-answer-${idQuestion}">`;
+                //             html += `<label class="form-check-label" for="exampleInputEmail1">${answer.answer}</label>`;
 
-                            html += `</div>`;
-                        });
-                        html += `</div>`;
-                    }
+                //             html += `</div>`;
+                //         });
+                //         html += `</div>`;
+                //     }
 
-                });
+                // });
 
-                html += `<button onclick="modalToggleQuestion()" data-toggle="modal" data-target="#exampleModal"
-                                class="w-100 btn btn-secondary border-button-address font-weight-800 fs-14 justify-content-center"
-                                >{{ __('home.Next') }}
-                </button>
-                </form>`;
-                $('#modalBooking').empty().append(html);
+                // html += `<button onclick="modalToggleQuestion()" data-toggle="modal" data-target="#exampleModal"
+                //                 class="w-100 btn btn-secondary border-button-address font-weight-800 fs-14 justify-content-center"
+                //                 >{{ __('home.Next') }}
+                // </button>
+                // </form>`;
+                // $('#modalBooking').empty().append(html);
 
             });
         });
 
-        function getValueSurvey() {
-            let arrayResultText = [];
-            let arrayResultCheckbox = [];
-            let arrayResultRadio = [];
+        // function getValueSurvey() {
+        //     let arrayResultText = [];
+        //     let arrayResultCheckbox = [];
+        //     let arrayResultRadio = [];
 
-            $('input[data-type="text-answer"]').each(function () {
-                if ($(this).val()) {
-                    let result_text = $(this).data('id-question') + '-' + $(this).val();
-                    arrayResultText.push(result_text);
-                }
-            });
+        //     $('input[data-type="text-answer"]').each(function () {
+        //         if ($(this).val()) {
+        //             let result_text = $(this).data('id-question') + '-' + $(this).val();
+        //             arrayResultText.push(result_text);
+        //         }
+        //     });
 
-            const checkboxInputs = $('input[data-type="checkbox-answer"]:checked');
+        //     const checkboxInputs = $('input[data-type="checkbox-answer"]:checked');
 
-            let checkboxAnswer = $(checkboxInputs[0]).data('id-question') + '-';
+        //     let checkboxAnswer = $(checkboxInputs[0]).data('id-question') + '-';
 
 
-            for (let i = 0; i < checkboxInputs.length; i++) {
-                let item = $(checkboxInputs[i]);
+        //     for (let i = 0; i < checkboxInputs.length; i++) {
+        //         let item = $(checkboxInputs[i]);
 
-                let currentQuestion = item.data('id-question');
-                let currentAnswer = item.data('id-answer');
-                let nextQuestion = $(checkboxInputs[i + 1]).data('id-question');
+        //         let currentQuestion = item.data('id-question');
+        //         let currentAnswer = item.data('id-answer');
+        //         let nextQuestion = $(checkboxInputs[i + 1]).data('id-question');
 
-                if (currentQuestion === nextQuestion) {
-                    checkboxAnswer += currentAnswer + ',';
-                } else {
-                    checkboxAnswer += currentAnswer + ',';
+        //         if (currentQuestion === nextQuestion) {
+        //             checkboxAnswer += currentAnswer + ',';
+        //         } else {
+        //             checkboxAnswer += currentAnswer + ',';
 
-                    checkboxAnswer = checkboxAnswer.substring(0, checkboxAnswer.length - 1);
+        //             checkboxAnswer = checkboxAnswer.substring(0, checkboxAnswer.length - 1);
 
-                    arrayResultCheckbox.push(checkboxAnswer);
+        //             arrayResultCheckbox.push(checkboxAnswer);
 
-                    if (i === checkboxInputs.length - 1) {
-                        break;
-                    }
+        //             if (i === checkboxInputs.length - 1) {
+        //                 break;
+        //             }
 
-                    checkboxAnswer = nextQuestion + '-';
-                }
-            }
+        //             checkboxAnswer = nextQuestion + '-';
+        //         }
+        //     }
 
-            $('input[data-type="radio-answer"]:checked').each(function () {
-                let result_radio = $(this).data('id-question') + '-' + $(this).data('id-answer');
-                arrayResultRadio.push(result_radio);
-            });
+        //     $('input[data-type="radio-answer"]:checked').each(function () {
+        //         let result_radio = $(this).data('id-question') + '-' + $(this).data('id-answer');
+        //         arrayResultRadio.push(result_radio);
+        //     });
 
-            // delete localStorage
-            window.localStorage.removeItem('result_text');
-            window.localStorage.removeItem('result_checkbox');
-            window.localStorage.removeItem('result_radio');
+        //     // delete localStorage
+        //     window.localStorage.removeItem('result_text');
+        //     window.localStorage.removeItem('result_checkbox');
+        //     window.localStorage.removeItem('result_radio');
 
-            window.localStorage.setItem('result_text', JSON.stringify(arrayResultText));
-            window.localStorage.setItem('result_checkbox', JSON.stringify(arrayResultCheckbox));
-            window.localStorage.setItem('result_radio', JSON.stringify(arrayResultRadio));
+        //     window.localStorage.setItem('result_text', JSON.stringify(arrayResultText));
+        //     window.localStorage.setItem('result_checkbox', JSON.stringify(arrayResultCheckbox));
+        //     window.localStorage.setItem('result_radio', JSON.stringify(arrayResultRadio));
 
-        }
+        // }
 
         async function modalToggleQuestion() {
-            await getValueSurvey();
+            // await getValueSurvey();
 
             let service = localStorage.getItem('services');
             var html = `<form method="post" action="{{route('clinic.booking.store')}}" class="p-3">
