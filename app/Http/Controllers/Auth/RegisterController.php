@@ -32,6 +32,8 @@ class RegisterController extends Controller
             $member = $request->input('member');
             $medical_history = $request->input('medical_history');
             $type = $request->input('type');
+            $provider_name = $request->input('provider_name') ?? "";
+            $provider_id = $request->input('provider_id') ?? "";
 
             /* Only type medical */
             $name = $request->input('name_doctor');
@@ -122,6 +124,8 @@ class RegisterController extends Controller
             $user->email = $email;
             $user->name = $name ?? '';
             $user->last_name = $name ?? '';
+            $user->provider_name = $provider_name;
+            $user->provider_id = $provider_id;
             $user->username = $username;
             $user->password = Hash::make($password);
             $user->phone = $contact_phone ?? '';
