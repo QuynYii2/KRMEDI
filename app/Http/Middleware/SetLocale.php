@@ -4,15 +4,17 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Illuminate\Support\Facades\Session;
 
 class SetLocale
 {
     public function handle(Request $request, Closure $next)
     {
-        $locale = 'laos';
+        $locale = $request->session()->get('locale');
+        if (!$locale){
+            $locale = 'vi';
+        }
         app()->setLocale($locale);
-//        LaravelLocalization::setLocale($locale);
 
         return $next($request);
     }

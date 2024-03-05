@@ -1,8 +1,13 @@
 <script src="{{ asset('js/tinymce/tinymce.min.js') }}" referrerpolicy="origin"></script>
+<style>
+    .tox.tox-tinymce {
+        z-index: 0;
+    }
+</style>
 <script>
     tinymce.init({
-        selector: 'textarea',
-        plugins: 'image media',
+        selector: 'textarea:not(div.composer textarea)',
+        plugins: 'link image media',
         toolbar: 'undo redo | formatselect| bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | image | table ',
         file_picker_callback: function (cb, value, meta) {
             var input = document.createElement('input');

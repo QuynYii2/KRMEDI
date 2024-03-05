@@ -7,19 +7,19 @@
     <div class="d-flex justify-content-center">
         <div id="filter" class="box--1 d-flex w-100">
             <div class="d-flex flex-fill">
-                <div class="filter_option"><p>Category <i class="bi bi-chevron-expand"></i></p></div>
-                <div class="filter_option"><p>Location <i class="bi bi-chevron-expand"></i></p></div>
+                <div class="filter_option"><p>{{ __('home.Category') }} <i class="bi bi-chevron-expand"></i></p></div>
+                <div class="filter_option"><p>{{ __('home.Location') }}<i class="bi bi-chevron-expand"></i></p></div>
             </div>
             <div class="filter_search flex-fill">
                 <label for="filter_search"><i class="bi bi-search"></i></label>
-                <input type="text" name="filter_search" id="filter_search" placeholder="Search for anything.....">
+                <input type="text" name="filter_search" id="filter_search" placeholder="{{ __('home.Search for anything…') }}">
             </div>
         </div>
     </div>
     <div id="title" class="d-flex justify-content-center">
         <div class="list-title d-flex">
             <div class="list--doctor p-0">
-                <a class="back" href="{{route('examination.findmymedicine')}}"><p><i class="bi bi-arrow-left"></i> 24/7 Available Pharmacists</p></a>
+                <a class="back" href="{{route('examination.findmymedicine')}}"><p><i class="bi bi-arrow-left"></i> {{ __('home.24/7 Available Pharmacists') }}</p></a>
             </div>
         </div>
     </div>
@@ -61,8 +61,8 @@
                 <div class="card-body">
                     <a href="#"><h5
                             class="card-title"> {{ $availablePhamrmacist->name }}</h5></a>
-                    <p class="card-text_1">Location: <b>{{ $availablePhamrmacist->address_detail }}</b></p>
-                    <p class="card-text_1">Working time: <b> {{ $text }}</b></p>
+                    <p class="card-text_1">{{ __('home.Location') }}: <b>{{ $availablePhamrmacist->address_detail }}</b></p>
+                    <p class="card-text_1">{{ __('home.Working time') }}: <b> {{ $text }}</b></p>
                 </div>
             </div>
             </div>

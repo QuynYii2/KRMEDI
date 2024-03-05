@@ -1,11 +1,11 @@
 @php use App\Enums\NewEventStatus; @endphp
 @php use App\Enums\NewEventType; @endphp
 @extends('layouts.admin')
-
+@section('title', 'News Events')
 @section('main-content')
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-4 text-gray-800">create</h1>
+    <h1 class="h3 mb-4 text-gray-800">{{ __('home.create') }}</h1>
     @if (session('success'))
         <div class="alert alert-success border-left-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -16,53 +16,27 @@
     @endif
     <form enctype="multipart/form-data">
         <div class="row">
-            <div class="col-sm-4">
-                <label>Title </label>
+            <div class="col-sm-12">
+                <label for="title">{{ __('home.Title') }} </label>
                 <input type="text" class="form-control" id="title" name="title">
             </div>
-            <div class="col-sm-4">
-                <label>Title Anh</label>
-                <input type="text" class="form-control" id="title_en" name="title_en">
-            </div>
-            <div class="col-sm-4">
-                <label>Title Lào</label>
-                <input type="text" class="form-control" id="title_laos" name="title_laos">
-            </div>
         </div>
         <div class="row">
-            <div class="col-sm-4">
-                <label>Short Description</label>
+            <div class="col-sm-12">
+                <label for="short_description">{{ __('home.Mô tả ngắn việt') }}</label>
                 <textarea type="text" class="form-control" id="short_description" name="short_description"></textarea>
             </div>
-            <div class="col-sm-4">
-                <label>Short Description Anh</label>
-                <textarea type="text" class="form-control" id="short_description_en"
-                          name="short_description_en"></textarea>
-            </div>
-            <div class="col-sm-4">
-                <label>Short Description Lào</label>
-                <textarea type="text" class="form-control" id="short_description_laos"
-                          name="short_description_laos"></textarea>
-            </div>
         </div>
         <div class="row">
-            <div class="col-sm-4">
-                <label>Description </label>
+            <div class="col-sm-12">
+                <label for="description">{{ __('home.Mô tả dài việt') }}</label>
                 <textarea type="text" class="form-control" id="description" name="description"></textarea>
             </div>
-            <div class="col-sm-4">
-                <label>Description Anh</label>
-                <textarea type="text" class="form-control" id="description_en" name="description_en"></textarea>
-            </div>
-            <div class="col-sm-4">
-                <label>Description Lào</label>
-                <textarea type="text" class="form-control" id="description_laos" name="description_laos"></textarea>
-            </div>
         </div>
         <div class="row">
             <div class="col-sm-4">
-                <label>Status</label>
-                <select class="custom-select" id="status" name="status">
+                <label for="status">{{ __('home.Status') }}</label>
+                <select class="form-select" id="status" name="status">
                     <option
                         value="{{ NewEventStatus::ACTIVE }}">{{ NewEventStatus::ACTIVE }}</option>
                     <option
@@ -70,8 +44,8 @@
                 </select>
             </div>
             <div class="col-sm-4">
-                <label>Loại</label>
-                <select class="custom-select" id="type" name="type">
+                <label for="type">{{ __('home.Loại') }}</label>
+                <select class="form-select" id="type" name="type">
                     <option
                         value="{{ NewEventType::NEWS }}">{{ NewEventType::NEWS }}</option>
                     <option
@@ -79,14 +53,13 @@
                 </select>
             </div>
             <div class="col-sm-4">
-                <label>thumbnail</label>
+                <label>{{ __('home.Thumbnail') }}</label>
                 <input type="file" class="form-control" id="thumbnail" name="thumbnail" accept="image/*">
             </div>
         </div>
     </form>
-    <button type="button" onclick="submitForm()" class="btn btn-primary up-date-button mt-md-4">Lưu</button>
+    <button type="button" onclick="submitForm()" class="btn btn-primary up-date-button mt-md-4">{{ __('home.Save') }}</button>
     <script>
-        const token = `{{ $_COOKIE['accessToken'] }}`;
 
         function submitForm() {
             loadingMasterPage();
@@ -95,11 +68,11 @@
             };
             const formData = new FormData();
 
-            const arrField = ['title', 'title_en', 'title_laos', 'status', 'type'];
+            const arrField = ['title', 'status', 'type'];
 
             const fieldTextareaTiny = [
-                'short_description', 'short_description_en', 'short_description_laos',
-                'description', 'description_en', 'description_laos',
+                'short_description',
+                'description',
             ];
             fieldTextareaTiny.forEach(fieldTextarea => {
                 const content = tinymce.get(fieldTextarea).getContent();

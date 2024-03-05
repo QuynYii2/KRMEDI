@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\TranslateController;
 use App\Models\online_medicine\CategoryProduct;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,7 @@ class BackendCategoryProductController extends Controller
      */
     public function index()
     {
-        $categoryProducts = CategoryProduct::where('status', 1)->paginate(20);
+        $categoryProducts = CategoryProduct::paginate(20);
         return view('admin.category_product.index', compact('categoryProducts'));
     }
 
@@ -69,12 +70,16 @@ class BackendCategoryProductController extends Controller
     public function update(Request $request)
     {
         $id = $request->input('id');
-        $params = $request->only('name', 'name_en', 'name_laos', 'status',);
+        $params = $request->only('name', 'status',);
 
         // kiểm tra 1 trong những name phải khác null
-        if (empty($params['name']) && empty($params['name_en']) && empty($params['name_laos'])) {
+        if (empty($params['name']) || empty($params['name_en']) || empty($params['name_laos'])) {
             return response('Tên danh mục không được để trống', 400);
         }
+
+        $translate = new TranslateController();
+        $params['name_en'] = $translate->translateText($params['name'], 'en');
+        $params['name_laos'] = $translate->translateText($params['name'], 'lo');
 
         $categoryProduct = CategoryProduct::find($id);
 
@@ -103,19 +108,22 @@ class BackendCategoryProductController extends Controller
      */
     public function store(Request $request)
     {
-        $params = $request->only('name', 'name_en', 'name_laos', 'status',);
+        $params = $request->only('name', 'status',);
 
         // kiểm tra 1 trong những name phải khác null
-        if (empty($params['name']) && empty($params['name_en']) && empty($params['name_laos'])) {
+        if (empty($params['name'])) {
             return response('Tên danh mục không được để trống', 400);
         }
+        $translate = new TranslateController();
+        $params['name_en'] = $translate->translateText($params['name'], 'en');
+        $params['name_laos'] = $translate->translateText($params['name'], 'lo');
 
         if ($request->hasFile('thumbnail')) {
             $item = $request->file('thumbnail');
             $itemPath = $item->store('product', 'public');
             $thumbnail = asset('storage/' . $itemPath);
         } else {
-            $thumbnail = '';
+            return response('Thumbnail không được để trống', 400);
         }
 
         $categoryProduct = new CategoryProduct();

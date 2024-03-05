@@ -6,7 +6,7 @@
     <div class="d-flex justify-content-between mt-md-2">
         <div class="fs-18px">{{$bookings->name}}</div>
         <div class="button-follow fs-12p ">
-            <a class="text-follow-12" href="">FOLLOW</a>
+            <a class="text-follow-12" href="">{{ __('home.FOLLOW') }}</a>
         </div>
     </div>
     <div class="d-flex mt-md-2">
@@ -15,7 +15,7 @@
             <div class="justify-content-center d-flex">
                 <i class="border-button-address fa-solid fa-bullseye"></i>
             </div>
-            <div class="d-flex justify-content-center">Start</div>
+            <div class="d-flex justify-content-center">{{ __('home.Start') }}</div>
         </a>
         </div>
         <div class="d-flex col-md-6 justify-content-center align-items-center">
@@ -23,12 +23,12 @@
                 <div class="justify-content-center d-flex">
                     <i class="border-button-address fa-regular fa-circle-right"></i>
                 </div>
-                <div class="d-flex justify-content-center">Direction</div>
+                <div class="d-flex justify-content-center">{{ __('home.Direction') }}</div>
             </a>
         </div>
     </div>
     <div class="mt-md-3 mb-md-3">
-        <a class="border-button-address font-weight-800 fs-14 justify-content-center" href="{{route('clinic.booking.service',$id)}}">Booking</a>
+        <a class="border-button-address font-weight-800 fs-14 justify-content-center" href="{{route('clinic.booking.service',$id)}}">{{ __('home.Booking') }}</a>
     </div>
     <div class="border-top">
         <div class="mt-md-2"><i class="text-gray mr-md-2 fa-solid fa-location-dot"></i>
@@ -38,7 +38,7 @@
         </div>
         <div class="mt-md-2">
             <i class="text-gray mr-md-2 fa-regular fa-clock"></i>
-            <span class="fs-14 font-weight-600">Open: {{ \Carbon\Carbon::parse($bookings->open_date)->format('H:i') }} - {{ \Carbon\Carbon::parse($bookings->close_date)->format('H:i') }}
+            <span class="fs-14 font-weight-600">{{ __('home.Open') }}: {{ \Carbon\Carbon::parse($bookings->open_date)->format('H:i') }} - {{ \Carbon\Carbon::parse($bookings->close_date)->format('H:i') }}
 </span>
         </div>
         <div class="mt-md-2">
@@ -66,7 +66,7 @@
                 </div>
                 <div class="content">
                     <p>
-                        Lần đầu tiên sử dụng dịch vụ qua app nhưng chất lượng và dịch vụ tại salon quá tốt. Book giờ nào thì cứ đúng giờ đến k sợ phải chờ đợi như mọi chỗ khác. Hy vọng thi thoảng app có nhiều ưu đãi để giới thiệu cho bạn bè cùng sử dụng :D
+                        {{ __('home.Lần đầu tiên sử dụng dịch vụ qua app nhưng chất lượng và dịch vụ tại salon quá tốt. Book giờ nào thì cứ đúng giờ đến k sợ phải chờ đợi như mọi chỗ khác. Hy vọng thi thoảng app có nhiều ưu đãi để giới thiệu cho bạn bè cùng sử dụng') }}
                     </p>
                 </div>
             </div>
@@ -85,7 +85,7 @@
             </div>
             <div class="content">
                 <p>
-                    Lần đầu tiên sử dụng dịch vụ qua app nhưng chất lượng và dịch vụ tại salon quá tốt. Book giờ nào thì cứ đúng giờ đến k sợ phải chờ đợi như mọi chỗ khác. Hy vọng thi thoảng app có nhiều ưu đãi để giới thiệu cho bạn bè cùng sử dụng :D
+                    {{ __('home.Lần đầu tiên sử dụng dịch vụ qua app nhưng chất lượng và dịch vụ tại salon quá tốt. Book giờ nào thì cứ đúng giờ đến k sợ phải chờ đợi như mọi chỗ khác. Hy vọng thi thoảng app có nhiều ưu đãi để giới thiệu cho bạn bè cùng sử dụng') }}
                 </p>
             </div>
         </div>

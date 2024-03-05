@@ -14,13 +14,13 @@
                 <div class="apply-text">
                     <strong>CV Trần Đình Phi</strong>
                     <div class="mt-1">
-                        <span>Update: </span><strong> 29/09/2023</strong>
+                        <span>{{ __('home.Update') }}: </span><strong> 29/09/2023</strong>
                     </div>
                 </div>
                 <div class="d-flex">
-                    <button class="apply-bt apply-bt_delete">Delete</button>
+                    <button class="apply-bt apply-bt_delete">{{ __('home.Delete') }}</button>
                     <form action="{{ route('recruitment.edit.cv') }}">
-                        <button type="submit" class="apply-bt apply-bt_edit">Edit</button>
+                        <button type="submit" class="apply-bt apply-bt_edit">{{ __('home.Edit') }}</button>
                     </form>
                 </div>
             </div>
@@ -33,13 +33,13 @@
                 <div class="apply-text">
                     <strong>CV Trần Đình Phi</strong>
                     <div class="mt-1">
-                        <span>Update: </span><strong> 29/09/2023</strong>
+                        <span>{{ __('home.Update') }}: </span><strong> 29/09/2023</strong>
                     </div>
                 </div>
                 <div class="d-flex">
-                    <button class="apply-bt apply-bt_delete">Delete</button>
+                    <button class="apply-bt apply-bt_delete">{{ __('home.Delete') }}</button>
                     <form action="{{ route('recruitment.edit.cv') }}">
-                        <button type="submit" class="apply-bt apply-bt_edit">Edit</button>
+                        <button type="submit" class="apply-bt apply-bt_edit">{{ __('home.Edit') }}</button>
                     </form>
                 </div>
             </div>
@@ -52,13 +52,13 @@
                 <div class="apply-text">
                     <strong>CV Trần Đình Phi</strong>
                     <div class="mt-1">
-                        <span>Update: </span><strong> 29/09/2023</strong>
+                        <span>{{ __('home.Update') }}: </span><strong> 29/09/2023</strong>
                     </div>
                 </div>
                 <div class="d-flex">
-                    <button class="apply-bt apply-bt_delete">Delete</button>
+                    <button class="apply-bt apply-bt_delete">{{ __('home.Delete') }}</button>
                     <form action="{{ route('recruitment.edit.cv') }}">
-                        <button type="submit" class="apply-bt apply-bt_edit">Edit</button>
+                        <button type="submit" class="apply-bt apply-bt_edit">{{ __('home.Edit') }}</button>
                     </form>
                 </div>
             </div>
@@ -67,7 +67,7 @@
             <a href="{{ route('recruitment.add.cv') }}">
                 <div class="row align-items-center h-100">
                     <div class="apply-margin apply-add">
-                        <strong style="color: black; font-size: 24px">Add new CV</strong>
+                        <strong style="color: black; font-size: 24px">{{ __('home.Add new CV') }}</strong>
                     </div>
                 </div>
             </a>

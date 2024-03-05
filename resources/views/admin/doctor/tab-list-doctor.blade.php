@@ -1,21 +1,15 @@
-<style>
-    td {
-        overflow: hidden;
-        max-width: 300px;
-        height: 80px;
-    }
-</style>
+<link href="{{ asset('css/tablistdoctor.css') }}" rel="stylesheet">
 <div class="">
     <table class="table table-striped">
         <thead>
         <tr>
             <th scope="col">#</th>
-            <th scope="col">Thumbnail</th>
-            <th scope="col">Chuyên Môn</th>
-            <th scope="col">Năm kinh nghiệm</th>
-            <th scope="col">Dịch vụ cung cấp</th>
-            <th scope="col">Thời gian</th>
-            <th scope="col">Những ngày làm việc</th>
+            <th scope="col">{{ __('home.Thumbnail') }}</th>
+            <th scope="col">{{ __('home.Chuyên Môn') }}</th>
+            <th scope="col">{{ __('home.Năm kinh nghiệm') }}</th>
+            <th scope="col">{{ __('home.Dịch vụ cung cấp') }}</th>
+            <th scope="col">{{ __('home.Thời gian') }}</th>
+            <th scope="col">{{ __('home.Những ngày làm việc') }}</th>
         </tr>
         </thead>
         <tbody id="ProductsAdmin">
@@ -24,7 +18,6 @@
     </table>
 </div>
 <script>
-    const token = `{{ $_COOKIE['accessToken'] }}`;
 
     $(document).ready(() => {
         callListProduct(token, 'DOCTOR');
@@ -57,7 +50,7 @@
                     console.log(url)
                     break;
                 default:
-                    url = `{{ route('api.backend.doctors.info.list') }}`;
+                    url = `{{ route('api.backend.doctors.info.list.by.user') }}`;
                     console.log(url)
                     break;
 
@@ -81,6 +74,7 @@
 
 
     async function renderProduct(res) {
+        console.log(res)
         let html = ``;
 
         for (let i = 0; i < res.length; i++) {
@@ -89,11 +83,11 @@
             let item = res[i];
             let rowNumber = i + 1;
 
-            let thumbnail = item.thumbnail;
+            let thumbnail = item.avt;
             let arrayGallery = thumbnail.split(',')
             let img = ``;
             for (let j = 0; j < arrayGallery.length; j++) {
-                img = img + `<img class="mr-2 w-auto h-100" src="${arrayGallery[j]}" alt="">`;
+                img = img + `<img loading="lazy" class="mr-2 w-auto h-100" src="${arrayGallery[j]}" alt="">`;
             }
             html = html + `<tr>
             <th scope="row">${i + 1}</th>
@@ -103,7 +97,7 @@
             <td>${item.service} </td>
             <td>${item.time_working_1}</td>
             <td>${item.time_working_2}</td>
-            <td><a href="${urlEdit}"> Edit</a> | <a href="#" onclick="checkDelete(${item.id})">Delete</a></td>
+            <td><a href="${urlEdit}"> {{ __('home.Edit') }}</a> | <a href="#" onclick="checkDelete(${item.id})">{{ __('home.Delete') }}</a></td>
         </tr>`;
         }
         await $('#ProductsAdmin').empty().append(html);
@@ -113,7 +107,6 @@
         let accessToken = `Bearer ` + token;
         let urlDelete = `{{route('api.backend.doctors.info.delete', ['id' => ':id'])}}`;
         urlDelete = urlDelete.replace(':id', id);
-        console.log(urlDelete)
         await $.ajax({
             url: urlDelete,
             method: 'DELETE',
@@ -132,7 +125,7 @@
     }
 
     function checkDelete(value) {
-        if (confirm("Press a button!") == true) {
+        if (confirm('Are you sure you want to delete?') == true) {
             deleteCoupon(token, value)
         }
     }

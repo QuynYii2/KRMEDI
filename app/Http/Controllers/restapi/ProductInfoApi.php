@@ -12,7 +12,13 @@ class ProductInfoApi extends Controller
 {
     public function index()
     {
-        $products = ProductInfo::where('status', ProductStatus::ACTIVE)->get();
+        $products = ProductInfo::where('product_infos.status', ProductStatus::ACTIVE)
+            ->leftJoin('users', 'product_infos.created_by', '=', 'users.id')
+            ->leftJoin('provinces', 'provinces.id', '=', 'users.province_id')
+            ->select('product_infos.*', 'provinces.name as location_name')
+            ->orderBy('id', 'desc')
+            ->get();
+
         return response()->json($products);
     }
 
@@ -48,31 +54,35 @@ class ProductInfoApi extends Controller
         $query = [];
 
         if ($name) {
-            $str = ['name', 'like', '%' . $name . '%'];
+            $str = ['product_infos.name', 'like', '%'.$name.'%'];
             array_push($query, $str);
         }
         if ($status) {
-            $str = ['status', '=', $status];
+            $str = ['product_infos.status', '=', $status];
             array_push($query, $str);
         }
 
         if ($min_price) {
-            $str = ['price', '>=', $min_price];
+            $str = ['product_infos.price', '>=', $min_price];
             array_push($query, $str);
         }
 
         if ($max_price) {
-            $str = ['price', '<=', $max_price];
+            $str = ['product_infos.price', '<=', $max_price];
             array_push($query, $str);
         }
 
         if ($category_id) {
-            $products = ProductInfo::where($query)->whereIn('category_id', $categories)->get();
+            $products = ProductInfo::where($query)->whereIn('category_id', $categories);
         } elseif (!$name && !$status && !$min_price && !$max_price) {
-            $products = ProductInfo::where('status', ProductStatus::ACTIVE)->get();
+            $products = ProductInfo::where('product_infos.status', ProductStatus::ACTIVE);
         } else {
-            $products = ProductInfo::where($query)->get();
+            $products = ProductInfo::where($query);
         }
+        $products->leftJoin('users', 'product_infos.created_by', '=', 'users.id')
+            ->leftJoin('provinces', 'provinces.id', '=', 'users.province_id')
+            ->select('product_infos.*', 'provinces.name as location_name');
+        $products = $products->get();
         return response()->json($products);
     }
 
@@ -84,13 +94,13 @@ class ProductInfoApi extends Controller
         if ($status) {
             if ($clinic) {
                 $products = ProductInfo::where('status', $status)
-                    ->where('created_by', $clinic->id)
+                    ->where('created_by', $clinic->user_id)
                     ->get();
             }
         } else {
             if ($clinic) {
                 $products = ProductInfo::where('status', '!=', ProductStatus::DELETED)
-                    ->where('created_by', $clinic->id)
+                    ->where('created_by', $clinic->user_id)
                     ->get();
             }
         }

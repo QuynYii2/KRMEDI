@@ -4,6 +4,8 @@ namespace App\Http\Controllers\backend;
 
 use App\Enums\ProductStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\restapi\MainApi;
+use App\Http\Controllers\TranslateController;
 use App\Models\Clinic;
 use App\Models\ProductInfo;
 use App\Models\WishList;
@@ -13,17 +15,32 @@ use Illuminate\Support\Facades\Auth;
 
 class BackendProductInfoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $userId = $request->input('user_id');
+        if (!$userId) {
+            if (Auth::check()){
+                $userId = Auth::user()->id;
+            }
+        }
+
         $products = DB::table('product_infos')
             ->join('provinces', 'provinces.id', '=', 'product_infos.province_id')
             ->where('product_infos.status', '!=', ProductStatus::DELETED)
+            ->where('product_infos.created_by', '=', $userId)
             ->select('product_infos.*', 'provinces.name as province_name')
             ->get();
 
-        if (Auth::check()) {
-            $userId = Auth::user()->id;
+        $isAdmin = (new MainApi())->isAdmin($userId);
+        if ($isAdmin){
+            $products = DB::table('product_infos')
+                ->join('provinces', 'provinces.id', '=', 'product_infos.province_id')
+                ->where('product_infos.status', '!=', ProductStatus::DELETED)
+                ->select('product_infos.*', 'provinces.name as province_name')
+                ->get();
+        }
 
+        if (Auth::check()) {
             $products->each(function ($product) use ($userId) {
                 $isFavorite = WishList::where('product_id', $product->id)
                     ->where('user_id', $userId)
@@ -136,21 +153,46 @@ class BackendProductInfoController extends Controller
     {
         try {
             $name = $request->input('name');
+
+            if ($name == null) {
+                return response('Name is required', 400);
+            }
+
+            $translate = new TranslateController();
+            $name_en = $translate->translateText($request->input('name'), 'en');
+            $name_laos = $translate->translateText($request->input('name'), 'lo');
+
             $category_id = $request->input('category_id');
-            $name_en = $request->input('name_en');
+            if ($category_id == null) {
+                return response('Category is required', 400);
+            }
+
             $brand_name = $request->input('brand_name');
-            $brand_name_en = $request->input('brand_name_en');
+            $brand_name_en = $translate->translateText($request->input('brand_name'), 'en');
+            $brand_name_laos = $translate->translateText($request->input('brand_name'), 'lo');
+
             $province_id = $request->input('province_id');
+            if ($province_id == null) {
+                return response('Province is required', 400);
+            }
+            $price = $request->input('price');
+            if ($price == null) {
+                return response('Price is required', 400);
+            }
             $description = $request->input('description');
-            $description_en = $request->input('description_en');
-            $description_laos = $request->input('description_laos');
+            $description_en = $translate->translateText($request->input('description'), 'en');
+            $description_laos = $translate->translateText($request->input('description'), 'lo');
+
+            if ($description == null) {
+                return response('Description is required', 400);
+            }
 
             if ($request->hasFile('thumbnail')) {
                 $item = $request->file('thumbnail');
                 $itemPath = $item->store('product', 'public');
                 $thumbnail = asset('storage/' . $itemPath);
             } else {
-                $thumbnail = '';
+                return response('Thumbnail is required', 400);
             }
 
             if ($request->hasFile('gallery')) {
@@ -160,23 +202,31 @@ class BackendProductInfoController extends Controller
                 }, $request->file('gallery'));
                 $gallery = implode(',', $galleryPaths);
             } else {
-                $gallery = '';
+                return response('Gallery is required', 400);
             }
 
-            $price = $request->input('price');
             $price_unit = $request->input('price_unit');
             $ads_plan = $request->input('ads_plan');
+            if ($ads_plan == null) {
+                return response('Ads plan is required', 400);
+            }
             $ads_period = $request->input('ads_period');
+            if ($ads_period == null) {
+                return response('Ads period is required', 400);
+            }
             $status = $request->input('status');
             $userID = $request->input('user_id');
+            $quantity = $request->input('quantity');
 
             $product = new ProductInfo();
 
             $product->name = $name;
             $product->name_en = $name_en;
+            $product->name_laos = $name_laos;
             $product->category_id = $category_id;
             $product->brand_name = $brand_name;
             $product->brand_name_en = $brand_name_en;
+            $product->brand_name_laos = $brand_name_laos;
             $product->province_id = $province_id;
             $product->thumbnail = $thumbnail;
             $product->gallery = $gallery;
@@ -189,6 +239,7 @@ class BackendProductInfoController extends Controller
             $product->description_laos = $description_laos;
             $product->status = $status;
             $product->created_by = $userID;
+            $product->quantity = $quantity;
 
             $success = $product->save();
             if ($success) {
@@ -220,15 +271,21 @@ class BackendProductInfoController extends Controller
 
             $name = $request->input('name');
             $category_id = $request->input('category_id');
-            $name_en = $request->input('name_en');
-            $name_laos = $request->input('name_laos');
+
+            $translate = new TranslateController();
+            $name_en = $translate->translateText($request->input('name'), 'en');
+            $name_laos = $translate->translateText($request->input('name'), 'lo');
+
             $brand_name = $request->input('brand_name');
-            $brand_name_en = $request->input('brand_name_en');
-            $brand_name_laos = $request->input('brand_name_laos');
+
+            $brand_name_en = $translate->translateText($request->input('brand_name'), 'en');
+            $brand_name_laos = $translate->translateText($request->input('brand_name'), 'lo');
+
             $province_id = $request->input('province_id');
             $description = $request->input('description');
-            $description_en = $request->input('description_en');
-            $description_laos = $request->input('description_laos');
+
+            $description_en = $translate->translateText($request->input('description'), 'en');
+            $description_laos = $translate->translateText($request->input('description'), 'lo');
 
             if ($request->hasFile('thumbnail')) {
                 $item = $request->file('thumbnail');
@@ -254,6 +311,7 @@ class BackendProductInfoController extends Controller
             $ads_period = $request->input('ads_period');
             $status = $request->input('status');
             $userID = $request->input('user_id');
+            $quantity = $request->input('quantity');
 
             $product->name = $name;
             $product->name_en = $name_en;
@@ -274,6 +332,7 @@ class BackendProductInfoController extends Controller
             $product->description_laos = $description_laos;
             $product->status = $status;
             $product->updated_by = $userID;
+            $product->quantity = $quantity;
 
             $success = $product->save();
             if ($success) {

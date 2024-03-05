@@ -3,335 +3,11 @@
 @section('title', 'Home')
 @section('content')
     <style>
-
-        .frame.comment-item img {
+        .tox.tox-tinymce {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-
-        .button-main {
-            width: 200px;
-            padding: 12px 16px;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            border-radius: 8px;
-        }
-
-        .frame button {
-            border-radius: 8px;
-            background: #45C3D2;
-            color: white;
-        }
-
-        .frame button:hover {
-            border-radius: 8px;
-            background: #26737c;
-        }
-
-        .text-title {
-            font-size: 24px;
-            font-style: normal;
-            font-weight: 800;
-            line-height: normal;
-        }
-
-        .card-title {
-            font-size: 32px;
-            font-style: normal;
-            font-weight: 800;
-            line-height: normal;
-            text-align: center;
-        }
-
-        .frame.mentoring-img {
-            align-items: flex-start;
-            gap: 30px;
-            position: relative;
-        }
-
-        .frame.mentoring-img .div {
-            position: relative;
-            width: 370px;
-            height: 276px;
-        }
-
-        .frame.mentoring-img .catalog {
-            height: 276px;
-            background-color: var(--grey-light);
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid;
-            border-color: var(--light);
-        }
-
-        .frame.mentoring-img .vuesax-bold-gallery {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            top: 108px;
-            left: 155px;
-        }
-
-        .frame.mentoring-img .rectangle {
-            position: absolute;
-            width: 370px;
-            height: 276px;
-            top: 0;
-            left: 0;
-            object-fit: cover;
-        }
-
-
-        .frame.comment-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 24px;
-            position: relative;
-        }
-
-        .frame.comment-item .div {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            position: relative;
-            align-self: stretch;
-            width: 100%;
-            flex: 0 0 auto;
-        }
-
-        .frame.comment-item .div-2 {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 13px;
-            position: relative;
-            align-self: stretch;
-            width: 100%;
-            flex: 0 0 auto;
-        }
-
-        .frame.comment-item .div-3 {
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            position: relative;
-            align-self: stretch;
-            width: 100%;
-            flex: 0 0 auto;
-        }
-
-        .frame.comment-item .div-4 {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            position: relative;
-            flex: 0 0 auto;
-        }
-
-        .frame.comment-item .ellipse {
-            position: relative;
-            width: 54px;
-            height: 54px;
-            object-fit: cover;
-        }
-
-        .frame.comment-item .text-wrapper {
-            position: relative;
-            width: fit-content;
-            text-align: center;
-        }
-
-        .frame.comment-item .div-wrapper {
-            display: inline-flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 16px;
-            position: relative;
-            flex: 0 0 auto;
-        }
-
-        .frame.comment-item .text-wrapper-2 {
-            position: relative;
-            width: fit-content;
-            margin-top: -1px;
-            color: #000000;
-        }
-
-        .frame.comment-item .d-ch-v-c-c-t-t-l-n-u-wrapper {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            position: relative;
-            align-self: stretch;
-            width: 100%;
-            flex: 0 0 auto;
-        }
-
-        .frame.comment-item .d-ch-v-c-c-t-t-l-n-u {
-            position: relative;
-            flex: 1;
-            margin-top: -1px;
-            font-weight: 400;
-            color: #000000;
-            font-size: 16px;
-            letter-spacing: 0;
-            line-height: normal;
-        }
-
-        .frame.comment-item .div-5 {
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            gap: 16px;
-            position: relative;
-            align-self: stretch;
-            width: 100%;
-            flex: 0 0 auto;
-        }
-
-        .frame.comment-item .frame-wrapper {
-            display: flex;
-            flex-direction: column;
-            height: 56px;
-            align-items: flex-start;
-            justify-content: center;
-            gap: 10px;
-            padding: 20px 16px;
-            position: relative;
-            flex: 1;
-            flex-grow: 1;
-            border-radius: 8px;
-            border: 1px solid;
-        }
-
-        .frame.comment-item .div-6 {
-            display: inline-flex;
-            align-items: center;
-            gap: 16px;
-            position: relative;
-            flex: 0 0 auto;
-            margin-top: -12px;
-            margin-bottom: -12px;
-        }
-
-        .frame.comment-item .img {
-            position: relative;
-            width: 40px;
-            height: 40px;
-            object-fit: cover;
-        }
-
-        .frame.comment-item .text-wrapper-4 {
-            position: relative;
-            width: 146px;
-            height: 20px;
-        }
-
-        .frame.comment-item .text-wrapper-5 {
-            display: flex;
-            width: 171px;
-            height: 56px;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            position: relative;
-            border-radius: 8px;
-        }
-
-        .frame.comment-item .text {
-            position: relative;
-            width: fit-content;
-            margin-left: -0.5px;
-            margin-right: -0.5px;
-            text-align: center;
-        }
-
-        .frame.comment-item .line {
-            position: relative;
-            align-self: stretch;
-            width: 100%;
-            height: 1px;
-            object-fit: cover;
-        }
-
-
-    </style>
-
-    <style>
-        /* Style the Image Used to Trigger the Modal */
-        #mentoring-img img {
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        #mentoring-img img:hover {
-            opacity: 0.7;
-        }
-
-        /* The Modal (background) */
-        #image-viewer {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0, 0, 0);
-            background-color: rgba(0, 0, 0, 0.9);
-        }
-
-        #image-viewer .modal-content {
-            margin: auto;
-            display: block;
-            width: 80%;
-            max-width: 700px;
-        }
-
-        #image-viewer .modal-content {
-            animation-name: zoom;
-            animation-duration: 0.6s;
-        }
-
-        @keyframes zoom {
-            from {
-                transform: scale(0)
-            }
-            to {
-                transform: scale(1)
-            }
-        }
-
-        #image-viewer .close {
-            position: absolute;
-            top: 15px;
-            right: 35px;
-            color: #f1f1f1;
-            font-size: 40px;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        #image-viewer .close:hover,
-        #image-viewer .close:focus {
-            color: #bbb;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        @media only screen and (max-width: 700px) {
-            #image-viewer .modal-content {
-                width: 100%;
-            }
         }
     </style>
+    <link href="{{ asset('css/detail.css') }}" rel="stylesheet">
     @include('layouts.partials.header_3')
     @include('component.banner')
     @php
@@ -342,7 +18,6 @@
                 $isDoctor = true;
             }
         }
-
         $isMedical = (new \App\Http\Controllers\MainController())->checkMedical();
     @endphp
     <div id="mentoring" class="container">
@@ -354,12 +29,23 @@
                           stroke-width="4"
                           stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                <h1 class="d-inline ml-3">Comment</h1>
+                <h1 class="d-inline ml-3">{{ __('home.Comment') }}</h1>
             </div>
         </a>
         <div class="card-body">
-            <h5 class="card-title">{{ $question->title }}</h5>
-            <p class="card-text">{{ $question->content }}</p>
+            <h5 class="card-title">{{ $question->title }}
+                @if(locationHelper() == 'vi')
+                    {{ ($question->title)}}
+                @else
+                    {{ ($question->title_en) }}
+                @endif
+            </h5>
+            <p class="card-text">
+                @if(locationHelper() == 'vi')
+                    {{ $question->content }}
+                @else
+                    {{$question->content_en}}
+                @endif</p>
         </div>
 
         <div class="frame row justify-content-md-around mentoring-img" id="mentoring-img">
@@ -392,20 +78,25 @@
                 @endif
             @endif
         </div>
-
+        <style>
+            .d-ch-v-c-c-t-t-l-n-u-wrapper a{
+                text-decoration: underline;
+            }
+        </style>
         <div class="mt-5">
             <div class="frame comment-item mb-3 d-none" id="comment-main">
                 <div class="div-5 ">
                     <div class="frame-wrapper">
                         <div class="div-6 w-100">
                             <img class="img"
-                                 src="https://media.licdn.com/dms/image/D560BAQE96KctT7x-iw/company-logo_200_200/0/1666170056007?e=2147483647&v=beta&t=U-5DmL_mYQaduEYyl0aVlabEvxP6-F5nZE9daao6Wuk"/>
-                            <input type="text" class="form-control text-wrapper-4 w-100 h-100 border-0"
-                                   placeholder="Enter question here" id="input-comment-main">
+                                 src="https://media.licdn.com/dms/image/D560BAQE96KctT7x-iw/company-logo_200_200/0/1666170056007?e=2147483647&v=beta&t=U-5DmL_mYQaduEYyl0aVlabEvxP6-F5nZE9daao6Wuk" alt=""/>
+                            <textarea type="text" class="form-control text-wrapper-4 w-100 h-100 border-0"
+                                      placeholder="{{ __('home.Enter question here') }}" id="input-comment-main"></textarea>
                         </div>
                     </div>
                     <div class="text-wrapper-5">
-                        <button type="button" class="btn mx-2 w-100 h-100" onclick="submitCommentMain()">comment
+                        <button type="button" class="btn mx-2 w-100 h-100"
+                                onclick="submitCommentMain()">{{ __('home.comment') }}
                         </button>
                     </div>
                 </div>
@@ -419,13 +110,15 @@
                 @endphp
 
                 @if(!Auth::check())
-                    <button type="button" class="btn btn-primary mx-2 button-main" onclick="alertLogin()">Like</button>
+                    <button type="button" class="btn btn-primary mx-2 button-main"
+                            onclick="alertLogin()">{{ __('home.Like') }}</button>
                 @else
                     <button type="button" class="btn btn-primary mx-2 button-main"
                             onclick="changeEmotion()">{{ $isLike ? ( $isLike->is_like ? 'Dislike' : 'Like' ) : 'Like'}}</button>
                 @endif
                 @if($isMedical)
-                    <button type="button" class="btn btn-primary mx-2 button-main" onclick="replyCommentMain()">Reply
+                    <button type="button" class="btn btn-primary mx-2 button-main"
+                            onclick="replyCommentMain()">{{ __('home.Reply') }}
                     </button>
                 @endif
             </div>
@@ -433,7 +126,7 @@
 
         <div class="border-bottom mb-4">
             <div class="div d-flex justify-content-between mb-3">
-                <div class="text-wrapper d-inline-flex header_comment">Answer</div>
+                <div class="text-wrapper d-inline-flex header_comment">{{ __('home.Answer') }}</div>
             </div>
         </div>
 
@@ -455,44 +148,108 @@
                         </div>
                         <div class="d-ch-v-c-c-t-t-l-n-u-wrapper">
                             <p class="d-ch-v-c-c-t-t-l-n-u">
-                                <span class="text-wrapper-3"
-                                >{{ $answer->content }}</span
-                                >
+                                <span class="text-wrapper-3">  @if(locationHelper() == 'vi')
+                                        {!! $answer->content !!}
+                                    @else
+                                       {!! $answer->content_en !!}
+                                    @endif</span>
                             </p>
                         </div>
                     </div>
+
                     <div class="div-5" id="reply-comment-{{ $index }}" style="display: none">
                         <div class="frame-wrapper">
                             <div class="div-6 w-100">
-                                <img class="img"
-                                     src="https://media.licdn.com/dms/image/D560BAQE96KctT7x-iw/company-logo_200_200/0/1666170056007?e=2147483647&v=beta&t=U-5DmL_mYQaduEYyl0aVlabEvxP6-F5nZE9daao6Wuk"/>
-                                <input type="text" class="form-control text-wrapper-4 w-100 h-100 border-0"
-                                       id="input-comment-{{ $index }}"
-                                       placeholder="Enter question here">
+
+                                <label for="input-comment-{{ $index }}">
+                                    <img class="img" src="https://media.licdn.com/dms/image/D560BAQE96KctT7x-iw/company-logo_200_200/0/1666170056007?e=2147483647&v=beta&t=U-5DmL_mYQaduEYyl0aVlabEvxP6-F5nZE9daao6Wuk" alt=""/>
+                                </label>
+                                <textarea type="text" class="form-control text-wrapper-4 w-100 h-100 border-0"
+                                                                                          id="input-comment-{{ $index }}"
+                                                                                          placeholder="{{ __('home.Enter question here') }}"></textarea>
                             </div>
                         </div>
                         <div class="text-wrapper-5">
                             <button type="button" class="btn mx-2 w-100 h-100"
-                                    onclick="submitComment('{{ $index }}')">comment
+                                    onclick="submitComment('{{ $index }}')">{{ __('home.comment') }}
                             </button>
                         </div>
                     </div>
+                    <style>
+                        .blue {
+                            color: #007bff;
+                        }
+                        .grey {
+                            color: #929292;
+                        }
+                    </style>
                     <div class="div-5 justify-content-end" id="button-reply-comment-{{ $index }}">
-                        @if($isMedical)
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
-                                 fill="none">
-                                <g clip-path="url(#clip0_1944_12433)">
-                                    <path
-                                        d="M6.66667 4.66808V1.83342C6.66667 1.63275 6.546 1.45142 6.36133 1.37275C6.17733 1.29475 5.962 1.33408 5.81867 1.47475L0.152 6.97475C0.0546667 7.06875 0 7.19808 0 7.33342C0 7.46875 0.0546667 7.59808 0.152 7.69208L5.81867 13.1921C5.96333 13.3321 6.178 13.3714 6.36133 13.2941C6.546 13.2154 6.66667 13.0341 6.66667 12.8334V10.0001H7.612C10.7027 10.0001 13.552 11.6801 15.0473 14.3814L15.0613 14.4067C15.1507 14.5694 15.32 14.6667 15.5 14.6667C15.5413 14.6667 15.5827 14.6621 15.624 14.6514C15.8453 14.5947 16 14.3954 16 14.1667C16 8.98408 11.8287 4.75742 6.66667 4.66808Z"
-                                        fill="#929292"/>
-                                </g>
-                                <defs>
-                                    <clipPath id="clip0_1944_12433">
-                                        <rect width="16" height="16" fill="white"/>
-                                    </clipPath>
-                                </defs>
-                            </svg>
-                            <div class="text-wrapper-3 reply-comment">Reply</div>
+                        @php
+                            $infoDoctorAnswer = User::where('id', $answer->user_id)->first();
+
+                            $checkCallDoctor = \App\Models\Question::where('id', $question->id)->first();
+                            $userCheck = \App\Models\User::where('id', $checkCallDoctor->user_id)->first();
+                                $checkLike = \App\Models\Answer::where('id', $answer->id)->get();
+                                if ($checkLike) {
+                                    $checkLikes = $answer->likes;
+                                }
+                                else {
+                                    $checkLikes = 0;
+                                }
+                            $isLikes = \App\Models\AnswerLike::where('answer_id', $answer->id)
+                            ->where('user_id', Auth::user()->id ?? '')
+                            ->where('is_like', 1)
+                            ->first();
+                            if ($isLikes) {
+                                $isLike = 'blue';
+                            }
+                            else {
+                                $isLike = 'grey';
+                            }
+                        @endphp
+                        @if(Auth::check())
+                            <div class="like-cmt d-flex">
+                                <a onclick="updateLikeCmt('{{ Auth::user()->id }}', '{{ $answer->id }}' , '{{ $index }}')">
+                                    <i id="fa-solid-{{$answer->id}}" class="fa-solid fa-thumbs-up {{$isLike}}"></i>
+                                </a>
+                                <div class="like-count-{{ $index }}">
+                                    {{$checkLikes}}
+                                </div>
+                            </div>
+                            @if(Auth::user()->id == $userCheck->id && $infoDoctorAnswer != null)
+                                <div id="opt_btn" class="d-flex justify-content-between justify-content-md-center">
+                                    <a onclick="handleStartChatWithDoctor('{{ $infoDoctorAnswer->id }}')" class="mr-2">
+                                        <button class="p-1">{{ __('home.Chat') }}</button>
+                                    </a>
+                                    <form method="post" action="{{ route('createMeeting') }}" target="_blank">
+                                        {{ csrf_field() }}
+                                        <input type="hidden" name="user_id_1"
+                                               value="@if(Auth::check()) {{ Auth::user()->id }} @endif">
+                                        <input type="hidden" name="user_id_2" value="{{ $infoDoctorAnswer->id }}">
+                                        <button class="p-1" type="submit">{{ __('home.Videocall') }}</button>
+                                    </form>
+                                </div>
+                            @endif
+
+                        @else
+                            <div class="like-cmt"><a onclick="alertLogin()"><i
+                                        class="fa-solid fa-thumbs-up"></i></a>{{$checkLikes}}</div>
+                        @endif
+                    @if($isMedical)
+                            <div class="text-wrapper-3 reply-comment">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
+                                     fill="none">
+                                    <g clip-path="url(#clip0_1944_12433)">
+                                        <path
+                                            d="M6.66667 4.66808V1.83342C6.66667 1.63275 6.546 1.45142 6.36133 1.37275C6.17733 1.29475 5.962 1.33408 5.81867 1.47475L0.152 6.97475C0.0546667 7.06875 0 7.19808 0 7.33342C0 7.46875 0.0546667 7.59808 0.152 7.69208L5.81867 13.1921C5.96333 13.3321 6.178 13.3714 6.36133 13.2941C6.546 13.2154 6.66667 13.0341 6.66667 12.8334V10.0001H7.612C10.7027 10.0001 13.552 11.6801 15.0473 14.3814L15.0613 14.4067C15.1507 14.5694 15.32 14.6667 15.5 14.6667C15.5413 14.6667 15.5827 14.6621 15.624 14.6514C15.8453 14.5947 16 14.3954 16 14.1667C16 8.98408 11.8287 4.75742 6.66667 4.66808Z"
+                                            fill="#929292"/>
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_1944_12433">
+                                            <rect width="16" height="16" fill="white"/>
+                                        </clipPath>
+                                    </defs>
+                                </svg>{{ __('home.Reply') }}</div>
                         @endif
                     </div>
                 </div>
@@ -523,7 +280,6 @@
         });
 
         var replyCommentElements = document.querySelectorAll(".reply-comment");
-        let token = `{{ $_COOKIE['accessToken'] ?? '' }}`;
         let headers = {
             'Authorization': `Bearer ${token}`
         };
@@ -578,8 +334,10 @@
             }
 
             const idComment = `input-comment-${id}`;
+            console.log(idComment)
 
-            const commentValue = document.getElementById(idComment).value;
+            const commentValue = tinymce.get(idComment).getContent();
+            console.log(commentValue)
 
             const formData = new FormData();
             formData.append("_token", '{{ csrf_token() }}');
@@ -621,7 +379,7 @@
 
             const idComment = `input-comment-main`;
 
-            const commentValue = document.getElementById(idComment).value;
+            const commentValue = tinymce.get(idComment).getContent();
 
             const formData = new FormData();
             formData.append("_token", '{{ csrf_token() }}');
@@ -697,5 +455,40 @@
         }
 
     </script>
+    <script>
+        async function updateLikeCmt(user, answer, idComment) {
+            loadingMasterPage();
+            let url = '{{ route('api.backend.like.answer') }}';
+            const headers = {
+                'Authorization': `Bearer ${token}`,
+            };
+            const formData = new FormData();
+            formData.append('_token', '{{ csrf_token() }}');
+            formData.append("user_id", user);
+            formData.append("answer_id", answer);
 
+            try {
+                const response = await $.ajax({
+                    url: url,
+                    method: 'POST',
+                    headers: headers,
+                    contentType: false,
+                    cache: false,
+                    data: formData,
+                    processData: false,
+                });
+
+                if (response.message === 'Success!') {
+                    $('.like-cmt').find(`.like-count-${idComment}`).text(response.data);
+                    $('#fa-solid-'+answer).toggleClass('grey');
+                    $('#fa-solid-'+answer).toggleClass('blue');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            } finally {
+                loadingMasterPage();
+            }
+        }
+
+    </script>
 @endsection

@@ -1,33 +1,25 @@
-@php use App\Models\Coupon; @endphp
-@php use App\Enums\CouponApplyStatus; @endphp
+@php use App\Enums\CouponApplyStatus;use App\Models\Coupon; @endphp
+@php @endphp
 @extends('layouts.admin')
-
+@section('title', 'List Coupon')
 @section('main-content')
-    <style>
-
-    </style>
+    <link href="{{ asset('css/tablistapplycoupon.css') }}" rel="stylesheet">
     <!-- Page Heading -->
-    <h1 class="h3 mb-4 text-gray-800">List Apply of Coupon</h1>
+    <h1 class="h3 mb-4 text-gray-800">{{ __('home.List Apply of Coupon') }}</h1>
 
-    <style>
-        td {
-            overflow: hidden;
-            max-width: 300px;
-            height: 80px;
-        }
-    </style>
+
     <div class="">
         <table class="table table-striped">
             <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Tên coupon</th>
-                <th scope="col">tên người đăng ký</th>
-                <th scope="col">Email người đăng ký</th>
-                <th scope="col">loại hình đăng ký</th>
-                <th scope="col">Link social người đăng ký</th>
-                <th scope="col">trạng thái</th>
-                <th scope="col">Thao tác</th>
+                <th scope="col">{{ __('home.Tên coupon') }}</th>
+                <th scope="col">{{ __('home.tên người đăng ký') }}</th>
+                <th scope="col">{{ __('home.Email người đăng ký') }}</th>
+                <th scope="col">{{ __('home.loại hình đăng ký') }}</th>
+                <th scope="col">{{ __('home.Link social người đăng ký') }}</th>
+                <th scope="col">{{ __('home.Trạng thái') }}</th>
+                <th scope="col">{{ __('home.Thao tác') }}</th>
             </tr>
             </thead>
             <tbody>
@@ -35,7 +27,7 @@
                 <tr>
                     <td>{{ ++$index }}</td>
                     <td>{{ Coupon::getNameCoupon($applyCoupon->coupon_id) }}</td>
-                    <td>{{ $applyCoupon->user_id }}</td>
+                    <td>{{ Coupon::getNameUser($applyCoupon->user_id) }}</td>
                     <td>{{ $applyCoupon->email }}</td>
                     <td>{{ $applyCoupon->sns_option }}</td>
                     <td>{{ $applyCoupon->link_ }}</td>
@@ -55,16 +47,18 @@
             @endforeach
             </tbody>
         </table>
+        <div class="d-flex justify-content-center align-items-center">
+            {{ $applyCoupons->links() }}
+        </div>
     </div>
 
     <script>
-        var token = `{{ $_COOKIE['accessToken'] }}`;
         const INVALID = '{{ CouponApplyStatus::INVALID }}';
         const VALID = '{{ CouponApplyStatus::VALID }}';
         const REWARD = '{{ CouponApplyStatus::REWARDED }}';
 
         async function changeStatusApplyCoupon(status, idApplyCoupon) {
-            let result = confirm('Bạn có chắc chắn muốn thay đổi trạng thái của coupon này?');
+            let result = confirm('{{ __('home.Bạn có chắc chắn muốn thay đổi trạng thái của coupon này') }}?');
             if (!result) {
                 return;
             }

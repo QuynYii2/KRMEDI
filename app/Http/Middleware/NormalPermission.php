@@ -36,7 +36,7 @@ class NormalPermission
             $roleNames = Role::where('id', $role_user->role_id)->pluck('name');
 
             if ($roleNames->contains('PAITENTS')
-                || $roleNames->contains('NORMAL_PEOPLE')
+                || $roleNames->contains('NORMAL PEOPLE')
                 || $roleNames->contains('DOCTORS')
                 || $roleNames->contains('PHAMACISTS')
                 || $roleNames->contains('THERAPISTS')
@@ -55,7 +55,7 @@ class NormalPermission
             if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException) {
                 return response()->json(['status' => 'Token is Invalid']);
             } else if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException) {
-                return response()->json(['status' => 'Token is Expired']);
+                return response('Token is Expired', 444);
             } else {
                 return response()->json(['status' => 'Authorization Token not found']);
             }

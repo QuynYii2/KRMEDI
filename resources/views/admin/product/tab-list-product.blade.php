@@ -1,21 +1,14 @@
-<style>
-    td {
-        overflow: hidden;
-        max-width: 300px;
-        height: 80px;
-    }
-</style>
+<link href="{{ asset('css/tablistproduct.css') }}" rel="stylesheet">
 <div class="">
     <table class="table table-striped">
         <thead>
         <tr>
             <th scope="col">#</th>
-            <th scope="col">Thumbnail</th>
-            <th scope="col">Gallery</th>
-            <th scope="col">Name</th>
-            <th scope="col">Location</th>
-            <th scope="col">Prise</th>
-            <th scope="col">Edit</th>
+            <th scope="col">{{ __('home.Thumbnail') }}</th>
+            <th scope="col">{{ __('home.Name') }}</th>
+            <th scope="col">{{ __('home.Location') }}</th>
+            <th scope="col">{{ __('home.Price') }}</th>
+            <th scope="col">{{ __('home.Edit') }}</th>
         </tr>
         </thead>
         <tbody id="ProductsAdmin">
@@ -25,7 +18,6 @@
 </div>
 
 <script>
-    var token = `{{ $_COOKIE['accessToken'] }}`;
     $(document).ready(function () {
         callListProduct(token);
         async function callListProduct(token) {
@@ -59,16 +51,21 @@
             let arrayGallery = gallery.split(',')
             let img = ``;
             for (let j = 0; j < arrayGallery.length; j++) {
-                img = img + `<img class="mr-2 w-auto h-100" src="${arrayGallery[j]}" alt="">`;
+                img = img + `<img loading="lazy" class="mr-2 w-auto h-100" src="${arrayGallery[j]}" alt="">`;
             }
             html = html + `<tr>
             <th scope="row">${rowNumber}</th>
-            <td><img class="mr-2 w-auto h-100" src="${item.thumbnail}" alt=""></td>
-            <td>${img}</td>
-            <td>${item.name}</td>
+            <td><img loading="lazy" class="mr-2 w-auto h-100" src="${item.thumbnail}" alt=""></td>
+            <td>
+            @if(locationHelper() == 'vi')
+            ${item.name}
+            @else
+            ${item.name_en}
+            @endif
+            </td>
             <td>${item.province_name}</td>
             <td>${item.price} ${item.price_unit}</td>
-            <td><a href="${urlEdit}"> Edit</a> | <a href="#" onclick="checkDelete(${item.id})">Delete</a></td>
+            <td><a href="${urlEdit}"> {{ __('home.Edit') }}</a> | <a href="#" onclick="checkDelete(${item.id})">{{ __('home.Delete') }}</a></td>
         </tr>`;
         }
         await $('#ProductsAdmin').empty().append(html);
@@ -95,7 +92,7 @@
     }
 
     function checkDelete(value) {
-        if (confirm("Press a button!") == true) {
+        if (confirm('Are you sure you want to delete?') == true) {
             deleteProduct(token, value)
         }
     }

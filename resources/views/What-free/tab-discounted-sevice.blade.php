@@ -8,7 +8,7 @@
         <div class="clinics-list">
             <div class="clinics-header margin-bottom-32 border-bottom">
                 <div class="justify-content-between align-items-center d-flex mt-4 mb-2">
-                    <div class="ac-text_content ">Discounted sevice</div>
+                    <div class="ac-text_content ">{{ __('home.Discounted sevice') }}</div>
                 </div>
             </div>
             <div class="body row">
@@ -23,7 +23,7 @@
                     <li class="page-item">
                         <a class="page-link" href="#" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
-                            <span class="sr-only">Previous</span>
+                            <span class="sr-only">{{ __('home.Previous') }}</span>
                         </a>
                     </li>
                     <li class="page-item"><a class="page-link" href="#">1</a></li>
@@ -32,7 +32,7 @@
                     <li class="page-item">
                         <a class="page-link" href="#" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
-                            <span class="sr-only">Next</span>
+                            <span class="sr-only">{{ __('home.Next') }}</span>
                         </a>
                     </li>
                 </ul>

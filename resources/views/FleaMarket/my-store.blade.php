@@ -7,14 +7,14 @@
         <div class="d-flex">
             <div class="col-md-3 mr-2 mobile-hidden">
                 <div class="">
-                    <div class="flea-adv row align-items-center justify-content-center">
-                        <img src="{{asset('img/image 16.png')}}" alt="" style="width: 270px;height: 682px">
+                    <div class=" row align-items-center justify-content-center">
+                        <img src="{{asset('img/image 16.png')}}" alt="" >
                     </div>
                 </div>
                 <div class="">
-                    <div class="flea-adv row align-items-center justify-content-center">
+                    <div class=" row align-items-center justify-content-center">
                         <div class="">
-                            <img src="{{asset('img/image 16.png')}}" alt="" style="width: 270px;height: 682px">
+                            <img src="{{asset('img/image 16.png')}}" alt="" >
                         </div>
                     </div>
                 </div>
@@ -23,13 +23,13 @@
                 @include('component.avt-info')
                 <ul class="nav nav-tabs row tabMystore" role="tablist">
                     <li class="nav-item col-4">
-                        <a class="nav-link active font-14-mobi" id="productList-tab" data-toggle="tab" href="#productList" role="tab" aria-controls="home" aria-selected="true">Home</a>
+                        <a class="nav-link d-flex align-items-center justify-content-center p-0 active font-14-mobi" id="productList-tab" data-toggle="tab" href="#productList" role="tab" aria-controls="home" aria-selected="true">{{ __('home.Home') }}</a>
                     </li>
                     <li class="nav-item col-4">
-                        <a class="nav-link font-14-mobi" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="profile" aria-selected="false">Review</a>
+                        <a class="nav-link d-flex align-items-center justify-content-center p-0 font-14-mobi" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="profile" aria-selected="false">{{ __('home.Review') }}</a>
                     </li>
                     <li class="nav-item col-4">
-                        <a class="nav-link font-14-mobi" id="wishList-tab" data-toggle="tab" href="#wishList" role="tab" aria-controls="contact" aria-selected="false">Wish List</a>
+                        <a class="nav-link d-flex align-items-center justify-content-center p-0 font-14-mobi" id="wishList-tab" data-toggle="tab" href="#wishList" role="tab" aria-controls="contact" aria-selected="false">{{ __('home.Wish list') }}</a>
                     </li>
                 </ul>
                 <div class="tab-content" id="myTabContent">
@@ -43,25 +43,6 @@
                                     @include('component.product-wish')
                     </div>
                 </div>
-{{--                <nav aria-label="Page navigation example" class="d-flex justify-content-center">--}}
-{{--                    <ul class="pagination">--}}
-{{--                        <li class="page-item">--}}
-{{--                            <a class="page-link" href="#" aria-label="Previous">--}}
-{{--                                <span aria-hidden="true">&laquo;</span>--}}
-{{--                                <span class="sr-only">Previous</span>--}}
-{{--                            </a>--}}
-{{--                        </li>--}}
-{{--                        <li class="page-item"><a class="page-link" href="#">1</a></li>--}}
-{{--                        <li class="page-item"><a class="page-link" href="#">2</a></li>--}}
-{{--                        <li class="page-item"><a class="page-link" href="#">3</a></li>--}}
-{{--                        <li class="page-item">--}}
-{{--                            <a class="page-link" href="#" aria-label="Next">--}}
-{{--                                <span aria-hidden="true">&raquo;</span>--}}
-{{--                                <span class="sr-only">Next</span>--}}
-{{--                            </a>--}}
-{{--                        </li>--}}
-{{--                    </ul>--}}
-{{--                </nav>--}}
             </div>
         </div>
     </div>

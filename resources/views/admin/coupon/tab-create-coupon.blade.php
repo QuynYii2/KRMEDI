@@ -1,147 +1,12 @@
 @php use App\Enums\CouponStatus; @endphp
-@php use Illuminate\Support\Facades\Auth; @endphp
+@php use App\Enums\TypeCoupon;use Illuminate\Support\Facades\Auth; @endphp
 @extends('layouts.admin')
-
+@section('title', 'List Coupon')
 @section('main-content')
-    <style>
-
-        .box {
-            display: block;
-            width: 300px;
-            height: 300px;
-            margin: 10px;
-            background-color: white;
-            border-radius: 5px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            overflow: hidden;
-        }
-
-        .upload-options {
-            position: relative;
-            height: 75px;
-            background-color: cadetblue;
-            cursor: pointer;
-            overflow: hidden;
-            text-align: center;
-            transition: background-color ease-in-out 150ms;
-        }
-        .upload-options:hover {
-            background-color: #7fb1b3;
-        }
-        .upload-options input {
-            width: 0.1px;
-            height: 0.1px;
-            opacity: 0;
-            overflow: hidden;
-            position: absolute;
-            z-index: -1;
-        }
-        .upload-options label {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            height: 100%;
-            font-weight: 400;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            cursor: pointer;
-            overflow: hidden;
-        }
-
-        .upload-options label::after {
-            content: "add";
-            font-family: "Material Icons";
-            position: absolute;
-            font-size: 2.5rem;
-            color: #e6e6e6;
-            top: calc(50% - 2.5rem);
-            left: calc(50% - 1.25rem);
-            z-index: 0;
-        }
-
-        .upload-options label span {
-            display: inline-block;
-            width: 50%;
-            height: 100%;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-            vertical-align: middle;
-            text-align: center;
-        }
-
-        .upload-options label span:hover i.material-icons {
-            color: lightgray;
-        }
-
-        .js--image-preview {
-            height: 225px;
-            width: 100%;
-            position: relative;
-            overflow: hidden;
-            background-image: url("");
-            background-color: white;
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-
-        .js--image-preview::after {
-            position: relative;
-            font-size: 4.5em;
-            color: #e6e6e6;
-            top: calc(50% - 3rem);
-            left: calc(50% - 2.25rem);
-            z-index: 0;
-        }
-
-        .js--image-preview.js--no-default::after {
-            display: none;
-        }
-
-        .js--image-preview:nth-child(2) {
-            background-image: url("http://bastianandre.at/giphy.gif");
-        }
-
-        i.material-icons {
-            transition: color 100ms ease-in-out;
-            font-size: 2.25em;
-            line-height: 55px;
-            color: white;
-            display: block;
-        }
-
-        .drop {
-            display: block;
-            position: absolute;
-            background: rgba(95, 158, 160, 0.2);
-            border-radius: 100%;
-            transform: scale(0);
-        }
-
-        .animate {
-            -webkit-animation: ripple 0.4s linear;
-            animation: ripple 0.4s linear;
-        }
-
-        @-webkit-keyframes ripple {
-            100% {
-                opacity: 0;
-                transform: scale(2.5);
-            }
-        }
-
-        @keyframes ripple {
-            100% {
-                opacity: 0;
-                transform: scale(2.5);
-            }
-        }
-    </style>
+    <link href="{{ asset('css/tabcreatecoupon.css') }}" rel="stylesheet">
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-4 text-gray-800">Create Coupon</h1>
+    <h1 class="h3 mb-4 text-gray-800">{{ __('home.Create Coupon') }}</h1>
     @if (session('success'))
         <div class="alert alert-success border-left-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -153,72 +18,140 @@
     <form id="form" enctype="multipart/form-data">
         @csrf
         <div class="row">
-            <div class="col-sm-4"><label>tiêu đề việt</label>
-                <input type="text" class="form-control" id="title" name="title"></div>
-            <div class="col-sm-4"><label>tiêu đề anh</label>
-                <input type="text" class="form-control" id="title_en" name="title_en" value=""></div>
-            <div class="col-sm-4"><label>tiêu đề lào</label>
-                <input type="text" class="form-control" id="title_laos" name="title_laos"
-                       value=""></div>
+            <div class="col-sm-4">
+                <label for="title">{{ __('home.tiêu đề việt') }}</label>
+                <input type="text" class="form-control" id="title" name="title">
+            </div>
         </div>
         <div class="row">
-            <div class="col-sm-4"><label>Mô tả ngắn việt</label>
+            <div class="col-sm-6">
+                <label for="short_description">{{ __('home.Phần thưởng') }}</label>
                 <textarea class="form-control" name="short_description" id="short_description"></textarea>
             </div>
-            <div class="col-sm-4"><label>Mô tả ngắn anh</label>
-                <textarea class="form-control" name="short_description_en" id="short_description_en"></textarea>
-            </div>
-            <div class="col-sm-4"><label>Mô tả ngắn lào</label>
-                <textarea class="form-control" name="short_description_laos" id="short_description_laos"></textarea>
+            <div class="col-sm-6">
+                <label for="condition">{{ __('home.Điều khoản và điều kiện') }}</label>
+                <textarea class="form-control" name="condition" id="condition"></textarea>
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-4"><label>Mô tả dài việt</label>
+            <div class="col-sm-6">
+                <label for="conduct">{{ __('home.Hướng dẫn chiến dịch') }}</label>
+                <textarea class="form-control" name="conduct" id="conduct"></textarea>
+            </div>
+            <div class="col-sm-6">
+                <label for="description">{{ __('home.Yêu cầu nội dung') }}</label>
                 <textarea class="form-control" name="description" id="description"></textarea>
             </div>
-            <div class="col-sm-4"><label>Mô tả dài anh</label>
-                <textarea class="form-control" name="description_en" id="description_en"></textarea>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <label for="instruction">{{ __('home.Hướng dẫn chi tiết') }}</label>
+                <textarea class="form-control" name="instruction" id="instruction"></textarea>
             </div>
-            <div class="col-sm-4"><label>Mô tả dài lào</label>
-                <textarea class="form-control" name="description_laos" id="description_laos"></textarea>
+            <div class="col-sm-6">
+                <label for="website">{{ __('home.Website') }}</label>
+                <textarea class="form-control" name="website" id="website"></textarea>
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-6"><label>Thời gian bắt đầu</label>
+            <div class="col-sm-4">
+                <label for="startDate">{{ __('home.Thời gian bắt đầu ứng tuyển') }}</label>
                 <input type="datetime-local" class="form-control" id="startDate" name="startDate"></div>
-            <div class="col-sm-6"><label>Thời gian kết thúc</label>
+            <div class="col-sm-4">
+                <label for="endDate">{{ __('home.Thời gian kết thúc ứng tuyển') }}</label>
                 <input type="datetime-local" class="form-control" id="endDate" name="endDate"></div>
-        </div>
-        <div class="row">
-            <div class="col-sm-6"><label>Số lượng đký tối đa</label>
-                <input type="number" class="form-control" id="max_register" name="max_register">
-            </div>
-            <div class="col-sm-6"><label>Đơn vị áp dụng</label>
-                <select class="custom-select" id="clinic_id">
-                    <option selected>Choose...</option>
+            <div class="col-sm-4">
+                <label for="type">{{ __('home.type') }}</label>
+                <select class="form-select" id="type" name="type">
+                    @foreach(TypeCoupon::getArray() as $value)
+                        <option value="{{ $value }}">{{ $value }}</option>
+                    @endforeach
                 </select>
             </div>
         </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <label for="start_selective">{{ __('home.	Thời gian bắt đầu chọn lọc') }}</label>
+                <input type="datetime-local" class="form-control" id="start_selective" name="start_selective"></div>
+            <div class="col-sm-4">
+                <label for="end_selective">{{ __('home.Thời gian kết thúc chọn lọc') }}</label>
+                <input type="datetime-local" class="form-control" id="end_selective" name="end_selective"></div>
+            <div class="col-sm-4">
+                <label for="status">{{ __('home.Status') }}</label>
+                <select class="form-select" id="status" disabled>
+                    <option value="{{ CouponStatus::ACTIVE }}">{{ CouponStatus::ACTIVE }}</option>
+                    <option value="{{ CouponStatus::INACTIVE }}">{{ CouponStatus::INACTIVE }}</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <label for="start_post">{{ __('home.Thời gian bắt đầu đăng bài') }}</label>
+                <input type="datetime-local" class="form-control" id="start_post" name="start_post"></div>
+            <div class="col-sm-4">
+                <label for="end_post">{{ __('home.Thời gian kết thúc đăng bài') }}</label>
+                <input type="datetime-local" class="form-control" id="end_post" name="end_post"></div>
+            <div class="col-sm-4">
+                <label for="max_register">{{ __('home.Số lượng đký tối đa') }}</label>
+                <input type="number" min="1" value="1" class="form-control" id="max_register" name="max_register">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <label for="start_evaluate">{{ __('home.Thời gian bắt đầu đánh giá') }}</label>
+                <input type="datetime-local" class="form-control" id="start_evaluate" name="start_evaluate"></div>
+            <div class="col-sm-4">
+                <label for="end_evaluate">{{ __('home.Thời gian kết thúc đánh giá') }}</label>
+                <input type="datetime-local" class="form-control" id="end_evaluate" name="end_evaluate"></div>
+            <div class="col-sm-4">
+                <label for="clinic_id">{{ __('home.Đơn vị áp dụng') }}</label>
+                <select class="form-select" id="clinic_id">
+                    <option selected>{{ __('home.Choose...') }}</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <label for="is_facebook">{{ __('home.Có phải coupon facebook không') }}</label>
+                <input type="checkbox" class="" id="is_facebook" name="is_facebook" value="1">
+            </div>
+            <div class="col">
+                <label for="is_google">{{ __('home.Có phải coupon google không') }}</label>
+                <input type="checkbox" class="" id="is_google" name="is_google" value="1">
+            </div>
+            <div class="col">
+                <label for="is_youtube">{{ __('home.Có phải coupon youtube không') }}</label>
+                <input type="checkbox" class="" id="is_youtube" name="is_youtube" value="1">
+            </div>
+            <div class="col">
+                <label for="is_instagram">{{ __('home.Có phải coupon instagram không') }}</label>
+                <input type="checkbox" class="" id="is_instagram" name="is_instagram" value="1">
+            </div>
+            <div class="col">
+                <label for="is_tiktok">{{ __('home.Có phải coupon tiktok không') }}</label>
+                <input type="checkbox" class="" id="is_tiktok" name="is_tiktok" value="1">
+            </div>
+
+        </div>
 
         <div class="row">
-            <div class="col-sm-6"><label>Ảnh bìa</label>
+            <div class="col-sm-6"><label>{{ __('home.Ảnh bìa') }}</label>
                 <div class="box">
                     <div class="js--image-preview"></div>
                     <div class="upload-options">
                         <label>
-                            <input type="file" class="image-upload" accept="image/*" id="thumbnail" name="thumbnail"/>
+                            <input type="file" class="image-upload" accept="image/*" id="thumbnail"
+                                   name="thumbnail"/>
                         </label>
                     </div>
                 </div>
             </div>
         </div>
+        <input type="hidden" value="{{ Auth::user()->id }}" name="user_id" id="user_id">
 
-        <button type="button" class="btn btn-primary up-date-button mt-md-4">Lưu</button>
+        <button type="button" class="btn btn-primary up-date-button mt-md-4">{{ __('home.Save') }}</button>
     </form>
     <script>
-
-        const token = `{{ $_COOKIE['accessToken'] }}`;
-
         $(document).ready(function () {
             $('.up-date-button').on('click', function () {
                 const headers = {
@@ -226,25 +159,72 @@
                 };
                 const formData = new FormData();
 
+                const arrFieldEmptyChecked = [
+                    'is_facebook', 'is_google', 'is_youtube', 'is_instagram', 'is_tiktok'
+                ];
+
                 const fieldNames = [
-                    "title", "title_en", "title_laos", "startDate", "endDate",
-                    "max_register", "status" ,"clinic_id"
+                    "title", "startDate", "endDate",
+                    "max_register", "clinic_id", 'type', 'start_selective', 'end_selective',
+                    'start_post', 'end_post', 'start_evaluate', 'end_evaluate', 'status', 'user_id'
+
                 ];
                 const fieldTextareaTiny = [
-                    "short_description", "short_description_en", "short_description_laos",
-                    "description", "description_en", "description_laos"
+                    "short_description", "description", "condition", "conduct", "instruction", "website"
                 ];
+                arrFieldEmptyChecked.forEach(data => {
+                    let checked = document.getElementById(data).checked;
+                    if (checked) {
+                        formData.append(data, $(`#${data}`).val());
+                    }
+                });
 
-                fieldNames.forEach(fieldName => {
-                    formData.append(fieldName, $(`#${fieldName}`).val());
-                });
-                fieldTextareaTiny.forEach(fieldTextarea => {
+                let item = $('#max_register');
+                let quantity = item.val();
+                if (quantity < 1) {
+                    quantity = 1;
+                }
+                item.val(quantity);
+
+                let isValid = true
+
+                let checking = true;
+                for (let i = 0; i < fieldTextareaTiny.length; i++) {
+                    let fieldTextarea = fieldTextareaTiny[i];
                     const content = tinymce.get(fieldTextarea).getContent();
+                    if (!content) {
+                        let labelElement = $(`label[for='${fieldTextarea}']`);
+                        let text = labelElement.text();
+                        if (!text) {
+                            text = 'The input'
+                        }
+                        text = text + ' not empty!'
+                        alert(text);
+                        checking = false;
+                        break;
+                    }
                     formData.append(fieldTextarea, content);
-                });
+                }
+
+                if (!checking) {
+                    return;
+                }
+
+                /* Tạo fn appendDataForm ở admin blade*/
+                isValid = appendDataForm(fieldNames, formData, isValid);
+
+                if (!isValid) {
+                    return;
+                }
 
                 formData.append("user_id", '{{ Auth::user()->id }}');
-                formData.append("thumbnail", $('#thumbnail')[0].files[0]);
+                let photo = $('#thumbnail')[0].files[0];
+                formData.append('thumbnail', photo);
+                if (!photo) {
+                    alert('Please check input require!')
+                    isValid = false;
+                    return;
+                }
 
                 try {
                     $.ajax({
@@ -255,16 +235,22 @@
                         cache: false,
                         processData: false,
                         data: formData,
-                        success: function () {
-                            alert('success');
+                        success: function (res) {
+                            console.log(res);
+                            alert('Create success!');
                             window.location.href = '{{ route('homeAdmin.list.coupons') }}'
                         },
                         error: function (exception) {
-                            console.log(exception)
+                            if (exception.status === 400) {
+                                toastr.error(exception.responseText, 'Error');
+                            } else {
+                                toastr.error('Create error, Please try again!', 'Error');
+                            }
                         }
                     });
                 } catch (error) {
-                    throw error;
+                    console.log(error);
+                    alert('Error, Please try again!');
                 }
             })
         })
@@ -272,7 +258,6 @@
         genSelectOption();
 
         async function genSelectOption() {
-            const token = `{{ $_COOKIE['accessToken'] }}`;
             const headers = {
                 'Authorization': `Bearer ${token}`
             };

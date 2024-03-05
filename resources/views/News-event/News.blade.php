@@ -3,75 +3,83 @@
 @section('content')
     @include('layouts.partials.header')
     @include('component.banner')
+
     <div class="recruitment-details ">
         <div class="container">
-            @if($listNews)
+            @if($listNews && count($listNews) > 0)
                 @php
                     $news = $listNews->first();
                 @endphp
-            @if($news)
-                    <a class="col-md-5 pl-0" href="{{route('detail.new',$news->id)}} ">
-                        <div class="d-flex">
-                            <div >
-                                <img class="w-100 b-radius-8px" src="{{$news->thumbnail}}">
+                @if($news)
+                    <a href="{{route('detail.new',$news->id)}}">
+                        <div class="d-md-flex">
+                            <div class="pl-0">
+                                <img class="thumbnail-title b-radius-8px" src="{{$news->thumbnail}}">
                             </div>
-                            <div class="col-md-7 pr-0">
-                                <strong class="text-content-product">{{$news->title}}</strong>
-                                <p class="text-gray mt-3">{!! $news->short_description !!}</p>
+                            <div class="main-title-news">
+                                <strong class="text-content-product">
+                                    @if(locationHelper() == 'vi')
+                                        {{ ($news->title) }}
+                                    @else
+                                        {{ ($news->title_en) }}
+                                    @endif
+                                </strong>
+                                <div class="text-gray max-6-line-title mt-md-3">
+                                    @if(locationHelper() == 'vi')
+                                        {!! $news->short_description !!}
+                                    @else
+                                        {!! $news->short_description_en !!}
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </a>
-            @endif
+                @endif
 
                 <div class="mt-4">
-                    <p class="text-content-product">All news</p>
+                    <p class="text-content-product">{{ __('home.All news') }}</p>
                 </div>
                 <div class="d-flex row">
                     @foreach($listNews as $news)
                         <div class="col-md-6 padding-news">
-                            <div class="d-flex border-8px w-100">
-                                <div class="col-md-3 p-0 content__item__image">
-                                    <img class="content__item__image" src="{{$news->thumbnail}}">
-                                </div>
-                                <div class="col-md-9 pr-0">
-                                    <a href="{{route('detail.new',$news->id)}}" class="w-100">
+                            <a href="{{route('detail.new',$news->id)}}">
+                                <div class="d-flex border-8px w-100">
+                                    <div class="p-0 col-md-4 content__item__image">
+                                        <img class="content__item__image" src="{{$news->thumbnail}}">
+                                    </div>
+                                    <div class="col-md-8 pr-0">
 
-                                        <strong class="fs-16px">{{$news->title}}</strong>
-                                        <div>
-                                            <p class="fs-12px mt-2">{!! $news->short_description !!}</p>
+                                        <strong class="fs-16px max-2-line-title">
+                                            @if(locationHelper() == 'vi')
+                                                {{$news->title}}
+                                            @else
+                                                {{ $news->title_en }}
+                                            @endif
+                                        </strong>
+                                        <div class="max-5-line-title">
+                                            <div class="fs-12px">
+                                                @if(locationHelper() == 'vi')
+                                                    {!! $news->short_description !!}
+                                                @else
+                                                    {!! $news->short_description_en !!}
+                                                @endif
+                                            </div>
                                         </div>
-                                    </a>
+                                    </div>
                                 </div>
-                                <div class="d-flex justify-content-end align-items-end"
-                                     style="position: absolute;bottom: 30px;right: 30px;">
-                                    <a href="{{route('detail.new',$news->id)}}">Read more</a>
-                                </div>
-                            </div>
+                            </a>
                         </div>
                     @endforeach
                 </div>
                 <nav aria-label="Page navigation example" class="d-flex justify-content-center">
-                    <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                                <span class="sr-only">Next</span>
-                            </a>
-                        </li>
-                    </ul>
+                    {{ $listNews->links() }}
                 </nav>
             @else
+                <div class="mt-4">
+                    <p class="text-content-product">{{ __('home.All news') }}</p>
+                </div>
                 <div class="d-flex justify-content-center">
-                    <h3>Không có tin tức nào</h3>
+                    <h3>{{ __('home.Không có tin tức nào') }}</h3>
                 </div>
             @endif
         </div>
@@ -81,69 +89,79 @@
     </div>
     <div class="recruitment-details ">
         <div class="container">
-            @if($listEvent)
+            @if($listEvent && count($listEvent) > 0)
                 @php
                     $Event = $listEvent->first();
                 @endphp
-            @if($Event)
+                @if($Event)
                     <a href="{{route('detail.new',$Event->id)}}">
-                        <div class="d-flex">
+                        <div class="d-md-flex">
                             <div class="col-md-5 pl-0">
-                                <img class="w-100 b-radius-8px" src="{{$Event->thumbnail}}">
+                                <img class="thumbnail-title b-radius-8px" src="{{$Event->thumbnail}}">
                             </div>
-                            <div class="col-md-7 pr-0">
-                                <strong class="text-content-product">{{$Event->title}}</strong>
-                                <p class="text-gray mt-3">{!! $Event->short_description !!}</p>
+                            <div class="main-title-news">
+                                <strong class="text-content-product">
+                                    @if(locationHelper() == 'vi')
+                                        {{$Event->title}}
+                                    @else
+                                        {{ $Event->title_en }}
+                                    @endif</strong>
+                                <div class="text-gray max-6-line-title mt-md-3">
+                                    @if(locationHelper() == 'vi')
+                                        {!! $Event->short_description !!}
+                                    @else
+                                        {!! $Event->short_description_en !!}
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </a>
-            @endif
+                @endif
                 <div class="mt-4">
-                    <p class="text-content-product">All Event</p>
+                    <p class="text-content-product">{{ __('home.All Event') }}</p>
                 </div>
                 <div class="d-flex row">
-                    @foreach($listEvent as $Event)
+                    @foreach($listEvent as $event)
                         <div class="col-md-6 padding-news">
-                            <div class="d-flex border-8px w-100">
-                                <div class="col-md-3 p-0 content__item__image">
-                                    <img class="content__item__image" src="{{$Event->thumbnail}}">
-                                </div>
-                                <div class="col-md-9 pr-0">
-                                    <a href="{{route('detail.new',$Event->id)}}" class="w-100">
+                            <a href="{{route('detail.new',$event->id)}}">
+                                <div class="d-flex border-8px w-100">
+                                    <div class="col-md-4 p-0 content__item__image">
+                                        <img class="content__item__image" src="{{$event->thumbnail}}">
+                                    </div>
+                                    <div class="col-md-8 pr-0">
 
-                                        <strong class="fs-16px">{{$Event->title}}</strong>
-                                        <div>
-                                            <p class="fs-12px mt-2">{!! $Event->short_description !!}</p>
+                                        <strong class="fs-16px max-2-line-title">
+                                            @if(locationHelper() == 'vi')
+                                                {{$event->title}}
+                                            @else
+                                                {{ $event->title_en }}
+                                            @endif
+                                        </strong>
+                                        <div class="max-5-line-title">
+                                            <div class="fs-12px">
+                                                @if(locationHelper() == 'vi')
+                                                    {!! $event->short_description !!}
+                                                @else
+                                                    {!! $event->short_description_en !!}
+                                                @endif
+                                            </div>
                                         </div>
-                                    </a>
+                                    </div>
                                 </div>
-                                <div class="d-flex justify-content-end align-items-end"
-                                     style="position: absolute;bottom: 30px;right: 30px;">
-                                    <a href="{{route('detail.new',$Event->id)}}">Read more</a>
-                                </div>
-                            </div>
+                            </a>
                         </div>
                     @endforeach
                 </div>
                 <nav aria-label="Page navigation example" class="d-flex justify-content-center">
-                    <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                                <span class="sr-only">Next</span>
-                            </a>
-                        </li>
-                    </ul>
+                    {{ $listEvent->links() }}
                 </nav>
+            @else
+                <div class="mt-4">
+                    <p class="text-content-product">{{ __('home.All Event') }}</p>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <h3>{{ __('home.Không có sự kiện nào') }}</h3>
+                </div>
             @endif
         </div>
     </div>

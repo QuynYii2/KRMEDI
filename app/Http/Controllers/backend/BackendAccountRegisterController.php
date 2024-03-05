@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\backend;
 
 use App\Enums\Role;
+use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -15,7 +16,7 @@ class BackendAccountRegisterController extends Controller
     public function index()
     {
         $list = [Role::BUSINESS, Role::MEDICAL];
-        $users = User::whereIn('type', $list)->get();
+        $users = User::whereIn('type', $list)->where('status', '!=', UserStatus::DELETED)->paginate(10);
         return view('admin.account_register.index', compact('users'));
     }
 

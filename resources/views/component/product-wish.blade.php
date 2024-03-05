@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="{{asset('css/fleaMarketWishList.css')}}">
+
 <div class="page row" id="listWishList">
 </div>
 <script>
@@ -15,7 +17,8 @@
                     product_id: productId
                 },
                 headers: {
-                    "Authorization": `Bearer ${token}`
+                    "Authorization": `Bearer ${token}`,
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function (response) {
                     location.reload();
@@ -27,7 +30,6 @@
         }
     }
 
-    var token = `{{ $_COOKIE['accessToken'] }}`;
     $(document).ready(function () {
         callListProduct(token);
 
@@ -43,7 +45,6 @@
                     user_id: {{ Auth::check() ? Auth::user()->id : null }}
                 },
                 success: function (response) {
-                    console.log(response);
                     renderWishList(response);
                 },
                 error: function (exception) {
@@ -53,27 +54,25 @@
         }
 
         async function renderWishList(res) {
-
-            let accessToken = `Bearer ` + token;
             let html = ``;
             for (let i = 0; i < res.length; i++) {
                 let product = res[i];
                 let url = `{{ route('flea.market.product.detail', ['id' => ':id']) }}`.replace(':id', product.id);
                 html += `
-                        <div class="col-md-4 col-6 item">
+                        <div class="col-md-3 col-6">
                             <div class="product-item">
-                                <div class="img-pro">
-                                    <img src="${product.thumbnail}" alt="">
+                                <div class="img-pro img-pro-wishList2">
+                                    <img loading="lazy" class="b-radius-8px" src="${product.thumbnail}" alt="">
                                     <a class="button-heart" data-favorite="0">
                                         <i id="bi-heart" class="bi bi-heart-fill" style="color: red;" data-product-id="${product.id}" onclick="addProductToWishList()"></i>
                                     </a>
                                 </div>
-                                <div class="content-pro">
+                                <div class="content-pro content-pro-wishList2">
                                     <div class="name-pro">
                                         <a href="${url}">${product.name}</a>
                                     </div>
                                     <div class="location-pro d-flex">
-                                        Location: <p>${product.province_id}</p>
+                                        {{ __('home.Location') }}: <p>${product.province_id}</p>
                                     </div>
                                     <div class="price-pro">
                                         ${product.price} ${product.price_unit}
@@ -84,7 +83,6 @@
                  `;
             }
             $('#listWishList').empty().append(html);
-
         }
     });
 </script>

@@ -20,8 +20,8 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
-        \App\Http\Middleware\SetLocale::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \App\Http\Middleware\CorsMiddleware::class,
     ];
 
     /**
@@ -37,6 +37,9 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\SetLocale::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+            \App\Http\Middleware\UserActivity::class,
         ],
 
         'api' => [
@@ -69,5 +72,6 @@ class Kernel extends HttpKernel
         'business' => \App\Http\Middleware\BusinessPermission::class,
         'medical' => \App\Http\Middleware\MedicalPermission::class,
         'normal' => \App\Http\Middleware\NormalPermission::class,
+        'user.active' => \App\Http\Middleware\UserActivity::class,
     ];
 }

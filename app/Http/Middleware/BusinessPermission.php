@@ -51,7 +51,7 @@ class BusinessPermission
             if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException) {
                 return response()->json(['status' => 'Token is Invalid']);
             } else if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException) {
-                return response()->json(['status' => 'Token is Expired']);
+                return response('Token is Expired', 444);
             } else {
                 return response()->json(['status' => 'Authorization Token not found']);
             }

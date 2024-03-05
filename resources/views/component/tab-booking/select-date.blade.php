@@ -1,112 +1,7 @@
 @extends('layouts.master')
 @section('title', 'Flea Market')
 @section('content')
-    <style>
-        section {
-            margin-top: 20px;
-        }
-
-        .ui-datepicker-calendar tbody tr td .ui-state-default {
-            border: none;
-            font-size: 12px;
-            font-weight: 800;        }
-
-        @media only screen and (max-width: 639px) {
-            .flex-container {
-                margin-top: 30px;
-            }
-        }
-
-        .spin-me {
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        .flex-container-morning, .flex-container-afternoon {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .master-container-slots.fade-in {
-            animation: fadein 1s;
-        }
-
-        .master-container-slots.fade-out {
-            animation: fadeout .5s;
-        }
-
-        .item {
-            flex: 0 0 25%;
-        }
-
-        .item .button {
-            width: 95%;
-        }
-
-        @media only screen and (min-width: 640px) {
-            .item .button {
-                margin-left: 10%;
-                /*width: 100%;*/
-                margin-right: 10%;
-            }
-        }
-
-        .form-submit {
-            /*width: 100%;*/
-            margin-top: 50px;
-        }
-
-        @keyframes fadein {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeout {
-            from {
-                opacity: 1;
-            }
-            to {
-                opacity: 0;
-            }
-        }
-        .button-apply-booking {
-            display: flex;
-            padding: 11px 50px;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            flex: 1 0 0;
-            border-radius: 8px;
-            background:  #45C3D2;
-        }
-        .button-Reset-booking {
-            display: flex;
-            padding: 11px 50px;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            flex: 1 0 0;
-            border-radius: 8px;
-            background:  #D6D6D6;
-        }
-        .item button {
-            border-radius: 8px;
-            background:  #F3F3F3;
-            color:  #929292;
-            display: flex;
-            width: 65px;
-            padding: 6px 16px;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            flex-shrink: 0;
-        }
-    </style>
+    <link href="{{ asset('css/selectdate.css') }}" rel="stylesheet">
 <section>
     <div class="row col-md-2 d-block">
         <div class="small-12 ">
@@ -129,10 +24,10 @@
     <div class="row col-md-2">
         <div class=" medium-centered d-md-flex justify-content-between">
             <div class="col-md-6 pl-0">
-            <a class= 'button form-submit button-Reset-booking w-100'>Reset</a>
+            <a class= 'button form-submit button-Reset-booking w-100'>{{ __('home.Reset') }}</a>
             </div>
             <div class="col-md-6 pr-0">
-            <a class='button form-submit w-100 button-apply-booking disabled'>Apply</a>
+            <a class='button form-submit w-100 button-apply-booking disabled'>{{ __('home.Apply') }}</a>
             </div>
         </div>
     </div>

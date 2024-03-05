@@ -138,7 +138,8 @@
 
 .title-clinics {
   margin-left: 8px;
-  margin-top: 40px;
+  margin-top: 10px;
+  margin-bottom: 16px;
 }
 .title-clinics h2 {
   color: var(--Black, #000);
@@ -153,6 +154,195 @@
   font-style: normal;
   font-weight: 600;
   line-height: normal;
+}
+
+@media (min-width: 576px) {
+  .body-news img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .news-content {
+    color: #000;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+  .main-title-news {
+    padding: 0 0 0 16px;
+  }
+  .content__item__image {
+    height: 137px;
+  }
+  .thumbnail-title {
+    width: 501px;
+    height: 334px;
+    object-fit: cover;
+  }
+  .max-2-line-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 44px;
+  }
+  .max-5-line-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #929292;
+  }
+  .max-5-line-title .fs-12px div, .max-5-line-title .fs-12px p, .max-5-line-title .fs-12px h2, .max-5-line-title .fs-12px h1, .max-5-line-title .fs-12px h3, .max-5-line-title .fs-12px h4, .max-5-line-title .fs-12px h5, .max-5-line-title .fs-12px h6, .max-5-line-title .fs-12px span, .max-5-line-title .fs-12px strong, .max-5-line-title .fs-12px small, .max-5-line-title .fs-12px li, .max-5-line-title .fs-12px ul, .max-5-line-title .fs-12px ol, .max-5-line-title .fs-12px button, .max-5-line-title .fs-12px td, .max-5-line-title .fs-12px th, .max-5-line-title .fs-12px form, .max-5-line-title .fs-12px fieldset, .max-5-line-title .fs-12px legend, .max-5-line-title .fs-12px textarea, .max-5-line-title .fs-12px select, .max-5-line-title .fs-12px option, .max-5-line-title .fs-12px label, .max-5-line-title .fs-12px table, .max-5-line-title .fs-12px blockquote, .max-5-line-title .fs-12px pre,
+  .max-5-line-title .fs-12px abbr, .max-5-line-title .fs-12px acronym, .max-5-line-title .fs-12px address, .max-5-line-title .fs-12px caption, .max-5-line-title .fs-12px cite, .max-5-line-title .fs-12px code, .max-5-line-title .fs-12px dfn, .max-5-line-title .fs-12px em, .max-5-line-title .fs-12px var, .max-5-line-title .fs-12px del, .max-5-line-title .fs-12px ins, .max-5-line-title .fs-12px sub, .max-5-line-title .fs-12px sup, .max-5-line-title .fs-12px iframe, .max-5-line-title .fs-12px object, .max-5-line-title .fs-12px applet, .max-5-line-title .fs-12px button, .max-5-line-title .fs-12px input, .max-5-line-title .fs-12px textarea, .max-5-line-title .fs-12px select, .max-5-line-title .fs-12px option, .max-5-line-title .fs-12px label, .max-5-line-title .fs-12px table,
+  .max-5-line-title .fs-12px blockquote, .max-5-line-title .fs-12px pre, .max-5-line-title .fs-12px abbr, .max-5-line-title .fs-12px acronym, .max-5-line-title .fs-12px address, .max-5-line-title .fs-12px caption, .max-5-line-title .fs-12px cite, .max-5-line-title .fs-12px code, .max-5-line-title .fs-12px dfn, .max-5-line-title .fs-12px em, .max-5-line-title .fs-12px var, .max-5-line-title .fs-12px del, .max-5-line-title .fs-12px ins, .max-5-line-title .fs-12px sub, .max-5-line-title .fs-12px sup, .max-5-line-title .fs-12px iframe, .max-5-line-title .fs-12px object, .max-5-line-title .fs-12px applet {
+    font-size: 12px !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 70px;
+    color: #929292;
+  }
+  .max-6-line-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 115px;
+    color: #929292;
+  }
+  .max-6-line-title div, .max-6-line-title p, .max-6-line-title h2, .max-6-line-title h1, .max-6-line-title h3, .max-6-line-title h4, .max-6-line-title h5, .max-6-line-title h6, .max-6-line-title span, .max-6-line-title strong, .max-6-line-title small, .max-6-line-title li, .max-6-line-title ul, .max-6-line-title ol, .max-6-line-title button, .max-6-line-title td, .max-6-line-title th, .max-6-line-title form, .max-6-line-title fieldset, .max-6-line-title legend, .max-6-line-title textarea, .max-6-line-title select, .max-6-line-title option, .max-6-line-title label, .max-6-line-title table, .max-6-line-title blockquote, .max-6-line-title pre,
+  .max-6-line-title abbr, .max-6-line-title acronym, .max-6-line-title address, .max-6-line-title caption, .max-6-line-title cite, .max-6-line-title code, .max-6-line-title dfn, .max-6-line-title em, .max-6-line-title var, .max-6-line-title del, .max-6-line-title ins, .max-6-line-title sub, .max-6-line-title sup, .max-6-line-title iframe, .max-6-line-title object, .max-6-line-title applet, .max-6-line-title button, .max-6-line-title input, .max-6-line-title textarea, .max-6-line-title select, .max-6-line-title option, .max-6-line-title label, .max-6-line-title table,
+  .max-6-line-title blockquote, .max-6-line-title pre, .max-6-line-title abbr, .max-6-line-title acronym, .max-6-line-title address, .max-6-line-title caption, .max-6-line-title cite, .max-6-line-title code, .max-6-line-title dfn, .max-6-line-title em, .max-6-line-title var, .max-6-line-title del, .max-6-line-title ins, .max-6-line-title sub, .max-6-line-title sup, .max-6-line-title iframe, .max-6-line-title object, .max-6-line-title applet {
+    font-size: 16px !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 115px;
+    color: #929292;
+  }
+  /* fin a doctor */
+  .list-title {
+    width: 100%;
+    border-bottom: 1px solid #D6D6D6;
+    margin-bottom: 24px;
+  }
+  .list-title .list--doctor a p {
+    font-size: 32px;
+    font-weight: 600;
+    margin: 0;
+  }
+  /* end fin a doctor */
+}
+@media (max-width: 575px) {
+  .content__item__image {
+    width: 128px;
+    height: 102px;
+  }
+  .body-news div, .body-news p, .body-news h2, .body-news h1, .body-news h3, .body-news h4, .body-news h5, .body-news h6, .body-news span, .body-news strong, .body-news small, .body-news li, .body-news ul, .body-news ol, .body-news button, .body-news td, .body-news th, .body-news form, .body-news fieldset, .body-news legend, .body-news textarea, .body-news select, .body-news option, .body-news label, .body-news table, .body-news blockquote, .body-news pre {
+    font-size: 12px !important;
+  }
+  .text-content-news div, .text-content-news p, .text-content-news h2, .text-content-news h1, .text-content-news h3, .text-content-news h4, .text-content-news h5, .text-content-news h6, .text-content-news span, .text-content-news strong, .text-content-news small, .text-content-news li, .text-content-news ul, .text-content-news ol, .text-content-news button, .text-content-news td, .text-content-news th, .text-content-news form, .text-content-news fieldset, .text-content-news legend, .text-content-news textarea, .text-content-news select, .text-content-news option, .text-content-news label, .text-content-news table, .text-content-news blockquote, .text-content-news pre {
+    margin-top: 12px;
+    font-size: 14px !important;
+  }
+  .news-content {
+    color: #000;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+  .main-title-news {
+    padding: 8px 0;
+  }
+  .thumbnail-title {
+    height: 226px;
+    object-fit: cover;
+  }
+  .max-2-line-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 44px;
+  }
+  .max-5-line-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #929292;
+  }
+  .max-5-line-title .fs-12px div, .max-5-line-title .fs-12px p, .max-5-line-title .fs-12px h2, .max-5-line-title .fs-12px h1, .max-5-line-title .fs-12px h3, .max-5-line-title .fs-12px h4, .max-5-line-title .fs-12px h5, .max-5-line-title .fs-12px h6, .max-5-line-title .fs-12px span, .max-5-line-title .fs-12px strong, .max-5-line-title .fs-12px small, .max-5-line-title .fs-12px li, .max-5-line-title .fs-12px ul, .max-5-line-title .fs-12px ol, .max-5-line-title .fs-12px button, .max-5-line-title .fs-12px td, .max-5-line-title .fs-12px th, .max-5-line-title .fs-12px form, .max-5-line-title .fs-12px fieldset, .max-5-line-title .fs-12px legend, .max-5-line-title .fs-12px textarea, .max-5-line-title .fs-12px select, .max-5-line-title .fs-12px option, .max-5-line-title .fs-12px label, .max-5-line-title .fs-12px table, .max-5-line-title .fs-12px blockquote, .max-5-line-title .fs-12px pre,
+  .max-5-line-title .fs-12px abbr, .max-5-line-title .fs-12px acronym, .max-5-line-title .fs-12px address, .max-5-line-title .fs-12px caption, .max-5-line-title .fs-12px cite, .max-5-line-title .fs-12px code, .max-5-line-title .fs-12px dfn, .max-5-line-title .fs-12px em, .max-5-line-title .fs-12px var, .max-5-line-title .fs-12px del, .max-5-line-title .fs-12px ins, .max-5-line-title .fs-12px sub, .max-5-line-title .fs-12px sup, .max-5-line-title .fs-12px iframe, .max-5-line-title .fs-12px object, .max-5-line-title .fs-12px applet, .max-5-line-title .fs-12px button, .max-5-line-title .fs-12px input, .max-5-line-title .fs-12px textarea, .max-5-line-title .fs-12px select, .max-5-line-title .fs-12px option, .max-5-line-title .fs-12px label, .max-5-line-title .fs-12px table,
+  .max-5-line-title .fs-12px blockquote, .max-5-line-title .fs-12px pre, .max-5-line-title .fs-12px abbr, .max-5-line-title .fs-12px acronym, .max-5-line-title .fs-12px address, .max-5-line-title .fs-12px caption, .max-5-line-title .fs-12px cite, .max-5-line-title .fs-12px code, .max-5-line-title .fs-12px dfn, .max-5-line-title .fs-12px em, .max-5-line-title .fs-12px var, .max-5-line-title .fs-12px del, .max-5-line-title .fs-12px ins, .max-5-line-title .fs-12px sub, .max-5-line-title .fs-12px sup, .max-5-line-title .fs-12px iframe, .max-5-line-title .fs-12px object, .max-5-line-title .fs-12px applet {
+    font-size: 12px !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 60px;
+    color: #929292;
+  }
+  .max-6-line-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #929292;
+  }
+  .max-6-line-title div, .max-6-line-title p, .max-6-line-title h2, .max-6-line-title h1, .max-6-line-title h3, .max-6-line-title h4, .max-6-line-title h5, .max-6-line-title h6, .max-6-line-title span, .max-6-line-title strong, .max-6-line-title small, .max-6-line-title li, .max-6-line-title ul, .max-6-line-title ol, .max-6-line-title button, .max-6-line-title td, .max-6-line-title th, .max-6-line-title form, .max-6-line-title fieldset, .max-6-line-title legend, .max-6-line-title textarea, .max-6-line-title select, .max-6-line-title option, .max-6-line-title label, .max-6-line-title table, .max-6-line-title blockquote, .max-6-line-title pre,
+  .max-6-line-title abbr, .max-6-line-title acronym, .max-6-line-title address, .max-6-line-title caption, .max-6-line-title cite, .max-6-line-title code, .max-6-line-title dfn, .max-6-line-title em, .max-6-line-title var, .max-6-line-title del, .max-6-line-title ins, .max-6-line-title sub, .max-6-line-title sup, .max-6-line-title iframe, .max-6-line-title object, .max-6-line-title applet, .max-6-line-title button, .max-6-line-title input, .max-6-line-title textarea, .max-6-line-title select, .max-6-line-title option, .max-6-line-title label, .max-6-line-title table,
+  .max-6-line-title blockquote, .max-6-line-title pre, .max-6-line-title abbr, .max-6-line-title acronym, .max-6-line-title address, .max-6-line-title caption, .max-6-line-title cite, .max-6-line-title code, .max-6-line-title dfn, .max-6-line-title em, .max-6-line-title var, .max-6-line-title del, .max-6-line-title ins, .max-6-line-title sub, .max-6-line-title sup, .max-6-line-title iframe, .max-6-line-title object, .max-6-line-title applet {
+    font-size: 12px !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 115px;
+    color: #929292;
+  }
+  /* fin a doctor */
+  #show-doctor .list-title {
+    width: 100%;
+    border-bottom: 1px solid #D6D6D6;
+  }
+  #show-doctor .list-title .list--doctor p {
+    color: #000;
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+  #show-doctor .list-title .seeAll a {
+    color: var(--Black, #1A202C);
+    text-align: center;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+  }
+  .list-title .list--doctor a p {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+  }
+  /* end fin a doctor */
 }
 
 /*# sourceMappingURL=news.css.map */

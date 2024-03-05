@@ -1,12 +1,15 @@
+@php
+    \App\Http\Controllers\CouponController::checkAndUpdateExpiredStatus();
+@endphp
 @extends('layouts.admin')
-
+@section('title', 'List Coupon')
 @section('main-content')
-    <style>
-
-    </style>
+    <link href="{{ asset('css/listcoupon.css') }}" rel="stylesheet">
     <!-- Page Heading -->
-    <h1 class="h3 mb-4 text-gray-800">List Coupon</h1>
-    <a href="{{route('coupon.create.product')}}" class="btn btn-primary mb-3">Add</a>
+    <h1 class="h3 mb-4 text-gray-800">{{ __('home.List Coupon') }}</h1>
+    @if(\App\Models\Coupon::isAdmin(Auth::user()->id))
+        <a href="{{route('coupon.create.product')}}" class="btn btn-primary mb-3">{{ __('home.Add') }}</a>
+    @endif
     @if (session('success'))
         <div class="alert alert-success border-left-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -16,24 +19,16 @@
         </div>
     @endif
 
-    <style>
-        td {
-            overflow: hidden;
-            max-width: 300px;
-            height: 80px;
-        }
-    </style>
     <div class="">
         <table class="table table-striped">
             <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Tiêu đề</th>
-                <th scope="col">Lượng người đăng ký</th>
-                <th scope="col">trạng thái</th>
-                <th scope="col">Thời hạn</th>
-                <th scope="col">Trạng thái</th>
-                <th scope="col">Thao tác</th>
+                <th scope="col">{{ __('home.Tiêu đề') }}</th>
+                <th scope="col">{{ __('home.Lượng người đăng ký') }}</th>
+                <th scope="col">{{ __('home.Thời hạn') }}</th>
+                <th scope="col">{{ __('home.Trạng thái') }}</th>
+                <th scope="col">{{ __('home.Thao tác') }}</th>
             </tr>
             </thead>
             <tbody id="ProductsAdmin">
@@ -43,7 +38,6 @@
     </div>
 
     <script>
-        var token = `{{ $_COOKIE['accessToken'] }}`;
         $(document).ready(function () {
             callListProduct(token);
             async function callListProduct(token) {
@@ -77,12 +71,17 @@
 
                 html = html + `<tr>
             <th scope="row">${ i + 1 }</th>
-            <td>${item.title}</td>
+            <td>
+            @if(locationHelper() == 'vi')
+                ${item.title}
+                @else
+                ${item.title_en}
+                @endif
+            </td>
             <td>${item.registered} / ${item.max_register ?? 0}</td>
-            <td>${item.status} </td>
-            <td>${item.startDate} - ${item.endDate}</td>
+            <td>${item.startDate} - ${item.end_evaluate}</td>
             <td>${item.status}</td>
-            <td><a href="${urlView}"> Xem đơn đăng ký </a> | <a href="${urlEdit}"> Edit</a> | <a href="#" onclick="checkDelete(${item.id})">Delete</a></td>
+            <td><a href="${urlView}"> {{ __('home.Xem đơn đăng ký') }} </a>@if(\App\Models\Coupon::isAdmin(Auth::user()->id)) | <a href="${urlEdit}"> {{ __('home.Edit') }}</a> | <a href="#" onclick="checkDelete(${item.id})">{{ __('home.Delete') }}</a> @endif</td>
         </tr>`;
             }
             await $('#ProductsAdmin').empty().append(html);
@@ -109,7 +108,7 @@
         }
 
         function checkDelete(value) {
-            if (confirm("Press a button!") == true) {
+            if (confirm('Are you sure you want to delete?') == true) {
                 deleteCoupon(token, value)
             }
         }

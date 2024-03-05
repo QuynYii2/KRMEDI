@@ -9,11 +9,7 @@ class Clinic extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'name', 'address_detail', 'address', 'open_date', 'close_date', 'user_id',
-        'introduce', 'gallery', 'status', 'name_en', 'address_detail_en',
-        'latitude', 'longitude',
-    ];
+    protected $table = 'clinics';
 
     public function user()
     {
@@ -38,5 +34,10 @@ class Clinic extends Model
     public function commune()
     {
         return $this->hasMany(Commune::class);
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'clinic_id', 'id');
     }
 }

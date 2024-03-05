@@ -4,6 +4,7 @@ namespace App\Http\Controllers\restapi;
 
 use App\Enums\ServiceClinicStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\TranslateController;
 use App\Models\Clinic;
 use App\Models\ServiceClinic;
 use Illuminate\Http\Request;
@@ -69,16 +70,21 @@ class ServiceClinicApi extends Controller
     public function saveService($request, $service)
     {
         $name = $request->input('name');
-        $name_en = $request->input('name_en');
-        $name_laos = $request->input('name_laos');
+
+        $translate = new TranslateController();
+        $name_en = $translate->translateText($request->input('name'), 'en');
+        $name_laos = $translate->translateText($request->input('name'), 'lo');
+
         $user_id = $request->input('user_id');
         $status = $request->input('status');
+        $servicePrice = $request->input('service_price');
 
         $service->name = $name;
         $service->name_en = $name_en;
         $service->name_laos = $name_laos;
         $service->user_id = $user_id;
         $service->status = $status;
+        $service->service_price = $servicePrice;
 
         return $service;
     }

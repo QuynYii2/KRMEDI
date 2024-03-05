@@ -8,22 +8,23 @@
             <ul class="nav nav-pills nav-fill d-flex w-100">
                 <li class="nav-item col-md-4 justify-content-center p-0">
                     <a class="nav-link active font-14-mobi" id="Pending-tab" data-toggle="tab" href="#Pending"
-                       role="tab" aria-controls="home" aria-selected="true">Pending</a>
+                       role="tab" aria-controls="home" aria-selected="true">{{ __('home.PENDING') }}</a>
                 </li>
                 <li class="nav-item col-md-4 justify-content-center">
                     <a class="nav-link font-14-mobi" id="Cancel-tab" data-toggle="tab" href="#Cancel"
-                       role="tab" aria-controls="profile" aria-selected="false">Event</a>
+                       role="tab" aria-controls="profile" aria-selected="false">{{ __('home.CANCEL') }}</a>
                 </li>
                 <li class="nav-item col-md-4 justify-content-center">
                     <a class="nav-link font-14-mobi" id="Complete-tab" data-toggle="tab" href="#Complete"
-                       role="tab" aria-controls="profile" aria-selected="false">Event</a>
+                       role="tab" aria-controls="profile" aria-selected="false">{{ __('home.COMPLETE') }}</a>
                 </li>
             </ul>
         </div>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="Pending" role="tabpanel" aria-labelledby="Pending-tab">
-                <div class="section1-content" id="listBookingPending">
-
+                <div class="section1-content">
+                    <div id="listBookingPending">
+                    </div>
                 </div>
             </div>
             <div class="tab-pane fade" id="Cancel" role="tabpanel" aria-labelledby="Cancel-tab">
@@ -41,7 +42,6 @@
 @endsection
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
-    var token = `{{ $_COOKIE['accessToken'] }}`;
     $(document).ready(function () {
         callListProduct();
 
@@ -71,20 +71,17 @@
 
         // Hàm gọi API
         async function callListProduct(status) {
-            console.log(status)
-            let routeName = "{{ route('api.backend.wish.lists.list') }}";
-            let id = "{{ $id }}";
+            let routeName = "{{ route('booking.list.users',['id'=>$id,'status'=> ':status'] ) }}";
+            routeName = routeName.replace(':status', status);
             let accessToken = `Bearer ` + token;
 
             await $.ajax({
                 url: routeName,
                 method: 'GET',
-                data: { id: id, status: status },
                 headers: {
                     "Authorization": accessToken
                 },
                 success: function (response) {
-                    console.log(response);
                     renderClinics(response);
                 },
                 error: function (exception) {
@@ -94,69 +91,89 @@
         }
 
 
-
-
         async function renderClinics(res) {
             let htmlPending = ``;
             let htmlCancel = ``;
             let htmlComplete = ``;
 
-            const baseUrl = '{{ route("clinic.detail", ["id" => ":id"]) }}';
+            const baseUrl = '{{ route("booking.detail.by.user", ["id" => ":id"]) }}';
 
             for (let i = 0; i < res.length; i++) {
                 let item = res[i];
+                console.log(item)
                 let urlDetail = baseUrl.replace(':id', item.id);
-                let gallery = item.gallery;
-                let arrayGallery = gallery.split(',');
-                let img = ``;
 
-                for (let j = 0; j < arrayGallery.length; j++) {
-                    img = img + `<img class="mr-2 w-auto h-100 img-item1 " src="${arrayGallery[j]}" alt="">`;
+                let buttonHtml = '';
+
+                if (item.status === 'PENDING') {
+                    buttonHtml = `<a href="#" onclick="checkDelete(${item.id})">{{ __('home.Cancel') }}</a>`;
+                } else if (item.status === 'CANCEL') {
+                    buttonHtml = `<a href="#" onclick="checkDelete(${item.id}, 'PENDING')">{{ __('home.Apply') }}</a>`;
                 }
 
-                // Tùy thuộc vào trạng thái, thêm vào chuỗi HTML của tab tương ứng
+                let productHtml = `
+                     <div class="border-radius mb-3 d-flex">
+                        <div class="col-md-10">
+                            <a href="${urlDetail}">
+                              <div>{{ __('home.Thời gian vào') }}: ${item.check_in} </div>
+                              <div> {{ __('home.clinics') }}: ${item.clinic_id} </div>
+                              {{--<div>{{ __('home.dịch vụ') }}: ${item.service} </div>--}}
+                </a>
+             </div>
+            <div class="col-md-2">
+${buttonHtml}
+                        </div>
+                     </div>
+                    `;
                 if (item.status === 'PENDING') {
-                    htmlPending = htmlPending + `
-                <div>
-                    <h3>${item.name}</h3>
-                    <p>Date: ${item.date}</p>
-                    <p>Status: ${item.status}</p>
-                    ${img}
-                    <a href="${urlDetail}">View Details</a>
-                </div>
-            `;
+                    htmlPending = htmlPending + productHtml;
                 } else if (item.status === 'CANCEL') {
-                    htmlCancel = htmlCancel + `
-                <div>
-                    <div>
-                    <h3>${item.name}</h3>
-                    <p>Date: ${item.date}</p>
-                    <p>Status: ${item.status}</p>
-                    ${img}
-                    <a href="${urlDetail}">View Details</a>
-                </div>
-                </div>
-            `;
+                    htmlCancel = htmlCancel + productHtml;
                 } else if (item.status === 'COMPLETE') {
-                    htmlComplete = htmlComplete + `
-                <div>
-                    <div>
-                    <h3>${item.name}</h3>
-                    <p>Date: ${item.date}</p>
-                    <p>Status: ${item.status}</p>
-                    ${img}
-                    <a href="${urlDetail}">View Details</a>
-                </div>
-                </div>
-            `;
+                    htmlComplete = htmlComplete + productHtml;
                 }
             }
 
-            // Hiển thị chuỗi HTML trong các phần tử tương ứng với từng tab
             $('#listBookingPending').empty().append(htmlPending);
             $('#listBookingCancel').empty().append(htmlCancel);
             $('#listBookingComplete').empty().append(htmlComplete);
         }
 
+
     });
+
+    async function checkDelete(id, status) {
+        let confirmed = confirm('Are you sure?');
+
+        if (confirmed) {
+            loadingMasterPage();
+            let accessToken = `Bearer ` + token;
+            let urlDelete = `{{ route('api.backend.booking.cancel', ['id' => ':id']) }}`;
+            urlDelete = urlDelete.replace(':id', id);
+
+            let data = {
+                status: status ?? `{{ \App\Enums\BookingStatus::CANCEL }}`
+            }
+
+            await $.ajax({
+                url: urlDelete,
+                method: 'POST',
+                headers: {
+                    "Authorization": accessToken,
+                },
+                data: data,
+                success: function (response) {
+                    loadingMasterPage();
+                    window.location.reload();
+                    alert('Success!');
+                },
+                error: function (exception) {
+                    loadingMasterPage();
+                    console.log(exception)
+                }
+            });
+        }
+    }
+
+
 </script>

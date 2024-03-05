@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CategoryProductStatus;
+use App\Enums\CategoryStatus;
 use App\Enums\ProductStatus;
+use App\Models\Category;
+use App\Models\online_medicine\CategoryProduct;
 use App\Models\ProductInfo;
 
 class ProductInfoController extends Controller
@@ -24,7 +28,8 @@ class ProductInfoController extends Controller
 
     public function createProduct()
     {
-        return view('admin.product.tab-create-products');
+        $categories = Category::where('status', CategoryStatus::ACTIVE)->get();
+        return view('admin.product.tab-create-products', compact('categories'));
     }
 
     public function edit($id)
@@ -35,6 +40,7 @@ class ProductInfoController extends Controller
         if (!$product || $product->status == ProductStatus::DELETED) {
             return redirect(route('homeAdmin.list.product'));
         }
-        return view('admin.product.tab-edit-product', compact('product', 'provinces', 'isAdmin'));
+        $categories = Category::where('status', CategoryStatus::ACTIVE)->get();
+        return view('admin.product.tab-edit-product', compact('product', 'provinces', 'isAdmin', 'categories'));
     }
 }

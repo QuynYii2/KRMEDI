@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AddressStatus;
 use App\Enums\OrderMethod;
 use App\Http\Controllers\restapi\CheckoutApi;
+use App\Models\Address;
 use App\Models\Cart;
 use App\Models\Role;
 use App\Models\User;
@@ -16,7 +18,19 @@ class CheckoutController extends Controller
     public function index()
     {
         $carts = Cart::where('user_id', Auth::user()->id)->get();
-        return view('checkout.checkout', compact('carts'));
+        $addresses = DB::table('addresses')
+            ->where('addresses.status', '!=', AddressStatus::DELETED)
+            ->where('addresses.user_id', Auth::user()->id)
+            ->orderBy('addresses.id', 'desc')
+            ->join('provinces', 'provinces.id', '=', 'addresses.province_id')
+            ->join('districts', 'districts.id', '=', 'addresses.district_id')
+            ->join('communes', 'communes.id', '=', 'addresses.commune_id')
+            ->select('addresses.*',
+                'provinces.full_name as provinces_name',
+                'districts.full_name as districts_name',
+                'communes.full_name as communes_name')
+            ->get();
+        return view('checkout.checkout', compact('carts', 'addresses'));
     }
 
     public function checkoutByImm(Request $request)
@@ -30,7 +44,7 @@ class CheckoutController extends Controller
             alert()->error('Error', 'Checkout error!');
             return back();
         } catch (\Exception $exception) {
-            alert()->error('Error', 'Please try again!');
+            alert()->error('Error', $exception->getMessage());
             return back();
         }
     }
@@ -49,7 +63,7 @@ class CheckoutController extends Controller
                     'full_name' => $arrayValue[1],
                     'email' => $arrayValue[2],
                     'phone' => $arrayValue[3],
-                    'address' => $arrayValue[4],
+                    'address_checkout' => $arrayValue[4],
                     'order_method' => OrderMethod::ELECTRONIC_WALLET,
                     'user_id' => $arrayValue[5],
                     'total_fee' => $arrayValue[6],
@@ -85,7 +99,7 @@ class CheckoutController extends Controller
         $vnp_Amount = $money;
         $vnp_Locale = 'vn';
         $user = Auth::user();
-        $vnp_IpAddr = $request->input('address');
+        $vnp_IpAddr = $request->input('address_checkout');
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
         $vnp_apiUrl = "http://sandbox.vnpayment.vn/merchant_webapi/merchant.html";
         $apiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
@@ -97,7 +111,7 @@ class CheckoutController extends Controller
         $full_name = $request->input('full_name');
         $email = $request->input("email");
         $phone = $request->input('phone');
-        $address = $request->input('address');
+        $address = $request->input('address_checkout');
 
         $user_id = $request->input('user_id');
 
@@ -134,11 +148,10 @@ class CheckoutController extends Controller
             "vnp_IpAddr" => $vnp_IpAddr,
             "vnp_Locale" => $vnp_Locale,
             "vnp_OrderInfo" => "Thanh toan GD:" . $vnp_TxnRef,
-            "vnp_OrderType" => "other",
+            "vnp_OrderType" => "270000",
             "vnp_ReturnUrl" => $vnp_ReturnUrl,
             "vnp_TxnRef" => $vnp_TxnRef,
         );
-
         if (isset($vnp_BankCode) && $vnp_BankCode != "") {
             $inputData['vnp_BankCode'] = $vnp_BankCode;
         }

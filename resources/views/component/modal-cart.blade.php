@@ -1,42 +1,12 @@
 @php use App\Enums\TypeProductCart; @endphp
 @php use App\Models\online_medicine\ProductMedicine; @endphp
 @php use App\Models\ProductInfo;use Illuminate\Support\Facades\Auth; @endphp
-<style>
-    .change-quantity {
-        width: 100%;
-        display: flex;
-        align-items: center;
-    }
-
-    .value-button {
-        display: inline-block;
-        width: 40px;
-        text-align: center;
-        font-size: 24px;
-    }
-
-    .value-button:hover {
-        cursor: pointer;
-    }
-
-    input.number {
-        text-align: center;
-        border: none;
-        width: 40px;
-        height: 40px;
-        font-size: 18px;
-        font-weight: 800;
-    }
-
-    input:focus-visible {
-        border: none !important;
-    }
-</style>
+<link href="{{ asset('css/modalcart.css') }}" rel="stylesheet">
 <div class="modal modal-cart fade" id="modalCart" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Carts</h5>
+                <h5 class="modal-title" id="exampleModalLabel">{{ __('home.Carts') }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -54,7 +24,7 @@
                                     break;
                             }
                         @endphp
-                        <div class="product-cart row">
+                        <div class="product-cart row position-relative">
                             <div class="col-2 img">
                                 <img src="{{asset($product->thumbnail)}}" alt="">
                             </div>
@@ -63,7 +33,7 @@
                                     {{ $product->name }}
                                 </div>
                                 <div class="price">
-                                    {{ $product->price }}  {{ $product->unit_price }}
+                                    {{ number_format($product->price, 0, ',', '.') }}  {{ $product->unit_price }}
                                 </div>
                             </div>
                             <div class="col-3">
@@ -76,17 +46,23 @@
                                     <div class="value-button btnChangeQty" data-type="increase"
                                          onclick="increaseQuantity('{{ $cart->id }}')">+
                                     </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <i class="fa-solid fa-trash" onclick="deleteProductCart('{{ $cart->id }}')"></i>
                                 </div>
                             </div>
+                            <div class="d-flex align-items-center justify-content-end ">
+                                <i class="position-absolute delete-product" onclick="deleteProductCart('{{ $cart->id }}')">&times;</i></div>
                         </div>
                     @endforeach
                 @endif
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn cancel" data-dismiss="modal">Cancel</button>
-                <a href="{{ route('user.checkout.index') }}" class="btn pay">Pay</a>
+                <button type="button" class="btn cancel" data-dismiss="modal">{{ __('home.CANCEL') }}</button>
+                @if(Auth::check())
+                    @if($carts->isNotEmpty())
+                        <a href="{{ route('user.checkout.index') }}" class="btn pay">{{ __('home.Pay') }}</a>
+                    @else
+                        <button disabled class="btn pay">{{ __('home.Pay') }}</button>
+                    @endif
+                @endif
             </div>
         </div>
     </div>
@@ -117,12 +93,11 @@
     }
 
     function deleteProductCart(id) {
-        let ok = confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?');
+        let ok = confirm('{{ __('home.Bạn có chắc chắn muốn xóa sản phẩm này không') }}?');
         if (!ok) {
             return;
         }
         loadingMasterPage();
-        const token = `{{ $_COOKIE['accessToken'] ?? '' }}`;
         const headers = {
             'Authorization': `Bearer ${token}`
         };
@@ -158,7 +133,6 @@
     }
 
     async function changeQuantity(id, quantity) {
-        let token = document.getElementById('accessToken').value;
 
         const headers = {
             'Authorization': `Bearer ${token}`

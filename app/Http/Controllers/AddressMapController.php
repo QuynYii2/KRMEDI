@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 
 class AddressMapController extends Controller
 {
+    public function policy()
+    {
+        return view('policy-krmedi.policy-krmedi');
+    }
     protected $geocodingService;
 
     public function __construct(GeocodingService $geocodingService)

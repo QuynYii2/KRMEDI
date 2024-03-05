@@ -3,9 +3,15 @@
 @section('content')
     @include('layouts.partials.header_3')
     @include('component.banner')
+
+    <style>
+        .list-doctor .card img {
+            height: 300px;
+        }
+    </style>
     <div class="container">
         <div class="d-flex">
-            <div class="col-md-3 mr-2">
+            <div class="col-md-3 mr-2 d-md-block d-none">
                 <div class="">
                     <div class="flea-adv row align-items-center justify-content-center">
                         <div class="">
@@ -27,25 +33,24 @@
                         <div class="tab-pane fade show active" id="productList" role="tabpanel"
                              aria-labelledby="productList-tab">
                             <div>
-                                <h3><b>My personal doctor</b></h3>
+                                <h3><b>{{ __('home.My personal doctor') }}</b></h3>
                                 <hr>
                             </div>
                             <div class="list-doctor row" id="listMyDoctor">
                             </div>
                         </div>
                         <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
-                            {{--                            @include('component.review-item')--}}
                         </div>
                         <div class="tab-pane fade" id="wishList" role="tabpanel" aria-labelledby="wishList-tab">
                             <div class="row">
 
                             </div>
-                        </div>1202
+                        </div>
 
                     </div>
                 </div>
             @else
-                <p class="text-center">Please login to continue!</p>
+                <p class="text-center">{{ __('home.Please login to continue') }}!</p>
             @endif
         </div>
     </div>
@@ -84,25 +89,18 @@
                 let html = ``;
                 for (let i = 0; i < res.length; i++) {
                     let data = res[i];
-
-                    let mainUrl = `{{asset('/storage')}}`;
-
-                    let imageDoctor = data['thumbnail'];
-                    let myArray = imageDoctor.split("/storage");
-
-                    let img = mainUrl + myArray[1];
-
                     let route = `{{route('examination.doctor_info', ['id'=>':id'])}}`;
                     route = route.replace(':id', data['id']);
 
-                    html = html + `<div class="card col-md-4">
+                    html = html + `<div class="col-md-3 col-6">
+                                    <div class="card" >
                                     <i class="bi bi-heart"></i>
-                                    <img src="${img}" class="card-img-top" alt="...">
+                                    <img src="${data.avt}" class="card-img-top" alt="...">
                                     <div class="card-body">
-                                        <a href="${route}"><h5 class="card-title">${data['name']}</h5></a>
-                                        <p class="card-text_1">Location: <b>Hanoi</b></p>
-                                        <p class="card-text_1">Working time: <b>${data['time_working_1']} - ${data['time_working_2']}</b></p>
-                                        <button class="delete-1">Delete</button>
+                                        <a href="${route}" target="_blank"><h5 class="card-title">${data['name']}</h5></a>
+                                        <p class="card-text_1">{{ __('home.Location') }}: <b>Hanoi</b></p>
+                                        <p class="card-text_1">{{ __('home.Working time') }}: <b>${data['time_working_1']} - ${data['time_working_2']}</b></p>
+                                    </div>
                                     </div>
                                 </div>`;
                 }

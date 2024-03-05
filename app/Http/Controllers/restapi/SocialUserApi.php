@@ -6,9 +6,9 @@ use App\Enums\SocialUserStatus;
 use App\Http\Controllers\Controller;
 use App\Models\SocialUser;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Exception;
 
 class SocialUserApi extends Controller
 {
@@ -65,6 +65,13 @@ class SocialUserApi extends Controller
         $userID = $request->input('user_id');
 
         $socialUser->user_id = $userID;
+        $linkChecks = [
+            'instagram' => '/^(https?:\/\/)?(www\.)?instagram\.com\/.*$/',
+            'facebook' => '/^(https?:\/\/)?(www\.)?facebook\.com\/.*$/',
+            'tiktok' => '/^(https?:\/\/)?(www\.)?tiktok\.com\/.*$/',
+            'youtube' => '/^(https?:\/\/)?(www\.)?youtube\.com\/.*$/',
+            'google_review' => '/^(https?:\/\/)?(www\.)?google\.com\/.*$/',
+        ];
 
         $socialUser->facebook = $request->input('facebook');
         $socialUser->instagram = $request->input('instagram');
@@ -75,6 +82,20 @@ class SocialUserApi extends Controller
         $socialUser->google_review = $request->input('google_review');
 
         $socialUser->other = $request->input('other');
+//        // Kiểm tra và xử lý các liên kết mạng xã hội
+//        foreach ($linkChecks as $field => $pattern) {
+//            $value = $request->input($field);
+//            // Kiểm tra định dạng URL
+//            if (!preg_match($pattern, $value)) {
+//                // Nếu không phù hợp, bạn có thể xử lý theo ý muốn, ví dụ:
+//                return response()->json(['error' => 'Invalid URL format for ' . $field], 400);
+//                // hoặc
+//                // throw new Exception('Invalid URL format for ' . $field);
+//            }
+//
+//            // Gán giá trị vào đối tượng $socialUser
+//            $socialUser->{$field} = $value;
+//        }
 
         $socialUser->status = SocialUserStatus::ACTIVE;
 
@@ -147,7 +168,8 @@ class SocialUserApi extends Controller
         }
     }
 
-    public function getSocialByUserId($userId) {
+    public function getSocialByUserId($userId)
+    {
         $data = SocialUser::where('user_id', $userId)->get();
 
         return response()->json($data);

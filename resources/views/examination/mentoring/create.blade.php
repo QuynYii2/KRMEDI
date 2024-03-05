@@ -4,48 +4,43 @@
     @include('layouts.partials.header_3')
     @include('component.banner')
 
-    <style>
-        .button_create_question {
-            padding: 10px 110px;
-            display: flex;
-            align-items: center;
-        }
+    <link href="{{ asset('css/create.css') }}" rel="stylesheet"><style>
+
     </style>
     <div class="container">
         <form enctype="multipart/form-data">
             <div class="form-group">
-                <label for="content-question">Title</label>
+                <label for="content-question">{{ __('home.Title') }}</label>
                 <input type="text" class="form-control" id="title"/>
             </div>
             <div class="form-group">
-                <label for="content-question">Content Question</label>
+                <label for="content-question">{{ __('home.Content Question') }}</label>
                 <textarea type="text" class="form-control" id="content-question"
-                          placeholder="Enter question here"></textarea>
+                          placeholder="{{ __('home.Enter question here') }}"></textarea>
             </div>
             <div class="form-group">
-                <label for="category">Select Category</label>
-                <select class="custom-select" id="category">
-                    <option selected value="0">Choose...</option>
-                    <option value="{{ \App\Enums\MentoringCategory::HEALTH }}">Heath</option>
-                    <option value="{{ \App\Enums\MentoringCategory::BEAUTY }}">Beauty</option>
-                    <option value="{{ \App\Enums\MentoringCategory::LOSING_WEIGHT }}">Losing weight</option>
-                    <option value="{{ \App\Enums\MentoringCategory::KIDS }}">Kids</option>
-                    <option value="{{ \App\Enums\MentoringCategory::PETS }}">Pets</option>
-                    <option value="{{ \App\Enums\MentoringCategory::OTHER }}">Other</option>
+                <label for="category">{{ __('home.Select Category') }}</label>
+                <select class="form-select" id="category">
+                    <option selected value="0">{{ __('home.Choose...') }}</option>
+                    <option value="{{ \App\Enums\MentoringCategory::HEALTH }}">{{ __('home.Heath') }}</option>
+                    <option value="{{ \App\Enums\MentoringCategory::BEAUTY }}">{{ __('home.Beauty') }}</option>
+                    <option value="{{ \App\Enums\MentoringCategory::LOSING_WEIGHT }}">{{ __('home.Losing weight') }}</option>
+                    <option value="{{ \App\Enums\MentoringCategory::KIDS }}">{{ __('home.Kids') }}</option>
+                    <option value="{{ \App\Enums\MentoringCategory::PETS }}">{{ __('home.Pets') }}</option>
+                    <option value="{{ \App\Enums\MentoringCategory::OTHER }}">{{ __('home.Other') }}</option>
                 </select>
             </div>
             @include('component.upload_gallery')
             <div class="d-flex justify-content-center">
                 <button type="button" class="btn btn-secondary mx-2 button_create_question" onclick="history.back()">
-                    Cancel
+                    {{ __('home.CANCEL') }}
                 </button>
-                <button type="button" class="btn btn-primary mx-2 button_create_question" id="btn_submit" onclick="submitButton()">Submit</button>
+                <button type="button" class="btn btn-primary mx-2 button_create_question" id="btn_submit" onclick="submitButton()">{{ __('home.Submit') }}</button>
             </div>
         </form>
     </div>
 
     <script>
-        const token = `{{ $_COOKIE['accessToken'] ?? '' }}`;
         function submitButton() {
             if (!token) {
                 alert('Please login to apply')

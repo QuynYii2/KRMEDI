@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 @section('title')
-    Create Service Clinics
+    {{ __('home.Create Service Clinics') }}
 @endsection
 @section('main-content')
     <div class="container">
         <!-- Page Heading -->
-        <h1 class="h3 mb-4 text-gray-800">Create Service Clinics</h1>
+        <h1 class="h3 mb-4 text-gray-800">  {{ __('home.Create Service Clinics') }}</h1>
         @if (session('success'))
             <div class="alert alert-success border-left-success alert-dismissible fade show" role="alert">
                 {{ session('success') }}
@@ -15,34 +15,27 @@
             </div>
         @endif
         <form>
-            <div class="form-row">
+            <div class="row">
                 <div class="form-group col-md-4">
-                    <label for="name">Name</label>
+                    <label for="name">{{ __('home.Name') }}</label>
                     <input type="text" class="form-control" id="name" name="name" required>
                 </div>
                 <div class="form-group col-md-4">
-                    <label for="name_en">Name EN</label>
-                    <input type="text" class="form-control" id="name_en" name="name_en">
+                    <label for="service_price">{{ __('home.Giá dịch vụ') }}</label>
+                    <input type="number" class="form-control" id="service_price" name="service_price">
                 </div>
                 <div class="form-group col-md-4">
-                    <label for="name_laos">Name Laos</label>
-                    <input type="text" class="form-control" id="name_laos" name="name_laos">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label for="status">Status</label>
+                    <label for="status">{{ __('home.Status') }}</label>
                     <select id="status" class="form-control">
-                        <option value="ACTIVE">ACTIVE</option>
-                        <option value="INACTIVE">INACTIVE</option>
+                        <option value="ACTIVE">{{ __('home.Active') }}</option>
+                        <option value="INACTIVE">{{ __('home.Inactive') }}</option>
                     </select>
                 </div>
             </div>
-            <button type="button" onclick="createService();" class="btn btn-primary float-right">Save</button>
+            <button type="button" onclick="createService();" class="btn btn-primary float-right">{{ __('home.Save') }}</button>
         </form>
     </div>
     <script>
-        let token = `{{ $_COOKIE['accessToken'] ?? '' }}`;
         let accessToken = `Bearer ` + token;
 
         async function createService() {
@@ -50,8 +43,7 @@
 
             let data = {
                 name: document.getElementById('name').value,
-                name_en: document.getElementById('name_en').value,
-                name_laos: document.getElementById('name_laos').value,
+                service_price: document.getElementById('service_price').value,
                 user_id: `{{ Auth::check() ? Auth::user()->id : '' }}`,
                 status: document.getElementById('status').value,
             };

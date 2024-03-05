@@ -22,10 +22,17 @@ class ReviewStoreController extends Controller
     public function createReview(Request $request, $id)
     {
         $cmt_review = $request->input('cmt_review');
+
+        $translate = new TranslateController();
+        $name_en = $translate->translateText($request->input('cmt_review'), 'en');
+//        $name_laos = $translate->translateText($request->input('cmt_review'), 'lo');
+
         $star_number = $request->input('star_number');
         $cmt_store = new ReviewStore();
         $cmt_store->star_number = $star_number;
         $cmt_store->content = $cmt_review;
+        $cmt_store->content_en = $name_en;
+//        $cmt_store->content_laos = $name_laos;
         $cmt_store->store_id = $id;
         $cmt_store->status = ReviewStoreStatus::APPROVED;
         if (!Auth::user()==null) {

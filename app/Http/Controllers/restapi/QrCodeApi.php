@@ -8,10 +8,9 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class QrCodeApi extends Controller
 {
-    public function doctorInfo(Request $request)
+    public function doctorInfo($id)
     {
-        $url = route('qr.code.show.doctor.info');
-        $qrCodes = QrCode::size(300)->generate($url);
-        return $qrCodes;
+        $url = route('qr.code.show.doctor.info', $id);
+        return QrCode::size(300)->generate($url);
     }
 }

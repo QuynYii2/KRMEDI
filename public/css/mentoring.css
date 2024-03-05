@@ -1,0 +1,185 @@
+@media (max-width: 575px) {
+    .header_comment {
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 800;
+        line-height: normal;
+    }
+    .list-group-item {
+        padding: 4px;
+    }
+    .list-group-item a b, .text-red {
+        font-size: 12px;
+    }
+    .style-b:hover {
+        font-style: normal;
+        font-weight: 800;
+        line-height: normal;
+        color:  #088180;
+        font-size: 12px;
+    }
+    .cl-select {
+        font-size: 12px;
+    }
+    .textCate {
+        font-size: 12px;
+    }
+    .lin-tip-tht-bi-cc p {
+        font-size: 12px;
+    }
+    .text-cmt {
+        font-size: 10px;
+    }
+}
+@media (min-width: 576px) {
+    .header_comment {
+        font-size: 32px;
+        font-style: normal;
+        font-weight: 800;
+        line-height: normal;
+    }
+}
+
+.comment_list svg {
+    position: relative;
+    top: -2px;
+}
+
+.text-red {
+    color: red;
+}
+
+
+
+.frame {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+}
+
+.frame .frame-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+}
+
+.frame .div {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+}
+
+.frame .div-wrapper {
+    display: flex;
+    width: 92px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 4px 17px;
+    position: relative;
+    border-radius: 65px;
+}
+
+.frame .text-wrapper {
+    position: relative;
+    width: fit-content;
+    margin-top: -1px;
+    color: #000000;
+}
+
+.frame .div-2 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    position: relative;
+    flex: 1;
+    flex-grow: 1;
+}
+
+.frame .lin-tip-tht-bi-cc {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    flex: 0 0 auto;
+}
+
+.frame .p {
+    position: relative;
+    width: fit-content;
+    margin-top: -1px;
+    color: #000000;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+}
+.frame .p:hover {
+    color:  #088180;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+}
+
+.frame .div-3 {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 40px;
+    position: relative;
+    flex: 0 0 auto;
+}
+
+.frame .div-4 {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+    flex: 0 0 auto;
+}
+
+.frame .img {
+    position: relative;
+    width: 24px;
+    height: 24px;
+}
+
+.frame .text-wrapper-2 {
+    position: relative;
+    width: fit-content;
+    margin-top: -0.5px;
+}
+
+.frame .line {
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    height: 1px;
+    margin-bottom: -0.5px;
+    margin-left: -0.5px;
+    margin-right: -0.5px;
+    object-fit: cover;
+}
+
+.textCate {
+    border-radius: 65px;
+    background:  #F3F3F3;
+    display: flex;
+    padding: 4px 17px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}

@@ -4,9 +4,13 @@ namespace App\Http\Controllers\backend;
 
 use App\Enums\online_medicine\OnlineMedicineStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\restapi\MainApi;
+use App\Http\Controllers\TranslateController;
+use App\Models\DrugIngredients;
 use App\Models\online_medicine\CategoryProduct;
 use App\Models\online_medicine\ProductMedicine;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BackendProductMedicineController extends Controller
 {
@@ -15,7 +19,18 @@ class BackendProductMedicineController extends Controller
      */
     public function index()
     {
-        $productMedicines = ProductMedicine::where('status', '!=', OnlineMedicineStatus::DELETED)->get();
+        $user_id = Auth::check() ? Auth::user()->id : '';
+        $isAdmin = (new MainApi())->isAdmin($user_id);
+        if ($isAdmin) {
+            $productMedicines = ProductMedicine::where('status', '!=', OnlineMedicineStatus::DELETED)
+                ->orderBy('created_at', 'DESC')
+                ->paginate(20);
+        } else {
+            $productMedicines = ProductMedicine::where('status', '!=', OnlineMedicineStatus::DELETED)
+                ->where('user_id', $user_id)
+                ->orderBy('created_at', 'DESC')
+                ->paginate(20);
+        }
         return view('admin.product_medicine.index', compact('productMedicines'));
     }
 
@@ -25,7 +40,11 @@ class BackendProductMedicineController extends Controller
     public function create()
     {
         $categoryProductMedicine = CategoryProduct::where('status', 1)->get();
-        return view('admin.product_medicine.create', compact('categoryProductMedicine'));
+        $reflector = new \ReflectionClass('App\Enums\online_medicine\ShapeProduct');
+        $shapes = $reflector->getConstants();
+        $reflector = new \ReflectionClass('App\Enums\online_medicine\UnitQuantityProduct');
+        $unit_quantity = $reflector->getConstants();
+        return view('admin.product_medicine.create', compact('categoryProductMedicine', 'shapes', 'unit_quantity'));
     }
 
     /**
@@ -43,7 +62,18 @@ class BackendProductMedicineController extends Controller
     {
         $productMedicine = ProductMedicine::find($id);
         $categoryProductMedicine = CategoryProduct::where('status', 1)->get();
-        return view('admin.product_medicine.edit', compact('productMedicine', 'categoryProductMedicine'));
+        $drugIngredient = DrugIngredients::where('product_id', $id)->first();
+
+        $drugIngredients = $drugIngredient->component_name;
+        $list_drugIngredients = explode(',', $drugIngredients);
+
+        $reflector = new \ReflectionClass('App\Enums\online_medicine\ShapeProduct');
+        $shapes = $reflector->getConstants();
+        $reflector = new \ReflectionClass('App\Enums\online_medicine\UnitQuantityProduct');
+        $unit_quantity = $reflector->getConstants();
+        return view('admin.product_medicine.edit',
+            compact('productMedicine', 'categoryProductMedicine',
+                'drugIngredient', 'shapes', 'unit_quantity', 'list_drugIngredients'));
     }
 
     /**
@@ -71,54 +101,93 @@ class BackendProductMedicineController extends Controller
      */
     public function update(Request $request)
     {
-        $params = $request->only(
-            'name', 'name_en', 'name_laos',
-            'brand_name', 'brand_name_en', 'brand_name_laos',
-            'category_id', 'object_', 'filter_', 'price', 'status',
-            'description', 'description_en', 'description_laos',
-            'unit_price'
-        );
+        try {
+            $params = $request->only('name', 'brand_name', 'category_id', 'object_', 'filter_',
+                'price', 'status', 'description', 'unit_price', 'quantity',
+                'manufacturing_country', 'manufacturing_company', 'unit_quantity',
 
-        //check name
-        if (empty($params['name']) && empty($params['name_en']) && empty($params['name_laos'])) {
-            return response('Tên sản phẩm không được để trống', 400);
-        }
-        //check description
-        if (empty($params['description']) && empty($params['description_en']) && empty($params['description_laos'])) {
-            return response('Mô tả sản phẩm không được để trống', 400);
-        }
-        //check brand_name
-        if (empty($params['brand_name']) && empty($params['brand_name_en']) && empty($params['brand_name_laos'])) {
-            return response('Tên thương hiệu không được để trống', 400);
-        }
+                'short_description', 'short_description',
+                'uses', 'user_manual',
+                'notes', 'preserve', 'side_effects',
 
-        //check thumbnail, nếu rỗng thì không thêm vào
-        if ($request->hasFile('thumbnail')) {
-            $item = $request->file('thumbnail');
-            $itemPath = $item->store('product_medicine', 'public');
-            $thumbnail = asset('storage/' . $itemPath);
-            $params['thumbnail'] = $thumbnail;
-        }
-        $productMedicine = ProductMedicine::find($request->input('id'));
-        $gallery = $productMedicine->gallery;
-        if ($request->hasFile('gallery')) {
-            $galleryPaths = array_map(function ($image) {
-                $itemPath = $image->store('gallery', 'public');
-                return asset('storage/' . $itemPath);
-            }, $request->file('gallery'));
-            $gallery = implode(',', $galleryPaths);
-        }
+                'shape', 'specifications', 'number_register', 'proved_by');
 
-        $productMedicine->gallery = $gallery;
+            $translate = new TranslateController();
 
-        $productMedicine->fill($params);
+            //check name
+            if (empty($params['name'])) {
+                return response('Tên sản phẩm không được để trống', 400);
+            }
+            $params['name'] = $translate->translateText($params['name'], 'vi');
+            $params['name_en'] = $translate->translateText($params['name'], 'en');
+            $params['name_laos'] = $translate->translateText($params['name'], 'lo');
+            //check short_description
+            if (empty($params['short_description'])) {
+                return response('Mô tả sản phẩm không được để trống', 400);
+            }
+            $params['short_description'] = $translate->translateText($params['short_description'], 'vi');
+            $params['short_description_en'] = $translate->translateText($params['short_description'], 'en');
+            $params['short_description_laos'] = $translate->translateText($params['short_description'], 'lo');
+            //check description
+            if (empty($params['description'])) {
+                return response('Mô tả sản phẩm không được để trống', 400);
+            }
+            $params['description'] = $translate->translateText($params['description'], 'vi');
+            $params['description_en'] = $translate->translateText($params['description'], 'en');
+            $params['description_laos'] = $translate->translateText($params['description'], 'lo');
+            //check brand_name
+            if (empty($params['brand_name'])) {
+                return response('Tên thương hiệu không được để trống', 400);
+            }
+            $params['brand_name'] = $translate->translateText($params['brand_name'], 'vi');
+            $params['brand_name_en'] = $translate->translateText($params['brand_name'], 'en');
+            $params['brand_name_laos'] = $translate->translateText($params['brand_name'], 'lo');
 
-        $success = $productMedicine->save();
+            //check thumbnail, nếu rỗng thì không thêm vào
+            if ($request->hasFile('thumbnail')) {
+                $item = $request->file('thumbnail');
+                $itemPath = $item->store('product_medicine', 'public');
+                $thumbnail = asset('storage/' . $itemPath);
+                $params['thumbnail'] = $thumbnail;
+            }
+            $productMedicine = ProductMedicine::find($request->input('id'));
+            $gallery = $productMedicine->gallery;
+            if ($request->hasFile('gallery')) {
+                $galleryPaths = array_map(function ($image) {
+                    $itemPath = $image->store('gallery', 'public');
+                    return asset('storage/' . $itemPath);
+                }, $request->file('gallery'));
+                $gallery = implode(',', $galleryPaths);
+            }
 
-        if ($success) {
-            return response('Cập nhật sản phẩm thành công', 200);
-        } else {
-            return response('Cập nhật sản phẩm thất bại', 400);
+            $productMedicine->gallery = $gallery;
+
+            $is_prescription = (bool)$request->input('is_prescription');
+            $params['is_prescription'] = $is_prescription;
+
+            $productMedicine->fill($params);
+
+            $success = $productMedicine->save();
+
+            if ($success) {
+                $drugIngredient = DrugIngredients::where('product_id', $request->input('id'))->first();
+
+                if (!$drugIngredient) {
+                    $drugIngredient = new DrugIngredients();
+                    $drugIngredient->product_id = $productMedicine->id;
+                }
+
+                $drugIngredient->component_name = ($request->input('ingredient') ?? '');
+                $success = $drugIngredient->save();
+            }
+
+            if ($success) {
+                return response((new MainApi())->returnMessage('Cập nhật sản phẩm thành công'), 200);
+            } else {
+                return response((new MainApi())->returnMessage('Cập nhật sản phẩm thất bại'), 400);
+            }
+        } catch (\Exception $exception) {
+            return response((new MainApi())->returnMessage($exception->getMessage()), 400);
         }
     }
 
@@ -127,66 +196,103 @@ class BackendProductMedicineController extends Controller
      */
     public function store(Request $request)
     {
-        $params = $request->only(
-            'name', 'name_en', 'name_laos',
-            'brand_name', 'brand_name_en', 'brand_name_laos',
-            'category_id', 'object_', 'filter_', 'price', 'status',
-            'description', 'description_en', 'description_laos',
-        );
+        try {
+            $params = $request->only('name', 'brand_name', 'category_id', 'object_', 'filter_',
+                'price', 'status', 'description', 'unit_price', 'quantity',
+                'manufacturing_country', 'manufacturing_company', 'unit_quantity',
 
-        //check name
-        if (empty($params['name']) && empty($params['name_en']) && empty($params['name_laos'])) {
-            return response('Tên sản phẩm không được để trống', 400);
+                'short_description', 'short_description',
+                'uses', 'user_manual',
+                'notes', 'preserve', 'side_effects',
+
+                'shape', 'specifications', 'number_register', 'proved_by');
+
+            $translate = new TranslateController();
+
+            //check name
+            if (empty($params['name'])) {
+                return response('Tên sản phẩm không được để trống', 400);
+            }
+            $params['name'] = $translate->translateText($params['name'], 'vi');
+            $params['name_en'] = $translate->translateText($params['name'], 'en');
+            $params['name_laos'] = $translate->translateText($params['name'], 'lo');
+            //check short_description
+            if (empty($params['short_description'])) {
+                return response('Mô tả sản phẩm không được để trống', 400);
+            }
+            $params['short_description'] = $translate->translateText($params['short_description'], 'vi');
+            $params['short_description_en'] = $translate->translateText($params['short_description'], 'en');
+            $params['short_description_laos'] = $translate->translateText($params['short_description'], 'lo');
+            //check description
+            if (empty($params['description'])) {
+                return response('Mô tả sản phẩm không được để trống', 400);
+            }
+            $params['description'] = $translate->translateText($params['description'], 'vi');
+            $params['description_en'] = $translate->translateText($params['description'], 'en');
+            $params['description_laos'] = $translate->translateText($params['description'], 'lo');
+            //check brand_name
+            if (empty($params['brand_name'])) {
+                return response('Tên thương hiệu không được để trống', 400);
+            }
+            $params['brand_name'] = $translate->translateText($params['brand_name'], 'vi');
+            $params['brand_name_en'] = $translate->translateText($params['brand_name'], 'en');
+            $params['brand_name_laos'] = $translate->translateText($params['brand_name'], 'lo');
+            //check thumbnail not null
+            if (!$request->hasFile('thumbnail')) {
+                return response('Ảnh đại diện không được để trống', 400);
+            }
+
+            //check gallery not null
+            if (!$request->hasFile('gallery')) {
+                return response('Ảnh chi tiết không được để trống', 400);
+            }
+
+            if ($request->hasFile('thumbnail')) {
+                $item = $request->file('thumbnail');
+                $itemPath = $item->store('product_medicine', 'public');
+                $thumbnail = asset('storage/' . $itemPath);
+                $params['thumbnail'] = $thumbnail;
+            }
+
+            if ($request->hasFile('gallery')) {
+                $galleryPaths = array_map(function ($image) {
+                    $itemPath = $image->store('gallery', 'public');
+                    return asset('storage/' . $itemPath);
+                }, $request->file('gallery'));
+                $gallery = implode(',', $galleryPaths);
+            } else {
+                $gallery = '';
+            }
+
+            $productMedicine = new ProductMedicine();
+
+            $productMedicine->gallery = $gallery;
+            $productMedicine->user_id = $request->input('user_id');
+
+            $is_prescription = (bool)$request->input('is_prescription');
+
+            $params['status'] = OnlineMedicineStatus::PENDING;
+            $params['is_prescription'] = $is_prescription;
+
+            $productMedicine->fill($params);
+
+            $success = $productMedicine->save();
+
+            if ($success) {
+                $drugIngredient = new DrugIngredients();
+                $drugIngredient->product_id = $productMedicine->id;
+                $drugIngredient->component_name = $request->input('ingredient');
+
+                $success = $drugIngredient->save();
+            }
+
+            if ($success) {
+                return response((new MainApi())->returnMessage('Thêm sản phẩm thành công'), 200);
+            } else {
+                return response((new MainApi())->returnMessage('Thêm sản phẩm thất bại'), 400);
+            }
+        } catch (\Exception $exception) {
+            return response((new MainApi())->returnMessage($exception->getMessage()), 400);
         }
-        //check description
-        if (empty($params['description']) && empty($params['description_en']) && empty($params['description_laos'])) {
-            return response('Mô tả sản phẩm không được để trống', 400);
-        }
-        //check brand_name
-        if (empty($params['brand_name']) && empty($params['brand_name_en']) && empty($params['brand_name_laos'])) {
-            return response('Tên thương hiệu không được để trống', 400);
-        }
-
-        //check thumbnail not null
-        if (!$request->hasFile('thumbnail')) {
-            return response('Ảnh đại diện không được để trống', 400);
-        }
-
-        //check gallery not null
-        if (!$request->hasFile('gallery')) {
-            return response('Ảnh chi tiết không được để trống', 400);
-        }
-
-        if ($request->hasFile('thumbnail')) {
-            $item = $request->file('thumbnail');
-            $itemPath = $item->store('product_medicine', 'public');
-            $thumbnail = asset('storage/' . $itemPath);
-            $params['thumbnail'] = $thumbnail;
-        }
-
-        if ($request->hasFile('gallery')) {
-            $galleryPaths = array_map(function ($image) {
-                $itemPath = $image->store('gallery', 'public');
-                return asset('storage/' . $itemPath);
-            }, $request->file('gallery'));
-            $gallery = implode(',', $galleryPaths);
-        } else {
-            $gallery = '';
-        }
-
-        $productMedicine = new ProductMedicine();
-
-        $productMedicine->gallery = $gallery;
-        $productMedicine->user_id = $request->input('user_id');
-        $productMedicine->fill($params);
-
-        $success = $productMedicine->save();
-
-        if ($success) {
-            return response('Thêm sản phẩm thành công', 200);
-        } else {
-            return response('Thêm sản phẩm thất bại', 400);
-        }
-
     }
 }

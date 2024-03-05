@@ -148,4 +148,22 @@ class AminServiceClinicApi extends Controller
             return response($exception, 400);
         }
     }
+
+    public function getServiceById($serviceId)
+    {
+        try {
+
+            $services = ServiceClinic::whereIn('id', explode(',', $serviceId))
+                ->select('name', 'name_en', 'name_laos')
+                ->get();
+
+            if ($services->isEmpty()) {
+                return response('Not found!', 404);
+            }
+
+            return response()->json($services);
+        } catch (\Exception $exception) {
+            return response('An error occurred.', 500);
+        }
+    }
 }

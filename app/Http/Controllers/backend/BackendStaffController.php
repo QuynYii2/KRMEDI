@@ -25,27 +25,37 @@ class BackendStaffController extends Controller
             $username = $request->input('username');
             $member = $request->input('member');
             $email = $request->input('email');
+            $phone = $request->input('phone');
             $password = $request->input('password');
             $password_confirm = $request->input('password_confirm');
             $manager_id = $request->input('manager_id');
 
-            //check username không được trống
+            $hospital = $request->input('hospital');
+            $specialty = $request->input('specialty');
+            $service = $request->input('service');
+            $year_of_experience = $request->input('year_of_experience');
+
+            $identifier = $request->input('identifier');
+            $department_id = $request->input('department_id');
+            $workspace = $request->input('workplace');
+
+            /* check username không được trống */
             if (!$username) {
                 return response('Username không được trống', 400);
             }
-            //check email không được trống
+            /* check email không được trống */
             if (!$email) {
                 return response('Email không được trống', 400);
             }
-            //check regex email
+            /* check regex email */
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 return response('Email không đúng định dạng', 400);
             }
-            //check password không được trống
+            /* check password không được trống */
             if (!$password) {
                 return response('Password không được trống', 400);
             }
-            //check password_confirm không được trống
+            /* check password_confirm không được trống */
             if (!$password_confirm) {
                 return response('Password_confirm không được trống', 400);
             }
@@ -56,6 +66,11 @@ class BackendStaffController extends Controller
             $isExistEmail = User::isExistEmail($email);
             if ($isExistEmail) {
                 return response('Email đã tồn tại', 400);
+            }
+
+            $isExistPhone = User::isExistPhone($phone);
+            if ($isExistPhone) {
+                return response('Phone đã tồn tại', 400);
             }
 
             if (strlen($password) < 8) {
@@ -75,8 +90,21 @@ class BackendStaffController extends Controller
 
             $user->name = '';
             $user->last_name = '';
-            $user->phone = '';
+            $user->phone = $phone;
             $user->address_code = '';
+
+            $user->hospital = $hospital;
+            $user->specialty = $specialty;
+            $user->service = $service;
+            $user->year_of_experience = $year_of_experience;
+
+            $user->identifier = $identifier;
+            $user->department_id = $department_id;
+            $user->workplace = $workspace;
+
+            $user->abouts = 'default';
+            $user->abouts_en = 'default';
+            $user->abouts_lao = 'default';
 
             $success = $user->save();
 
@@ -117,23 +145,33 @@ class BackendStaffController extends Controller
             $username = $request->input('username');
             $member = $request->input('member');
             $email = $request->input('email');
+            $phone = $request->input('phone');
             $password = $request->input('password');
             $password_confirm = $request->input('password_confirm');
             $status = $request->input('status');
 
-            //check username không được trống
+            $hospital = $request->input('hospital');
+            $specialty = $request->input('specialty');
+            $service = $request->input('service');
+            $year_of_experience = $request->input('year_of_experience');
+
+            $identifier = $request->input('identifier');
+            $department_id = $request->input('department_id');
+            $workspace = $request->input('workplace');
+
+            /* check username không được trống */
             if (!$username) {
                 return response('Username không được trống', 400);
             }
-            //check email không được trống
+            /* check email không được trống */
             if (!$email) {
                 return response('Email không được trống', 400);
             }
-            //check regex email
+            /* check regex email */
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 return response('Email không đúng định dạng', 400);
             }
-            //check password không được trống
+            /* check password không được trống */
             if ($password) {
                 if (strlen($password) < 8) {
                     return response('Password phải có ít nhất 8 ký tự', 400);
@@ -145,29 +183,54 @@ class BackendStaffController extends Controller
                     return response('Password_confirm không được trống', 400);
                 }
             }
-            //check username xem có trùng với username của user id hiện tại không
-            $isExistUsername = User::where('username', $username)->where('id', '!=', $id)->first();
-            if ($isExistUsername) {
-                return response('Username đã tồn tai', 400);
-            }
-            //check email xem có trùng với email của user id hiện tại không
-            $isExistEmail = User::where('email', $email)->where('id', '!=', $id)->first();
-            if ($isExistEmail) {
-                return response('Email đã tồn tại', 400);
-            }
 
             $user = User::find($id);
             if (!$user) {
                 return response('User not found', 404);
             }
+
+            if ($user->username != $username) {
+                /* check username xem có trùng với username của user id hiện tại không */
+                $isExistUsername = User::where('username', $username)->where('id', '!=', $id)->first();
+                if ($isExistUsername) {
+                    return response('Username đã tồn tai', 400);
+                }
+            }
+
+            if ($user->email != $email) {
+                /* check email xem có trùng với email của user id hiện tại không */
+                $isExistEmail = User::where('email', $email)->where('id', '!=', $id)->first();
+                if ($isExistEmail) {
+                    return response('Email đã tồn tại', 400);
+                }
+            }
+
             $user->username = $username;
             $user->email = $email;
             if ($password) {
                 $user->password = Hash::make($password);
             }
+
+            if ($user->phone != $phone) {
+                /* check phone xem có trùng với username của user id hiện tại không */
+                $isExistPhone = User::where('phone', $phone)->where('id', '!=', $id)->first();
+                if ($isExistPhone) {
+                    return response('Phone đã tồn tai', 400);
+                }
+            }
+
             $user->type = $member;
+            $user->phone = $phone;
             $user->status = $status;
 
+            $user->hospital = $hospital;
+            $user->specialty = $specialty;
+            $user->service = $service;
+            $user->year_of_experience = $year_of_experience;
+
+            $user->identifier = $identifier;
+            $user->department_id = $department_id;
+            $user->workplace = $workspace;
 
             $success = $user->save();
 
@@ -175,8 +238,7 @@ class BackendStaffController extends Controller
                 $role = Role::where('name', $member)->first();
 
                 if ($role) {
-
-                    // cập nhật bản ghi trong bảng role_user
+                    /* cập nhật bản ghi trong bảng role_user */
                     RoleUser::where('user_id', $user->id)->update([
                         'role_id' => $role->id,
                     ]);
@@ -184,6 +246,7 @@ class BackendStaffController extends Controller
                 }
                 return response()->json($user);
             }
+            return response('Update error!');
         } catch (Exception $exception) {
             return response($exception, 400);
         }
@@ -199,6 +262,7 @@ class BackendStaffController extends Controller
             }
             $user->status = UserStatus::DELETED;
             $user->save();
+            return response('Delete success!');
         } catch (Exception $exception) {
             return response($exception, 400);
         }

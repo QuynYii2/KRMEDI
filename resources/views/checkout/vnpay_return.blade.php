@@ -1,4 +1,4 @@
-@extends('layouts.master')
+‹@extends('layouts.master')
 
 @section('title', 'View Cart')
 
@@ -44,16 +44,16 @@
                                   style="stroke-dasharray:100px, 100px; stroke-dashoffset: 200px;"/>
                     </g>
                 </svg>
-                <h2>Payment Success</h2>
+                <h2>{{ __('home.Payment Success') }}</h2>
             </div>
         </div>
         <div class="row" id="form-paymentSuccess">
             <div class="form-group col-12 col-md-6">
-                <label>Mã đơn hàng:</label>
+                <label>{{ __('home.Mã đơn hàng') }}:</label>
                 <label><?php echo $_GET['vnp_TxnRef'] ?></label>
             </div>
             <div class="form-group col-12 col-md-6">
-                <label>Số tiền:</label>
+                <label>{{ __('home.Số tiền') }} </label>
                 <label><?php
                        $vnp_Amount = $_GET['vnp_Amount'];
 
@@ -63,50 +63,50 @@
                            $formattedAmount = rtrim($formattedAmount, '.');
                            echo $formattedAmount . " VND";
                        } else {
-                           echo "Không có thông tin số tiền hợp lệ.";
+                           echo  __('home.Không có thông tin số tiền hợp lệ');
                        }
                        ?></label>
             </div>
             <div class="form-group col-12 col-md-6">
-                <label>Ngân hàng thanh toán:</label>
+                <label>{{ __('home.Ngân hàng thanh toán') }}:</label>
                 <label><?php echo $_GET['vnp_BankCode'] ?></label>
             </div>
             <div class="form-group col-12 col-md-6">
-                <label>Thời gian thanh toán:</label>
+                <label>{{ __('home.Thời gian thanh toán') }}:</label>
                 <label><?php
                        $vnp_PayDate = $_GET['vnp_PayDate'];
                        if (isset($vnp_PayDate) && strtotime($vnp_PayDate) !== false) {
                            $formattedDate = date("Y-m-d H:i:s", strtotime($vnp_PayDate));
                            echo $formattedDate;
                        } else {
-                           echo "Không có thông tin ngày giờ hợp lệ.";
+                           echo __('home.Không có thông tin ngày giờ hợp lệ');
                        }
                        ?></label>
             </div>
             <div class="form-group col-12 col-md-6">
-                <label>Mã GD Tại VNPAY:</label>
+                <label>{{ __('home.Mã GD Tại VNPAY') }}:</label>
                 <label><?php echo $_GET['vnp_TransactionNo'] ?></label>
             </div>
             <div class="form-group col-12 col-md-6">
-                <label>Nội dung thanh toán:</label>
+                <label>{{ __('home.Nội dung thanh toán') }}:</label>
                 <label><?php echo $_GET['vnp_OrderInfo'] ?></label>
             </div>
             <div class="form-group col-12 col-md-6">
-                <label>Mã phản hồi (vnp_ResponseCode):</label>
+                <label>{{ __('home.Mã phản hồi (vnp_ResponseCode)') }}:</label>
                 <label><?php echo $_GET['vnp_ResponseCode'] ?></label>
             </div>
             <div class="form-group col-12 col-md-6">
-                <label>Kết quả:</label>
+                <label>{{ __('home.Kết quả') }}:</label>
                 <label>
                     <?php
                     if ($secureHash == $vnp_SecureHash) {
                         if ($_GET['vnp_ResponseCode'] == '00') {
-                            echo "<span style='color:blue'>GD Thanh cong</span>";
+                            echo "<span style='color:blue'>Giao dịch thành công</span>";
                         } else {
-                            echo "<span style='color:red'>GD Khong thanh cong</span>";
+                            echo "<span style='color:red'>Giao dịch không thành công</span>";
                         }
                     } else {
-                        echo "<span style='color:red'>Chu ky khong hop le</span>";
+                        echo "<span style='color:red'>Chữ ký không hợp lệ</span>";
                     }
                     ?>
 

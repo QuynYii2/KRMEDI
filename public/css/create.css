@@ -1,0 +1,5 @@
+.button_create_question {
+    padding: 10px 110px;
+    display: flex;
+    align-items: center;
+}

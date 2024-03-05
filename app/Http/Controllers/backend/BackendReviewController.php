@@ -4,6 +4,7 @@ namespace App\Http\Controllers\backend;
 
 use App\Enums\ReviewStatus;
 use App\Http\Controllers\Controller;
+use App\Models\Clinic;
 use App\Models\Review;
 use DB;
 use Illuminate\Http\Request;
@@ -121,6 +122,7 @@ class BackendReviewController extends Controller
             }
             $review->status = $status;
             $success = $review->save();
+            $this->updateAverage($review->clinic_id);
             if ($success) {
                 return response()->json($review);
             }
@@ -178,6 +180,8 @@ class BackendReviewController extends Controller
             }
             $review->status = ReviewStatus::DELETED;
             $success = $review->save();
+
+            $this->updateAverage($review->clinic_id);
             if ($success) {
                 return response('Delete review success!', 200);
             }
@@ -185,5 +189,19 @@ class BackendReviewController extends Controller
         } catch (\Exception $exception) {
             return response($exception, 400);
         }
+    }
+
+    private function updateAverage($clinic_id)
+    {
+        $clinic = Clinic::find($clinic_id);
+        $listReview = Review::where('clinic_id', $clinic_id)
+            ->where('status', ReviewStatus::APPROVED)
+            ->get();
+
+        $totalReview = $listReview->count();
+        $totalStar = $listReview->sum('star');
+        $calcReview = ($totalReview > 0) ? ($totalStar / $totalReview) : 0;
+        $clinic->average_star = $calcReview;
+        $clinic->save();
     }
 }

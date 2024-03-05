@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Province extends Model
 {
     use HasFactory;
+
+    public static function getNameById($id)
+    {
+        $address = Province::find($id);
+        if (!$address) {
+            return null;
+        }
+        return $address->name;
+    }
 }

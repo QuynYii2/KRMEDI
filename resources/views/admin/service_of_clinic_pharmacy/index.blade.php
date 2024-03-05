@@ -5,8 +5,8 @@
 
     </style>
     <!-- Page Heading -->
-    <h1 class="h3 mb-4 text-gray-800">List service of clinic pharmacy</h1>
-    <a href="{{ route('api.backend.service-clinic-pharmacy.create') }}" class="btn btn-primary mb-3">Add</a>
+    <h1 class="h3 mb-4 text-gray-800">{{ __('home.List service of clinic pharmacy') }}</h1>
+    <a href="{{ route('api.backend.service-clinic-pharmacy.create') }}" class="btn btn-primary mb-3">{{ __('home.Add') }}</a>
     @if (session('success'))
         <div class="alert alert-success border-left-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -20,10 +20,10 @@
         <thead>
         <tr>
             <th scope="col">STT</th>
-            <th scope="col">Tên việt</th>
-            <th scope="col">Tên ANh</th>
-            <th scope="col">Tên lào</th>
-            <th scope="col">thao tác</th>
+            <th scope="col">{{ __('home.Name') }} </th>
+            <th scope="col">{{ __('home.name_en') }}</th>
+            <th scope="col">{{ __('home.name_laos') }}</th>
+            <th scope="col">{{ __('home.Thao tác') }} </th>
         </tr>
         </thead>
         <tbody>
@@ -34,19 +34,21 @@
                 <td>{{ $serviceClinic->name_en }}</td>
                 <td>{{ $serviceClinic->name_laos }}</td>
                 <td>
-                    <a href="{{ route('api.backend.service-clinic-pharmacy.edit', ['id' => $serviceClinic->id]) }}" class="btn btn-primary">Sửa</a>
-                    <button onclick="deleteRecord({{ $serviceClinic->id }})" class="btn btn-danger">Xóa</button>
+                    <a href="{{ route('api.backend.service-clinic-pharmacy.edit', ['id' => $serviceClinic->id]) }}" class="btn btn-primary">{{ __('home.Sửa') }} </a>
+                    <button onclick="deleteRecord({{ $serviceClinic->id }})" class="btn btn-danger">{{ __('home.Delete') }} </button>
                 </td>
             </tr>
         @endforeach
 
         </tbody>
     </table>
+    <div class="align-items-center justify-content-center d-flex">
+        {{$serviceClinics->links()}}
+    </div>
     <script>
-        const token = `{{ $_COOKIE['accessToken'] ?? ''}}`;
 
         function deleteRecord(id) {
-            if (confirm('Bạn có chắc chắn muốn xóa không?')) {
+            if (confirm('{{ __('home.Bạn có chắc chắn muốn xóa không') }} ?')) {
 
                 loadingMasterPage();
                 let url = '{{ route('api.backend.service-clinic-pharmacy.destroy', ['id' => ':id']) }}';

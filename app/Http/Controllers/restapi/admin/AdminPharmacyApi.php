@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\restapi\admin;
 
 use App\Enums\ClinicStatus;
-use App\Enums\TypeBussiness;
+use App\Enums\TypeBusiness;
 use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Clinic;
@@ -17,20 +17,29 @@ class AdminPharmacyApi extends Controller
     {
         $status = $request->input('status');
         if ($status && $status != ClinicStatus::DELETED) {
-            $pharmacies = Clinic::where('status', $status)->where('type', TypeBussiness::PHARMACIES)->get();
+            $pharmacies = Clinic::where('status', $status)
+                ->where('type', TypeBusiness::PHARMACIES)
+                ->get();
         } else {
-            $pharmacies = Clinic::where('status', '!=', ClinicStatus::DELETED)->where('type', TypeBussiness::PHARMACIES)->get();
+            $pharmacies = Clinic::where('status', '!=', ClinicStatus::DELETED)
+                ->where('type', TypeBusiness::PHARMACIES)
+                ->get();
         }
         return response()->json($pharmacies);
     }
 
-    public function getAllPharmacy(Request $request) {
+    public function getAllPharmacy(Request $request)
+    {
 
         $status = $request->input('status');
         if ($status && $status != ClinicStatus::DELETED) {
-            $pharmacy = Clinic::where('status', $status)->where('type', TypeBussiness::PHARMACY)->get();
+            $pharmacy = Clinic::where('status', $status)
+                ->where('type', TypeBusiness::PHARMACIES)
+                ->get();
         } else {
-            $pharmacy = Clinic::where('status', '!=', ClinicStatus::DELETED)->where('type', TypeBussiness::PHARMACY)->get();
+            $pharmacy = Clinic::where('status', '!=', ClinicStatus::DELETED)
+                ->where('type', TypeBusiness::PHARMACIES)
+                ->get();
         }
 
         return response()->json($pharmacy);
@@ -43,12 +52,12 @@ class AdminPharmacyApi extends Controller
             $pharmacies = Clinic::where([
                 ['status', $status],
                 ['user_id', $id]
-            ])->where('type', TypeBussiness::PHARMACIES)->get();
+            ])->where('type', TypeBusiness::PHARMACIES)->get();
         } else {
             $pharmacies = Clinic::where([
                 ['status', '!=', ClinicStatus::DELETED],
                 ['user_id', $id]
-            ])->where('type', TypeBussiness::PHARMACIES)->get();
+            ])->where('type', TypeBusiness::PHARMACIES)->get();
         }
         return response()->json($pharmacies);
     }
@@ -74,6 +83,9 @@ class AdminPharmacyApi extends Controller
             $close_date = $request->input('close_date');
             $introduce = $request->input('introduce');
 
+            $department = $request->input('departments');
+            $symptoms = $request->input('symptoms');
+
             if ($request->hasFile('gallery')) {
                 $galleryPaths = array_map(function ($image) {
                     $itemPath = $image->store('gallery', 'public');
@@ -94,7 +106,7 @@ class AdminPharmacyApi extends Controller
             $pharmacy->address_detail = $address_detail;
             $pharmacy->address_detail_en = $address_detail_en ?? '';
             $pharmacy->user_id = $user_id;
-            $pharmacy->type = TypeBussiness::PHARMACIES;
+            $pharmacy->type = TypeBusiness::PHARMACIES;
 
             $address = [
                 'nation_id' => $nation_id,
@@ -110,6 +122,9 @@ class AdminPharmacyApi extends Controller
             $pharmacy->introduce = $introduce;
             $pharmacy->gallery = $gallery;
             $pharmacy->status = $status ?? ClinicStatus::ACTIVE;
+
+            $pharmacy->department = $department;
+            $pharmacy->symptom = $symptoms;
 
             if (!$user_id) {
                 return response("UserID not null!", 400);
@@ -163,6 +178,9 @@ class AdminPharmacyApi extends Controller
             $introduce = $request->input('introduce') ?? $pharmacy->introduce;
             $status = $request->input('status') ?? $pharmacy->status;
 
+            $department = $request->input('departments') ?? $pharmacy->department;;
+            $symptoms = $request->input('symptoms') ?? $pharmacy->symptom;;
+
             if ($request->hasFile('gallery')) {
                 $galleryPaths = array_map(function ($image) {
                     $itemPath = $image->store('gallery', 'public');
@@ -195,6 +213,9 @@ class AdminPharmacyApi extends Controller
             $pharmacy->introduce = $introduce;
             $pharmacy->gallery = $gallery;
             $pharmacy->status = $status ?? ClinicStatus::ACTIVE;
+
+            $pharmacy->department = $department;
+            $pharmacy->symptom = $symptoms;
 
             $success = $pharmacy->save();
             if ($success) {

@@ -2,16 +2,39 @@
 
 namespace App\Http\Controllers\restapi;
 
+use App\Enums\BookingStatus;
+use App\Enums\Constants;
 use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
+use App\Models\Clinic;
+use App\Models\Role;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use function Symfony\Component\String\u;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class UserApi extends Controller
 {
+    public function getUserByPoint(Request $request)
+    {
+        $sort_by = $request->input('sort_by') ?? 'desc';
+        $admin = Role::where('name', \App\Enums\Role::ADMIN)->first();
+        $role_admin = DB::table('role_users')->where('role_id', $admin->id)->get();
+        $array_id = [];
+        foreach ($role_admin as $item) {
+            $array_id[] = $item->user_id;
+        }
+        $users = User::where('status', '!=', UserStatus::DELETED)
+//            ->whereNotIn('id', $array_id)
+            ->orderBy('points', $sort_by)
+            ->get();
+        return response()->json($users);
+    }
+
     public function changePassword(Request $request)
     {
         try {
@@ -26,19 +49,24 @@ class UserApi extends Controller
                 $check = Hash::check($currentPassword, $oldPassword);
                 if ($check) {
                     if ($newPassword != $newPasswordConfirm) {
-                        return response('New password or new password confirm incorrect', 400);
+                        return response((new MainApi())->returnMessage('New password or new password confirm incorrect!'), 400);
                     }
+
+                    if (strlen($newPassword) < 5) {
+                        return response((new MainApi())->returnMessage('Password invalid!'), 400);
+                    }
+
                     $user->password = Hash::make($newPassword);
                     $success = $user->save();
                     if ($success) {
-                        return response('Change password success!', 200);
+                        return response((new MainApi())->returnMessage('Change password success!'), 200);
                     }
-                    return response('Change password error', 400);
+                    return response((new MainApi())->returnMessage('Change password error'), 400);
                 } else {
-                    return response('Password incorrect', 400);
+                    return response((new MainApi())->returnMessage('Password incorrect'), 400);
                 }
             }
-            return response('User not found', 404);
+            return response((new MainApi())->returnMessage('User not found'), 404);
         } catch (\Exception $exception) {
             return response($exception, 500);
         }
@@ -136,17 +164,17 @@ class UserApi extends Controller
                     $itemPath = $item->store('user/avt', 'public');
                     $thumbnail = asset('storage/' . $itemPath);
                 } else {
-                    $thumbnail = '';
+                    $thumbnail = $user->avt;
                 }
 
                 $user->avt = $thumbnail;
                 $success = $user->save();
                 if ($success) {
-                    return response('Change PhoneNumber success!', 200);
+                    return response((new MainApi())->returnMessage('Change Avatar success!'), 200);
                 }
-                return response('Change PhoneNumber error', 400);
+                return response((new MainApi())->returnMessage('Change Avatar error'), 400);
             }
-            return response('User not found', 404);
+            return response((new MainApi())->returnMessage('User not found'), 404);
         } catch (\Exception $exception) {
             return response($exception, 500);
         }
@@ -162,6 +190,7 @@ class UserApi extends Controller
             $username = $request->input('username');
 
             $email = $request->input('email');
+            $medical_history = $request->input('medical_history');
             $phone_number = $request->input('phone_number');
             $current_password = $request->input('current_password');
             $new_password = $request->input('new_password');
@@ -176,6 +205,7 @@ class UserApi extends Controller
             $birthday = $request->input('birthday');
 
             $user = User::find($userID);
+
             if ($userID && $user && $user->status == UserStatus::ACTIVE) {
                 $user->name = $name;
                 $user->last_name = $last_name;
@@ -183,12 +213,12 @@ class UserApi extends Controller
                 if ($user->email != $email) {
                     $isEmail = filter_var($email, FILTER_VALIDATE_EMAIL);
                     if (!$isEmail) {
-                        return response('Email invalid!', 400);
+                        return response((new MainApi())->returnMessage('Email invalid!'), 400);
                     }
 
                     $oldUser = User::where('email', $email)->first();
                     if ($oldUser) {
-                        return response('Email already exited!', 400);
+                        return response((new MainApi())->returnMessage('Email already exited!'), 400);
                     }
                     $user->email = $email;
                 }
@@ -196,24 +226,24 @@ class UserApi extends Controller
                 if ($user->username != $username) {
                     $oldUser = User::where('username', $username)->first();
                     if ($oldUser) {
-                        return response('Username already exited!', 400);
+                        return response((new MainApi())->returnMessage('Username already exited!'), 400);
                     }
                     $user->username = $username;
                 }
-
                 $user->phone = $phone_number;
+                $user->medical_history = $medical_history;
 
                 if ($current_password || $new_password || $confirm_password) {
                     $oldPassword = $user->password;
                     $check = Hash::check($current_password, $oldPassword);
                     if (!$check) {
-                        return response('Password incorrect', 400);
+                        return response((new MainApi())->returnMessage('Password incorrect'), 400);
                     }
                     if (strlen($new_password) < 5) {
-                        return response('Password invalid!', 400);
+                        return response((new MainApi())->returnMessage('Password invalid!'), 400);
                     }
                     if ($new_password != $confirm_password) {
-                        return response('New password or new password confirm incorrect', 400);
+                        return response((new MainApi())->returnMessage('New password or new password confirm incorrect'), 400);
                     }
                     $user->password = Hash::make($new_password);
                 }
@@ -228,13 +258,65 @@ class UserApi extends Controller
 
                 $success = $user->save();
                 if ($success) {
-                    return response('Change Information success!', 200);
+                    return response((new MainApi())->returnMessage('Change Information success!'), 200);
                 }
-                return response('Change Information error', 400);
+                return response((new MainApi())->returnMessage('Change Information error'), 400);
             }
-            return response('User not found', 404);
+            return response((new MainApi())->returnMessage('User not found'), 404);
         } catch (\Exception $exception) {
             return response($exception, 500);
         }
+    }
+
+    public function getUserFromEmail(Request $request)
+    {
+        $email = $request->input('email');
+        $user = User::where('email', $email)->first();
+        return response()->json($user);
+    }
+
+    /* Temporary function */
+    public function logout()
+    {
+        User::where('token', '!=', null)->update(['token' => null]);
+        return response('Logout done!', 200);
+    }
+
+    public function calcPoint(Request $request)
+    {
+        $user_id = $request->input('user_id');
+        $user = User::find($user_id);
+        if (!$user) {
+            return response('User not found!', 404);
+        }
+        $key__ = $request->input('key');
+        $point = $request->input('point');
+        if ($key__ == Constants::KEY_PROJECT) {
+            $user->points = $point;
+            $user->save();
+            return response('Success!', 200);
+        }
+        return response('Key?', 201);
+    }
+
+    public function showBooking(Request $request, $id)
+    {
+        $bookings = null;
+        $now = Carbon::now()->addHours(7);
+        $startDay = $now->copy()->startOfDay();
+        $endDay = $now->copy()->endOfDay();
+
+        if (Auth::check()) {
+            $business = Clinic::where('user_id', Auth::user()->id)->first();
+            if ($business) {
+                $bookings = Booking::where('clinic_id', $business->id)
+                    ->where('user_id', $id)
+                    ->whereIn('status', [BookingStatus::PENDING, BookingStatus::APPROVED])
+                    ->whereBetween('check_in', [$startDay, $endDay])
+                    ->orderBy('id', 'desc')
+                    ->get();
+            }
+        }
+        return view('ui.my-bookings.show-booking-by-qrcode', compact('bookings', 'id'));
     }
 }

@@ -5,13 +5,15 @@
     font-weight: 600;
     line-height: normal;
 }
+
 .fs-16px {
-    color:  #424242;
+    color: #424242;
     font-size: 16px;
     font-style: normal;
     font-weight: 800;
     line-height: normal;
 }
+
 .fs-18px {
     color: #000;
     text-align: center;
@@ -20,6 +22,7 @@
     font-weight: 800;
     line-height: normal;
 }
+
 .fs-12px {
     color: #929292;
     font-size: 12px;
@@ -27,9 +30,11 @@
     font-weight: 600;
     line-height: normal;
 }
+
 .fs-24px {
     font-size: 24px;
 }
+
 .fs-32px {
     color: #000;
     font-size: 32px;
@@ -37,10 +42,11 @@
     font-weight: 800;
     line-height: normal;
 }
+
 .border-8px {
     border-radius: 12px;
-    border: 1px solid  #EAEAEA;
-    background:  #FFF;
+    border: 1px solid #EAEAEA;
+    background: #FFF;
     padding: 8px;
 }
 
@@ -50,8 +56,9 @@
     background: #FFF;
     padding: 16px;
 }
+
 .color-Grey-Dark {
-    color:  #929292;
+    color: #929292;
 }
 
 .css-button {
@@ -91,12 +98,14 @@
     line-height: 56px;
     text-align: center;
     cursor: pointer;
+
     :hover {
         background: rgb(69, 195, 210);
         color: white;
         border-radius: 8px;
     }
 }
+
 .text-option {
     color: var(--secon1, #45C3D2);
     font-size: 16px;
@@ -105,6 +114,7 @@
     line-height: normal;
     padding: 17px;
 }
+
 .text-arena-info {
     border-radius: 8px;
     border: 1px solid var(--Grey-medium, #BFBFBF);
@@ -119,6 +129,7 @@
     width: 100%;
     margin-top: 16px;
 }
+
 .text-arena-p {
     color: var(--Grey-Dark, #929292);
     font-size: 16px;
@@ -126,13 +137,16 @@
     font-weight: 600;
     line-height: normal;
 }
+
 //.w-45 {
 //    width: 45% !important;
 //}
 
 .title-clinics {
     margin-left: 8px;
-    margin-top: 40px;
+    margin-top: 10px;
+    margin-bottom: 16px;
+
     h2 {
         color: var(--Black, #000);
         font-size: 32px;
@@ -140,6 +154,7 @@
         font-weight: 800;
         line-height: normal;
     }
+
     p {
         color: var(--Grey-Dark, #929292);
         font-size: 16px;
@@ -149,3 +164,225 @@
     }
 }
 
+@media (min-width: 576px) {
+    .body-news {
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+    .news-content {
+        color: #000;
+        font-size: 48px;
+        font-style: normal;
+        font-weight: 800;
+        line-height: normal;
+    }
+    .main-title-news {
+        padding: 0 0 0 16px;
+    }
+    .content__item__image {
+        //width: 173px;
+        height: 137px;
+    }
+    .thumbnail-title {
+        width: 501px;
+        height: 334px;
+        object-fit: cover;
+    }
+    .max-2-line-title {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        height: 44px;
+    }
+
+    .max-5-line-title {
+        display: -webkit-box;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #929292;
+
+        .fs-12px {
+            div, p, h2, h1, h3, h4, h5, h6, span, strong, small, li, ul, ol, button, td, th, form, fieldset, legend, textarea, select, option, label, table, blockquote, pre,
+            abbr, acronym, address, caption, cite, code, dfn, em, var, del, ins, sub, sup, iframe, object, applet, button, input, textarea, select, option, label, table,
+            blockquote, pre, abbr, acronym, address, caption, cite, code, dfn, em, var, del, ins, sub, sup, iframe, object, applet {
+                font-size: 12px !important;
+                display: -webkit-box;
+                -webkit-line-clamp: 5;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-height: 70px;
+                color: #929292;
+            }
+        }
+    }
+    .max-6-line-title {
+        display: -webkit-box;
+        -webkit-line-clamp: 6;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        height: 115px;
+        color: #929292;
+
+        div, p, h2, h1, h3, h4, h5, h6, span, strong, small, li, ul, ol, button, td, th, form, fieldset, legend, textarea, select, option, label, table, blockquote, pre,
+        abbr, acronym, address, caption, cite, code, dfn, em, var, del, ins, sub, sup, iframe, object, applet, button, input, textarea, select, option, label, table,
+        blockquote, pre, abbr, acronym, address, caption, cite, code, dfn, em, var, del, ins, sub, sup, iframe, object, applet {
+            font-size: 16px !important;
+            display: -webkit-box;
+            -webkit-line-clamp: 6;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            height: 115px;
+            color: #929292;
+        }
+    }
+
+    /* fin a doctor */
+    .list-title {
+        width: 100%;
+        border-bottom: 1px solid #D6D6D6;
+        margin-bottom: 24px;
+    }
+    .list-title .list--doctor a p {
+        font-size: 32px;
+        font-weight: 600;
+        margin: 0;
+    }
+    /* end fin a doctor */
+
+}
+
+
+@media (max-width: 575px) {
+    .content__item__image {
+        width: 128px;
+        height: 102px;
+    }
+    .body-news {
+        div, p, h2, h1, h3, h4, h5, h6, span, strong, small, li, ul, ol, button, td, th, form, fieldset, legend, textarea, select, option, label, table, blockquote, pre {
+            font-size: 12px !important;
+        }
+    }
+    .text-content-news {
+        div, p, h2, h1, h3, h4, h5, h6, span, strong, small, li, ul, ol, button, td, th, form, fieldset, legend, textarea, select, option, label, table, blockquote, pre {
+            margin-top: 12px;
+            font-size: 14px !important;
+        }
+    }
+    .news-content {
+        color: #000;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 800;
+        line-height: normal;
+    }
+    .main-title-news {
+        padding: 8px 0;
+    }
+
+    .thumbnail-title {
+        //width: 343px;
+        height: 226px;
+        object-fit: cover;
+    }
+    .max-2-line-title {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        height: 44px;
+    }
+
+    .max-5-line-title {
+        display: -webkit-box;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #929292;
+
+        .fs-12px {
+            div, p, h2, h1, h3, h4, h5, h6, span, strong, small, li, ul, ol, button, td, th, form, fieldset, legend, textarea, select, option, label, table, blockquote, pre,
+            abbr, acronym, address, caption, cite, code, dfn, em, var, del, ins, sub, sup, iframe, object, applet, button, input, textarea, select, option, label, table,
+            blockquote, pre, abbr, acronym, address, caption, cite, code, dfn, em, var, del, ins, sub, sup, iframe, object, applet {
+                font-size: 12px !important;
+                display: -webkit-box;
+                -webkit-line-clamp: 4;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-height: 60px;
+                color: #929292;
+            }
+        }
+    }
+    .max-6-line-title {
+        display: -webkit-box;
+        -webkit-line-clamp: 6;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        //height: 115px;
+        color: #929292;
+
+        div, p, h2, h1, h3, h4, h5, h6, span, strong, small, li, ul, ol, button, td, th, form, fieldset, legend, textarea, select, option, label, table, blockquote, pre,
+        abbr, acronym, address, caption, cite, code, dfn, em, var, del, ins, sub, sup, iframe, object, applet, button, input, textarea, select, option, label, table,
+        blockquote, pre, abbr, acronym, address, caption, cite, code, dfn, em, var, del, ins, sub, sup, iframe, object, applet {
+            font-size: 12px !important;
+            display: -webkit-box;
+            -webkit-line-clamp: 6;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: 115px;
+            color: #929292;
+        }
+    }
+
+    /* fin a doctor */
+    #show-doctor {
+        .list-title {
+            width: 100%;
+            border-bottom: 1px solid #D6D6D6;
+            //margin-bottom: 12px;
+            .list--doctor {
+                p {
+                    color: #000;
+                    text-align: center;
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 800;
+                    line-height: normal;
+                }
+            }
+            .seeAll {
+                a {
+                    color: var(--Black, #1A202C);
+                    text-align: center;
+                    font-size: 12px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: normal;
+                }
+
+            }
+        }
+    }
+    .list-title .list--doctor a p {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    /* end fin a doctor */
+}

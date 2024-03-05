@@ -13,14 +13,16 @@ class NewEventController extends Controller
      */
     public function index()
     {
+        $perPage = 6; // Set the number of items per page
+
         $listEvent = NewEvent::where('status', NewEventStatus::ACTIVE)
             ->where('type', 'EVENT')
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate($perPage);
         $listNews = NewEvent::where('status', NewEventStatus::ACTIVE)
             ->where('type', 'NEWS')
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate($perPage);
         return view('News-event.News', compact('listEvent', 'listNews'));
     }
 

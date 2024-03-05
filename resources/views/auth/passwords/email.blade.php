@@ -11,7 +11,7 @@
                         <div class="col-lg-6">
                             <div class="p-5">
                                 <div class="text-center">
-                                    <h1 class="h4 text-gray-900 mb-4">{{ __('Reset Password') }}</h1>
+                                    <h1 class="h4 text-gray-900 mb-4">{{ __('home.Reset Password') }}</h1>
                                 </div>
 
                                 @if ($errors->any())
@@ -34,12 +34,12 @@
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                                     <div class="form-group">
-                                        <input type="email" class="form-control form-control-user" name="email" placeholder="{{ __('E-Mail Address') }}" value="{{ old('email') }}" required>
+                                        <input type="email" class="form-control form-control-user" name="email" placeholder="{{ __('home.E-Mail Address') }}" value="{{ old('email') }}" required>
                                     </div>
 
                                     <div class="form-group">
                                         <button type="submit" class="btn btn-primary btn-user btn-block">
-                                            {{ __('Send Password Reset Link') }}
+                                            {{ __('home.Send Password Reset Link') }}
                                         </button>
                                     </div>
                                 </form>

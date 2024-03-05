@@ -1,8 +1,3 @@
-@media (min-width: 1500px) {
-  .container {
-    min-width: 1440px;
-  }
-}
 .input-quantity {
   font-size: 24px;
   border: 1px solid #ccc;
@@ -73,11 +68,10 @@
 
 .banner {
   margin-top: 100px;
-  height: 500px;
   margin-bottom: 40px;
 }
 .banner img {
-  height: 100%;
+  height: auto;
   width: 100%;
   object-fit: cover;
 }
@@ -94,6 +88,17 @@
   gap: 10px;
   align-self: stretch;
   width: 100%;
+}
+
+.recruitment-details--text--line {
+  border: 1px solid #BFBFBF;
+  margin: 16px 0;
+}
+
+.recruitment-details--text div, .recruitment-details--text p, .recruitment-details--text span, .recruitment-details--text h1, .recruitment-details--text h2, .recruitment-details--text h3, .recruitment-details--text h4, .recruitment-details--text h5, .recruitment-details--text h6 {
+  color: #000;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 .recruitment-details--title {
@@ -139,46 +144,6 @@
   border: 1px solid rgb(234, 234, 234);
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
-.recruitment-details--content--right .product-details .body .text-wrapper {
-  font-size: 24px;
-  font-weight: 800;
-}
-.recruitment-details--content--right .product-details .body .price {
-  font-size: 32px;
-  font-weight: 800;
-  margin-top: 24px;
-}
-.recruitment-details--content--right .product-details .body .brand-name {
-  margin-top: 24px;
-}
-.recruitment-details--content--right .product-details .body .brand-name .text-wrapper-2 {
-  font-size: 24px;
-  font-weight: 400;
-  margin-right: 10px;
-}
-.recruitment-details--content--right .product-details .body .brand-name .text-wrapper-3 {
-  font-size: 25px;
-  font-weight: 800;
-}
-.recruitment-details--content--right .product-details .button {
-  margin-top: 24px;
-}
-.recruitment-details--content--right .product-details .button button {
-  width: 100%;
-  border: none;
-  font-size: 14px;
-  font-weight: 800;
-  height: 50px;
-}
-.recruitment-details--content--right .product-details .button button.div-wrapper {
-  border-radius: 8px;
-  background: rgb(214, 214, 214);
-}
-.recruitment-details--content--right .product-details .button button.text-wrapper-5 {
-  border-radius: 8px;
-  background: rgb(69, 195, 210);
-  color: white;
-}
 .recruitment-details--content--right .form-1 .div .title {
   font-size: 16px;
   font-weight: 700;
@@ -212,7 +177,6 @@
 .recruitment-details--content--right .form-1 .div-3 {
   display: inline-flex;
   flex-direction: column;
-  gap: 24px;
   width: 100%;
 }
 .recruitment-details--content--right .form-1 .div-3 .div-4 {
@@ -264,7 +228,7 @@
   padding: 11px 0;
   width: 47%;
   border-radius: 8px;
-  background: var(--secon1, #45C3D2);
+  background: var(--secon1, #088180);
   color: var(--White, #FFF);
   text-align: center;
   font-size: 14px;
@@ -363,7 +327,7 @@
   padding: 11px 0;
   width: 47%;
   border-radius: 8px;
-  background: var(--secon1, #45C3D2);
+  background: var(--secon1, #088180);
   color: var(--White, #FFF);
   text-align: center;
   font-size: 14px;
@@ -449,7 +413,7 @@
 }
 .medicine-search--center .search-box input {
   width: 100%;
-  padding-left: 8%;
+  padding-left: 15%;
   height: 48px;
   background: rgb(247, 247, 247);
   font-size: 14px;
@@ -474,6 +438,7 @@
   align-items: center;
   margin-right: 20px;
   border: none;
+  padding: 8px;
 }
 .medicine-search--center .shopping-bag:focus {
   border: none;
@@ -540,11 +505,14 @@
 .product-item .img-pro #bi-heart-fill {
   color: rgb(255, 0, 0);
 }
+.product-item .content-pro {
+  padding: 0 10px;
+}
 .product-item .content-pro .name-pro a {
-  color: black;
+  color: #ffffff;
   font-size: 18px;
   font-weight: 800;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -556,10 +524,12 @@
 .product-item .content-pro .location-pro p {
   margin-left: 5px;
   font-weight: 800;
+  color: #FFFFFF;
 }
 .product-item .content-pro .price-pro {
   font-size: 24px;
   font-weight: 800;
+  color: #FFFFFF;
 }
 
 .clinics-list .clinics-header {
@@ -590,7 +560,7 @@
 }
 .clinic-search--center .search-box input {
   width: 100%;
-  padding-left: 8%;
+  padding-left: 15%;
   height: 48px;
   background: rgb(247, 247, 247);
   font-size: 14px;
@@ -654,6 +624,30 @@
   overflow-x: hidden;
 }
 
+.button-visitStore {
+  border-radius: 8px;
+  background: var(--Grey-Light, #D6D6D6);
+  display: flex;
+  padding: 11px 50px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex: 1 0 0;
+  border: 0;
+}
+
+.button-buyNow {
+  border-radius: 8px;
+  background: var(--secon1, #088180);
+  display: flex;
+  padding: 11px 50px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex: 1 0 0;
+  border: 0;
+}
+
 .clinic-item {
   border: 1px solid rgb(234, 234, 234);
   padding: 10px 14px;
@@ -661,6 +655,7 @@
   margin-bottom: 8px;
   display: grid;
   gap: 8px;
+  height: 100%;
 }
 .clinic-item a {
   font-size: 18px;
@@ -697,8 +692,8 @@
   height: 80px;
 }
 .clinic-item .img-detail .img-item img {
-  width: 100%;
-  height: 100%;
+  width: 80px !important;
+  height: 80px !important;
   object-fit: cover;
 }
 
@@ -711,68 +706,6 @@
 .detail-clinics iframe {
   width: 100%;
   height: 80vh;
-}
-
-.modal-cart .modal-dialog {
-  max-width: 700px;
-}
-.modal-cart .modal-dialog .modal-content .modal-header {
-  border-bottom: none;
-}
-.modal-cart .modal-dialog .modal-content .modal-header .modal-title {
-  font-size: 24px;
-  font-weight: 800;
-}
-.modal-cart .modal-dialog .modal-content .modal-body {
-  max-height: 75vh;
-  overflow-y: auto;
-  padding: 0 30px;
-  border-bottom: none;
-  display: grid;
-  gap: 16px;
-}
-.modal-cart .modal-dialog .modal-content .modal-body .product-cart {
-  border-radius: 8px;
-  padding: 10px 16px;
-  border: 1px solid rgb(234, 234, 234);
-  align-items: center;
-}
-.modal-cart .modal-dialog .modal-content .modal-body .product-cart .img {
-  width: 100px;
-  height: 100px;
-}
-.modal-cart .modal-dialog .modal-content .modal-body .product-cart .img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.modal-cart .modal-dialog .modal-content .modal-body .product-cart .title .title-name {
-  font-size: 18px;
-  font-weight: 800;
-}
-.modal-cart .modal-dialog .modal-content .modal-body .product-cart .title .price {
-  font-size: 18px;
-  font-weight: 600;
-}
-.modal-cart .modal-dialog .modal-content .modal-footer {
-  border-top: none;
-}
-.modal-cart .modal-dialog .modal-content .modal-footer .cancel {
-  width: 161px;
-  font-size: 14px;
-  font-weight: 800;
-  background: rgb(214, 214, 214);
-  border-radius: 8px;
-  height: 40px;
-}
-.modal-cart .modal-dialog .modal-content .modal-footer .pay {
-  width: 161px;
-  font-size: 14px;
-  font-weight: 800;
-  background: rgb(69, 195, 210);
-  color: white;
-  border-radius: 8px;
-  height: 40px;
 }
 
 .modalCreatPrescription .title {
@@ -801,7 +734,7 @@
   border: 1px solid rgb(191, 191, 191);
   color: #929292;
 }
-.modalCreatPrescription .add-img button {
+.modalCreatPrescription .add-img label {
   width: 220px;
   height: 220px;
   border-radius: 8px;
@@ -809,12 +742,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
-.modalCreatPrescription .add-img button i {
+.modalCreatPrescription .add-img label i {
   color: rgb(146, 146, 146);
   font-size: 60px;
 }
-.modalCreatPrescription .add-img button img {
+.modalCreatPrescription .add-img label img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -822,7 +756,6 @@
 
 .medicine-list--item .tabMystore {
   border-bottom: none;
-  margin-bottom: 32px;
 }
 .medicine-list--item .tabMystore .nav-item a {
   width: 100% !important;
@@ -836,9 +769,6 @@
 .rv_item-1 {
   padding: 10px;
   border-bottom: 1px solid rgb(214, 214, 214);
-}
-.rv_item-1 .rv-header {
-  margin-bottom: 10px;
 }
 .rv_item-1 .rv-header--left {
   align-items: center;
@@ -985,10 +915,6 @@ section {
   animation: fadeout 0.5s;
 }
 
-.item {
-  flex: 0 0 25%;
-}
-
 .item .button {
   width: 95%;
 }
@@ -1055,5 +981,121 @@ section {
   gap: 10px;
   flex-shrink: 0;
 }
+
+.text-overflow {
+  display: -webkit-box;
+  line-height: 1.3;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 25px;
+}
+
+/* doctor information */
+@media (max-width: 575px) {
+  #show_inf #inf-doctor #img_info {
+    width: 100%;
+    margin: 0;
+  }
+  #show_inf #inf-doctor #img_info #doc {
+    margin-bottom: 32px;
+  }
+  #show_inf #inf-doctor #img_info #qr_code {
+    display: flex;
+    padding: 24px 67px 24px 66px;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    border-radius: 8px;
+    border: 1px solid #EAEAEA;
+  }
+  #show_inf #inf-doctor #img_info #qr_code p {
+    color: #000;
+    font-size: 18px;
+    font-weight: 800;
+  }
+  #show_inf #inf-doctor #about {
+    width: 100%;
+  }
+  #show_inf #inf-doctor #about h5 {
+    font-size: 18px;
+    font-weight: 800;
+  }
+  #show_inf #inf-doctor #about .dess {
+    margin-top: 8px;
+    display: flex;
+  }
+  #show_inf #inf-doctor #about .dess p {
+    color: #929292;
+    font-size: 14px;
+    font-weight: 400;
+  }
+  #show_inf #inf-doctor #about .dess span {
+    color: #000;
+    font-size: 14px;
+    font-weight: 800;
+    margin-left: 8px;
+  }
+  #show_inf #inf-doctor #about .dess span div, #show_inf #inf-doctor #about .dess span p, #show_inf #inf-doctor #about .dess span span, #show_inf #inf-doctor #about .dess span h1, #show_inf #inf-doctor #about .dess span h2, #show_inf #inf-doctor #about .dess span h3, #show_inf #inf-doctor #about .dess span h4, #show_inf #inf-doctor #about .dess span h5, #show_inf #inf-doctor #about .dess span h6 {
+    color: #000;
+    font-size: 14px;
+    font-weight: 800;
+    margin-left: 8px;
+  }
+  #show_inf #review {
+    margin-top: 24px;
+  }
+}
+@media (min-width: 576px) {
+  #show_inf #inf-doctor #img_info {
+    width: 100%;
+    margin-right: 15px;
+  }
+  #show_inf #inf-doctor #img_info #doc {
+    margin-bottom: 32px;
+  }
+  #show_inf #inf-doctor #img_info #qr_code {
+    display: flex;
+    padding: 24px 67px 24px 66px;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    border-radius: 8px;
+    border: 1px solid #EAEAEA;
+  }
+  #show_inf #inf-doctor #img_info #qr_code p {
+    color: #000;
+    font-size: 32px;
+    font-weight: 800;
+  }
+  #show_inf #inf-doctor #about {
+    width: 100%;
+    margin-left: 15px;
+  }
+  #show_inf #inf-doctor #about h5 {
+    font-size: 48px;
+    font-weight: 800;
+  }
+  #show_inf #inf-doctor #about .dess {
+    margin-top: 24px;
+    display: flex;
+  }
+  #show_inf #inf-doctor #about .dess p {
+    color: #929292;
+    font-size: 24px;
+    font-weight: 400;
+  }
+  #show_inf #inf-doctor #about .dess span {
+    color: #000;
+    font-size: 24px;
+    font-weight: 800;
+    margin-left: 10px;
+  }
+  #review {
+    margin-top: 40px;
+  }
+}
+/* end doctor information */
 
 /*# sourceMappingURL=file.css.map */

@@ -4,168 +4,138 @@
     @include('layouts.partials.header_3')
     @include('component.banner')
     <div id="examination-scene" class="container ">
-        <div class="d-flex w-100">
-            <div id="filter" class="box--3 d-flex justify-content-between w-100">
-                <div class="d-flex flex-fill">
-                    <div class="filter_option" style="list-style: none;">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Department
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <div class="d-md-flex d-none
+         w-100">
+            <div id="filter" class="box--3 w-100 ">
+                <form action="{{ route('examination.index') }}" method="get" class="row" id="searchForm">
+                    <div class="col-sm-2 col">
+                        <div class="form-group">
+                            <label for="exampleFormControlSelect2">{{ __('home.Department') }}</label>
+                            <select class="form-control" name="department_id" onchange="submitForm()">
+                                <option value="">{{ __('home.All') }}</option>
                                 @foreach($departments as $department)
-                                    <a class="dropdown-item doctor-department" href="#"
-                                       data-department="{{$department}}">{{$department->name}}</a>
+                                    <option href="#"
+                                            {{ $departmentId == $department->id ? 'selected' : '' }} value="{{ $department->id }}"
+                                            data-department="{{$department}}">{{$department->name}}</option>
                                 @endforeach
-                            </div>
-                        </li>
+                            </select>
+                        </div>
                     </div>
-                    <div class="filter_option"><p>Position</p></div>
-                    <div class="filter_option"><p>Location</p></div>
-                    <div class="filter_option"><p>Experience</p></div>
-                </div>
-                <div class="form-group has-search">
-                    <span class="fa fa-search form-control-feedback"></span>
-                    <input type="text" class="form-control" placeholder="Search for anything…">
-                </div>
+
+                    <div class="col-sm-2 col">
+                        <div class="form-group">
+                            <label for="exampleFormControlSelect2">{{ __('home.Location') }}</label>
+                            <select class="form-control" name="province_id" onchange="submitForm()">
+                                <option value="">{{ __('home.All') }}</option>
+                                @foreach($provinces as $province)
+                                    <option href="#" {{ $provinceId == $province->id ? 'selected' : '' }}
+                                    value="{{ $province->id }}"
+                                    >{{$province->full_name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 col">
+                        <div class="form-group">
+                            <label for="exampleFormControlSelect2">{{ __('home.Hospital') }}</label>
+                            <select class="form-control" name="hospital_id" onchange="submitForm()">
+                                <option value="">{{ __('home.All') }}</option>
+                                @foreach( $hospitals as $hospital )
+                                    <option href="#" {{ $hospitalId == $hospital->id ? 'selected' : '' }}
+                                    value="{{ $hospital->id }}"
+                                    >{{ $hospital->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 col">
+                        <div class="form-group">
+                            <label for="exampleFormControlSelect2">{{ __('home.Experience') }}</label>
+                            <select class="form-control" name="year_of_experience" onchange="submitForm()">
+                                <option value="">{{ __('home.All') }}</option>
+                                @foreach( $experiences as $experience )
+                                    <option href="#" {{ $experienceValue == $experience ? 'selected' : '' }}
+                                    value="{{ $experience }}"
+                                    >{{ $experience }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col">
+                        <div class="form-group position-relative">
+                            <label for="inputSearchDoctor" class="fa fa-search form-control-feedback"></label>
+                            <input type="search" id="inputSearchDoctor" class="form-control"
+                                   name="nameSearch"
+                                   value="{{ $nameSearch }}"
+                                   placeholder="{{ __('home.Search for anything…') }}">
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
         <div id="show-doctor">
             <div class="d-flex justify-content-center" style="padding: 12px">
-                <div id="list-title-best" class="list-title d-flex">
+                <div id="list-title-best" class="list-title justify-content-between align-items-center d-flex">
                     <div class="list--doctor p-0">
-                        <p>Best doctor</p>
+                        <p>{{ __('home.Best doctor') }}</p>
                     </div>
-                    <div class="ms-auto p-2"><a href="{{route('examination.best_doctor')}}">See all</a></div>
+                    <div class="p-md-2 seeAll"><a href="{{route('examination.best_doctor')}}">{{ __('home.See all') }}</a>
+                    </div>
                 </div>
             </div>
-            <div id="list-doctor-best" class="list-doctor row m-auto p-0">
-
+            <div class="row list-doctor m-auto find-my-medicine">
+                @if(count($bestDoctorInfos) > 0)
+                    @foreach($bestDoctorInfos as $pharmacist)
+                        @include('examination.component_doctor_findmymedicine', ['pharmacist' => $pharmacist])
+                    @endforeach
+                @else
+                    <h3 class="no-data text-center">{{ __('home.no data') }}</h3>
+                @endif
             </div>
+
+
             <div class="d-flex justify-content-center" style="padding: 12px">
-                <div id="list-title-new" class="list-title d-flex">
+                <div id="list-title-new" class="list-title justify-content-between align-items-center d-flex">
                     <div class="list--doctor p-0">
-                        <p>New doctor</p>
+                        <p>{{ __('home.New doctor') }}</p>
                     </div>
-                    <div class="ms-auto p-2"><a href="{{route('examination.new_doctor')}}">See all</a></div>
+                    <div class="seeAll p-2"><a href="{{route('examination.new_doctor')}}">{{ __('home.See all') }}</a>
+                    </div>
                 </div>
             </div>
-            <div id="list-doctor-new" class="list-doctor row m-auto">
-
+            <div class="row list-doctor m-auto find-my-medicine">
+                @if(count($newDoctorInfos) > 0)
+                    @foreach($newDoctorInfos as $pharmacist)
+                        @include('examination.component_doctor_findmymedicine', ['pharmacist' => $pharmacist])
+                    @endforeach
+                @else
+                    <h3 class="no-data text-center">{{ __('home.no data') }}</h3>
+                @endif
             </div>
             <div class="d-flex justify-content-center" style="padding: 12px;">
-                <div id="list-title-available" class="list-title d-flex">
+                <div id="list-title-available" class="list-title justify-content-between align-items-center d-flex">
                     <div class="list--doctor p-0">
-                        <p>24/7 Available doctor</p>
+                        <p>{{ __('home.24/7 Available doctor') }}</p>
                     </div>
-                    <div class="ms-auto p-2"><a href="{{route('examination.available_doctor')}}">See all</a></div>
+                    <div class="seeAll p-2"><a
+                            href="{{route('examination.available_doctor')}}">{{ __('home.See all') }}</a></div>
                 </div>
             </div>
-            <div id="list-doctor-available" class="list-doctor row m-auto">
-
+            <div class="row list-doctor m-auto find-my-medicine">
+                @if(count($availableDoctorInfos) > 0)
+                    @foreach($availableDoctorInfos as $pharmacist)
+                        @include('examination.component_doctor_findmymedicine', ['pharmacist' => $pharmacist])
+                    @endforeach
+                @else
+                    <h3 class="no-data text-center">{{ __('home.no data') }}</h3>
+                @endif
             </div>
         </div>
     </div>
+
     <script>
-        $(document).ready(function () {
-            async function callListDoctor() {
-                await $.ajax({
-                    url: `{{route('doctors.info.restapi.list')}}/?size=4`,
-                    method: 'GET',
-                    success: function (response) {
-                        showListDoctor(response);
-                    },
-                    error: function (exception) {
-                        console.log(exception)
-                    }
-                });
-            }
-
-            callListDoctor();
-
-            function showListDoctor(res) {
-                let html = ``;
-                let url = `{{ asset('storage') }}`;
-                let detailDoctor = `{{ route('examination.doctor_info', ['id' => ':id']) }}`;
-                for (let i = 0; i < res.length; i++) {
-                    let item = res[i];
-                    let mainUrl = detailDoctor.replace(':id', item['id']);
-                    let imageDoctor = item['thumbnail'];
-                    let myArray = imageDoctor.split("/storage");
-                    html = html + `<div class="col-md-3" >
-                                    <div class="card">
-                            <i class="bi bi-heart"></i>
-                            <img src=" ${url}${myArray[1]} " class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <a href="${mainUrl}"><h5 class="card-title">${item['name']}</h5></a>
-                                <p class="card-text">Specialty: ${item['specialty']}</p>
-                                <p class="card-text_1">Location: <b>${item['detail_address']}</b></p>
-                                <p class="card-text_1">Working time: <b>${item['time_working_1']}</b></p>
-                            </div>
-                            </div>
-                        </div>`;
-
-                }
-                $('#list-doctor-new').empty().append(html);
-                $('#list-doctor-best').empty().append(html);
-                $('#list-doctor-available').empty().append(html);
-            }
-
-            $('.doctor-department').on('click', function () {
-                let department = $(this).data('department');
-                callListDoctorByDepartment(department);
-            })
-
-            function showListDoctorDepartment(res, department) {
-                let html = ``;
-                let url = `{{ asset('storage') }}`;
-                let detailDoctor = `{{ route('examination.doctor_info', ['id' => ':id']) }}`;
-                for (let i = 0; i < res.length; i++) {
-                    let item = res[i];
-                    let mainUrl = detailDoctor.replace(':id', item['id']);
-                    let imageDoctor = item['thumbnail'];
-                    let myArray = imageDoctor.split("/storage");
-                    html = html + `<div class="card col-md-3" >
-                              <i class="bi bi-heart"></i>
-                            <img src=" ${url}${myArray[1]} " class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <a href="${mainUrl}"><h5 class="card-title">${item['name']}</h5></a>
-                                <p class="card-text">Specialty: ${item['specialty']}</p>
-                                <p class="card-text_1">Location: <b>${item['detail_address']}</b></p>
-                                <p class="card-text_1">Working time: <b>${item['time_working_1']}</b></p>
-                            </div>
-                        </div>`;
-                }
-
-                let listDoctor = `<div id="list-doctor-department" class="list-doctor row container m-auto"> ${html} </div>`;
-                let showDepartment = `<div class="d-flex justify-content-center">
-                        <div id="list-title-department" class="list-title d-flex">
-                            <div class="list--doctor p-0">
-                                <p>${department['name']}</p>
-                            </div>
-                        <div class="ms-auto p-2"><a href="{{route('examination.index')}}">See all</a></div>
-                        </div>
-                    </div>`;
-                let allHtml = showDepartment + listDoctor;
-                $('#show-doctor').empty().append(allHtml);
-            }
-
-            async function callListDoctorByDepartment(department) {
-                let url = `{{route('doctors.info.restapi.department', ['id' => ':id'])}}/?size=4`;
-                url = url.replace(':id', department['id']);
-                await $.ajax({
-                    url: url,
-                    method: 'GET',
-                    success: function (response) {
-                        showListDoctorDepartment(response, department);
-                    },
-                    error: function (exception) {
-                        console.log(exception)
-                    }
-                });
-            }
-        })
+        function submitForm() {
+            document.getElementById('searchForm').submit();
+        }
     </script>
 @endsection
-

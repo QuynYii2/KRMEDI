@@ -29,14 +29,13 @@
                         <div class="d-flex align-items-end"><p>10:20 07/04/2023</p></div>
                     </div>
                     <div class="text-description">
-                        <strong>"Dịch vụ cực tốt"</strong>
-                        <p>Lần đầu tiên sử dụng dịch vụ qua app nhưng chất lượng và dịch vụ tại salon quá tốt. Book giờ nào thì cứ đúng giờ đến k sợ phải chờ đợi như mọi chỗ khác.
-                            Hy vọng thi thoảng app có nhiều ưu đãi để giới thiệu cho bạn bè cùng sử dụng :D</p>
+                        <strong>"{{ __('home.Dịch vụ cực tốt') }}"</strong>
+                        <p>{{ __('home.Lần đầu tiên sử dụng dịch vụ qua app nhưng chất lượng và dịch vụ tại salon quá tốt. Book giờ nào thì cứ đúng giờ đến k sợ phải chờ đợi như mọi chỗ khác. Hy vọng thi thoảng app có nhiều ưu đãi để giới thiệu cho bạn bè cùng sử dụng') }}</p>
                     </div>
                     <a href="#">
                         <div class="row icon-reply d-flex justify-content-end">
                             <i class="fa-solid fa-reply"></i>
-                            <p>Reply</p>
+                            <p>{{ __('home.Reply') }}</p>
                         </div>
                     </a>
                 </div>

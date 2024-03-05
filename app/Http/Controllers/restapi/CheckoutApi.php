@@ -34,14 +34,27 @@ class CheckoutApi extends Controller
 
     public function checkout($request)
     {
+        $discount_price_exchange = $request->input('discount_price_exchange');
+        if ($discount_price_exchange > 999) {
+            $point_exchange = intval($discount_price_exchange / 1000);
+        } else {
+            $point_exchange = 0;
+        }
+
         $userID = $request->input('user_id');
+
+        $user = User::find($userID);
+        $user->points = $point_exchange;
+        $user->save();
 
         $full_name = $request->input('full_name');
         $email = $request->input('email');
         $phone = $request->input('phone');
-        $address = $request->input('address');
+        $address = $request->input('address_checkout');
+
 
         $total = $request->input('total_fee');
+
         $ship = $request->input('shipping_fee');
         $discount = $request->input('discount_fee');
         $totalOrder = $request->input('total_order');
@@ -82,9 +95,13 @@ class CheckoutApi extends Controller
             $orderItem->quantity = $cart->quantity;
             $orderItem->price = $product->price;
 
-            $orderItem->status = OrderItemStatus::ACTIVE;
+            $orderItem->type_product = $cart->type_product;
 
+            $orderItem->status = OrderItemStatus::ACTIVE;
             $orderItem->save();
+
+            $product->quantity -= $cart->quantity;
+            $product->save();
 
             $cart->delete();
         }
@@ -92,9 +109,72 @@ class CheckoutApi extends Controller
         $roleAdmin = Role::where('name', \App\Enums\Role::ADMIN)->first();
         $role_user = DB::table('role_users')->where('role_id', $roleAdmin->id)->first();
         $admin = User::where('id', $role_user->user_id)->first();
-        (new MailController())->sendEmail($email, 'supporttdoctor@gmail.com', 'Order success', 'Notification of successful order placement!');
-        (new MailController())->sendEmail($admin->email, 'supporttdoctor@gmail.com', 'Order created', 'A new order has just been created!');
+        (new MailController())->sendEmail($email, 'support_krmedi@gmail.com', 'Order success', 'Notification of successful order placement!');
+        (new MailController())->sendEmail($admin->email, 'support_krmedi@gmail.com', 'Order created', 'A new order has just been created!');
 
         return $success;
+    }
+
+    public function returnCheckoutVNPay(Request $request)
+    {
+        try {
+            $response = null;
+            $vnp_ResponseCode = $request->input('vnp_ResponseCode');
+            $response['vnp_ResponseCode'] = $vnp_ResponseCode;
+            return response()->json($response);
+        } catch (\Exception $exception) {
+            return response((new MainApi())->returnMessage('Error, Please try again!'), 400);
+        }
+    }
+
+    public function showPoint(Request $request)
+    {
+        $user_id = $request->input('user_id');
+        $user = User::find($user_id);
+
+        if (!$user) {
+            return response((new MainApi())->returnMessage('User not found!'), 404);
+        }
+
+        $point = $user->points;
+        $price_discount_max = $point * 1000;
+        return response()->json(['price_discount_max' => $price_discount_max], 200);
+    }
+
+    public function calcDiscount(Request $request)
+    {
+        $price = $request->input('price');
+        $user_id = $request->input('user_id');
+
+        $response['status'] = 200;
+        $response['discount'] = 0;
+        $response['price'] = $price;
+        $user = User::find($user_id);
+        if (!$user) {
+            $response['status'] = 404;
+            $response['message'] = 'User not found!';
+            return response((new MainApi())->returnMessage($response['message']), $response['status']);
+        }
+
+        $point = $user->points;
+        $point_to_money = $point * 1000;
+        if ($point > 0) {
+            $point_exchange = 0; /* Tiền thừa*/
+            if ($price < $point_to_money) {
+                $point_money_exchange = $point_to_money - $price;
+                $point_exchange = intval($point_money_exchange / 1000);
+                $discount = $price;
+                $price = 0;
+
+            } else {
+                $discount = $point_to_money;
+                $price = $price - $point_to_money;
+            }
+            $response['point_exchange'] = $point_exchange;
+            $response['discount'] = $discount;
+            $response['price'] = $price;
+        }
+
+        return response()->json($response);
     }
 }

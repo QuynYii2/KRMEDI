@@ -50,11 +50,20 @@ class BackendCategoryController extends Controller
             $name_laos = $request->input('name_laos');
             $description = $request->input('description');
             $description_en = $request->input('description_en');
+            $description_laos = $request->input('description_laos');
             $parent_id = $request->input('parent_id');
             $status = $request->input('status');
             $user_id = $request->input('user_id');
 
-            if ($parent_id) {
+            if ($request->hasFile('thumbnail')) {
+                $item = $request->file('thumbnail');
+                $itemPath = $item->store('categories', 'public');
+                $thumbnail = asset('storage/' . $itemPath);
+            } else {
+                $thumbnail = '';
+            }
+
+            if ($parent_id && $parent_id != '0') {
                 $category->parent_id = $parent_id;
             }
 
@@ -63,6 +72,8 @@ class BackendCategoryController extends Controller
             $category->name_laos = $name_laos;
             $category->description = $description;
             $category->description_en = $description_en;
+            $category->thumbnail = $thumbnail;
+            $category->description_laos = $description_laos;
             $category->status = $status;
             $category->user_id = $user_id;
 
@@ -89,11 +100,20 @@ class BackendCategoryController extends Controller
             $name_laos = $request->input('name_laos');
             $description = $request->input('description');
             $description_en = $request->input('description_en');
+            $description_laos = $request->input('description_laos');
+
+            if ($request->hasFile('thumbnail')) {
+                $item = $request->file('thumbnail');
+                $itemPath = $item->store('categories', 'public');
+                $thumbnail = asset('storage/' . $itemPath);
+            } else {
+                $thumbnail = $category->thumbnail;
+            }
+
             $parent_id = $request->input('parent_id');
             $status = $request->input('status');
-            $user_id = $request->input('user_id');
 
-            if ($parent_id) {
+            if ($parent_id && $parent_id != '0') {
                 $category->parent_id = $parent_id;
             }
 
@@ -103,7 +123,9 @@ class BackendCategoryController extends Controller
             $category->description = $description;
             $category->description_en = $description_en;
             $category->status = $status;
-            $category->user_id = $user_id;
+
+            $category->thumbnail = $thumbnail;
+            $category->description_laos = $description_laos;
 
             $success = $category->save();
             if ($success) {

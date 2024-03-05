@@ -6,6 +6,7 @@ use App\Enums\DoctorInfoStatus;
 use App\Enums\TypeMedical;
 use App\Http\Controllers\Controller;
 use App\Models\DoctorInfo;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class AdminPhamacitisApi extends Controller
@@ -14,12 +15,12 @@ class AdminPhamacitisApi extends Controller
     {
         $status = $request->input('status');
         if ($status) {
-            $doctor_infos = DoctorInfo::where('status', $status)
-                ->where('hocham_hocvi', TypeMedical::PHAMACISTS)
+            $doctor_infos = User::where('status', $status)
+                ->where('member', TypeMedical::PHAMACISTS)
                 ->get();
         } else {
-            $doctor_infos = DoctorInfo::where('status', '!=', DoctorInfoStatus::DELETED)
-                ->where('hocham_hocvi', TypeMedical::PHAMACISTS)
+            $doctor_infos = User::where('status', '!=', DoctorInfoStatus::DELETED)
+                ->where('member', TypeMedical::PHAMACISTS)
                 ->get();
         }
         return response()->json($doctor_infos);

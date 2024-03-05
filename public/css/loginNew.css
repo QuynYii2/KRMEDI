@@ -1,0 +1,294 @@
+@media (max-width: 575px) {
+  .modal-body .popup .form-element button {
+    margin-top: 24px;
+    border-radius: 8px;
+    background: var(--secon1, #088180);
+    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.15);
+    display: flex;
+    width: 156px;
+    height: 40px;
+    padding: 18px 24px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    color: var(--White, #FFF);
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+    border: none;
+    margin-bottom: 32px;
+  }
+  .modal-body .popup .sign--up p {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    color: var(--Black, #000);
+  }
+  .modal-body .popup .sign--up a {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+    color: var(--secon1, #088180);
+  }
+  .modal-body .popup #other-option .form-signin {
+    margin-top: 40px;
+  }
+  .modal-body .popup #other-option .form-signin button {
+    width: 64px;
+    height: 64px;
+    border: none;
+    outline: none;
+    background: white;
+  }
+  .modal-body .popup .other_sign {
+    margin: 16px 0;
+    text-align: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-body .popup .other_sign .text-center {
+    padding: 16px;
+    font-size: 18px;
+  }
+  .modal-body .popup .other_sign .line {
+    width: 200px;
+    height: 1px;
+    background-color: #000;
+    margin: 5px 0;
+  }
+  .modal-body .popup .form {
+    margin-top: 24px;
+  }
+  .modal-body .popup .form .form-element label {
+    color: #000;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+  .modal-body .popup .form .form-element #email, .modal-body .popup .form .form-element #password, .modal-body .popup .form .form-element #username, .modal-body .popup .form .form-element #passwordConfirm, .modal-body .popup .form .form-element #type, .modal-body .popup .form .form-element #member {
+    display: flex;
+    width: 100%;
+    height: 48px;
+    padding: 20px 16px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 8px;
+    border: 1px solid var(--Grey-medium, #BFBFBF);
+    background: var(--White-Light, #F3F3F3);
+  }
+  .modal-body .popup .form .form-element .remember-me {
+    display: flex;
+    align-items: center;
+  }
+  .modal-body .popup .form .form-element .remember-me label {
+    color: var(--Black, #000);
+    text-align: center;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+    margin-left: 4px;
+  }
+  .modal-body .popup .form .form-element a {
+    color: var(--Black, #000);
+    text-align: center;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+  }
+}
+@media (min-width: 576px) {
+  #modal_login {
+    width: 770px;
+    height: 807px;
+    border-radius: 16px;
+    background: #FFF;
+    right: 110px;
+  }
+  #modal_register {
+    width: 770px;
+    border-radius: 16px;
+    background: #FFF;
+    right: 110px;
+  }
+  .popup .form .form-element {
+    margin: 16px;
+  }
+  .m-16 {
+    margin: 16px;
+  }
+  .m-16 label {
+    font-weight: 800;
+    font-size: 14px;
+  }
+  .popup .form .form-element label {
+    font-weight: 800;
+    font-size: 14px;
+  }
+  .popup .form .form-element a {
+    float: right;
+    text-decoration: none;
+    color: black;
+    font-weight: 800;
+    font-size: 14px;
+  }
+  .popup .form .form-element .input-time {
+    width: 100%;
+    height: 56px;
+    padding: 20px 16px 20px 16px;
+    border-radius: 8px;
+    border: 1px;
+    gap: 10px;
+    outline: none;
+    background: #F3F3F3;
+  }
+  .popup .form .form-element input[type=text],
+  .popup .form .form-element select,
+  .popup .form .form-element input[type=email],
+  .popup .form .form-element input[type=file],
+  .popup .form .form-element input[type=password],
+  .popup .form .form-element input[type=number] {
+    width: 570px;
+    height: 56px;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px;
+    gap: 10px;
+    outline: none;
+    background: #F3F3F3;
+  }
+  .popup .form .form-element input[type=checkbox] {
+    width: 18px;
+    height: 18px;
+    top: 3px;
+    left: 3px;
+    border: 2px;
+    margin-right: 5px;
+  }
+  .popup .form .form-element button {
+    width: 270px;
+    height: 56px;
+    padding: 18px 24px 18px 24px;
+    border-radius: 8px;
+    outline: none;
+    border: none;
+    background: #45C3D2;
+    font-size: 18px;
+    font-weight: 800;
+    color: white;
+  }
+  .popup .form .form-signin button {
+    width: 64px;
+    height: 64px;
+    border: none;
+    outline: none;
+    background: white;
+  }
+  .popup .form .form-signin button img {
+    width: 64px;
+    height: 64px;
+  }
+  .modal-backdrop.show {
+    z-index: 1;
+  }
+  .modal-dialog {
+    width: 770px !important;
+  }
+  .modal-content {
+    z-index: 10 !important;
+  }
+  #staticBackdrop .modal-dialog .modal-content .modal-body .popup .form {
+    width: 570px;
+    height: 531px;
+    margin-top: 115px;
+  }
+  #staticBackdrop .modal-dialog .modal-content .modal-body .popup .tab-content .tab-pane {
+    width: 570px;
+    height: 531px;
+  }
+  #modalRegister .modal-dialog .modal-content .modal-body .popup {
+    margin-top: 48px;
+  }
+  #modalRegister .modal-dialog .modal-content .modal-body .popup .form {
+    width: 597px;
+    margin: auto;
+  }
+  #modalRegister .modal-dialog .modal-content .modal-body .popup .form .user-option {
+    width: 597px;
+    height: 48px;
+    border: 1px solid #EAEAEA;
+    border-radius: 8px;
+  }
+  #modalRegister .modal-dialog .modal-content .modal-body .popup .form .user-option .nav .nav-item .active {
+    background: #45C3D2;
+    color: white;
+    width: 199px;
+    height: 48px;
+    border-radius: 8px;
+  }
+  #modalRegister .modal-dialog .modal-content .modal-body .popup .form .user-option .nav .nav-item {
+    color: black;
+    width: 199px;
+    height: 48px;
+    border-radius: 8px;
+  }
+  #myTab {
+    width: 597px;
+    height: 48px;
+  }
+  #other-option {
+    width: 597px;
+    margin: auto;
+  }
+  #other-option .form-element button {
+    width: 270px;
+    height: 56px;
+    padding: 18px 24px 18px 24px;
+    border-radius: 8px;
+    outline: none;
+    border: none;
+    background: #45C3D2;
+    font-size: 18px;
+    font-weight: 800;
+    color: white;
+  }
+  #other-option .form-signin {
+    margin-top: 40px;
+  }
+  #other-option .form-signin button {
+    width: 64px;
+    height: 64px;
+    border: none;
+    outline: none;
+    background: white;
+  }
+  .other_sign {
+    margin-top: 16px;
+    text-align: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .other_sign .text-center {
+    padding: 16px;
+  }
+  .other_sign .line {
+    width: 248px;
+    height: 1px;
+    background-color: #000;
+    margin: 5px 0;
+  }
+}
+
+/*# sourceMappingURL=loginNew.css.map */

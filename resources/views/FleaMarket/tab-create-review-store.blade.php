@@ -1,33 +1,25 @@
-<style>
-    .fa-2xl {
-        /*color: #FFCF26;*/
-        cursor: pointer;
-    }
-    .checked {
-        color: #fac325;
-    }
-</style>
+<link href="{{ asset('css/tabcreatereviewstore.css') }}" rel="stylesheet">
 <div class="recruitment-details ">
     <div class="container-fluid">
         <div class="recruitment-details--title"><a href="{{route('flea.market.product.shop.info',$id)}}"><i
-                    class="fa-solid fa-arrow-left"></i> Review</a></div>
+                    class="fa-solid fa-arrow-left"></i> {{ __('home.Review') }}</a></div>
         <form action="{{route('flea.market.product.create.review',$id)}}" method="post">
             <div class="row recruitment-details--content">
                 @csrf
                 @method('POST')
                 <div class="font-weight-600 fs-24px text-center row">
-                    <span>Are you satisfied with
+                    <span>{{ __('home.Are you satisfied with') }}
                         <strong>
                             @php
                                 $shop = \App\Models\User::where('id', $id)->first();
                             @endphp
                             {{$shop->name}}
                         </strong>
-                        shop?
+                        {{ __('home.shop') }}?
                     </span>
                 </div>
                 <div class="mt-md-4 mb-md-5 d-flex justify-content-center">
-                    <input type="radio" name="star_number" id="star-edit-1" value="1" hidden="">
+                    <input type="radio" name="star_number" id="star-edit-1" value="1" hidden="" required>
                     <label for="star-edit-1" onclick="starCheckEdit(1)"><i id="icon-star-edit-1"
                                                                            class="fa fa-star fa-2xl p-1"></i></label>
                     <input type="radio" name="star_number" id="star-edit-2" value="2" hidden="">
@@ -44,18 +36,18 @@
                                                                            class="fa fa-star fa-2xl p-1"></i></label>
                 </div>
                 <div>
-                    <label for="cmt-review">Add detailed review</label>
+                    <label for="cmt-review">{{ __('home.Add detailed review') }}</label>
                     <div>
-                        <textarea id="cmt-review" name="cmt_review" class="cmt_review" placeholder="Your comment"></textarea>
+                        <textarea id="cmt-review" name="cmt_review" class="cmt_review" placeholder="{{ __('home.Your comment') }}"></textarea>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="recruitment-details--btn col-md-6 justify-content-end d-flex">
-                    <a href="#" class="btn btn-primary button-Reset-booking col-md-6">Cancel</a>
+                    <a href="{{route('flea.market.product.shop.info',$id)}}" class="btn btn-primary button-Reset-booking col-md-6">{{ __('home.CANCEL') }}</a>
                 </div>
                 <div class="recruitment-details--btn col-md-6 justify-content-start d-flex">
-                    <button class="btn btn-primary col-md-6 button-apply-booking" type="submit">Submit</button>
+                    <button class="btn btn-primary col-md-6 button-apply-booking" type="submit">{{ __('home.Submit') }}</button>
                 </div>
             </div>
         </form>

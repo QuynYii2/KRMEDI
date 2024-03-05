@@ -4,8 +4,10 @@ namespace App\Http\Controllers\backend;
 
 use App\Enums\CouponApplyStatus;
 use App\Enums\CouponStatus;
+use App\Enums\SocialUserStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\MailController;
+use App\Http\Controllers\restapi\MainApi;
 use App\Models\Coupon;
 use App\Models\CouponApply;
 use App\Models\SocialUser;
@@ -13,6 +15,9 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 
 class BackendCouponApplyController extends Controller
 {
@@ -52,6 +57,40 @@ class BackendCouponApplyController extends Controller
         return response()->json($data);
     }
 
+    public function listMyCoupons(Request $request)
+    {
+        $id = $request->input('user_id') ?? Auth::user()->id;
+        $status = $request->input('status');
+        if ($status) {
+            $couponApplies = DB::table('coupon_applies')
+                ->where('status', $status)
+                ->where('user_id', $id)
+                ->orderByDesc('id')
+                ->cursor()
+                ->map(function ($couponApply) {
+                    $item = (array)$couponApply;
+                    $coupon = Coupon::find($couponApply->coupon_id);
+                    $item['coupon_info'] = $coupon;
+                    return $item;
+                });
+        } else {
+            $couponApplies = DB::table('coupon_applies')
+                ->where('status', '!=', CouponApplyStatus::DELETED)
+                ->where('user_id', $id)
+                ->orderByDesc('id')
+                ->cursor()
+                ->map(function ($couponApply) {
+                    $item = (array)$couponApply;
+                    $coupon = Coupon::find($couponApply->coupon_id);
+                    $item['coupon_info'] = $coupon;
+                    return $item;
+                });
+        }
+
+
+        return response()->json($couponApplies);
+    }
+
     public function detail($id)
     {
         $couponApply = CouponApply::find($id);
@@ -72,32 +111,65 @@ class BackendCouponApplyController extends Controller
             $content = $request->input('content');
             $user_id = $request->input('user_id');
             $coupon_id = $request->input('coupon_id');
-            $sns_option = $request->input('sns_option');
 
+            $SocialUser = SocialUser::where('user_id', $user_id)
+                ->where('status', SocialUserStatus::ACTIVE)
+                ->first();
+
+            $my_array = null;
+            $instagram = $SocialUser->instagram ? $my_array[] = 'instagram' : 0;
+            $facebook = $SocialUser->facebook ? $my_array[] = 'facebook' : 0;
+            $tiktok = $SocialUser->tiktok ? $my_array[] = 'tiktok' : 0;
+            $youtube = $SocialUser->youtube ? $my_array[] = 'youtube' : 0;
+            $google = $SocialUser->google_review ? $my_array[] = 'google_review' : 0;
+
+            $coupon = Coupon::find($coupon_id);
+
+            $your_array = null;
+            $instagram = $coupon->is_instagram == 1 ? $your_array[] = 'instagram' : 0;
+            $facebook = $coupon->is_facebook == 1 ? $your_array[] = 'facebook' : 0;
+            $tiktok = $coupon->is_tiktok == 1 ? $your_array[] = 'tiktok' : 0;
+            $youtube = $coupon->is_youtube == 1 ? $your_array[] = 'youtube' : 0;
+            $google = $coupon->is_google == 1 ? $your_array[] = 'google_review' : 0;
             //check sns option not null
-            if (!$sns_option) {
-                return response('thiếu thông tin mạng xã hội, hãy vào trang cá nhân để cập nhật', 400);
-            }
-            // kiểm tra name, email, phone, content not null
-            if (!$name || !$email || !$phone || !$content) {
-                return response('Nhập thiếu thông tin rồi', 400);
+            $text = null;
+            $is_valid = true;
+            foreach ($your_array as $item) {
+                if (!in_array($item, $my_array)) {
+                    $is_valid = false;
+                    $text = $item;
+                    break;
+                }
             }
 
-            $link = SocialUser::where('user_id', $user_id)->first($sns_option);
+            if (!$is_valid) {
+                return response((new MainApi())->returnMessage('link social ' . $text . ' not empty'), 400);
+            }
+
+            // kiểm tra name, email, phone, content not null
+            if (!$name || !$email || !$phone) {
+                return response((new MainApi())->returnMessage('invalid email or name or phone'), 400);
+            }
+            foreach ($your_array as $item) {
+                $link = SocialUser::where('user_id', $user_id)->value($item); // Assuming you want to get the value of the field
+                if ($link) {
+                    $your_links[] = $link;
+                }
+                $your_string = implode(', ', $your_array);
+            }
+//            $link = SocialUser::where('user_id', $user_id)->first();
 
             $couponApply->name = $name;
             $couponApply->email = $email;
             $couponApply->phone = $phone;
-            $couponApply->content = $content;
+//            $couponApply->content = $content;
             $couponApply->user_id = $user_id;
             $couponApply->coupon_id = $coupon_id;
-            $couponApply->sns_option = $sns_option;
-            $couponApply->link_ = $link[$sns_option];
+            $couponApply->sns_option = $your_string;
+            $couponApply->link_ = implode(', ', $your_links);
             $couponApply->status = CouponApplyStatus::PENDING;
-
-            $coupon = Coupon::find($coupon_id);
             if (!$coupon || $coupon->status != CouponStatus::ACTIVE) {
-                return response('Coupon not found!', 404);
+                return response((new MainApi())->returnMessage('Coupon not found!'), 404);
             }
 
             $coupon->registered = $coupon->registered + 1;
@@ -140,7 +212,7 @@ class BackendCouponApplyController extends Controller
             $couponApply->name = $name;
             $couponApply->email = $email;
             $couponApply->phone = $phone;
-            $couponApply->content = $content;
+//            $couponApply->content = $content;
             $couponApply->user_id = $user_id;
 
             if ($newCheck == false) {
@@ -225,6 +297,9 @@ class BackendCouponApplyController extends Controller
         if ($couponApply->status == CouponApplyStatus::REWARDED) {
             return response('Không thể thay đổi trạng thái của bài đã trao giải', 400);
         }
+        if ($couponApply->status == CouponApplyStatus::PENDING || $couponApply->status == CouponApplyStatus::INVALID) {
+            $this->sendMailWhenValid($couponApply);
+        }
 
         if ($status == CouponApplyStatus::REWARDED) {
             if ($couponApply->status == CouponApplyStatus::VALID) {
@@ -257,6 +332,33 @@ class BackendCouponApplyController extends Controller
 
     }
 
+    public function sendMailWhenValid($couponApply)
+    {
+        $coupon = Coupon::where('id', $couponApply->coupon_id)->first();
+        $donViPhatHanh = $coupon->user_id;
+
+        $emailNguoiDungApply = $couponApply->email ?? '';
+        $emailDonViPhatHanh = User::where('id', $donViPhatHanh)->first()->email ?? '';
+        $emailAdmin = '';
+
+        $emailFrom = 'support.il.vietnam@gmail.com';
+        $title = 'Thông báo ứng tuyển thành công';
+        $content = 'Chúc mừng bạn đã ứng tuyển thành công.
+Yêu cầu bạn nhập link trong khung thời gian đăng bài để được đánh giá :
+' . Url::signedRoute('what.free.reply.link', ['id' => $couponApply->id]);
+
+        $listEmail = [];
+        array_push($listEmail, $emailNguoiDungApply);
+        array_push($listEmail, $emailDonViPhatHanh);
+        array_push($listEmail, $emailAdmin);
+
+        $mailController = new MailController();
+        foreach ($listEmail as $email) {
+            if ($email) {
+                $mailController->sendEmail($email, $emailFrom, $title, $content);
+            }
+        }
+    }
     public function sendMailWhenReward($couponApply)
     {
         $coupon = Coupon::where('id', $couponApply->coupon_id)->first();

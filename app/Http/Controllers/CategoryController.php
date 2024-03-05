@@ -2,64 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CategoryStatus;
 use App\Models\Category;
+use App\Models\Clinic;
+use App\Models\Review;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return view('admin.category.list');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $reflector = new \ReflectionClass('App\Enums\CategoryStatus');
+        $status = $reflector->getConstants();
+        $categories = Category::where('status', CategoryStatus::ACTIVE)
+            ->orderBy('id', 'desc')
+            ->get();
+        return view('admin.category.create', compact('status', 'categories'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function detail($id)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Category $category)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Category $category)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Category $category)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Category $category)
-    {
-        //
+        $category = Category::find($id);
+        $reflector = new \ReflectionClass('App\Enums\CategoryStatus');
+        $status = $reflector->getConstants();
+        $categories = Category::where('status', CategoryStatus::ACTIVE)
+            ->where('id', '!=', $id)
+            ->orderBy('id', 'desc')
+            ->get();
+        return view('admin.category.detail', compact('category', 'status', 'categories'));
     }
 }

@@ -187,7 +187,7 @@ margin-top: 2rem;
     font-size: 14px;
 }
 .fs-12 {
-    font-size: 12px;
+    font-size: 12px !important;
 }
 .banner-logo {
     width: 100%;
@@ -489,6 +489,9 @@ a, input, button {
         color: #929292;
     }
     .add-cv-bt {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         border-radius: 8px;
         height: 48px;
         width: 270px;

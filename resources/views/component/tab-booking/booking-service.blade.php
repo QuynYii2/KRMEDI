@@ -10,29 +10,28 @@
     </div>
     <div class="mb-md-4">
         <div class="border-bottom fs-16px">
-            <span>Booking</span>
+            <span>{{ __('home.Booking') }}</span>
         </div>
         <div class="mt-md-3">
-            <a class="border-button-address font-weight-800 fs-14 justify-content-center" href="{{route('clinic.booking.select.date',$id)}}">Please select a date and
-                time</a>
+            <a class="border-button-address font-weight-800 fs-14 justify-content-center" href="{{route('clinic.booking.select.date',$id)}}">{{ __('home.Please select a date and time') }}</a>
         </div>
     </div>
 
     <div class="border-bottom fs-16px mb-md-3">
-        <span>Main service</span>
+        <span>{{ __('home.Main service') }}</span>
     </div>
     @for($i=0; $i<4; $i++)
         <div class="d-flex justify-content-between mt-md-2 border-booking-sv align-items-center">
             <div class="fs-14 font-weight-600">
-                <span>Botox, filler consultation and reservation</span>
+                <span>{{ __('home.Botox, filler consultation and reservation') }}</span>
             </div>
             <div class="button-booking-sv">
-                <a href="{{route('clinic.booking.select.date',$id)}}">Booking</a>
+                <a href="{{route('clinic.booking.select.date',$id)}}">{{ __('home.Booking') }}</a>
             </div>
         </div>
     @endfor
     <div class="border-bottom mt-md-4 fs-16px mb-md-3">
-        <span>Information</span>
+        <span>{{ __('home.Information') }}</span>
     </div>
     <div class="fs-14 font-weight-600">
         <span>

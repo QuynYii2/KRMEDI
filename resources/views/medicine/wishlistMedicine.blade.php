@@ -1,148 +1,365 @@
+@php use App\Enums\online_medicine\FilterOnlineMedicine;use App\Enums\online_medicine\ObjectOnlineMedicine;use App\Http\Controllers\MainController;use App\Models\User;use Illuminate\Support\Facades\Auth; @endphp
 @extends('layouts.master')
 @section('title', 'Online Medicine')
 @section('content')
     @include('layouts.partials.header')
     @include('component.banner')
 
-    <div class="medicine container">
-        <div class="row medicine-search">
+    <style>
+        .bi-heart-fill {
+            color: red;
+        }
+
+        .product-item .img-pro i {
+            padding: 8px;
+            border-radius: 36px;
+            background: #EAEAEA;
+            align-items: center;
+            justify-content: center;
+            display: flex;
+        }
+
+        @media (max-width: 576px) {
+            #online-medicine .btnModalCart.shopping-bag {
+                margin-right: 0;
+                height: 100%;
+                width: 100%;
+            }
+
+            .content-pro .name-product a {
+                color: #FFFFFF;
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 800;
+                line-height: normal;
+                min-height: 50px;
+            }
+
+
+        }
+
+        .add-cv-bt {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            height: 48px;
+            width: 270px;
+            color: #f7f7f7;
+            border: none;
+            margin-top: 24px;
+        }
+    </style>
+    <div class="medicine container" id="online-medicine">
+        <div class="row medicine-search d-none d-sm-flex">
             <div class="medicine-search--left col-md-3 d-flex justify-content-around">
-                <div class="title">Category <i class="bi bi-arrow-down-up"></i></div>
-                <div class="title">Location <i class="bi bi-arrow-down-up"></i></div>
+                <div class="title pl-0 col-md-5">
+                    <select class="form-select" id="category_id" name="category_id"
+                            onchange="categoryFilterMedicine(this.value)">
+                        <option value="">{{ __('home.Category') }}</option>
+                        @if($categoryMedicines)
+                            @foreach($categoryMedicines as $index => $cateProductMedicine)
+                                <option value="{{ $cateProductMedicine->id }}">{{ $cateProductMedicine->name }}</option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
+                <div class="title pr-0 col-md-7">
+                    <select class="form-select" id="category_id" name="category_id"
+                            onchange="locationFilterMedicine(this.value)">
+                        <option value="">{{ __('home.Location') }}</option>
+                        @if($provinces)
+                            @foreach($provinces as $index => $province)
+                                <option value="{{ $province->id }}">{{ $province->full_name }}</option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
             </div>
             <div class="medicine-search--center col-md-6 row d-flex justify-content-between">
                 <form class="search-box col-md-10">
-                    <input type="search" name="focus" placeholder="Search" id="search-input" value="">
+                    <input type="search" onkeyup="performSearch()" name="focus"
+                           placeholder="{{ __('home.Search for anything…') }}" id="search-input" value="">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </form>
-                <button type="button" data-toggle="modal" data-target="#modalCart" class="shopping-bag">
-                    <i class="fa-solid fa-bag-shopping"></i>
-                    <div class="text-wrapper">1</div>
-                </button>
+                @if(Auth::check())
+                    <button type="button" data-toggle="modal" data-target="#modalCart"
+                            class="btnModalCart shopping-bag">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                        @if($carts && count($carts) > 0)
+                            <div class="text-wrapper"> {{ count($carts) }}</div>
+                        @endif
+                    </button>
+                    @include('component.modal-cart')
+                @endif
                 @include('component.modal-cart')
             </div>
-            <div class="medicine-search--right col-md-3 d-flex row justify-content-between">
-                <div class="col-md-6 ">
-                    <div class="div-wrapper">
-                        <button type="button" data-toggle="modal" data-target="#modalCreatPrescription">Create
-                            prescription
+        </div>
+
+        {{-- filter trong màn hình mobile --}}
+        <div class=" medicine-search d-block d-sm-none">
+            <div class="medicine-search--center row">
+
+                @if(Auth::check())
+                    <form class="search-box col-md-8 col-8">
+                        <input type="search" onkeyup="performSearch()" name="focus"
+                               placeholder="{{ __('home.Search for anything…') }}" id="search-input" value="">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </form>
+                    <a class="col-2">
+                        <button type="button" data-toggle="modal" data-target="#modalCart"
+                                class="btnModalCart shopping-bag">
+                            <i class="fa-solid fa-bag-shopping"></i>
+                            @if($carts && count($carts) > 0)
+                                <div class="text-wrapper"> {{ count($carts) }}</div>
+                            @endif
                         </button>
-                    </div>
-                </div>
-                @include('component.modalCreatPrescription')
-                <div class="col-md-6">
-                    <div class="div-wrapper">
-                        <a href="{{route('medicine.wishList')}}">Wish list</a>
-                    </div>
-                </div>
+                    </a>
+                    <a class="col-2">
+                        <button type="button"
+                                class="btnModalCart shopping-bag" data-bs-toggle="offcanvas"
+                                data-bs-target="#filterNavbar">
+                            <i class="bi bi-filter"></i>
+                        </button>
+                    </a>
+
+                    @include('component.modal-cart')
+                @else
+                    <form class="search-box col-12">
+                        <input type="search" onkeyup="performSearch()" name="focus"
+                               placeholder="{{ __('home.Search for anything…') }}" id="search-input" value="">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </form>
+                @endif
+                @include('component.modal-cart')
             </div>
         </div>
+
         <div class="medicine-list row">
-            <div class="col-md-3 medicine-list--filter">
+            <div class="col-md-3 medicine-list--filter d-none d-sm-block">
                 <div class="filter">
                     <div class="filter-header d-flex justify-content-between">
-                        <div class="text-wrapper">Filter</div>
+                        <div class="text-wrapper">{{ __('home.Filter') }}</div>
                         <i class="fa-solid fa-chevron-down"></i>
                     </div>
                     <div class="filter-body">
                         <div class="d-flex item">
-                            <input type="checkbox">
-                            <div class="text-all">All (96)</div>
+                            <input type="checkbox" name="filter_" value="0" onchange="searchFilterMedicine(this.value)">
+                            <div class="text-all">{{ __('home.All') }} ({{ $countAllMedicine }})</div>
                         </div>
                         <div class="d-flex item">
-                            <input type="checkbox">
-                            <div class="text">Health</div>
+                            <input type="checkbox" name="filter_"
+                                   value="{{ FilterOnlineMedicine::HEALTH }}"
+                                   onchange="searchFilterMedicine(this.value)">
+                            <div class="text">{{ __('home.Heath') }}</div>
                         </div>
                         <div class="d-flex item">
-                            <input type="checkbox">
-                            <div class="text">Beauty</div>
+                            <input type="checkbox" name="filter_"
+                                   value="{{ FilterOnlineMedicine::BEAUTY }}"
+                                   onchange="searchFilterMedicine(this.value)">
+                            <div class="text">{{ __('home.Beauty') }}</div>
                         </div>
                         <div class="d-flex item">
-                            <input type="checkbox">
-                            <div class="text">Kids</div>
-                        </div>
-                        <div class="d-flex item">
-                            <input type="checkbox">
-                            <div class="text">Pet</div>
+                            <input type="checkbox" name="filter_"
+                                   value="{{ FilterOnlineMedicine::PET }}"
+                                   onchange="searchFilterMedicine(this.value)">
+                            <div class="text">{{ __('home.Pets') }}</div>
                         </div>
                     </div>
                 </div>
                 <div class="filter">
                     <div class="filter-header d-flex justify-content-between">
-                        <div class="text-wrapper">Object</div>
+                        <div class="text-wrapper">{{ __('home.Object') }}</div>
                         <i class="fa-solid fa-chevron-down"></i>
                     </div>
                     <div class="filter-body">
                         <div class="d-flex item">
-                            <input type="checkbox">
-                            <div class="text">For kids</div>
+                            <input type="checkbox" value="{{ ObjectOnlineMedicine::KIDS }}"
+                                   onchange="objectFilterMedicine(this.value)">
+                            <div class="text">{{ __('home.For kids') }}</div>
                         </div>
                         <div class="d-flex item">
-                            <input type="checkbox">
-                            <div class="text">For women</div>
+                            <input type="checkbox"
+                                   value="{{ ObjectOnlineMedicine::FOR_WOMEN }}"
+                                   onchange="objectFilterMedicine(this.value)">
+                            <div class="text">{{ __('home.For women') }}</div>
                         </div>
                         <div class="d-flex item">
-                            <input type="checkbox">
-                            <div class="text">For men</div>
+                            <input type="checkbox"
+                                   value="{{ ObjectOnlineMedicine::FOR_MEN }}"
+                                   onchange="objectFilterMedicine(this.value)">
+                            <div class="text">{{ __('home.For men') }}</div>
                         </div>
                         <div class="d-flex item">
-                            <input type="checkbox">
-                            <div class="text">For adults</div>
+                            <input type="checkbox"
+                                   value="{{ ObjectOnlineMedicine::FOR_ADULT }}"
+                                   onchange="objectFilterMedicine(this.value)">
+                            <div class="text">{{ __('home.For adults') }}</div>
                         </div>
                     </div>
                 </div>
-                <div class="price">
-                    <div class="text-wrapper">Price</div>
-                    <div class="wrapper">
-                        <div class="price-input">
-                            <div class="field">
-                                <input type="number" class="input-min" value="0">
+                <div class="border-radius mt-3 ">
+                    <div class="d-flex">
+                        <div class="wrapper">
+                            <header>
+                                <h2>{{ __('home.Price') }}</h2>
+                            </header>
+                            <div class="price-input">
+                                <div class="field">
+                                    <input type="number" onchange="performSearch()" id="inputProductMin"
+                                           class="rangePrice input-min" value="0">
+                                </div>
+                                <div class="separator">-</div>
+                                <div class="field">
+                                    <input type="number" onchange="performSearch()" id="inputProductMax"
+                                           class="rangePrice input-max" value="0">
+                                </div>
                             </div>
-                            <div class="separator">-</div>
-                            <div class="field">
-                                <input type="number" class="input-max" value="0">
+                            <div class="slider">
+                                <div class="progress"></div>
                             </div>
-                        </div>
-                        <div class="slider">
-                            <div class="progress"></div>
-                        </div>
-                        <div class="range-input">
-                            <input type="range" class="range-min" min="0" max="10000" value="2500" step="100">
-                            <input type="range" class="range-max" min="0" max="10000" value="7500" step="100">
+                            <div class="range-input">
+                                <input type="range" onchange="performSearch()" class="rangePrice range-min" min="0"
+                                       max="10000000" value="2500000" step="1000">
+                                <input type="range" onchange="performSearch()" class="rangePrice range-max" min="0"
+                                       max="10000000" value="7500000" step="1000">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-md-9 medicine-list--item">
-                <div class="page row ">
-                    @for($i = 0; $i < 12; $i++)
-                        <div class="col-md-4 item">
-                            @include('component.product-wish')
+                <div class="page row" id="content-medicine">
+                    @foreach($medicines as $medicine)
+                        <div class="col-md-4 col-6 col-sm-4 col-xl-3 d-none d-sm-block">
+                            @include('component.products')
                         </div>
-                    @endfor
+                    @endforeach
+                    @foreach($medicine10 as $medicine)
+                        <div class="col-md-4 col-6 col-sm-4 col-xl-3 d-block d-sm-none">
+                            @include('component.products')
+                        </div>
+                    @endforeach
                 </div>
-                <nav aria-label="Page navigation example" class="d-flex justify-content-center">
-                    <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                                <span class="sr-only">Next</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
+                <div class="d-flex justify-content-center d-none d-sm-block">
+                    {{ $medicines->links() }}
+                </div>
+                <div class="d-flex justify-content-center d-block d-sm-none">
+                    {{ $medicine10->links() }}
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="filterNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header">
+            <a href="{{route('home')}}" class="offcanvas-title" id="offcanvasNavbarLabel"><img class="w-100"
+                                                                                               src="{{asset('img/icons_logo/logo-new.png')}}"></a>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="col-md-3 medicine-list--filter">
+                <div class="filter">
+                    <div class="filter-header d-flex justify-content-between">
+                        <div class="text-wrapper">{{ __('home.Filter') }}</div>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="filter-body">
+                        <div class="d-flex item">
+                            <input type="checkbox" name="filter_" value="0" onchange="searchFilterMedicine(this.value)">
+                            <div class="text-all">{{ __('home.All') }} ({{ $countAllMedicine }})</div>
+                        </div>
+                        <div class="d-flex item">
+                            <input type="checkbox" name="filter_"
+                                   value="{{ FilterOnlineMedicine::HEALTH }}"
+                                   onchange="searchFilterMedicine(this.value)">
+                            <div class="text">{{ __('home.Heath') }}</div>
+                        </div>
+                        <div class="d-flex item">
+                            <input type="checkbox" name="filter_"
+                                   value="{{ FilterOnlineMedicine::BEAUTY }}"
+                                   onchange="searchFilterMedicine(this.value)">
+                            <div class="text">{{ __('home.Beauty') }}</div>
+                        </div>
+                        <div class="d-flex item">
+                            <input type="checkbox" name="filter_"
+                                   value="{{ FilterOnlineMedicine::PET }}"
+                                   onchange="searchFilterMedicine(this.value)">
+                            <div class="text">{{ __('home.Pets') }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="filter">
+                    <div class="filter-header d-flex justify-content-between">
+                        <div class="text-wrapper">{{ __('home.Object') }}</div>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="filter-body">
+                        <div class="d-flex item">
+                            <input type="checkbox" value="{{ ObjectOnlineMedicine::KIDS }}"
+                                   onchange="objectFilterMedicine(this.value)">
+                            <div class="text">{{ __('home.For kids') }}</div>
+                        </div>
+                        <div class="d-flex item">
+                            <input type="checkbox"
+                                   value="{{ ObjectOnlineMedicine::FOR_WOMEN }}"
+                                   onchange="objectFilterMedicine(this.value)">
+                            <div class="text">{{ __('home.For women') }}</div>
+                        </div>
+                        <div class="d-flex item">
+                            <input type="checkbox"
+                                   value="{{ ObjectOnlineMedicine::FOR_MEN }}"
+                                   onchange="objectFilterMedicine(this.value)">
+                            <div class="text">{{ __('home.For men') }}</div>
+                        </div>
+                        <div class="d-flex item">
+                            <input type="checkbox"
+                                   value="{{ ObjectOnlineMedicine::FOR_ADULT }}"
+                                   onchange="objectFilterMedicine(this.value)">
+                            <div class="text">{{ __('home.For adults') }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-radius mt-3 ">
+                    <div class="d-flex">
+                        <div class="wrapper">
+                            <header>
+                                <h2>{{ __('home.Price') }}</h2>
+                            </header>
+                            <div class="price-input">
+                                <div class="field">
+                                    <input type="number" onchange="performSearch()" id="inputProductMin"
+                                           class="rangePrice input-min" value="0">
+                                </div>
+                                <div class="separator">-</div>
+                                <div class="field">
+                                    <input type="number" onchange="performSearch()" id="inputProductMax"
+                                           class="rangePrice input-max" value="0">
+                                </div>
+                            </div>
+                            <div class="slider">
+                                <div class="progress"></div>
+                            </div>
+                            <div class="range-input">
+                                <input type="range" onchange="performSearch()" class="rangePrice range-min" min="0"
+                                       max="10000000" value="2500000" step="1000">
+                                <input type="range" onchange="performSearch()" class="rangePrice range-max" min="0"
+                                       max="10000000" value="7500000" step="1000">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center mt-4">
+                    <a class="add-cv-bt w-100 apply-bt_delete col-6">{{ __('home.Refresh') }}</a>
+                    <form class="col-6 pr-0">
+                        <button type="button" data-bs-dismiss="offcanvas" aria-label="Close"
+                                class="add-cv-bt apply-bt_edit w-100">{{ __('home.Apply') }}</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
+
     <script>
         const rangeInput = document.querySelectorAll(".range-input input"),
             priceInput = document.querySelectorAll(".price-input input"),

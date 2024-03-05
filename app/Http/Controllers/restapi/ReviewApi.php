@@ -7,7 +7,9 @@ use App\Enums\ReviewStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Clinic;
 use App\Models\Review;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ReviewApi extends Controller
 {
@@ -19,8 +21,24 @@ class ReviewApi extends Controller
 
     public function getAllByClinicId($id, Request $request)
     {
-        $reviews = Review::where('status', ReviewStatus::APPROVED)->where('clinic_id', $id)->get();
-        return response()->json($reviews);
+        $reviews = DB::table('reviews')
+            ->where('status', ReviewStatus::APPROVED)
+            ->where('clinic_id', $id)
+            ->where('user_id', 0)
+            ->orderByDesc('id')
+            ->get();
+
+        $review_users = DB::table('reviews')
+            ->where('reviews.status', ReviewStatus::APPROVED)
+            ->where('reviews.clinic_id', $id)
+            ->join('users', 'users.id', '=', 'reviews.user_id')
+            ->select('reviews.*', 'users.points')
+            ->orderByDesc('reviews.id')
+            ->get();
+
+        $mergedCollection = $reviews->merge($review_users);
+        $mergedCollection->sortByDesc('id');
+        return response()->json($mergedCollection);
     }
 
     public function detail($id)
@@ -64,10 +82,26 @@ class ReviewApi extends Controller
             $review->user_id = $userID;
             $review->star = $star;
             $review->content = $content;
-            $review->status = ReviewStatus::PENDING;
+            $review->status = ReviewStatus::APPROVED;
 
             $success = $review->save();
+
+            $listReview = Review::where('clinic_id', $clinic_id)
+                ->where('status', ReviewStatus::APPROVED)
+                ->get();
+
+            $totalReview = $listReview->count();
+            $totalStar = $listReview->sum('star');
+            $calcReview = ($totalReview > 0) ? ($totalStar / $totalReview) : 0;
+            $clinic->average_star = $calcReview;
+            $clinic->save();
+
             if ($success) {
+                $user = User::find($userID);
+                if ($user) {
+                    $user->points = $user->points + 1;
+                    $user->save();
+                }
                 return response()->json($review);
             }
             return response('Create review error!', 400);

@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers\backend;
 
+use App\Enums\AnswerStatus;
 use App\Enums\MentoringCategory;
 use App\Enums\QuestionStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Answer;
+use App\Models\AnswerLike;
 use App\Models\CalcViewQuestion;
 use App\Models\Question;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class BackendQuestionController extends Controller
 {
@@ -26,11 +29,33 @@ class BackendQuestionController extends Controller
         return response()->json($questions);
     }
 
-    public function detail($id)
+    public function detail($id, Request $request)
     {
+        $user_id = $request->input('user_id');
         $statusQuestion = Question::find($id);
         $question = CalcViewQuestion::getViewQuestion($id);
-        $answersQuestion = Answer::where('question_id', $id)->get();
+
+        $answersQuestion = DB::table('answers')
+            ->where('status', '!=', AnswerStatus::DELETED)
+            ->where('question_id', $id)
+            ->orderByDesc('likes')
+            ->cursor()
+            ->map(function ($item) use ($user_id) {
+                $like_answer = AnswerLike::where('answer_id', $item->id)
+                    ->where('is_like', 1)
+                    ->where('user_id', $user_id)
+                    ->first();
+
+                $like = false;
+
+                if ($like_answer) {
+                    $like = true;
+                }
+                $answer = (array)$item;
+                $answer['is_likes'] = $like;
+                return $answer;
+            });
+
         if ($statusQuestion->status == QuestionStatus::DELETED) {
             return response('Not found', 404);
         }
@@ -82,7 +107,7 @@ class BackendQuestionController extends Controller
             if ($request->hasFile('gallery')) {
                 $galleryPaths = array_map(function ($image) {
                     $itemPath = $image->store('gallery', 'public');
-                    return asset('storage/'.$itemPath);
+                    return asset('storage/' . $itemPath);
                 }, $request->file('gallery'));
                 $gallery = implode(',', $galleryPaths);
             } else {
@@ -97,7 +122,7 @@ class BackendQuestionController extends Controller
             $arrayPublic = explode(',', $list_image);
 
 
-            if ($list_image){
+            if ($list_image) {
                 $itemPublic = null;
                 foreach ($arrayPublic as $quantity) {
                     $itemPublic[] = $arrayGalleries[$quantity];
