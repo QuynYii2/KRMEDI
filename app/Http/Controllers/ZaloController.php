@@ -23,7 +23,7 @@ class ZaloController extends Controller
     protected $app_id = Constants::ID_ZALO_APP;
     protected $app_secret = Constants::KEY_ZALO_APP;
     protected $access_token;
-    protected $app_redirect = 'https%3A%2F%2Fkrmedi.vn%2Fzalo-service%2Fcallback';
+    protected $app_redirect = 'https%3A%2F%2Fkrmedi.vn:81%2Fzalo-service%2Fcallback';
     protected $app_url_permission = 'https://oauth.zaloapp.com/v4/oa/permission';
     protected $app_url_token = 'https://oauth.zaloapp.com/v4/oa/access_token';
     protected $auth_zalo_app = 'https://oauth.zaloapp.com/v4/permission';
@@ -52,9 +52,12 @@ class ZaloController extends Controller
     }
 
     /* Get code of my OA */
-    public function getAuthCode()
+    public function getAuthCode($isRedirect = true)
     {
         $url = $this->getLoginUrlOA();
+        if (!$isRedirect) {
+            return $url;
+        }
         return redirect($url);
     }
 
@@ -297,8 +300,6 @@ class ZaloController extends Controller
 
     public function manageFollower()
     {
-        $syncStatus = session('sync_status');
-
         try {
             $follower_info = ZaloFollower::latest('updated_at')->get();
 
@@ -315,7 +316,7 @@ class ZaloController extends Controller
             if ($this->access_token == null) {
                 //Logged to OA
                 session()->put('zalo_intended_url', request()->url());
-                return $this->getAuthCode();
+                return response()->json(['redirectUrl' => $this->getAuthCode(false)]);
             }
 
             $followers = $this->getFollower()['data']['followers'] ?? [];
@@ -377,11 +378,9 @@ class ZaloController extends Controller
                 }
             }
 
-            toast('Sync successfully', 'success', 'top-left');
-            return back()->with('sync_status', 'success');
+            return response()->json(['success' => true, 'data' => $this->manageFollower()]);
         } catch (Throwable $e) {
-            toast('Fail to sync', 'error', 'top-left');
-            return back()->with('sync_status', 'error');
+            return response()->json(['success' => false, 'error' => $e->getMessage()]);
         }
     }
 
@@ -550,15 +549,120 @@ class ZaloController extends Controller
     {
         try {
             $user = User::where('provider_name', 'zalo')->where('provider_id', $app_id)->first();
-    
+
             if ($user) {
                 $token = JWTAuth::fromUser($user);
                 $user->token = $token;
                 $user->save();
                 return response()->json($user);
             }
-    
+
             throw new \Exception('User not found');
+        } catch (\Exception $e) {
+            return response()->json(['error' => 1, 'message' => $e->getMessage()], 404);
+        }
+    }
+
+    //Gửi tin nhắn thông tin giao dịch booking cho người dùng
+    public function sendBookingMessage(Request $request)
+    {
+        try {
+            $userId = $request->user_id;
+            $clinic = $request->booking_clinic;
+            $name = $request->user_name;
+            $bookingStatus = $request->booking_status;
+            $bookingCancelReason = $request->booking_cancel_reason;
+
+            $msgBuilder = new MessageBuilder(MessageBuilder::MSG_TYPE_TRANSACTION);
+            $msgBuilder->withUserId($userId);
+
+            $msgBuilder->withTemplateType(TransactionTemplateType::TRANSACTION_ORDER);
+            $msgBuilder->withLanguage("VI");
+
+            $bannerElement = array(
+                'image_url' => 'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/311942959/original/c064dac2df0c204b234b395ece39fa4f9d87661e/medical-website-healthcare-website-clinic-website-doctor-website-dental-website-22dd.jpg',
+                'type' => 'banner'
+            );
+            $msgBuilder->addElement($bannerElement);
+
+            $headerElement = array(
+                'content' => 'Trạng thái lịch hẹn',
+                'align' => 'left',
+                'type' => 'header'
+            );
+            $msgBuilder->addElement($headerElement);
+
+            $text1Element = array(
+                'align' => 'left',
+                'content' => '• Cảm ơn bạn đã đặt lịch tại ' . $clinic . '.<br>• Hãy kiểm tra lịch hẹn của bạn:',
+                'type' => 'text'
+            );
+            $msgBuilder->addElement($text1Element);
+
+            $tableContent1 = array(
+                'key' => 'Tên người bệnh',
+                'value' => $name
+            );
+            switch ($bookingStatus) {
+                case 'PENDING':
+                    $tableContent2 = array(
+                        'key' => 'Trạng thái',
+                        'value' => 'Đang chờ',
+                        'style' => 'yellow',
+                    );
+                    break;
+                case 'COMPLETE':
+                    $tableContent2 = array(
+                        'key' => 'Trạng thái',
+                        'value' => 'Hoàn thành',
+                        'style' => 'green',
+                    );
+                    break;
+                case 'APPROVED':
+                    $tableContent2 = array(
+                        'key' => 'Trạng thái',
+                        'value' => 'Được duyệt',
+                        'style' => 'blue',
+                    );
+                    break;
+                case 'CANCEL':
+                    $tableContent2 = array(
+                        'key' => 'Trạng thái',
+                        'value' => 'Bị huỷ ('. $bookingCancelReason .')',
+                        'style' => 'red',
+                    );
+                    break;
+
+                default:
+                    $tableContent2 = array(
+                        'key' => 'Trạng thái',
+                        'value' => 'Something went wrong',
+                        'style' => 'grey',
+                    );
+                    break;
+            }
+            $tableElement = array(
+                'content' => array($tableContent1, $tableContent2),
+                'type' => 'table'
+            );
+            $msgBuilder->addElement($tableElement);
+
+            $text2Element = array(
+                'content' => '📆 Hãy để ý lịch và thông báo. Xin cảm ơn!',
+                'align' => 'center',
+                'type' => 'text'
+
+            );
+            $msgBuilder->addElement($text2Element);
+
+            $actionOpenUrl = $msgBuilder->buildActionOpenURL('https://oa.zalo.me/home');
+            $msgBuilder->addButton('Kiểm tra đơn hàng - default icon', '', $actionOpenUrl);
+
+            $msgTransaction = $msgBuilder->build();
+
+            // send request
+            $response = $this->zalo->post(ZaloEndPoint::API_OA_SEND_TRANSACTION_MESSAGE_V3, $this->access_token, $msgTransaction);
+            $result = $response->getDecodedBody();
         } catch (\Exception $e) {
             return response()->json(['error' => 1, 'message' => $e->getMessage()], 404);
         }

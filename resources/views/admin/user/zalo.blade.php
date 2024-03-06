@@ -46,7 +46,7 @@
                         </td>
                         <td class="text-center">
                             @if (isset($info['avatar']) && $info['avatar'])
-                                <img src="{{ $info['avatar'] }}" alt="avt">
+                                <img src="{{ $info['avatar'] }}" alt="avt" width="120">
                             @else
                                 <i class="fa-solid fa-ban fa-2xl" style="color: red;"></i>
                             @endif
@@ -195,20 +195,27 @@
             );
 
             $.ajax({
-                type: 'POST',
+                type: 'GET',
                 url: '{{ route('admin.sync.user.zalo') }}',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
-                    var table = $('#tableListZaloFollower').DataTable();
-                    table.destroy();
-                    $('#tableListZaloFollower').load(location.href + ' #tableListZaloFollower', function() {
-                        $(this).find('table').DataTable();
-                    });
-                    toastr.success('Sync follower successfully', 'Success');
+                    if (response.redirectUrl) {
+                        window.location.href = response.redirectUrl;
+                    } else if (response.success) {
+                        var table = $('#tableListZaloFollower').DataTable();
+                        table.destroy();
+                        $('#tableListZaloFollower').load(location.href + ' #tableListZaloFollower', function() {
+                            $(this).find('table').DataTable();
+                        });
+                        toastr.success('Sync follower successfully', 'Success');
+                    } else {
+                        toastr.error('Failed to sync: ' + response.error, 'Error');
+                    }
                 },
                 error: function(xhr, status, error) {
+                    console.log(xhr, status, error);
                     toastr.error('Failed to sync: ' + error, 'Error');
                 },
                 complete: function() {
