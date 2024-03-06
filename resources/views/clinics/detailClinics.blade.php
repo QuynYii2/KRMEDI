@@ -329,9 +329,9 @@
                 //Check user followed
                 let followed = await fetch('{{ route('zalo-follower.show', Auth::user()->id ?? 0) }}', {
                     method: 'GET',
-                    headers: {
-                        "Authorization": accessToken
-                    },
+                    // headers: {
+                    //     "Authorization": accessToken
+                    // },
                 });
 
                 if (followed.ok) {
