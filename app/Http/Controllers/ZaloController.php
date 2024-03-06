@@ -576,14 +576,11 @@ class ZaloController extends Controller
             $bookingStatus = $request->booking_status;
             $bookingCancelReason = $request->booking_cancel_reason;
 
-            $msgBuilder = new MessageBuilder(MessageBuilder::MSG_TYPE_TRANSACTION);
+            $msgBuilder = new MessageBuilder(MessageBuilder::MSG_TYPE_PROMOTION);
             $msgBuilder->withUserId($userId);
 
-            $msgBuilder->withTemplateType(TransactionTemplateType::TRANSACTION_ORDER);
-            $msgBuilder->withLanguage("VI");
-
             $bannerElement = array(
-                'image_url' => 'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/311942959/original/c064dac2df0c204b234b395ece39fa4f9d87661e/medical-website-healthcare-website-clinic-website-doctor-website-dental-website-22dd.jpg',
+                'attachment_id' => 'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/311942959/original/c064dac2df0c204b234b395ece39fa4f9d87661e/medical-website-healthcare-website-clinic-website-doctor-website-dental-website-22dd.jpg',
                 'type' => 'banner'
             );
             $msgBuilder->addElement($bannerElement);
@@ -603,7 +600,7 @@ class ZaloController extends Controller
             $msgBuilder->addElement($text1Element);
 
             $tableContent1 = array(
-                'key' => 'Tên khách hàng',
+                'key' => 'Tên người bệnh',
                 'value' => $name
             );
 
@@ -650,7 +647,6 @@ class ZaloController extends Controller
                 'key' => 'Thời gian bắt đầu',
                 'value' => $checkInTime
             );
-
             $tableElement = array(
                 'content' => array($tableContent1, $tableContent2, $tableContent3),
                 'type' => 'table'
@@ -680,12 +676,12 @@ class ZaloController extends Controller
                 $msgBuilder->addButton('Đặt lại lịch', 'https://static.vecteezy.com/system/resources/previews/010/160/988/original/calendar-icon-sign-symbol-design-free-png.png', $actionOpenUrl);
             }
 
-            $msgTransaction = $msgBuilder->build();
+            $msgPromotion = $msgBuilder->build();
 
             // send request
-            $response = $this->zalo->post(ZaloEndPoint::API_OA_SEND_TRANSACTION_MESSAGE_V3, $this->access_token, $msgTransaction);
+            $response = $this->zalo->post(ZaloEndPoint::API_OA_SEND_PROMOTION_MESSAGE_V3, $this->access_token, $msgPromotion);
             $result = $response->getDecodedBody();
-            dd($result);
+            return $result;
         } catch (\Exception $e) {
             return response()->json(['error' => 1, 'message' => $e->getMessage()], 404);
         }
