@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use Throwable;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Zalo\Builder\MessageBuilder;
+use Zalo\Common\TransactionTemplateType;
 use Zalo\FileUpload\ZaloFile;
 use Zalo\Util\PKCEUtil;
 use Zalo\Zalo;
@@ -569,6 +570,8 @@ class ZaloController extends Controller
         try {
             $userId = $request->user_id;
             $clinic = $request->booking_clinic;
+            $clinicId = $request->booking_clinic_id;
+            $checkInTime = $request->booking_clinic_checkin;
             $name = $request->user_name;
             $bookingStatus = $request->booking_status;
             $bookingCancelReason = $request->booking_cancel_reason;
@@ -594,15 +597,16 @@ class ZaloController extends Controller
 
             $text1Element = array(
                 'align' => 'left',
-                'content' => '• Cảm ơn bạn đã đặt lịch tại ' . $clinic . '.<br>• Hãy kiểm tra lịch hẹn của bạn:',
+                'content' => '• Cảm ơn bạn đã đặt lịch tại: ' . $clinic . '<br>• Hãy kiểm tra lịch hẹn của bạn:',
                 'type' => 'text'
             );
             $msgBuilder->addElement($text1Element);
 
             $tableContent1 = array(
-                'key' => 'Tên người bệnh',
+                'key' => 'Tên khách hàng',
                 'value' => $name
             );
+
             switch ($bookingStatus) {
                 case 'PENDING':
                     $tableContent2 = array(
@@ -628,7 +632,7 @@ class ZaloController extends Controller
                 case 'CANCEL':
                     $tableContent2 = array(
                         'key' => 'Trạng thái',
-                        'value' => 'Bị huỷ ('. $bookingCancelReason .')',
+                        'value' => 'Bị huỷ (' . $bookingCancelReason . ')',
                         'style' => 'red',
                     );
                     break;
@@ -641,28 +645,47 @@ class ZaloController extends Controller
                     );
                     break;
             }
+
+            $tableContent3 = array(
+                'key' => 'Thời gian bắt đầu',
+                'value' => $checkInTime
+            );
+
             $tableElement = array(
-                'content' => array($tableContent1, $tableContent2),
+                'content' => array($tableContent1, $tableContent2, $tableContent3),
                 'type' => 'table'
             );
             $msgBuilder->addElement($tableElement);
 
-            $text2Element = array(
-                'content' => '📆 Hãy để ý lịch và thông báo. Xin cảm ơn!',
-                'align' => 'center',
-                'type' => 'text'
-
-            );
+            if ($bookingStatus == "CANCEL") {
+                $text2Element = array(
+                    'content' => '🤕 Chúng tôi rất xin lỗi vì phải huỷ lịch đặt của bạn!',
+                    'align' => 'center',
+                    'type' => 'text'
+                );
+            } else {
+                $text2Element = array(
+                    'content' => '📆 Hãy để ý lịch và thông báo. Xin cảm ơn!',
+                    'align' => 'center',
+                    'type' => 'text'
+                );
+            }
             $msgBuilder->addElement($text2Element);
 
-            $actionOpenUrl = $msgBuilder->buildActionOpenURL('https://oa.zalo.me/home');
-            $msgBuilder->addButton('Kiểm tra đơn hàng - default icon', '', $actionOpenUrl);
+            $actionOpenUrl = $msgBuilder->buildActionOpenURL(route('web.users.my.bookings.list'));
+            $msgBuilder->addButton('Kiểm tra đơn hàng', '', $actionOpenUrl);
+
+            if ($bookingStatus == "CANCEL") {
+                $actionOpenUrl = $msgBuilder->buildActionOpenURL(route('clinic.detail', $clinicId));
+                $msgBuilder->addButton('Đặt lại lịch', 'https://static.vecteezy.com/system/resources/previews/010/160/988/original/calendar-icon-sign-symbol-design-free-png.png', $actionOpenUrl);
+            }
 
             $msgTransaction = $msgBuilder->build();
 
             // send request
             $response = $this->zalo->post(ZaloEndPoint::API_OA_SEND_TRANSACTION_MESSAGE_V3, $this->access_token, $msgTransaction);
             $result = $response->getDecodedBody();
+            dd($result);
         } catch (\Exception $e) {
             return response()->json(['error' => 1, 'message' => $e->getMessage()], 404);
         }

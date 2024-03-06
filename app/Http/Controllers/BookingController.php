@@ -20,6 +20,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use App\Http\Controllers\ZaloController;
+use App\Models\ZaloFollower;
 
 class BookingController extends Controller
 {
@@ -181,22 +183,28 @@ class BookingController extends Controller
                 return back()->with('success', 'Booking success');
             }
             alert('Booking error');
-            return back('Create error', );
+            return back('Create error',);
         } catch (\Exception $exception) {
             alert('Booking error');
             return back();
         }
-
     }
 
     public function update(Request $request, $id)
     {
         try {
+            $isSendOaToUser = false;
             $booking = Booking::find($id);
             $status = $request->input('status');
             $is_result = $request->input('is_result');
             if (!$is_result) {
                 $is_result = 0;
+            }
+
+            // Check if the status has changed
+            if ($booking->status != $status) {
+                // Status has changed, send zalo OA msg to customer
+                $isSendOaToUser = true;
             }
 
             $booking->is_result = $is_result;
@@ -210,6 +218,23 @@ class BookingController extends Controller
 
             $success = $booking->save();
             if ($success) {
+                if ($isSendOaToUser) {
+                    $userId = $booking->user_id;
+                    $userFollower = ZaloFollower::whereRaw("JSON_EXTRACT(`extend`, '$.user_id') = $userId")->first();
+                    $zalo = new ZaloController();
+                    $additionalParams = [
+                        'user_id' => $userFollower->user_id,
+                        'booking_clinic' => $booking->clinic->name,
+                        'booking_clinic_id' => $booking->clinic_id,
+                        'user_name' => $booking->user->name . ' ' . $booking->user->last_name,
+                        'booking_status' => $status,
+                        'booking_cancel_reason' => $reason,
+                        'booking_clinic_checkin' => date('d/m/Y h:i A', strtotime($booking->check_in))
+                    ];
+                    $newRequest = $request->duplicate()->merge($additionalParams);
+                    $zalo->sendBookingMessage($newRequest);
+                }
+
                 alert('Update success');
                 return Redirect::route('homeAdmin.list.booking')->with('success', 'Booking success');
             }
