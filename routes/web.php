@@ -642,6 +642,4 @@ Route::group(['prefix' => 'zalo-service'], function () {
     Route::post('send-message-text', [ZaloController::class, 'sendMessage'])->name('zalo.service.send.message.text');
     // Send follower invitation to get information
     Route::get('send-follower-invitation', [ZaloController::class, 'sendInvitation'])->name('zalo.service.send.invitation');
-
-    Route::resource('zalo-follower', 'ZaloFollowerController');
 });

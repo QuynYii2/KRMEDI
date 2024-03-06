@@ -405,17 +405,18 @@
     function userFollowZaloOA(res)
     {
         const userId = res.userId;
+        const currentUserId = "{{ Auth::user()->id ?? 0}}";
         if (userId) {
             $.ajax({
                 url: " {{ route('zalo-follower.store') }} ",
                 method: "POST",
-                headers: {
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                data: { 
+                    userId: userId,
+                    currentUserId: currentUserId
                 },
-                data: { userId: userId },
                 success: function (response) {
                     if (response.error == 0) {
-                        toastr.success("Thank you " + response.user + " for following", 'Success');
+                        toastr.success("Thank you " + response.user.name + " for following", 'Success');
                     }
                 },
                 error: function (xhr, status, error) {

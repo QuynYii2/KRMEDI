@@ -23,7 +23,7 @@ class ZaloController extends Controller
     protected $app_id = Constants::ID_ZALO_APP;
     protected $app_secret = Constants::KEY_ZALO_APP;
     protected $access_token;
-    protected $app_redirect = 'https%3A%2F%2Fkrmedi.vn:81%2Fzalo-service%2Fcallback';
+    protected $app_redirect = 'https%3A%2F%2Fkrmedi.vn%2Fzalo-service%2Fcallback';
     protected $app_url_permission = 'https://oauth.zaloapp.com/v4/oa/permission';
     protected $app_url_token = 'https://oauth.zaloapp.com/v4/oa/access_token';
     protected $auth_zalo_app = 'https://oauth.zaloapp.com/v4/permission';

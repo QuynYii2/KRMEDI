@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\ZaloFollower;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,10 +32,20 @@ class ZaloFollowerController extends Controller
     {
         try {
             $userId = $request->userId;
-            $currentUser = Auth::user();
+            $currentUserId = $request->currentUserId;
+
+            $currentUser = User::find($currentUserId);
+
+            if (!$userId) {
+                throw new \Exception("userId is empty");
+            }
+
+            if (!$currentUserId) {
+                throw new \Exception("currentUserId is empty");
+            }
 
             if (!$currentUser) {
-                throw new \Exception("User not authenticated");
+                throw new \Exception("User not found");
             }
 
             $existedFollower = ZaloFollower::where('user_id', $userId)->first();
@@ -73,7 +84,7 @@ class ZaloFollowerController extends Controller
                 $existedFollower->save();
             }
 
-            return response()->json(['error' => 0, 'user' => $existedFollower->name]);
+            return response()->json(['error' => 0, 'user' => $existedFollower]);
         } catch (\Exception $e) {
             return response()->json(['error' => 1, 'message' => $e->getMessage()]);
         }

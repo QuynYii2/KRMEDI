@@ -40,6 +40,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
 Route::group(['prefix' => 'products'], function () {
     Route::get('/list', [ProductInfoApi::class, 'index'])->name('products.api.list');
     Route::get('/category/{id}', [ProductInfoApi::class, 'getAllByCategory'])->name('products.api.category');
@@ -232,4 +233,8 @@ Route::group(['prefix' => 'questions'], function () {
 Route::group(['prefix' => 'api/mobile/fcm'], function () {
     Route::post('/send', [MainApi::class, 'sendNotificationFcm'])->name('restapi.mobile.fcm.send');
     Route::post('/send_v2', [MainApi::class, 'sendNotificationWeb']);
+});
+
+Route::group(['prefix' => 'api/zalo'], function () {
+    Route::resource('zalo-follower', 'ZaloFollowerController');
 });
