@@ -80,6 +80,8 @@ class ZaloFollowerController extends Controller
                 if ($currentUser->detail_address) {
                     $existedFollower->address = $currentUser->detail_address;
                 }
+                $extendData = json_decode($existedFollower->extend, true);
+                $extendData['user_id'] = $currentUser->id;
                 $existedFollower->extend = json_encode($extendData);
                 $existedFollower->save();
             }

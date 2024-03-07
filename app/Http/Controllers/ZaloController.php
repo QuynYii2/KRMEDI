@@ -9,6 +9,7 @@ use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -86,6 +87,24 @@ class ZaloController extends Controller
             $expiration_time = time() + $array['expires_in'];
             setCookie('access_token_zalo', $array['access_token'], $expiration_time, '/');
             setCookie('refresh_token_zalo', $array['refresh_token'], $expiration_time, '/');
+
+            $user = User::find(Auth::user()->id);
+
+            if ($user) {
+                if ($user->extend === null) {
+                    $user->extend = json_encode([
+                        'access_token_zalo' => $array['access_token'],
+                        'refresh_token_zalo' => $array['refresh_token']
+                    ]);
+                } else {
+                    $extendData = json_decode($user->extend, true);
+                    $extendData['access_token_zalo'] = $array['access_token'];
+                    $extendData['refresh_token_zalo'] = $array['refresh_token'];
+                    $user->extend = json_encode($extendData);
+                }
+
+                $user->save();
+            }
         }
         if (session('zalo_intended_url')) {
             return redirect(session('zalo_intended_url'));
@@ -299,6 +318,57 @@ class ZaloController extends Controller
         }
     }
 
+    //Get access token from refresh token
+    private function getRefreshAccessToken($refresh_token)
+    {
+        try {
+            $client = new Client();
+
+            $response = $client->post($this->app_url_token, [
+                'headers' => [
+                    'secret_key' => $this->app_secret,
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                ],
+                'form_params' => [
+                    'refresh_token' => $refresh_token,
+                    'app_id' => $this->app_id,
+                    'grant_type' => 'refresh_token',
+                ],
+            ]);
+
+            $data = $response->getBody()->getContents();
+            $array_data = json_decode($data, true);
+
+            $user = User::find(Auth::user()->id);
+
+            if ($user) {
+                if ($user->extend === null) {
+                    $user->extend = json_encode([
+                        'access_token_zalo' => $array_data['access_token'],
+                        'refresh_token_zalo' => $array_data['refresh_token']
+                    ]);
+                } else {
+                    $extendData = json_decode($user->extend, true);
+                    $extendData['access_token_zalo'] = $array_data['access_token'];
+                    $extendData['refresh_token_zalo'] = $array_data['refresh_token'];
+                    $user->extend = json_encode($extendData);
+                }
+
+                $user->save();
+            }
+
+            return [
+                'data' => $data,
+                'status' => 200,
+            ];
+        } catch (\Exception $exception) {
+            return [
+                'data' => $exception->getMessage(),
+                'status' => 500,
+            ];
+        }
+    }
+
     public function manageFollower()
     {
         try {
@@ -314,10 +384,26 @@ class ZaloController extends Controller
     public function syncFollower()
     {
         try {
-            if ($this->access_token == null) {
-                //Logged to OA
-                session()->put('zalo_intended_url', request()->url());
-                return response()->json(['redirectUrl' => $this->getAuthCode(false)]);
+            if (!$this->access_token == null) {
+                $refresh_token = json_decode(Auth::user()->extend)->refresh_token_zalo;
+                if ($refresh_token) {
+                    $array_token = $this->getRefreshAccessToken($refresh_token);
+                    $dataToken = null;
+                    if ($array_token['status'] == 200) {
+                        $dataToken = $array_token['data'];
+                    }
+                    $array = json_decode($dataToken, true);
+                    if (isset($array['access_token'])) {
+                        $expiration_time = time() + $array['expires_in'];
+                        setCookie('access_token_zalo', $array['access_token'], $expiration_time, '/');
+                        setCookie('refresh_token_zalo', $array['refresh_token'], $expiration_time, '/');
+                        $this->access_token = $array['access_token'];
+                    }
+                } else {
+                    //Logged to OA
+                    session()->put('zalo_intended_url', request()->url());
+                    return response()->json(['redirectUrl' => $this->getAuthCode(false)]);
+                }
             }
 
             $followers = $this->getFollower()['data']['followers'] ?? [];
