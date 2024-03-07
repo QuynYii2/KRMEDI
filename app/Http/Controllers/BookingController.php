@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\ZaloController;
+use App\Models\User;
 use App\Models\ZaloFollower;
 
 class BookingController extends Controller
@@ -221,7 +222,6 @@ class BookingController extends Controller
                 if ($isSendOaToUser) {
                     $userId = $booking->user_id;
                     $userFollower = ZaloFollower::whereRaw("JSON_EXTRACT(`extend`, '$.user_id') = $userId")->first();
-                    $zalo = new ZaloController();
                     $additionalParams = [
                         'user_id' => $userFollower->user_id,
                         'booking_clinic' => $booking->clinic->name,
@@ -232,6 +232,7 @@ class BookingController extends Controller
                         'booking_clinic_checkin' => date('d/m/Y h:i A', strtotime($booking->check_in))
                     ];
                     $newRequest = $request->duplicate()->merge($additionalParams);
+                    $zalo = new ZaloController();
                     $zalo->sendBookingMessage($newRequest);
                 }
 
@@ -267,5 +268,50 @@ class BookingController extends Controller
         } catch (\Exception $exception) {
             return response($exception, 400);
         }
+    }
+
+    public function sendMessageToUserOnBookingCreated($booking)
+    {
+        $clinicAccessToken = json_decode($booking->clinic->users->extend)->access_token_zalo;
+        $zaloFollower = new ZaloFollowerController();
+        $bookedUser = $zaloFollower->show($booking->user_id)->getData();
+        $zalo = new ZaloController($clinicAccessToken);
+
+        $additionalParams = [
+            'user_id' => $bookedUser->user->user_id,
+            'booking_clinic' => $booking->clinic->name,
+            'booking_clinic_id' => $booking->clinic_id,
+            'user_name' => $booking->user->name . ' ' . $booking->user->last_name,
+            'booking_status' => $booking->status,
+            'booking_cancel_reason' => $booking->reason_cancel ?? '',
+            'booking_clinic_checkin' => date('d/m/Y h:i A', strtotime($booking->check_in))
+        ];
+        $request = new Request();
+        $bookingRequest = $request->duplicate()->merge($additionalParams);
+        $zalo->sendBookingMessage($bookingRequest);
+    }
+
+    public function sendOAMessageFromAdminToClinic($booking)
+    {
+        $clinicAccessToken = json_decode($booking->clinic->users->extend)->access_token_zalo;
+        $admin = User::whereHas('roles', function ($query) {
+            $query->where('name', 'ADMIN');
+        })
+            ->whereNotNull('extend->access_token_zalo')
+            ->first();
+        $adminAccessToken = json_decode($admin->extend)->access_token_zalo;
+        $zalo = new ZaloController($adminAccessToken);
+        $zaloFollower = new ZaloFollowerController();
+        $additionalParams = [
+            'user_id' => $clinicAccessToken,
+            'booking_clinic' => $booking->clinic->name,
+            'booking_clinic_id' => $booking->clinic_id,
+            'user_name' => $booking->user->name . ' ' . $booking->user->last_name,
+            'doctor_name' => $booking->doctor->name,
+            'booking_clinic_checkin' => date('d/m/Y h:i A', strtotime($booking->check_in))
+        ];
+        $request = new Request();
+        $bookingRequest = $request->duplicate()->merge($additionalParams);
+        $zalo->sendBookingMessage($bookingRequest, true);
     }
 }

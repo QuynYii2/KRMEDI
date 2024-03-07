@@ -32,13 +32,10 @@ class ZaloController extends Controller
 
     private $zalo;
 
-    public function __construct()
+    public function __construct($access_token = null)
     {
-        $this->access_token = $_COOKIE['access_token_zalo'] ?? null;
+        $this->access_token = $access_token ?? $_COOKIE['access_token_zalo'] ?? null;
         $this->zalo = $this->main();
-        // if ($this->access_token == null) {
-        //     $this->getAuthCode();
-        // }
     }
 
     /* Create new zalo */
@@ -384,23 +381,30 @@ class ZaloController extends Controller
     public function syncFollower()
     {
         try {
-            if (!$this->access_token == null) {
+            if ($this->access_token == null) {
                 $refresh_token = json_decode(Auth::user()->extend)->refresh_token_zalo;
                 if ($refresh_token) {
-                    $array_token = $this->getRefreshAccessToken($refresh_token);
-                    $dataToken = null;
-                    if ($array_token['status'] == 200) {
-                        $dataToken = $array_token['data'];
-                    }
-                    $array = json_decode($dataToken, true);
-                    if (isset($array['access_token'])) {
-                        $expiration_time = time() + $array['expires_in'];
-                        setCookie('access_token_zalo', $array['access_token'], $expiration_time, '/');
-                        setCookie('refresh_token_zalo', $array['refresh_token'], $expiration_time, '/');
-                        $this->access_token = $array['access_token'];
+                    try {
+                        $array_token = $this->getRefreshAccessToken($refresh_token);
+                        $dataToken = null;
+                        if ($array_token['status'] == 200) {
+                            $dataToken = $array_token['data'];
+                        }
+                        $array = json_decode($dataToken, true);
+                        if (isset($array['access_token'])) {
+                            $expiration_time = time() + $array['expires_in'];
+                            setCookie('access_token_zalo', $array['access_token'], $expiration_time, '/');
+                            setCookie('refresh_token_zalo', $array['refresh_token'], $expiration_time, '/');
+                            $this->access_token = $array['access_token'];
+                        }
+                    } catch (Exception $e) {
+                        // Handle the exception
+                        // Logged to OA
+                        session()->put('zalo_intended_url', request()->url());
+                        return response()->json(['redirectUrl' => $this->getAuthCode(false)]);
                     }
                 } else {
-                    //Logged to OA
+                    // Logged to OA
                     session()->put('zalo_intended_url', request()->url());
                     return response()->json(['redirectUrl' => $this->getAuthCode(false)]);
                 }
@@ -521,6 +525,7 @@ class ZaloController extends Controller
         }
     }
 
+    //Lấy thông tin người dùng & check accesstoken hết hạn hay k
     public function getUserInformation($userAccessToken)
     {
         try {
@@ -653,9 +658,80 @@ class ZaloController extends Controller
     }
 
     //Gửi tin nhắn thông tin giao dịch booking cho người dùng
-    public function sendBookingMessage(Request $request)
+    public function sendBookingMessage(Request $request, $isOAReceived = false)
     {
         try {
+            //Gửi cho OA
+            if ($isOAReceived) {
+                $userId = $request->user_id;
+                $clinic = $request->booking_clinic;
+                $clinicId = $request->booking_clinic_id;
+                $checkInTime = $request->booking_clinic_checkin;
+                $userName = $request->user_name;
+                $doctorName = $request->doctor_name;
+
+                $msgBuilder = new MessageBuilder(MessageBuilder::MSG_TYPE_PROMOTION);
+                $msgBuilder->withUserId($userId);
+
+                $bannerElement = array(
+                    'image_url' => 'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/311942959/original/c064dac2df0c204b234b395ece39fa4f9d87661e/medical-website-healthcare-website-clinic-website-doctor-website-dental-website-22dd.jpg',
+                    'type' => 'banner'
+                );
+                $msgBuilder->addElement($bannerElement);
+
+                $headerElement = array(
+                    'content' => 'Có lịch hẹn mới',
+                    'align' => 'left',
+                    'type' => 'header'
+                );
+                $msgBuilder->addElement($headerElement);
+
+                $text1Element = array(
+                    'align' => 'left',
+                    'content' => '• Lịch hẹn mới tại: ' . $clinic . '<br>• Hãy kiểm tra hồ sơ người bệnh:',
+                    'type' => 'text'
+                );
+                $msgBuilder->addElement($text1Element);
+
+                $tableContent1 = array(
+                    'key' => 'Tên bác sĩ',
+                    'value' => $doctorName
+                );
+
+                $tableContent2 = array(
+                    'key' => 'Tên người bệnh',
+                    'value' => $userName
+                );
+
+                $tableContent3 = array(
+                    'key' => 'Thời gian bắt đầu',
+                    'value' => $checkInTime
+                );
+                $tableElement = array(
+                    'content' => array($tableContent1, $tableContent2, $tableContent3),
+                    'type' => 'table'
+                );
+                $msgBuilder->addElement($tableElement);
+
+                $text2Element = array(
+                    'content' => '📆 Hãy để ý lịch và thông báo. Xin cảm ơn!',
+                    'align' => 'center',
+                    'type' => 'text'
+                );
+
+                $msgBuilder->addElement($text2Element);
+
+                $actionOpenUrl = $msgBuilder->buildActionOpenURL(route('homeAdmin.list.booking'));
+                $msgBuilder->addButton('Kiểm tra lịch khám', '', $actionOpenUrl);
+
+                $msgPromotion = $msgBuilder->build();
+
+                // send request
+                $response = $this->zalo->post(ZaloEndPoint::API_OA_SEND_PROMOTION_MESSAGE_V3, $this->access_token, $msgPromotion);
+                $result = $response->getDecodedBody();
+                return $result;
+            }
+            //Gửi cho người dùng
             $userId = $request->user_id;
             $clinic = $request->booking_clinic;
             $clinicId = $request->booking_clinic_id;
@@ -668,7 +744,7 @@ class ZaloController extends Controller
             $msgBuilder->withUserId($userId);
 
             $bannerElement = array(
-                'attachment_id' => 'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/311942959/original/c064dac2df0c204b234b395ece39fa4f9d87661e/medical-website-healthcare-website-clinic-website-doctor-website-dental-website-22dd.jpg',
+                'image_url' => 'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/311942959/original/c064dac2df0c204b234b395ece39fa4f9d87661e/medical-website-healthcare-website-clinic-website-doctor-website-dental-website-22dd.jpg',
                 'type' => 'banner'
             );
             $msgBuilder->addElement($bannerElement);
@@ -757,7 +833,7 @@ class ZaloController extends Controller
             $msgBuilder->addElement($text2Element);
 
             $actionOpenUrl = $msgBuilder->buildActionOpenURL(route('web.users.my.bookings.list'));
-            $msgBuilder->addButton('Kiểm tra đơn hàng', '', $actionOpenUrl);
+            $msgBuilder->addButton('Kiểm tra lịch khám', '', $actionOpenUrl);
 
             if ($bookingStatus == "CANCEL") {
                 $actionOpenUrl = $msgBuilder->buildActionOpenURL(route('clinic.detail', $clinicId));

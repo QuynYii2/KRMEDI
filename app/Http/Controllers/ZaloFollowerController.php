@@ -99,9 +99,9 @@ class ZaloFollowerController extends Controller
     {
         //Check user follow
         try {
-            $existed = ZaloFollower::whereRaw("JSON_EXTRACT(`extend`, '$.user_id') = $user_id")->get();
+            $existed = ZaloFollower::whereRaw("JSON_EXTRACT(`extend`, '$.user_id') = $user_id")->first();
 
-            if ($existed->isEmpty()) {
+            if (empty($existed)) {
                 throw new \Exception("User not followed");
             }
 
