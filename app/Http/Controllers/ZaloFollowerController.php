@@ -130,8 +130,28 @@ class ZaloFollowerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        try {
+            if (!$id) {
+                throw new \Exception("userId is empty");
+            }
+
+            if (!is_numeric($id)) {
+                throw new \Exception("userId must be number");
+            }
+
+            $existed = ZaloFollower::whereRaw("JSON_EXTRACT(`extend`, '$.user_id') = $id")->first();
+
+            if (!$existed) {
+                throw new \Exception("User not existed");
+            }
+            
+            $existed->delete();
+
+            return response()->json(['error' => 0, 'message' => 'Successfully delete user ' . $id]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 1, 'message' => $e->getMessage()]);
+        }
     }
 }
