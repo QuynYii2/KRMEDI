@@ -617,7 +617,7 @@ Route::group(['prefix' => ''], function () {
 
 // Zalo API
 Route::get('/registerZaloSocialApi', [AuthSocialController::class, 'zaloRegister'])->name('zalo.user.register');
-Route::get('/checkZaloSocialApi/{app_id}/{role?}', [ZaloController::class, 'userExisted'])->name('zalo.user.existed');
+Route::get('/checkZaloSocialApi/{app_id}', [ZaloController::class, 'userExisted'])->name('zalo.user.existed');
 // Zalo API
 
 Route::get('explore', [MapController::class, 'explore'])->name('explore.list');
