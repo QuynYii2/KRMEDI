@@ -546,15 +546,24 @@ class ZaloController extends Controller
     }
 
     //API check user login = zalo existed?
-    public function userExisted($app_id)
+    public function userExisted($app_id, $role = null)
     {
         try {
-            $user = User::where('provider_name', 'zalo')->where('provider_id', $app_id)->first();
+            $user = User::where('provider_name', 'zalo')
+                ->where('provider_id', $app_id);
+
+            if ($role !== null) {
+                $user->where('role', $role);
+            }
+
+            $user = $user->first();
 
             if ($user) {
+                $role = $user->roles()->first();
                 $token = JWTAuth::fromUser($user);
                 $user->token = $token;
                 $user->save();
+                $user->role = $role->name ?? "";
                 return response()->json($user);
             }
 
