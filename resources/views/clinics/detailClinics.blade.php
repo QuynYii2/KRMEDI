@@ -89,22 +89,10 @@
                                 <span>{{ __('home.Main service') }}</span>
                                 <div class="mt-1">
                                     Select Department
-                                    <select onchange="getDoctor({{ $bookings->id }}, this.value)" class="form-select"
-                                        name="department_id" id="department_id">
+                                    <select class="form-select" name="department_id" id="department_id">
                                     </select>
                                 </div>
                             </div>
-                            {{-- <div class="border-bottom fs-16px mb-md-3">
-                                <span>{{ __('home.Doctor Name') }}</span>
-                                <div class="mt-1">
-                                    Select Doctor
-                                    <div id="list-doctor">
-                                        <select class="form-control">
-                                            <option value="#">Please choose doctor</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div> --}}
                             <div class="border-bottom mt-md-4 fs-16px mb-md-3">
                                 <span>{{ __('home.Information') }}</span>
                             </div>
@@ -489,7 +477,6 @@
             loadData();
             let clinicID = `{{ $bookings->id }}`;
             await getDepartment(clinicID);
-            await getDoctor(clinicID, $('#department_id').find(':selected').val());
         }
 
         function loadData() {
@@ -549,6 +536,13 @@
                     selectedDateTime.setHours(parseInt(startTime.split(":")[0]));
                     selectedDateTime.setMinutes(parseInt(startTime.split(":")[1]));
 
+                    var workingTime = checkWorkingTime(selectedDate + " " + timeParts[0] + ":00", selectedDate + " " +
+                        timeParts[1] + ":00")
+
+                    if (workingTime == false) {
+                        button.prop("disabled", true);
+                    }
+
                     // Kiểm tra nếu ngày được chọn là hôm nay và giờ hiện tại nằm trong khoảng từ 08:00 đến currentHour
                     if (
                         selectedDateTime.toDateString() === currentTime.toDateString() &&
@@ -603,44 +597,38 @@
             // Trigger the change event when the datepicker is loaded
             $("#datepicker").trigger("change");
         }
+
+        function checkWorkingTime(check_in, check_out) {
+            let result = true;
+            let checkWorkingTimeUrl = `{{ route('api.backend.booking.check.time.available') }}`;
+
+            let data = {
+                'clinic_id': '{{ $booking->id ?? 0 }}',
+                'checkInTime': check_in,
+                'checkOutTime': check_out,
+            };
+            let accessToken = `Bearer ` + token;
+            let headers = {
+                "Authorization": accessToken
+            };
+            $.ajax({
+                url: checkWorkingTimeUrl,
+                method: "GET",
+                headers: headers,
+                data: data,
+                success: function(response) {
+                    if (response.data > 10) {
+                        result = false;
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+            return result;
+        }
     </script>
     <script>
-        // async function getDoctor(clinic, department) {
-        //     await $.ajax({
-        //         url: `{{ route('restapi.list.doctor.clinics.department') }}?clinic_id=${clinic}&department_id=${department}`,
-        //         method: 'GET',
-        //         success: function(response) {
-        //             renderDoctor(response);
-        //             checkDataFullFill();
-        //         },
-        //         error: function(exception) {
-        //             console.log(exception);
-        //         }
-        //     });
-        // }
-
-        // function renderDoctor(response) {
-        //     let html = ``;
-
-        //     if (response.length == 0) {
-        //         //NULL DOCTOR
-        //         let main_html = `<select class="form-control" disable><option>Không có bác sĩ hoạt động</option></select>`;
-        //         $('#list-doctor').empty().append(main_html);
-        //     } else {
-        //         for (let i = 0; i < response.length; i++) {
-        //             let data = response[i];
-        //             html += `<option value="${data.id}">${data.username}-${data.email}</option>`
-        //         }
-
-        //         let main_html = `<select class="form-control"
-        //                                 name="doctor_id" id="doctor_id">
-        //                                     ${html}
-        //                                </select>`;
-        //         $('#list-doctor').empty().append(main_html);
-        //         checkDataFullFill();
-        //     }
-        // }
-
         async function getDepartment(clinic) {
             await $.ajax({
                 url: `{{ route('restapi.list.departments.clinics') }}?clinic_id=${clinic}`,
