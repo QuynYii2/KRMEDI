@@ -272,7 +272,10 @@ class BookingController extends Controller
 
     public function sendMessageToUserOnBookingCreated($booking)
     {
-        $clinicAccessToken = json_decode($booking->clinic->users->extend)->access_token_zalo;
+        $clinicAccessToken = json_decode($booking->clinic->users->extend)->access_token_zalo ?? "";
+        if (!$clinicAccessToken) {
+            return;
+        }
         $zaloFollower = new ZaloFollowerController();
         $bookedUser = $zaloFollower->show($booking->user_id)->getData();
         $zalo = new ZaloController($clinicAccessToken);
@@ -293,7 +296,10 @@ class BookingController extends Controller
 
     public function sendOAMessageFromAdminToClinic($booking)
     {
-        $clinicAccessToken = json_decode($booking->clinic->users->extend)->access_token_zalo;
+        $clinicAccessToken = json_decode($booking->clinic->users->extend)->access_token_zalo ?? "";
+        if (!$clinicAccessToken) {
+            return;
+        }
         $admin = User::whereHas('roles', function ($query) {
             $query->where('name', 'ADMIN');
         })
