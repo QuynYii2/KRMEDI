@@ -9,6 +9,7 @@ use App\Enums\ReviewStatus;
 use App\Enums\ServiceClinicStatus;
 use App\Enums\SymptomStatus;
 use App\Enums\TypeUser;
+use App\Http\Controllers\restapi\BookingApi;
 use App\Http\Controllers\restapi\MainApi;
 use App\Models\Booking;
 use App\Models\Clinic;
@@ -36,7 +37,6 @@ class ClinicController extends Controller
 
     public function showNear()
     {
-
     }
 
     public function index()
@@ -58,8 +58,14 @@ class ClinicController extends Controller
                     ->where('user_id', Auth::user()->id)
                     ->get();
                 $services = ServiceClinic::where('status', ServiceClinicStatus::ACTIVE)->get();
-                return view('clinics.detailClinics', compact('id', 'bookings', 'services',
-                    'reviews', 'memberFamily', 'userId'));
+                return view('clinics.detailClinics', compact(
+                    'id',
+                    'bookings',
+                    'services',
+                    'reviews',
+                    'memberFamily',
+                    'userId'
+                ));
             }
         }
         if (!$bookings || $bookings->status != ClinicStatus::ACTIVE) {
@@ -68,7 +74,7 @@ class ClinicController extends Controller
 
         $questionByDepartment =
 
-        $services = ServiceClinic::where('status', ServiceClinicStatus::ACTIVE)->get();
+            $services = ServiceClinic::where('status', ServiceClinicStatus::ACTIVE)->get();
         return view('clinics.detailClinics', compact('id', 'bookings', 'services', 'reviews'));
     }
 
@@ -127,29 +133,23 @@ class ClinicController extends Controller
                 alert()->error('Error', 'Please login to booking.');
                 return back();
             } else {
-                $booking = new Booking();
-
-                $booking = $this->createBooking($request, $booking);
-                $user = User::find($booking->user_id);
+                $bookingApi = new BookingApi();
+                $requestData = $request->except('_token');
+                $request->merge($requestData);
+                $user = User::find($request->user_id);
                 if (!$user || $user->type == 'MEDICAL' || $user->type == 'BUSINESS') {
                     alert()->error('Error', 'Not permission!');
                     return back();
                 }
-                $success = $booking->save();
-
-                $bookingId = $booking->id;
-                $this->storeAnswerSurveyUser($request->input('survey_text'), $bookingId);
-                $this->storeAnswerSurveyUser($request->input('survey_checkbox'), $bookingId);
-                $this->storeAnswerSurveyUser($request->input('survey_radio'), $bookingId);
-
-                if ($success) {
+                $booking = $bookingApi->createBooking($request);
+                if ($booking->getStatusCode() == 200) {
                     alert()->success('Success', 'Booking success.');
                     return back()->with('success', 'Booking success');
                 }
             }
             alert()->error('Error', 'Booking error.');
             return back()->with('error', 'Booking error');
-        } catch (\Exception $exception) {
+        } catch (\Exception $e) {
             alert()->error('Error', 'Please try again');
             return back()->with('error', 'Booking error');
         }
@@ -158,53 +158,14 @@ class ClinicController extends Controller
     private function storeAnswerSurveyUser($arrInput, $bookingId)
     {
         $arrInput = json_decode($arrInput);
-        foreach ($arrInput as $item) {
-            $answerSurveyUser = new SurveyAnswerUser();
-            $answerSurveyUser->result = $item;
-            $answerSurveyUser->booking_id = $bookingId;
-            $answerSurveyUser->user_id = Auth::id();
-            $answerSurveyUser->save();
+        if (is_array($arrInput) || is_object($arrInput)) {
+            foreach ($arrInput as $item) {
+                $answerSurveyUser = new SurveyAnswerUser();
+                $answerSurveyUser->result = $item;
+                $answerSurveyUser->booking_id = $bookingId;
+                $answerSurveyUser->user_id = Auth::id();
+                $answerSurveyUser->save();
+            }
         }
-    }
-
-    public function createBooking(Request $request, $booking)
-    {
-        $userID = $request->input('user_id');
-        $clinicID = $request->input('clinic_id');
-        $doctor_id = $request->input('doctor_id');
-        $department_id = $request->input('department_id');
-        $service = $request->input('service') ?? '';
-        $memberFamily = $request->input('member_family_id');
-        $medical_history = $request->input('medical_history') ?? '';
-        $consulting_form = $request->input('consulting_form');
-
-        if (is_array($service)) {
-            $servicesAsString = implode(',', $service);
-        } else {
-            $servicesAsString = $service;
-        }
-
-        $booking->doctor_id = $doctor_id;
-        $booking->department_id = $department_id;
-
-        if (is_array($medical_history)) {
-            $medical_historyAsString = implode('&&', $medical_history);
-        } else {
-            $medical_historyAsString = $medical_history;
-        }
-
-        $time = $request->input('selectedTime');
-        $timestamp = Carbon::parse($time);
-
-        $booking->user_id = $userID;
-        $booking->clinic_id = $clinicID;
-        $booking->check_in = $timestamp;
-        $booking->status = BookingStatus::PENDING;
-        $booking->service = $servicesAsString;
-        $booking->medical_history = $medical_historyAsString;
-        $booking->member_family_id = $memberFamily;
-        $booking->consulting_form = $consulting_form;
-
-        return $booking;
     }
 }

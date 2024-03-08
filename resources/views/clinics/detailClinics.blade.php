@@ -531,23 +531,53 @@
                             'margin-right': '7px',
                             'margin-bottom': '5px'
                         })
-                        .text(workingHour)
-                        .on("click", function() {
-                            $(".timeContainer button").removeClass("btn btn-primary").addClass(
-                                "btn btn-outline-primary");
-                            $(this).removeClass("btn btn-outline-primary").addClass("btn btn-primary");
-                            var timeText = $(this).text();
-                            var timeParts = timeText.split("-");
-                            var checkIn = selectedDate + " " + timeParts[0] + ":00";
-                            var checkOut = selectedDate + " " + timeParts[1] + ":00";
-                            console.log("checkIn:", checkIn);
-                            console.log("checkOut:", checkOut);
-                            $('#checkInTime').val(checkIn);
-                            $('#checkOutTime').val(checkOut);
-                            checkDataFullFill();
-                        });
+                        .text(workingHour);
+
+                    //VALIDATE TODAY TIME
+                    var timeParts = workingHour.split("-");
+                    var startTime = timeParts[0];
+                    var endTime = timeParts[1];
+
+                    var currentTime = new Date();
+                    var currentHour = currentTime.getHours();
+                    var currentMinute = currentTime.getMinutes();
+
+                    if (currentMinute > 0) {
+                        currentHour += 1; //Làm tròn giờ khi đã vào ca
+                    }
+
+                    var selectedDateTime = new Date(selectedDate);
+                    selectedDateTime.setHours(parseInt(startTime.split(":")[0]));
+                    selectedDateTime.setMinutes(parseInt(startTime.split(":")[1]));
+
+                    // Kiểm tra nếu ngày được chọn là hôm nay và giờ hiện tại nằm trong khoảng từ 08:00 đến currentHour
+                    if (
+                        selectedDateTime.toDateString() === currentTime.toDateString() &&
+                        currentHour > 8 && currentHour > parseInt(startTime.split(":")[0])
+                    ) {
+                        // Vô hiệu hóa các nút từ 08:00 đến currentHour
+                        button.prop("disabled", true);
+                    }
+                    //VALIDATE TODAY TIME
+
+                    button.on("click", function() {
+                        $(".timeContainer button").removeClass("btn btn-primary").addClass(
+                            "btn btn-outline-primary");
+                        $(this).removeClass("btn btn-outline-primary").addClass("btn btn-primary");
+                        var timeText = $(this).text();
+                        var timeParts = timeText.split("-");
+                        var checkIn = selectedDate + " " + timeParts[0] + ":00";
+                        var checkOut = selectedDate + " " + timeParts[1] + ":00";
+                        console.log("checkIn:", checkIn);
+                        console.log("checkOut:", checkOut);
+                        $('#checkInTime').val(checkIn);
+                        $('#checkOutTime').val(checkOut);
+                        checkDataFullFill();
+                    });
+
                     container.append(button);
                 }
+                checkDataFullFill();
             }
 
             $("#datepicker").datepicker({

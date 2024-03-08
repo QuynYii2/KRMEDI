@@ -13,58 +13,54 @@ use App\Models\SurveyAnswer;
 use App\Models\SurveyAnswerUser;
 use App\Models\SurveyQuestion;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class BookingApi extends Controller
 {
     public function createBooking(Request $request)
     {
         try {
-            $booking = new Booking();
-            $booking = (new ClinicController())->createBooking($request, $booking);
+            $validated = Validator::make($request->all(), [
+                'checkInTime' => 'required|date',
+                'checkOutTime' => 'required|date|after:checkInTime',
+                'member_family_id' => 'nullable|numeric',
+                'department_id' => 'required|numeric',
+                'doctor_id' => 'required|numeric',
+                'clinic_id' => 'required|numeric',
+                'user_id' => 'required|numeric'
+            ]);
 
-            $clinicID = $booking->clinic_id;
-            $timestamp = $booking->check_in;
-            $datetime = $timestamp->addMinutes(30);
-            $familyId = $booking->member_family_id;
-            $exitBooking = Booking::where('clinic_id', $clinicID)
-                ->where('member_family_id', $familyId)
-                ->where('check_in', '<', $datetime)
-                ->where('status', BookingStatus::APPROVED)
-                ->get();
-            if (count($exitBooking) > 5) {
-                $array = [
-                    'message' => 'The pre-booking service has reached the allowed number! Please re-choose again!'
-                ];
-                return response($array, 400);
+            if ($validated->fails()) {
+                return response()->json(['error' => -1, 'message' => $validated->errors()->first()], 400);
             }
 
-            $clinic = Clinic::find($clinicID);
-            if (!$clinic) {
-                return response((new MainApi())->returnMessage('Not found!'), 404);
+            $validatedData = $validated->validated();
+
+            $checkInTime = Carbon::parse($validatedData['checkInTime']);
+            $checkOutTime = Carbon::parse($validatedData['checkOutTime']);
+        
+            $validatedData['check_in'] = $checkInTime;
+            $validatedData['check_out'] = $checkOutTime;
+
+            $requestData = $request->only(['checkInTime', 'checkOutTime', 'clinic_id']);
+            $request->merge($requestData);
+
+            $checkWorkingTime = $this->checkWorkingTime($request);
+            $slotAvailable = json_decode($checkWorkingTime->getContent())->data;
+
+            if($slotAvailable > 10)
+            {
+                return response()->json(['error' => -1, 'message' => 'This slot have full of 10 request'], 400);
             }
 
-            $user = User::find($booking->user_id);
-            if (!$user || $user->type == 'MEDICAL' || $user->type == 'BUSINESS') {
-                return response((new MainApi())->returnMessage('Not permission!'), 400);
-            }
+            $booking = Booking::create($validatedData);
 
-            $success = $booking->save();
-
-            $department = $clinic->department;
-            $array_department = explode(',', $department);
-            $list_department = DB::table('departments')
-                ->whereIn('id', $array_department)
-                ->update(['score' => DB::raw('score + 2')]);
-            if ($success) {
-                $response = $booking->toArray();
-                $response['time_convert_checkin'] = date('Y-m-d H:i:s', strtotime($booking->check_in));
-                return response()->json($response);
-            }
-            return response('Create error', 400);
-        } catch (\Exception $exception) {
-            return response($exception, 400);
+            return response()->json(['error' => 0, 'data' => $booking]);
+        } catch (\Exception $e) {
+            return response(['error' => -1, 'message' => $e->getMessage()], 400);
         }
     }
 
@@ -92,7 +88,8 @@ class BookingApi extends Controller
         $business_role5 = \App\Models\Role::where('name', Role::SPAS)->first();
         $business_role6 = \App\Models\Role::where('name', Role::OTHERS)->first();
 
-        $array_id = [$business_role1->id,
+        $array_id = [
+            $business_role1->id,
             $business_role2->id,
             $business_role3->id,
             $business_role4->id,
@@ -138,7 +135,6 @@ class BookingApi extends Controller
 
                             $answer = $result;
                             $question['answers'] = $answer;
-
                         }
                         array_push($arrQuestion, $question);
                     } else {
@@ -196,7 +192,6 @@ class BookingApi extends Controller
 
                             $answer = $result;
                             $question['answers'] = $answer;
-
                         }
                         array_push($arrQuestion, $question);
                     } else {
@@ -266,8 +261,7 @@ class BookingApi extends Controller
         $status = $request->input('status') ?? BookingStatus::CANCEL;
         $reason = $request->input('reason');
         if ($booking) {
-            $booking->status = $booking->status == BookingStatus::PENDING ? BookingStatus::CANCEL :
-                ($booking->status == BookingStatus::CANCEL ? BookingStatus::PENDING : BookingStatus::CANCEL);
+            $booking->status = $booking->status == BookingStatus::PENDING ? BookingStatus::CANCEL : ($booking->status == BookingStatus::CANCEL ? BookingStatus::PENDING : BookingStatus::CANCEL);
             $booking->reason_cancel = $reason;
             $booking->save();
             return response()->json(['message' => 'Booking status updated successfully']);
@@ -292,5 +286,38 @@ class BookingApi extends Controller
         $reflector = new \ReflectionClass('App\Enums\ReasonCancel');
         $reasons = $reflector->getConstants();
         return response()->json($reasons);
+    }
+
+    public function checkWorkingTime(Request $request)
+    {
+        try {
+            $validated = Validator::make($request->all(), [
+                'checkInTime' => 'required|date',
+                'checkOutTime' => 'required|date|after:checkInTime',
+                'clinic_id' => 'nullable|numeric'
+            ]);
+
+            if ($validated->fails()) {
+                return response()->json(['error' => -1, 'message' => $validated->errors()->first()], 400);
+            }
+
+            $validatedData = $validated->validated();
+
+            $checkInTime = $validatedData['checkInTime'];
+            $checkOutTime = $validatedData['checkOutTime'];
+            $clinic_id = $validatedData['clinic_id'];
+            
+            $bookingCount = Booking::where('check_in', '>=', $checkInTime)->where('check_out', '<=', $checkOutTime);
+
+            if ($clinic_id) {
+                $bookingCount = $bookingCount->where('clinic_id', $clinic_id);
+            }
+
+            $bookingCount = $bookingCount->count();
+
+            return response()->json(['error' => 0, 'data' => $bookingCount]);
+        } catch (\Exception $e) {
+            return response(['error' => -1, 'message' => $e->getMessage()], 400);
+        }
     }
 }
