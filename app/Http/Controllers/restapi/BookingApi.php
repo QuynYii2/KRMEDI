@@ -28,7 +28,6 @@ class BookingApi extends Controller
                 'checkOutTime' => 'required|date|after:checkInTime',
                 'member_family_id' => 'nullable|numeric',
                 'department_id' => 'required|numeric',
-                'doctor_id' => 'required|numeric',
                 'clinic_id' => 'required|numeric',
                 'user_id' => 'required|numeric'
             ]);

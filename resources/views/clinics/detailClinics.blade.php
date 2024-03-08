@@ -94,7 +94,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="border-bottom fs-16px mb-md-3">
+                            {{-- <div class="border-bottom fs-16px mb-md-3">
                                 <span>{{ __('home.Doctor Name') }}</span>
                                 <div class="mt-1">
                                     Select Doctor
@@ -104,7 +104,7 @@
                                         </select>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="border-bottom mt-md-4 fs-16px mb-md-3">
                                 <span>{{ __('home.Information') }}</span>
                             </div>
@@ -471,8 +471,7 @@
             var checkOut = $('#checkOutTime').val();
             // var memberFamily = $('#member_family_id').val();
             var department = $('#department_id').val();
-            var doctor = $('#doctor_id').val();
-            if (checkIn && checkOut && department && doctor) {
+            if (checkIn && checkOut && department) {
                 // All values are not null or undefined
                 submitButton.text('Đặt lịch ngay');
                 submitButton.attr("disabled", false);
@@ -606,41 +605,41 @@
         }
     </script>
     <script>
-        async function getDoctor(clinic, department) {
-            await $.ajax({
-                url: `{{ route('restapi.list.doctor.clinics.department') }}?clinic_id=${clinic}&department_id=${department}`,
-                method: 'GET',
-                success: function(response) {
-                    renderDoctor(response);
-                    checkDataFullFill();
-                },
-                error: function(exception) {
-                    console.log(exception);
-                }
-            });
-        }
+        // async function getDoctor(clinic, department) {
+        //     await $.ajax({
+        //         url: `{{ route('restapi.list.doctor.clinics.department') }}?clinic_id=${clinic}&department_id=${department}`,
+        //         method: 'GET',
+        //         success: function(response) {
+        //             renderDoctor(response);
+        //             checkDataFullFill();
+        //         },
+        //         error: function(exception) {
+        //             console.log(exception);
+        //         }
+        //     });
+        // }
 
-        function renderDoctor(response) {
-            let html = ``;
+        // function renderDoctor(response) {
+        //     let html = ``;
 
-            if (response.length == 0) {
-                //NULL DOCTOR
-                let main_html = `<select class="form-control" disable><option>Không có bác sĩ hoạt động</option></select>`;
-                $('#list-doctor').empty().append(main_html);
-            } else {
-                for (let i = 0; i < response.length; i++) {
-                    let data = response[i];
-                    html += `<option value="${data.id}">${data.username}-${data.email}</option>`
-                }
+        //     if (response.length == 0) {
+        //         //NULL DOCTOR
+        //         let main_html = `<select class="form-control" disable><option>Không có bác sĩ hoạt động</option></select>`;
+        //         $('#list-doctor').empty().append(main_html);
+        //     } else {
+        //         for (let i = 0; i < response.length; i++) {
+        //             let data = response[i];
+        //             html += `<option value="${data.id}">${data.username}-${data.email}</option>`
+        //         }
 
-                let main_html = `<select class="form-control"
-                                        name="doctor_id" id="doctor_id">
-                                            ${html}
-                                       </select>`;
-                $('#list-doctor').empty().append(main_html);
-                checkDataFullFill();
-            }
-        }
+        //         let main_html = `<select class="form-control"
+        //                                 name="doctor_id" id="doctor_id">
+        //                                     ${html}
+        //                                </select>`;
+        //         $('#list-doctor').empty().append(main_html);
+        //         checkDataFullFill();
+        //     }
+        // }
 
         async function getDepartment(clinic) {
             await $.ajax({
@@ -665,7 +664,7 @@
             }
 
             if (response.length < 1) {
-                html = `<option value="">No doctor</option>`;
+                html = `<option value="">No department</option>`;
             }
 
             $('#department_id').empty().append(html);

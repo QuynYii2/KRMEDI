@@ -668,7 +668,6 @@ class ZaloController extends Controller
                 $clinicId = $request->booking_clinic_id;
                 $checkInTime = $request->booking_clinic_checkin;
                 $userName = $request->user_name;
-                $doctorName = $request->doctor_name;
 
                 $msgBuilder = new MessageBuilder(MessageBuilder::MSG_TYPE_PROMOTION);
                 $msgBuilder->withUserId($userId);
@@ -693,11 +692,6 @@ class ZaloController extends Controller
                 );
                 $msgBuilder->addElement($text1Element);
 
-                $tableContent1 = array(
-                    'key' => 'Tên bác sĩ',
-                    'value' => $doctorName
-                );
-
                 $tableContent2 = array(
                     'key' => 'Tên người bệnh',
                     'value' => $userName
@@ -708,7 +702,7 @@ class ZaloController extends Controller
                     'value' => $checkInTime
                 );
                 $tableElement = array(
-                    'content' => array($tableContent1, $tableContent2, $tableContent3),
+                    'content' => array($tableContent2, $tableContent3),
                     'type' => 'table'
                 );
                 $msgBuilder->addElement($tableElement);

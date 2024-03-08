@@ -313,7 +313,6 @@ class BookingController extends Controller
             'booking_clinic' => $booking->clinic->name,
             'booking_clinic_id' => $booking->clinic_id,
             'user_name' => $booking->user->name . ' ' . $booking->user->last_name,
-            'doctor_name' => $booking->doctor->name,
             'booking_clinic_checkin' => date('d/m/Y h:i A', strtotime($booking->check_in))
         ];
         $request = new Request();
