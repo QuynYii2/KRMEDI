@@ -142,6 +142,7 @@
             }
         });
     </script>
+    @yield('pages-style')
 </head>
 
 <style>
@@ -428,3 +429,4 @@
         }
     }                                 
 </script>
+@yield('pages-script')
