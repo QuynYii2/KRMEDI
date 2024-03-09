@@ -122,6 +122,9 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAl8bmtXj3F5lPG_mbD5Pj9mGSu2LCzrrE"></script>
     <script>
         let accessToken = `Bearer ` + token;
+        let headers = {
+            "Authorization": accessToken
+        };
         var locations = {!! json_encode($coordinatesArray) !!};
         var jsonServices = {!! json_encode($services) !!};
         var infoWindows = [];
@@ -380,9 +383,7 @@
             await $.ajax({
                 url: url,
                 method: 'GET',
-                headers: {
-                    "Authorization": accessToken
-                },
+                headers: headers,
                 success: function(response) {
                     renderService(response);
                 },
@@ -439,9 +440,7 @@
                 let response = await fetch(
                     '{{ route('api.survey.get-by-department', $bookings->department) }}', {
                         method: 'GET',
-                        headers: {
-                            "Authorization": accessToken
-                        },
+                        headers: headers,
                     });
 
                 if (response.ok) {
@@ -509,66 +508,70 @@
             function renderWorkingHours(selectedDate) {
                 var container = $(".timeContainer");
                 for (var i = 0; i < workingHours.length; i++) {
-                    var workingHour = workingHours[i];
-                    var button = $("<button>")
-                        .addClass("btn btn-outline-primary")
-                        .attr("type", "button")
-                        .css({
-                            'margin-right': '7px',
-                            'margin-bottom': '5px'
-                        })
-                        .text(workingHour);
+                    (function() {
+                        var workingHour = workingHours[i];
+                        var button = $("<button>")
+                            .addClass("btn btn-outline-primary")
+                            .attr("type", "button")
+                            .css({
+                                'margin-right': '7px',
+                                'margin-bottom': '5px'
+                            })
+                            .text(workingHour);
 
-                    //VALIDATE TODAY TIME
-                    var timeParts = workingHour.split("-");
-                    var startTime = timeParts[0];
-                    var endTime = timeParts[1];
+                        //VALIDATE TODAY TIME
+                        var timeParts = workingHour.split("-");
+                        var startTime = timeParts[0];
+                        var endTime = timeParts[1];
 
-                    var currentTime = new Date();
-                    var currentHour = currentTime.getHours();
-                    var currentMinute = currentTime.getMinutes();
+                        var currentTime = new Date();
+                        var currentHour = currentTime.getHours();
+                        var currentMinute = currentTime.getMinutes();
 
-                    if (currentMinute > 0) {
-                        currentHour += 1; //Làm tròn giờ khi đã vào ca
-                    }
+                        if (currentMinute > 0) {
+                            currentHour += 1; //Làm tròn giờ khi đã vào ca
+                        }
 
-                    var selectedDateTime = new Date(selectedDate);
-                    selectedDateTime.setHours(parseInt(startTime.split(":")[0]));
-                    selectedDateTime.setMinutes(parseInt(startTime.split(":")[1]));
+                        var selectedDateTime = new Date(selectedDate);
+                        selectedDateTime.setHours(parseInt(startTime.split(":")[0]));
+                        selectedDateTime.setMinutes(parseInt(startTime.split(":")[1]));
 
-                    var workingTime = checkWorkingTime(selectedDate + " " + timeParts[0] + ":00", selectedDate + " " +
-                        timeParts[1] + ":00")
+                        // Kiểm tra nếu ngày được chọn là hôm nay và giờ hiện tại nằm trong khoảng từ 08:00 đến currentHour
+                        if (
+                            selectedDateTime.toDateString() === currentTime.toDateString() &&
+                            currentHour > 8 && currentHour > parseInt(startTime.split(":")[0])
+                        ) {
+                            // Vô hiệu hóa các nút từ 08:00 đến currentHour
+                            button.prop("disabled", true);
+                        }
+                        //VALIDATE TODAY TIME
 
-                    if (workingTime == false) {
-                        button.prop("disabled", true);
-                    }
+                        checkWorkingTime(selectedDate + " " + timeParts[0] + ":00", selectedDate + " " +
+                            timeParts[1] + ":00",
+                            function(result) {
+                                if (!result) {
+                                    button.prop("disabled", true);
+                                }
+                            });
 
-                    // Kiểm tra nếu ngày được chọn là hôm nay và giờ hiện tại nằm trong khoảng từ 08:00 đến currentHour
-                    if (
-                        selectedDateTime.toDateString() === currentTime.toDateString() &&
-                        currentHour > 8 && currentHour > parseInt(startTime.split(":")[0])
-                    ) {
-                        // Vô hiệu hóa các nút từ 08:00 đến currentHour
-                        button.prop("disabled", true);
-                    }
-                    //VALIDATE TODAY TIME
+                        button.on("click", function() {
+                            $(".timeContainer button").removeClass("btn btn-primary").addClass(
+                                "btn btn-outline-primary");
+                            $(this).removeClass("btn btn-outline-primary").addClass("btn btn-primary");
+                            var timeText = $(this).text();
+                            var timeParts = timeText.split("-");
+                            var checkIn = selectedDate + " " + timeParts[0] + ":00";
+                            var checkOut = selectedDate + " " + timeParts[1] + ":00";
+                            console.log("checkIn:", checkIn);
+                            console.log("checkOut:", checkOut);
+                            $('#checkInTime').val(checkIn);
+                            $('#checkOutTime').val(checkOut);
+                            checkDataFullFill();
+                        });
 
-                    button.on("click", function() {
-                        $(".timeContainer button").removeClass("btn btn-primary").addClass(
-                            "btn btn-outline-primary");
-                        $(this).removeClass("btn btn-outline-primary").addClass("btn btn-primary");
-                        var timeText = $(this).text();
-                        var timeParts = timeText.split("-");
-                        var checkIn = selectedDate + " " + timeParts[0] + ":00";
-                        var checkOut = selectedDate + " " + timeParts[1] + ":00";
-                        console.log("checkIn:", checkIn);
-                        console.log("checkOut:", checkOut);
-                        $('#checkInTime').val(checkIn);
-                        $('#checkOutTime').val(checkOut);
-                        checkDataFullFill();
-                    });
+                        container.append(button);
 
-                    container.append(button);
+                    })();
                 }
                 checkDataFullFill();
             }
@@ -598,18 +601,13 @@
             $("#datepicker").trigger("change");
         }
 
-        function checkWorkingTime(check_in, check_out) {
-            let result = true;
+        function checkWorkingTime(check_in, check_out, callback) {
             let checkWorkingTimeUrl = `{{ route('api.backend.booking.check.time.available') }}`;
 
             let data = {
-                'clinic_id': '{{ $booking->id ?? 0 }}',
+                'clinic_id': `{{ $bookings->id ?? '' }}`,
                 'checkInTime': check_in,
                 'checkOutTime': check_out,
-            };
-            let accessToken = `Bearer ` + token;
-            let headers = {
-                "Authorization": accessToken
             };
             $.ajax({
                 url: checkWorkingTimeUrl,
@@ -617,15 +615,17 @@
                 headers: headers,
                 data: data,
                 success: function(response) {
+                    let result = true;
                     if (response.data > 10) {
                         result = false;
                     }
+                    callback(result);
                 },
                 error: function(error) {
                     console.log(error);
+                    callback(false);
                 }
             });
-            return result;
         }
     </script>
     <script>
