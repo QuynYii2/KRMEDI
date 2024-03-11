@@ -398,7 +398,7 @@ class BookingApi extends Controller
             $validated = Validator::make($request->all(), [
                 'status' => 'required|in:PENDING,CANCEL,APPROVED,COMPLETE,DELETE',
                 'date' => 'required|date',
-                'clinic_id' => 'required|numeric'
+                'user_id' => 'required|numeric'
             ]);
 
             if ($validated->fails()) {
@@ -408,7 +408,8 @@ class BookingApi extends Controller
             $validatedData = $validated->validated();
 
             $selectedDate = $validatedData['date'];
-            $clinicId = $validatedData['clinic_id'];
+            $userId = $validatedData['user_id'];
+            $clinicId = User::getClinicID($userId);
             $status = $validatedData['status'];
 
             $workingHours = [

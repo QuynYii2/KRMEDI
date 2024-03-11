@@ -196,22 +196,28 @@ class User extends Authenticatable implements JWTSubject
         }
 
         return Auth::user()->type == \App\Enums\Role::NORMAL;
-
     }
 
-    public static function getClinicID()
+    public static function getClinicID($user_id = null)
     {
         if (!Auth::check()) {
             return false;
         }
 
-        $clinic = User::with('clinic')->find(Auth::user()->id);
+        if ($user_id) {
+            $clinic = User::with('clinic')->find($user_id);
 
-        if (!$clinic || self::isAdmin()) {
-            return 0;
+            if (!$clinic || self::isAdmin($user_id)) {
+                return 0;
+            }
+        } else {
+            $clinic = User::with('clinic')->find(Auth::user()->id);
+
+            if (!$clinic || self::isAdmin()) {
+                return 0;
+            }
         }
-        
-        return $clinic->id;
-    }
 
+        return $clinic->clinic->id;
+    }
 }
