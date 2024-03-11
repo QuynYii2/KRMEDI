@@ -24,17 +24,17 @@ class SendBookingNotification implements ShouldQueue
     /**
      * Handle the event.
      */
-    public function handle(BookingCreated $event): void
-    {
-        // Xử lý sự kiện khi có bản ghi booking mới được tạo
-        // Sử dụng $event->booking để truy cập bản ghi booking mới
-        $newBooking = $event->booking;
-        // Eager load the clinic and user relationships
-        $newBooking->load('clinic.users', 'user', 'doctor');
+    // public function handle(BookingCreated $event): void
+    // {
+    //     // Xử lý sự kiện khi có bản ghi booking mới được tạo
+    //     // Sử dụng $event->booking để truy cập bản ghi booking mới
+    //     $newBooking = $event->booking;
+    //     // Eager load the clinic and user relationships
+    //     $newBooking->load('clinic.users', 'user', 'doctor');
 
-        //Gửi tin nhắn cho người dùng bằng OA Bệnh viện
-        $this->booking->sendMessageToUserOnBookingCreated($newBooking);
-        //Gửi tin nhắn từ OA tổng cho OA Bệnh viện
-        $this->booking->sendOAMessageFromAdminToClinic($newBooking);
-    }
+    //     //Gửi tin nhắn cho người dùng bằng OA Bệnh viện
+    //     $this->booking->sendMessageToUserOnBookingCreated($newBooking);
+    //     //Gửi tin nhắn từ OA tổng cho OA Bệnh viện
+    //     $this->booking->sendOAMessageFromAdminToClinic($newBooking);
+    // }
 }
