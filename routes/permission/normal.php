@@ -3,6 +3,7 @@
 use App\Http\Controllers\FamilyManagementController;
 use App\Http\Controllers\QuestionLikesController;
 use App\Http\Controllers\restapi\admin\AdminSurveyApi;
+use App\Http\Controllers\restapi\BookingApi;
 use App\Http\Controllers\SurveyController;
 use Illuminate\Support\Facades\Route;
 
@@ -61,4 +62,9 @@ Route::group(['prefix' => 'surveys'], function () {
     Route::get('get-answer-by-user/{question_id}/{user_id}', [SurveyController::class, 'getAnswerByUser']);
     Route::post('form-survey', [AdminSurveyApi::class, 'handleFormSurvey'])->name('api.medical.surveys.form.submit');
 
+});
+
+/* Bookings api */
+Route::group(['prefix' => 'normal/bookings'], function () {
+    Route::get('list', [BookingApi::class, 'getUserListBooking'])->name('api.medical.symptoms.list');
 });

@@ -41,7 +41,7 @@ class BookingApi extends Controller
 
             $checkInTime = Carbon::parse($validatedData['checkInTime']);
             $checkOutTime = Carbon::parse($validatedData['checkOutTime']);
-        
+
             $validatedData['check_in'] = $checkInTime;
             $validatedData['check_out'] = $checkOutTime;
 
@@ -51,8 +51,7 @@ class BookingApi extends Controller
             $checkWorkingTime = $this->checkWorkingTime($request);
             $slotAvailable = json_decode($checkWorkingTime->getContent())->data;
 
-            if($slotAvailable > 10)
-            {
+            if ($slotAvailable > 10) {
                 return response()->json(['error' => -1, 'message' => 'This slot have full of 10 request'], 400);
             }
 
@@ -314,7 +313,7 @@ class BookingApi extends Controller
             $checkInTime = $validatedData['checkInTime'];
             $checkOutTime = $validatedData['checkOutTime'];
             $clinic_id = $validatedData['clinic_id'];
-            
+
             $bookingCount = Booking::where('check_in', '>=', $checkInTime)->where('check_out', '<=', $checkOutTime);
 
             if ($clinic_id) {
@@ -358,27 +357,27 @@ class BookingApi extends Controller
             ];
 
             $bookingCounts = [];
-    
+
             foreach ($workingHours as $timeSlot) {
                 list($startTime, $endTime) = explode('-', $timeSlot);
-    
+
                 $checkInTime = $selectedDate . ' ' . $startTime . ':00';
                 $checkOutTime = $selectedDate . ' ' . $endTime . ':00';
-    
+
                 $query = Booking::where('check_in', '>=', $checkInTime)
                     ->where('check_out', '<=', $checkOutTime);
-    
+
                 if ($clinicId) {
                     $query->where('clinic_id', $clinicId);
                 }
-    
+
                 $bookingCount = $query->count();
 
                 $bookingInfo = null;
                 if ($bookingCount > 0) {
                     $bookingInfo = $query->get();
                 }
-    
+
                 $bookingCounts[] = [
                     'checkInTime' => $checkInTime,
                     'checkOutTime' => $checkOutTime,
@@ -392,4 +391,146 @@ class BookingApi extends Controller
             return response(['error' => -1, 'message' => $e->getMessage()], 400);
         }
     }
+
+    public function getBusinessListBooking(Request $request)
+    {
+        try {
+            $validated = Validator::make($request->all(), [
+                'status' => 'required|in:PENDING,CANCEL,APPROVED,COMPLETE,DELETE',
+                'date' => 'required|date',
+                'clinic_id' => 'required|numeric'
+            ]);
+
+            if ($validated->fails()) {
+                return response()->json(['error' => -1, 'message' => $validated->errors()->first()], 400);
+            }
+
+            $validatedData = $validated->validated();
+
+            $selectedDate = $validatedData['date'];
+            $clinicId = $validatedData['clinic_id'];
+            $status = $validatedData['status'];
+
+            $workingHours = [
+                "08:00-09:00",
+                "09:00-10:00",
+                "10:00-11:00",
+                "12:00-13:00",
+                "13:00-14:00",
+                "14:00-15:00",
+                "15:00-16:00",
+                "16:00-17:00"
+            ];
+
+            $bookingCounts = [];
+
+            foreach ($workingHours as $timeSlot) {
+                list($startTime, $endTime) = explode('-', $timeSlot);
+
+                $checkInTime = $selectedDate . ' ' . $startTime . ':00';
+                $checkOutTime = $selectedDate . ' ' . $endTime . ':00';
+
+                $query = Booking::where('check_in', '>=', $checkInTime)
+                    ->where('check_out', '<=', $checkOutTime);
+
+                if ($clinicId) {
+                    $query->where('clinic_id', $clinicId);
+                }
+
+                if ($status) {
+                    $query->where('status', $status);
+                }
+
+                $bookingCount = $query->count();
+
+                $bookingInfo = null;
+                if ($bookingCount > 0) {
+                    $bookingInfo = $query->get();
+                }
+
+                $bookingCounts[] = [
+                    'checkInTime' => $checkInTime,
+                    'checkOutTime' => $checkOutTime,
+                    'count' => $bookingCount,
+                    'bookings' => $bookingInfo
+                ];
+            }
+
+            return response()->json(['error' => 0, 'data' => $bookingCounts]);
+        } catch (\Exception $e) {
+            return response(['error' => -1, 'message' => $e->getMessage()], 400);
+        }
+    }
+
+    public function getUserListBooking(Request $request)
+    {
+        try {
+            $validated = Validator::make($request->all(), [
+                'status' => 'required|in:PENDING,CANCEL,APPROVED,COMPLETE,DELETE',
+                'date' => 'required|date',
+                'user_id' => 'required|numeric',
+            ]);
+
+            if ($validated->fails()) {
+                return response()->json(['error' => -1, 'message' => $validated->errors()->first()], 400);
+            }
+
+            $validatedData = $validated->validated();
+
+            $selectedDate = $validatedData['date'];
+            $userId = $validatedData['user_id'];
+            $status = $validatedData['status'];
+
+            $workingHours = [
+                "08:00-09:00",
+                "09:00-10:00",
+                "10:00-11:00",
+                "12:00-13:00",
+                "13:00-14:00",
+                "14:00-15:00",
+                "15:00-16:00",
+                "16:00-17:00"
+            ];
+
+            $bookingCounts = [];
+
+            foreach ($workingHours as $timeSlot) {
+                list($startTime, $endTime) = explode('-', $timeSlot);
+
+                $checkInTime = $selectedDate . ' ' . $startTime . ':00';
+                $checkOutTime = $selectedDate . ' ' . $endTime . ':00';
+
+                $query = Booking::where('check_in', '>=', $checkInTime)
+                    ->where('check_out', '<=', $checkOutTime);
+
+                if ($userId) {
+                    $query->where('user_id', $userId);
+                }
+
+                if ($status) {
+                    $query->where('status', $status);
+                }
+
+                $bookingCount = $query->count();
+
+                $bookingInfo = null;
+                if ($bookingCount > 0) {
+                    $bookingInfo = $query->get();
+                }
+
+                $bookingCounts[] = [
+                    'checkInTime' => $checkInTime,
+                    'checkOutTime' => $checkOutTime,
+                    'count' => $bookingCount,
+                    'bookings' => $bookingInfo
+                ];
+            }
+
+            return response()->json(['error' => 0, 'data' => $bookingCounts]);
+        } catch (\Exception $e) {
+            return response(['error' => -1, 'message' => $e->getMessage()], 400);
+        }
+    }
+
+
 }

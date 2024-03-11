@@ -7,6 +7,7 @@ use App\Http\Controllers\backend\BackendProductMedicineController;
 use App\Http\Controllers\backend\BackendServiceClinicController;
 use App\Http\Controllers\restapi\admin\AdminDepartmentApi;
 use App\Http\Controllers\restapi\admin\AdminSymptomsApi;
+use App\Http\Controllers\restapi\BookingApi;
 use App\Http\Controllers\restapi\ui\MyBusinessApi;
 use Illuminate\Support\Facades\Route;
 
@@ -79,5 +80,10 @@ Route::group(['prefix' => 'symptoms'], function () {
     Route::post('/create', [AdminSymptomsApi::class, 'create'])->name('api.medical.symptoms.create');
     Route::post('/update/{id}', [AdminSymptomsApi::class, 'update'])->name('api.medical.symptoms.update');
     Route::delete('/delete/{id}', [AdminSymptomsApi::class, 'delete'])->name('api.medical.symptoms.delete');
+});
+
+/* Bookings api */
+Route::group(['prefix' => 'business/bookings'], function () {
+    Route::get('list', [BookingApi::class, 'getBusinessListBooking'])->name('api.business.booking.list');
 });
 
