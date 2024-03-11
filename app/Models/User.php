@@ -44,6 +44,11 @@ class User extends Authenticatable implements JWTSubject
         'extend' => 'array',
     ];
 
+    public function clinic()
+    {
+        return $this->belongsTo(Clinic::class, 'id', 'user_id');
+    }
+
     public static function getNameByID($id)
     {
         if (!$id) {
@@ -194,6 +199,19 @@ class User extends Authenticatable implements JWTSubject
 
     }
 
+    public static function getClinicID()
+    {
+        if (!Auth::check()) {
+            return false;
+        }
 
+        $clinic = User::with('clinic')->find(Auth::user()->id);
+
+        if (!$clinic || self::isAdmin()) {
+            return 0;
+        }
+        
+        return $clinic->id;
+    }
 
 }

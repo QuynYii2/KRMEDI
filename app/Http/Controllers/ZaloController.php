@@ -22,8 +22,8 @@ use Zalo\ZaloEndPoint;
 
 class ZaloController extends Controller
 {
-    protected $app_id = Constants::ID_ZALO_APP;
-    protected $app_secret = Constants::KEY_ZALO_APP;
+    protected $app_id;
+    protected $app_secret;
     protected $access_token;
     protected $app_redirect = 'https%3A%2F%2Fkrmedi.vn%2Fzalo-service%2Fcallback';
     protected $app_url_permission = 'https://oauth.zaloapp.com/v4/oa/permission';
@@ -34,6 +34,8 @@ class ZaloController extends Controller
 
     public function __construct($access_token = null)
     {
+        $this->app_id = Auth::user()->extend['zalo_app_id'] ?? Constants::ID_ZALO_APP ?? null;
+        $this->app_secret = Auth::user()->extend['zalo_secret_id'] ?? Constants::KEY_ZALO_APP ?? null;
         $this->access_token = $access_token ?? $_COOKIE['access_token_zalo'] ?? null;
         $this->zalo = $this->main();
     }
@@ -386,7 +388,11 @@ class ZaloController extends Controller
     public function manageFollower()
     {
         try {
-            $follower_info = ZaloFollower::latest('updated_at')->get();
+            $clinicId = Auth::user()->getClinicID();
+            if (Auth::user()->isAdmin()) {
+                $clinicId = 0;
+            }
+            $follower_info = ZaloFollower::latest('updated_at')->where('extend->clinic_id', $clinicId)->get();
 
             return view('admin.user.zalo')->with(compact('follower_info'));
         } catch (Throwable $e) {
@@ -463,6 +469,11 @@ class ZaloController extends Controller
                         $convertedPhone = null;
                     }
 
+                    $zaloFollower = ZaloFollower::where('user_id', $user_id)->first();
+                    $extendData = $zaloFollower->extend ?? [];
+
+                    $extendData['clinic_id'] = Auth::user()->getClinicID();
+
                     ZaloFollower::updateOrCreate(
                         ['user_id' => $user_id],
                         [
@@ -470,7 +481,8 @@ class ZaloController extends Controller
                             'name' => $name,
                             'user_id_by_app' => $result['data']['user_id_by_app'],
                             'phone' => $convertedPhone,
-                            'address' => $addressString
+                            'address' => $addressString,
+                            'extend' => $extendData
                         ]
                     );
                 } catch (Throwable $e) {

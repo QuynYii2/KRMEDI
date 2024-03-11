@@ -1,4 +1,4 @@
-@php use Illuminate\Support\Facades\Auth; @endphp
+@php use Illuminate\Support\Facades\Auth;use App\Http\Controllers\MainController; @endphp
 @extends('layouts.admin')
 @section('title')
     {{ __('home.Profile') }}
@@ -348,6 +348,30 @@
                                     </div>
                                 </div>
                             </div>
+
+                            @if (Auth::user()->type == "BUSINESS" || (new MainController())->checkAdmin())
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group focused">
+                                            <label class="form-control-label"
+                                                for="zalo_app_id"><a href="https://oa.zalo.me/home">{{ __('home.zalo_app_id') }}</a></label>
+                                            <input type="text" id="zalo_app_id" class="form-control" name="zalo_app_id"
+                                                placeholder="<Enter your zalo app id>"
+                                                value="{{ old('zalo_app_id', Auth::user()->extend['zalo_app_id'] ?? "") }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group focused">
+                                            <label class="form-control-label"
+                                                for="zalo_secret_id"><a href="https://oa.zalo.me/home">{{ __('home.zalo_secret_id') }}</a></label>
+                                            <input type="text" id="zalo_secret_id" class="form-control" name="zalo_secret_id"
+                                                placeholder="<Enter your zalo secret id>"
+                                                value="{{ old('zalo_secret_id', Auth::user()->extend['zalo_secret_id'] ?? "") }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
                             @if(Auth::user()->type == 'NORMAL')
                                 <div class="row">
                                     <div class="col-12"><label

@@ -28,8 +28,6 @@ Route::group(['prefix' => 'user'], function () {
     Route::get('list', [AdminUserController::class, 'list'])->name('view.admin.user.list');
     Route::get('detail/{id}', [AdminUserController::class, 'detail'])->name('view.admin.user.detail');
     Route::get('create', [AdminUserController::class, 'create'])->name('view.admin.user.create');
-    Route::get('zalo-oa', [ZaloController::class, 'manageFollower'])->name('view.admin.user.zalo');
-    Route::get('sync-follower-zalo-oa', [ZaloController::class, 'syncFollower'])->name('admin.sync.user.zalo');
 });
 
 /* Admin review */

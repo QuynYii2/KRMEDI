@@ -990,6 +990,8 @@ return [
     'Select service' => 'Select service',
     'Xác nhận đặt khám' => 'Confirm medical appointment',
     'Nhập vào câu trả lời' => 'Enter your answer',
-    'Please upload your prescription file' => 'Please upload your prescription file'
+    'Please upload your prescription file' => 'Please upload your prescription file',
+    'zalo_app_id' => 'Zalo APP ID',
+    'zalo_secret_id' => 'Zalo SECRET ID'
 
 ];

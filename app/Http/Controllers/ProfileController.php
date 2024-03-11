@@ -87,12 +87,19 @@ class ProfileController extends Controller
 
             'current_password' => 'nullable|required_with:new_password',
             'new_password' => 'nullable|min:6|max:12|required_with:current_password',
-            'password_confirmation' => 'nullable|min:6|max:12|required_with:new_password|same:new_password'
+            'password_confirmation' => 'nullable|min:6|max:12|required_with:new_password|same:new_password',
+            'zalo_app_id' => 'nullable',
+            'zalo_secret_id' => 'nullable'
         ]);
+
+        $zaloAppID = $request->input('zalo_app_id') ?? "";
+        $zaloSecretID = $request->input('zalo_secret_id') ?? "";
 
         $username = $request->input('username');
 
         $user = User::findOrFail(Auth::user()->id);
+        
+        $extendData = $user->extend ?? [];
 
         if ($username != Auth::user()->username) {
             $oldUser = User::where('username', $username)
@@ -204,6 +211,17 @@ class ProfileController extends Controller
                 return redirect()->back()->withInput();
             }
         }
+
+        if ($zaloAppID) {
+            $extendData['zalo_app_id'] = $zaloAppID;
+        }
+
+        if ($zaloSecretID) {
+            $extendData['zalo_secret_id'] = $zaloSecretID;
+        }
+
+        $user->extend = $extendData;
+
         $user->save();
 
         toast('Success, Update profile success!', 'success', 'top-left');

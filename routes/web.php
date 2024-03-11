@@ -556,6 +556,12 @@ Route::group(['prefix' => 'route-ui', 'middleware' => 'jwt'], function () {
     require_once __DIR__ . '/authorization/auth.php';
 });
 
+/* Admin OR Business */
+Route::group(['prefix' => 'staff-ui', 'middleware' => ['business']], function () {
+    Route::get('zalo-oa', [ZaloController::class, 'manageFollower'])->name('view.admin.user.zalo');
+    Route::get('sync-follower-zalo-oa', [ZaloController::class, 'syncFollower'])->name('admin.sync.user.zalo');
+});
+
 /* List Api*/
 /* Auth */
 Route::group(['prefix' => 'auth'], function () {

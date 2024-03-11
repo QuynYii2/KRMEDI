@@ -986,7 +986,8 @@ return [
     'Select service' => 'Chọn dịch vụ',
     'Xác nhận đặt khám' => 'Xác nhận đặt khám',
     'Nhập vào câu trả lời' => 'Nhập vào câu trả lời',
-    'Please upload your prescription file' => 'Vui lòng tải lên tập tin đơn thuốc của bạn'
-
+    'Please upload your prescription file' => 'Vui lòng tải lên tập tin đơn thuốc của bạn',
+    'zalo_app_id' => 'Zalo APP ID',
+    'zalo_secret_id' => 'Zalo SECRET ID'
 
 ];

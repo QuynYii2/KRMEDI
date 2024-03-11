@@ -539,6 +539,11 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="{{ route('view.admin.user.zalo') }}">
+                        <i class="bi bi-circle"></i><span>{{ __('admin.zalo-oa-follower') }}</span>
+                    </a>
+                </li>
                 <!-- End Examination Nav -->
             @endif
             @if($isAdmin)
@@ -680,11 +685,6 @@
                         <li>
                             <a href="{{ route('view.admin.user.create') }}">
                                 <i class="bi bi-circle"></i><span>{{ __('home.Create User') }}</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('view.admin.user.zalo') }}">
-                                <i class="bi bi-circle"></i><span>{{ __('admin.zalo-oa-follower') }}</span>
                             </a>
                         </li>
                     </ul>
