@@ -64,7 +64,7 @@ class ZaloFollowerController extends Controller
                         'user_id_by_app' => isset($currentUser->provider_id) && $currentUser->provider_id != null ? $currentUser->provider_id : null,
                         'phone' => $currentUser->phone ?? null,
                         'address' => $currentUser->detail_address ?? null,
-                        'extend' => json_encode($extendData),
+                        'extend' => $extendData,
                     ]
                 );
             } else {
@@ -80,9 +80,9 @@ class ZaloFollowerController extends Controller
                 if ($currentUser->detail_address) {
                     $existedFollower->address = $currentUser->detail_address;
                 }
-                $extendData = json_decode($existedFollower->extend, true);
+                $extendData = $existedFollower->extend ?? [];
                 $extendData['user_id'] = $currentUser->id;
-                $existedFollower->extend = json_encode($extendData);
+                $existedFollower->extend = $extendData;
                 $existedFollower->save();
             }
 
@@ -99,7 +99,7 @@ class ZaloFollowerController extends Controller
     {
         //Check user follow
         try {
-            $existed = ZaloFollower::whereRaw("JSON_EXTRACT(`extend`, '$.user_id') = $user_id")->first();
+            $existed = ZaloFollower::where('extend->user_id', $user_id)->first();
 
             if (empty($existed)) {
                 throw new \Exception("User not followed");
@@ -141,7 +141,7 @@ class ZaloFollowerController extends Controller
                 throw new \Exception("userId must be number");
             }
 
-            $existed = ZaloFollower::whereRaw("JSON_EXTRACT(`extend`, '$.user_id') = $id")->first();
+            $existed = ZaloFollower::where('extend->user_id', $id)->first();
 
             if (!$existed) {
                 throw new \Exception("User not existed");

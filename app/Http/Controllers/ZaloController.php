@@ -88,18 +88,27 @@ class ZaloController extends Controller
             $user = User::find(Auth::user()->id);
 
             if ($user) {
-                if ($user->extend === null) {
-                    $user->extend = json_encode([
-                        'access_token_zalo' => $array['access_token'],
-                        'refresh_token_zalo' => $array['refresh_token']
-                    ]);
-                } else {
-                    $extendData = json_decode($user->extend, true);
-                    $extendData['access_token_zalo'] = $array['access_token'];
-                    $extendData['refresh_token_zalo'] = $array['refresh_token'];
-                    $user->extend = json_encode($extendData);
-                }
+                // if ($user->extend === null) {
+                //     $user->extend = json_encode([
+                //         'access_token_zalo' => $array['access_token'],
+                //         'refresh_token_zalo' => $array['refresh_token']
+                //     ]);
+                // } else {
+                //     $extendData = json_decode($user->extend, true);
+                //     $extendData['access_token_zalo'] = $array['access_token'];
+                //     $extendData['refresh_token_zalo'] = $array['refresh_token'];
+                //     $user->extend = json_encode($extendData);
+                // }
 
+                // $user->save();
+
+
+                $extendData = $user->extend ?? [];
+
+                $extendData['access_token_zalo'] = $array['access_token'];
+                $extendData['refresh_token_zalo'] = $array['refresh_token'];
+
+                $user->extend = $extendData;
                 $user->save();
             }
         }
@@ -339,18 +348,26 @@ class ZaloController extends Controller
             $user = User::find(Auth::user()->id);
 
             if ($user) {
-                if ($user->extend === null) {
-                    $user->extend = json_encode([
-                        'access_token_zalo' => $array_data['access_token'],
-                        'refresh_token_zalo' => $array_data['refresh_token']
-                    ]);
-                } else {
-                    $extendData = json_decode($user->extend, true);
-                    $extendData['access_token_zalo'] = $array_data['access_token'];
-                    $extendData['refresh_token_zalo'] = $array_data['refresh_token'];
-                    $user->extend = json_encode($extendData);
-                }
+                // if ($user->extend === null) {
+                //     $user->extend = json_encode([
+                //         'access_token_zalo' => $array_data['access_token'],
+                //         'refresh_token_zalo' => $array_data['refresh_token']
+                //     ]);
+                // } else {
+                //     $extendData = json_decode($user->extend, true);
+                //     $extendData['access_token_zalo'] = $array_data['access_token'];
+                //     $extendData['refresh_token_zalo'] = $array_data['refresh_token'];
+                //     $user->extend = json_encode($extendData);
+                // }
 
+                // $user->save();
+
+                $extendData = $user->extend ?? [];
+
+                $extendData['access_token_zalo'] = $array_data['access_token'];
+                $extendData['refresh_token_zalo'] = $array_data['refresh_token'];
+
+                $user->extend = $extendData;
                 $user->save();
             }
 
@@ -382,7 +399,7 @@ class ZaloController extends Controller
     {
         try {
             if ($this->access_token == null) {
-                $refresh_token = json_decode(Auth::user()->extend)->refresh_token_zalo ?? null;
+                $refresh_token = Auth::user()->extend['refresh_token_zalo'] ?? null;
                 if ($refresh_token) {
                     try {
                         $array_token = $this->getRefreshAccessToken($refresh_token);
@@ -840,6 +857,7 @@ class ZaloController extends Controller
             $result = $response->getDecodedBody();
             return $result;
         } catch (\Exception $e) {
+            dd($e->getMessage());
             return response()->json(['error' => 1, 'message' => $e->getMessage()], 404);
         }
     }

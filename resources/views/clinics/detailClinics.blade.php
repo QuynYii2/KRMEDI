@@ -506,6 +506,9 @@
             var isRendered = false; // Flag to track if working hours are rendered
 
             function renderWorkingHours(selectedDate) {
+                if (isRendered) {
+                    $(".timeContainer").empty(); // Clear existing working hours
+                }
                 var container = $(".timeContainer");
                 for (var i = 0; i < workingHours.length; i++) {
                     (function() {

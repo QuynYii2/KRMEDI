@@ -41,6 +41,7 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'extend' => 'array',
     ];
 
     public static function getNameByID($id)

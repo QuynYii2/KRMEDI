@@ -221,7 +221,13 @@ class BookingController extends Controller
             if ($success) {
                 if ($isSendOaToUser) {
                     $userId = $booking->user_id;
-                    $userFollower = ZaloFollower::whereRaw("JSON_EXTRACT(`extend`, '$.user_id') = $userId")->first();
+                    $userFollower = ZaloFollower::where('extend->user_id', $userId)->first();
+                    $admin = User::whereHas('roles', function ($query) {
+                        $query->where('name', 'ADMIN');
+                    })
+                        ->whereNotNull('extend->access_token_zalo')
+                        ->first();
+                    $adminAccessToken = $admin->extend['access_token_zalo'];
                     $additionalParams = [
                         'user_id' => $userFollower->user_id,
                         'booking_clinic' => $booking->clinic->name,
@@ -232,7 +238,7 @@ class BookingController extends Controller
                         'booking_clinic_checkin' => date('d/m/Y h:i A', strtotime($booking->check_in))
                     ];
                     $newRequest = $request->duplicate()->merge($additionalParams);
-                    $zalo = new ZaloController();
+                    $zalo = new ZaloController($adminAccessToken);
                     $zalo->sendBookingMessage($newRequest);
                 }
 
@@ -273,7 +279,7 @@ class BookingController extends Controller
     public function sendMessageToUserOnBookingCreated($booking)
     {
         try {
-            $clinicAccessToken = json_decode($booking->clinic->users->extend)->access_token_zalo ?? "";
+            $clinicAccessToken = $booking->clinic->users->extend['access_token_zalo'] ?? "";
             if (!$clinicAccessToken) {
                 return;
             }
@@ -301,7 +307,7 @@ class BookingController extends Controller
     public function sendOAMessageFromAdminToClinic($booking)
     {
         try {
-            $clinicAccessToken = json_decode($booking->clinic->users->extend)->access_token_zalo ?? "";
+            $clinicAccessToken = $booking->clinic->users->extend['access_token_zalo'] ?? "";
             if (!$clinicAccessToken) {
                 return;
             }
@@ -310,9 +316,8 @@ class BookingController extends Controller
             })
                 ->whereNotNull('extend->access_token_zalo')
                 ->first();
-            $adminAccessToken = json_decode($admin->extend)->access_token_zalo;
+            $adminAccessToken = $admin->extend['access_token_zalo'];
             $zalo = new ZaloController($adminAccessToken);
-            $zaloFollower = new ZaloFollowerController();
             $additionalParams = [
                 'user_id' => $clinicAccessToken,
                 'booking_clinic' => $booking->clinic->name,

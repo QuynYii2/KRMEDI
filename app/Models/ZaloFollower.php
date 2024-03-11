@@ -18,4 +18,8 @@ class ZaloFollower extends Model
         'address',
         'extend'
     ];
+
+    protected $casts = [
+        'extend' => 'array',
+    ];
 }
