@@ -108,6 +108,7 @@ Route::group(['prefix' => 'booking'], function () {
     Route::post('cancel/{id}', [BookingApi::class, 'cancelBooking'])->name('api.backend.booking.cancel');
     Route::get('list-reason', [BookingApi::class, 'getListReason'])->name('api.backend.booking.list.reason');
     Route::get('check-working-time-available', [BookingApi::class, 'checkWorkingTime'])->name('api.backend.booking.check.time.available');
+    Route::get('list-clinic-working-time', [BookingApi::class, 'listWorkingTime'])->name('api.backend.booking.list.working.time');
 });
 
 Route::group(['prefix' => 'messages'], function () {

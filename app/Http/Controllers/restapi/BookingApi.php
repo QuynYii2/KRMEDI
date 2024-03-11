@@ -328,4 +328,68 @@ class BookingApi extends Controller
             return response(['error' => -1, 'message' => $e->getMessage()], 400);
         }
     }
+
+    public function listWorkingTime(Request $request)
+    {
+        try {
+            $validated = Validator::make($request->all(), [
+                'date' => 'required|date',
+                'clinic_id' => 'required|numeric'
+            ]);
+
+            if ($validated->fails()) {
+                return response()->json(['error' => -1, 'message' => $validated->errors()->first()], 400);
+            }
+
+            $validatedData = $validated->validated();
+
+            $selectedDate = $validatedData['date'];
+            $clinicId = $validatedData['clinic_id'];
+
+            $workingHours = [
+                "08:00-09:00",
+                "09:00-10:00",
+                "10:00-11:00",
+                "12:00-13:00",
+                "13:00-14:00",
+                "14:00-15:00",
+                "15:00-16:00",
+                "16:00-17:00"
+            ];
+
+            $bookingCounts = [];
+    
+            foreach ($workingHours as $timeSlot) {
+                list($startTime, $endTime) = explode('-', $timeSlot);
+    
+                $checkInTime = $selectedDate . ' ' . $startTime . ':00';
+                $checkOutTime = $selectedDate . ' ' . $endTime . ':00';
+    
+                $query = Booking::where('check_in', '>=', $checkInTime)
+                    ->where('check_out', '<=', $checkOutTime);
+    
+                if ($clinicId) {
+                    $query->where('clinic_id', $clinicId);
+                }
+    
+                $bookingCount = $query->count();
+
+                $bookingInfo = null;
+                if ($bookingCount > 0) {
+                    $bookingInfo = $query->get();
+                }
+    
+                $bookingCounts[] = [
+                    'checkInTime' => $checkInTime,
+                    'checkOutTime' => $checkOutTime,
+                    'count' => $bookingCount,
+                    'bookings' => $bookingInfo
+                ];
+            }
+
+            return response()->json(['error' => 0, 'data' => $bookingCounts]);
+        } catch (\Exception $e) {
+            return response(['error' => -1, 'message' => $e->getMessage()], 400);
+        }
+    }
 }

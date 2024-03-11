@@ -616,7 +616,7 @@
                 data: data,
                 success: function(response) {
                     let result = true;
-                    if (response.data > 10) {
+                    if (response.data >= 10) {
                         result = false;
                     }
                     callback(result);
