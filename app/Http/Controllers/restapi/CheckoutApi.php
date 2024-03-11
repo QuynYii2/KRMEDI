@@ -74,6 +74,7 @@ class CheckoutApi extends Controller
         $order->shipping_price = $ship;
         $order->discount_price = $discount;
         $order->total = $totalOrder;
+        $order->aha_order_id = $request->input('aha_order_id') ?? null;
 
         $order->order_method = $orderMethod;
         $order->status = OrderStatus::PROCESSING;
