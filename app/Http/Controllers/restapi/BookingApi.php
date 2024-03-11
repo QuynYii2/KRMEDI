@@ -5,6 +5,7 @@ namespace App\Http\Controllers\restapi;
 use App\Enums\BookingStatus;
 use App\Enums\Role;
 use App\Enums\SurveyType;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ClinicController;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
@@ -56,6 +57,14 @@ class BookingApi extends Controller
             }
 
             $booking = Booking::create($validatedData);
+
+            $newBooking = Booking::with('user', 'clinic')->find($booking->id);
+
+            if ($newBooking) {
+                $bookingController = new BookingController();
+                $bookingController->sendMessageToUserOnBookingCreated($newBooking);
+                $bookingController->sendOAMessageFromAdminToClinic($newBooking);
+            }
 
             return response()->json(['error' => 0, 'data' => $booking]);
         } catch (\Exception $e) {

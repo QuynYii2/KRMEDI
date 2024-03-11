@@ -19,7 +19,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class=m-auto">
+                        <div class="m-auto">
                             <div class="form-group">
                                 <label class="label-input" for="full_name">{{ __('home.Full Name') }} <span
                                         class="text-danger">*</span></label>

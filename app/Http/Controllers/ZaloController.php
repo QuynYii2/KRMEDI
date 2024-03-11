@@ -382,7 +382,7 @@ class ZaloController extends Controller
     {
         try {
             if ($this->access_token == null) {
-                $refresh_token = json_decode(Auth::user()->extend)->refresh_token_zalo;
+                $refresh_token = json_decode(Auth::user()->extend)->refresh_token_zalo ?? null;
                 if ($refresh_token) {
                     try {
                         $array_token = $this->getRefreshAccessToken($refresh_token);
@@ -453,8 +453,7 @@ class ZaloController extends Controller
                             'name' => $name,
                             'user_id_by_app' => $result['data']['user_id_by_app'],
                             'phone' => $convertedPhone,
-                            'address' => $addressString,
-                            'extend' => null
+                            'address' => $addressString
                         ]
                     );
                 } catch (Throwable $e) {
