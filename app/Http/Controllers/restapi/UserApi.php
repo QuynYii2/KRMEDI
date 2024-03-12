@@ -311,7 +311,7 @@ class UserApi extends Controller
             if ($business) {
                 $bookings = Booking::where('clinic_id', $business->id)
                     ->where('user_id', $id)
-                    ->whereIn('status', [BookingStatus::PENDING, BookingStatus::APPROVED])
+                    ->where('status', BookingStatus::APPROVED)
                     ->whereBetween('check_in', [$startDay, $endDay])
                     ->orderBy('id', 'desc')
                     ->get();

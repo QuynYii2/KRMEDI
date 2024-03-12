@@ -396,7 +396,7 @@ class BookingApi extends Controller
     {
         try {
             $validated = Validator::make($request->all(), [
-                'status' => 'required|in:PENDING,CANCEL,APPROVED,COMPLETE,DELETE',
+                'status' => 'required|in:CANCEL,APPROVED,COMPLETE,DELETE',
                 'date' => 'required|date',
                 'user_id' => 'required|numeric'
             ]);
@@ -467,7 +467,7 @@ class BookingApi extends Controller
     {
         try {
             $validated = Validator::make($request->all(), [
-                'status' => 'required|in:PENDING,CANCEL,APPROVED,COMPLETE,DELETE',
+                'status' => 'required|in:CANCEL,APPROVED,COMPLETE,DELETE',
                 'date' => 'required|date',
                 'user_id' => 'required|numeric',
             ]);

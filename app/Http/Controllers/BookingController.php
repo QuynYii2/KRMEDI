@@ -144,7 +144,7 @@ class BookingController extends Controller
             $booking->user_id = Auth::user()->id;
             $booking->clinic_id = $clinicID;
             $booking->check_in = $timestamp;
-            $booking->status = BookingStatus::PENDING;
+            $booking->status = BookingStatus::APPROVED;
             $booking->service = $servicesAsString;
             $booking->medical_history = $medical_historyAsString;
             $booking->member_family_id = $memberFamily;
