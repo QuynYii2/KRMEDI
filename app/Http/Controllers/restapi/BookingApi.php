@@ -57,7 +57,7 @@ class BookingApi extends Controller
 
             $booking = Booking::create($validatedData);
 
-            $newBooking = Booking::with('user', 'clinic')->find($booking->id);
+            $newBooking = Booking::with('user', 'clinic.users')->find($booking->id);
 
             if ($newBooking) {
                 $bookingController = new BookingController();
