@@ -14,10 +14,6 @@
         <div class="d-flex justify-content-center">
             <button id="syncButton" type="button" class="btn btn-primary" onclick="syncData()"><i
                     class="fa-solid fa-rotate"></i> Sync data</button>
-            {{-- <button style="display: none" class="btn btn-primary" type="button" disabled>
-                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                Synchronizing...
-            </button> --}}
         </div>
 
         @if (session('syncStatus') == 'success')
@@ -61,10 +57,18 @@
                             {{ $info['user_id_by_app'] ?? '' }}
                         </td>
                         <td class="text-center">
-                            <a type="button" data-bs-toggle="modal" data-bs-target="#sendMessageModal"
-                                data-toggle="tooltip" data-placement="top"
-                                title="{{ __('admin.send-message-to') }}: {{ $info['phone'] ?? '' }}"
-                                onclick="setModalUserId('{{ $info['user_id'] ?? 0 }}', '{{ $info['phone'] ?? '' }}')">{{ $info['phone'] ?? '' }}</a>
+                            @if ($info['phone'])
+                                <a type="button" data-bs-toggle="modal" data-bs-target="#sendMessageModal"
+                                    data-toggle="tooltip" data-placement="top"
+                                    title="{{ __('admin.send-message-to') }}: {{ $info['phone'] ?? '' }}"
+                                    onclick="setModalUserId('{{ $info['user_id'] ?? 0 }}', '{{ $info['phone'] ?? '' }}')">{{ $info['phone'] }}</a>
+                            @else
+                                <a href="{{ route('zalo.service.send.invitation', ['user_zalo' => $info['user_id'], 'title' => 'Hãy cung cấp thông tin để chúng tôi biết thêm về bạn']) }}"
+                                    type="button" class="btn btn-outline-primary" data-toggle="tooltip"
+                                    data-placement="top" title="{{ __('admin.send-request-get-information') }}">
+                                    <i class="fa-regular fa-paper-plane"></i>
+                                </a>
+                            @endif
                         </td>
                         <td class="text-center">
                             {!! $info['address'] ?? '' !!}

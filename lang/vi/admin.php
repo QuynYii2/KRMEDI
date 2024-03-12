@@ -12,5 +12,6 @@ return [
     'through-zalo-oa' => 'qua Zalo OA',
     'message' => 'Tin nhắn',
     'close' => 'Đóng',
-    'send' => 'Gửi'
+    'send' => 'Gửi',
+    'send-request-get-information' => "Gửi tin yêu cầu thông tin người dùng"
 ];

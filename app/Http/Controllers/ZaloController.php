@@ -248,10 +248,20 @@ class ZaloController extends Controller
             $subtitle = $request->input('subtitle');
             $image_url = $request->input('image_url');
 
-            return $this->sendInvitationContent($user_id, $title, $subtitle, $image_url);
+            $response = $this->sendInvitationContent($user_id, $title, $subtitle, $image_url);
+
+            if (isset($response['error']) && $response['error'] == 0) {
+                toast('Thành công!! Đã gửi yêu cầu đến user', 'error', 'top-left');
+                return back();
+            }
+
+            if (json_decode($response->getContent())->status == -230) {
+                toast('Thất bại!! User không tương tác với OA trong vòng 7 ngày', 'error', 'top-left');
+                return back();
+            }
         } catch (\Exception $e) {
             // Exception handling code
-            return response()->json(['error' => 'An error occurred while sending the invitation: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'An error occurred while sending the invitation: ' . $e->getMessage(), 'status' => $e->getCode()], 500);
         }
     }
 
@@ -275,7 +285,7 @@ class ZaloController extends Controller
             return $response->getDecodedBody();
         } catch (\Exception $e) {
             // Exception handling code
-            return response()->json(['error' => 'An error occurred while sending the invitation: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'An error occurred while sending the invitation: ' . $e->getMessage(), 'status' => $e->getCode()], 500);
         }
     }
 

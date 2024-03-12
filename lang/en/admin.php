@@ -12,5 +12,6 @@ return [
     'through-zalo-oa' => 'through Zalo OA',
     'message' => 'Message',
     'close' => 'Close',
-    'send' => 'Send'
+    'send' => 'Send',
+    'send-request-get-information' => "Send request get more information to user"
 ];
