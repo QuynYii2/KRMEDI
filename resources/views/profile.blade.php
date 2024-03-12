@@ -370,6 +370,9 @@
                                         </div>
                                     </div>
                                 </div>
+                                @if (!isset(Auth::user()->extend['isActivated']) || !Auth::user()->extend['isActivated'])
+                                    <a href="{{ route('zalo.service.auth.verify') }}" type="button" class="btn btn-outline-primary" >{{ __('home.activate_zalo_oa') }}</a>
+                                @endif
                             @endif
 
                             @if(Auth::user()->type == 'NORMAL')

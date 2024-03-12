@@ -992,6 +992,7 @@ return [
     'Nhập vào câu trả lời' => 'Enter your answer',
     'Please upload your prescription file' => 'Please upload your prescription file',
     'zalo_app_id' => 'Zalo APP ID',
-    'zalo_secret_id' => 'Zalo SECRET ID'
+    'zalo_secret_id' => 'Zalo SECRET ID',
+    'activate_zalo_oa' => 'Activate ZALO OA'
 
 ];

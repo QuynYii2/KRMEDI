@@ -34,8 +34,16 @@ class ProfileController extends Controller
         $departments = DoctorDepartment::where('status', DoctorDepartmentStatus::ACTIVE)->get();
         $url = route('web.users.my.bookings.detail', Auth::user()->id);
         $qrCodes = QrCode::size(300)->generate($url);
-        return view('profile', compact('roles', 'roleItem', 'isAdmin',
-            'socialUser', 'nations', 'doctor', 'departments', 'qrCodes'));
+        return view('profile', compact(
+            'roles',
+            'roleItem',
+            'isAdmin',
+            'socialUser',
+            'nations',
+            'doctor',
+            'departments',
+            'qrCodes'
+        ));
     }
 
     public function infoUser($userId)
@@ -98,7 +106,7 @@ class ProfileController extends Controller
         $username = $request->input('username');
 
         $user = User::findOrFail(Auth::user()->id);
-        
+
         $extendData = $user->extend ?? [];
 
         if ($username != Auth::user()->username) {
@@ -142,7 +150,7 @@ class ProfileController extends Controller
         $user->phone = $request->input('phone');
         $user->address_code = $request->input('address_code');
 
-//        $user->nation_id = $request->input('nation_id');
+        //        $user->nation_id = $request->input('nation_id');
         $province = $request->input('province_id');
         $district = $request->input('district_id');
         $commune = $request->input('commune_id');
@@ -220,6 +228,10 @@ class ProfileController extends Controller
             $extendData['zalo_secret_id'] = $zaloSecretID;
         }
 
+        if ($zaloAppID || $zaloSecretID) {
+            $extendData['isActivated'] = false;
+        }
+
         $user->extend = $extendData;
 
         $user->save();
@@ -284,7 +296,6 @@ class ProfileController extends Controller
             default:
                 return response()->json((new MainApi())->returnMessage('Lỗi, thử lại'), 400);
         }
-
     }
 
     private function sendOTPEmail($value, $user)

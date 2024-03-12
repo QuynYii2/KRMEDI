@@ -8,6 +8,7 @@ use App\Models\ZaloFollower;
 use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -34,15 +35,29 @@ class ZaloController extends Controller
 
     public function __construct($access_token = null)
     {
-        $this->app_id = Auth::user()->extend['zalo_app_id'] ?? Constants::ID_ZALO_APP ?? null;
-        $this->app_secret = Auth::user()->extend['zalo_secret_id'] ?? Constants::KEY_ZALO_APP ?? null;
         $this->access_token = $access_token ?? $_COOKIE['access_token_zalo'] ?? null;
-        $this->zalo = $this->main();
+
+        $this->middleware(function ($request, $next) {
+            $this->zalo = $this->main();
+            //Check access token valid
+            $checkOA = $this->getOAInformation();
+            if (isset($checkOA['error']) && $checkOA['error'] == 0) {
+                return $next($request);
+            } else {
+                $statusCode = json_decode($checkOA->getContent())->code ?? "";
+                if ($statusCode == -216) {
+                    $this->getRefreshAccessToken();
+                }
+                return $next($request);
+            }
+        });
     }
 
     /* Create new zalo */
     public function main()
     {
+        $this->app_id = Auth::user()->extend['zalo_app_id'] ?? Constants::ID_ZALO_APP ?? null;
+        $this->app_secret = Auth::user()->extend['zalo_secret_id'] ?? Constants::KEY_ZALO_APP ?? null;
         $config = array(
             'app_id' => $this->app_id,
             'app_secret' => $this->app_secret
@@ -50,6 +65,18 @@ class ZaloController extends Controller
         $zalo = new Zalo($config);
 
         return $zalo;
+    }
+
+    // Get OA information => To check access token valid
+    private function getOAInformation()
+    {
+        try {
+            $response = $this->zalo->get(ZaloEndPoint::API_OA_GET_PROFILE, $this->access_token, []);
+            $result = $response->getDecodedBody(); // result
+            return $result;
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage(), 'code' => $e->getCode()], 400);
+        }
     }
 
     /* Get code of my OA */
@@ -90,25 +117,11 @@ class ZaloController extends Controller
             $user = User::find(Auth::user()->id);
 
             if ($user) {
-                // if ($user->extend === null) {
-                //     $user->extend = json_encode([
-                //         'access_token_zalo' => $array['access_token'],
-                //         'refresh_token_zalo' => $array['refresh_token']
-                //     ]);
-                // } else {
-                //     $extendData = json_decode($user->extend, true);
-                //     $extendData['access_token_zalo'] = $array['access_token'];
-                //     $extendData['refresh_token_zalo'] = $array['refresh_token'];
-                //     $user->extend = json_encode($extendData);
-                // }
-
-                // $user->save();
-
-
                 $extendData = $user->extend ?? [];
 
                 $extendData['access_token_zalo'] = $array['access_token'];
                 $extendData['refresh_token_zalo'] = $array['refresh_token'];
+                $extendData['isActivated'] = true;
 
                 $user->extend = $extendData;
                 $user->save();
@@ -118,7 +131,7 @@ class ZaloController extends Controller
             return redirect(session('zalo_intended_url'));
         }
 
-        return redirect(route('home'));
+        return redirect(route('profile'));
     }
 
     /* Get user follow*/
@@ -327,9 +340,12 @@ class ZaloController extends Controller
     }
 
     //Get access token from refresh token
-    private function getRefreshAccessToken($refresh_token)
+    public function getRefreshAccessToken($refresh_token = null)
     {
         try {
+            if (!$refresh_token) {
+                $refresh_token = Auth::user()->extend['refresh_token_zalo'] ?? $_COOKIE['refresh_token_zalo'] ?? null;
+            }
             $client = new Client();
 
             $response = $client->post($this->app_url_token, [
@@ -350,29 +366,32 @@ class ZaloController extends Controller
             $user = User::find(Auth::user()->id);
 
             if ($user) {
-                // if ($user->extend === null) {
-                //     $user->extend = json_encode([
-                //         'access_token_zalo' => $array_data['access_token'],
-                //         'refresh_token_zalo' => $array_data['refresh_token']
-                //     ]);
-                // } else {
-                //     $extendData = json_decode($user->extend, true);
-                //     $extendData['access_token_zalo'] = $array_data['access_token'];
-                //     $extendData['refresh_token_zalo'] = $array_data['refresh_token'];
-                //     $user->extend = json_encode($extendData);
-                // }
-
-                // $user->save();
-
                 $extendData = $user->extend ?? [];
 
+                if (isset($array_data['error'])) {
+                    $extendData['isActivated'] = false;
+                    $user->extend = $extendData;
+                    $user->save();
+                    toast('Bạn cần phải đăng nhập lại Zalo OA', 'error', 'top-left');
+
+                    $redirectRoute = route('profile');
+                    $response = new RedirectResponse($redirectRoute);
+                    $response->send();
+                    exit;
+                }
+
+                $expiration_time = time() + $array_data['expires_in'];
+                setCookie('access_token_zalo', $array_data['access_token'], $expiration_time, '/');
+                setCookie('refresh_token_zalo', $array_data['refresh_token'], $expiration_time, '/');
                 $extendData['access_token_zalo'] = $array_data['access_token'];
                 $extendData['refresh_token_zalo'] = $array_data['refresh_token'];
+                $extendData['isActivated'] = true;
 
                 $user->extend = $extendData;
                 $user->save();
             }
 
+            toast('Refresh token thành công', 'success', 'top-left');
             return [
                 'data' => $data,
                 'status' => 200,
@@ -697,8 +716,11 @@ class ZaloController extends Controller
                 $checkInTime = $request->booking_clinic_checkin;
                 $userName = $request->user_name;
 
-                $msgBuilder = new MessageBuilder(MessageBuilder::MSG_TYPE_PROMOTION);
+                $msgBuilder = new MessageBuilder(MessageBuilder::MSG_TYPE_TRANSACTION);
                 $msgBuilder->withUserId($userId);
+
+                $msgBuilder->withTemplateType(TransactionTemplateType::TRANSACTION_ORDER);
+                $msgBuilder->withLanguage("VI");
 
                 $bannerElement = array(
                     'image_url' => 'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/311942959/original/c064dac2df0c204b234b395ece39fa4f9d87661e/medical-website-healthcare-website-clinic-website-doctor-website-dental-website-22dd.jpg',
@@ -721,7 +743,7 @@ class ZaloController extends Controller
                 $msgBuilder->addElement($text1Element);
 
                 $tableContent2 = array(
-                    'key' => 'Tên người bệnh',
+                    'key' => 'Tên khách hàng',
                     'value' => $userName
                 );
 
@@ -729,6 +751,7 @@ class ZaloController extends Controller
                     'key' => 'Thời gian bắt đầu',
                     'value' => $checkInTime
                 );
+
                 $tableElement = array(
                     'content' => array($tableContent2, $tableContent3),
                     'type' => 'table'
@@ -746,10 +769,10 @@ class ZaloController extends Controller
                 $actionOpenUrl = $msgBuilder->buildActionOpenURL(route('homeAdmin.list.booking'));
                 $msgBuilder->addButton('Kiểm tra lịch khám', '', $actionOpenUrl);
 
-                $msgPromotion = $msgBuilder->build();
+                $msgTransaction = $msgBuilder->build();
 
                 // send request
-                $response = $this->zalo->post(ZaloEndPoint::API_OA_SEND_PROMOTION_MESSAGE_V3, $this->access_token, $msgPromotion);
+                $response = $this->zalo->post(ZaloEndPoint::API_OA_SEND_TRANSACTION_MESSAGE_V3, $this->access_token, $msgTransaction);
                 $result = $response->getDecodedBody();
                 return $result;
             }
@@ -762,8 +785,11 @@ class ZaloController extends Controller
             $bookingStatus = $request->booking_status;
             $bookingCancelReason = $request->booking_cancel_reason;
 
-            $msgBuilder = new MessageBuilder(MessageBuilder::MSG_TYPE_PROMOTION);
+            $msgBuilder = new MessageBuilder(MessageBuilder::MSG_TYPE_TRANSACTION);
             $msgBuilder->withUserId($userId);
+
+            $msgBuilder->withTemplateType(TransactionTemplateType::TRANSACTION_ORDER);
+            $msgBuilder->withLanguage("VI");
 
             $bannerElement = array(
                 'image_url' => 'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/311942959/original/c064dac2df0c204b234b395ece39fa4f9d87661e/medical-website-healthcare-website-clinic-website-doctor-website-dental-website-22dd.jpg',
@@ -786,7 +812,7 @@ class ZaloController extends Controller
             $msgBuilder->addElement($text1Element);
 
             $tableContent1 = array(
-                'key' => 'Tên người bệnh',
+                'key' => 'Tên khách hàng',
                 'value' => $name
             );
 
@@ -833,6 +859,7 @@ class ZaloController extends Controller
                 'key' => 'Thời gian bắt đầu',
                 'value' => $checkInTime
             );
+
             $tableElement = array(
                 'content' => array($tableContent1, $tableContent2, $tableContent3),
                 'type' => 'table'
@@ -861,11 +888,9 @@ class ZaloController extends Controller
                 $actionOpenUrl = $msgBuilder->buildActionOpenURL(route('clinic.detail', $clinicId));
                 $msgBuilder->addButton('Đặt lại lịch', 'https://static.vecteezy.com/system/resources/previews/010/160/988/original/calendar-icon-sign-symbol-design-free-png.png', $actionOpenUrl);
             }
-
-            $msgPromotion = $msgBuilder->build();
-
+            $msgTransaction = $msgBuilder->build();
             // send request
-            $response = $this->zalo->post(ZaloEndPoint::API_OA_SEND_PROMOTION_MESSAGE_V3, $this->access_token, $msgPromotion);
+            $response = $this->zalo->post(ZaloEndPoint::API_OA_SEND_TRANSACTION_MESSAGE_V3, $this->access_token, $msgTransaction);
             $result = $response->getDecodedBody();
             return $result;
         } catch (\Exception $e) {

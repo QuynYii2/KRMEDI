@@ -511,6 +511,20 @@ Route::middleware(['auth'])->group(function () {
         Route::get('create', [PrescriptionResultController::class, 'create'])->name('view.prescription.result.create');
         Route::get('get-medicine', [PrescriptionResultController::class, 'getListMedicine'])->name('view.prescription.result.get-medicine');
     });
+    
+    Route::group(['prefix' => 'zalo-service'], function () {
+        Route::get('auth-verify', [ZaloController::class, 'getAuthCode'])->name('zalo.service.auth.verify');
+        Route::get('callback', [ZaloController::class, 'getParameter'])->name('zalo.service.callback');
+        Route::get('token', [ZaloController::class, 'getToken'])->name('zalo.service.token');
+        Route::get('follower', [ZaloController::class, 'getFollower'])->name('zalo.service.follower');
+        // Get follower information
+        Route::get('profile', [ZaloController::class, 'getProfile'])->name('zalo.service.profile');
+        Route::post('send-message-text', [ZaloController::class, 'sendMessage'])->name('zalo.service.send.message.text');
+        // Send follower invitation to get information
+        Route::get('send-follower-invitation', [ZaloController::class, 'sendInvitation'])->name('zalo.service.send.invitation');
+        //OA send user message
+        Route::get('send-user-message', [ZaloController::class, 'sendBookingMessage'])->name('zalo.service.oa.send.user.message');
+    });
 });
 
 Route::get('/send', 'SendMessageController@index')->name('send');
@@ -638,16 +652,3 @@ Route::group(['prefix' => 'download'], function () {
     Route::get('file/{id}', [DownloadController::class, 'downloadFile'])->name('user.download.file');
 });
 Route::get('test/translate', [MainApi::class, 'translateLanguage']);
-Route::group(['prefix' => 'zalo-service'], function () {
-    Route::get('auth-verify', [ZaloController::class, 'getAuthCode'])->name('zalo.service.auth.verify');
-    Route::get('callback', [ZaloController::class, 'getParameter'])->name('zalo.service.callback');
-    Route::get('token', [ZaloController::class, 'getToken'])->name('zalo.service.token');
-    Route::get('follower', [ZaloController::class, 'getFollower'])->name('zalo.service.follower');
-    // Get follower information
-    Route::get('profile', [ZaloController::class, 'getProfile'])->name('zalo.service.profile');
-    Route::post('send-message-text', [ZaloController::class, 'sendMessage'])->name('zalo.service.send.message.text');
-    // Send follower invitation to get information
-    Route::get('send-follower-invitation', [ZaloController::class, 'sendInvitation'])->name('zalo.service.send.invitation');
-    //OA send user message
-    Route::get('send-user-message', [ZaloController::class, 'sendBookingMessage'])->name('zalo.service.oa.send.user.message');
-});
