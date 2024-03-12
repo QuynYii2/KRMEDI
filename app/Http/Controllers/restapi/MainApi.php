@@ -18,6 +18,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -237,6 +238,40 @@ class MainApi extends Controller
         } catch (\Exception $exception) {
             return response($exception, 400);
         }
+    }
+
+    public function sendFcmNotification(Request $request)
+    {
+        $client = new Client();
+        $YOUR_SERVER_KEY = Constants::GG_KEY;
+
+        $device_token = Auth::user()->token_firebase;
+
+        $response = $client->post('https://fcm.googleapis.com/fcm/send', [
+            'headers' => [
+                'Authorization' => 'key=' . $YOUR_SERVER_KEY,
+                'Content-Type' => 'application/json',
+            ],
+            'json' => [
+                'to' => $device_token,
+                'data' => [
+                    'key1' => 'value1',
+                    'key2' => 'value2',
+                ],
+                'notification' => [
+                    'title' => 'Test Title',
+                    'body' => 'Test Body',
+                ],
+                'web' => [
+                    'notification' => [
+                        'title' => 'Test Title',
+                        'body' => 'Test Body',
+                    ],
+                ],
+            ],
+        ]);
+
+        return $response->getBody();
     }
 
 }

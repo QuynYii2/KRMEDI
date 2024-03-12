@@ -52,6 +52,124 @@
         })
     </script>
 
+    
+    <script type="module">
+        import {initializeApp} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import {
+            getMessaging,
+            getToken,
+            onMessage
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAW-1uaHUA8tAaA3IQD9ypNkbVzFji88bE",
+            authDomain: "chat-firebase-de134.firebaseapp.com",
+            projectId: "chat-firebase-de134",
+            storageBucket: "chat-firebase-de134.appspot.com",
+            messagingSenderId: "867778569957",
+            databaseURL: 'https://chat-firebase-de134.firebaseio.com',
+            appId: "1:867778569957:web:7f3a6b87d83cefd8e8d60c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const messaging = getMessaging();
+
+        const key_pair_fire_base = 'BIKdl-B84phF636aS0ucw5k-KoGPnivJW4L_a9GNf7gyrWBZt--O9KcEzvsLl3h-3_Ld0rT8YFTsuupknvguW9s';
+        getToken(messaging, {vapidKey: key_pair_fire_base}).then((currentToken) => {
+            if (currentToken) {
+                console.log('token: ', currentToken);
+                saveToken(currentToken);
+            } else {
+                console.log('No registration token available. Request permission to generate one.');
+            }
+        }).catch((err) => {
+            console.log('An error occurred while retrieving token. ', err);
+        });
+
+        let accessToken = `Bearer ` + token;
+        let headers = {
+            'Authorization': accessToken
+        };
+
+        async function saveToken(token) {
+            @if(Auth::check() && (!Auth::user()->token_firebase || Auth::user()->token_firebase == '' || Auth::user()->token_firebase == null))
+                await callSaveToken(token);
+            @endif
+        }
+
+        async function callSaveToken(token) {
+            let saveTokenUrl = `{{ route('api.user.save.token') }}`;
+
+            let data = {
+                'token_firebase': token,
+                'user_id': '{{ Auth::check() ? Auth::user()->id : '' }}'
+            };
+            await $.ajax({
+                url: saveTokenUrl,
+                method: "POST",
+                headers: headers,
+                data: data,
+                success: function (response) {
+                    console.log(response)
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        onMessage(messaging, (payload) => {
+            console.log('Message received. ', payload);
+            if (!window.Notification) {
+                console.log('Browser does not support notifications.');
+            } else {
+                // Create the new notification item
+                var newNotificationItem = $('<li><hr class="dropdown-divider">' +
+                    '</li><li class="notification-item">' +
+                    '<i class="bi bi-exclamation-circle text-warning"></i>' +
+                    '<div class="notificationContent ms-3">' +
+                    '<h4>Title</h4>' +
+                    '<p>Nội dung</p>' +
+                    '<p>Time</p>' +
+                    '</div>' +
+                    '</li>');
+                // Find the first <li> element in the dropdown menu
+                var secondListItem = $('.dropdown-menu.notifications li:nth-child(2)');
+
+                if (Notification.permission === 'granted') {
+                    let notify = new Notification('KRMEDI Notification', {
+                        body: payload.notification.title + ': ' + payload.notification.body
+                    });
+
+                    // Prepend the new notification item before the first <li> element
+                    secondListItem.before(newNotificationItem);
+                } else {
+                    Notification.requestPermission().then(function (p) {
+                        if (p === 'granted') {
+                            let notify = new Notification('KRMEDI Notification', {
+                                body: payload.notification.title + ': ' + payload.notification.body
+                            });
+                            secondListItem.before(newNotificationItem);
+                        } else {
+                            console.log('User blocked notifications.');
+                        }
+                    }).catch(function (err) {
+                        console.error(err);
+                    });
+                }
+            }
+        });
+
+        // messaging.onMessage(function (payload) {
+        //     const title = payload.notification.title;
+        //     const options = {
+        //         body: payload.notification.body,
+        //         icon: payload.notification.icon,
+        //     };
+        //     new Notification(title, options);
+        // });
+    </script>
+
     @yield('page-style')
 
 </head>
@@ -188,7 +306,7 @@
 
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
                     <li class="dropdown-header">
-                        {{ __('home.You have 4 new notifications') }}
+                        Thông báo
                         <a href="#"><span
                                 class="badge rounded-pill bg-primary p-2 ms-2">{{ __('home.View all') }}</span></a>
                     </li>
@@ -197,11 +315,11 @@
                     </li>
 
                     <li class="notification-item">
-                        <i class="bi bi-exclamation-circle text-warning"></i>
-                        <div>
-                            <h4>Lorem Ipsum</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>30 min. ago</p>
+                        <img src="/admin/img/profile-img.jpg" alt="Profile" class="rounded-circle" width="60px">
+                        <div class="notificationContent ms-3">
+                            <h4>Title</h4>
+                            <p>Nội dung</p>
+                            <p>Time</p>
                         </div>
                     </li>
 
@@ -209,44 +327,6 @@
                         <hr class="dropdown-divider">
                     </li>
 
-                    <li class="notification-item">
-                        <i class="bi bi-x-circle text-danger"></i>
-                        <div>
-                            <h4>Atque rerum nesciunt</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>1 hr. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-check-circle text-success"></i>
-                        <div>
-                            <h4>Sit rerum fuga</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>2 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-info-circle text-primary"></i>
-                        <div>
-                            <h4>Dicta reprehenderit</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>4 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
                     <li class="dropdown-footer">
                         <a href="#">{{ __('home.Show all notifications') }}</a>
                     </li>
