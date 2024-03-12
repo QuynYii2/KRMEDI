@@ -61,8 +61,8 @@ class BookingApi extends Controller
 
             if ($newBooking) {
                 $bookingController = new BookingController();
-                // $bookingController->sendMessageToUserOnBookingCreated($newBooking);
-                $bookingController->sendOAMessageFromAdminToClinic($newBooking);
+                $bookingController->sendMessageToUserOnBookingCreated($newBooking);
+                // $bookingController->sendOAMessageFromAdminToClinic($newBooking);
             }
 
             return response()->json(['error' => 0, 'data' => $booking]);
