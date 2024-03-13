@@ -61,8 +61,18 @@ class BookingApi extends Controller
 
             if ($newBooking) {
                 $bookingController = new BookingController();
-                $bookingController->sendMessageToUserOnBookingCreated($newBooking);
+                // $bookingController->sendMessageToUserOnBookingCreated($newBooking);
                 // $bookingController->sendOAMessageFromAdminToClinic($newBooking);
+
+                //Send Noti
+                $mainApi = new MainApi();
+                $newRequestData = [
+                    'id' => $newBooking->id,
+                    'user_id' => $newBooking->user_id,
+                    'clinic_id' => $newBooking->clinic_id,
+                ];
+                $request = new Request($newRequestData);
+                $mainApi->sendFcmNotification($request);
             }
 
             return response()->json(['error' => 0, 'data' => $booking]);

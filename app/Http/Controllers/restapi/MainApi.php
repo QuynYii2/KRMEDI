@@ -269,8 +269,6 @@ class MainApi extends Controller
             $client = new Client();
             $YOUR_SERVER_KEY = Constants::GG_KEY;
     
-            // $device_token = Auth::user()->token_firebase;
-    
             $response = $client->post('https://fcm.googleapis.com/fcm/send', [
                 'headers' => [
                     'Authorization' => 'key=' . $YOUR_SERVER_KEY,
@@ -302,8 +300,6 @@ class MainApi extends Controller
             ]);
 
             return $response->getBody();
-
-            // return response()->json(['error' => 0, 'data' => $response->getBody()]);
         } catch (\Exception $e) {
             return response(['error' => -1, 'message' => $e->getMessage()], 400);
         }
