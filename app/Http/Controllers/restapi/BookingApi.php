@@ -324,7 +324,7 @@ class BookingApi extends Controller
             $checkOutTime = $validatedData['checkOutTime'];
             $clinic_id = $validatedData['clinic_id'];
 
-            $bookingCount = Booking::where('check_in', '>=', $checkInTime)->where('check_out', '<=', $checkOutTime);
+            $bookingCount = Booking::where('check_in', '>=', $checkInTime)->where('check_out', '<=', $checkOutTime)->where('status', '!=', 'CANCEL');
 
             if ($clinic_id) {
                 $bookingCount = $bookingCount->where('clinic_id', $clinic_id);
