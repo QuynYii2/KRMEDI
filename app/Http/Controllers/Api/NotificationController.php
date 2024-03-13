@@ -37,7 +37,7 @@ class NotificationController extends Controller
                 $notifications = $notifications->get();
             }
 
-            $unseenNoti = Notification::where('seen', 0)->count();
+            $unseenNoti = Notification::where('follower', $user_id)->where('seen', 0)->count();
 
             return response()->json(['error' => 0, 'data' => $notifications, 'unseenNoti' => $unseenNoti]);
         } catch (\Exception $e) {
