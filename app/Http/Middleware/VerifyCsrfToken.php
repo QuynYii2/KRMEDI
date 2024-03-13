@@ -74,6 +74,7 @@ class VerifyCsrfToken extends Middleware
         '/check-valid-otp',
         '/change-password',
         '/medicine/list',
-        '/api/zalo/**'
+        '/api/zalo/**',
+        '/api/notifications'
     ];
 }

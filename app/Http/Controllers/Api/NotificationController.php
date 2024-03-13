@@ -17,7 +17,8 @@ class NotificationController extends Controller
         try {
             $validated = Validator::make($request->all(), [
                 'limit' => 'nullable|numeric',
-                'user_id' => 'required|numeric'
+                'user_id' => 'required|numeric',
+                'page' => 'nullable|numeric',
             ]);
 
             if ($validated->fails()) {
@@ -32,7 +33,8 @@ class NotificationController extends Controller
             $notifications  = Notification::with('senders', 'followers')->where('follower', $user_id)->orderBy('created_at', 'desc')->orderBy('updated_at', 'desc');
 
             if ($limit) {
-                $notifications = $notifications->simplePaginate($limit);
+                $page = $validatedData['page'] ?? 1;
+                $notifications = $notifications->simplePaginate($limit, ['*'], 'page', $page);
             } else {
                 $notifications = $notifications->get();
             }
@@ -55,10 +57,35 @@ class NotificationController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * Seen all notifications
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $validated = Validator::make($request->all(), [
+                'user_id' => 'required|numeric'
+            ]);
+
+            if ($validated->fails()) {
+                return response()->json(['error' => -1, 'message' => $validated->errors()->first()], 400);
+            }
+
+            $validatedData = $validated->validated();
+
+            $user_id = $validatedData['user_id'];
+            
+            $notifications = Notification::where('follower', $user_id)->where('seen', 0)->get();
+
+            foreach ($notifications as $noti) {
+                $noti->seen = 1;
+    
+                $noti->save();
+            }
+
+            return response()->json(['error' => 0, 'data' => $notifications->count()]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => -1, 'message' => $e->getMessage()]);
+        }
     }
 
     /**

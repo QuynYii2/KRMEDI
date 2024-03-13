@@ -319,10 +319,10 @@
                     <span class="badge bg-primary badge-number countUnseenNotification">{{ $unseenNoti }}</span>
                 </a><!-- End Notification Icon -->
 
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications" style="max-height: 500px; overflow-y: auto;" id="notificationList" data-page="1" onscroll="lazyLoadNotifications()">
                     <li class="dropdown-header">
                         Bạn có <span class="countUnseenNotification">{{ $unseenNoti }}</span> thông báo chưa đọc
-                        <a href="#"><span
+                        <a type="button" onclick="seenAllNotify({{ Auth::user()->id ?? 0 }})"><span
                                 class="badge rounded-pill bg-primary p-2 ms-2">{{ __('home.View all') }}</span></a>
                     </li>
                     <li>
@@ -966,6 +966,8 @@
 
 <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.11.2/dist/echo.iife.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/vi.min.js"></script>
 
 @yield('page-script')
 
@@ -1224,13 +1226,13 @@
 </script>
 
 <script>
+    let accessToken = `Bearer ` + token;
+    let headers = {
+        'Authorization': accessToken
+    };
+
     function seenNotify(event, id) {
         event.preventDefault();
-
-        let accessToken = `Bearer ` + token;
-        let headers = {
-            'Authorization': accessToken
-        };
 
         $.ajax({
             url: `/api/notifications/${id}/edit`,
@@ -1246,4 +1248,119 @@
 
       window.location.href = event.currentTarget.getAttribute('href');
     }
+
+    function seenAllNotify(user_id) {
+        $.ajax({
+            url: `/api/notifications`,
+            type: 'POST',
+            headers: headers,
+            data: {
+                'user_id': user_id
+            },
+            success: function(response) {
+                if (response.data > 0) {
+                    $('.countUnseenNotification').text(function(index, text) {
+                        return parseInt(text) - response.data;
+                    });
+                }
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    }
+
+    let loadingNotifications = false;
+    let currentPage = 2; // Track the current page
+
+    function loadMoreNotifications() {
+        const notificationList = $('#notificationList');
+        const userId = '{{ Auth::user()->id}}'; // Replace with the actual user ID
+
+        if (loadingNotifications) {
+            return;
+        }
+
+        loadingNotifications = true;
+
+        const url = `{{ route('notifications.index') }}?limit=4&page=${currentPage}&user_id=${userId}`;
+
+        $.ajax({
+            url: url,
+            headers: headers,
+            dataType: 'json',
+            success: function(data) {
+                const notifications = data.data.data ?? [];
+                const unseenNoti = data.unseenNoti ?? 0;
+
+                if (Array.isArray(notifications)) {
+                    notifications.forEach(notification => {
+                        const liWrapper = $('<li>').addClass('notification-item');
+
+                        const aLink = $('<a>').attr('href', notification.target_url ?? '#').on('click', event => seenNotify(event, notification.id));
+
+                        const divNotification = $('<div>').addClass('notification-item');
+                        if (notification.seen == 0) {
+                            divNotification.addClass('fw-bold');
+                        }
+
+                        const imgProfile = $('<img>').attr('src', notification.senders?.avt ?? '').attr('alt', 'Profile').addClass('rounded-circle').attr('width', '60');
+
+                        const divContent = $('<div>').addClass('notificationContent ms-3');
+
+                        const h4Title = $('<h4>').text(notification.title ?? '');
+
+                        const pDescription = $('<p>').text(notification.description ?? '');
+
+                        const pCreatedAt = $('<p>').text(moment(notification.created_at).locale('vi').fromNow());
+
+                        divContent.append(h4Title);
+                        divContent.append(pDescription);
+                        divContent.append(pCreatedAt);
+
+                        divNotification.append(imgProfile);
+                        divNotification.append(divContent);
+
+                        aLink.append(divNotification);
+
+                        liWrapper.append(aLink);
+
+                        const hrDivider = $('<hr>').addClass('dropdown-divider');
+
+                        const liDivider = $('<li>').append(hrDivider);
+
+                        notificationList.append(liWrapper);
+                        notificationList.append(liDivider);
+                    });
+                }
+
+                currentPage++; // Increment the current page
+                $('.countUnseenNotification').text(unseenNoti);
+
+                loadingNotifications = false;
+            },
+            error: function(error) {
+                console.error('Error loading notifications:', error);
+                loadingNotifications = false;
+            }
+        });
+    }
+
+    function isScrolledToBottom() {
+        const notificationList = $('#notificationList');
+        return notificationList.scrollTop() + notificationList.innerHeight() >= notificationList.prop('scrollHeight') - 100
+    }
+
+    function lazyLoadNotifications() {
+        if (isScrolledToBottom()) {
+            loadMoreNotifications();
+        }
+    }
+
+    // Attach the lazyLoadNotifications function to the scroll event
+    $('#notificationList').on('scroll', lazyLoadNotifications);
+
+    // Load initial notifications
+    loadMoreNotifications();
+
 </script>
