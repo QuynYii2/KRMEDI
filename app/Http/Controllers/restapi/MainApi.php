@@ -275,7 +275,8 @@ class MainApi extends Controller
                     'Content-Type' => 'application/json',
                 ],
                 'json' => [
-                    'registration_ids' => [$hospitalToken, $userToken],
+                    // 'registration_ids' => [$hospitalToken, $userToken],
+                    'to' => $userToken,
                     'data' => [
                         'hospital' => [
                             'url' => route('api.backend.booking.edit', ['id' => $bookingId]),
