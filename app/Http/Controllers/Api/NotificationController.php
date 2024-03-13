@@ -71,10 +71,23 @@ class NotificationController extends Controller
 
     /**
      * Show the form for editing the specified resource.
+     * Update notification status unseen -> seen
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        try {
+            if (!$id) {
+                return response()->json(['error' => -1, 'message' => 'ID is required'], 400);
+            }
+
+            $notification = Notification::find($id);
+            $notification->seen = 1;
+            $notification->save();
+
+            return response()->json(['error' => 0, 'data' => $notification]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => -1, 'message' => $e->getMessage()]);
+        }
     }
 
     /**

@@ -330,7 +330,7 @@
 
                     @forelse ($notifications as $noti)
                         <li class="notification-item">
-                            <a href="{{ $noti->target_url ?? '#' }}">
+                            <a href="{{ $noti->target_url ?? '#' }}" onclick="seenNotify({{ $noti->id }})">
                                 <div class="notification-item {{ $noti->seen == 0 ? "fw-bold" : "" }}">
                                     <img src="{{ asset($noti->senders->avt) }}" alt="Profile" class="rounded-circle" width="60px">
                                     <div class="notificationContent ms-3">

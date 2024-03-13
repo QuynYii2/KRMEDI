@@ -278,8 +278,8 @@ class MainApi extends Controller
                 return response()->json(['error' => -1, 'message' => "Not found user token"], 400);
             }
 
+            $response = $this->sendBookingNotification(null, $userToken, $bookingId, $hospitalUser->users->id, $userId);
             $response = $this->sendBookingNotification($hospitalToken, null, $bookingId, $userId, $hospitalUser->users->id);
-            // $response = $this->sendBookingNotification(null, $userToken, $bookingId, $hospitalUser->users->id, $userId);
 
             $data = $response->getContents();
             return response($data);
