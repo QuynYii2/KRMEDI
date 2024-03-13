@@ -5,6 +5,7 @@ use App\Http\Controllers\backend\BackendCouponController;
 use App\Http\Controllers\backend\BackendQuestionController;
 use App\Http\Controllers\connect\AgoraChatController;
 use App\Http\Controllers\CouponController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\restapi\AddressApi;
 use App\Http\Controllers\restapi\AnswerLikeApi;
 use App\Http\Controllers\restapi\BookingApi;
@@ -162,3 +163,5 @@ Route::group(['prefix' => 'prescription-result'], function () {
 
 Route::get("connect/video/agora/get-token-app", [AgoraChatController::class, 'getInfoAgoraForApp'])->name("agora.get-token-app");
 Route::get("connect/video/agora/get-push-token-user", [AgoraChatController::class, 'getPushTokenByUser'])->name("agora.get-token-app-user");
+
+Route::resource('notifications', 'Api\NotificationController');

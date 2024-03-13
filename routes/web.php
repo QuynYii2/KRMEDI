@@ -539,7 +539,7 @@ Route::group(['prefix' => 'qr-code'], function () {
 });
 
 Route::group(['prefix' => 'my-bookings'], function () {
-    Route::get('show-detail/{id}', [UserApi::class, 'showBooking'])->name('web.users.my.bookings.detail');
+    Route::get('show-detail/{id}', [UserApi::class, 'showBooking'])->name('web.users.my.bookings.show.detail');
     Route::get('show/{id}', [MyBookingController::class, 'showBookingQr'])->name('web.users.my.bookings.show');
     Route::get('generate/{id}', [MyBookingController::class, 'generateQrCode'])->name('web.users.my.bookings.generate');
     Route::get('download/{id}', [MyBookingController::class, 'downloadQrCode'])->name('web.users.my.bookings.download');

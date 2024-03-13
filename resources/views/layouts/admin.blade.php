@@ -123,15 +123,23 @@
             if (!window.Notification) {
                 console.log('Browser does not support notifications.');
             } else {
+                var description = payload.data.description;
+                var sender = payload.data.sender;
+                var url = payload.data.url;
+                var title = payload.data.title;
                 // Create the new notification item
                 var newNotificationItem = $('<li><hr class="dropdown-divider">' +
-                    '</li><li class="notification-item">' +
-                    '<i class="bi bi-exclamation-circle text-warning"></i>' +
+                    '</li><li class="notification-item fw-bold">' +
+                    '<a href="'+ url +'">' +
+                    '<div class="notification-item">'+
+                    '<img src="' + sender + '" alt="Profile" class="rounded-circle" width="60px">'+
                     '<div class="notificationContent ms-3">' +
-                    '<h4>Title</h4>' +
-                    '<p>Nội dung</p>' +
-                    '<p>Time</p>' +
+                    '<h4>' + title + '</h4>' +
+                    '<p>' + description + '</p>' +
+                    '<p>Vừa xong</p>' +
                     '</div>' +
+                    '</div>' +
+                    '</a>' +
                     '</li>');
                 // Find the first <li> element in the dropdown menu
                 var secondListItem = $('.dropdown-menu.notifications li:nth-child(2)');
@@ -143,6 +151,9 @@
 
                     // Prepend the new notification item before the first <li> element
                     secondListItem.before(newNotificationItem);
+                    $('.countUnseenNotification').text(function(index, text) {
+                        return parseInt(text) + 1;
+                    });
                 } else {
                     Notification.requestPermission().then(function (p) {
                         if (p === 'granted') {
@@ -150,6 +161,9 @@
                                 body: payload.notification.title + ': ' + payload.notification.body
                             });
                             secondListItem.before(newNotificationItem);
+                            $('.countUnseenNotification').text(function(index, text) {
+                                return parseInt(text) + 1;
+                            });
                         } else {
                             console.log('User blocked notifications.');
                         }
@@ -301,12 +315,12 @@
 
                 <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
                     <i class="bi bi-bell"></i>
-                    <span class="badge bg-primary badge-number">4</span>
+                    <span class="badge bg-primary badge-number countUnseenNotification">{{ $unseenNoti }}</span>
                 </a><!-- End Notification Icon -->
 
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
                     <li class="dropdown-header">
-                        Thông báo
+                        Bạn có <span class="countUnseenNotification">{{ $unseenNoti }}</span> thông báo chưa đọc
                         <a href="#"><span
                                 class="badge rounded-pill bg-primary p-2 ms-2">{{ __('home.View all') }}</span></a>
                     </li>
@@ -314,22 +328,28 @@
                         <hr class="dropdown-divider">
                     </li>
 
-                    <li class="notification-item">
-                        <img src="/admin/img/profile-img.jpg" alt="Profile" class="rounded-circle" width="60px">
-                        <div class="notificationContent ms-3">
-                            <h4>Title</h4>
-                            <p>Nội dung</p>
-                            <p>Time</p>
-                        </div>
-                    </li>
+                    @forelse ($notifications as $noti)
+                        <li class="notification-item ">
+                            <a href="{{ $noti->target_url ?? '#' }}">
+                                <div class="notification-item {{ $noti->seen == 0 ? "fw-bold" : "" }}">
+                                    <img src="{{ asset($noti->senders->avt) }}" alt="Profile" class="rounded-circle" width="60px">
+                                    <div class="notificationContent ms-3">
+                                        <h4>{{ $noti->title ?? "" }}</h4>
+                                        <p>{{ $noti->description ?? "" }}</p>
+                                        <p>{{ \Carbon\Carbon::parse($noti->created_at)->diffForHumans() }}</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
 
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-
-                    <li class="dropdown-footer">
-                        <a href="#">{{ __('home.Show all notifications') }}</a>
-                    </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                    @empty
+                        <li>
+                            Không có thông báo nào
+                        </li>
+                    @endforelse
 
                 </ul><!-- End Notification Dropdown Items -->
 

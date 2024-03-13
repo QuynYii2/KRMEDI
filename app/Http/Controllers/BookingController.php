@@ -245,9 +245,9 @@ class BookingController extends Controller
                 alert('Update success');
                 return Redirect::route('homeAdmin.list.booking')->with('success', 'Booking success');
             }
-            return response('Update error', 400);
-        } catch (\Exception $exception) {
-            return response($exception, 400);
+            return response()->json(['error' => 0, 'data' => $booking]);
+        } catch (\Exception $e) {
+            return response(['error' => -1, 'message' => $e->getMessage()], 400);
         }
     }
 
