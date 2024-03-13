@@ -225,7 +225,8 @@ class MainApi extends Controller
                             'badge' => '/badge-icon.png'
                         )
                     )
-                ));
+                )
+            );
             $jsonData = json_encode($data);
 
             $response = $client->post('https://fcm.googleapis.com/v1/projects/myproject-b5ae1/messages:send', [
@@ -271,28 +272,44 @@ class MainApi extends Controller
             }
 
             $userToken = User::find($userId)->token_firebase;
-    
-            $client = new Client();
-            $YOUR_SERVER_KEY = Constants::GG_KEY;
-    
+
+            if (!$userToken) {
+                return response()->json(['error' => -1, 'message' => "Not found user token"], 400);
+            }
+
+            $response = $this->sendBookingNotification($hospitalToken, null, $bookingId);
+            $response = $this->sendBookingNotification(null, $userToken, $bookingId);
+
+            $data = $response->getContents();
+            return response($data);
+        } catch (\Exception $e) {
+            return response(['error' => -1, 'message' => $e->getMessage()], 400);
+        }
+    }
+
+    private function sendBookingNotification($hospitalToken = null, $userToken = null, $bookingId)
+    {
+        $client = new Client();
+        $YOUR_SERVER_KEY = Constants::GG_KEY;
+
+        $data = [];
+
+        if ($hospitalToken) {
+            $data = [
+                'hospital' => [
+                    'url' => route('api.backend.booking.edit', ['id' => $bookingId]),
+                    'content' => 'Bạn vừa nhận được 1 lịch booking mới',
+                ]
+            ];
+
             $response = $client->post('https://fcm.googleapis.com/fcm/send', [
                 'headers' => [
                     'Authorization' => 'key=' . $YOUR_SERVER_KEY,
                     'Content-Type' => 'application/json',
                 ],
                 'json' => [
-                    // 'registration_ids' => [$hospitalToken, $userToken],
                     'to' => $hospitalToken,
-                    'data' => [
-                        'hospital' => [
-                            'url' => route('api.backend.booking.edit', ['id' => $bookingId]),
-                            'content' => 'Bạn vừa nhận được 1 lịch booking mới',
-                        ],
-                        'user' => [
-                            'url' => route('booking.list.by.user'),
-                            'content' => 'Bạn vừa đặt phòng khám thành công',
-                        ],
-                    ],
+                    'data' => $data,
                     'notification' => [
                         'title' => 'Bạn vừa nhận được 1 thông báo mới',
                         'body' => 'Booking',
@@ -305,11 +322,38 @@ class MainApi extends Controller
                     ],
                 ],
             ]);
-
-            return $response->getBody();
-        } catch (\Exception $e) {
-            return response(['error' => -1, 'message' => $e->getMessage()], 400);
         }
-    }
 
+        if ($userToken) {
+            $data = [
+                'user' => [
+                    'url' => route('booking.list.by.user'),
+                    'content' => 'Bạn vừa đặt phòng khám thành công',
+                ],
+            ];
+
+            $response = $client->post('https://fcm.googleapis.com/fcm/send', [
+                'headers' => [
+                    'Authorization' => 'key=' . $YOUR_SERVER_KEY,
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => [
+                    'to' => $userToken,
+                    'data' => $data,
+                    'notification' => [
+                        'title' => 'Bạn vừa nhận được 1 thông báo mới',
+                        'body' => 'Booking',
+                    ],
+                    'web' => [
+                        'notification' => [
+                            'title' => 'Bạn vừa nhận được 1 thông báo mới',
+                            'body' => 'Booking',
+                        ],
+                    ],
+                ],
+            ]);
+        }
+
+        return $response->getBody();
+    }
 }
