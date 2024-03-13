@@ -177,6 +177,7 @@ class BookingApi extends Controller
         } else {
             $bookings = Booking::where('user_id', $id)
                 ->where('status', $status)
+                ->orderBy('id', 'desc')
                 ->get();
 
             foreach ($bookings as $booking) {
