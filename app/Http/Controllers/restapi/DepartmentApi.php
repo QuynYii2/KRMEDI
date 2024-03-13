@@ -16,6 +16,7 @@ class DepartmentApi extends Controller
     {
         $departments = Department::where('status', DepartmentStatus::ACTIVE)
             ->orderBy('id', 'desc')
+            ->where('isFilter', 1)
             ->get();
         return response()->json($departments);
     }
