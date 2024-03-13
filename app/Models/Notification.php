@@ -16,12 +16,18 @@ class Notification extends Model
         'follower',
         'target_url',
         'description',
+        'booking_id',
         'created_at',
     ];
 
     public function senders()
     {
         return $this->belongsTo(User::class, 'sender_id', 'id');
+    }
+
+    public function bookings()
+    {
+        return $this->belongsTo(Booking::class, 'booking_id', 'id');
     }
 
     public function followers()
