@@ -240,6 +240,16 @@ class BookingController extends Controller
                     $newRequest = $request->duplicate()->merge($additionalParams);
                     $zalo = new ZaloController($adminAccessToken);
                     $zalo->sendBookingMessage($newRequest);
+
+                    //Send notification
+                    $mainApi = new MainApi();
+                    $newRequestData = [
+                        'id' => $booking->id,
+                        'user_id' => $booking->user_id,
+                        'clinic_id' => $booking->clinic_id,
+                    ];
+                    $request = new Request($newRequestData);
+                    $mainApi->sendFcmNotification($request);
                 }
 
                 alert('Update success');

@@ -119,6 +119,7 @@ class BookingApi extends Controller
             $clinic = Clinic::where('user_id', $id)->first();
             $bookings = Booking::where('clinic_id', $clinic->id)
                 ->where('status', $status)
+                ->orderBy('id', 'desc')
                 ->get();
 
             foreach ($bookings as $booking) {
