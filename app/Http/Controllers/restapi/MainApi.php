@@ -262,7 +262,9 @@ class MainApi extends Controller
 
             $clinicId = $validatedData['clinic_id'];
 
-            $hospitalToken = Clinic::with('users')->find($clinicId)->users->pluck('token_firebase')->first();
+            $hospitalUser = Clinic::with('users')->find($clinicId);
+
+            $hospitalToken = $hospitalUser->users->token_firebase;
 
             if (!$hospitalToken) {
                 return response()->json(['error' => -1, 'message' => "Not found hospital token"], 400);
