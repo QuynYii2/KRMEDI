@@ -301,7 +301,7 @@ class MainApi extends Controller
                 'sender_id' => $sender_id,
                 'follower' => $follower_id,
                 'target_url' => route('api.backend.booking.edit', ['id' => $bookingId]),
-                'description' => 'Kiểm tra lịch khám ngay!!'
+                'description' => 'Kiểm tra lịch khám ngay!!',
             ]);
 
             $notificationWithSender = Notification::with('senders')->find($notification->id);
@@ -310,7 +310,8 @@ class MainApi extends Controller
                 'title' => $notificationWithSender->title ?? "",
                 'sender' => $notificationWithSender->senders->avt ?? "",
                 'url' => $notificationWithSender->target_url ?? "#",
-                'description' => $notificationWithSender->description ?? ""
+                'description' => $notificationWithSender->description ?? "",
+                'id' => $notificationWithSender->id,
             ];
 
             $response = $client->post('https://fcm.googleapis.com/fcm/send', [
@@ -350,7 +351,8 @@ class MainApi extends Controller
                 'title' => $notificationWithSender->title ?? "",
                 'sender' => $notificationWithSender->senders->avt ?? "",
                 'url' => $notificationWithSender->target_url ?? "#",
-                'description' => $notificationWithSender->description ?? ""
+                'description' => $notificationWithSender->description ?? "",
+                'id' => $notificationWithSender->id,
             ];
 
             $response = $client->post('https://fcm.googleapis.com/fcm/send', [

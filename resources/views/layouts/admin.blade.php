@@ -127,10 +127,11 @@
                 var sender = payload.data.sender;
                 var url = payload.data.url;
                 var title = payload.data.title;
+                var id = payload.data.id;
                 // Create the new notification item
                 var newNotificationItem = $('<li><hr class="dropdown-divider">' +
                     '</li><li class="notification-item fw-bold">' +
-                    '<a href="'+ url +'">' +
+                    '<a href="'+ url +'" onclick="seenNotify(event, ' + id + ')">' +
                     '<div class="notification-item">'+
                     '<img src="' + sender + '" alt="Profile" class="rounded-circle" width="60px">'+
                     '<div class="notificationContent ms-3">' +
@@ -330,7 +331,7 @@
 
                     @forelse ($notifications as $noti)
                         <li class="notification-item">
-                            <a href="{{ $noti->target_url ?? '#' }}" onclick="seenNotify({{ $noti->id }})">
+                            <a href="{{ $noti->target_url ?? '#' }}" onclick="seenNotify(event, {{ $noti->id }})">
                                 <div class="notification-item {{ $noti->seen == 0 ? "fw-bold" : "" }}">
                                     <img src="{{ asset($noti->senders->avt) }}" alt="Profile" class="rounded-circle" width="60px">
                                     <div class="notificationContent ms-3">
@@ -1219,5 +1220,30 @@
 
             $table.trigger('repaginate');
         });
+    }
+</script>
+
+<script>
+    function seenNotify(event, id) {
+        event.preventDefault();
+
+        let accessToken = `Bearer ` + token;
+        let headers = {
+            'Authorization': accessToken
+        };
+
+        $.ajax({
+            url: `/api/notifications/${id}/edit`,
+            type: 'GET',
+            headers: headers,
+            success: function(response) {
+                console.log(response)
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+
+      window.location.href = event.currentTarget.getAttribute('href');
     }
 </script>
