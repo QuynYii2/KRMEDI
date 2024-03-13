@@ -26,8 +26,18 @@
 
                             <div class="form-group">
                                 <label for="image">{{ __('home.Ảnh đại diện') }}:</label>
-                                <input required type="file" name="image" id="image" class="form-control-file" accept="image/*">
+                                <input required type="file" name="image" id="image" class="form-control-file"
+                                    accept="image/*">
                             </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="isFilter" id="isFilter"
+                                    checked>
+                                <label class="form-check-label" for="isFilter">
+                                    Khả dụng để lọc?
+                                </label>
+                            </div>
+                            <br>
 
                             <button type="submit" class="btn btn-primary">{{ __('home.Thêm mới') }}</button>
                         </form>

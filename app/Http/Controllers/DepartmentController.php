@@ -37,6 +37,8 @@ class DepartmentController extends Controller
     {
         $department = Department::find($id);
 
+        $isFilter = $request->input('isFilter');
+
         $name = $request->input('name');
 
         $translate = new TranslateController();
@@ -77,6 +79,13 @@ class DepartmentController extends Controller
         $department->description_laos = $description_laos;
 
         $department->status = $status;
+
+        if ($isFilter && $isFilter == "on") {
+            $department->isFilter = 1;
+        } else {
+            $department->isFilter = 0;
+        }
+
         $department->save();
 
         return redirect()->route('view.admin.department.index')->with('success', 'Department update successfully.');
@@ -89,6 +98,8 @@ class DepartmentController extends Controller
         $translate = new TranslateController();
 
         $name = $request->input('name');
+
+        $isFilter = $request->input('isFilter');
 
         $name_en = $translate->translateText($name, 'en');
         $name_laos = $translate->translateText($name, 'lo');
@@ -131,6 +142,11 @@ class DepartmentController extends Controller
 
         $department->status = $status;
         $department->user_id = $user_id;
+
+        if ($isFilter && $isFilter == "on") {
+            $department->isFilter = 1;
+        }
+
         $department->save();
 
         return redirect()->route('view.admin.department.index')->with('success', 'Department created successfully.');

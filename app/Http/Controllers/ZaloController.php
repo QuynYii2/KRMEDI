@@ -884,8 +884,19 @@ class ZaloController extends Controller
             $result = $response->getDecodedBody();
             return $result;
         } catch (\Exception $e) {
-            dd($e->getMessage());
-            return response()->json(['error' => 1, 'message' => $e->getMessage()], 404);
+            if ($e->getMessage() == "Access token has expired") {
+                $admin = User::whereHas('roles', function ($query) {
+                    $query->where('name', 'ADMIN');
+                })
+                    ->whereNotNull('extend->refresh_token_zalo')
+                    ->first();
+                $adminRefreshToken = $admin->extend['refresh_token_zalo'];
+                $getRefreshToken = $this->getRefreshAccessToken($adminRefreshToken);
+                if($getRefreshToken['status'] == 200){
+                    return response()->json(['error' => 1, 'message' => 'refresh token success']);
+                }
+            }
+            return response()->json(['error' => -1, 'message' => $e->getMessage()], 404);
         }
     }
 }

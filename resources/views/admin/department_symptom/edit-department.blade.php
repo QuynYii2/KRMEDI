@@ -34,6 +34,15 @@
                                 <img loading="lazy" src="{{ asset($department->thumbnail) }}" alt="" width="80px">
                             </div>
 
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="isFilter" id="isFilter"
+                                    {{ $department->isFilter ? "checked" : "" }}>
+                                <label class="form-check-label" for="isFilter">
+                                    Khả dụng để lọc?
+                                </label>
+                            </div>
+                            <br>
+
                             <button type="submit" class="btn btn-primary">{{ __('home.Thêm mới') }}</button>
                         </form>
                     </div>

@@ -13,6 +13,7 @@ class AdminDepartmentApi extends Controller
     {
         $departments = Department::where('status', DepartmentStatus::ACTIVE)
             ->orderBy('id', 'desc')
+            ->where('isFilter', 1)
             ->get();
         return response()->json($departments);
     }
@@ -45,6 +46,7 @@ class AdminDepartmentApi extends Controller
 
     public function saveDepartment($request, $department)
     {
+        $isFilter = $request->input('isFilter');
         $name = $request->input('name');
 
         if ($request->hasFile('thumbnail')) {
@@ -58,6 +60,12 @@ class AdminDepartmentApi extends Controller
         $description = $request->input('description');
         $status = $request->input('status');
         $user_id = $request->input('user_id');
+
+        if ($isFilter && $isFilter == "on") {
+            $department->isFilter = 1;
+        } else {
+            $department->isFilter = 0;
+        }
 
         $department->name = $name;
         $department->thumbnail = $thumbnail;

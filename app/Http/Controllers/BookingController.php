@@ -239,7 +239,11 @@ class BookingController extends Controller
                     ];
                     $newRequest = $request->duplicate()->merge($additionalParams);
                     $zalo = new ZaloController($adminAccessToken);
-                    $zalo->sendBookingMessage($newRequest);
+                    $checkStatus = $zalo->sendBookingMessage($newRequest);
+
+                    if (isset($checkStatus['error']) && $checkStatus['error'] == 1) {
+                        $zalo->sendBookingMessage($newRequest);
+                    }
 
                     //Send notification
                     $mainApi = new MainApi();
