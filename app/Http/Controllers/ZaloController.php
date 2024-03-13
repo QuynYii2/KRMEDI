@@ -694,27 +694,6 @@ class ZaloController extends Controller
         toast('Successfully', 'success', 'top-left');
     }
 
-    //API check user login = zalo existed?
-    public function userExisted($app_id)
-    {
-        try {
-            $user = User::where('provider_name', 'zalo')->where('provider_id', $app_id)->first();
-
-            if ($user) {
-                $role = $user->roles()->first();
-                $token = JWTAuth::fromUser($user);
-                $user->token = $token;
-                $user->save();
-                $user->role = $role->name ?? "";
-                return response()->json($user);
-            }
-
-            throw new \Exception('User not found');
-        } catch (\Exception $e) {
-            return response()->json(['error' => 1, 'message' => $e->getMessage()], 404);
-        }
-    }
-
     //Gửi tin nhắn thông tin giao dịch booking cho người dùng
     public function sendBookingMessage(Request $request, $isOAReceived = false)
     {

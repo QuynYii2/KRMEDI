@@ -25,8 +25,8 @@ class NotificationController extends Controller
             }
 
             $validatedData = $validated->validated();
-
-            $limit = $validatedData['limit'];
+            
+            $limit = $validatedData['limit'] ?? "";
             $user_id = $validatedData['user_id'];
 
             $notifications  = Notification::with('senders', 'followers')->where('follower', $user_id)->orderBy('created_at', 'desc')->orderBy('updated_at', 'desc');
