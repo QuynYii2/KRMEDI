@@ -302,6 +302,7 @@ class MainApi extends Controller
                 'follower' => $follower_id,
                 'target_url' => route('api.backend.booking.edit', ['id' => $bookingId]),
                 'description' => 'Kiểm tra lịch khám ngay!!',
+                'booking_id' => $bookingId
             ]);
 
             $notificationWithSender = Notification::with('senders')->find($notification->id);
@@ -342,7 +343,8 @@ class MainApi extends Controller
                 'sender_id' => $sender_id,
                 'follower' => $follower_id,
                 'target_url' => route('booking.list.by.user'),
-                'description' => 'Kiểm tra lịch khám ngay!!'
+                'description' => 'Kiểm tra lịch khám ngay!!',
+                'booking_id' => $bookingId
             ]);
 
             $notificationWithSender = Notification::with('senders')->find($notification->id);
