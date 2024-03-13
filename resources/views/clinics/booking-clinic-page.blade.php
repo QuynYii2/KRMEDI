@@ -199,12 +199,13 @@
                 </div>
             </div>
         </div>
-        <form action="{{route('booking.create.new')}}" method="post">
+        <form action="{{route('booking.create.new')}}" method="post" id="bookingHospitalForm">
             @csrf
             @method('POST')
             <input type="hidden" name="check_in" id="check_in" value=''>
             <input type="hidden" name="check_in_time" id="check_in_time" value=''>
             <input type="hidden" name="clinic_id" id="clinic_id" value='{{$clinicDetail->id}}'>
+            <input type="hidden" name="user_id" id="user_id" value='{{ $clinicDetail->users->pluck('id')->first() }}'>
             <div>
                 <div></div>
                 <section>

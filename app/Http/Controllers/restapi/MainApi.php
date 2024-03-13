@@ -20,6 +20,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class MainApi extends Controller
@@ -242,36 +243,70 @@ class MainApi extends Controller
 
     public function sendFcmNotification(Request $request)
     {
-        $client = new Client();
-        $YOUR_SERVER_KEY = Constants::GG_KEY;
+        try {
+            $validated = Validator::make($request->all(), [
+                'id' => 'required|numeric',
+                'clinic_id' => 'required|numeric',
+                'user_id' => 'required|numeric'
+            ]);
 
-        $device_token = Auth::user()->token_firebase;
+            if ($validated->fails()) {
+                return response()->json(['error' => -1, 'message' => $validated->errors()->first()], 400);
+            }
 
-        $response = $client->post('https://fcm.googleapis.com/fcm/send', [
-            'headers' => [
-                'Authorization' => 'key=' . $YOUR_SERVER_KEY,
-                'Content-Type' => 'application/json',
-            ],
-            'json' => [
-                'to' => $device_token,
-                'data' => [
-                    'key1' => 'value1',
-                    'key2' => 'value2',
+            $validatedData = $validated->validated();
+
+            $userId = $validatedData['user_id'];
+
+            $bookingId = $validatedData['id'];
+
+            $clinicId = $validatedData['clinic_id'];
+
+            $hospitalToken = Clinic::with('users')->find($clinicId)->users->pluck('token_firebase')->first();
+
+            $userToken = User::find($userId)->token_firebase;
+    
+            $client = new Client();
+            $YOUR_SERVER_KEY = Constants::GG_KEY;
+    
+            // $device_token = Auth::user()->token_firebase;
+    
+            $response = $client->post('https://fcm.googleapis.com/fcm/send', [
+                'headers' => [
+                    'Authorization' => 'key=' . $YOUR_SERVER_KEY,
+                    'Content-Type' => 'application/json',
                 ],
-                'notification' => [
-                    'title' => 'Test Title',
-                    'body' => 'Test Body',
-                ],
-                'web' => [
+                'json' => [
+                    'registration_ids' => [$hospitalToken, $userToken],
+                    'data' => [
+                        'hospital' => [
+                            'url' => route('api.backend.booking.edit', ['id' => $bookingId]),
+                            'content' => 'Bạn vừa nhận được 1 lịch booking mới',
+                        ],
+                        'user' => [
+                            'url' => route('booking.list.by.user'),
+                            'content' => 'Bạn vừa đặt phòng khám thành công',
+                        ],
+                    ],
                     'notification' => [
-                        'title' => 'Test Title',
-                        'body' => 'Test Body',
+                        'title' => 'Bạn vừa nhận được 1 thông báo mới',
+                        'body' => 'Booking',
+                    ],
+                    'web' => [
+                        'notification' => [
+                            'title' => 'Bạn vừa nhận được 1 thông báo mới',
+                            'body' => 'Booking',
+                        ],
                     ],
                 ],
-            ],
-        ]);
+            ]);
 
-        return $response->getBody();
+            return $response->getBody();
+
+            // return response()->json(['error' => 0, 'data' => $response->getBody()]);
+        } catch (\Exception $e) {
+            return response(['error' => -1, 'message' => $e->getMessage()], 400);
+        }
     }
 
 }

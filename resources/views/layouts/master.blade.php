@@ -94,9 +94,36 @@
             @if(Auth::check() && (!Auth::user()->token_firebase || Auth::user()->token_firebase == '' || Auth::user()->token_firebase == null))
                 await callSaveToken(token);
             @endif
+            $('#bookingHospitalForm').submit(async function(event) {
+                event.preventDefault(); // Prevent the default form submission
+                
+                var userId = $(this).find('input[name="user_id"]').val();
+                // alert(userId)
+            });
         }
 
         async function callSaveToken(token) {
+            let saveTokenUrl = `{{ route('api.user.save.token') }}`;
+
+            let data = {
+                'token_firebase': token,
+                'user_id': '{{ Auth::check() ? Auth::user()->id : '' }}'
+            };
+            await $.ajax({
+                url: saveTokenUrl,
+                method: "POST",
+                headers: headers,
+                data: data,
+                success: function (response) {
+                    console.log(response)
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        async function callSaveHospitalToken(token, ) {
             let saveTokenUrl = `{{ route('api.user.save.token') }}`;
 
             let data = {
