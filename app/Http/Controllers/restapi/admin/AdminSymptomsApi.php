@@ -12,7 +12,10 @@ class AdminSymptomsApi extends Controller
     public function getList()
     {
         $symptoms = Symptom::where('status', SymptomStatus::ACTIVE)
+            ->orderBy('order', 'asc')
+            ->orderBy('isFilter', 'desc')
             ->orderBy('id', 'desc')
+            ->where('isFilter', 1)
             ->get();
         return response()->json($symptoms);
     }

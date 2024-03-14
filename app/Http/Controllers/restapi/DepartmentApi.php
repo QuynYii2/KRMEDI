@@ -15,6 +15,8 @@ class DepartmentApi extends Controller
     public function getList()
     {
         $departments = Department::where('status', DepartmentStatus::ACTIVE)
+            ->orderBy('order', 'asc')
+            ->orderBy('isFilter', 'desc')
             ->orderBy('id', 'desc')
             ->where('isFilter', 1)
             ->get();
