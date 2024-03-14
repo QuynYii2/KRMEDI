@@ -301,7 +301,7 @@ class MainApi extends Controller
                 'title' => $userTitle,
                 'sender_id' => $hospitalUser->users->id,
                 'follower' => $userId,
-                'target_url' => route('restapi.booking.detail', ['id' => $bookingId]),
+                'target_url' => route('booking.detail.by.user', ['id' => $bookingId]),
                 'description' => 'Kiểm tra lịch khám ngay!!',
                 'booking_id' => $bookingId
             ]);

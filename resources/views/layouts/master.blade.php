@@ -122,15 +122,47 @@
             if (!window.Notification) {
                 console.log('Browser does not support notifications.');
             } else {
+                var description = payload.data.description;
+                var sender = payload.data.sender;
+                var url = payload.data.url;
+                var title = payload.data.title;
+                var id = payload.data.id;
+                // Create the new notification item
+                var newNotificationItem = $('<li><hr class="dropdown-divider">' +
+                    '</li><li class="notification-item fw-bold">' +
+                    '<a href="'+ url +'" onclick="seenNotify(event, ' + id + ')">' +
+                    '<div class="notification-item">'+
+                    '<img src="' + sender + '" alt="Profile" class="rounded-circle" width="60px">'+
+                    '<div class="notificationContent ms-3">' +
+                    '<h4>' + title + '</h4>' +
+                    '<p>' + description + '</p>' +
+                    '<p>Vừa xong</p>' +
+                    '</div>' +
+                    '</div>' +
+                    '</a>' +
+                    '</li>');
+                // Find the first <li> element in the dropdown menu
+                var secondListItem = $('.dropdown-menu.notifications li:nth-child(2)');
+
                 if (Notification.permission === 'granted') {
                     let notify = new Notification('KRMEDI Notification', {
                         body: payload.notification.title + ': ' + payload.notification.body
+                    });
+
+                    // Prepend the new notification item before the first <li> element
+                    secondListItem.before(newNotificationItem);
+                    $('.countUnseenNotification').text(function(index, text) {
+                        return parseInt(text) + 1;
                     });
                 } else {
                     Notification.requestPermission().then(function (p) {
                         if (p === 'granted') {
                             let notify = new Notification('KRMEDI Notification', {
                                 body: payload.notification.title + ': ' + payload.notification.body
+                            });
+                            secondListItem.before(newNotificationItem);
+                            $('.countUnseenNotification').text(function(index, text) {
+                                return parseInt(text) + 1;
                             });
                         } else {
                             console.log('User blocked notifications.');

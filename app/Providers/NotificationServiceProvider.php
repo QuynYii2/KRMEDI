@@ -42,5 +42,24 @@ class NotificationServiceProvider extends ServiceProvider
             $view->with('notifications', $notificationData->data);
             $view->with('unseenNoti', $unseenNoti);
         });
+
+        View::composer('layouts.partials.header', function ($view) {
+            // Resolve an instance of NotificationController
+            $notificationController = app()->make(NotificationController::class);
+
+            // Call the index() method and pass any required parameters
+            $request = new Request();
+            $request->merge(['limit' => 4, 'user_id' => Auth::user()->id]);
+
+            $notifications = $notificationController->index($request);
+
+            $notificationData = json_decode($notifications->getContent())->data ?? [];
+
+            $unseenNoti = json_decode($notifications->getContent())->unseenNoti ?? 0;
+
+            // Configure the data for the view
+            $view->with('notifications', $notificationData->data);
+            $view->with('unseenNoti', $unseenNoti);
+        });
     }
 }
