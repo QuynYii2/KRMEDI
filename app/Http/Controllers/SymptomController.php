@@ -115,11 +115,7 @@ class SymptomController extends Controller
         $symptom->status = $status;
 
         if ($orderType == "before") {
-            if ($getSymptomOrder == 0) {
-                $symptom->order = 0;
-            } else {
-                $symptom->order = $getSymptomOrder - 1;
-            }
+            $symptom->order = $getSymptomOrder - 1;
         } elseif ($orderType == "after") {
             $symptom->order = $getSymptomOrder + 1;
         } else {
@@ -199,11 +195,7 @@ class SymptomController extends Controller
         $symptom->user_id = $user_id;
 
         if ($orderType == "before") {
-            if ($getSymptomOrder == 0) {
-                $symptom->order = 0;
-            } else {
-                $symptom->order = $getSymptomOrder - 1;
-            }
+            $symptom->order = $getSymptomOrder - 1;
         } elseif ($orderType == "after") {
             $symptom->order = $getSymptomOrder + 1;
         } else {

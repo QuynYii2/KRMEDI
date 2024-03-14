@@ -99,11 +99,7 @@ class DepartmentController extends Controller
         $department->status = $status;
 
         if ($orderType == "before") {
-            if ($getDepartmentOrder == 0) {
-                $department->order = 0;
-            } else {
-                $department->order = $getDepartmentOrder - 1;
-            }
+            $department->order = $getDepartmentOrder - 1;
         } elseif ($orderType == "after") {
             $department->order = $getDepartmentOrder + 1;
         } else {
@@ -180,11 +176,7 @@ class DepartmentController extends Controller
         $department->user_id = $user_id;
 
         if ($orderType == "before") {
-            if ($getDepartmentOrder == 0) {
-                $department->order = 0;
-            } else {
-                $department->order = $getDepartmentOrder - 1;
-            }
+            $department->order = $getDepartmentOrder - 1;
         } elseif ($orderType == "after") {
             $department->order = $getDepartmentOrder + 1;
         } else {
