@@ -35,8 +35,7 @@ class Order extends Model
         $this->total_order_items = $order_items->count();
         $this->order_items = $order_items;
         
-        $collection_products = collect();
-        
+        $array_products = [];
         foreach ($order_items as $order_item) {
             if ($order_item->type_product == TypeProductCart::MEDICINE) {
                 $product = ProductMedicine::join('users', 'users.id', '=', 'product_medicines.user_id')
@@ -49,11 +48,9 @@ class Order extends Model
                     ->select('product_infos.*', 'users.username')
                     ->first();
             }
-            
-            $collection_products->push($product); // Add product to the collection
+            $array_products[] = $product;
         }
-        
-        $this->total_products = $collection_products->count();
-        $this->products = $collection_products->isEmpty() ? null : $collection_products->first();
+        $this->total_products = count($array_products);
+        $this->products = $array_products;
     }
 }

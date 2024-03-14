@@ -24,7 +24,7 @@ class CheckoutApi extends Controller
         try {
             $success = $this->checkout($request);
             if ($success) {
-                return response()->json([$success]);
+                return response()->json($success);
             }
             return response('Checkout error!', 400);
         } catch (\Exception $exception) {
