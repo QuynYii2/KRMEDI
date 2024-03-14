@@ -14,6 +14,7 @@ use App\Http\Controllers\restapi\DoctorReviewApi;
 use App\Http\Controllers\restapi\MainApi;
 use App\Http\Controllers\restapi\MedicalApi;
 use App\Http\Controllers\restapi\MedicalResultApi;
+use App\Http\Controllers\restapi\MedicineApi;
 use App\Http\Controllers\restapi\NewsApi;
 use App\Http\Controllers\restapi\OrderApi;
 use App\Http\Controllers\restapi\PharmacyApi;
@@ -234,6 +235,10 @@ Route::group(['prefix' => 'api/mobile/fcm'], function () {
     Route::post('/send', [MainApi::class, 'sendNotificationFcm'])->name('restapi.mobile.fcm.send');
     Route::post('/send_v2', [MainApi::class, 'sendNotificationWeb']);
     Route::post('send-booking-notification', [MainApi::class, 'sendFcmNotification'])->name('restapi.mobile.fcm.send.booking.notification');
+});
+
+Route::group(['prefix' => 'api/medicine'], function () {
+    Route::get('list-by-clinic', [MedicineApi::class, 'getAllByClinic'])->name('restapi.medicines.get.by.clinic');
 });
 
 Route::group(['prefix' => 'api/zalo'], function () {

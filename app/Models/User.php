@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Http\Controllers\restapi\MainApi;
+use App\Models\online_medicine\ProductMedicine;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -219,5 +219,10 @@ class User extends Authenticatable implements JWTSubject
         }
 
         return $clinic->clinic->id;
+    }
+
+    public function productMedicines()
+    {
+        return $this->hasMany(ProductMedicine::class);
     }
 }

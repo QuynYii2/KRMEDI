@@ -2,7 +2,9 @@
 
 namespace App\Models\online_medicine;
 
+use App\Models\Category;
 use App\Models\DrugIngredients;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,5 +28,10 @@ class ProductMedicine extends Model
     public function DrugIngredient()
     {
         return $this->hasMany(DrugIngredients::class, 'product_id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 }
