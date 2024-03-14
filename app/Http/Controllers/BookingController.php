@@ -237,13 +237,13 @@ class BookingController extends Controller
                         'booking_cancel_reason' => $reason,
                         'booking_clinic_checkin' => date('d/m/Y h:i A', strtotime($booking->check_in))
                     ];
-                    $newRequest = $request->duplicate()->merge($additionalParams);
-                    $zalo = new ZaloController($adminAccessToken);
-                    $checkStatus = $zalo->sendBookingMessage($newRequest);
+                    // $newRequest = $request->duplicate()->merge($additionalParams);
+                    // $zalo = new ZaloController($adminAccessToken);
+                    // $checkStatus = $zalo->sendBookingMessage($newRequest);
 
-                    if (isset($checkStatus['error']) && $checkStatus['error'] == 1) {
-                        $zalo->sendBookingMessage($newRequest);
-                    }
+                    // if (isset($checkStatus['error']) && $checkStatus['error'] == 1) {
+                    //     $zalo->sendBookingMessage($newRequest);
+                    // }
 
                     //Send notification
                     $mainApi = new MainApi();

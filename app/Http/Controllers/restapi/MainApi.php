@@ -266,20 +266,34 @@ class MainApi extends Controller
 
             $hospitalUser = Clinic::with('users')->find($clinicId);
 
-            $hospitalToken = $hospitalUser->users->token_firebase;
+            $hospitalToken = $hospitalUser->users->token_firebase ?? "";
+            
+            $hospitalNotification = Notification::create([
+                'title' => 'Lịch khám mới đã được đặt',
+                'sender_id' => $userId,
+                'follower' => $hospitalUser->users->id,
+                'target_url' => route('api.backend.booking.edit', ['id' => $bookingId]),
+                'description' => 'Kiểm tra lịch khám ngay!!',
+            ]);
 
-            if (!$hospitalToken) {
-                return response()->json(['error' => -1, 'message' => "Not found hospital token"], 400);
+            if ($hospitalToken) {
+                $response = $this->sendBookingNotification($hospitalToken, null, $hospitalNotification);
             }
 
-            $userToken = User::find($userId)->token_firebase;
+            $userToken = User::find($userId)->token_firebase ?? "";
 
-            if (!$userToken) {
-                return response()->json(['error' => -1, 'message' => "Not found user token"], 400);
+            $userNotification = Notification::create([
+                'title' => 'Đặt lịch khám thành công',
+                'sender_id' => $hospitalUser->users->id,
+                'follower' => $userId,
+                'target_url' => route('booking.list.by.user'),
+                'description' => 'Kiểm tra lịch khám ngay!!'
+            ]);
+
+            if ($userToken) {
+                $response = $this->sendBookingNotification(null, $userToken, $userNotification);
             }
 
-            $response = $this->sendBookingNotification(null, $userToken, $bookingId, $hospitalUser->users->id, $userId);
-            $response = $this->sendBookingNotification($hospitalToken, null, $bookingId, $userId, $hospitalUser->users->id);
 
             $data = $response->getContents();
             return response($data);
@@ -288,7 +302,7 @@ class MainApi extends Controller
         }
     }
 
-    private function sendBookingNotification($hospitalToken = null, $userToken = null, $bookingId, $sender_id, $follower_id)
+    private function sendBookingNotification($hospitalToken = null, $userToken = null, $notification)
     {
         $client = new Client();
         $YOUR_SERVER_KEY = Constants::GG_KEY;
@@ -296,14 +310,6 @@ class MainApi extends Controller
         $data = [];
 
         if ($hospitalToken) {
-            $notification = Notification::create([
-                'title' => 'Lịch khám mới đã được đặt',
-                'sender_id' => $sender_id,
-                'follower' => $follower_id,
-                'target_url' => route('api.backend.booking.edit', ['id' => $bookingId]),
-                'description' => 'Kiểm tra lịch khám ngay!!',
-            ]);
-
             $notificationWithSender = Notification::with('senders')->find($notification->id);
 
             $data = [
@@ -337,14 +343,6 @@ class MainApi extends Controller
         }
 
         if ($userToken) {
-            $notification = Notification::create([
-                'title' => 'Đặt lịch khám thành công',
-                'sender_id' => $sender_id,
-                'follower' => $follower_id,
-                'target_url' => route('booking.list.by.user'),
-                'description' => 'Kiểm tra lịch khám ngay!!'
-            ]);
-
             $notificationWithSender = Notification::with('senders')->find($notification->id);
 
             $data = [
