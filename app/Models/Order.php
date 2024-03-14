@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\TypeProductCart;
+use App\Models\online_medicine\ProductMedicine;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
