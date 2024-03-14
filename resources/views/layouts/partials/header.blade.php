@@ -1226,7 +1226,7 @@
 
     function loadMoreNotifications() {
         const notificationList = $('#notificationList');
-        const userId = '{{ Auth::user()->id}}'; // Replace with the actual user ID
+        const userId = `{{ Auth::user()->id ?? 0}}`; // Replace with the actual user ID
 
         if (loadingNotifications) {
             return;
