@@ -249,7 +249,9 @@ class MainApi extends Controller
             $validated = Validator::make($request->all(), [
                 'id' => 'required|numeric',
                 'clinic_id' => 'required|numeric',
-                'user_id' => 'required|numeric'
+                'user_id' => 'required|numeric',
+                'clinic_title' => 'nullable|string',
+                'user_title' => 'nullable|string',
             ]);
 
             if ($validated->fails()) {
@@ -264,12 +266,16 @@ class MainApi extends Controller
 
             $clinicId = $validatedData['clinic_id'];
 
+            $clinicTitle = $validatedData['clinic_title'];
+
+            $userTitle = $validatedData['user_title'];
+
             $hospitalUser = Clinic::with('users')->find($clinicId);
 
             $hospitalToken = $hospitalUser->users->token_firebase ?? "";
             
             $hospitalNotification = Notification::create([
-                'title' => 'Lịch khám mới đã được đặt',
+                'title' => $clinicTitle ?? 'Lịch khám mới đã được đặt',
                 'sender_id' => $userId,
                 'follower' => $hospitalUser->users->id,
                 'target_url' => route('api.backend.booking.edit', ['id' => $bookingId]),
@@ -284,10 +290,10 @@ class MainApi extends Controller
             $userToken = User::find($userId)->token_firebase ?? "";
 
             $userNotification = Notification::create([
-                'title' => 'Đặt lịch khám thành công',
+                'title' => $userTitle ?? 'Đặt lịch khám thành công',
                 'sender_id' => $hospitalUser->users->id,
                 'follower' => $userId,
-                'target_url' => route('booking.list.by.user'),
+                'target_url' => route('restapi.booking.detail', ['id' => $bookingId]),
                 'description' => 'Kiểm tra lịch khám ngay!!',
                 'booking_id' => $bookingId
             ]);

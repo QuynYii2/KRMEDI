@@ -251,6 +251,7 @@ class BookingController extends Controller
                         'id' => $booking->id,
                         'user_id' => $booking->user_id,
                         'clinic_id' => $booking->clinic_id,
+                        'user_title' => 'Trạng thái booking đã thay đổi',
                     ];
                     $request = new Request($newRequestData);
                     $mainApi->sendFcmNotification($request);

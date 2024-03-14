@@ -268,6 +268,17 @@ class BookingApi extends Controller
             $booking->status = $status;
             $booking->reason_cancel = $reason;
             $booking->save();
+            
+            $mainApi = new MainApi();
+            $newRequestData = [
+                'id' => $booking->id,
+                'user_id' => $booking->user_id,
+                'clinic_id' => $booking->clinic_id,
+                'user_title' => 'Bạn đã huỷ booking thành công',
+                'clinic_title' => 'Một đơn booking đã bị huỷ',
+            ];
+            $request = new Request($newRequestData);
+            $mainApi->sendFcmNotification($request);
             return response()->json(['message' => 'Booking status updated successfully']);
         } else {
             return response()->json(['error' => 'Booking not found'], 404);

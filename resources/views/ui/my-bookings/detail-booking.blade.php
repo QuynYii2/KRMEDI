@@ -37,7 +37,7 @@
             </div>
             <div class="form-group col-md-6">
                 <label for="doctor_id">Doctor Name</label>
-                <input disabled type="text" class="form-control" id="doctor_id" value="{{ $doctor->username }}">
+                <input disabled type="text" class="form-control" id="doctor_id" value="{{ $doctor->username ?? "" }}">
             </div>
         </div>
         <div class="form-group">
