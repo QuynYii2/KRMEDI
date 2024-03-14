@@ -30,9 +30,37 @@
                                     accept="image/*">
                             </div>
 
+                            <div class="row">
+                                <label for="image">Thứ tự sắp xếp:</label>
+                                <div class="col-md-6">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="department_order_type"
+                                            id="department_order_type_after" value="after" checked>
+                                        <label class="form-check-label" for="department_order_type_after">Sau chuyên
+                                            khoa</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="department_order_type"
+                                            id="department_order_type_before" value="before">
+                                        <label class="form-check-label" for="department_order_type_before">Trước chuyên
+                                            khoa</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <select class="form-select" name="department_order_id" required>
+                                        @forelse ($departments as $dep)
+                                            <option value="{{ $dep->id }}">{{ $dep->name }}</option>
+                                        @empty
+                                            <option value="" disabled>Không có chuyên khoa hợp lệ</option>
+                                        @endforelse
+                                    </select>
+                                </div>
+                            </div>
+                            <br>
+
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="isFilter" id="isFilter"
-                                    checked>
+                                <input class="form-check-input" type="checkbox" name="isFilter" id="isFilter" checked>
                                 <label class="form-check-label" for="isFilter">
                                     Khả dụng để lọc?
                                 </label>

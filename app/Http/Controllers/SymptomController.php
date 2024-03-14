@@ -22,9 +22,18 @@ class SymptomController extends Controller
     public function create()
     {
         $departments = Department::where('status', DepartmentStatus::ACTIVE)
+            ->orderBy('order', 'asc')
+            ->orderBy('isFilter', 'desc')
             ->orderBy('id', 'desc')
             ->get();
-        return view('admin.department_symptom.create-symptom', compact('departments'));
+
+        $symptoms = Symptom::where('status', SymptomStatus::ACTIVE)
+            ->orderBy('order', 'asc')
+            ->orderBy('isFilter', 'desc')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return view('admin.department_symptom.create-symptom', compact('departments', 'symptoms'));
     }
 
     public function show($id)
@@ -34,15 +43,31 @@ class SymptomController extends Controller
     public function edit($id)
     {
         $symptom = Symptom::find($id);
+
         $departments = Department::where('status', DepartmentStatus::ACTIVE)
+            ->orderBy('order', 'asc')
+            ->orderBy('isFilter', 'desc')
             ->orderBy('id', 'desc')
             ->get();
-        return view('admin.department_symptom.edit-symptom', compact('symptom', 'departments'));
+
+        $symptoms = Symptom::where('status', SymptomStatus::ACTIVE)
+            ->orderBy('order', 'asc')
+            ->orderBy('isFilter', 'desc')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return view('admin.department_symptom.edit-symptom', compact('symptom', 'departments', 'symptoms'));
     }
 
     public function update(Request $request, $id)
     {
         $symptom = Symptom::find($id);
+
+        $isFilter = $request->input('isFilter');
+
+        $orderType = $request->input('symptom_order_type');
+
+        $symOrderId = $request->input('symptom_order_id');
 
         $translate = new TranslateController();
 
@@ -80,12 +105,32 @@ class SymptomController extends Controller
             return back();
         }
 
+        $getSymptomOrder = Symptom::find($symOrderId)->order ?? 0;
+
         $symptom->description = $description;
         $symptom->description_en = $description_en;
         $symptom->description_laos = $description_laos;
 
         $status = SymptomStatus::ACTIVE;
         $symptom->status = $status;
+
+        if ($orderType == "before") {
+            if ($getSymptomOrder == 0) {
+                $symptom->order = 0;
+            } else {
+                $symptom->order = $getSymptomOrder - 1;
+            }
+        } elseif ($orderType == "after") {
+            $symptom->order = $getSymptomOrder + 1;
+        } else {
+            $symptom->order = 0;
+        }
+
+        if ($isFilter && $isFilter == "on") {
+            $symptom->isFilter = 1;
+        } else {
+            $symptom->isFilter = 0;
+        }
 
         $symptom->save();
 
@@ -99,6 +144,12 @@ class SymptomController extends Controller
         $symptom = new Symptom();
 
         $translate = new TranslateController();
+
+        $isFilter = $request->input('isFilter');
+
+        $orderType = $request->input('symptom_order_type');
+
+        $symOrderId = $request->input('symptom_order_id');
 
         $name_en = $translate->translateText($name, 'en');
         $name_laos = $translate->translateText($name, 'lo');
@@ -132,6 +183,8 @@ class SymptomController extends Controller
         $user_id = Auth::user()->id;
         $status = SymptomStatus::ACTIVE;
 
+        $getSymptomOrder = Symptom::find($symOrderId)->order ?? 0;
+
         $symptom->name = $name;
         $symptom->name_en = $name_en;
         $symptom->name_laos = $name_laos;
@@ -144,6 +197,22 @@ class SymptomController extends Controller
 
         $symptom->status = $status;
         $symptom->user_id = $user_id;
+
+        if ($orderType == "before") {
+            if ($getSymptomOrder == 0) {
+                $symptom->order = 0;
+            } else {
+                $symptom->order = $getSymptomOrder - 1;
+            }
+        } elseif ($orderType == "after") {
+            $symptom->order = $getSymptomOrder + 1;
+        } else {
+            $symptom->order = 0;
+        }
+
+        if ($isFilter && $isFilter == "on") {
+            $symptom->isFilter = 1;
+        }
 
         $symptom->save();
 

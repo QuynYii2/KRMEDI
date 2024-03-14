@@ -9,5 +9,5 @@ class Symptom extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'description', 'thumbnail'];
+    protected $fillable = ['name', 'description', 'thumbnail', 'order', 'isFilter'];
 }

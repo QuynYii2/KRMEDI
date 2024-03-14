@@ -39,6 +39,41 @@
                                 <input required type="file" name="image" id="image" class="form-control-file" accept="image/*">
                             </div>
 
+                            <div class="row">
+                                <label for="image">Thứ tự sắp xếp:</label>
+                                <div class="col-md-6">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="symptom_order_type"
+                                            id="symptom_order_type_after" value="after" checked>
+                                        <label class="form-check-label" for="symptom_order_type_after">Sau triệu chứng</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="symptom_order_type"
+                                            id="symptom_order_type_before" value="before">
+                                        <label class="form-check-label" for="symptom_order_type_before">Trước triệu chứng</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <select class="form-select" name="symptom_order_id" required>
+                                        @forelse ($symptoms as $sym)
+                                            <option value="{{ $sym->id }}">{{ $sym->name }}</option>
+                                        @empty
+                                            <option value="" disabled>Không có triệu chứng hợp lệ</option>
+                                        @endforelse
+                                    </select>
+                                </div>
+                            </div>
+                            <br>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="isFilter" id="isFilter" checked>
+                                <label class="form-check-label" for="isFilter">
+                                    Khả dụng để lọc?
+                                </label>
+                            </div>
+                            <br>
+
                             <button type="submit" class="btn btn-primary">{{ __('home.Thêm mới') }}</button>
                         </form>
                     </div>

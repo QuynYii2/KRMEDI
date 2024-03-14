@@ -12,6 +12,8 @@ class DepartmentController extends Controller
     public function index()
     {
         $departments = Department::where('status', DepartmentStatus::ACTIVE)
+            ->orderBy('order', 'asc')
+            ->orderBy('isFilter', 'desc')
             ->orderBy('id', 'desc')
             ->paginate(10);
 
@@ -20,7 +22,12 @@ class DepartmentController extends Controller
 
     public function create()
     {
-        return view('admin.department_symptom.create-department');
+        $departments = Department::where('status', DepartmentStatus::ACTIVE)
+            ->orderBy('order', 'asc')
+            ->orderBy('isFilter', 'desc')
+            ->orderBy('id', 'desc')
+            ->get();
+        return view('admin.department_symptom.create-department')->with(compact('departments'));
     }
 
     public function show($id)
@@ -29,8 +36,13 @@ class DepartmentController extends Controller
 
     public function edit($id)
     {
+        $departments = Department::where('status', DepartmentStatus::ACTIVE)
+            ->orderBy('order', 'asc')
+            ->orderBy('isFilter', 'desc')
+            ->orderBy('id', 'desc')
+            ->get();
         $department = Department::find($id);
-        return view('admin.department_symptom.edit-department', compact('department'));
+        return view('admin.department_symptom.edit-department', compact('department', 'departments'));
     }
 
     public function update(Request $request, $id)
@@ -38,6 +50,10 @@ class DepartmentController extends Controller
         $department = Department::find($id);
 
         $isFilter = $request->input('isFilter');
+
+        $orderType = $request->input('department_order_type');
+
+        $depOrderId = $request->input('department_order_id');
 
         $name = $request->input('name');
 
@@ -70,6 +86,8 @@ class DepartmentController extends Controller
             return back();
         }
 
+        $getDepartmentOrder = Department::find($depOrderId)->order ?? 0;
+
         $department->name = $name;
         $department->name_en = $name_en;
         $department->name_laos = $name_laos;
@@ -79,6 +97,18 @@ class DepartmentController extends Controller
         $department->description_laos = $description_laos;
 
         $department->status = $status;
+
+        if ($orderType == "before") {
+            if ($getDepartmentOrder == 0) {
+                $department->order = 0;
+            } else {
+                $department->order = $getDepartmentOrder - 1;
+            }
+        } elseif ($orderType == "after") {
+            $department->order = $getDepartmentOrder + 1;
+        } else {
+            $department->order = 0;
+        }
 
         if ($isFilter && $isFilter == "on") {
             $department->isFilter = 1;
@@ -100,6 +130,10 @@ class DepartmentController extends Controller
         $name = $request->input('name');
 
         $isFilter = $request->input('isFilter');
+
+        $orderType = $request->input('department_order_type');
+
+        $depOrderId = $request->input('department_order_id');
 
         $name_en = $translate->translateText($name, 'en');
         $name_laos = $translate->translateText($name, 'lo');
@@ -130,6 +164,8 @@ class DepartmentController extends Controller
         $status = DepartmentStatus::ACTIVE;
         $user_id = Auth::user()->id;
 
+        $getDepartmentOrder = Department::find($depOrderId)->order ?? 0;
+
         $department->name = $name;
         $department->name_en = $name_en;
         $department->name_laos = $name_laos;
@@ -142,6 +178,18 @@ class DepartmentController extends Controller
 
         $department->status = $status;
         $department->user_id = $user_id;
+
+        if ($orderType == "before") {
+            if ($getDepartmentOrder == 0) {
+                $department->order = 0;
+            } else {
+                $department->order = $getDepartmentOrder - 1;
+            }
+        } elseif ($orderType == "after") {
+            $department->order = $getDepartmentOrder + 1;
+        } else {
+            $department->order = 0;
+        }
 
         if ($isFilter && $isFilter == "on") {
             $department->isFilter = 1;
