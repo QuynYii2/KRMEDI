@@ -35,25 +35,19 @@
             <div class="header-right d-flex align-items-center">
                 @if(Auth::check())
                     <div class="dropdown">
-                        <div class="d-flex dropdown-toggle justify-content-between" type="button" data-toggle="dropdown"
-                             aria-expanded="false">
+                        <div class="dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
                             <img src="{{Auth::user()->avt ?? asset('img/user-circle.png')}}" style="width: 40px; height: 40px; border-radius: 25px;"> &nbsp;
-                            <div class="d-flex align-items-center krm-name-user mr-2">
-                                {{Auth::user()->name}}
-                            </div>
+                            <span class="krm-name-user mr-2">{{Auth::user()->name}}</span>
+                            <span class="caret"></span>
                         </div>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item"
-                               href="{{ route('profile') }}">{{ __('home.Trang cá nhân') }}</a>
+                            <a class="dropdown-item" href="{{ route('profile') }}">{{ __('home.Trang cá nhân') }}</a>
                             @if(Auth::user()->type != Role::NORMAL)
-                                <a class="dropdown-item"
-                                   href="{{ route('view.prescription.result.create') }}">Create Prescription</a>
+                                <a class="dropdown-item" href="{{ route('view.prescription.result.create') }}">Create Prescription</a>
                             @else
-                                <a class="dropdown-item"
-                                   href="{{ route('view.prescription.result.my.list') }}">{{__('home.My Prescription')}}</a>
+                                <a class="dropdown-item" href="{{ route('view.prescription.result.my.list') }}">{{__('home.My Prescription')}}</a>
                             @endif
-                            <a class="dropdown-item"
-                               href="{{route('booking.list.by.user')}}">{{ __('home.My booking') }}</a>
+                            <a class="dropdown-item" href="{{route('booking.list.by.user')}}">{{ __('home.My booking') }}</a>
                             <a class="dropdown-item" href="{{route('logoutProcess')}}">{{ __('home.Logout') }}</a>
                         </div>
                     </div>

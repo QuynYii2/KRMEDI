@@ -1259,6 +1259,7 @@
             },
             success: function(response) {
                 if (response.data > 0) {
+                    $('.notification-item').removeClass('fw-bold');
                     $('.countUnseenNotification').text(function(index, text) {
                         return parseInt(text) - response.data;
                     });

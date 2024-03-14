@@ -268,16 +268,20 @@ class MainApi extends Controller
 
             if (!isset($validatedData['clinic_title'])) {
                 $clinicTitle =  'Lịch khám mới đã được đặt';
+            } else {
+                $clinicTitle =  $validatedData['clinic_title'];
             }
 
             if (!isset($validatedData['user_title'])) {
                 $userTitle = 'Đặt lịch khám thành công';
+            } else {
+                $userTitle = $validatedData['user_title'];
             }
 
             $hospitalUser = Clinic::with('users')->find($clinicId);
 
             $hospitalToken = $hospitalUser->users->token_firebase ?? "";
-            
+
             $hospitalNotification = Notification::create([
                 'title' => $clinicTitle,
                 'sender_id' => $userId,
