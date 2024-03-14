@@ -266,16 +266,20 @@ class MainApi extends Controller
 
             $clinicId = $validatedData['clinic_id'];
 
-            $clinicTitle = $validatedData['clinic_title'];
+            if (!isset($validatedData['clinic_title'])) {
+                $clinicTitle =  'Lịch khám mới đã được đặt';
+            }
 
-            $userTitle = $validatedData['user_title'];
+            if (!isset($validatedData['user_title'])) {
+                $userTitle = 'Đặt lịch khám thành công';
+            }
 
             $hospitalUser = Clinic::with('users')->find($clinicId);
 
             $hospitalToken = $hospitalUser->users->token_firebase ?? "";
             
             $hospitalNotification = Notification::create([
-                'title' => $clinicTitle ?? 'Lịch khám mới đã được đặt',
+                'title' => $clinicTitle,
                 'sender_id' => $userId,
                 'follower' => $hospitalUser->users->id,
                 'target_url' => route('api.backend.booking.edit', ['id' => $bookingId]),
@@ -290,7 +294,7 @@ class MainApi extends Controller
             $userToken = User::find($userId)->token_firebase ?? "";
 
             $userNotification = Notification::create([
-                'title' => $userTitle ?? 'Đặt lịch khám thành công',
+                'title' => $userTitle,
                 'sender_id' => $hospitalUser->users->id,
                 'follower' => $userId,
                 'target_url' => route('restapi.booking.detail', ['id' => $bookingId]),
