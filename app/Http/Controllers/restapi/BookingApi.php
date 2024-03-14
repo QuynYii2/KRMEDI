@@ -269,13 +269,21 @@ class BookingApi extends Controller
             $booking->reason_cancel = $reason;
             $booking->save();
             
+            if ($request->input('status') == BookingStatus::CANCEL) {
+                $user_title = 'Một đơn booking đã huỷ';
+                $clinic_title = 'Một đơn booking đã huỷ';
+            }else{
+                $user_title = 'Một đơn booking đã thay đổi trạng thái';
+                $clinic_title = 'Một đơn booking đã thay đổi trạng thái';
+            }
+
             $mainApi = new MainApi();
             $newRequestData = [
                 'id' => $booking->id,
                 'user_id' => $booking->user_id,
                 'clinic_id' => $booking->clinic_id,
-                'user_title' => 'Bạn đã huỷ booking thành công',
-                'clinic_title' => 'Một đơn booking đã bị huỷ',
+                'user_title' => $user_title,
+                'clinic_title' => $clinic_title,
             ];
             $request = new Request($newRequestData);
             $mainApi->sendFcmNotification($request);

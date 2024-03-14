@@ -61,6 +61,46 @@
                     </button>
                 @endif
             </div>
+
+            @if (Auth::check())
+                <div class="header-right d-flex align-items-center">
+                    <div class="dropdown">
+                        <a class="d-flex align-items-center" href="#" id="notificationDropdown"
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-regular fa-bell fa-2xl" style="color: #ffffff; font-size: 28px"></i>
+                            <span class="badge bg-primary badge-number countUnseenNotification">1</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications"
+                            style="max-height: 500px; overflow-y: auto;" id="notificationList" data-page="1"
+                            aria-labelledby="notificationDropdown">
+                            <li class="dropdown-header">
+                                Bạn có <span class="countUnseenNotification">1</span> thông báo chưa đọc
+                                <a href="" class="text-decoration-none"><span
+                                        class="badge rounded-pill bg-primary p-2 ms-2">{{ __('home.View all') }}</span></a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li class="notification-item">
+                                <a href="">
+                                    <div class="notification-item" style="display: flex; align-items: center">
+                                        <img src="{{ asset(Auth::user()->avt) }}" alt="Profile" class="rounded-circle" style="width: 80px">
+                                        <div class="notificationContent ms-3">
+                                            <h4>test</h4>
+                                            <p>test</p>
+                                            <p>test</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            @endif
+
             <div class="pr-3 ">
                 <div class="dropdown float-right ">
                     <button class="btn krm-select-national dropdown-toggle  btn-outline-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
