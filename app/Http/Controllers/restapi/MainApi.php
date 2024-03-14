@@ -274,6 +274,7 @@ class MainApi extends Controller
                 'follower' => $hospitalUser->users->id,
                 'target_url' => route('api.backend.booking.edit', ['id' => $bookingId]),
                 'description' => 'Kiểm tra lịch khám ngay!!',
+                'booking_id' => $bookingId
             ]);
 
             if ($hospitalToken) {
@@ -287,7 +288,8 @@ class MainApi extends Controller
                 'sender_id' => $hospitalUser->users->id,
                 'follower' => $userId,
                 'target_url' => route('booking.list.by.user'),
-                'description' => 'Kiểm tra lịch khám ngay!!'
+                'description' => 'Kiểm tra lịch khám ngay!!',
+                'booking_id' => $bookingId
             ]);
 
             if ($userToken) {
