@@ -110,8 +110,8 @@ class CheckoutApi extends Controller
         $roleAdmin = Role::where('name', \App\Enums\Role::ADMIN)->first();
         $role_user = DB::table('role_users')->where('role_id', $roleAdmin->id)->first();
         $admin = User::where('id', $role_user->user_id)->first();
-        // (new MailController())->sendEmail($email, 'support_krmedi@gmail.com', 'Order success', 'Notification of successful order placement!');
-        // (new MailController())->sendEmail($admin->email, 'support_krmedi@gmail.com', 'Order created', 'A new order has just been created!');
+        (new MailController())->sendEmail($email, 'support_krmedi@gmail.com', 'Order success', 'Notification of successful order placement!');
+        (new MailController())->sendEmail($admin->email, 'support_krmedi@gmail.com', 'Order created', 'A new order has just been created!');
         $order->getOrderDetails();
         return $order;
     }
