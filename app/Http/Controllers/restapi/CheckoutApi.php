@@ -41,7 +41,7 @@ class CheckoutApi extends Controller
             $point_exchange = 0;
         }
 
-        $userID = $request->input('user_id');
+        $userID = intval($request->input('user_id'));
 
         $user = User::find($userID);
         $user->points = $point_exchange;
@@ -53,11 +53,11 @@ class CheckoutApi extends Controller
         $address = $request->input('address_checkout');
 
 
-        $total = $request->input('total_fee');
+        $total = intval($request->input('total_fee'));
 
-        $ship = $request->input('shipping_fee');
-        $discount = $request->input('discount_fee');
-        $totalOrder = $request->input('total_order');
+        $ship = intval($request->input('shipping_fee'));
+        $discount = intval($request->input('discount_fee'));
+        $totalOrder = intval($request->input('total_order'));
 
         $orderMethod = $request->input('order_method');
 
