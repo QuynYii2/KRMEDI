@@ -102,6 +102,7 @@ class MyBookingController extends Controller
     public function fileBookingResult($id)
     {
         $booking = Booking::find($id);
-        return view('ui.my-bookings.file-booking-result', compact('booking'));
+        $bookingFiles = $booking->extend['booking_results'];
+        return view('ui.my-bookings.file-booking-result', compact('bookingFiles'));
     }
 }

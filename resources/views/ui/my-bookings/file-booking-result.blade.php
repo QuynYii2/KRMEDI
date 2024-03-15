@@ -1,7 +1,80 @@
 @section('title')
     Kết quả khám bệnh
 @endsection
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-<div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
-    <iframe src="https://view.officeapps.live.com/op/embed.aspx?src={{ url(asset($booking->extend['booking_results'][0]['url'])) }}" width="100%" height="100%" style="border: none;"></iframe>
+<div class="container-fluid mt-3">
+    <div class="d-flex justify-content-center">
+        @forelse ($bookingFiles as $index => $file)
+            <button id="btn{{ $index }}" class="btn btn-outline-success me-3"
+                onclick="showIframe({{ $index }})">
+                {{ $file['type'] }}
+            </button>
+        @empty
+        @endforelse
+    </div>
+
+    <div class="d-flex justify-content-center mt-3">
+        @forelse ($bookingFiles as $index => $file)
+            @php
+                $fileType = '';
+                $extension = pathinfo($file['url'], PATHINFO_EXTENSION);
+                if ($extension === 'xlsx') {
+                    $fileType = 'xlsx';
+                } elseif ($extension === 'pdf') {
+                    $fileType = 'pdf';
+                } elseif ($extension === 'docx') {
+                    $fileType = 'docx';
+                } else {
+                    $fileType = 'Unknown';
+                }
+            @endphp
+            <br>
+            @if ($fileType == 'xlsx')
+                <iframe id="iframe{{ $index }}"
+                    src="https://view.officeapps.live.com/op/embed.aspx?src={{ url(asset($file['url'])) }}"
+                    width="80%" height="500"
+                    style="border: none; {{ $index === 0 ? 'display: block;' : 'display: none;' }}"></iframe>
+            @elseif ($fileType == 'pdf')
+                <embed src="{{ url(asset($file['url'])) }}" type="application/pdf" width="80%" height="800"
+                    style="border: none; {{ $index === 0 ? 'display: block;' : 'display: none;' }}">
+            @elseif ($fileType == 'docx')
+                <iframe src="https://view.officeapps.live.com/op/view.aspx?src={{ url(asset($file['url'])) }}"
+                    width="80%" height="800"
+                    style="border: none; {{ $index === 0 ? 'display: block;' : 'display: none;' }}"></iframe>
+            @else
+                <iframe src="{{ url(asset($file['url'])) }}" width="80%" height="800"
+                    style="border: none; {{ $index === 0 ? 'display: block;' : 'display: none;' }}"></iframe>
+            @endif
+        @empty
+        @endforelse
+    </div>
 </div>
+
+<script>
+    function showIframe(index) {
+        var iframes = document.getElementsByTagName('iframe');
+        for (var i = 0; i < iframes.length; i++) {
+            iframes[i].style.display = 'none';
+        }
+
+        var selectedIframe = document.getElementById('iframe' + index);
+        if (selectedIframe) {
+            selectedIframe.style.display = 'block';
+        }
+
+        var buttons = document.getElementsByTagName('button');
+        for (var j = 0; j < buttons.length; j++) {
+            buttons[j].classList.remove('active');
+        }
+
+        var selectedButton = document.getElementById('btn' + index);
+        if (selectedButton) {
+            selectedButton.classList.add('active');
+        }
+    }
+
+    // Show the first iframe and set the class of the first button initially
+    showIframe(0);
+</script>
