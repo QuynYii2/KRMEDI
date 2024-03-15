@@ -229,7 +229,10 @@ class BookingController extends Controller
 
             if ($status == BookingStatus::COMPLETE && $is_result == 1) {
                 // Find the missing index
-                $missingIndex = array_diff(array_keys($bookingResults), array_keys($oldValues));
+                $missingIndex = [];
+                if ($bookingResults !== null && $oldValues !== null) {
+                    $missingIndex = array_diff(array_keys($bookingResults), array_keys($oldValues));
+                }
 
                 // Remove the missing index from $bookingResults and delete the URL file
                 if (!empty($missingIndex)) {
