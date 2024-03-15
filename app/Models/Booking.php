@@ -11,6 +11,10 @@ class Booking extends Model
 {
     protected $fillable = ['user_id', 'clinic_id', 'check_in', 'check_out', 'consulting_form', 'member_family_id', 'department_id'];
 
+    protected $casts = [
+        'extend' => 'array',
+    ];
+
     public function clinic()
     {
         return $this->belongsTo(Clinic::class, 'clinic_id', 'id');

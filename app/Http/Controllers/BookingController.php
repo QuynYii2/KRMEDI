@@ -23,6 +23,8 @@ use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\ZaloController;
 use App\Models\User;
 use App\Models\ZaloFollower;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class BookingController extends Controller
 {
@@ -104,8 +106,26 @@ class BookingController extends Controller
         $reflector = new \ReflectionClass('App\Enums\ReasonCancel');
         $reasons = $reflector->getConstants();
 
+        $repeaterItems = [];
+
+        if (isset($bookings_edit->extend['booking_results'])) {
+            foreach ($bookings_edit->extend['booking_results'] as $bookingResult) {
+                $selectValue = $bookingResult['type'];
+                $fileUrl = $bookingResult['url'];
+
+                // Create a new repeater item array
+                $item = [
+                    'selectValue' => $selectValue,
+                    'fileUrl' => $fileUrl,
+                ];
+
+                // Add the repeater item to the array
+                $repeaterItems[] = $item;
+            }
+        }
+
         if ($owner == Auth::id() || $isAdmin) {
-            return view('admin.booking.tab-edit-booking', compact('bookings_edit', 'isAdmin', 'services', 'reasons'));
+            return view('admin.booking.tab-edit-booking', compact('bookings_edit', 'isAdmin', 'services', 'reasons', 'repeaterItems'));
         } else {
             session()->flash('error', 'You do not have permission.');
             return \redirect()->back();
@@ -202,6 +222,65 @@ class BookingController extends Controller
                 $is_result = 0;
             }
 
+            $selectValues = $request->input('select');
+            $fileInputs = $request->file('file');
+            $bookingResults = $booking->extend['booking_results'] ?? [];
+            $oldValues = $request->input('file_urls');
+
+            if ($status == BookingStatus::COMPLETE && $is_result == 1) {
+                // Find the missing index
+                $missingIndex = array_diff(array_keys($bookingResults), array_keys($oldValues));
+
+                // Remove the missing index from $bookingResults and delete the URL file
+                if (!empty($missingIndex)) {
+                    $index = array_keys($missingIndex)[0];
+
+                    if (isset($bookingResults[$index]['url']) && Storage::exists(str_replace('/storage', 'public', $bookingResults[$index]['url']))) {
+                        Storage::delete(str_replace('/storage', 'public', $bookingResults[$index]['url']));
+                    }
+
+                    unset($bookingResults[$index]);
+                }
+
+                if (isset($selectValues) && isset($fileInputs)) {
+                    $validator = Validator::make($request->all(), [
+                        'file.*' => 'mimes:pdf,xlsx,docx',
+                    ]);
+
+                    if ($validator->fails()) {
+                        alert('Error', 'Tài liệu phải là định dạng PDF, XLSX hoặc DOCX', 'error');
+                        return redirect()->back()->withErrors($validator)->withInput();
+                    }
+
+                    foreach ($fileInputs as $index => $fileInput) {
+                        // Remove the old file if it exists
+                        if (isset($bookingResults[$index]['url']) && Storage::exists(str_replace('/storage', 'public', $bookingResults[$index]['url']))) {
+                            Storage::delete(str_replace('/storage', 'public', $bookingResults[$index]['url']));
+                        }
+                        // Handle the new file input
+                        if ($fileInput) {
+                            $itemPath = $fileInput->store('bookings_result', 'public');
+                            $fileUrl = asset('storage/' . $itemPath);
+                        } else {
+                            // If file input is not set, use the existing value
+                            $fileUrl = $booking->extend['booking_results'][$index]['url'] ?? '';
+                        }
+
+                        $bookingResult = [
+                            'type' => $selectValues[$index],
+                            'url' => $fileUrl,
+                        ];
+
+                        $bookingResults[$index] = $bookingResult;
+                    }
+                }
+
+                $extendData = $booking->extend ?? [];
+
+                $extendData['booking_results'] = array_values($bookingResults);
+                $booking->extend = $extendData;
+            }
+
             // Check if the status has changed
             if ($booking->status != $status) {
                 // Status has changed, send zalo OA msg to customer
@@ -259,7 +338,7 @@ class BookingController extends Controller
                 }
 
                 alert('Update success');
-                return Redirect::route('homeAdmin.list.booking')->with('success', 'Booking success');
+                return Redirect::route('api.backend.booking.edit', ['id' => $id])->with('success', 'Booking success');
             }
             return response()->json(['error' => 0, 'data' => $booking]);
         } catch (\Exception $e) {

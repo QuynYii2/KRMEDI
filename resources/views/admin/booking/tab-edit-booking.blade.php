@@ -5,24 +5,25 @@
 @section('main-content')
     <div class="container-fluid">
         <h1 class="h3 mb-4 text-gray-800">{{ __('home.List Booking') }}</h1>
-        <form id="form" action="{{route('api.backend.booking.update',$bookings_edit->id)}}" method="post"
-              enctype="multipart/form-data">
+        <form id="form" action="{{ route('api.backend.booking.update', $bookings_edit->id) }}" method="post"
+            enctype="multipart/form-data">
             @csrf
             <div class="row">
                 <div class="col-md-3 form-group">
                     <label for="user">{{ __('home.Tên người đăng ký') }}</label>
                     @php
-                        $user_name = \App\Models\User::where('id',$bookings_edit->user_id)->value('name');
+                        $user_name = \App\Models\User::where('id', $bookings_edit->user_id)->value('name');
                     @endphp
-                    <input type="text" class="form-control" id="user" name="user" value="{{$user_name}}" disabled>
+                    <input type="text" class="form-control" id="user" name="user" value="{{ $user_name }}"
+                        disabled>
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="clinic_id">{{ __('home.BusinessName') }}</label>
                     @php
-                        $clinic_name = \App\Models\Clinic::where('id',$bookings_edit->clinic_id)->value('name');
+                        $clinic_name = \App\Models\Clinic::where('id', $bookings_edit->clinic_id)->value('name');
                     @endphp
-                    <input type="text" class="form-control" id="user" name="clinic_id" value="{{$clinic_name}}"
-                           disabled>
+                    <input type="text" class="form-control" id="user" name="clinic_id" value="{{ $clinic_name }}"
+                        disabled>
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="department_id">{{ __('home.Department') }}</label>
@@ -30,213 +31,159 @@
                         $department = \App\Models\Department::find($bookings_edit->department_id);
                     @endphp
                     <input type="text" class="form-control" id="department_id" name="department_id"
-                           value="{{$department ? $department->name : ''}}" disabled>
+                        value="{{ $department ? $department->name : '' }}" disabled>
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="doctor_id">{{ __('home.Doctor Name') }}</label>
                     @php
-                        $doctor = \App\Models\User::where('id',$bookings_edit->doctor_id)->first();
+                        $doctor = \App\Models\User::where('id', $bookings_edit->doctor_id)->first();
                         $doctor_info = '';
-                        if ($doctor){
-                            $doctor_info = $doctor->username .'-'.$doctor->email;
+                        if ($doctor) {
+                            $doctor_info = $doctor->username . '-' . $doctor->email;
                         }
                     @endphp
-                    <input type="text" class="form-control" id="doctor_id" name="doctor_id"
-                           value="{{$doctor_info}}"
-                           disabled>
+                    <input type="text" class="form-control" id="doctor_id" name="doctor_id" value="{{ $doctor_info }}"
+                        disabled>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-3 form-group">
                     <label for="check_in">{{ __('home.Thời gian bắt đầu') }}</label>
                     <input disabled type="datetime-local" class="form-control" id="check_in" name="check_in"
-                           value="{{ $bookings_edit->check_in }}">
+                        value="{{ $bookings_edit->check_in }}">
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="check_out">{{ __('home.Thời gian kết thúc') }}</label>
                     <input disabled type="datetime-local" class="form-control" id="check_out" name="check_out"
-                           value="{{ $bookings_edit->check_out }}">
+                        value="{{ $bookings_edit->check_out }}">
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="booking_status">{{ __('home.Trạng thái') }}</label>
                     <select class="form-select" id="booking_status" name="status">
-                        <option
-                            value="{{ \App\Enums\BookingStatus::PENDING }}" {{ $bookings_edit->status === \App\Enums\BookingStatus::PENDING ? 'selected' : '' }}>
+                        <option value="{{ \App\Enums\BookingStatus::PENDING }}"
+                            {{ $bookings_edit->status === \App\Enums\BookingStatus::PENDING ? 'selected' : '' }}>
                             {{ \App\Enums\BookingStatus::PENDING }}
                         </option>
-                        <option
-                            value="{{ \App\Enums\BookingStatus::COMPLETE }}" {{ $bookings_edit->status === \App\Enums\BookingStatus::COMPLETE ? 'selected' : '' }}>
+                        <option value="{{ \App\Enums\BookingStatus::COMPLETE }}"
+                            {{ $bookings_edit->status === \App\Enums\BookingStatus::COMPLETE ? 'selected' : '' }}>
                             {{ \App\Enums\BookingStatus::COMPLETE }}
                         </option>
-                        <option
-                            value="{{ \App\Enums\BookingStatus::APPROVED }}" {{ $bookings_edit->status === \App\Enums\BookingStatus::APPROVED ? 'selected' : '' }}>
+                        <option value="{{ \App\Enums\BookingStatus::APPROVED }}"
+                            {{ $bookings_edit->status === \App\Enums\BookingStatus::APPROVED ? 'selected' : '' }}>
                             {{ \App\Enums\BookingStatus::APPROVED }}
                         </option>
-                        <option
-                            value="{{ \App\Enums\BookingStatus::CANCEL }}" {{ $bookings_edit->status === \App\Enums\BookingStatus::CANCEL ? 'selected' : '' }}>
+                        <option value="{{ \App\Enums\BookingStatus::CANCEL }}"
+                            {{ $bookings_edit->status === \App\Enums\BookingStatus::CANCEL ? 'selected' : '' }}>
                             {{ \App\Enums\BookingStatus::CANCEL }}
                         </option>
                     </select>
                 </div>
                 <div class=" col-md-3 form-group mt-4">
                     <label for="services"></label>
-                    <input type="checkbox" name="is_result"
-                           {{ $bookings_edit->is_result == 1 ? 'checked' : '' }}
-                           class="is_result" id="is_result" value="1">
+                    <input type="checkbox" name="is_result" {{ $bookings_edit->is_result == 1 ? 'checked' : '' }}
+                        class="is_result" id="is_result" value="1">
                     <label for="is_result">{{ __('home.Result') }}</label>
                 </div>
             </div>
             <div class="row" id="showReasonCancel">
 
             </div>
-            <input type="text" name="services" id="services"
-                   class="form-control d-none">
+
+            @if ($bookings_edit->is_result == 1 && $bookings_edit->status === \App\Enums\BookingStatus::COMPLETE)
+                <div id="repeater">
+                    @forelse ($repeaterItems as $index => $item)
+                        <div class="d-flex align-items-center row repeater-item">
+                            <div class="col-md-1 delete-repeater-div">
+                                @if ($index != 0)
+                                    <button class="btn btn-danger delete-btn" data-index="{{ $index }}"><i
+                                            class="fa-solid fa-x"></i></button>
+                                @endif
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="select{{ $index }}">Loại khám bệnh:</label>
+                                    <select class="form-control" name="select[]">
+                                        <option value="Khám bệnh"
+                                            {{ $item['selectValue'] === 'Khám bệnh' ? 'selected' : '' }}>
+                                            Khám bệnh</option>
+                                        <option value="Siêu âm" {{ $item['selectValue'] === 'Siêu âm' ? 'selected' : '' }}>
+                                            Siêu
+                                            âm</option>
+                                        <option value="XQuang" {{ $item['selectValue'] === 'XQuang' ? 'selected' : '' }}>
+                                            XQuang
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="repeater-item col-md-4">
+                                <div class="form-group">
+                                    <label for="file">Tài liệu khám bệnh:</label>
+                                    <input type="file" name="file[{{ $index }}]" class="form-control-file"
+                                        accept=".pdf, .xlsx, .docx">
+                                    <input type="hidden" name="file_urls[{{ $index }}]" value="{{ $item['fileUrl'] }}">
+                                </div>
+                            </div>
+                            <div class="col-md-3 viewFile">
+                                <a href="{{ asset($item['fileUrl']) }}">Xem tài liệu khám</a>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="d-flex align-items-center row repeater-item">
+                            <div class="col-md-1 delete-repeater-div">
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="select1">Select:</label>
+                                    <select class="form-control" name="select[]">
+                                        <option value="Khám bệnh">Khám bệnh</option>
+                                        <option value="Siêu âm">Siêu âm</option>
+                                        <option value="XQuang">XQuang</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="repeater-item col-md-4">
+                                <div class="form-group">
+                                    <label for="file">Tài liệu khám bệnh:</label>
+                                    <input type="file" name="file[]" class="form-control-file"
+                                        accept=".pdf, .xlsx, .docx">
+                                </div>
+                            </div>
+                        </div>
+                    @endforelse
+                </div>
+                <button type="button" class="btn btn-primary" id="addBtn"><i class="fa-solid fa-plus"></i></button>
+                </br>
+            @endif
+
+
+            <input type="text" name="services" id="services" class="form-control d-none">
             <button type="submit" class="btn btn-primary up-date-button mt-4">{{ __('home.Save') }}</button>
-            {{--            @if($bookings_edit->is_result == 1 && $bookings_edit->status === \App\Enums\BookingStatus::COMPLETE )--}}
-            {{--                @php--}}
-            {{--                    $old_result = \App\Models\BookingResult::where('booking_id', $bookings_edit->id)->first();--}}
-            {{--                @endphp--}}
-            {{--                @if($old_result)--}}
-            {{--                    <label for="input_old_result"></label>--}}
-            {{--                    <input type="text" hidden id="input_old_result" value="{{ $old_result->id }}">--}}
-            {{--                @endif--}}
-            {{--                <!-- Button trigger modal -->--}}
-            {{--                <button type="button" class="btn btn-success {{ $old_result ? 'btnUnCreate' : '' }} mt-4"--}}
-            {{--                        data-toggle="modal"--}}
-            {{--                        data-target="{{ $old_result ? '' : '#exampleModalComplete' }}">--}}
-            {{--                    {{ __('home.Create result') }}--}}
-            {{--                </button>--}}
-            {{--            @else--}}
-            {{--                <button type="button" class="btn btn-success mt-4" data-toggle="modal" data-target="#exampleModal">--}}
-            {{--                    {{ __('home.Create result') }}--}}
-            {{--                </button>--}}
-            {{--            @endif--}}
         </form>
-    </div>
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModalComplete" tabindex="-1" aria-labelledby="exampleModalLabelComplete"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabelComplete">{{ __('home.Create new result') }}</h5>
-                    <button type="button" class="close btn btn-secondary" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form>
-                    <div class="modal-body">
-                        <div class="list-service-result mt-2 mb-3">
-                            <div id="list-service-result">
-
-                            </div>
-                            <button type="button"
-                                    class="btn btn-outline-primary mt-3 btnAddNewResult">{{ __('home.Add new result') }}
-                            </button>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="files">{{ __('home.File Attachments') }}</label>
-                            <input type="file" multiple class="form-control" id="files" name="files[]">
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-md-8">
-                                <label for="prescriptions">{{ __('home.File Prescriptions') }}
-                                    <span class="text-danger"> *</span>
-                                </label>
-                                <input type="file" multiple class="form-control" id="prescriptions"
-                                       accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                                       name="prescriptions">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <button type="button" class="btnGetFile btn btn-outline-warning mt-4">
-                                    {{ __('home.Xem đơn mẫu') }}
-                                </button>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="detail">{{ __('home.Detail') }}</label>
-                            <textarea class="form-control" id="detail" rows="5"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="detail_en">{{ __('home.Detail En') }}</label>
-                            <textarea class="form-control" id="detail_en" rows="5"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="detail_laos">{{ __('home.Detail Lao') }}</label>
-                            <textarea class="form-control" id="detail_laos" rows="5"></textarea>
-                        </div>
-                        <div class="d-none">
-                            <label for="booking_id">{{ __('home.BookingId') }} </label>
-                            <input type="text" class="form-control" name="booking_id "
-                                   value="{{ $bookings_edit->id }}" id="booking_id">
-                            <label for="family_member">{{ __('home.FamilyMember') }} </label>
-                            <input type="text" class="form-control" name="family_member"
-                                   value="{{ $bookings_edit->member_family_id }}" id="family_member">
-                            <label for="user_id">{{ __('home.UserID') }}</label>
-                            <input type="text" class="form-control" name="user_id" value="{{ $bookings_edit->user_id }}"
-                                   id="user_id">
-                            <label for="created_by">{{ __('home.CreatedBy') }}</label>
-                            <input type="text" class="form-control" id="created_by" name="created_by "
-                                   value="{{ \Illuminate\Support\Facades\Auth::user()->id }}">
-                            <label for="status">{{ __('home.Status') }}</label>
-                            <input type="text" class="form-control" id="status" name="status"
-                                   value="{{ \App\Enums\BookingResultStatus::ACTIVE }}">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary"
-                                data-dismiss="modal">{{ __('home.Close') }}</button>
-                        <button type="button" class="btn btn-primary btnCreate">{{ __('home.create') }}</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">{{ __('home.Thông báo') }}</h5>
-                    <button type="button" class="close btn btn-secondary" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    {{ __('home.Please update status for booking with "Completed" and Select Result to create result') }}
-                    !
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('home.Close') }}</button>
-                </div>
-            </div>
-        </div>
     </div>
 
     {{-- Handle JS --}}
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             let html = `<div class="form-group">
                     <label for="reason_text">Lí do hủy: </label>
-                    <input type="text" class="form-control" id="reason_text" name="reason_text" value="{{$bookings_edit->reason_cancel}}">
+                    <input type="text" class="form-control" id="reason_text" name="reason_text" value="{{ $bookings_edit->reason_cancel }}">
                     <p class="small text-danger mt-1" id="support_reason">Vui lòng chọn/nhập lý do hủy</p>
                     <ul class="list-reason " style="list-style: none; padding-left: 0">
-                        @foreach($reasons as $reason)
+                        @foreach ($reasons as $reason)
             <li class="new-select">
                 <input onchange="changeReason();" class="reason_item"
-                       value="{{$reason}}"
-                                       id="{{$reason}}"
-                                       {{ $reason == 'Other' ? 'checked' : ''}}
+                       value="{{ $reason }}"
+                                       id="{{ $reason }}"
+                                       {{ $reason == 'Other' ? 'checked' : '' }}
             name="reason_item"
             type="radio">
-     <label for="{{$reason}}">{{$reason}}</label>
+     <label for="{{ $reason }}">{{ $reason }}</label>
                             </li>
                         @endforeach
             </ul>
         </div>`;
             showOrHidden(html);
-            $('#booking_status').change(function () {
+            $('#booking_status').change(function() {
                 showOrHidden(html);
             });
         })
@@ -254,7 +201,7 @@
             let value = $('input[name="reason_item"]:checked').val();
             if (value !== 'Other') {
                 $('#support_reason').addClass('d-none');
-                $('#reason_text').val(value).prop('disabled', false /* or 'true' to  disabled input */);
+                $('#reason_text').val(value).prop('disabled', false /* or 'true' to  disabled input */ );
             } else {
                 $('#support_reason').removeClass('d-none');
                 $('#reason_text').val('').prop('disabled', false);
@@ -266,7 +213,9 @@
         let arrayNameService = [];
 
         function removeArray(arr) {
-            var what, a = arguments, L = a.length, ax;
+            var what, a = arguments,
+                L = a.length,
+                ax;
             while (L > 1 && arr.length) {
                 what = a[--L];
                 while ((ax = arr.indexOf(what)) !== -1) {
@@ -357,21 +306,22 @@
             "Authorization": accessToken
         };
 
-        $(document).ready(function () {
-            $(window).on('popstate', function () {
+        $(document).ready(function() {
+            $(window).on('popstate', function() {
                 location.reload();
             });
 
-            $('.btnCreate').on('click', function () {
+            $('.btnCreate').on('click', function() {
                 createBookingResult();
             })
 
-            $('.btnUnCreate').on('click', function () {
+            $('.btnUnCreate').on('click', function() {
                 unCreateBooking();
             })
 
-            $('.btnGetFile').on('click', function () {
-                let alertMessage = `Vui lòng nhập vào file theo định dạng mẫu đã được viết sẵn! Chúng tôi không khuyến khích bất kì hành động thay đổi định dạng file hoặc cấu trúc dữ liệu trong file vì điều này sẽ ảnh hướng đến việc đọc hiểu dữ liệu.`
+            $('.btnGetFile').on('click', function() {
+                let alertMessage =
+                    `Vui lòng nhập vào file theo định dạng mẫu đã được viết sẵn! Chúng tôi không khuyến khích bất kì hành động thay đổi định dạng file hoặc cấu trúc dữ liệu trong file vì điều này sẽ ảnh hướng đến việc đọc hiểu dữ liệu.`
                 if (confirm(alertMessage)) {
                     window.location.href = `{{ route('user.download') }}`;
                 }
@@ -449,7 +399,9 @@
                 });
 
                 let files_data = document.getElementById('files');
-                let i = 0, len = files_data.files.length, img, reader, file;
+                let i = 0,
+                    len = files_data.files.length,
+                    img, reader, file;
                 for (i; i < len; i++) {
                     file = files_data.files[i];
                     formData.append('files[]', file);
@@ -471,12 +423,13 @@
                             cache: false,
                             processData: false,
                             data: formData,
-                            success: function (response) {
+                            success: function(response) {
                                 alert('Create success!')
                                 // window.location.href = ``;
-                                window.location.href = `{{ route('web.booking.result.list', $bookings_edit->id) }}`;
+                                window.location.href =
+                                    `{{ route('web.booking.result.list', $bookings_edit->id) }}`;
                             },
-                            error: function (error) {
+                            error: function(error) {
                                 console.log(error);
                                 alert('Create error!')
                             }
@@ -504,7 +457,7 @@
     <div class="row">
      <div class="form-group">
             <label for="service_result">{{ __('home.Service Name') }}</label>
-            <input type="text" class="form-control service_result" value="{{$bookings_edit->service}}" id="service_result" name="service_result">
+            <input type="text" class="form-control service_result" value="{{ $bookings_edit->service }}" id="service_result" name="service_result">
         </div>
 <div class="form-group">
         <label for="result">{{ __('home.Result') }}</label>
@@ -524,9 +477,9 @@
 </div>
 </div>`;
 
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('#list-service-result').append(html);
-            $('.btnAddNewResult').on('click', function () {
+            $('.btnAddNewResult').on('click', function() {
                 $('#list-service-result').append(html);
                 loadTrash();
                 loadData();
@@ -535,7 +488,7 @@
             loadTrash();
 
             function loadTrash() {
-                $('.btnTrash').on('click', function () {
+                $('.btnTrash').on('click', function() {
                     let main = $(this).parent().parent();
                     main.remove();
                 })
@@ -544,10 +497,10 @@
             loadData();
 
             function loadData() {
-                $('.service_name_item').on('click', function () {
+                $('.service_name_item').on('click', function() {
                     let my_array = null;
                     let my_name = null;
-                    $(this).parent().parent().find(':checkbox:checked').each(function (i) {
+                    $(this).parent().parent().find(':checkbox:checked').each(function(i) {
                         let value = $(this).val();
                         if (my_array) {
                             my_array = my_array + ',' + value;
@@ -567,5 +520,36 @@
                 })
             }
         })
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            var counter = 2;
+
+            $('#addBtn').click(function() {
+                var clone = $('.repeater-item:first').clone();
+                clone.find('select').attr('name', 'select[]');
+                clone.find('input[type="file"]').attr('name',
+                    'file[]');
+                clone.find('input[type="file"]').val('');
+                clone.find('.delete-repeater-div').html(
+                    `<button class="btn btn-danger delete-btn" data-index="` + counter + `"><i
+                                            class="fa-solid fa-x"></i></button>`);
+                clone.find('input[type="hidden"]').remove();
+                clone.find('.viewFile').remove();
+                clone.appendTo('#repeater');
+                counter++;
+            });
+
+            $(document).on('click', '.delete-btn', function() {
+                var index = $(this).data('index');
+                $(this).closest('.repeater-item').remove();
+                // Update the counter and reindex the remaining items
+                counter--;
+                $('.delete-btn').each(function(idx) {
+                    $(this).data('index', idx);
+                });
+            });
+        });
     </script>
 @endsection
