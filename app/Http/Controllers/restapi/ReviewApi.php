@@ -36,9 +36,13 @@ class ReviewApi extends Controller
             ->orderByDesc('reviews.id')
             ->get();
 
-        $mergedCollection = $reviews->merge($review_users);
-        $mergedCollection->sortByDesc('id');
-        return response()->json($mergedCollection);
+        // $mergedCollection = $reviews->merge($review_users);
+        // $mergedCollection->sortByDesc('id');
+
+        $mergedCollection = $reviews->concat($review_users); // Use concat() instead of merge() to preserve the ordering
+
+        $sortedCollection = $mergedCollection->sortByDesc('id');
+        return response()->json($sortedCollection);
     }
 
     public function detail($id)
