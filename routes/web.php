@@ -652,3 +652,5 @@ Route::group(['prefix' => 'download'], function () {
     Route::get('file/{id}', [DownloadController::class, 'downloadFile'])->name('user.download.file');
 });
 Route::get('test/translate', [MainApi::class, 'translateLanguage']);
+
+Route::get('booking-result/{id}', [MyBookingController::class, 'fileBookingResult'])->name('web.users.booking.result');

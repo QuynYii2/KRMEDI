@@ -120,7 +120,8 @@
                                     <label for="file">Tài liệu khám bệnh:</label>
                                     <input type="file" name="file[{{ $index }}]" class="form-control-file"
                                         accept=".pdf, .xlsx, .docx">
-                                    <input type="hidden" name="file_urls[{{ $index }}]" value="{{ $item['fileUrl'] }}">
+                                    <input type="hidden" name="file_urls[{{ $index }}]"
+                                        value="{{ $item['fileUrl'] }}">
                                 </div>
                             </div>
                             <div class="col-md-3 viewFile">
@@ -157,6 +158,10 @@
 
 
             <input type="text" name="services" id="services" class="form-control d-none">
+            @if ($bookings_edit->is_result == 1 && $bookings_edit->status === \App\Enums\BookingStatus::COMPLETE)
+                <button type="button" class="btn btn-success mt-4 me-2"><i class="fa-regular fa-eye"
+                    onclick="window.location.href = '{{ route('web.users.booking.result', ['id' => $bookings_edit->id]) }}';"></i></button>
+            @endif
             <button type="submit" class="btn btn-primary up-date-button mt-4">{{ __('home.Save') }}</button>
         </form>
     </div>

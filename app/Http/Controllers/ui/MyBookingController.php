@@ -98,4 +98,10 @@ class MyBookingController extends Controller
 
         return Response::download($path, 'my-qrcode.jpg');
     }
+
+    public function fileBookingResult($id)
+    {
+        $booking = Booking::find($id);
+        return view('ui.my-bookings.file-booking-result', compact('booking'));
+    }
 }
