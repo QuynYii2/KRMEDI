@@ -62,14 +62,23 @@
             iframes[i].style.display = 'none';
         }
 
+        var embeds = document.getElementsByTagName('embed');
+        for (var j = 0; j < embeds.length; j++) {
+            embeds[j].style.display = 'none';
+        }
+
         var selectedIframe = document.getElementById('iframe' + index);
+        var selectedEmbed = document.getElementById('embed' + index);
         if (selectedIframe) {
             selectedIframe.style.display = 'block';
         }
+        if (selectedEmbed) {
+            selectedEmbed.style.display = 'block';
+        }
 
         var buttons = document.getElementsByTagName('button');
-        for (var j = 0; j < buttons.length; j++) {
-            buttons[j].classList.remove('active');
+        for (var k = 0; k < buttons.length; k++) {
+            buttons[k].classList.remove('active');
         }
 
         var selectedButton = document.getElementById('btn' + index);
