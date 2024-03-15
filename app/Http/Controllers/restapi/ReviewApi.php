@@ -41,7 +41,7 @@ class ReviewApi extends Controller
 
         $mergedCollection = $reviews->concat($review_users); // Use concat() instead of merge() to preserve the ordering
 
-        $sortedCollection = $mergedCollection->sortByDesc('id');
+        $sortedCollection = $mergedCollection->sortByDesc('id')->values()->toArray();;
         return response()->json($sortedCollection);
     }
 
