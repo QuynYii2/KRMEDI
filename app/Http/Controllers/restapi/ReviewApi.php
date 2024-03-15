@@ -25,7 +25,7 @@ class ReviewApi extends Controller
             ->where('status', ReviewStatus::APPROVED)
             ->where('clinic_id', $id)
             ->where('user_id', 0)
-            ->orderByDesc('id', 'asc')
+            ->orderByDesc('id')
             ->get();
 
         $review_users = DB::table('reviews')
@@ -33,7 +33,7 @@ class ReviewApi extends Controller
             ->where('reviews.clinic_id', $id)
             ->join('users', 'users.id', '=', 'reviews.user_id')
             ->select('reviews.*', 'users.points')
-            ->orderByDesc('reviews.id', 'asc')
+            ->orderByDesc('reviews.id')
             ->get();
 
         $mergedCollection = $reviews->merge($review_users);
