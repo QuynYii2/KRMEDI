@@ -37,14 +37,17 @@
                     width="80%" height="500"
                     style="border: none; {{ $index === 0 ? 'display: block;' : 'display: none;' }}"></iframe>
             @elseif ($fileType == 'pdf')
-                <embed src="{{ url(asset($file['url'])) }}" type="application/pdf" width="80%" height="800"
+                <embed id="iframe{{ $index }}" src="{{ url(asset($file['url'])) }}" type="application/pdf"
+                    width="80%" height="800"
                     style="border: none; {{ $index === 0 ? 'display: block;' : 'display: none;' }}">
             @elseif ($fileType == 'docx')
-                <iframe src="https://view.officeapps.live.com/op/view.aspx?src={{ url(asset($file['url'])) }}"
+                <iframe id="iframe{{ $index }}"
+                    src="https://view.officeapps.live.com/op/view.aspx?src={{ url(asset($file['url'])) }}"
                     width="80%" height="800"
                     style="border: none; {{ $index === 0 ? 'display: block;' : 'display: none;' }}"></iframe>
             @else
-                <iframe src="{{ url(asset($file['url'])) }}" width="80%" height="800"
+                <iframe id="iframe{{ $index }}" src="{{ url(asset($file['url'])) }}" width="80%"
+                    height="800"
                     style="border: none; {{ $index === 0 ? 'display: block;' : 'display: none;' }}"></iframe>
             @endif
         @empty
