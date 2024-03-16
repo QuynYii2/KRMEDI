@@ -83,6 +83,15 @@
                     <input type="checkbox" name="is_result" {{ $bookings_edit->is_result == 1 ? 'checked' : '' }}
                         class="is_result" id="is_result" value="1">
                     <label for="is_result">{{ __('home.Result') }}</label>
+                    @if (Auth::user()->extend['isActivated'])
+                        @if (
+                            $bookings_edit->is_result == 1 &&
+                                $bookings_edit->status === \App\Enums\BookingStatus::COMPLETE &&
+                                $user_zalo_id != 0)
+                            <a href="{{ route('admin.send.booking.result', ['id' => $bookings_edit->id, 'userId' => $user_zalo_id]) }}"
+                                class="btn btn-outline-dark ms-5">Gửi thông báo qua zalo</a>
+                        @endif
+                    @endif
                 </div>
             </div>
             <div class="row" id="showReasonCancel">
@@ -124,9 +133,11 @@
                                         value="{{ $item['fileUrl'] }}">
                                 </div>
                             </div>
-                            <div class="col-md-3 viewFile">
-                                <a href="{{ asset($item['fileUrl']) }}">Xem tài liệu khám</a>
-                            </div>
+                            @if (Storage::exists(str_replace('/storage', 'public', $item['fileUrl'])))
+                                <div class="col-md-3 viewFile">
+                                    <a target="_blank" href="{{ asset($item['fileUrl']) }}">Xem tài liệu khám</a>
+                                </div>
+                            @endif
                         </div>
                     @empty
                         <div class="d-flex align-items-center row repeater-item">
@@ -159,8 +170,10 @@
 
             <input type="text" name="services" id="services" class="form-control d-none">
             @if ($bookings_edit->is_result == 1 && $bookings_edit->status === \App\Enums\BookingStatus::COMPLETE)
-                <button type="button" class="btn btn-success mt-4 me-2"><i class="fa-regular fa-eye"
-                    onclick="window.location.href = '{{ route('web.users.booking.result', ['id' => $bookings_edit->id]) }}';"></i></button>
+                @if (isset($bookings_edit->extend['booking_results']))
+                    <button type="button" class="btn btn-success mt-4 me-2"><i class="fa-regular fa-eye"
+                            onclick="window.location.href = '{{ route('web.users.booking.result', ['id' => $bookings_edit->id]) }}';"></i></button>
+                @endif
             @endif
             <button type="submit" class="btn btn-primary up-date-button mt-4">{{ __('home.Save') }}</button>
         </form>

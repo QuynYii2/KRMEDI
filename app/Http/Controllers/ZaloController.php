@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Constants;
+use App\Models\Booking;
 use App\Models\User;
 use App\Models\ZaloFollower;
 use Exception;
@@ -41,15 +42,27 @@ class ZaloController extends Controller
         $this->middleware(function ($request, $next) {
             $this->zalo = $this->main();
             //Check access token valid
+            $currentMethod = app('request')->route()->getActionMethod();
+            if ($currentMethod == "getParameter" || $currentMethod == "getToken") {
+                return $next($request);
+            }
             $checkOA = $this->getOAInformation();
+            if ($checkOA instanceof JsonResponse) {
+                $error = json_decode($checkOA->getContent())->error ?? "";
+                if ($error == "You must provide an access token.") {
+                    return redirect($this->getAuthCode(false));
+                }
+            }
             if (isset($checkOA['error']) && $checkOA['error'] == 0) {
                 return $next($request);
             } else {
                 $statusCode = json_decode($checkOA->getContent())->code ?? "";
                 if ($statusCode == -216) {
                     $this->getRefreshAccessToken();
+                    return $next($request);
+                } else {
+                    throw new Exception('Something went wrong');
                 }
-                return $next($request);
             }
         });
     }
@@ -892,10 +905,57 @@ class ZaloController extends Controller
                     ->first();
                 $adminRefreshToken = $admin->extend['refresh_token_zalo'];
                 $getRefreshToken = $this->getRefreshAccessToken($adminRefreshToken);
-                if($getRefreshToken['status'] == 200){
+                if ($getRefreshToken['status'] == 200) {
                     return response()->json(['error' => 1, 'message' => 'refresh token success']);
                 }
             }
+            return response()->json(['error' => -1, 'message' => $e->getMessage()], 404);
+        }
+    }
+
+    public function sendBookingResult($id, $userId)
+    {
+        try {
+            $guest = ZaloFollower::where('user_id', $userId)->first();
+            $booking = Booking::with('clinic')->find($id);
+
+            $msgBuilder = new MessageBuilder(MessageBuilder::MSG_TYPE_PROMOTION);
+            $msgBuilder->withUserId($userId);
+
+            $bannerElement = array(
+                'image_url' => 'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/311942959/original/c064dac2df0c204b234b395ece39fa4f9d87661e/medical-website-healthcare-website-clinic-website-doctor-website-dental-website-22dd.jpg',
+                'type' => 'banner'
+            );
+            $msgBuilder->addElement($bannerElement);
+
+            $headerElement = array(
+                'content' => 'Xin chào quý khách ' . $guest->name . ',',
+                'align' => 'center',
+                'type' => 'header'
+            );
+            $msgBuilder->addElement($headerElement);
+
+            $text1Element = array(
+                'align' => 'left',
+                'content' => 'Cảm ơn quý khách đã sử dụng dịch vụ tại ' . $booking->clinic->name . '. Quý khách có thể theo dõi thông tin khám chữa bệnh ngày ' . date('d/m/Y', strtotime($booking->check_in)) . ' tại link sau.',
+                'type' => 'text'
+            );
+            $msgBuilder->addElement($text1Element);
+
+            $actionOpenUrl = $msgBuilder->buildActionOpenURL(route('web.users.booking.result', ['id' => $id]));
+            $msgBuilder->addButton('Tìm hiểu thêm', '', $actionOpenUrl);
+
+            $msgPromotion = $msgBuilder->build();
+            // send request
+            $response = $this->zalo->post(ZaloEndPoint::API_OA_SEND_PROMOTION_MESSAGE_V3, $this->access_token, $msgPromotion);
+            $result = $response->getDecodedBody();
+            if ($result['error'] != 0) {
+                //Err
+                toast('Something went wrong', 'error', 'top-left');
+            }
+            toast('Successfully', 'success', 'top-left');
+            return back();
+        } catch (\Exception $e) {
             return response()->json(['error' => -1, 'message' => $e->getMessage()], 404);
         }
     }

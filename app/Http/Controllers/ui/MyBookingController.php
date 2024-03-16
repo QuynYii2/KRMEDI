@@ -10,6 +10,7 @@ use App\Http\Controllers\restapi\BookingResultApi;
 use App\Models\Booking;
 use App\Models\BookingResult;
 use App\Models\ServiceClinic;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
@@ -101,8 +102,17 @@ class MyBookingController extends Controller
 
     public function fileBookingResult($id)
     {
-        $booking = Booking::find($id);
-        $bookingFiles = $booking->extend['booking_results'];
-        return view('ui.my-bookings.file-booking-result', compact('bookingFiles'));
+        try {
+            $booking = Booking::findOrFail($id);
+
+            $bookingFiles = $booking->extend['booking_results'] ?? [];
+
+            if (empty($bookingFiles)) {
+                return response()->json(['error' => -1, 'message' => 'An error occurred while getting booking files.']);
+            }
+            return view('ui.my-bookings.file-booking-result', compact('bookingFiles'));
+        } catch (Throwable $e) {
+            return response()->json(['error' => -1, 'message' => $e->getMessage()]);
+        }
     }
 }

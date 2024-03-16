@@ -103,6 +103,10 @@ class BookingController extends Controller
         $services = ServiceClinic::where('status', ServiceClinicStatus::ACTIVE)->get();
         $isAdmin = (new MainController())->checkAdmin();
 
+        $userId = $bookings_edit->user_id;
+        $userFollower = ZaloFollower::where('extend->user_id', $userId)->first();
+        $user_zalo_id = $userFollower->user_id ?? 0;
+
         $reflector = new \ReflectionClass('App\Enums\ReasonCancel');
         $reasons = $reflector->getConstants();
 
@@ -125,7 +129,7 @@ class BookingController extends Controller
         }
 
         if ($owner == Auth::id() || $isAdmin) {
-            return view('admin.booking.tab-edit-booking', compact('bookings_edit', 'isAdmin', 'services', 'reasons', 'repeaterItems'));
+            return view('admin.booking.tab-edit-booking', compact('bookings_edit', 'isAdmin', 'services', 'reasons', 'repeaterItems', 'user_zalo_id'));
         } else {
             session()->flash('error', 'You do not have permission.');
             return \redirect()->back();

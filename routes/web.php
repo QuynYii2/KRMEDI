@@ -574,6 +574,8 @@ Route::group(['prefix' => 'route-ui', 'middleware' => 'jwt'], function () {
 Route::group(['prefix' => 'staff-ui', 'middleware' => ['business']], function () {
     Route::get('zalo-oa', [ZaloController::class, 'manageFollower'])->name('view.admin.user.zalo');
     Route::get('sync-follower-zalo-oa', [ZaloController::class, 'syncFollower'])->name('admin.sync.user.zalo');
+    
+    Route::get('send-booking-result/{id}/{userId}', [ZaloController::class, 'sendBookingResult'])->name('admin.send.booking.result');
 });
 
 /* List Api*/

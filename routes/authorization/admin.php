@@ -9,7 +9,6 @@ use App\Http\Controllers\restapi\admin\AdminUserApi;
 use App\Http\Controllers\restapi\admin\AminServiceClinicApi;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ShortVideoController;
-use App\Http\Controllers\ZaloController;
 use Illuminate\Support\Facades\Route;
 
 /*
