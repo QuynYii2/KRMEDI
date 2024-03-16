@@ -40,26 +40,29 @@ class BusinessApi extends Controller
     {
         $name = $request->input('name');
 
-        $name = (new MainController())->convertVietnameseToAscii($name);
+        $en_name = (new MainController())->convertVietnameseToAscii($name);
 
         $clinics = DB::table('clinics')
             ->join('users', 'users.id', '=', 'clinics.user_id')
             ->where('clinics.status', ClinicStatus::ACTIVE)
-            ->where(function ($query) use ($name) {
-                $query->orWhere(DB::raw("LOWER(CONVERT(clinics.name USING utf8) COLLATE utf8_general_ci)"), 'like', '%' . strtolower($name) . '%');
+            ->where(function ($query) use ($name, $en_name) {
+                $query->where(DB::raw('LOWER(clinics.name)'), 'like', '%' . strtolower($name) . '%')
+                    ->orWhere(DB::raw('LOWER(clinics.name_en)'), 'like', '%' . strtolower($en_name) . '%');
             })
-            ->orWhere(function ($query) use ($name) {
-                $query->whereIn('department', function ($subQuery) use ($name) {
+            ->orWhere(function ($query) use ($name, $en_name) {
+                $query->whereIn('department', function ($subQuery) use ($name, $en_name) {
                     $subQuery->select('id')
                         ->from('departments')
-                        ->where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($name) . '%');
+                        ->where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($name) . '%')
+                        ->orWhere(DB::raw('LOWER(name_en)'), 'like', '%' . strtolower($en_name) . '%');
                 });
             })
-            ->orWhere(function ($query) use ($name) {
-                $query->whereIn('symptom', function ($subQuery) use ($name) {
+            ->orWhere(function ($query) use ($name, $en_name) {
+                $query->whereIn('symptom', function ($subQuery) use ($name, $en_name) {
                     $subQuery->select('id')
                         ->from('symptoms')
-                        ->where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($name) . '%');
+                        ->where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($name) . '%')
+                        ->orWhere(DB::raw('LOWER(name_en)'), 'like', '%' . strtolower($en_name) . '%');
                 });
             })
             ->select('clinics.*', 'users.email')
