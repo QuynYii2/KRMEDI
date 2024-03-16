@@ -46,7 +46,7 @@ class BusinessApi extends Controller
             ->join('users', 'users.id', '=', 'clinics.user_id')
             ->where('clinics.status', ClinicStatus::ACTIVE)
             ->where(function ($query) use ($name) {
-                $query->orWhere(DB::raw('LOWER(clinics.name)'), 'like', '%' . strtolower($name) . '%');
+                $query->orWhere(DB::raw("LOWER(CONVERT(clinics.name USING utf8) COLLATE utf8_general_ci)"), 'like', '%' . strtolower($name) . '%');
             })
             ->orWhere(function ($query) use ($name) {
                 $query->whereIn('department', function ($subQuery) use ($name) {
