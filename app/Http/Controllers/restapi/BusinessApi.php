@@ -40,28 +40,28 @@ class BusinessApi extends Controller
     {
         $name = $request->input('name');
 
-        $name = (new MainController())->vn_to_str($name);
+        $name = (new MainController())->convertVietnameseToAscii($name);
 
         $clinics = DB::table('clinics')
             ->join('users', 'users.id', '=', 'clinics.user_id')
-            ->when($name, function ($query) use ($name) {
+            ->where('clinics.status', ClinicStatus::ACTIVE)
+            ->where(function ($query) use ($name) {
                 $query->orWhere(DB::raw('LOWER(clinics.name)'), 'like', '%' . strtolower($name) . '%');
             })
-            ->when($name, function ($query) use ($name) {
-                $departments = Department::where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($name) . '%')->get();
-                $arrayDepartmentID = $departments->pluck('id')->toArray();
-                if ($arrayDepartmentID) {
-                    $query->orWhereRaw("FIND_IN_SET(?, department) > 0", $arrayDepartmentID);
-                }
+            ->orWhere(function ($query) use ($name) {
+                $query->whereIn('department', function ($subQuery) use ($name) {
+                    $subQuery->select('id')
+                        ->from('departments')
+                        ->where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($name) . '%');
+                });
             })
-            ->when($name, function ($query) use ($name) {
-                $symptoms = Symptom::where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($name) . '%')->get();
-                $arraySymptomID = $symptoms->pluck('id')->toArray();
-                if ($arraySymptomID) {
-                    $query->orWhereRaw("FIND_IN_SET(?, symptom) > 0", $arraySymptomID);
-                }
+            ->orWhere(function ($query) use ($name) {
+                $query->whereIn('symptom', function ($subQuery) use ($name) {
+                    $subQuery->select('id')
+                        ->from('symptoms')
+                        ->where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($name) . '%');
+                });
             })
-            ->where('clinics.status', ClinicStatus::ACTIVE)
             ->select('clinics.*', 'users.email')
             ->cursor()
             ->map(function ($item) {
@@ -250,6 +250,5 @@ class BusinessApi extends Controller
 
     public function filter(Request $request)
     {
-
     }
 }
