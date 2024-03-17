@@ -53,6 +53,7 @@ class BusinessApi extends Controller
                 $query->whereIn('department', function ($subQuery) use ($name, $en_name) {
                     $subQuery->select('id')
                         ->from('departments')
+                        ->where('isFilter', 1)
                         ->where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($name) . '%')
                         ->orWhere(DB::raw('LOWER(name_en)'), 'like', '%' . strtolower($en_name) . '%');
                 });
@@ -61,6 +62,7 @@ class BusinessApi extends Controller
                 $query->whereIn('symptom', function ($subQuery) use ($name, $en_name) {
                     $subQuery->select('id')
                         ->from('symptoms')
+                        ->where('isFilter', 1)
                         ->where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($name) . '%')
                         ->orWhere(DB::raw('LOWER(name_en)'), 'like', '%' . strtolower($en_name) . '%');
                 });
@@ -78,10 +80,14 @@ class BusinessApi extends Controller
                 $addressC = Commune::where('id', $array[3] ?? null)->first();
                 /*Find department*/
                 $list_departments = explode(',', $item->department);
-                $departments = Department::whereIn('id', $list_departments)->get();
+                $departments = Department::whereIn('id', $list_departments)
+                    ->where('isFilter', 1)
+                    ->get();
                 /*Find symptom*/
                 $list_symptoms = explode(',', $item->symptom);
-                $symptoms = Symptom::whereIn('id', $list_symptoms)->get();
+                $symptoms = Symptom::whereIn('id', $list_symptoms)
+                    ->where('isFilter', 1)
+                    ->get();
                 /* Convert to array*/
                 $clinic = (array)$item;
                 /* Count and calc review*/
@@ -148,6 +154,7 @@ class BusinessApi extends Controller
     {
         return DB::table('clinics')
             ->join('users', 'users.id', '=', 'clinics.user_id')
+            ->where('clinics.status', ClinicStatus::ACTIVE)
             ->when($type, function ($query) use ($type) {
                 return $query->where('clinics.type', $type);
             })
@@ -186,7 +193,6 @@ class BusinessApi extends Controller
             ->when($workHouse, function ($query) use ($workHouse) {
                 return $query->where('time_work', $workHouse);
             })
-            ->where('clinics.status', ClinicStatus::ACTIVE)
             ->select('clinics.*', 'users.email')
             ->cursor()
             ->map(function ($item) {
@@ -202,10 +208,14 @@ class BusinessApi extends Controller
                 $addressC = Commune::where('id', $array[3] ?? null)->first();
                 /*Find department*/
                 $list_departments = explode(',', $item->department);
-                $departments = Department::whereIn('id', $list_departments)->get();
+                $departments = Department::whereIn('id', $list_departments)
+                    ->where('isFilter', 1)
+                    ->get();
                 /*Find symptom*/
                 $list_symptoms = explode(',', $item->symptom);
-                $symptoms = Symptom::whereIn('id', $list_symptoms)->get();
+                $symptoms = Symptom::whereIn('id', $list_symptoms)
+                    ->where('isFilter', 1)
+                    ->get();
                 /* Convert to array*/
                 $clinic = (array)$item;
                 /* Count and calc review*/
