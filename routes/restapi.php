@@ -190,6 +190,7 @@ Route::group(['prefix' => 'symptoms'], function () {
 });
 
 Route::get('/users/by-role/{role_id}', [\App\Http\Controllers\ProfileController::class, 'getUsersByRoleId'])->name('role.user');
+Route::get('/getUsers/{role_id}', [\App\Http\Controllers\ProfileController::class, 'getUsersWithRoleId'])->name('role.user.list');
 Route::get('/service/{serviceId}', [\App\Http\Controllers\restapi\admin\AminServiceClinicApi::class, 'getServiceById'])->name('service.by.id');
 
 /* Booking result*/

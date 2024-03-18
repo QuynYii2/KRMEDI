@@ -225,4 +225,11 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(ProductMedicine::class);
     }
+
+    public function getUsersByRoleName($roleName)
+    {
+        return $this->whereHas('roles', function ($query) use ($roleName) {
+            $query->where('name', $roleName);
+        })->get();
+    }
 }

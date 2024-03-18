@@ -2,6 +2,10 @@
 @section('title')
     {{ __('home.Edit') }}
 @endsection
+@section('page-style')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+@endsection
 @section('main-content')
     <div class="container-fluid">
         <h1 class="h3 mb-4 text-gray-800">{{ __('home.List Booking') }}</h1>
@@ -35,7 +39,7 @@
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="doctor_id">{{ __('home.Doctor Name') }}</label>
-                    @php
+                    {{-- @php
                         $doctor = \App\Models\User::where('id', $bookings_edit->doctor_id)->first();
                         $doctor_info = '';
                         if ($doctor) {
@@ -43,7 +47,12 @@
                         }
                     @endphp
                     <input type="text" class="form-control" id="doctor_id" name="doctor_id" value="{{ $doctor_info }}"
-                        disabled>
+                        disabled> --}}
+                    <select class="form-select" id="doctor_id" name="doctor_id">
+                        @if ($doctor_id && $doctor_name)
+                            <option value="{{ $doctor_id }}">{{ $doctor_name }}</option>
+                        @endif
+                    </select>
                 </div>
             </div>
             <div class="row">
@@ -321,10 +330,10 @@
         // getInputServiceName();
     </script>
     <script>
-        let accessToken = `Bearer ` + token;
-        let headers = {
-            "Authorization": accessToken
-        };
+        // let accessToken = `Bearer ` + token;
+        // let headers = {
+        //     "Authorization": accessToken
+        // };
 
         $(document).ready(function() {
             $(window).on('popstate', function() {
@@ -594,6 +603,41 @@
             // Check conditions when is_result checkbox or booking_status select changes
             $("#is_result, #booking_status").change(function() {
                 checkConditions();
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#doctor_id').select2({
+                ajax: {
+                    url: "{{ route('role.user.list', ['role_id' => 39]) }}",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            name: params.term, // Pass the search term as the 'name' parameter
+                        };
+                    },
+                    processResults: function(data) {
+                        if (Array.isArray(data)) {
+                            return {
+                                results: data.map(function(user) {
+                                    return {
+                                        id: user.id,
+                                        text: user.name
+                                    };
+                                })
+                            };
+                        } else {
+                            return {
+                                results: []
+                            };
+                        }
+                    },
+                    cache: true
+                },
+                minimumInputLength: 1
             });
         });
     </script>
