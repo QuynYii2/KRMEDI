@@ -251,11 +251,11 @@ class BookingController extends Controller
 
                 if (isset($selectValues) && isset($fileInputs)) {
                     $validator = Validator::make($request->all(), [
-                        'file.*' => 'mimes:pdf,xlsx,docx',
+                        'file.*' => 'mimes:pdf',
                     ]);
 
                     if ($validator->fails()) {
-                        alert('Error', 'Tài liệu phải là định dạng PDF, XLSX hoặc DOCX', 'error');
+                        alert('Error', 'Tài liệu phải là định dạng PDF', 'error');
                         return redirect()->back()->withErrors($validator)->withInput();
                     }
 

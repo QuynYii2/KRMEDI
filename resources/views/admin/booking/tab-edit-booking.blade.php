@@ -83,7 +83,7 @@
                     <input type="checkbox" name="is_result" {{ $bookings_edit->is_result == 1 ? 'checked' : '' }}
                         class="is_result" id="is_result" value="1">
                     <label for="is_result">{{ __('home.Result') }}</label>
-                    @if (Auth::user()->extend['isActivated'])
+                    @if (isset(Auth::user()->extend['isActivated']) && Auth::user()->extend['isActivated'])
                         @if (
                             $bookings_edit->is_result == 1 &&
                                 $bookings_edit->status === \App\Enums\BookingStatus::COMPLETE &&
@@ -98,7 +98,8 @@
 
             </div>
 
-            @if ($bookings_edit->is_result == 1 && $bookings_edit->status === \App\Enums\BookingStatus::COMPLETE)
+            {{-- @if ($bookings_edit->is_result == 1 && $bookings_edit->status === \App\Enums\BookingStatus::COMPLETE) --}}
+            <div id="trackFile" style="display: none;">
                 <div id="repeater">
                     @forelse ($repeaterItems as $index => $item)
                         <div class="d-flex align-items-center row repeater-item">
@@ -128,7 +129,7 @@
                                 <div class="form-group">
                                     <label for="file">Tài liệu khám bệnh:</label>
                                     <input type="file" name="file[{{ $index }}]" class="form-control-file"
-                                        accept=".pdf, .xlsx, .docx">
+                                        accept=".pdf">
                                     <input type="hidden" name="file_urls[{{ $index }}]"
                                         value="{{ $item['fileUrl'] }}">
                                 </div>
@@ -165,7 +166,8 @@
                 </div>
                 <button type="button" class="btn btn-primary" id="addBtn"><i class="fa-solid fa-plus"></i></button>
                 </br>
-            @endif
+            </div>
+            {{-- @endif --}}
 
 
             <input type="text" name="services" id="services" class="form-control d-none">
@@ -541,6 +543,7 @@
     </script>
 
     <script>
+        //REPEATER
         $(document).ready(function() {
             var counter = 2;
 
@@ -567,6 +570,30 @@
                 $('.delete-btn').each(function(idx) {
                     $(this).data('index', idx);
                 });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            // Function to check the conditions and show/hide the trackFile div
+            function checkConditions() {
+                var isChecked = $("#is_result").is(":checked");
+                var selectedValue = $("#booking_status").val();
+
+                if (isChecked && selectedValue === "COMPLETE") {
+                    $("#trackFile").show();
+                } else {
+                    $("#trackFile").hide();
+                }
+            }
+
+            // Check conditions on page load
+            checkConditions();
+
+            // Check conditions when is_result checkbox or booking_status select changes
+            $("#is_result, #booking_status").change(function() {
+                checkConditions();
             });
         });
     </script>

@@ -20,10 +20,19 @@
         color: white
     }
 
+    /* Styles for viewport widths up to 768px */
     @media (max-width: 768px) {
         .iframe-container {
             width: 500px !important;
             height: 570px !important;
+        }
+    }
+
+    /* Styles for viewport widths between 769px and 1024px */
+    @media (min-width: 769px) and (max-width: 1024px) {
+        .iframe-container {
+            width: 560px !important;
+            height: 650px !important;
         }
     }
 </style>
@@ -51,10 +60,11 @@
             @endphp
             <br>
             @if ($fileType == 'pdf')
-                <div class="position-relative iframe-container" style="aspect-ratio: 5/7; width: 800px;">
+                <div class="position-relative iframe-container"
+                    style="aspect-ratio: 5/7; width: 800px;{{ $index === 0 ? 'display: block;' : 'display: none;' }}">
                     <iframe id="iframe{{ $index }}" src="{{ url(asset($file['url'])) }}#toolbar=0"
-                        style="border: none; width: 100%; height: 100%; {{ $index === 0 ? 'display: block;' : 'display: none;' }}"
-                        frameborder="0" scrolling="no" allowfullscreen="">
+                        style="border: none; width: 100%; height: 100%;" frameborder="0" scrolling="no"
+                        allowfullscreen="">
                     </iframe>
                     <a class="download-button text-decoration-none mt-2 me-2" href="{{ url(asset($file['url'])) }}"
                         download>
@@ -67,8 +77,7 @@
                 </div>
             @else
                 <iframe id="iframe{{ $index }}" src="{{ url(asset($file['url'])) }}" width="80%"
-                    height="800"
-                    style="border: none; {{ $index === 0 ? 'display: block;' : 'display: none;' }}"></iframe>
+                    height="800" style="border: none"></iframe>
             @endif
         @empty
         @endforelse
@@ -77,12 +86,12 @@
 
 <script>
     function showIframe(index) {
-        var iframes = document.getElementsByTagName('iframe');
+        var iframes = document.getElementsByTagName('iframe-container');
         for (var i = 0; i < iframes.length; i++) {
             iframes[i].style.display = 'none';
         }
 
-        var selectedIframe = document.getElementById('iframe' + index);
+        var selectedIframe = document.getElementById('iframe-container' + index);
         if (selectedIframe) {
             selectedIframe.style.display = 'block';
         }
