@@ -183,8 +183,10 @@ class DoctorReviewApi extends Controller
             $calcReview = ($totalReview > 0) ? ($totalStar / $totalReview) : 0;
 
             $user = User::find($review->doctor_id);
-            $user->average_star = $calcReview;
-            $user->save();
+            if ($user) {
+                $user->average_star = $calcReview;
+                $user->save();
+            }
         }
     }
 
