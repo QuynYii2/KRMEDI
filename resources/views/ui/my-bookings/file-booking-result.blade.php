@@ -37,9 +37,15 @@
                     width="80%" height="500"
                     style="border: none; {{ $index === 0 ? 'display: block;' : 'display: none;' }}"></iframe>
             @elseif ($fileType == 'pdf')
-                <embed id="iframe{{ $index }}" src="{{ url(asset($file['url'])) }}" type="application/pdf"
+                {{-- <embed id="iframe{{ $index }}" src="{{ url(asset($file['url'])) }}" type="application/pdf"
                     width="80%" height="800"
-                    style="border: none; {{ $index === 0 ? 'display: block;' : 'display: none;' }}">
+                    style="border: none; {{ $index === 0 ? 'display: block;' : 'display: none;' }}"> --}}
+                <div class="row justify-content-center">
+                    <iframe id="iframe{{ $index }}" src="{{ url(asset($file['url'])) }}#toolbar=0" width="100%"
+                        height="400"
+                        style="width: 95%; transform: scale(2); border: none; {{ $index === 0 ? 'display: block;' : 'display: none;' }}">
+                    </iframe>
+                </div>
             @elseif ($fileType == 'docx')
                 <iframe id="iframe{{ $index }}"
                     src="https://view.officeapps.live.com/op/view.aspx?src={{ url(asset($file['url'])) }}"

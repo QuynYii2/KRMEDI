@@ -203,6 +203,7 @@ class UserApi extends Controller
 
             $gender = $request->input('gender');
             $birthday = $request->input('birthday');
+            $detail_address = $request->input('detail_address');
 
             $user = User::find($userID);
 
@@ -255,6 +256,8 @@ class UserApi extends Controller
 
                 $user->gender = $gender;
                 $user->birthday = $birthday;
+
+                $user->detail_address = $detail_address;
 
                 $success = $user->save();
                 if ($success) {
