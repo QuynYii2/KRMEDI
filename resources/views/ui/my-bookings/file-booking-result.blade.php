@@ -6,6 +6,15 @@
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
 <style>
+    .qr-container {
+        position: absolute;
+        bottom: 3%;
+        left: 3%;
+        z-index: 2;
+        pointer-events: none;
+        max-width: 100%;
+    }
+
     .download-button {
         position: absolute;
         top: 0;
@@ -26,6 +35,15 @@
             width: 500px !important;
             height: 570px !important;
         }
+
+        .qr-container {
+            bottom: -3%;
+            left: 12%;
+        }
+
+        .qr-container svg {
+            width: 80px;
+        }
     }
 
     /* Styles for viewport widths between 769px and 1024px */
@@ -33,6 +51,15 @@
         .iframe-container {
             width: 560px !important;
             height: 650px !important;
+        }
+
+        .qr-container {
+            bottom: 0%;
+            left: 12%;
+        }
+
+        .qr-container svg {
+            width: 80px;
         }
     }
 </style>
@@ -66,6 +93,11 @@
                         style="border: none; width: 100%; height: 100%;" frameborder="0" scrolling="no"
                         allowfullscreen="">
                     </iframe>
+                    @if ($qrCodes)
+                        <div class="qr-container">
+                            {!! $qrCodes !!}
+                        </div>
+                    @endif
                     <a class="download-button text-decoration-none mt-2 me-2" href="{{ url(asset($file['url'])) }}"
                         download>
                         <svg class="me-1" width="20" height="20" viewBox="0 0 24 24" fill="none"
