@@ -579,4 +579,19 @@ class BookingApi extends Controller
         }
     }
 
+    public function fileBookingResult($booking_id)
+    {
+        try {
+            if (!$booking_id) {
+                return response()->json(['error' => -1, 'message' => 'Booking Id is required'], 400);
+            }
+            
+            $detail = Booking::with('clinic.users', 'user', 'doctor')->find($booking_id);
+
+            return response()->json(['error' => 0, 'data' => $detail]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => -1, 'message' => $e->getMessage()]);
+        }
+    }
+
 }

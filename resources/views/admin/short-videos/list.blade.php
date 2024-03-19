@@ -16,14 +16,14 @@
         @endif
         <table class="table" id="tableListVideo">
             <thead>
-            <tr>
-                <th scope="col">{{ __('home.Title') }}</th>
-                <th scope="col">{{ __('home.views') }}</th>
-                <th scope="col">{{ __('home.shares') }}</th>
-                <th scope="col">{{ __('home.reactions') }}</th>
-                <th scope="col">{{ __('home.Status') }}</th>
-                <th scope="col">{{ __('home.Active') }}</th>
-            </tr>
+                <tr>
+                    <th scope="col">{{ __('home.Title') }}</th>
+                    <th scope="col">{{ __('home.views') }}</th>
+                    <th scope="col">{{ __('home.shares') }}</th>
+                    <th scope="col">{{ __('home.reactions') }}</th>
+                    <th scope="col">{{ __('home.Status') }}</th>
+                    <th scope="col">{{ __('home.Active') }}</th>
+                </tr>
             </thead>
             <tbody id="tbodyListVideo">
 
@@ -43,10 +43,10 @@
                 headers: {
                     "Authorization": accessToken
                 },
-                success: function (response) {
+                success: function(response) {
                     renderVideo(response);
                 },
-                error: function (error) {
+                error: function(error) {
                     console.log(error);
                 }
             });
@@ -56,17 +56,11 @@
         function renderVideo(response) {
             let html = ``;
             for (let i = 0; i < response.length; i++) {
-                let detail = `{{ route('view.admin.videos.detail', ['id'=>':id']) }}`;
+                let detail = `{{ route('view.admin.videos.detail', ['id' => ':id']) }}`;
                 let data = response[i];
                 detail = detail.replace(':id', data.id);
                 html = html + ` <tr>
-                        <td>${data.title}
-                        @if(locationHelper() == 'vi')
-                ${data.title}
-                @else
-                ${data.title_en}
-                @endif
-                        </td>
+                        <td>${data.title}</td>
                         <td>${data.views}</td>
                         <td>${data.shares}</td>
                         <td>${data.reactions}</td>
@@ -89,7 +83,7 @@
         }
 
         async function confirmDeleteVideo(id) {
-            let url = `{{ route('api.medical.short.videos.delete', ['id'=>':id']) }}`;
+            let url = `{{ route('api.medical.short.videos.delete', ['id' => ':id']) }}`;
             url = url.replace(':id', id);
             await $.ajax({
                 url: url,
@@ -97,12 +91,12 @@
                 headers: {
                     "Authorization": accessToken
                 },
-                success: function (response) {
+                success: function(response) {
                     console.log(response);
                     callListVideo();
                     alert('Delete success!')
                 },
-                error: function (error) {
+                error: function(error) {
                     console.log(error);
                     alert('Delete error!')
                 }
@@ -110,4 +104,3 @@
         }
     </script>
 @endsection
-

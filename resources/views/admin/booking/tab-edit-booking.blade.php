@@ -2,6 +2,10 @@
 @section('title')
     {{ __('home.Edit') }}
 @endsection
+@section('page-style')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+@endsection
 @section('main-content')
     <div class="container-fluid">
         <h1 class="h3 mb-4 text-gray-800">{{ __('home.List Booking') }}</h1>
@@ -35,7 +39,7 @@
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="doctor_id">{{ __('home.Doctor Name') }}</label>
-                    @php
+                    {{-- @php
                         $doctor = \App\Models\User::where('id', $bookings_edit->doctor_id)->first();
                         $doctor_info = '';
                         if ($doctor) {
@@ -43,7 +47,12 @@
                         }
                     @endphp
                     <input type="text" class="form-control" id="doctor_id" name="doctor_id" value="{{ $doctor_info }}"
-                        disabled>
+                        disabled> --}}
+                    <select class="form-select" id="doctor_id" name="doctor_id">
+                        @if ($doctor_id && $doctor_name)
+                            <option value="{{ $doctor_id }}">{{ $doctor_name }}</option>
+                        @endif
+                    </select>
                 </div>
             </div>
             <div class="row">
@@ -83,7 +92,7 @@
                     <input type="checkbox" name="is_result" {{ $bookings_edit->is_result == 1 ? 'checked' : '' }}
                         class="is_result" id="is_result" value="1">
                     <label for="is_result">{{ __('home.Result') }}</label>
-                    @if (Auth::user()->extend['isActivated'])
+                    @if (isset(Auth::user()->extend['isActivated']) && Auth::user()->extend['isActivated'])
                         @if (
                             $bookings_edit->is_result == 1 &&
                                 $bookings_edit->status === \App\Enums\BookingStatus::COMPLETE &&
@@ -98,7 +107,8 @@
 
             </div>
 
-            @if ($bookings_edit->is_result == 1 && $bookings_edit->status === \App\Enums\BookingStatus::COMPLETE)
+            {{-- @if ($bookings_edit->is_result == 1 && $bookings_edit->status === \App\Enums\BookingStatus::COMPLETE) --}}
+            <div id="trackFile" style="display: none;">
                 <div id="repeater">
                     @forelse ($repeaterItems as $index => $item)
                         <div class="d-flex align-items-center row repeater-item">
@@ -128,7 +138,7 @@
                                 <div class="form-group">
                                     <label for="file">Tài liệu khám bệnh:</label>
                                     <input type="file" name="file[{{ $index }}]" class="form-control-file"
-                                        accept=".pdf, .xlsx, .docx">
+                                        accept=".pdf">
                                     <input type="hidden" name="file_urls[{{ $index }}]"
                                         value="{{ $item['fileUrl'] }}">
                                 </div>
@@ -165,7 +175,8 @@
                 </div>
                 <button type="button" class="btn btn-primary" id="addBtn"><i class="fa-solid fa-plus"></i></button>
                 </br>
-            @endif
+            </div>
+            {{-- @endif --}}
 
 
             <input type="text" name="services" id="services" class="form-control d-none">
@@ -319,10 +330,10 @@
         // getInputServiceName();
     </script>
     <script>
-        let accessToken = `Bearer ` + token;
-        let headers = {
-            "Authorization": accessToken
-        };
+        // let accessToken = `Bearer ` + token;
+        // let headers = {
+        //     "Authorization": accessToken
+        // };
 
         $(document).ready(function() {
             $(window).on('popstate', function() {
@@ -541,6 +552,7 @@
     </script>
 
     <script>
+        //REPEATER
         $(document).ready(function() {
             var counter = 2;
 
@@ -567,6 +579,65 @@
                 $('.delete-btn').each(function(idx) {
                     $(this).data('index', idx);
                 });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            // Function to check the conditions and show/hide the trackFile div
+            function checkConditions() {
+                var isChecked = $("#is_result").is(":checked");
+                var selectedValue = $("#booking_status").val();
+
+                if (isChecked && selectedValue === "COMPLETE") {
+                    $("#trackFile").show();
+                } else {
+                    $("#trackFile").hide();
+                }
+            }
+
+            // Check conditions on page load
+            checkConditions();
+
+            // Check conditions when is_result checkbox or booking_status select changes
+            $("#is_result, #booking_status").change(function() {
+                checkConditions();
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#doctor_id').select2({
+                ajax: {
+                    url: "{{ route('role.user.list', ['role_id' => 39]) }}",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            name: params.term, // Pass the search term as the 'name' parameter
+                        };
+                    },
+                    processResults: function(data) {
+                        if (Array.isArray(data)) {
+                            return {
+                                results: data.map(function(user) {
+                                    return {
+                                        id: user.id,
+                                        text: user.name
+                                    };
+                                })
+                            };
+                        } else {
+                            return {
+                                results: []
+                            };
+                        }
+                    },
+                    cache: true
+                },
+                minimumInputLength: 1
             });
         });
     </script>

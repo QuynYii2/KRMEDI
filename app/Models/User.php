@@ -22,7 +22,7 @@ class User extends Authenticatable implements JWTSubject
         'name', 'last_name', 'email', 'password',
         'username', 'phone', 'address_code', 'status', 'type',
         'provider_id', 'provider_name', 'prescription', 'free', 'abouts', 'abouts_en', 'abouts_lao', 'workspace',
-        'last_seen', 'extend'
+        'last_seen', 'extend', 'average_star'
     ];
 
     /**
@@ -224,5 +224,12 @@ class User extends Authenticatable implements JWTSubject
     public function productMedicines()
     {
         return $this->hasMany(ProductMedicine::class);
+    }
+
+    public function getUsersByRoleName($roleName)
+    {
+        return $this->whereHas('roles', function ($query) use ($roleName) {
+            $query->where('name', $roleName);
+        })->get();
     }
 }

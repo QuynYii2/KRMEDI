@@ -104,13 +104,18 @@ class MyBookingController extends Controller
     {
         try {
             $booking = Booking::findOrFail($id);
+            $qrCodes = null;
+            if (isset($booking->doctor_id) && $booking->doctor_id) {
+                $url = route('qr.code.show.doctor.info', $booking->doctor_id);
+                $qrCodes = QrCode::size(150)->generate($url);
+            }
 
             $bookingFiles = $booking->extend['booking_results'] ?? [];
 
             if (empty($bookingFiles)) {
                 return response()->json(['error' => -1, 'message' => 'An error occurred while getting booking files.']);
             }
-            return view('ui.my-bookings.file-booking-result', compact('bookingFiles'));
+            return view('ui.my-bookings.file-booking-result', compact('bookingFiles', 'qrCodes'));
         } catch (Throwable $e) {
             return response()->json(['error' => -1, 'message' => $e->getMessage()]);
         }

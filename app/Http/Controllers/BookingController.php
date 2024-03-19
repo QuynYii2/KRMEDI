@@ -107,6 +107,16 @@ class BookingController extends Controller
         $userFollower = ZaloFollower::where('extend->user_id', $userId)->first();
         $user_zalo_id = $userFollower->user_id ?? 0;
 
+        $doctor_id = null;
+        $doctor_name = null;
+
+        if (isset($bookings_edit->doctor_id) && $bookings_edit->doctor_id) {
+            $doctor = User::find($bookings_edit->doctor_id);
+            $doctor_id = $bookings_edit->doctor_id;
+            $doctor_name = $doctor->name;
+        }
+
+
         $reflector = new \ReflectionClass('App\Enums\ReasonCancel');
         $reasons = $reflector->getConstants();
 
@@ -129,7 +139,7 @@ class BookingController extends Controller
         }
 
         if ($owner == Auth::id() || $isAdmin) {
-            return view('admin.booking.tab-edit-booking', compact('bookings_edit', 'isAdmin', 'services', 'reasons', 'repeaterItems', 'user_zalo_id'));
+            return view('admin.booking.tab-edit-booking', compact('bookings_edit', 'isAdmin', 'services', 'reasons', 'repeaterItems', 'user_zalo_id', 'doctor_id', 'doctor_name'));
         } else {
             session()->flash('error', 'You do not have permission.');
             return \redirect()->back();
@@ -221,6 +231,7 @@ class BookingController extends Controller
             $isSendOaToUser = false;
             $booking = Booking::find($id);
             $status = $request->input('status');
+            $doctor_id = $request->input('doctor_id');
             $is_result = $request->input('is_result');
             if (!$is_result) {
                 $is_result = 0;
@@ -251,11 +262,11 @@ class BookingController extends Controller
 
                 if (isset($selectValues) && isset($fileInputs)) {
                     $validator = Validator::make($request->all(), [
-                        'file.*' => 'mimes:pdf,xlsx,docx',
+                        'file.*' => 'mimes:pdf',
                     ]);
 
                     if ($validator->fails()) {
-                        alert('Error', 'Tài liệu phải là định dạng PDF, XLSX hoặc DOCX', 'error');
+                        alert('Error', 'Tài liệu phải là định dạng PDF', 'error');
                         return redirect()->back()->withErrors($validator)->withInput();
                     }
 
@@ -293,7 +304,8 @@ class BookingController extends Controller
                 // Status has changed, send zalo OA msg to customer
                 $isSendOaToUser = true;
             }
-
+            
+            $booking->doctor_id = $doctor_id;
             $booking->is_result = $is_result;
             $booking->status = $status;
 
