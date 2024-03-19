@@ -28,10 +28,10 @@
                     </li>
                 </ul>
                 <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane fade show active" id="productList" role="tabpanel" aria-labelledby="productList-tab">
+                    <div class="tab-pane fades show active" id="productList" role="tabpanel" aria-labelledby="productList-tab">
                         @include('FleaMarket.tab-product-flea')
                     </div>
-                    <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
+                    <div class="tab-pane fades" id="review" role="tabpanel" aria-labelledby="review-tab">
                         <div class="d-flex justify-content-end align-items-center mb-md-3">
                             <a id="writeReviewBtn" class="b-radius p-2" style="border-radius: 30px; background: none" ><i class="fa-regular fa-file-lines"></i>{{ __('home.Write a review') }}</a>
                         </div>

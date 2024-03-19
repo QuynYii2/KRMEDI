@@ -240,6 +240,7 @@ class BackendProductInfoController extends Controller
             $product->status = $status;
             $product->created_by = $userID;
             $product->quantity = $quantity;
+            $product->type_product = $request->type_product;
 
             $success = $product->save();
             if ($success) {
@@ -333,6 +334,7 @@ class BackendProductInfoController extends Controller
             $product->status = $status;
             $product->updated_by = $userID;
             $product->quantity = $quantity;
+            $product->type_product = $request->type_product;
 
             $success = $product->save();
             if ($success) {

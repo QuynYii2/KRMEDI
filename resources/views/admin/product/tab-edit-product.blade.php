@@ -135,6 +135,14 @@
                     </select>
 
                 </div>
+                <div class="col-md-4 mt-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="1" @if($product->type_product == 1) checked @endif id="type_product" name="type_product">
+                        <label class="form-check-label" for="type_product">
+                            Sản phẩm theo chỉ định của bác sĩ
+                        </label>
+                    </div>
+                </div>
             </div>
 
             <div hidden="">
@@ -189,10 +197,16 @@
                 }
                 const photoGallery = $('#gallery')[0].files;
                 const photo = $('#thumbnail')[0].files[0];
+                const remember = document.getElementById("type_product");
+                let active_type = 0;
+                if (remember.checked) {
+                    active_type = 1;
+                }
                 formDataEdit.append('thumbnail', photo);
                 formDataEdit.append('status', $('#status').val());
+                formDataEdit.append('type_product', active_type);
 
-                if (isValid) {
+                if (!isValid) {
                     alert('Please check input not empty!')
                     return;
                 }

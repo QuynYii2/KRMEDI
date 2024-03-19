@@ -138,9 +138,11 @@
                                     </defs>
                                 </svg> &nbsp; ${item.location_name ?? 'Toàn quốc'}
                                 </div>
-                                <div class="prices-pro">
-                                    ${formatCurrency(item.price)} ${item.price_unit}
-                                </div>
+                                ${item.type_product == 0? `<div class="prices-pro">
+                    ${formatCurrency(item.price)} ${item.price_unit}
+                </div>`:`<div class="contact_doctor" onclick="checkDoctorOnline(${item.created_by})">
+                                    Liên hệ
+                                </div>`}
                             </div>
                         </div>
                         <div class="d-flex justify-content-end">
@@ -164,4 +166,27 @@
             }
         }
     });
+    function checkDoctorOnline(doctor_id) {
+        let accessToken = `Bearer ` + token;
+        $.ajax({
+            url: window.location.origin +'/connect/chat/check-doctor-online/'+doctor_id,
+            type: 'GET',
+            headers: {
+                'Authorization': accessToken
+            },
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(response) {
+                if (response.isOnline) {
+                    handleStartChatWithDoctor(`${doctor_id}`)
+                } else {
+                    alert('Bác sĩ hiện không online. Vui lòng liên hệ lại sau.');
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('Vui lòng đăng nhập để tiếp tục.');
+            }
+        });
+    }
 </script>

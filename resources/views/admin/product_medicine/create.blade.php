@@ -160,6 +160,14 @@
                     <input type="text" class="form-control" id="manufacturing_company"
                            name="manufacturing_company">
                 </div>
+                <div class="col-md-6">
+                    <div class="form-check mt-3 mb-3">
+                        <input class="form-check-input" type="checkbox" value="1" id="type_product" name="type_product">
+                        <label class="form-check-label" for="type_product">
+                            Sản phẩm theo chỉ định của bác sĩ
+                        </label>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <label for="side_effects">Side Effects</label>
@@ -267,9 +275,15 @@
             if (!photo) {
                 isValid = false;
             }
+            const remember = document.getElementById("type_product");
+            let active_type = 0;
+            if (remember.checked) {
+                active_type = 1;
+            }
             formData.append('user_id', '{{ Auth::user()->id }}');
             formData.append('_token', '{{ csrf_token() }}');
             formData.append('proved_by', '{{ Auth::user()->id }}');
+            formData.append('type_product', active_type);
 
             if (!isValid) {
                 alert('Please check input empty!');

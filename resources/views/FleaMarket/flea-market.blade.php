@@ -413,9 +413,12 @@
                     </defs>
                 </svg> &nbsp; ${product.location_name ?? toanQuoc }
                 </div>
-                <div class="prices-pro">
+                 ${product.type_product == 0? `<div class="prices-pro">
                     ${formatCurrency(product.price)} ${product.price_unit}
-                </div>
+                </div>`:`<div class="contact_doctor" onclick="checkDoctorOnline(${product.created_by})">
+                                    Liên hệ
+                                </div>`}
+
             </div>
         </div>
         <div class="d-flex justify-content-end">
@@ -604,9 +607,13 @@
                                     </defs>
                                 </svg> &nbsp; ${item.location_name ?? toanQuoc}
                                 </div>
-                                <div class="prices-pro">
+                                ${item.type_product == 0? `<div class="prices-pro">
                                     ${formatCurrency(item.price)} ${item.price_unit}
-                                </div>
+                                </div>`:`<div class="contact_doctor" onclick="checkDoctorOnline(${item.created_by})">
+                                    Liên hệ
+                                </div>`}
+
+
                             </div>
                         </div>
                         <div class="d-flex justify-content-end">
@@ -652,5 +659,30 @@
             }
             return 'bi-heart';
         }
+
+        function checkDoctorOnline(doctor_id) {
+            let accessToken = `Bearer ` + token;
+            $.ajax({
+                url: window.location.origin +'/connect/chat/check-doctor-online/'+doctor_id,
+                type: 'GET',
+                headers: {
+                    'Authorization': accessToken
+                },
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function(response) {
+                    if (response.isOnline) {
+                        handleStartChatWithDoctor(`${doctor_id}`)
+                    } else {
+                        alert('Bác sĩ hiện không online. Vui lòng liên hệ lại sau.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('Vui lòng đăng nhập để tiếp tục.');
+                }
+            });
+        }
+
     </script>
 @endsection
