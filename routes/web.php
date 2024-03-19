@@ -600,7 +600,7 @@ Route::group(['prefix' => 'products'], function () {
 
     // QrCode
     Route::group(['prefix' => 'qr-code'], function () {
-        Route::get('/doctor-info/{id}', [DoctorInfoController::class, 'showFromQrCode'])->name('qr.code.show.doctor.info');
+        Route::get('/doctor-info/{id}', [DoctorInfoController::class, 'showFromQrCode'])->name('qr.code.product.show.doctor.info');
     });
 });
 
