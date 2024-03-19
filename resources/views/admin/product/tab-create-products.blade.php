@@ -108,6 +108,14 @@
                             value="{{ \App\Enums\ProductStatus::ACTIVE }}">{{ \App\Enums\ProductStatus::ACTIVE }}</option>
                     </select>
                 </div>
+                <div class="col-md-4 mt-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="1" id="type_product" name="type_product">
+                        <label class="form-check-label" for="type_product">
+                            Sản phẩm theo chỉ định của bác sĩ
+                        </label>
+                    </div>
+                </div>
             </div>
             <div hidden="">
                 <label for="user_id">{{ __('home.Username') }}</label>
@@ -168,8 +176,14 @@
             if (!photo) {
                 isValid = false;
             }
+            const remember = document.getElementById("type_product");
+            let active_type = 0;
+            if (remember.checked) {
+                active_type = 1;
+            }
             formData.append('thumbnail', photo);
             formData.append('status', 'ACTIVE');
+            formData.append('type_product', active_type);
             if (isValid) {
                 try {
                     await $.ajax({

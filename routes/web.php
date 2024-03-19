@@ -441,6 +441,7 @@ Route::middleware(['auth'])->group(function () {
                 'seen-message/{id}',
                 [WidgetChatController::class, 'handleSeenMessage']
             )->name('api.backend.connect.chat.seen-message');
+            Route::get('check-doctor-online/{id}', [ChatMessageController::class,'checkDoctorOnline']);
         });
     });
     /* User view points */
@@ -511,7 +512,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('create', [PrescriptionResultController::class, 'create'])->name('view.prescription.result.create');
         Route::get('get-medicine', [PrescriptionResultController::class, 'getListMedicine'])->name('view.prescription.result.get-medicine');
     });
-    
+
     Route::group(['prefix' => 'zalo-service'], function () {
         Route::get('auth-verify', [ZaloController::class, 'getAuthCode'])->name('zalo.service.auth.verify');
         Route::get('callback', [ZaloController::class, 'getParameter'])->name('zalo.service.callback');
@@ -574,7 +575,7 @@ Route::group(['prefix' => 'route-ui', 'middleware' => 'jwt'], function () {
 Route::group(['prefix' => 'staff-ui', 'middleware' => ['business']], function () {
     Route::get('zalo-oa', [ZaloController::class, 'manageFollower'])->name('view.admin.user.zalo');
     Route::get('sync-follower-zalo-oa', [ZaloController::class, 'syncFollower'])->name('admin.sync.user.zalo');
-    
+
     Route::get('send-booking-result/{id}/{userId}', [ZaloController::class, 'sendBookingResult'])->name('admin.send.booking.result');
 });
 

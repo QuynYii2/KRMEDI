@@ -1188,6 +1188,15 @@ span.material-symbols-outlined {
     margin-bottom: 30px;
 }
 
+.contact_doctor{
+    background: #ff5d4b;
+    padding: 3px 10px;
+    border-radius: 8px;
+    color: #f0f0f0;
+    width: fit-content;
+    cursor: pointer;
+}
+
 @media (max-width: 575px) {
     #mentoring .nav .tab.active {
         border-bottom: 4px solid #45C3D2;
