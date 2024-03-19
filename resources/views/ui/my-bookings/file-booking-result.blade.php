@@ -6,15 +6,6 @@
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
 <style>
-    .qr-container {
-        position: absolute;
-        bottom: 3%;
-        left: 3%;
-        z-index: 2;
-        pointer-events: none;
-        max-width: 100%;
-    }
-
     .download-button {
         position: absolute;
         top: 0;
@@ -35,15 +26,6 @@
             width: 500px !important;
             height: 570px !important;
         }
-
-        .qr-container {
-            bottom: -3%;
-            left: 12%;
-        }
-
-        .qr-container svg {
-            width: 80px;
-        }
     }
 
     /* Styles for viewport widths between 769px and 1024px */
@@ -51,15 +33,6 @@
         .iframe-container {
             width: 560px !important;
             height: 650px !important;
-        }
-
-        .qr-container {
-            bottom: 0%;
-            left: 12%;
-        }
-
-        .qr-container svg {
-            width: 80px;
         }
     }
 </style>
@@ -87,17 +60,12 @@
             @endphp
             <br>
             @if ($fileType == 'pdf')
-                <div class="position-relative iframe-container"
+                <div id="iframe{{ $index }}" class="position-relative iframe-container"
                     style="aspect-ratio: 5/7; width: 800px;{{ $index === 0 ? 'display: block;' : 'display: none;' }}">
-                    <iframe id="iframe{{ $index }}" src="{{ url(asset($file['url'])) }}#toolbar=0"
+                    <iframe src="{{ url(asset($file['url'])) }}#toolbar=0"
                         style="border: none; width: 100%; height: 100%;" frameborder="0" scrolling="no"
                         allowfullscreen="">
                     </iframe>
-                    @if ($qrCodes)
-                        <div class="qr-container">
-                            {!! $qrCodes !!}
-                        </div>
-                    @endif
                     <a class="download-button text-decoration-none mt-2 me-2" href="{{ url(asset($file['url'])) }}"
                         download>
                         <svg class="me-1" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -108,8 +76,11 @@
                         </svg>Tải PDF</a>
                 </div>
             @else
-                <iframe id="iframe{{ $index }}" src="{{ url(asset($file['url'])) }}" width="80%"
-                    height="800" style="border: none"></iframe>
+                <div id="iframe{{ $index }}" class="position-relative iframe-container"
+                    style="aspect-ratio: 5/7; width: 800px;{{ $index === 0 ? 'display: block;' : 'display: none;' }}">
+                    <iframe src="{{ url(asset($file['url'])) }}" width="80%" height="800"
+                        style="border: none"></iframe>
+                </div>
             @endif
         @empty
         @endforelse
@@ -118,12 +89,12 @@
 
 <script>
     function showIframe(index) {
-        var iframes = document.getElementsByTagName('iframe-container');
+        var iframes = document.getElementsByClassName('iframe-container');
         for (var i = 0; i < iframes.length; i++) {
             iframes[i].style.display = 'none';
         }
 
-        var selectedIframe = document.getElementById('iframe-container' + index);
+        var selectedIframe = document.getElementById('iframe' + index);
         if (selectedIframe) {
             selectedIframe.style.display = 'block';
         }
