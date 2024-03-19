@@ -24,6 +24,14 @@
         top: 50%;
         display: block;
     }
+    .contact_doctor{
+        background: #ff5d4b;
+        padding: 7px 20px;
+        border-radius: 8px;
+        color: #f0f0f0;
+        width: fit-content;
+        cursor: pointer;
+    }
 </style>
 <div class="product-item {{ $isSoldOut ? 'sold-out-overlay' : '' }}">
     <div class="img-pro">
@@ -66,9 +74,15 @@
                 </defs>
             </svg> <p>{{ $medicine->location_name ??  __('home.Toàn quốc') }}</p>
         </div>
+        @if($medicine->type_product == 0)
         <div class="price-pro">
             {{ number_format($medicine->price, 0, ',', '.') }} {{ $medicine->unit_price ?? 'VND' }}
         </div>
+            @else
+            <div class="contact_doctor" onclick="checkDoctorOnline({{$medicine->user_id}})">
+                Liên hệ
+            </div>
+        @endif
     </div>
     <div class="d-flex justify-content-end">
         <div class="SeeDetail">

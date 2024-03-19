@@ -78,8 +78,12 @@
                                     {{ ($medicine->name_en  ?? __('home.no name') ) }}
                                 @endif
                             </p>
+                            @if($medicine->type_product == 0)
                             <div
                                 class="price">{{number_format($medicine->price, 0, ',', '.') }} {{$medicine->price_unit ?? 'VND'}}</div>
+                            @else
+                                <div class="price">Liên hệ</div>
+                                @endif
                             @php
                                 $user = User::find($medicine->user_id);
                                 $clinic = \App\Models\Clinic::where('user_id', $user->id)->first();
@@ -153,8 +157,13 @@
                             </div>
                             <div class="col-6">
                                 @if(Auth::check())
+                                    @if($medicine->type_product == 0)
                                     <button id="btnBuyNow" {{ $prMedicine->quantity == 0 ? 'disabled' : '' }}
                                     class=" button-buyNow btn btn-primary w-100">{{ __('home.Buy now') }}</button>
+                                        @else
+                                        <button {{ $prMedicine->quantity == 0 ? 'disabled' : '' }}
+                                        class=" button-buyNow btn btn-primary w-100" onclick="checkDoctorOnline({{$prMedicine->user_id}})">Liên hệ</button>
+                                        @endif
                                 @else
                                     <button onclick="alertLogin();"
                                             class=" button-buyNow btn btn-primary w-100">{{ __('home.Buy now') }}</button>
@@ -234,5 +243,28 @@
             $(this).addClass('selected');
             $(".main").attr("src", $(this).attr('src'));
         })
+        function checkDoctorOnline(doctor_id) {
+            let accessToken = `Bearer ` + token;
+            $.ajax({
+                url: window.location.origin +'/connect/chat/check-doctor-online/'+doctor_id,
+                type: 'GET',
+                headers: {
+                    'Authorization': accessToken
+                },
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function(response) {
+                    if (response.isOnline) {
+                        handleStartChatWithDoctor(`${doctor_id}`)
+                    } else {
+                        alert('Bác sĩ hiện không online. Vui lòng liên hệ lại sau.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('Vui lòng đăng nhập để tiếp tục.');
+                }
+            });
+        }
     </script>
 @endsection

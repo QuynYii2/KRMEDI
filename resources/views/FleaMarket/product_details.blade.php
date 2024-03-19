@@ -57,7 +57,7 @@
                             </strong>
                             <div class="text-content-product">
                                 <strong
-                                    class="">{{number_format($pr_json->price, 0, ',', '.') }} {{$pr_json->price_unit ?? 'VND'}}</strong>
+                                    class="">@if($pr_json->type_product == 0) {{number_format($pr_json->price, 0, ',', '.') }} {{$pr_json->price_unit ?? 'VND'}} @else Liên hệ @endif</strong>
                             </div>
 
                             <p style="color: #929292">{{ __('home.Location') }}:<strong class="flea-prise">
