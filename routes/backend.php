@@ -111,6 +111,7 @@ Route::group(['prefix' => 'booking'], function () {
     Route::get('detail/{id}', [BookingApi::class, 'getBookingDetail'])->name('api.booking.detail');
     Route::get('check-working-time-available', [BookingApi::class, 'checkWorkingTime'])->name('api.backend.booking.check.time.available');
     Route::get('list-clinic-working-time', [BookingApi::class, 'listWorkingTime'])->name('api.backend.booking.list.working.time');
+    Route::get('list-file-booking-result/{id}', [BookingApi::class, 'fileBookingResult'])->name('api.backend.booking.result.file');
 });
 
 Route::group(['prefix' => 'messages'], function () {
