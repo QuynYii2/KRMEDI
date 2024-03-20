@@ -141,7 +141,7 @@
                                 ${item.type_product == 0? `<div class="prices-pro">
                     ${formatCurrency(item.price)} ${item.price_unit}
                 </div>`:`<div class="contact_doctor" onclick="checkDoctorOnline(${item.created_by})">
-                                    Liên hệ
+                                    Tư vấn
                                 </div>`}
                             </div>
                         </div>

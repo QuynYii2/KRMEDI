@@ -80,7 +80,7 @@
         </div>
             @else
             <div class="contact_doctor" onclick="checkDoctorOnline({{$medicine->user_id}})">
-                Liên hệ
+                Tư vấn
             </div>
         @endif
     </div>
