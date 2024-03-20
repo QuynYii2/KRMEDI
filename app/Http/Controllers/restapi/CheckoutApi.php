@@ -14,8 +14,10 @@ use App\Models\OrderItem;
 use App\Models\ProductInfo;
 use App\Models\Role;
 use App\Models\User;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Enums\Constants;
 
 class CheckoutApi extends Controller
 {
@@ -151,7 +153,35 @@ class CheckoutApi extends Controller
         $order->status = $request->status;
         $order->save();
 
+        $data = $request->all();
+        $user = User::find($order->user_id);
+        $token = $user->token_firebase;
+        $response = $this->sendNotification($token, $data);
+
         return response()->json(['status'=>true,'message' => 'Cập nhật trạng thái đơn hàng thành công'], 200);
+    }
+
+    public function sendNotification($device_token, $data)
+    {
+        $client = new Client();
+        $YOUR_SERVER_KEY = Constants::GG_KEY;
+
+        $response = $client->post('https://fcm.googleapis.com/fcm/send', [
+            'headers' => [
+                'Authorization' => 'key=' . $YOUR_SERVER_KEY,
+                'Content-Type' => 'application/json',
+            ],
+            'json' => [
+                'to' => $device_token,
+                'data' => $data,
+                'notification' => 'Cập nhật trạng thái đơn hàng thành công',
+                'web' => [
+                    'notification' => 'Cập nhật trạng thái đơn hàng thành công',
+                ],
+            ],
+        ]);
+
+        return $response->getBody();
     }
 
     public function calcDiscount(Request $request)
