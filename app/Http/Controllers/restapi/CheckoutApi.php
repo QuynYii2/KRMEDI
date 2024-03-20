@@ -142,6 +142,15 @@ class CheckoutApi extends Controller
         return response()->json(['price_discount_max' => $price_discount_max], 200);
     }
 
+    public function statusOrder(Request $request)
+    {
+        $order = Order::where('aha_order_id',$request->order_id)->first();
+        $order->status = $request->status;
+        $order->save();
+
+        return response()->json(['status'=>true,'message' => 'Cập nhật trạng thái đơn hàng thành công'], 200);
+    }
+
     public function calcDiscount(Request $request)
     {
         $price = $request->input('price');

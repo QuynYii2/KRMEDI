@@ -75,6 +75,7 @@ class VerifyCsrfToken extends Middleware
         '/change-password',
         '/medicine/list',
         '/api/zalo/**',
-        '/api/notifications'
+        '/api/notifications',
+        '/api/set-status-order'
     ];
 }
