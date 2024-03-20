@@ -174,7 +174,10 @@ class CheckoutApi extends Controller
             'json' => [
                 'to' => $device_token,
                 'data' => $data,
-                'notification' => 'Cập nhật trạng thái đơn hàng thành công',
+                'notification' => [
+                    'title' => 'Cập nhật trạng thái đơn hàng thành công',
+                    'body' => 'order',
+                ],
                 'web' => [
                     'notification' => 'Cập nhật trạng thái đơn hàng thành công',
                 ],
