@@ -9,6 +9,8 @@ use App\Models\DrugIngredients;
 use App\Models\MedicalFavourite;
 use App\Models\online_medicine\CategoryProduct;
 use App\Models\online_medicine\ProductMedicine;
+use App\Models\Role;
+use App\Models\RoleUser;
 use App\Models\WishList;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Province;
@@ -67,12 +69,15 @@ class MedicineController extends Controller
         $medicine = ProductMedicine::find($id);
         $categoryMedicines = CategoryProduct::where('status', true)->get();
         $carts = null;
+        $name_role = '';
         if (Auth::check()) {
             $carts = Cart::where('user_id', Auth::user()->id)
                 ->where('type_product', TypeProductCart::MEDICINE)
                 ->get();
+            $role = RoleUser::where('user_id',Auth::user()->id)->first();
+            $name_role = Role::find($role->role_id)->name;
         }
-        return view('medicine.detailMedicine', compact('medicine', 'categoryMedicines', 'carts', 'id'));
+        return view('medicine.detailMedicine', compact('medicine', 'categoryMedicines', 'carts', 'id','name_role'));
     }
 
     public function wishList()

@@ -157,12 +157,12 @@
                             </div>
                             <div class="col-6">
                                 @if(Auth::check())
-                                    @if($medicine->type_product == 0)
+                                    @if($medicine->type_product == 0 || $name_role == 'HOSPITALS' || $name_role == 'DOCTORS')
                                     <button id="btnBuyNow" {{ $prMedicine->quantity == 0 ? 'disabled' : '' }}
                                     class=" button-buyNow btn btn-primary w-100">{{ __('home.Buy now') }}</button>
                                         @else
                                         <button {{ $prMedicine->quantity == 0 ? 'disabled' : '' }}
-                                        class=" button-buyNow btn btn-primary w-100" onclick="checkDoctorOnline({{$prMedicine->user_id}})">Liên hệ</button>
+                                        class=" button-buyNow btn btn-primary w-100" onclick="checkDoctorOnline({{$prMedicine->user_id}})">Tư vấn</button>
                                         @endif
                                 @else
                                     <button onclick="alertLogin();"
