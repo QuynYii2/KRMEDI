@@ -19,39 +19,57 @@
                 <div class="form-group col-md-12">
                     <label for="title">{{ __('home.Title') }}</label>
                     <input type="text" class="form-control" id="title" name="title" value="{{ $video->title }}"
-                           required>
+                        required>
                 </div>
             </div>
             <div class="row">
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
                     <label for="views">{{ __('home.views') }}</label>
                     <input type="number" min="0" class="form-control" id="views" name="views"
-                           value="{{ $video->views }}">
+                        value="{{ $video->views }}">
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
                     <label for="shares">{{ __('home.shares') }}</label>
                     <input type="number" min="0" class="form-control" id="shares" value="{{ $video->shares }}"
-                           name="shares">
+                        name="shares">
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
                     <label for="reactions">{{ __('home.reactions') }}</label>
-                    <input type="number" min="0" class="form-control" id="reactions" value="{{ $video->reactions }}"
-                           name="reactions">
+                    <input type="number" min="0" class="form-control" id="reactions"
+                        value="{{ $video->reactions }}" name="reactions">
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="status">{{ __('home.Status') }}</label>
+                    <select id="status" name="status" class="form-control form-select">
+                        <option {{ $video->status == 'ACTIVE' ? 'selected' : '' }} value="ACTIVE">{{ __('home.Active') }}
+                        </option>
+                        <option {{ $video->status == 'INACTIVE' ? 'selected' : '' }} value="INACTIVE">
+                            {{ __('home.Inactive') }}
+                        </option>
+                    </select>
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-md-3">
                     <label for="file">{{ __('home.Video') }}</label>
                     <input type="file" class="form-control" id="file" name="file" accept="video/*">
-                    <video width="320" height="240" controls autoplay>
+                    <video class="mt-3" width="320" height="240" controls>
                         <source src="{{ asset($video->file) }}" type="video/mp4">
                         {{ __('home.Your browser does not support the video tag.') }}
                     </video>
                 </div>
                 <div class="form-group col-md-3">
+                    <label for="file">{{ __('home.Images') }}</label>
+                    <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                    @if ($video->thumbnail)
+                        <img loading="lazy" class="mt-3" src="{{ asset($video->thumbnail) }}" alt="Ảnh đã xảy ra lỗi"
+                            height="240px">
+                    @endif
+                </div>
+                <div class="form-group col-md-3">
                     <label for="topic_id">{{ __('home.topic') }}</label>
                     <select id="topic_id" name="topic_id" class="form-control form-select">
-                        @foreach($topics as $topic)
+                        @foreach ($topics as $topic)
                             <option {{ $topic->id == $video->topic_id ? 'selected' : '' }} value="{{ $topic->id }}">
                                 {{ $topic->name }}
                             </option>
@@ -61,17 +79,7 @@
                 <div class="form-group col-md-3">
                     <label for="user_id">{{ __('home.Username') }}</label>
                     <input type="text" class="form-control" id="user_id" disabled value="{{ $user->username }}"
-                           name="user_id">
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="status">{{ __('home.Status') }}</label>
-                    <select id="status" name="status" class="form-control form-select">
-                        <option
-                            {{ $video->status == 'ACTIVE' ? 'selected' : '' }} value="ACTIVE">{{ __('home.Active') }}</option>
-                        <option
-                            {{ $video->status == 'INACTIVE' ? 'selected' : '' }} value="INACTIVE">{{ __('home.Inactive') }}
-                        </option>
-                    </select>
+                        name="user_id">
                 </div>
             </div>
             <button type="button" class="btn btn-primary float-right" id="btnUpdateVideo">
@@ -82,17 +90,18 @@
     <script>
         let accessToken = `Bearer ` + token;
 
-        $(document).ready(function () {
+        $(document).ready(function() {
             let formDataEdit = new FormData();
 
-            $('#btnUpdateVideo').on('click', function () {
+            $('#btnUpdateVideo').on('click', function() {
                 let url = `{{ route('api.medical.short.videos.update', $video->id) }}`;
                 let headers = {
                     'Authorization': `Bearer ${token}`
                 };
 
                 const arrField = ['title', 'status',
-                    'views', 'shares', 'reactions', 'topic_id'];
+                    'views', 'shares', 'reactions', 'topic_id'
+                ];
 
                 let isValid = true
                 /* Tạo fn appendDataForm ở admin blade*/
@@ -100,6 +109,9 @@
 
                 const video = $('#file')[0].files[0];
                 formDataEdit.append('file_videos', video);
+
+                const image = $('#image')[0].files[0];
+                formDataEdit.append('images', image);
 
                 if (isValid) {
                     try {
@@ -111,11 +123,11 @@
                             cache: false,
                             processData: false,
                             data: formDataEdit,
-                            success: function () {
+                            success: function() {
                                 alert('success');
-                                window.location.href = `{{route('view.admin.videos.list')}}`;
+                                window.location.href = `{{ route('view.admin.videos.list') }}`;
                             },
-                            error: function (exception) {
+                            error: function(exception) {
                                 alert('Update error!')
                                 console.log(exception)
                             }
