@@ -25,6 +25,8 @@ use App\Models\User;
 use App\Models\ZaloFollower;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use setasign\Fpdi\Fpdi;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class BookingController extends Controller
 {
@@ -277,8 +279,17 @@ class BookingController extends Controller
                         }
                         // Handle the new file input
                         if ($fileInput) {
+                            $qrCode = null;
+                            if (isset($booking->doctor_id) && $booking->doctor_id) {
+                                $url = route('qr.code.show.doctor.info', $booking->doctor_id);
+                                $qrCode = QrCode::format('png')->size(150)->generate($url);
+                            }
                             $itemPath = $fileInput->store('bookings_result', 'public');
                             $fileUrl = asset('storage/' . $itemPath);
+
+                            if ($fileUrl) {
+                                $this->insertQRCodeIntoPDF($fileUrl, $qrCode, $booking);
+                            }
                         } else {
                             // If file input is not set, use the existing value
                             $fileUrl = $booking->extend['booking_results'][$index]['url'] ?? '';
@@ -304,7 +315,7 @@ class BookingController extends Controller
                 // Status has changed, send zalo OA msg to customer
                 $isSendOaToUser = true;
             }
-            
+
             $booking->doctor_id = $doctor_id;
             $booking->is_result = $is_result;
             $booking->status = $status;
@@ -444,6 +455,88 @@ class BookingController extends Controller
             $zalo->sendBookingMessage($bookingRequest, true);
         } catch (\Exception $e) {
             dd('An error occurred while sending an OA message from admin to clinic: ' . $e->getMessage());
+        }
+    }
+
+    public function insertQRCodeIntoPDF($pdfPath, $qrCode, $booking)
+    {
+        $filePath = $pdfPath;
+
+        $outputDirectory = public_path('storage/bookings_result');
+        if (!is_dir($outputDirectory)) {
+            mkdir($outputDirectory, 0755, true);
+        }
+
+        $outputFilePath = $outputDirectory . '/' . basename($filePath);
+
+        $this->fillPdfFile(public_path($filePath), $outputFilePath, $qrCode, $booking);
+
+        return response()->json(['message' => 'QR code inserted into PDF successfully.']);
+    }
+
+    public function fillPdfFile($file, $outputFilePath, $qrCode, $booking)
+    {
+        try {
+            $fpdi = new Fpdi();
+            $count = $fpdi->setSourceFile($file);
+
+            // Save the PNG image to a temporary file
+            if ($qrCode) {
+                $imageDirectory = public_path('storage/doctor_qr');
+                if (!is_dir($imageDirectory)) {
+                    mkdir($imageDirectory, 0755, true);
+                }
+                // Save the PNG image to a temporary file
+                $imagePath = $imageDirectory . '/qr_code.png';
+                file_put_contents($imagePath, $qrCode);
+            }
+
+            $template = $fpdi->importPage($count);
+            $size = $fpdi->getTemplateSize($template);
+            $fpdi->AddPage($size['orientation'], array($size['width'], $size['height']));
+            $fpdi->useTemplate($template);
+
+            $right = $size['width'] - 10; // Right position
+            $bottom = $size['height'] - 10; // Bottom position
+
+            $fpdi->AddFont('arial-unicode-ms', '', 'arial-unicode-ms.php', public_path('fonts'));
+
+            $fpdi->SetFont('arial-unicode-ms', '', 10, '', true);
+            $fpdi->SetTextColor(0, 0, 0);
+
+            $dateString = $booking->check_out;
+            $timestamp = strtotime($dateString);
+
+            $day = date("d", $timestamp);
+            $month = date("m", $timestamp);
+            $year = date("Y", $timestamp);
+
+            // Text
+            $textLine1 = iconv('UTF-8', 'cp1258', 'Ngày ' . $day . ' tháng ' . $month . ' Năm ' . $year);
+            $fpdi->SetXY($right - $fpdi->GetStringWidth($textLine1), $bottom - 38);
+            $fpdi->Cell(0, 0, $textLine1, 0, 0, 'C');
+
+            if ($booking->doctor) {
+                $textLine2 = iconv('UTF-8', 'cp1258', 'Bác sỹ kết luận');
+                $fpdi->SetXY($right - $fpdi->GetStringWidth($textLine2) - 20, $bottom - 33);
+                $fpdi->Cell(0, 0, $textLine2, 0, 0, 'C');
+
+                $textLine3 = iconv('UTF-8', 'cp1258', $booking->doctor->name);
+                $fpdi->SetFont('arial-unicode-ms', '', 9, '', true);
+                $fpdi->SetXY($right - $fpdi->GetStringWidth($textLine3) - 19, $bottom - 27);
+                $fpdi->Cell(0, 0, $textLine3, 0, 0, 'C');
+            }
+
+            if ($qrCode) {
+                $imageWidth = 30;
+                $imageHeight = 30;
+                $fpdi->Image($imagePath, 10, $bottom - $imageHeight, $imageWidth, $imageHeight);
+            }
+
+            $fpdi->Output($outputFilePath, 'F');
+        } catch (Exception $e) {
+            // Handle any errors that occur during the PDF generation
+            dd($e->getMessage());
         }
     }
 }
