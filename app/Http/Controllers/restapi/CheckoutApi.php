@@ -153,7 +153,7 @@ class CheckoutApi extends Controller
         $order->status = $request->status;
         $order->save();
 
-        $data = $request->all();
+        $data = json_encode($request->all());
         $user = User::find($order->user_id);
         $token = $user->token_firebase;
         $response = $this->sendNotification($token, $data);
