@@ -6,7 +6,7 @@
     @include('component.banner')
     <div class="container">
         <div class="text-center">
-            @foreach($videos as $video)
+            @foreach ($videos as $video)
                 <div class="user-posted">
                     <div class="header-post">
                         <div class="user">
@@ -57,14 +57,18 @@
                     <div class="form-group">
                         <label for="topic">{{ __('home.topic') }}</label>
                         <select id="topic" class="form-select">
-                            @foreach($topics as $topic)
-                                <option value="{{$topic->id}}">{{$topic->name}}</option>
+                            @foreach ($topics as $topic)
+                                <option value="{{ $topic->id }}">{{ $topic->name }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="video">{{ __('home.Video') }}</label>
                         <input type="file" class="form-control" id="video" accept="video/mp4,video/x-m4v,video/*">
+                    </div>
+                    <div class="form-group">
+                        <label for="images">{{ __('home.Images') }}</label>
+                        <input type="file" class="form-control" id="images" accept="image/*">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -79,8 +83,8 @@
             'Authorization': `Bearer ${token}`
         };
 
-        $(document).ready(function () {
-            $('#btnUploadVideo').on('click', function () {
+        $(document).ready(function() {
+            $('#btnUploadVideo').on('click', function() {
                 uploadVideo();
             })
 
@@ -93,20 +97,23 @@
                 const video = $('#video')[0].files[0];
                 formData.append('file_videos', video);
 
+                const images = $('#images')[0].files[0];
+                formData.append('images', images);
+
                 try {
                     $.ajax({
-                        url: `{{route('api.medical.short.videos.create')}}`,
+                        url: `{{ route('api.medical.short.videos.create') }}`,
                         method: 'POST',
                         headers: headers,
                         contentType: false,
                         cache: false,
                         processData: false,
                         data: formData,
-                        success: function (response) {
+                        success: function(response) {
                             alert('success');
                             window.location.reload();
                         },
-                        error: function (exception) {
+                        error: function(exception) {
                             console.log(exception)
                         }
                     });

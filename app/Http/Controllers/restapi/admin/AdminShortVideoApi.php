@@ -70,7 +70,6 @@ class AdminShortVideoApi extends Controller
 
     public function search(Request $request)
     {
-
     }
 
     public function create(Request $request)
@@ -85,6 +84,21 @@ class AdminShortVideoApi extends Controller
             $topic = $request->input('topic_id');
 
             $user_id = $request->input('user_id');
+
+            if ($request->hasFile('images')) {
+
+                $fileSize = $request->file('images')->getSize();
+                if ($fileSize > 3 * 1024 * 1024) {
+                    return response()->json(['error' => 'File size exceeds the limit of 3MB.'], 400);
+                }
+
+                $item = $request->file('images');
+                $itemPath = $item->store('short_video/thumbnail', 'public');
+                $file = asset('storage/' . $itemPath);
+                $video->thumbnail = $file;
+            } else {
+                return response('Please upload image!', 400);
+            }
 
             if ($request->hasFile('file_videos')) {
 
@@ -173,6 +187,19 @@ class AdminShortVideoApi extends Controller
                 $itemPath = $item->store('short_video', 'public');
                 $file = asset('storage/' . $itemPath);
                 $video->file = $file;
+            }
+
+            if ($request->hasFile('images')) {
+
+                $fileSize = $request->file('images')->getSize();
+                if ($fileSize > 3 * 1024 * 1024) {
+                    return response()->json(['error' => 'File size exceeds the limit of 3MB.'], 400);
+                }
+
+                $item = $request->file('images');
+                $itemPath = $item->store('short_video/thumbnail', 'public');
+                $file = asset('storage/' . $itemPath);
+                $video->thumbnail = $file;
             }
 
             $success = $video->save();
