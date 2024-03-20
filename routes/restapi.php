@@ -245,3 +245,5 @@ Route::group(['prefix' => 'api/medicine'], function () {
 Route::group(['prefix' => 'api/zalo'], function () {
     Route::resource('zalo-follower', 'ZaloFollowerController');
 });
+
+Route::post('api/set-status-order', [\App\Http\Controllers\restapi\CheckoutApi::class, 'statusOrder']);
