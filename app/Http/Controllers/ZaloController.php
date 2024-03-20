@@ -36,7 +36,7 @@ class ZaloController extends Controller
 
     public function __construct($access_token = null)
     {
-        $this->access_token = $access_token ?? $_COOKIE['access_token_zalo'] ?? null;
+        $this->access_token = $access_token ?? null;
         $this->zalo = $this->main();
 
         $this->middleware(function ($request, $next) {
@@ -72,6 +72,11 @@ class ZaloController extends Controller
     {
         $this->app_id = Auth::user()->extend['zalo_app_id'] ?? Constants::ID_ZALO_APP ?? null;
         $this->app_secret = Auth::user()->extend['zalo_secret_id'] ?? Constants::KEY_ZALO_APP ?? null;
+
+        if (Auth::user()->extend['access_token_zalo']) {
+            $this->access_token = Auth::user()->extend['access_token_zalo'];
+        }
+
         $config = array(
             'app_id' => $this->app_id,
             'app_secret' => $this->app_secret
@@ -124,10 +129,6 @@ class ZaloController extends Controller
         }
         $array = json_decode($dataToken, true);
         if (isset($array['access_token'])) {
-            $expiration_time = time() + $array['expires_in'];
-            setCookie('access_token_zalo', $array['access_token'], $expiration_time, '/');
-            setCookie('refresh_token_zalo', $array['refresh_token'], $expiration_time, '/');
-
             $user = User::find(Auth::user()->id);
 
             if ($user) {
@@ -145,6 +146,7 @@ class ZaloController extends Controller
             return redirect(session('zalo_intended_url'));
         }
 
+        toast('Đăng nhập zalo thành công', 'success', 'top-left');
         return redirect(route('profile'));
     }
 
@@ -403,10 +405,6 @@ class ZaloController extends Controller
                     $response->send();
                     exit;
                 }
-
-                $expiration_time = time() + $array_data['expires_in'];
-                setCookie('access_token_zalo', $array_data['access_token'], $expiration_time, '/');
-                setCookie('refresh_token_zalo', $array_data['refresh_token'], $expiration_time, '/');
                 $extendData['access_token_zalo'] = $array_data['access_token'];
                 $extendData['refresh_token_zalo'] = $array_data['refresh_token'];
                 $extendData['isActivated'] = true;
@@ -458,9 +456,6 @@ class ZaloController extends Controller
                         }
                         $array = json_decode($dataToken, true);
                         if (isset($array['access_token'])) {
-                            $expiration_time = time() + $array['expires_in'];
-                            setCookie('access_token_zalo', $array['access_token'], $expiration_time, '/');
-                            setCookie('refresh_token_zalo', $array['refresh_token'], $expiration_time, '/');
                             $this->access_token = $array['access_token'];
                         }
                     } catch (Exception $e) {
@@ -583,6 +578,7 @@ class ZaloController extends Controller
         }
     }
 
+    //Social API
     public function getUserAccessToken($codeVerifier)
     {
         try {
@@ -683,9 +679,9 @@ class ZaloController extends Controller
         $result = $response->getDecodedBody();
         if ($result['error'] != 0) {
             //Err
-            toast('Something went wrong', 'error', 'top-left');
+            toast('Đã xảy ra sự cố', 'error', 'top-left');
         }
-        toast('Successfully', 'success', 'top-left');
+        toast('Thành công', 'success', 'top-left');
     }
 
     //Gửi tin nhắn dạng Gif
@@ -702,9 +698,9 @@ class ZaloController extends Controller
         $result = $response->getDecodedBody(); // result
         if ($result['error'] != 0) {
             //Err
-            toast('Something went wrong', 'error', 'top-left');
+            toast('Đã xảy ra sự cố', 'error', 'top-left');
         }
-        toast('Successfully', 'success', 'top-left');
+        toast('Thành công', 'success', 'top-left');
     }
 
     //Gửi tin nhắn thông tin giao dịch booking cho người dùng
@@ -951,9 +947,9 @@ class ZaloController extends Controller
             $result = $response->getDecodedBody();
             if ($result['error'] != 0) {
                 //Err
-                toast('Something went wrong', 'error', 'top-left');
+                toast('Đã xảy ra sự cố', 'error', 'top-left');
             }
-            toast('Successfully', 'success', 'top-left');
+            toast('Thành công', 'success', 'top-left');
             return back();
         } catch (\Exception $e) {
             return response()->json(['error' => -1, 'message' => $e->getMessage()], 404);

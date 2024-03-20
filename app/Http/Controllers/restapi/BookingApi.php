@@ -61,7 +61,7 @@ class BookingApi extends Controller
 
             if ($newBooking) {
                 $bookingController = new BookingController();
-                // $bookingController->sendMessageToUserOnBookingCreated($newBooking);
+                $bookingController->sendMessageToUserOnBookingCreated($newBooking);
                 // $bookingController->sendOAMessageFromAdminToClinic($newBooking);
 
                 //Send Noti
@@ -268,11 +268,11 @@ class BookingApi extends Controller
             $booking->status = $status;
             $booking->reason_cancel = $reason;
             $booking->save();
-            
+
             if ($request->input('status') == BookingStatus::CANCEL) {
                 $user_title = 'Một đơn booking đã huỷ';
                 $clinic_title = 'Một đơn booking đã huỷ';
-            }else{
+            } else {
                 $user_title = 'Một đơn booking đã thay đổi trạng thái';
                 $clinic_title = 'Một đơn booking đã thay đổi trạng thái';
             }
@@ -570,7 +570,7 @@ class BookingApi extends Controller
             if (!$id) {
                 return response()->json(['error' => -1, 'message' => 'Id is required'], 400);
             }
-            
+
             $detail = Booking::with('clinic.users', 'user')->find($id);
 
             return response()->json(['error' => 0, 'data' => $detail]);
@@ -585,7 +585,7 @@ class BookingApi extends Controller
             if (!$booking_id) {
                 return response()->json(['error' => -1, 'message' => 'Booking Id is required'], 400);
             }
-            
+
             $detail = Booking::with('clinic.users', 'user', 'doctor')->find($booking_id);
 
             return response()->json(['error' => 0, 'data' => $detail]);
@@ -593,5 +593,4 @@ class BookingApi extends Controller
             return response()->json(['error' => -1, 'message' => $e->getMessage()]);
         }
     }
-
 }
