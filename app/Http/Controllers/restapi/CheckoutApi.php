@@ -145,6 +145,9 @@ class CheckoutApi extends Controller
     public function statusOrder(Request $request)
     {
         $order = Order::where('aha_order_id',$request->order_id)->first();
+        if (empty($order)){
+            return response()->json(['status'=>false,'message' => 'Đơn hàng không tồn tại'], 200);
+        }
         $order->status = $request->status;
         $order->save();
 
