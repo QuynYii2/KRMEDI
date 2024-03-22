@@ -6,7 +6,7 @@ use BenSampo\Enum\Enum;
 
 final class OrderStatus extends Enum
 {
-    const PROCESSING =   'PROCESSING';
+    const PROCESSING =   'ASSIGHNING';
     const WAIT_PAYMENT =   'WAITING FOR PAYMENT';
     const SHIPPING = 'SHIPPING';
     const DELIVERED = 'DELIVERED';
