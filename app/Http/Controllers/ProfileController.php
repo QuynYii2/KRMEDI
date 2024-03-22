@@ -76,6 +76,13 @@ class ProfileController extends Controller
 
         $users = User::whereIn('id', $userIds)->get();
 
+        $users->map(function ($user) {
+            $user->abouts = str_replace(array("\r", "\n"), '', strip_tags(html_entity_decode($user->abouts)));
+            $user->abouts_en = str_replace(array("\r", "\n"), '', strip_tags(html_entity_decode($user->abouts_en)));
+            $user->abouts_lao = str_replace(array("\r", "\n"), '', strip_tags(html_entity_decode($user->abouts_lao)));
+            return $user;
+        });
+
         return response()->json(['users' => $users]);
     }
 
@@ -462,7 +469,7 @@ class ProfileController extends Controller
             return response()->json(['message' => 'No users found for the given role_id'], 404);
         }
 
-        $users = User::whereIn('id', $userIds)->where('name', 'LIKE' , '%' . $name . '%')->get();
+        $users = User::whereIn('id', $userIds)->where('name', 'LIKE', '%' . $name . '%')->get();
 
         $data = $users->map(function ($user) {
             return [
