@@ -255,7 +255,8 @@ class BusinessApi extends Controller
                 $clinic['total_symptoms'] = $symptoms->count();
                 $clinic['symptoms'] = $symptoms->toArray();
                 $clinic['info_doctor'] = $detailDoctor->toArray();
-
+                $clinic['introduce'] = str_replace(array("\r", "\n"), '', strip_tags(html_entity_decode($clinic['introduce'])));
+                
                 return $clinic;
             });
     }
