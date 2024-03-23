@@ -255,7 +255,14 @@ class MedicineController extends Controller
             ->select('product_medicines.*', 'provinces.name as location_name');
 
         // Paginate
-        $medicines = $medicines->get();
+        $medicines = $medicines->get();        
+
+        $medicines->map(function ($medicine) {
+            $medicine->description = str_replace(array("\r", "\n"), '', strip_tags(html_entity_decode($medicine->description)));
+            $medicine->description_en = str_replace(array("\r", "\n"), '', strip_tags(html_entity_decode($medicine->description_en)));
+            $medicine->description_lao = str_replace(array("\r", "\n"), '', strip_tags(html_entity_decode($medicine->description_lao)));
+            return $medicine;
+        });
 
 
         return response()->json($medicines);
