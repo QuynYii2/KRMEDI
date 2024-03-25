@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\restapi;
 
+use App\Enums\CartStatus;
 use App\Enums\TypeProductCart;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
@@ -85,6 +86,66 @@ class CartApi extends Controller
             return response('Error, Please try again!', 400);
         } catch (\Exception $exception) {
             return response($exception, 400);
+        }
+    }
+
+    public function addToCartV2(Request $request)
+    {
+        try {
+            $validated = Validator::make($request->all(), [
+                'user_id' => 'required|numeric',
+                'products.*.id' => 'required|numeric|exists:products,id',
+                'products.*.quantity' => 'required|integer|min:1',
+                'products.*.note' => 'nullable|string',
+                'type_product' => 'nullable|string',
+            ]);
+
+            if ($validated->fails()) {
+                return response()->json(['error' => -1, 'message' => $validated->errors()->first()], 400);
+            }
+
+            $validatedData = $validated->validated();
+
+            $typeProduct = $validatedData['type_product'] ?? TypeProductCart::MEDICINE;
+
+            $userID = $validatedData['user_id'];
+
+            // Add each product to the cart
+            foreach ($validatedData['products'] as $productData) {
+                if ($typeProduct == TypeProductCart::MEDICINE) {
+                    $product = ProductMedicine::find($productData['id']);
+                } else {
+                    $product = ProductInfo::find($productData['id']);
+                }
+
+                if (!$product) {
+                    return response((new MainApi())->returnMessage('Product not found'), 404);
+                }
+
+                if ($product->quantity == 0) {
+                    return response((new MainApi())->returnMessage('Product out of stock'), 400);
+                }
+
+                $quantity = $productData['quantity'];
+
+                if ($productData['quantity'] && $productData['quantity'] > $product->quantity) {
+                    $quantity = $product->quantity;
+                }
+
+                // Add the product to the cart with the specified quantity
+                $cart =  Cart::create([
+                    'product_id' => $productData['id'],
+                    'quantity' => $quantity,
+                    'user_id' => $userID,
+                    'type_product' => $typeProduct,
+                    'status' => CartStatus::PENDING,
+                    'note' => $productData['note'] ?? ""
+                ]);
+            }
+
+            return response()->json(['error' => 0, 'data' => $cart]);
+        } catch (\Exception $e) {
+            return response(['error' => -1, 'message' => $e->getMessage()], 400);
         }
     }
 

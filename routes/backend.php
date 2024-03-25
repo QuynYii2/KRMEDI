@@ -123,6 +123,8 @@ Route::group(['prefix' => 'messages'], function () {
 Route::group(['prefix' => 'carts'], function () {
     Route::get('user/{id}', [CartApi::class, 'showCartByUserID'])->name('api.backend.cart.user');
     Route::post('create', [CartApi::class, 'addToCart'])->name('api.backend.cart.create');
+    //ADD TO CART V2 => Dùng cho app để lưu prescription_id khi bsi kê đơn thuốc
+    Route::post('create-v2', [CartApi::class, 'addToCartV2'])->name('api.backend.cart.create.v2');
     Route::post('change-quantity/{id}', [CartApi::class, 'changeQuantityCart'])->name('api.backend.cart.change.quantity');
     Route::delete('delete/{id}', [CartApi::class, 'deleteCart'])->name('api.backend.cart.delete');
     Route::delete('clear/{id}', [CartApi::class, 'clearCart'])->name('api.backend.cart.clear');
