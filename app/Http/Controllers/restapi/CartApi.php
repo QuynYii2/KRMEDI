@@ -10,6 +10,8 @@ use App\Models\online_medicine\ProductMedicine;
 use App\Models\ProductInfo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class CartApi extends Controller
 {
@@ -94,7 +96,7 @@ class CartApi extends Controller
         try {
             $validated = Validator::make($request->all(), [
                 'user_id' => 'required|numeric',
-                'products.*.id' => 'required|numeric|exists:products,id',
+                'products.*.id' => 'required|numeric',
                 'products.*.quantity' => 'required|integer|min:1',
                 'products.*.note' => 'nullable|string',
                 'type_product' => 'nullable|string',
@@ -109,6 +111,8 @@ class CartApi extends Controller
             $typeProduct = $validatedData['type_product'] ?? TypeProductCart::MEDICINE;
 
             $userID = $validatedData['user_id'];
+
+            $prescription_id = strtoupper(Str::random(3)) . '_' . time();
 
             // Add each product to the cart
             foreach ($validatedData['products'] as $productData) {
@@ -133,17 +137,20 @@ class CartApi extends Controller
                 }
 
                 // Add the product to the cart with the specified quantity
-                $cart =  Cart::create([
+                Cart::create([
                     'product_id' => $productData['id'],
                     'quantity' => $quantity,
                     'user_id' => $userID,
                     'type_product' => $typeProduct,
                     'status' => CartStatus::PENDING,
-                    'note' => $productData['note'] ?? ""
+                    'note' => $productData['note'] ?? "",
+                    'prescription_id' => $prescription_id
                 ]);
             }
 
-            return response()->json(['error' => 0, 'data' => $cart]);
+            $carts = Cart::with('users', 'products')->where('prescription_id', $prescription_id)->get();
+
+            return response()->json(['error' => 0, 'data' => $carts]);
         } catch (\Exception $e) {
             return response(['error' => -1, 'message' => $e->getMessage()], 400);
         }
