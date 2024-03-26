@@ -176,13 +176,17 @@ class CartApi extends Controller
 
             $prescription_id = $request->input('prescription_id');
 
-            $carts = Cart::query();
+            $carts = Cart::query()->with('users');
 
             if ($prescription_id) {
                 $carts = $carts->where('prescription_id', $prescription_id);
             }
 
             $carts = $carts->get();
+
+            if ($carts->isEmpty()) {
+                return response()->json(['error' => -1, 'message' => 'No carts found.']);
+            }
 
             $carts->each(function ($cart) {
                 if ($cart->type_product == TypeProductCart::MEDICINE) {
