@@ -97,6 +97,7 @@ class ProductMedicineApi extends Controller
     {
         foreach ($products as $product) {
             $cart = Cart::where('user_id', $userID)
+                ->whereNull('prescription_id')
                 ->where('product_id', $product->id)
                 ->where('type_product', $typeProduct)
                 ->first();

@@ -38,6 +38,7 @@ class MedicineController extends Controller
         if (Auth::check()) {
             $carts = Cart::where('user_id', Auth::user()->id)
                 ->where('type_product', TypeProductCart::MEDICINE)
+                ->whereNull('prescription_id')
                 ->get();
         }
         $provinces = Province::all();
@@ -72,6 +73,7 @@ class MedicineController extends Controller
         $name_role = '';
         if (Auth::check()) {
             $carts = Cart::where('user_id', Auth::user()->id)
+                ->whereNull('prescription_id')
                 ->where('type_product', TypeProductCart::MEDICINE)
                 ->get();
             $role = RoleUser::where('user_id',Auth::user()->id)->first();
@@ -98,6 +100,7 @@ class MedicineController extends Controller
         $carts = null;
         if (Auth::check()) {
             $carts = Cart::where('user_id', Auth::user()->id)
+                ->whereNull('prescription_id')
                 ->where('type_product', TypeProductCart::MEDICINE)
                 ->get();
         }

@@ -83,7 +83,7 @@ class CheckoutApi extends Controller
 
         $order->save();
 
-        $carts = Cart::where('user_id', $userID)->get();
+        $carts = Cart::where('user_id', $userID)->whereNull('prescription_id')->get();
         foreach ($carts as $cart) {
             if ($cart->type_product == TypeProductCart::MEDICINE) {
                 $product = ProductMedicine::find($cart->product_id);

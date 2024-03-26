@@ -44,6 +44,7 @@ class CartApi extends Controller
 
         try {
             $cart = Cart::where('user_id', $userID)
+                ->whereNull('prescription_id')
                 ->where('product_id', $productID)
                 ->where('type_product', $typeProduct)
                 ->first();
@@ -248,7 +249,7 @@ class CartApi extends Controller
     public function clearCart($id)
     {
         try {
-            $success = Cart::where('user_id', $id)->delete();
+            $success = Cart::where('user_id', $id)->whereNull('prescription_id')->delete();
             if ($success) {
                 return response('Success!', 200);
             }

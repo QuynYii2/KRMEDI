@@ -17,7 +17,7 @@ class CheckoutController extends Controller
 {
     public function index()
     {
-        $carts = Cart::where('user_id', Auth::user()->id)->get();
+        $carts = Cart::where('user_id', Auth::user()->id)->whereNull('prescription_id')->get();
         $addresses = DB::table('addresses')
             ->where('addresses.status', '!=', AddressStatus::DELETED)
             ->where('addresses.user_id', Auth::user()->id)
