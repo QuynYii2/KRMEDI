@@ -11,16 +11,16 @@ class Cart extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'user_id', 
-        'product_id', 
-        'quantity', 
-        'type_product', 
-        'type_cart', 
-        'type_delivery', 
-        'price', 
-        'total_price', 
-        'status', 
-        'prescription_id', 
+        'user_id',
+        'product_id',
+        'quantity',
+        'type_product',
+        'type_cart',
+        'type_delivery',
+        'price',
+        'total_price',
+        'status',
+        'prescription_id',
         'note'
     ];
 
@@ -29,12 +29,13 @@ class Cart extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function products()
+    public function productInfo()
     {
-        if ($this->type_product == TypeProductCart::MEDICINE) {
-            return $this->belongsTo(ProductMedicine::class, 'product_id', 'id');
-        } else {
-            return $this->belongsTo(ProductInfo::class, 'product_id', 'id');
-        }
+        return $this->belongsTo(ProductInfo::class, 'product_id', 'id');
+    }
+
+    public function productMedicine()
+    {
+        return $this->belongsTo(ProductMedicine::class, 'product_id', 'id');
     }
 }

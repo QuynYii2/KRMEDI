@@ -108,7 +108,7 @@ class CartApi extends Controller
 
             $validatedData = $validated->validated();
 
-            $typeProduct = $validatedData['type_product'] ?? TypeProductCart::MEDICINE;
+            $typeProduct = $request->input('type_product') ?? TypeProductCart::MEDICINE;
 
             $userID = $validatedData['user_id'];
 
@@ -147,8 +147,50 @@ class CartApi extends Controller
                     'prescription_id' => $prescription_id
                 ]);
             }
+            if ($typeProduct == TypeProductCart::MEDICINE) {
+                $carts = Cart::with(['users', 'productMedicine'])
+                    ->where('prescription_id', $prescription_id)
+                    ->get();
+            } else {
+                $carts = Cart::with(['users', 'productMedicine'])
+                    ->where('prescription_id', $prescription_id)
+                    ->get();
+            }
 
-            $carts = Cart::with('users', 'products')->where('prescription_id', $prescription_id)->get();
+            return response()->json(['error' => 0, 'data' => $carts]);
+        } catch (\Exception $e) {
+            return response(['error' => -1, 'message' => $e->getMessage()], 400);
+        }
+    }
+
+    public function searchCart(Request $request)
+    {
+        try {
+            $validated = Validator::make($request->all(), [
+                'prescription_id' => 'nullable|string',
+            ]);
+
+            if ($validated->fails()) {
+                return response()->json(['error' => -1, 'message' => $validated->errors()->first()], 400);
+            }
+
+            $prescription_id = $request->input('prescription_id');
+
+            $carts = Cart::query();
+
+            if ($prescription_id) {
+                $carts = $carts->where('prescription_id', $prescription_id);
+            }
+
+            $carts = $carts->get();
+
+            $carts->each(function ($cart) {
+                if ($cart->type_product == TypeProductCart::MEDICINE) {
+                    $cart->load('productMedicine');
+                } else {
+                    $cart->load('productInfo');
+                }
+            });
 
             return response()->json(['error' => 0, 'data' => $carts]);
         } catch (\Exception $e) {
