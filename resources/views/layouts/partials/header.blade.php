@@ -336,7 +336,7 @@
                         <div class="form">
                             <div class="form-element">
                                 <label for="email">{{ __('home.Email') }}</label>
-                                <input id="email" name="email" type="email" placeholder="exmaple@gmail.com">
+                                <input id="email" name="email" type="text" placeholder="exmaple@gmail.com">
                             </div>
                             <div class="form-element">
                                 <label for="password">{{ __('home.Password') }}</label>
@@ -541,7 +541,7 @@
                                         </div>
                                         <div class="form-element">
                                             <label for="email">{{ __('home.Email') }}</label>
-                                            <input id="email" name="email" type="email" placeholder="exmaple@gmail.com"
+                                            <input id="email" name="email" type="text" placeholder="exmaple@gmail.com"
                                                    required>
                                         </div>
                                         <div id="action-doctor" style="display: none">

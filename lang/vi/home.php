@@ -151,7 +151,7 @@ return [
     'Already have an account? Login!' => 'Bạn có sẵn sàng để tạo một tài khoản? Đăng nhập!',
     'PhoneNumber' => 'Số điện thoại',
     'Username' => 'Tên tài khoản',
-    'Email' => 'E-mail',
+    'Email' => 'E-mail hoặc SĐT',
     'AddressCode' => 'Mã địa chỉ',
     'Type Account' => 'Loại tài khoản',
     'BUSINESS' => 'VIỆC KINH DOANH',

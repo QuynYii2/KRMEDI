@@ -202,7 +202,6 @@ class AuthController extends Controller
 
                     toast('Register success!', 'success', 'top-left');
                     return redirect()->route('home');
-
                 }
 
                 toast('Register success!', 'success', 'top-left');
@@ -224,12 +223,18 @@ class AuthController extends Controller
             $password = $request->input('password');
 
             $credentials = [
-                'email' => $loginRequest,
                 'password' => $password,
             ];
 
-            $user = User::where('email', $loginRequest)->first();
-            if (!$user) {
+            // Check if the login request is a valid email address
+            if (filter_var($loginRequest, FILTER_VALIDATE_EMAIL)) {
+                $credentials['email'] = $loginRequest;
+            } else {
+                $credentials['phone'] = $loginRequest;
+            }
+
+            $user = User::where('email', $loginRequest)->orWhere('phone', $loginRequest)->first();
+            if (!$user || !$loginRequest) {
                 toast('Account not found!', 'error', 'top-left');
                 return back();
             }
@@ -260,7 +265,6 @@ class AuthController extends Controller
                     toast('The account is already logged in elsewhere!', 'error', 'top-left');
                     return back();
                 } catch (Exception $e) {
-
                 }
             }
 
