@@ -22,11 +22,17 @@ class LoginController extends Controller
             $password = $request->input('password');
 
             $credentials = [
-                'email' => $loginRequest,
                 'password' => $password,
             ];
 
-            $user = User::where('email', $loginRequest)->first();
+            // Check if the login request is a valid email address
+            if (filter_var($loginRequest, FILTER_VALIDATE_EMAIL)) {
+                $credentials['email'] = $loginRequest;
+            } else {
+                $credentials['phone'] = $loginRequest;
+            }
+
+            $user = User::where('email', $loginRequest)->orWhere('phone', $loginRequest)->first();
             if (!$user) {
                 return response($this->returnMessage('User not found!'), 404);
             } else {
