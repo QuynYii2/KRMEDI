@@ -57,6 +57,11 @@ class BookingApi extends Controller
 
             $booking = Booking::create($validatedData);
 
+            $extend['isReminded'] = 0;
+
+            $booking->extend = $extend;
+            $booking->save();
+
             $newBooking = Booking::with('user', 'clinic.users')->find($booking->id);
 
             if ($newBooking) {
@@ -591,6 +596,32 @@ class BookingApi extends Controller
             return response()->json(['error' => 0, 'data' => $detail]);
         } catch (\Exception $e) {
             return response()->json(['error' => -1, 'message' => $e->getMessage()]);
+        }
+    }
+
+    //Booking reminder through zalo
+    public function bookingReminder()
+    {
+        $currentDateTime = Carbon::now('Asia/Ho_Chi_Minh');
+
+        $booking = Booking::query();
+
+        $booking = $booking->where(function ($query) use ($currentDateTime) {
+            $query->where(function ($query) use ($currentDateTime) {
+                $query->where('extend->isReminded', 0)
+                    ->where('check_in', $currentDateTime->copy()->addHour()->minute(0)->second(0));
+            });
+        });
+
+        $booking = $booking->get();
+
+        $bookingController = new BookingController();
+        foreach ($booking as $b) {
+            $newBooking = Booking::with('user', 'clinic.users')->find($b->id);
+            $bookingController->sendMessageToUserOnBookingCreated($newBooking);
+            $extend['isReminded'] = 1;
+            $b->extend = $extend;
+            $b->save();
         }
     }
 }

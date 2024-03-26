@@ -24,6 +24,8 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('download:recording')->everyMinute()->withoutOverlapping();
         $schedule->command('voucher:check-expired')->everyMinute();
+        //Remind booking schedule
+        $schedule->command('booking:check-scheduled')->hourly();
     }
 
     /**

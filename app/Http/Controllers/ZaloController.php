@@ -51,6 +51,11 @@ class ZaloController extends Controller
                 $error = json_decode($checkOA->getContent())->error ?? "";
                 if ($error == "You must provide an access token.") {
                     return redirect($this->getAuthCode(false));
+                } elseif ($error == "Access token has expired") {
+                    $this->getRefreshAccessToken();
+                    return $next($request);
+                } else {
+                    throw new Exception('Something went wrong');
                 }
             }
             if (isset($checkOA['error']) && $checkOA['error'] == 0) {
@@ -73,7 +78,7 @@ class ZaloController extends Controller
         $this->app_id = Auth::user()->extend['zalo_app_id'] ?? Constants::ID_ZALO_APP ?? null;
         $this->app_secret = Auth::user()->extend['zalo_secret_id'] ?? Constants::KEY_ZALO_APP ?? null;
 
-        if (Auth::user()->extend['access_token_zalo']) {
+        if (isset(Auth::user()->extend['access_token_zalo']) && Auth::user()->extend['access_token_zalo']) {
             $this->access_token = Auth::user()->extend['access_token_zalo'];
         }
 
