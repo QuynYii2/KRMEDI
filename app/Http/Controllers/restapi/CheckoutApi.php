@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\restapi;
 
+use App\Enums\CartStatus;
 use App\Enums\OrderItemStatus;
 use App\Enums\OrderStatus;
 use App\Enums\TypeProductCart;
@@ -63,6 +64,8 @@ class CheckoutApi extends Controller
 
         $orderMethod = $request->input('order_method');
 
+        $prescription_id = $request->input('prescription_id');
+
         $order = new Order();
 
         $order->user_id = $userID;
@@ -81,9 +84,16 @@ class CheckoutApi extends Controller
         $order->order_method = $orderMethod;
         $order->status = OrderStatus::PROCESSING;
 
+        $order->prescription_id = $prescription_id;
+
         $order->save();
 
-        $carts = Cart::where('user_id', $userID)->whereNull('prescription_id')->get();
+        if ($prescription_id) {
+            $carts = Cart::where('user_id', $userID)->whereNotNull('prescription_id')->get();
+        } else {
+            $carts = Cart::where('user_id', $userID)->whereNull('prescription_id')->get();
+        }
+
         foreach ($carts as $cart) {
             if ($cart->type_product == TypeProductCart::MEDICINE) {
                 $product = ProductMedicine::find($cart->product_id);
@@ -106,7 +116,9 @@ class CheckoutApi extends Controller
             $product->quantity -= $cart->quantity;
             $product->save();
 
-            $cart->delete();
+            if (!$prescription_id) {
+                $cart->delete();
+            }
         }
 
         $roleAdmin = Role::where('name', \App\Enums\Role::ADMIN)->first();
@@ -146,19 +158,27 @@ class CheckoutApi extends Controller
 
     public function statusOrder(Request $request)
     {
-        $order = Order::where('aha_order_id',$request->_id)->first();
-        if (empty($order)){
-            return response()->json(['status'=>false,'message' => 'Đơn hàng không tồn tại'], 200);
+        $order = Order::where('aha_order_id', $request->_id)->first();
+        if (empty($order)) {
+            return response()->json(['status' => false, 'message' => 'Đơn hàng không tồn tại'], 200);
         }
         $order->status = $request->status;
         $order->save();
+
+        if ($request->status == "ACCEPTED") {
+            $carts = Cart::where('prescription_id', $order->prescription_id)->get();
+            foreach ($carts as $cart) {
+                $cart->status = CartStatus::COMPLETE;
+                $cart->save();
+            }
+        }
 
         $data = $request->all();
         $user = User::find($order->user_id);
         $token = $user->token_firebase;
         $response = $this->sendNotification($token, $data);
 
-        return response()->json(['status'=>true,'message' => 'Cập nhật trạng thái đơn hàng thành công'], 200);
+        return response()->json(['status' => true, 'message' => 'Cập nhật trạng thái đơn hàng thành công'], 200);
     }
 
     public function sendNotification($device_token, $data)
@@ -211,7 +231,6 @@ class CheckoutApi extends Controller
                 $point_exchange = intval($point_money_exchange / 1000);
                 $discount = $price;
                 $price = 0;
-
             } else {
                 $discount = $point_to_money;
                 $price = $price - $point_to_money;

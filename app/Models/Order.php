@@ -26,7 +26,8 @@ class Order extends Model
         'status',
         'created_at',
         'type_product',
-        'aha_order_id'
+        'aha_order_id',
+        'prescription_id'
     ];
 
     public function getOrderDetails()
