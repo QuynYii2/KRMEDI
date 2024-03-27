@@ -5,9 +5,10 @@
 @section('page-style')
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
 @endsection
 @section('main-content')
     <div class="container-fluid">
@@ -137,6 +138,7 @@
                                     </select>
                                 </div>
                             </div>
+
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="in_charged_{{ $index }}">Bác sĩ phụ trách:</label>
@@ -148,6 +150,7 @@
                                     </select>
                                 </div>
                             </div>
+
                             <div class="repeater-item col-md-3">
                                 <div class="form-group">
                                     <label for="file">Tài liệu khám bệnh:</label>
@@ -624,7 +627,7 @@
     <script>
         $(document).ready(function() {
             $('.doctor_selector').select2({
-    theme: 'bootstrap-5',
+                theme: 'bootstrap-5',
                 ajax: {
                     url: "{{ route('role.user.list', ['role_id' => 39]) }}",
                     dataType: 'json',
