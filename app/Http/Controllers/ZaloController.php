@@ -51,23 +51,43 @@ class ZaloController extends Controller
                 $error = json_decode($checkOA->getContent())->error ?? "";
                 if ($error == "You must provide an access token.") {
                     return redirect($this->getAuthCode(false));
-                } elseif ($error == "Access token has expired") {
-                    $this->getRefreshAccessToken();
-                    return $next($request);
-                } else {
-                    throw new Exception('Something went wrong');
+                }
+                $statusCode = json_decode($checkOA->getContent())->code ?? "";
+                switch ($statusCode) {
+                    case -204:
+                        toast('Error OA! Official Account đã bị xóa', 'error', 'top-left');
+                        return back();
+                        break;
+                    case -211:
+                        toast('Error OA! Hết quota', 'error', 'top-left');
+                        return back();
+                        break;
+                    case -213:
+                        toast('Error OA! Người dùng chưa quan tâm Official Account', 'error', 'top-left');
+                        return back();
+                        break;
+                    case -216:
+                        $this->getRefreshAccessToken();
+                        return $next($request);
+                        break;
+                    case -224:
+                        toast('Error OA! Official Account chưa mua gói dịch vụ', 'error', 'top-left');
+                        return back();
+                        break;
+                    case -230:
+                        toast('Error OA! Người dùng không tương tác với OA trong 7 ngày qua.', 'error', 'top-left');
+                        return back();
+                        break;
+
+                    default:
+                        toast('Something went wrong', 'error', 'top-left');
+                        return back();
+                        break;
                 }
             }
+
             if (isset($checkOA['error']) && $checkOA['error'] == 0) {
                 return $next($request);
-            } else {
-                $statusCode = json_decode($checkOA->getContent())->code ?? "";
-                if ($statusCode == -216) {
-                    $this->getRefreshAccessToken();
-                    return $next($request);
-                } else {
-                    throw new Exception('Something went wrong');
-                }
             }
         });
     }

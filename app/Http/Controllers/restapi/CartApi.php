@@ -153,7 +153,7 @@ class CartApi extends Controller
                     ->where('prescription_id', $prescription_id)
                     ->get();
             } else {
-                $carts = Cart::with(['users', 'productMedicine'])
+                $carts = Cart::with(['users', 'productInfo'])
                     ->where('prescription_id', $prescription_id)
                     ->get();
             }
