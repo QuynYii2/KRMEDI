@@ -138,19 +138,17 @@
                                     </select>
                                 </div>
                             </div>
-
-                            {{-- <div class="col-md-3">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="in_charged_{{ $index }}">Bác sĩ phụ trách:</label>
                                     <select id="in_charged_{{ $index }}" class="form-select doctor_selector"
-                                        name="doctor_id[]" required>
+                                        name="doctor_id[]">
                                         @if ($item['doctorId'] && $item['doctorName'])
                                             <option value="{{ $item['doctorId'] }}">{{ $item['doctorName'] }}</option>
                                         @endif
                                     </select>
                                 </div>
-                            </div> --}}
-
+                            </div>
                             <div class="repeater-item col-md-3">
                                 <div class="form-group">
                                     <label for="file">Tài liệu khám bệnh:</label>
@@ -170,7 +168,7 @@
                         <div class="d-flex align-items-center row repeater-item">
                             <div class="col-md-1 delete-repeater-div">
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="select1">Select:</label>
                                     <select class="form-control" name="select[]">
@@ -180,7 +178,15 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="repeater-item col-md-4">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="in_charged">Bác sĩ phụ trách:</label>
+                                    <select id="in_charged" class="form-select doctor_selector"
+                                        name="doctor_id[]">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="repeater-item col-md-3">
                                 <div class="form-group">
                                     <label for="file">Tài liệu khám bệnh:</label>
                                     <input type="file" name="file[]" class="form-control-file"

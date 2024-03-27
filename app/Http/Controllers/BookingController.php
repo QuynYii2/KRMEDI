@@ -309,11 +309,6 @@ class BookingController extends Controller
 
                         $bookingResults[$index] = $bookingResult;
                     }
-                } else {
-                    foreach ($selectValues as $index => $type) {
-                        $bookingResults[$index]['type'] = $type;
-                        $bookingResults[$index]['doctor_id'] = $doctorValues[$index];
-                    }
                 }
 
                 $extendData = $booking->extend ?? [];
