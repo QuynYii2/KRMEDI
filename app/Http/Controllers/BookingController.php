@@ -305,7 +305,7 @@ class BookingController extends Controller
                         $bookingResult = [
                             'type' => $selectValues[$index],
                             'url' => $fileUrl,
-                            'doctor_id' => $doctorValues[$index],
+                            // 'doctor_id' => $doctorValues[$index],
                         ];
 
                         $bookingResults[$index] = $bookingResult;
