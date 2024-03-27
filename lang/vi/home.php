@@ -989,6 +989,8 @@ return [
     'Please upload your prescription file' => 'Vui lòng tải lên tập tin đơn thuốc của bạn',
     'zalo_app_id' => 'Zalo APP ID',
     'zalo_secret_id' => 'Zalo SECRET ID',
-    'activate_zalo_oa' => 'Kích hoạt ZALO OA'
+    'activate_zalo_oa' => 'Kích hoạt ZALO OA',
+    'role' => 'Vai trò',
+    'identify_number' => 'Mã định danh'
 
 ];

@@ -1,4 +1,7 @@
-@php use Illuminate\Support\Facades\Auth;use App\Http\Controllers\MainController; @endphp
+@php
+    use Illuminate\Support\Facades\Auth;
+    use App\Http\Controllers\MainController;
+@endphp
 @extends('layouts.admin')
 @section('title')
     {{ __('home.Profile') }}
@@ -33,15 +36,15 @@
             <div class="card shadow mb-4">
                 <div class="card-profile-image mt-4 d-flex justify-content-center">
                     <img loading="lazy" class="avatar-user" src="{{ Auth::user()->avt }}" alt=""
-                         style="width: 100px; height: 100px; object-fit: cover;">
+                        style="width: 100px; height: 100px; object-fit: cover;">
                 </div>
                 <div class="card-body">
 
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="text-center">
-                                <h5 class="font-weight-bold">{{  Auth::user()->username }}</h5>
-                                <p>{{  Auth::user()->points }} points</p>
+                                <h5 class="font-weight-bold">{{ Auth::user()->username }}</h5>
+                                <p>{{ Auth::user()->points }} points</p>
                             </div>
                             <div class="d-flex justify-content-center align-items-center">
                                 <div class="mr-3 ml-3">
@@ -77,8 +80,7 @@
                                         class="fa-brands fa-facebook w-icon-px"></i></span>
                             </div>
                             <label for="facebook"></label><input type="text" class="form-control" id="facebook"
-                                                                 name="facebook"
-                                                                 value="{{ $socialUser->facebook ?? '' }}">
+                                name="facebook" value="{{ $socialUser->facebook ?? '' }}">
                         </div>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
@@ -86,25 +88,22 @@
                                         class="fa-brands fa-tiktok w-icon-px"></i></span>
                             </div>
                             <label for="tiktok"></label><input type="text" class="form-control" id="tiktok"
-                                                               name="tiktok"
-                                                               value="{{ $socialUser->tiktok ?? '' }}">
-                        </div>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1"><i class="fa-brands fa-instagram"></i></span>
-                            </div>
-                            <label for="instagram"></label><input type="text" class="form-control" id="instagram"
-                                                                  name="instagram"
-                                                                  value="{{ $socialUser->instagram ?? '' }}">
+                                name="tiktok" value="{{ $socialUser->tiktok ?? '' }}">
                         </div>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1"><i
-                                        class="fa-brands fa-google"></i></span>
+                                        class="fa-brands fa-instagram"></i></span>
                             </div>
-                            <label for="google_review"></label><input type="text" class="form-control"
-                                                                      id="google_review" name="google_review"
-                                                                      value="{{ $socialUser->google_review ?? '' }}">
+                            <label for="instagram"></label><input type="text" class="form-control" id="instagram"
+                                name="instagram" value="{{ $socialUser->instagram ?? '' }}">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1"><i class="fa-brands fa-google"></i></span>
+                            </div>
+                            <label for="google_review"></label><input type="text" class="form-control" id="google_review"
+                                name="google_review" value="{{ $socialUser->google_review ?? '' }}">
                         </div>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
@@ -112,22 +111,20 @@
                                         class="fa-brands fa-youtube w-icon-px"></i></span>
                             </div>
                             <label for="youtube"></label><input type="text" class="form-control" id="youtube"
-                                                                name="youtube"
-                                                                value="{{ $socialUser->youtube ?? '' }}">
+                                name="youtube" value="{{ $socialUser->youtube ?? '' }}">
                         </div>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1"><i
                                         class="fa-solid fa-hashtag"></i></span>
                             </div>
-                            <label for="other"></label><input type="text" class="form-control" id="other" name="other"
-                                                              value="{{ $socialUser->other ?? '' }}">
+                            <label for="other"></label><input type="text" class="form-control" id="other"
+                                name="other" value="{{ $socialUser->other ?? '' }}">
                         </div>
 
-                        <input type="hidden" id="user_id" name="user_id"
-                               value="{{ Auth::user()->id }}">
+                        <input type="hidden" id="user_id" name="user_id" value="{{ Auth::user()->id }}">
                         <button type="button" class="btn btn-primary"
-                                onclick="submitForm()">{{ __('home.Submit') }}</button>
+                            onclick="submitForm()">{{ __('home.Submit') }}</button>
                     </form>
                 </div>
             </div>
@@ -166,13 +163,13 @@
 
                 <div class="card-header py-3">
                     @php
-                        $roleUser = \App\Models\RoleUser::where('user_id',Auth::user()->id)->first();
-                        $roleName = \App\Models\Role::where('id',$roleUser->role_id)->first();
+                        $roleUser = \App\Models\RoleUser::where('user_id', Auth::user()->id)->first();
+                        $roleName = \App\Models\Role::where('id', $roleUser->role_id)->first();
 
                     @endphp
                     <h6 class="m-0 font-weight-bold text-primary">{{ __('home.My Account') }}
-                        : @if($roleName->name != 'ADMIN')
-                            {{$member ?? 'Người dùng'}}
+                        : @if ($roleName->name != 'ADMIN')
+                            {{ $member ?? 'Người dùng' }}
                         @else
                             ADMIN
                         @endif
@@ -181,7 +178,7 @@
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('profile.update') }}" autocomplete="off"
-                          enctype="multipart/form-data">
+                        enctype="multipart/form-data">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                         <input type="hidden" name="_method" value="PUT">
@@ -195,26 +192,25 @@
                                         <label class="form-control-label" for="username">{{ __('home.Username') }}<span
                                                 class="small text-danger">*</span></label>
                                         <input type="text" id="username" class="form-control" name="username"
-                                               placeholder="Username" required
-                                               value="{{ old('username', Auth::user()->username) }}">
+                                            placeholder="Username" required
+                                            value="{{ old('username', Auth::user()->username) }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group focused">
                                         <label class="form-control-label" for="name">{{ __('home.Name') }}<span
                                                 class="small text-danger">*</span></label>
-                                        <input type="text" id="name" class="form-control" name="name" placeholder="Name"
-                                               required
-                                               value="{{ old('name', Auth::user()->name) }}">
+                                        <input type="text" id="name" class="form-control" name="name"
+                                            placeholder="Name" required value="{{ old('name', Auth::user()->name) }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group focused">
                                         <label class="form-control-label"
-                                               for="last_name">{{ __('home.Last name') }}</label>
+                                            for="last_name">{{ __('home.Last name') }}</label>
                                         <input type="text" id="last_name" class="form-control" name="last_name"
-                                               placeholder="Last name" required
-                                               value="{{ old('last_name', Auth::user()->last_name) }}">
+                                            placeholder="Last name" required
+                                            value="{{ old('last_name', Auth::user()->last_name) }}">
                                     </div>
                                 </div>
                             </div>
@@ -223,25 +219,25 @@
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <label class="form-control-label" for="email">{{ __('home.Email address') }}
-                                            <span
-                                                class="small text-danger">*</span></label>
+                                            <span class="small text-danger">*</span></label>
                                         <input type="email" id="email" class="form-control" name="email"
-                                               placeholder="example@example.com" required
-                                               value="{{ old('email', Auth::user()->email) }}">
+                                            placeholder="example@example.com" required
+                                            value="{{ old('email', Auth::user()->email) }}">
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label class="form-control-label" for="phone">{{ __('home.PhoneNumber') }}<span
+                                        <label class="form-control-label"
+                                            for="phone">{{ __('home.PhoneNumber') }}<span
                                                 class="small text-danger">*</span></label>
                                         <input type="number" id="phone" class="form-control" name="phone"
-                                               placeholder="Phone"
-                                               value="{{ old('phone', Auth::user()->phone) }}" required>
+                                            placeholder="Phone" value="{{ old('phone', Auth::user()->phone) }}" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <label for="avt">{{ __('home.Ảnh đại diện') }} </label>
-                                    <input type="file" class="form-control" id="avt" name="avt" accept="image/*">
+                                    <input type="file" class="form-control" id="avt" name="avt"
+                                        accept="image/*">
                                 </div>
                             </div>
 
@@ -249,26 +245,25 @@
                                 <div class="col-lg-4">
                                     <div class="form-group focused">
                                         <label class="form-control-label"
-                                               for="current_password">{{ __('home.Current password') }}</label>
+                                            for="current_password">{{ __('home.Current password') }}</label>
                                         <input type="password" id="current_password" class="form-control"
-                                               name="current_password" placeholder="{{ __('home.Current password') }}">
+                                            name="current_password" placeholder="{{ __('home.Current password') }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group focused">
                                         <label class="form-control-label"
-                                               for="new_password">{{ __('home.New password') }}</label>
+                                            for="new_password">{{ __('home.New password') }}</label>
                                         <input type="password" id="new_password" class="form-control"
-                                               name="new_password" placeholder="{{ __('home.New password') }}">
+                                            name="new_password" placeholder="{{ __('home.New password') }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group focused">
                                         <label class="form-control-label"
-                                               for="confirm_password">{{ __('home.Confirm Password') }}</label>
+                                            for="confirm_password">{{ __('home.Confirm Password') }}</label>
                                         <input type="password" id="confirm_password" class="form-control"
-                                               name="password_confirmation"
-                                               placeholder="{{ __('home.Confirm Password') }}">
+                                            name="password_confirmation" placeholder="{{ __('home.Confirm Password') }}">
                                     </div>
                                 </div>
                             </div>
@@ -276,31 +271,31 @@
                                 <div class="col-sm-4">
                                     <label for="detail_address">{{ __('home.địa chỉ chi tiết việt') }}</label>
                                     <input class="form-control" name="detail_address" id="detail_address"
-                                           value="{{$doctor->detail_address}}">
+                                        value="{{ $doctor->detail_address }}">
                                 </div>
                                 <div class="col-sm-4">
                                     <label for="detail_address_en">{{ __('home.địa chỉ chi tiết anh') }}</label>
                                     <input class="form-control" name="detail_address_en" id="detail_address_en"
-                                           value="{{$doctor->detail_address_en}}">
+                                        value="{{ $doctor->detail_address_en }}">
                                 </div>
                                 <div class="col-sm-4">
                                     <label for="detail_address_laos">{{ __('home.địa chỉ chi tiết lào') }}</label>
                                     <input class="form-control" name="detail_address_laos" id="detail_address_laos"
-                                           value="{{$doctor->detail_address_laos}}">
+                                        value="{{ $doctor->detail_address_laos }}">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-4">
                                     <label for="province_id">{{ __('home.Tỉnh') }}</label>
                                     <select name="province_id" id="province_id" class="form-control"
-                                            onchange="callGetAllDistricts(this.value)">
+                                        onchange="callGetAllDistricts(this.value)">
 
                                     </select>
                                 </div>
                                 <div class="col-sm-4">
                                     <label for="district_id">{{ __('home.Quận') }}</label>
                                     <select name="district_id" id="district_id" class="form-control"
-                                            onchange="callGetAllCommunes(this.value)">
+                                        onchange="callGetAllCommunes(this.value)">
                                         <option value="">{{ __('home.Chọn quận') }}</option>
                                     </select>
                                 </div>
@@ -315,10 +310,10 @@
                                 <div class="col-lg-4">
                                     <div class="form-group focused">
                                         <label class="form-control-label"
-                                               for="address_code">{{ __('home.AddressCode') }}</label>
+                                            for="address_code">{{ __('home.AddressCode') }}</label>
                                         <input type="text" id="address_code" class="form-control" name="address_code"
-                                               placeholder="ha_noi"
-                                               value="{{ old('address_code', Auth::user()->address_code) }}" required>
+                                            placeholder="ha_noi"
+                                            value="{{ old('address_code', Auth::user()->address_code) }}" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -326,15 +321,15 @@
                                         <label class="form-control-label" for="member">{{ __('home.Member') }}<span
                                                 class="small text-danger">*</span></label>
                                         <select id="member" name="member" class="form-control" disabled>
-                                            @foreach($roles as $role)
+                                            @foreach ($roles as $role)
                                                 @php
                                                     $isSelected = false;
-                                                    if ($role->id == $roleItem->id){
+                                                    if ($role->id == $roleItem->id) {
                                                         $isSelected = true;
                                                     }
                                                 @endphp
-                                                <option
-                                                    {{ $isSelected ? 'selected' : '' }} value="{{$role->id}}">{{$role->name}}</option>
+                                                <option {{ $isSelected ? 'selected' : '' }} value="{{ $role->id }}">
+                                                    {{ $role->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -343,67 +338,90 @@
                                     <div class="form-group focused">
                                         <label class="form-control-label" for="status">{{ __('home.Status') }}</label>
                                         <input type="text" id="status" class="form-control" name="status"
-                                               disabled
-                                               value="{{ old('status', Auth::user()->status) }}">
+                                            disabled value="{{ old('status', Auth::user()->status) }}">
                                     </div>
                                 </div>
                             </div>
 
-                            @if (Auth::user()->type == "BUSINESS" || (new MainController())->checkAdmin())
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group focused">
+                                        <label class="form-control-label" for="role">{{ __('home.role') }}</label>
+                                        <input type="text" id="role" class="form-control"
+                                            value="{{ Auth::user()->roles->first()->name ?? '' }}" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-lg-7">
+                                    <div class="form-group focused">
+                                        <label class="form-control-label"
+                                            for="identify_number">{{ __('home.identify_number') }}</label>
+                                        <div class="input-group">
+                                            <input type="text" id="identify_number" class="form-control"
+                                                value="{{ Auth::user()->identify_number ?? '' }}" readonly>
+                                            <div class="input-group-append">
+                                                <button onclick="copyToClipboard()" type="button" class="btn btn-outline-primary"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    title="Gửi mã này cho bạn bè để nhận điểm tích luỹ"><i
+                                                        class="fa-regular fa-copy"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if (Auth::user()->type == 'BUSINESS' || (new MainController())->checkAdmin())
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="form-group focused">
-                                            <label class="form-control-label"
-                                                for="zalo_app_id"><a href="https://oa.zalo.me/home">{{ __('home.zalo_app_id') }}</a></label>
-                                            <input type="text" id="zalo_app_id" class="form-control" name="zalo_app_id"
-                                                placeholder="<Enter your zalo app id>"
-                                                value="{{ old('zalo_app_id', Auth::user()->extend['zalo_app_id'] ?? "") }}">
+                                            <label class="form-control-label" for="zalo_app_id"><a
+                                                    href="https://oa.zalo.me/home">{{ __('home.zalo_app_id') }}</a></label>
+                                            <input type="text" id="zalo_app_id" class="form-control"
+                                                name="zalo_app_id" placeholder="<Enter your zalo app id>"
+                                                value="{{ old('zalo_app_id', Auth::user()->extend['zalo_app_id'] ?? '') }}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group focused">
-                                            <label class="form-control-label"
-                                                for="zalo_secret_id"><a href="https://oa.zalo.me/home">{{ __('home.zalo_secret_id') }}</a></label>
-                                            <input type="text" id="zalo_secret_id" class="form-control" name="zalo_secret_id"
-                                                placeholder="<Enter your zalo secret id>"
-                                                value="{{ old('zalo_secret_id', Auth::user()->extend['zalo_secret_id'] ?? "") }}">
+                                            <label class="form-control-label" for="zalo_secret_id"><a
+                                                    href="https://oa.zalo.me/home">{{ __('home.zalo_secret_id') }}</a></label>
+                                            <input type="text" id="zalo_secret_id" class="form-control"
+                                                name="zalo_secret_id" placeholder="<Enter your zalo secret id>"
+                                                value="{{ old('zalo_secret_id', Auth::user()->extend['zalo_secret_id'] ?? '') }}">
                                         </div>
                                     </div>
                                 </div>
                                 @if (!isset(Auth::user()->extend['isActivated']) || !Auth::user()->extend['isActivated'])
-                                    <a href="{{ route('zalo.service.auth.verify') }}" type="button" class="btn btn-outline-primary" >{{ __('home.activate_zalo_oa') }}</a>
+                                    <a href="{{ route('zalo.service.auth.verify') }}" type="button"
+                                        class="btn btn-outline-primary">{{ __('home.activate_zalo_oa') }}</a>
                                 @endif
                             @endif
 
-                            @if(Auth::user()->type == 'NORMAL')
+                            @if (Auth::user()->type == 'NORMAL')
                                 <div class="row">
                                     <div class="col-12"><label
                                             for="medical_history">{{ __('home.Tiền sử bệnh án') }}</label>
-                                        <textarea id="medical_history"
-                                                  name="medical_history">{{ old('medical_history', Auth::user()->medical_history) }}</textarea>
+                                        <textarea id="medical_history" name="medical_history">{{ old('medical_history', Auth::user()->medical_history) }}</textarea>
                                     </div>
                                 </div>
                             @endif
 
                             <!-- Doctor -->
-                            @if(Auth::user()->type == 'MEDICAL')
+                            @if (Auth::user()->type == 'MEDICAL')
                                 <h1>Info doctor</h1>
                                 <div class="row">
                                     <div class="col-sm-4">
-                                        <label
-                                            for="identifier">{{ __('home.Mã định danh trên giấy hành nghề') }}</label>
+                                        <label for="identifier">{{ __('home.Mã định danh trên giấy hành nghề') }}</label>
                                         <input type="text" class="form-control" id="identifier" name="identifier"
-                                               value="{{$doctor->identifier}}">
+                                            value="{{ $doctor->identifier }}">
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="workplace">{{ __('home.Workplace') }}</label>
-                                        <input class="form-control" id="workplace" type="text" name="workplace" required
-                                               value="{{$doctor->workplace}}">
+                                        <input class="form-control" id="workplace" type="text" name="workplace"
+                                            required value="{{ $doctor->workplace }}">
                                     </div>
-                                    <div class="col-sm-4"><label
-                                            for="specialty">{{ __('home.chuyên môn việt') }}</label>
+                                    <div class="col-sm-4"><label for="specialty">{{ __('home.chuyên môn việt') }}</label>
                                         <input type="text" class="form-control" id="specialty" name="specialty"
-                                               value="{{$doctor->specialty}}">
+                                            value="{{ $doctor->specialty }}">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -412,13 +430,12 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <label for="service">{{ __('home.Dịch vụ cung cấp việt') }}</label>
-                                        <textarea class="form-control" name="service"
-                                                  id="service">
-                                            @if(locationHelper() == 'vi')
-                                                {{$doctor->service ?? ''}}
-                                            @else
-                                                {{ $doctor->service_en ?? ''}}
-                                            @endif
+                                        <textarea class="form-control" name="service" id="service">
+                                            @if (locationHelper() == 'vi')
+{{ $doctor->service ?? '' }}
+@else
+{{ $doctor->service_en ?? '' }}
+@endif
                                         </textarea>
                                     </div>
                                 </div>
@@ -430,88 +447,86 @@
                                         $working2 = $doctor->time_working_2;
                                         $arrayWorking2 = explode('-', $working2);
                                     @endphp
-                                    @if(!$working1 == null && !$working2 == null)
+                                    @if (!$working1 == null && !$working2 == null)
                                         <div class="col-sm-3">
                                             <label
                                                 for="time_working_1_start">{{ __('home.Thời gian làm việc bắt đầu') }}</label>
                                             <input type="time" class="form-control" id="time_working_1_start"
-                                                   name="time_working_1_start"
-                                                   value="{{ $arrayWorking1[0] }}">
+                                                name="time_working_1_start" value="{{ $arrayWorking1[0] }}">
                                         </div>
                                         <div class="col-sm-3">
                                             <label
                                                 for="time_working_1_end">{{ __('home.Thời gian làm việc kết thúc') }}</label>
                                             <input type="time" class="form-control" id="time_working_1_end"
-                                                   name="time_working_1_end"
-                                                   value="{{ $arrayWorking1[1] }}">
+                                                name="time_working_1_end" value="{{ $arrayWorking1[1] }}">
                                         </div>
                                         <div class="col-sm-3">
                                             <label
                                                 for="time_working_2_start">{{ __('home.Những này làm việc bắt đầu') }}</label>
                                             <select name="time_working_2_start" id="time_working_2_start"
-                                                    class="form-control">
-                                                <option
-                                                    {{ $arrayWorking2[0] == 'T2' ? 'selected' : '' }} value="T2">{{ __('home.Thứ 2') }}</option>
-                                                <option
-                                                    {{ $arrayWorking2[0] == 'T3' ? 'selected' : '' }}  value="T3">{{ __('home.Thứ 3') }}</option>
-                                                <option
-                                                    {{ $arrayWorking2[0] == 'T4' ? 'selected' : '' }}  value="T4">{{ __('home.Thứ 4') }}</option>
-                                                <option
-                                                    {{ $arrayWorking2[0] == 'T5' ? 'selected' : '' }}  value="T5">{{ __('home.Thứ 5') }}</option>
-                                                <option
-                                                    {{ $arrayWorking2[0] == 'T6' ? 'selected' : '' }}  value="T6">{{ __('home.Thứ 6') }}</option>
-                                                <option
-                                                    {{ $arrayWorking2[0] == 'T7' ? 'selected' : '' }}  value="T7">{{ __('home.Thứ 7') }}</option>
-                                                <option
-                                                    {{ $arrayWorking2[0] == 'CN' ? 'selected' : '' }}  value="CN">{{ __('home.Chủ nhật') }}</option>
+                                                class="form-control">
+                                                <option {{ $arrayWorking2[0] == 'T2' ? 'selected' : '' }} value="T2">
+                                                    {{ __('home.Thứ 2') }}</option>
+                                                <option {{ $arrayWorking2[0] == 'T3' ? 'selected' : '' }} value="T3">
+                                                    {{ __('home.Thứ 3') }}</option>
+                                                <option {{ $arrayWorking2[0] == 'T4' ? 'selected' : '' }} value="T4">
+                                                    {{ __('home.Thứ 4') }}</option>
+                                                <option {{ $arrayWorking2[0] == 'T5' ? 'selected' : '' }} value="T5">
+                                                    {{ __('home.Thứ 5') }}</option>
+                                                <option {{ $arrayWorking2[0] == 'T6' ? 'selected' : '' }} value="T6">
+                                                    {{ __('home.Thứ 6') }}</option>
+                                                <option {{ $arrayWorking2[0] == 'T7' ? 'selected' : '' }} value="T7">
+                                                    {{ __('home.Thứ 7') }}</option>
+                                                <option {{ $arrayWorking2[0] == 'CN' ? 'selected' : '' }} value="CN">
+                                                    {{ __('home.Chủ nhật') }}</option>
                                             </select>
                                         </div>
                                         <div class="col-sm-3">
                                             <label
                                                 for="time_working_2_end">{{ __('home.Những này làm việc kết thúc') }}</label>
                                             <select name="time_working_2_end" id="time_working_2_end"
-                                                    class="form-control">
-                                                <option
-                                                    {{ $arrayWorking2[1] == 'T2' ? 'selected' : '' }}  value="T2">{{ __('home.Thứ 2') }}</option>
-                                                <option
-                                                    {{ $arrayWorking2[1] == 'T3' ? 'selected' : '' }}  value="T3">{{ __('home.Thứ 3') }}</option>
-                                                <option
-                                                    {{ $arrayWorking2[1] == 'T4' ? 'selected' : '' }}  value="T4">{{ __('home.Thứ 4') }}</option>
-                                                <option
-                                                    {{ $arrayWorking2[1] == 'T5' ? 'selected' : '' }}  value="T5">{{ __('home.Thứ 5') }}</option>
-                                                <option
-                                                    {{ $arrayWorking2[1] == 'T6' ? 'selected' : '' }}  value="T6">{{ __('home.Thứ 6') }}</option>
-                                                <option
-                                                    {{ $arrayWorking2[1] == 'T7' ? 'selected' : '' }}  value="T7">{{ __('home.Thứ 7') }}</option>
-                                                <option
-                                                    {{ $arrayWorking2[1] == 'CN' ? 'selected' : '' }}  value="CN">{{ __('home.Chủ nhật') }}</option>
+                                                class="form-control">
+                                                <option {{ $arrayWorking2[1] == 'T2' ? 'selected' : '' }} value="T2">
+                                                    {{ __('home.Thứ 2') }}</option>
+                                                <option {{ $arrayWorking2[1] == 'T3' ? 'selected' : '' }} value="T3">
+                                                    {{ __('home.Thứ 3') }}</option>
+                                                <option {{ $arrayWorking2[1] == 'T4' ? 'selected' : '' }} value="T4">
+                                                    {{ __('home.Thứ 4') }}</option>
+                                                <option {{ $arrayWorking2[1] == 'T5' ? 'selected' : '' }} value="T5">
+                                                    {{ __('home.Thứ 5') }}</option>
+                                                <option {{ $arrayWorking2[1] == 'T6' ? 'selected' : '' }} value="T6">
+                                                    {{ __('home.Thứ 6') }}</option>
+                                                <option {{ $arrayWorking2[1] == 'T7' ? 'selected' : '' }} value="T7">
+                                                    {{ __('home.Thứ 7') }}</option>
+                                                <option {{ $arrayWorking2[1] == 'CN' ? 'selected' : '' }} value="CN">
+                                                    {{ __('home.Chủ nhật') }}</option>
                                             </select>
                                         </div>
 
                                         <input type="text" class="form-control d-none" id="time_working_1"
-                                               name="time_working_1">
+                                            name="time_working_1">
                                         <input type="text" class="form-control d-none" id="time_working_2"
-                                               name="time_working_2">
-                                        <input type="text" class="form-control d-none" id="apply_for" name="apply_for">
+                                            name="time_working_2">
+                                        <input type="text" class="form-control d-none" id="apply_for"
+                                            name="apply_for">
                                     @else
                                         <div class="col-sm-3">
                                             <label
                                                 for="time_working_1_start">{{ __('home.Thời gian làm việc bắt đầu') }}</label>
                                             <input type="time" class="form-control" id="time_working_1_start"
-                                                   name="time_working_1_start"
-                                                   value="00:00">
+                                                name="time_working_1_start" value="00:00">
                                         </div>
                                         <div class="col-sm-3">
                                             <label
                                                 for="time_working_1_end">{{ __('home.Thời gian làm việc kết thúc') }}</label>
                                             <input type="time" class="form-control" id="time_working_1_end"
-                                                   name="time_working_1_end" value="23:59">
+                                                name="time_working_1_end" value="23:59">
                                         </div>
                                         <div class="col-sm-3">
                                             <label
                                                 for="time_working_2_start">{{ __('home.Addresses') }}{{ __('home.Những này làm việc bắt đầu') }}</label>
                                             <select name="time_working_2_start" id="time_working_2_start"
-                                                    class="form-control">
+                                                class="form-control">
                                                 <option value="T2">{{ __('home.Thứ 2') }}</option>
                                                 <option value="T3">{{ __('home.Thứ 3') }}</option>
                                                 <option value="T4">{{ __('home.Thứ 4') }}</option>
@@ -525,7 +540,7 @@
                                             <label
                                                 for="time_working_2_end">{{ __('home.Những này làm việc kết thúc') }}</label>
                                             <select name="time_working_2_end" id="time_working_2_end"
-                                                    class="form-control">
+                                                class="form-control">
                                                 <option value="T2">{{ __('home.Thứ 2') }}</option>
                                                 <option value="T3">{{ __('home.Thứ 3') }}</option>
                                                 <option value="T4"{{ __('home.Thứ 4') }}></option>
@@ -537,76 +552,79 @@
                                         </div>
 
                                         <input type="text" class="form-control d-none" id="time_working_1"
-                                               name="time_working_1">
+                                            name="time_working_1">
                                         <input type="text" class="form-control d-none" id="time_working_2"
-                                               name="time_working_2">
-                                        <input type="text" class="form-control d-none" id="apply_for" name="apply_for">
+                                            name="time_working_2">
+                                        <input type="text" class="form-control d-none" id="apply_for"
+                                            name="apply_for">
                                     @endif
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-4"><label for="department_id">{{ __('home.Department') }}</label>
                                         <select class="form-select" id="department_id" name="department_id">
                                             @php
-                                                $departments = \App\Models\DoctorDepartment::where('status', \App\Enums\DoctorDepartmentStatus::ACTIVE)->get();
+                                                $departments = \App\Models\DoctorDepartment::where(
+                                                    'status',
+                                                    \App\Enums\DoctorDepartmentStatus::ACTIVE,
+                                                )->get();
                                             @endphp
-                                            @foreach($departments as $department)
-                                                <option value="{{$department->id}}"> {{$department->name}}</option>
+                                            @foreach ($departments as $department)
+                                                <option value="{{ $department->id }}"> {{ $department->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="col-sm-4">
                                         <label for="year_of_experience">{{ __('home.Năm kinh nghiệm') }}</label>
                                         <input type="number" class="form-control" id="year_of_experience"
-                                               name="year_of_experience"
-                                               value="{{$doctor->year_of_experience}}">
+                                            name="year_of_experience" value="{{ $doctor->year_of_experience }}">
                                     </div>
                                     <div class="col-sm-4">
                                         <label for="service_price">{{ __('home.Giá dịch vụ việt') }}</label>
                                         <input class="form-control" type="number" name="service_price"
-                                               id="service_price"
-                                               value="{{$doctor->service_price}}">
+                                            id="service_price" value="{{ $doctor->service_price }}">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="form-group">
                                         <input name="prescription" type="checkbox" id="prescription"
-                                               value="{{ $doctor->prescription == null ? '0' : '1' }}" {{ $doctor->prescription == null ? '' : 'checked' }} >
-                                        <label
-                                            for="prescription">{{ __('home.prescription') }}</label>
+                                            value="{{ $doctor->prescription == null ? '0' : '1' }}"
+                                            {{ $doctor->prescription == null ? '' : 'checked' }}>
+                                        <label for="prescription">{{ __('home.prescription') }}</label>
                                     </div>
                                     <div class="form-group">
                                         <input name="free" type="checkbox" id="free"
-                                               value="{{ $doctor->free == null ? '1' : '0' }}" {{ $doctor->free == null ? '' : 'checked' }}>
-                                        <label
-                                            for="free">{{ __('home.free') }}</label>
+                                            value="{{ $doctor->free == null ? '1' : '0' }}"
+                                            {{ $doctor->free == null ? '' : 'checked' }}>
+                                        <label for="free">{{ __('home.free') }}</label>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="apply_show">{{ __('home.Apply Show') }}</label>
-                                    <input type="text" class="form-control" id="apply_show" name="apply_show" disabled>
+                                    <input type="text" class="form-control" id="apply_show" name="apply_show"
+                                        disabled>
                                     @php
                                         $arrayApply = [
-                                            'name'=> 'Name',
-                                            'response_rate'=> 'Response Rate',
-                                            'specialty'=> 'Specialty',
-                                            'year_of_experience'=> 'Years of experience',
-                                            'service'=> 'Service',
-                                            'service_price'=> 'Service Price',
-                                            'time_working_1'=> 'Time Working',
-                                            'time_working_2'=> 'Date Working',
+                                            'name' => 'Name',
+                                            'response_rate' => 'Response Rate',
+                                            'specialty' => 'Specialty',
+                                            'year_of_experience' => 'Years of experience',
+                                            'service' => 'Service',
+                                            'service_price' => 'Service Price',
+                                            'time_working_1' => 'Time Working',
+                                            'time_working_2' => 'Date Working',
                                         ];
 
                                         $arrayApplyOld = explode(',', $doctor->apply_for);
                                     @endphp
                                     <ul class="list-apply">
-                                        @foreach($arrayApply as $key => $value)
+                                        @foreach ($arrayApply as $key => $value)
                                             <li class="new-select">
-                                                <input onchange="getInput();" class="apply_item" value="{{$key}}"
-                                                       id="apply_item_{{$key}}"
-                                                       name="apply_item"
-                                                       {{ in_array($key, $arrayApplyOld) ? 'checked' : '' }}
-                                                       type="checkbox">
-                                                <label for="apply_item_{{$key}}">{{$value}}</label>
+                                                <input onchange="getInput();" class="apply_item"
+                                                    value="{{ $key }}" id="apply_item_{{ $key }}"
+                                                    name="apply_item"
+                                                    {{ in_array($key, $arrayApplyOld) ? 'checked' : '' }}
+                                                    type="checkbox">
+                                                <label for="apply_item_{{ $key }}">{{ $value }}</label>
                                             </li>
                                         @endforeach
                                     </ul>
@@ -614,41 +632,40 @@
                             @endif
 
                             {{-- Business only --}}
-                            @if(Auth::user()->type == 'BUSINESS')
+                            @if (Auth::user()->type == 'BUSINESS')
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label for="open_date">{{ __('home.Thời gian bắt đầu') }}</label>
-                                        <input class="form-control" id="open_date" name="open_date"
-                                               type="time" placeholder="">
+                                        <input class="form-control" id="open_date" name="open_date" type="time"
+                                            placeholder="">
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="close_date">{{ __('home.Thời gian kết thúc') }}</label>
-                                        <input class="form-control" id="close_date" name="close_date"
-                                               type="time" placeholder="">
+                                        <input class="form-control" id="close_date" name="close_date" type="time"
+                                            placeholder="">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label for="experienceHospital">{{ __('home.EXPERIENCE') }}</label>
                                         <input class="form-control" type="number" id="experienceHospital"
-                                               name="experienceHospital"
-                                               placeholder="{{ __('home.EXPERIENCE') }}">
+                                            name="experienceHospital" placeholder="{{ __('home.EXPERIENCE') }}">
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="time_work">{{ __('home.Time work') }}</label>
                                         <select class="form-select" id="time_work" name="time_work">
-                                            <option
-                                                value="{{\App\Enums\TypeTimeWork::ALL}}">{{\App\Enums\TypeTimeWork::ALL}}</option>
-                                            <option
-                                                value="{{\App\Enums\TypeTimeWork::NONE}}">{{\App\Enums\TypeTimeWork::NONE}}</option>
-                                            <option
-                                                value="{{\App\Enums\TypeTimeWork::OFFICE_HOURS}}">{{\App\Enums\TypeTimeWork::OFFICE_HOURS}}</option>
-                                            <option
-                                                value="{{\App\Enums\TypeTimeWork::ONLY_AFTERNOON}}">{{\App\Enums\TypeTimeWork::ONLY_MORNING}}</option>
-                                            <option
-                                                value="{{\App\Enums\TypeTimeWork::ONLY_AFTERNOON}}">{{\App\Enums\TypeTimeWork::ONLY_AFTERNOON}}</option>
-                                            <option
-                                                value="{{\App\Enums\TypeTimeWork::OTHER}}">{{\App\Enums\TypeTimeWork::OTHER}}</option>
+                                            <option value="{{ \App\Enums\TypeTimeWork::ALL }}">
+                                                {{ \App\Enums\TypeTimeWork::ALL }}</option>
+                                            <option value="{{ \App\Enums\TypeTimeWork::NONE }}">
+                                                {{ \App\Enums\TypeTimeWork::NONE }}</option>
+                                            <option value="{{ \App\Enums\TypeTimeWork::OFFICE_HOURS }}">
+                                                {{ \App\Enums\TypeTimeWork::OFFICE_HOURS }}</option>
+                                            <option value="{{ \App\Enums\TypeTimeWork::ONLY_AFTERNOON }}">
+                                                {{ \App\Enums\TypeTimeWork::ONLY_MORNING }}</option>
+                                            <option value="{{ \App\Enums\TypeTimeWork::ONLY_AFTERNOON }}">
+                                                {{ \App\Enums\TypeTimeWork::ONLY_AFTERNOON }}</option>
+                                            <option value="{{ \App\Enums\TypeTimeWork::OTHER }}">
+                                                {{ \App\Enums\TypeTimeWork::OTHER }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -662,7 +679,8 @@
                         <div class="pl-lg-4 mt-4">
                             <div class="row">
                                 <div class="col text-center">
-                                    <button type="submit" class="btn btn-primary">{{ __('home.Save Changes') }}</button>
+                                    <button type="submit"
+                                        class="btn btn-primary">{{ __('home.Save Changes') }}</button>
                                 </div>
                             </div>
                         </div>
@@ -683,10 +701,10 @@
             $.ajax({
                 url: `{{ route('restapi.get.provinces') }}`,
                 method: 'GET',
-                success: function (response) {
+                success: function(response) {
                     showAllProvince(response);
                 },
-                error: function (exception) {
+                error: function(exception) {
                     console.log(exception);
                 }
             });
@@ -698,10 +716,10 @@
             $.ajax({
                 url: url,
                 method: 'GET',
-                success: function (response) {
+                success: function(response) {
                     showAllDistricts(response);
                 },
-                error: function (exception) {
+                error: function(exception) {
                     console.log(exception);
                 }
             });
@@ -713,10 +731,10 @@
             $.ajax({
                 url: url,
                 method: 'GET',
-                success: function (response) {
+                success: function(response) {
                     showAllCommunes(response);
                 },
-                error: function (exception) {
+                error: function(exception) {
                     console.log(exception);
                 }
             });
@@ -734,7 +752,8 @@
                     select = ``;
                 }
                 let code = data.code;
-                html = html + `<option ${select} class="province province-item" data-code="${code}" value="${data.code}">${data.name}</option>`;
+                html = html +
+                    `<option ${select} class="province province-item" data-code="${code}" value="${data.code}">${data.name}</option>`;
             }
             $('#province_id').empty().append(html);
             callGetAllDistricts($('#province_id').find(':selected').val());
@@ -778,7 +797,9 @@
         let arrayNameCategory = [];
 
         function removeArray(arr) {
-            var what, a = arguments, L = a.length, ax;
+            var what, a = arguments,
+                L = a.length,
+                ax;
             while (L > 1 && arr.length) {
                 what = a[--L];
                 while ((ax = arr.indexOf(what)) !== -1) {
@@ -845,19 +866,19 @@
         setDataForTime('time_working_1_start', 'time_working_1_end', 'time_working_1');
         setDataForTime('time_working_2_start', 'time_working_2_end', 'time_working_2');
 
-        $('#time_working_1_start').on('change', function () {
+        $('#time_working_1_start').on('change', function() {
             setDataForTime('time_working_1_start', 'time_working_1_end', 'time_working_1')
         })
 
-        $('#time_working_1_end').on('change', function () {
+        $('#time_working_1_end').on('change', function() {
             setDataForTime('time_working_1_start', 'time_working_1_end', 'time_working_1')
         })
 
-        $('#time_working_2_start').on('change', function () {
+        $('#time_working_2_start').on('change', function() {
             setDataForTime('time_working_2_start', 'time_working_2_end', 'time_working_2')
         })
 
-        $('#time_working_2_end').on('change', function () {
+        $('#time_working_2_end').on('change', function() {
             setDataForTime('time_working_2_start', 'time_working_2_end', 'time_working_2')
         })
 
@@ -885,19 +906,19 @@
 
             try {
                 $.ajax({
-                    url: `{{route('user.social.update')}}`,
+                    url: `{{ route('user.social.update') }}`,
                     method: 'POST',
                     headers: headers,
                     contentType: false,
                     cache: false,
                     processData: false,
                     data: formData,
-                    success: function () {
+                    success: function() {
                         loadingMasterPage();
                         toastr.success('Update success');
                         window.location.reload();
                     },
-                    error: function (exception) {
+                    error: function(exception) {
                         toastr.error('Update fail');
                         loadingMasterPage();
                     }
@@ -910,8 +931,8 @@
         }
     </script>
     <script>
-        $(document).ready(function () {
-            document.getElementById('prescription').addEventListener('change', function () {
+        $(document).ready(function() {
+            document.getElementById('prescription').addEventListener('change', function() {
                 if (this.checked) {
                     this.value = 1;
                 } else {
@@ -923,7 +944,7 @@
 
             });
 
-            document.getElementById('free').addEventListener('change', function () {
+            document.getElementById('free').addEventListener('change', function() {
                 if (this.checked) {
                     this.value = 1;
                 } else {
@@ -936,5 +957,29 @@
             });
 
         });
+    </script>
+    <script>
+        function copyToClipboard() {
+            // Get the value from the input element
+            var inputValue = $('#identify_number').val();
+
+            // Create a temporary input element
+            var tempInput = $('<input>');
+            $('body').append(tempInput);
+
+            // Set the value of the temporary input to the desired value
+            tempInput.val(inputValue);
+
+            // Select the value in the temporary input
+            tempInput.select();
+
+            // Copy the selected value to the clipboard
+            document.execCommand('copy');
+
+            // Remove the temporary input element
+            tempInput.remove();
+            
+            toastr.success('Copied!!');
+        }
     </script>
 @endsection

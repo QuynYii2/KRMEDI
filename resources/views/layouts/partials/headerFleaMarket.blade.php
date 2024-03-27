@@ -361,9 +361,9 @@
                                             </div>
                                         </div>
                                         <div class="form-element">
-                                            <label for="email">{{ __('home.Email') }}</label>
-                                            <input id="email" name="email" type="text"
-                                                   placeholder="exmaple@gmail.com"
+                                            <label for="email">Email</label>
+                                            <input id="email" name="email" type="email"
+                                                   placeholder="example@gmail.com"
                                                    required>
                                         </div>
 
@@ -378,6 +378,13 @@
                                             <input id="passwordConfirm" name="passwordConfirm" minlength="8"
                                                    type="password" placeholder="********" required>
                                         </div>
+
+                                        <div class="form-element">
+                                            <label for="inviteCode">Mã giới thiệu</label>
+                                            <input id="inviteCode" type="text" name="inviteCode"
+                                                   placeholder="Nhập mã giới thiệu">
+                                        </div>
+
                                         <div class="form-element">
                                             <input id="remember-me" type="checkbox" required>
                                             <label

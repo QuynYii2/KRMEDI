@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -37,6 +38,13 @@ class AuthController extends Controller
             $time_work = $request->input('time_work');
             $provider_name = $request->input('provider_name') ?? "";
             $provider_id = $request->input('provider_id') ?? "";
+
+            $invite_code = $request->input('inviteCode') ?? "";
+
+            $identify_number = Str::random(8);
+            while (User::where('identify_number', $identify_number)->exists()) {
+                $identify_number = Str::random(8);
+            }
 
             $address = $request->input('combined_address');
             $representative = $request->input('representative');
@@ -146,6 +154,7 @@ class AuthController extends Controller
             $user->member = $member;
             $user->provider_id = $provider_id;
             $user->provider_name = $provider_name;
+            $user->identify_number = $identify_number;
             $user->abouts = 'default';
             $user->abouts_en = 'default';
             $user->abouts_lao = 'default';
