@@ -18,6 +18,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class RegisterController extends Controller
 {
@@ -34,6 +35,13 @@ class RegisterController extends Controller
             $type = $request->input('type');
             $provider_name = $request->input('provider_name') ?? "";
             $provider_id = $request->input('provider_id') ?? "";
+
+            $invite_code = $request->input('inviteCode') ?? "";
+
+            $identify_number = Str::random(8);
+            while (User::where('identify_number', $identify_number)->exists()) {
+                $identify_number = Str::random(8);
+            }
 
             /* Only type medical */
             $name = $request->input('name_doctor');
@@ -126,6 +134,7 @@ class RegisterController extends Controller
             $user->last_name = $name ?? '';
             $user->provider_name = $provider_name;
             $user->provider_id = $provider_id;
+            $user->identify_number = $identify_number;
             $user->username = $username;
             $user->password = Hash::make($password);
             $user->phone = $contact_phone ?? '';
