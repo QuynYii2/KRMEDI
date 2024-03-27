@@ -139,14 +139,17 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
+                            {{-- <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="in_charged_{{ $index }}">Bác sĩ phụ trách:</label>
                                     <select id="in_charged_{{ $index }}" class="form-select doctor_selector"
                                         name="doctor_id[]" required>
+                                        @if ($item['doctorId'] && $item['doctorName'])
+                                            <option value="{{ $item['doctorId'] }}">{{ $item['doctorName'] }}</option>
+                                        @endif
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <div class="repeater-item col-md-3">
                                 <div class="form-group">
