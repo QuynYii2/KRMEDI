@@ -19,6 +19,7 @@ class CartApi extends Controller
     {
         $carts = DB::table('carts')
             ->where('user_id', $id)
+            ->whereNull('prescription_id')
             ->cursor()
             ->map(function ($item) {
                 if ($item->type_product == TypeProductCart::MEDICINE) {
