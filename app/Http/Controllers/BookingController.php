@@ -128,11 +128,15 @@ class BookingController extends Controller
             foreach ($bookings_edit->extend['booking_results'] as $bookingResult) {
                 $selectValue = $bookingResult['type'];
                 $fileUrl = $bookingResult['url'];
+                $doctorId = $bookingResult['doctor_id'];
+                $doctorName = User::find($doctorId)->name;
 
                 // Create a new repeater item array
                 $item = [
                     'selectValue' => $selectValue,
                     'fileUrl' => $fileUrl,
+                    'doctorId' => $doctorId,
+                    'doctorName' => $doctorName,
                 ];
 
                 // Add the repeater item to the array
@@ -233,13 +237,14 @@ class BookingController extends Controller
             $isSendOaToUser = false;
             $booking = Booking::find($id);
             $status = $request->input('status');
-            $doctor_id = $request->input('doctor_id');
+            // $doctor_id = $request->input('doctor_id');
             $is_result = $request->input('is_result');
             if (!$is_result) {
                 $is_result = 0;
             }
 
             $selectValues = $request->input('select');
+            $doctorValues = $request->input('doctor_id');
             $fileInputs = $request->file('file');
             $bookingResults = $booking->extend['booking_results'] ?? [];
             $oldValues = $request->input('file_urls');
@@ -262,7 +267,7 @@ class BookingController extends Controller
                     unset($bookingResults[$index]);
                 }
 
-                if (isset($selectValues) && isset($fileInputs)) {
+                if (isset($selectValues) && isset($fileInputs) && isset($doctorValues)) {
                     $validator = Validator::make($request->all(), [
                         'file.*' => 'mimes:pdf',
                     ]);
@@ -280,15 +285,16 @@ class BookingController extends Controller
                         // Handle the new file input
                         if ($fileInput) {
                             $qrCode = null;
-                            if (isset($booking->doctor_id) && $booking->doctor_id) {
-                                $url = route('qr.code.show.doctor.info', $booking->doctor_id);
+                            if (isset($doctorValues[$index]) && $doctorValues[$index]) {
+                                $url = route('qr.code.show.doctor.info', $doctorValues[$index]);
                                 $qrCode = QrCode::format('png')->size(150)->generate($url);
                             }
                             $itemPath = $fileInput->store('bookings_result', 'public');
                             $fileUrl = asset('storage/' . $itemPath);
 
                             if ($fileUrl) {
-                                $this->insertQRCodeIntoPDF($fileUrl, $qrCode, $booking);
+                                $doctorName = User::find($doctorValues[$index])->name ?? "";
+                                $this->insertQRCodeIntoPDF($fileUrl, $qrCode, $booking, $doctorName);
                             }
                         } else {
                             // If file input is not set, use the existing value
@@ -298,9 +304,15 @@ class BookingController extends Controller
                         $bookingResult = [
                             'type' => $selectValues[$index],
                             'url' => $fileUrl,
+                            'doctor_id' => $doctorValues[$index],
                         ];
 
                         $bookingResults[$index] = $bookingResult;
+                    }
+                } else {
+                    foreach ($selectValues as $index => $type) {
+                        $bookingResults[$index]['type'] = $type;
+                        $bookingResults[$index]['doctor_id'] = $doctorValues[$index];
                     }
                 }
 
@@ -316,7 +328,7 @@ class BookingController extends Controller
                 $isSendOaToUser = true;
             }
 
-            $booking->doctor_id = $doctor_id;
+            // $booking->doctor_id = $doctor_id;
             $booking->is_result = $is_result;
             $booking->status = $status;
 
@@ -458,7 +470,7 @@ class BookingController extends Controller
         }
     }
 
-    public function insertQRCodeIntoPDF($pdfPath, $qrCode, $booking)
+    public function insertQRCodeIntoPDF($pdfPath, $qrCode, $booking, $doctorName)
     {
         $filePath = $pdfPath;
 
@@ -469,12 +481,12 @@ class BookingController extends Controller
 
         $outputFilePath = $outputDirectory . '/' . basename($filePath);
 
-        $this->fillPdfFile(public_path($filePath), $outputFilePath, $qrCode, $booking);
+        $this->fillPdfFile(public_path($filePath), $outputFilePath, $qrCode, $booking, $doctorName);
 
         return response()->json(['message' => 'QR code inserted into PDF successfully.']);
     }
 
-    public function fillPdfFile($file, $outputFilePath, $qrCode, $booking)
+    public function fillPdfFile($file, $outputFilePath, $qrCode, $booking, $doctorName)
     {
         try {
             $fpdi = new Fpdi();
@@ -516,12 +528,12 @@ class BookingController extends Controller
             $fpdi->SetXY($right - $fpdi->GetStringWidth($textLine1), $bottom - 38);
             $fpdi->Cell(0, 0, $textLine1, 0, 0, 'C');
 
-            if ($booking->doctor) {
+            if ($doctorName) {
                 $textLine2 = iconv('UTF-8', 'cp1258', 'Bác sỹ kết luận');
                 $fpdi->SetXY($right - $fpdi->GetStringWidth($textLine2) - 20, $bottom - 33);
                 $fpdi->Cell(0, 0, $textLine2, 0, 0, 'C');
 
-                $textLine3 = iconv('UTF-8', 'cp1258', $booking->doctor->name);
+                $textLine3 = iconv('UTF-8', 'cp1258', $doctorName);
                 $fpdi->SetFont('arial-unicode-ms', '', 9, '', true);
                 $fpdi->SetXY($right - $fpdi->GetStringWidth($textLine3) - 19, $bottom - 27);
                 $fpdi->Cell(0, 0, $textLine3, 0, 0, 'C');

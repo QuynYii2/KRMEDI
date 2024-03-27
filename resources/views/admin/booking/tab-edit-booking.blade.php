@@ -5,6 +5,9 @@
 @section('page-style')
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
 @endsection
 @section('main-content')
     <div class="container-fluid">
@@ -39,7 +42,7 @@
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="doctor_id">{{ __('home.Doctor Name') }}</label>
-                    {{-- @php
+                    @php
                         $doctor = \App\Models\User::where('id', $bookings_edit->doctor_id)->first();
                         $doctor_info = '';
                         if ($doctor) {
@@ -47,12 +50,12 @@
                         }
                     @endphp
                     <input type="text" class="form-control" id="doctor_id" name="doctor_id" value="{{ $doctor_info }}"
-                        disabled> --}}
-                    <select class="form-select" id="doctor_id" name="doctor_id">
+                        disabled>
+                    {{-- <select class="form-select" id="doctor_id" name="doctor_id">
                         @if ($doctor_id && $doctor_name)
                             <option value="{{ $doctor_id }}">{{ $doctor_name }}</option>
                         @endif
-                    </select>
+                    </select> --}}
                 </div>
             </div>
             <div class="row">
@@ -118,10 +121,10 @@
                                             class="fa-solid fa-x"></i></button>
                                 @endif
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="select{{ $index }}">Loại khám bệnh:</label>
-                                    <select class="form-control" name="select[]">
+                                    <label for="selectType{{ $index }}">Loại khám bệnh:</label>
+                                    <select id="selectType{{ $index }}" class="form-control" name="select[]">
                                         <option value="Khám bệnh"
                                             {{ $item['selectValue'] === 'Khám bệnh' ? 'selected' : '' }}>
                                             Khám bệnh</option>
@@ -134,7 +137,18 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="repeater-item col-md-4">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="in_charged_{{ $index }}">Bác sĩ phụ trách:</label>
+                                    <select id="in_charged_{{ $index }}" class="form-select doctor_selector"
+                                        name="doctor_id[]" required>
+                                        @if ($item['doctorId'] && $item['doctorName'])
+                                            <option value="{{ $item['doctorId'] }}">{{ $item['doctorName'] }}</option>
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="repeater-item col-md-3">
                                 <div class="form-group">
                                     <label for="file">Tài liệu khám bệnh:</label>
                                     <input type="file" name="file[{{ $index }}]" class="form-control-file"
@@ -144,7 +158,7 @@
                                 </div>
                             </div>
                             @if (Storage::exists(str_replace('/storage', 'public', $item['fileUrl'])))
-                                <div class="col-md-3 viewFile">
+                                <div class="col-md-2 viewFile">
                                     <a target="_blank" href="{{ asset($item['fileUrl']) }}">Xem tài liệu khám</a>
                                 </div>
                             @endif
@@ -609,7 +623,8 @@
 
     <script>
         $(document).ready(function() {
-            $('#doctor_id').select2({
+            $('.doctor_selector').select2({
+    theme: 'bootstrap-5',
                 ajax: {
                     url: "{{ route('role.user.list', ['role_id' => 39]) }}",
                     dataType: 'json',
@@ -637,7 +652,7 @@
                     },
                     cache: true
                 },
-                minimumInputLength: 1
+                minimumInputLength: 1,
             });
         });
     </script>
