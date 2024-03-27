@@ -144,9 +144,9 @@
                                     <label for="in_charged_{{ $index }}">Bác sĩ phụ trách:</label>
                                     <select id="in_charged_{{ $index }}" class="form-select doctor_selector"
                                         name="doctor_id[]" required>
-                                        @if ($item['doctorId'] && $item['doctorName'])
+                                        {{-- @if ($item['doctorId'] && $item['doctorName'])
                                             <option value="{{ $item['doctorId'] }}">{{ $item['doctorName'] }}</option>
-                                        @endif
+                                        @endif --}}
                                     </select>
                                 </div>
                             </div>
