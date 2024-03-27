@@ -128,15 +128,15 @@ class BookingController extends Controller
             foreach ($bookings_edit->extend['booking_results'] as $bookingResult) {
                 $selectValue = $bookingResult['type'];
                 $fileUrl = $bookingResult['url'];
-                $doctorId = $bookingResult['doctor_id'];
-                $doctorName = User::find($doctorId)->name;
+                // $doctorId = $bookingResult['doctor_id'];
+                // $doctorName = User::find($doctorId)->name;
 
                 // Create a new repeater item array
                 $item = [
                     'selectValue' => $selectValue,
                     'fileUrl' => $fileUrl,
-                    'doctorId' => $doctorId,
-                    'doctorName' => $doctorName,
+                    // 'doctorId' => $doctorId,
+                    // 'doctorName' => $doctorName,
                 ];
 
                 // Add the repeater item to the array
@@ -244,7 +244,7 @@ class BookingController extends Controller
             }
 
             $selectValues = $request->input('select');
-            $doctorValues = $request->input('doctor_id');
+            // $doctorValues = $request->input('doctor_id');
             $fileInputs = $request->file('file');
             $bookingResults = $booking->extend['booking_results'] ?? [];
             $oldValues = $request->input('file_urls');
@@ -267,7 +267,7 @@ class BookingController extends Controller
                     unset($bookingResults[$index]);
                 }
 
-                if (isset($selectValues) && isset($fileInputs) && isset($doctorValues)) {
+                if (isset($selectValues) && isset($fileInputs)) {
                     $validator = Validator::make($request->all(), [
                         'file.*' => 'mimes:pdf',
                     ]);
@@ -285,16 +285,17 @@ class BookingController extends Controller
                         // Handle the new file input
                         if ($fileInput) {
                             $qrCode = null;
-                            if (isset($doctorValues[$index]) && $doctorValues[$index]) {
-                                $url = route('qr.code.show.doctor.info', $doctorValues[$index]);
-                                $qrCode = QrCode::format('png')->size(150)->generate($url);
-                            }
+                            // if (isset($doctorValues[$index]) && $doctorValues[$index]) {
+                            //     $url = route('qr.code.show.doctor.info', $doctorValues[$index]);
+                            //     $qrCode = QrCode::format('png')->size(150)->generate($url);
+                            // }
                             $itemPath = $fileInput->store('bookings_result', 'public');
                             $fileUrl = asset('storage/' . $itemPath);
 
                             if ($fileUrl) {
-                                $doctorName = User::find($doctorValues[$index])->name ?? "";
-                                $this->insertQRCodeIntoPDF($fileUrl, $qrCode, $booking, $doctorName);
+                                $this->insertQRCodeIntoPDF($fileUrl, $qrCode, $booking);
+                                // $doctorName = User::find($doctorValues[$index])->name ?? "";
+                                // $this->insertQRCodeIntoPDF($fileUrl, $qrCode, $booking, $doctorName);
                             }
                         } else {
                             // If file input is not set, use the existing value
@@ -309,12 +310,13 @@ class BookingController extends Controller
 
                         $bookingResults[$index] = $bookingResult;
                     }
-                } else {
-                    foreach ($selectValues as $index => $type) {
-                        $bookingResults[$index]['type'] = $type;
-                        $bookingResults[$index]['doctor_id'] = $doctorValues[$index];
-                    }
-                }
+                } 
+                // else {
+                //     foreach ($selectValues as $index => $type) {
+                //         $bookingResults[$index]['type'] = $type;
+                //         $bookingResults[$index]['doctor_id'] = $doctorValues[$index];
+                //     }
+                // }
 
                 $extendData = $booking->extend ?? [];
 
@@ -470,7 +472,7 @@ class BookingController extends Controller
         }
     }
 
-    public function insertQRCodeIntoPDF($pdfPath, $qrCode, $booking, $doctorName)
+    public function insertQRCodeIntoPDF($pdfPath, $qrCode, $booking)
     {
         $filePath = $pdfPath;
 
@@ -481,12 +483,12 @@ class BookingController extends Controller
 
         $outputFilePath = $outputDirectory . '/' . basename($filePath);
 
-        $this->fillPdfFile(public_path($filePath), $outputFilePath, $qrCode, $booking, $doctorName);
+        $this->fillPdfFile(public_path($filePath), $outputFilePath, $qrCode, $booking);
 
         return response()->json(['message' => 'QR code inserted into PDF successfully.']);
     }
 
-    public function fillPdfFile($file, $outputFilePath, $qrCode, $booking, $doctorName)
+    public function fillPdfFile($file, $outputFilePath, $qrCode, $booking)
     {
         try {
             $fpdi = new Fpdi();
@@ -528,12 +530,12 @@ class BookingController extends Controller
             $fpdi->SetXY($right - $fpdi->GetStringWidth($textLine1), $bottom - 38);
             $fpdi->Cell(0, 0, $textLine1, 0, 0, 'C');
 
-            if ($doctorName) {
+            if ($booking->doctor) {
                 $textLine2 = iconv('UTF-8', 'cp1258', 'Bác sỹ kết luận');
                 $fpdi->SetXY($right - $fpdi->GetStringWidth($textLine2) - 20, $bottom - 33);
                 $fpdi->Cell(0, 0, $textLine2, 0, 0, 'C');
 
-                $textLine3 = iconv('UTF-8', 'cp1258', $doctorName);
+                $textLine3 = iconv('UTF-8', 'cp1258', $booking->doctor->name);
                 $fpdi->SetFont('arial-unicode-ms', '', 9, '', true);
                 $fpdi->SetXY($right - $fpdi->GetStringWidth($textLine3) - 19, $bottom - 27);
                 $fpdi->Cell(0, 0, $textLine3, 0, 0, 'C');
