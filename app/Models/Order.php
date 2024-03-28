@@ -55,28 +55,37 @@ class Order extends Model
         $this->products = $array_products;
     }
 
-    public function getOrderPrescriptionDetails()
+    public function getOrderPrescriptionDetails($userId)
     {
-        $cart_items = Cart::where('prescription_id', $this->prescription_id)->get();
-        $this->total_order_items = $cart_items->count();
-        $this->order_items = $cart_items;
-        
+        $orders = $this->where('user_id', $userId)
+            ->whereNotNull('prescription_id')
+            ->get();
+    
         $array_products = [];
-        foreach ($cart_items as $cart) {
-            if ($cart->type_product == TypeProductCart::MEDICINE) {
-                $product = ProductMedicine::join('users', 'users.id', '=', 'product_medicines.user_id')
-                    ->where('product_medicines.id', $cart->product_id)
-                    ->select('product_medicines.*', 'users.username')
-                    ->first();
-            } else {
-                $product = ProductInfo::join('users', 'users.id', '=', 'product_infos.created_by')
-                    ->where('product_infos.id', $cart->product_id)
-                    ->select('product_infos.*', 'users.username')
-                    ->first();
+        foreach ($orders as $order) {
+            $cart_items = Cart::where('prescription_id', $order->prescription_id)->get();
+    
+            $order->total_order_items = $cart_items->count();
+            $order->order_items = $cart_items;
+    
+            foreach ($cart_items as $cart) {
+                if ($cart->type_product == TypeProductCart::MEDICINE) {
+                    $product = ProductMedicine::join('users', 'users.id', '=', 'product_medicines.user_id')
+                        ->where('product_medicines.id', $cart->product_id)
+                        ->select('product_medicines.*', 'users.username')
+                        ->first();
+                } else {
+                    $product = ProductInfo::join('users', 'users.id', '=', 'product_infos.created_by')
+                        ->where('product_infos.id', $cart->product_id)
+                        ->select('product_infos.*', 'users.username')
+                        ->first();
+                }
+                $array_products[] = $product;
             }
-            $array_products[] = $product;
+            $order->total_products = count($array_products);
+            $order->products = $array_products;
         }
-        $this->total_products = count($array_products);
-        $this->products = $array_products;
+    
+        return $orders;
     }
 }

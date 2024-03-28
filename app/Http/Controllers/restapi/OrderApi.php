@@ -112,7 +112,8 @@ class OrderApi extends Controller
                 return response()->json(['error' => -1, 'message' => "You must provide user id"], 400);
             }
 
-            $getOrder = Order::with('getOrderPrescriptionDetails')->where('user_id', $id)->whereNotNull('prescription_id')->get();
+            $orderModel = new Order();
+            $getOrder = $orderModel->getOrderPrescriptionDetails($id);
 
             return response()->json(['error' => 0, 'data' => $getOrder]);
         } catch (\Exception $e) {
