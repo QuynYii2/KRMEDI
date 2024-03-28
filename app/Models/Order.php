@@ -64,6 +64,8 @@ class Order extends Model
         $array_products = [];
         foreach ($orders as $order) {
             $cart_items = Cart::where('prescription_id', $order->prescription_id)->get();
+
+            $getCart = Cart::where('prescription_id', $order->prescription_id)->first();
     
             $order->total_order_items = $cart_items->count();
             $order->order_items = $cart_items;
@@ -82,6 +84,9 @@ class Order extends Model
                 }
                 $product->note = $cart->note; // Add the note value to the product object
                 $array_products[] = $product;
+            }
+            if ($getCart) {
+                $order->doctor = User::find($getCart->user_id);
             }
             $order->total_products = count($array_products);
             $order->products = $array_products;
