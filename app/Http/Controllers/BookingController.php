@@ -243,68 +243,67 @@ class BookingController extends Controller
                 $is_result = 0;
             }
 
-            $selectValues = $request->input('select');
-            $doctorValues = $request->input('doctor_id');
-            $fileInputs = $request->file('file');
             $bookingResults = $booking->extend['booking_results'] ?? [];
-            $oldValues = $request->input('file_urls');
+
+            $bookingResultList = $request->booking_result_list;
 
             if ($status == BookingStatus::COMPLETE && $is_result == 1) {
-                // Find the missing index
-                $missingIndex = [];
-                if ($bookingResults !== null && $oldValues !== null) {
-                    $missingIndex = array_diff(array_keys($bookingResults), array_keys($oldValues));
-                }
+                // // Find the missing index
+                // $missingIndex = [];
+                // if ($bookingResults !== null && $oldValues !== null) {
+                //     $missingIndex = array_diff(array_keys($bookingResults), array_keys($oldValues));
+                // }
 
-                // Remove the missing index from $bookingResults and delete the URL file
-                if (!empty($missingIndex)) {
-                    $index = array_keys($missingIndex)[0];
+                // // Remove the missing index from $bookingResults and delete the URL file
+                // if (!empty($missingIndex)) {
+                //     $index = array_keys($missingIndex)[0];
 
-                    if (isset($bookingResults[$index]['url']) && Storage::exists(str_replace('/storage', 'public', $bookingResults[$index]['url']))) {
-                        Storage::delete(str_replace('/storage', 'public', $bookingResults[$index]['url']));
-                    }
+                //     if (isset($bookingResults[$index]['url']) && Storage::exists(str_replace('/storage', 'public', $bookingResults[$index]['url']))) {
+                //         Storage::delete(str_replace('/storage', 'public', $bookingResults[$index]['url']));
+                //     }
 
-                    unset($bookingResults[$index]);
-                }
+                //     unset($bookingResults[$index]);
+                // }
 
-                if (isset($selectValues) && isset($fileInputs) && isset($doctorValues)) {
-                    $validator = Validator::make($request->all(), [
-                        'file.*' => 'mimes:pdf',
-                    ]);
+                foreach ($bookingResultList as $index => $result) {
+                    if (isset($result['select']) && isset($result['doctor_id']) && (isset($result['file_urls']) || isset($result['file']))) {
+                        $validator = Validator::make($result, [
+                            'file.*' => 'mimes:pdf',
+                        ]);
 
-                    if ($validator->fails()) {
-                        alert('Error', 'Tài liệu phải là định dạng PDF', 'error');
-                        return redirect()->back()->withErrors($validator)->withInput();
-                    }
+                        if ($validator->fails()) {
+                            alert('Error', 'Tài liệu phải là định dạng PDF', 'error');
+                            return redirect()->back()->withErrors($validator)->withInput();
+                        }
 
-                    foreach ($fileInputs as $index => $fileInput) {
-                        // Remove the old file if it exists
-                        if (isset($bookingResults[$index]['url']) && Storage::exists(str_replace('/storage', 'public', $bookingResults[$index]['url']))) {
+                        // Remove the old file if it exists new file
+                        if (isset($bookingResults[$index]['url']) && Storage::exists(str_replace('/storage', 'public', $bookingResults[$index]['url'])) && isset($result['file'])) {
                             Storage::delete(str_replace('/storage', 'public', $bookingResults[$index]['url']));
                         }
+
                         // Handle the new file input
-                        if ($fileInput) {
+                        if (isset($result['file']) && $result['file']) {
                             $qrCode = null;
-                            if (isset($doctorValues[$index]) && $doctorValues[$index]) {
-                                $url = route('qr.code.show.doctor.info', $doctorValues[$index]);
+                            if (isset($result['doctor_id']) && $result['doctor_id']) {
+                                $url = route('qr.code.show.doctor.info', $result['doctor_id']);
                                 $qrCode = QrCode::format('png')->size(150)->generate($url);
                             }
-                            $itemPath = $fileInput->store('bookings_result', 'public');
+                            $itemPath = $result['file']->store('bookings_result', 'public');
                             $fileUrl = asset('storage/' . $itemPath);
 
                             if ($fileUrl) {
-                                $doctorName = User::find($doctorValues[$index])->name ?? "";
+                                $doctorName = User::find($result['doctor_id'])->name ?? "";
                                 $this->insertQRCodeIntoPDF($fileUrl, $qrCode, $booking, $doctorName);
                             }
-                        } else {
-                            // If file input is not set, use the existing value
-                            $fileUrl = $booking->extend['booking_results'][$index]['url'] ?? '';
+                        } else if ($result['file_urls']) {
+                            // If file input is not set, use the existing value with file_urls
+                            $fileUrl = $booking->extend['booking_results'][$index]['url'] ?? $result['file_urls'] ?? '';
                         }
 
                         $bookingResult = [
-                            'type' => $selectValues[$index],
+                            'type' => $result['select'],
                             'url' => $fileUrl,
-                            'doctor_id' => $doctorValues[$index],
+                            'doctor_id' => $result['doctor_id'],
                         ];
 
                         $bookingResults[$index] = $bookingResult;

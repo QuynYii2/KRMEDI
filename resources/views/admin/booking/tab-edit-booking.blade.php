@@ -115,88 +115,92 @@
             <div id="trackFile" style="display: none;">
                 <div id="repeater">
                     @forelse ($repeaterItems as $index => $item)
-                        <div class="d-flex align-items-center row repeater-item">
-                            <div class="col-md-1 delete-repeater-div">
-                                @if ($index != 0)
-                                    <button class="btn btn-danger delete-btn" data-index="{{ $index }}"><i
+                        <div data-repeater-list="booking_result_list">
+                            <div class="d-flex align-items-center row" data-repeater-item>
+                                <div class="col-md-1">
+                                    <button type="button" data-repeater-delete class="btn btn-danger mt-3"><i
                                             class="fa-solid fa-x"></i></button>
+                                </div>
+                                <div class="col-md-3 firstSelector">
+                                    <div class="form-group">
+                                        <label for="selectType{{ $index }}">Loại khám bệnh:</label>
+                                        <select id="selectType{{ $index }}" class="form-control selectType"
+                                            name="select">
+                                            <option value="Khám bệnh"
+                                                {{ $item['selectValue'] === 'Khám bệnh' ? 'selected' : '' }}>
+                                                Khám bệnh</option>
+                                            <option value="Siêu âm"
+                                                {{ $item['selectValue'] === 'Siêu âm' ? 'selected' : '' }}>
+                                                Siêu
+                                                âm</option>
+                                            <option value="XQuang"
+                                                {{ $item['selectValue'] === 'XQuang' ? 'selected' : '' }}>
+                                                XQuang
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 select2Div">
+                                    <div class="form-group">
+                                        <label for="in_charged_{{ $index }}">Bác sĩ phụ trách:</label>
+                                        <select id="in_charged_{{ $index }}" class="form-select doctor_selector"
+                                            name="doctor_id">
+                                            @if ($item['doctorId'] && $item['doctorName'])
+                                                <option value="{{ $item['doctorId'] }}">{{ $item['doctorName'] }}
+                                                </option>
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="file">Tài liệu khám bệnh:</label>
+                                        <input type="file" name="file" class="form-control-file" accept=".pdf">
+                                        <input type="hidden" name="file_urls" value="{{ $item['fileUrl'] }}">
+                                    </div>
+                                </div>
+                                @if (Storage::exists(str_replace('/storage', 'public', $item['fileUrl'])))
+                                    <div class="col-md-2 viewFile">
+                                        <a target="_blank" href="{{ asset($item['fileUrl']) }}">Xem tài liệu khám</a>
+                                    </div>
                                 @endif
                             </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="selectType{{ $index }}">Loại khám bệnh:</label>
-                                    <select id="selectType{{ $index }}" class="form-control" name="select[]">
-                                        <option value="Khám bệnh"
-                                            {{ $item['selectValue'] === 'Khám bệnh' ? 'selected' : '' }}>
-                                            Khám bệnh</option>
-                                        <option value="Siêu âm" {{ $item['selectValue'] === 'Siêu âm' ? 'selected' : '' }}>
-                                            Siêu
-                                            âm</option>
-                                        <option value="XQuang" {{ $item['selectValue'] === 'XQuang' ? 'selected' : '' }}>
-                                            XQuang
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="in_charged_{{ $index }}">Bác sĩ phụ trách:</label>
-                                    <select id="in_charged_{{ $index }}" class="form-select doctor_selector"
-                                        name="doctor_id[]">
-                                        @if ($item['doctorId'] && $item['doctorName'])
-                                            <option value="{{ $item['doctorId'] }}">{{ $item['doctorName'] }}</option>
-                                        @endif
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="repeater-item col-md-3">
-                                <div class="form-group">
-                                    <label for="file">Tài liệu khám bệnh:</label>
-                                    <input type="file" name="file[{{ $index }}]" class="form-control-file"
-                                        accept=".pdf">
-                                    <input type="hidden" name="file_urls[{{ $index }}]"
-                                        value="{{ $item['fileUrl'] }}">
-                                </div>
-                            </div>
-                            @if (Storage::exists(str_replace('/storage', 'public', $item['fileUrl'])))
-                                <div class="col-md-2 viewFile">
-                                    <a target="_blank" href="{{ asset($item['fileUrl']) }}">Xem tài liệu khám</a>
-                                </div>
-                            @endif
                         </div>
                     @empty
-                        <div class="d-flex align-items-center row repeater-item">
-                            <div class="col-md-1 delete-repeater-div">
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="select1">Select:</label>
-                                    <select class="form-control" name="select[]">
-                                        <option value="Khám bệnh">Khám bệnh</option>
-                                        <option value="Siêu âm">Siêu âm</option>
-                                        <option value="XQuang">XQuang</option>
-                                    </select>
+                        <div data-repeater-list="booking_result_list">
+                            <div class="d-flex align-items-center row" data-repeater-item>
+                                <div class="col-md-1">
+                                    <button class="btn btn-danger mt-3" data-repeater-delete><i
+                                            class="fa-solid fa-x"></i></button>
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="in_charged">Bác sĩ phụ trách:</label>
-                                    <select id="in_charged" class="form-select doctor_selector"
-                                        name="doctor_id[]">
-                                    </select>
+                                <div class="col-md-3 firstSelector">
+                                    <div class="form-group">
+                                        <label for="selectType">Select:</label>
+                                        <select class="form-control selectType" name="select">
+                                            <option value="Khám bệnh">Khám bệnh</option>
+                                            <option value="Siêu âm">Siêu âm</option>
+                                            <option value="XQuang">XQuang</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="repeater-item col-md-3">
-                                <div class="form-group">
-                                    <label for="file">Tài liệu khám bệnh:</label>
-                                    <input type="file" name="file[]" class="form-control-file"
-                                        accept=".pdf, .xlsx, .docx">
+                                <div class="col-md-3 select2Div">
+                                    <div class="form-group">
+                                        <label for="in_charged">Bác sĩ phụ trách:</label>
+                                        <select class="form-select doctor_selector" name="doctor_id"></select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="file">Tài liệu khám bệnh:</label>
+                                        <input type="file" name="file" class="form-control-file" accept=".pdf">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     @endforelse
+                    <button data-repeater-create type="button" class="btn btn-primary" id="addBtn"><i
+                            class="fa-solid fa-plus"></i></button>
                 </div>
-                <button type="button" class="btn btn-primary" id="addBtn"><i class="fa-solid fa-plus"></i></button>
                 </br>
             </div>
             {{-- @endif --}}
@@ -214,6 +218,7 @@
     </div>
 
     {{-- Handle JS --}}
+    <script src="{{ asset('js/jquery.repeater.js') }}"></script>
     <script>
         $(document).ready(function() {
             let html = `<div class="form-group">
@@ -577,32 +582,78 @@
     <script>
         //REPEATER
         $(document).ready(function() {
-            var counter = 2;
+            initialSelect2($('.doctor_selector'));
 
-            $('#addBtn').click(function() {
-                var clone = $('.repeater-item:first').clone();
-                clone.find('select').attr('name', 'select[]');
-                clone.find('input[type="file"]').attr('name',
-                    'file[]');
-                clone.find('input[type="file"]').val('');
-                clone.find('.delete-repeater-div').html(
-                    `<button class="btn btn-danger delete-btn" data-index="` + counter + `"><i
-                                            class="fa-solid fa-x"></i></button>`);
-                clone.find('input[type="hidden"]').remove();
-                clone.find('.viewFile').remove();
-                clone.appendTo('#repeater');
-                counter++;
+            var count = $('[data-repeater-item]').length;
+            $('#repeater').repeater({
+                show: function() {
+                    var $item = $(this);
+
+                    $item.find('.selectType option[selected]').removeAttr('selected');
+                    $item.find('.selectType option:first').prop('selected', true);
+                    $item.find('.selectType').attr('name', `booking_result_list[${count}][select]`);
+                    $item.find('input[type="file"]').attr('name',
+                        `booking_result_list[${count}][file]`);
+                    $item.find('input[type="file"]').val('');
+                    $item.find('input[type="hidden"]').remove();
+                    $item.find('.viewFile').remove();
+                    $item.find('.select2Div').remove();
+                    $item.find('.firstSelector').after(`
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="in_charged">Bác sĩ phụ trách:</label>
+                    <select class="form-select doctor_selector" name="booking_result_list[${count}][doctor_id]"></select>
+                </div>
+            </div>
+        `);
+
+                    // Find the last data-repeater-item and insert the new item after it
+                    var $lastItem = $('[data-repeater-item]').last();
+                    $item.insertAfter($lastItem);
+
+                    $item.slideDown();
+                    initialSelect2($item.find('.doctor_selector'));
+                    count++;
+                },
+                hide: function(deleteElement) {
+                    $(this).slideUp(deleteElement);
+                },
+                isFirstItemUndeletable: true
             });
 
-            $(document).on('click', '.delete-btn', function() {
-                var index = $(this).data('index');
-                $(this).closest('.repeater-item').remove();
-                // Update the counter and reindex the remaining items
-                counter--;
-                $('.delete-btn').each(function(idx) {
-                    $(this).data('index', idx);
+            function initialSelect2(selectElement) {
+                selectElement.select2({
+                    theme: 'bootstrap-5',
+                    ajax: {
+                        url: "{{ route('role.user.list', ['role_id' => 39]) }}",
+                        dataType: 'json',
+                        delay: 250,
+                        data: function(params) {
+                            return {
+                                name: params.term, // Pass the search term as the 'name' parameter
+                            };
+                        },
+                        processResults: function(data) {
+                            if (Array.isArray(data)) {
+                                return {
+                                    results: data.map(function(user) {
+                                        return {
+                                            id: user.id,
+                                            text: user.name
+                                        };
+                                    })
+                                };
+                            } else {
+                                return {
+                                    results: []
+                                };
+                            }
+                        },
+                        cache: true
+                    },
+                    minimumInputLength: 1,
                 });
-            });
+            }
         });
     </script>
 
@@ -626,42 +677,6 @@
             // Check conditions when is_result checkbox or booking_status select changes
             $("#is_result, #booking_status").change(function() {
                 checkConditions();
-            });
-        });
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            $('.doctor_selector').select2({
-                theme: 'bootstrap-5',
-                ajax: {
-                    url: "{{ route('role.user.list', ['role_id' => 39]) }}",
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            name: params.term, // Pass the search term as the 'name' parameter
-                        };
-                    },
-                    processResults: function(data) {
-                        if (Array.isArray(data)) {
-                            return {
-                                results: data.map(function(user) {
-                                    return {
-                                        id: user.id,
-                                        text: user.name
-                                    };
-                                })
-                            };
-                        } else {
-                            return {
-                                results: []
-                            };
-                        }
-                    },
-                    cache: true
-                },
-                minimumInputLength: 1,
             });
         });
     </script>

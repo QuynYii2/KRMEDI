@@ -15,6 +15,7 @@ use App\Http\Controllers\restapi\CheckoutApi;
 use App\Http\Controllers\restapi\MainApi;
 use App\Http\Controllers\restapi\MedicalFavouriteApi;
 use App\Http\Controllers\restapi\MessageApi;
+use App\Http\Controllers\restapi\OrderApi;
 use App\Http\Controllers\restapi\PrescriptionResultApi;
 use App\Http\Controllers\restapi\ServiceClinicApi;
 use App\Http\Controllers\restapi\SocialUserApi;
@@ -129,6 +130,11 @@ Route::group(['prefix' => 'carts'], function () {
     Route::post('change-quantity/{id}', [CartApi::class, 'changeQuantityCart'])->name('api.backend.cart.change.quantity');
     Route::delete('delete/{id}', [CartApi::class, 'deleteCart'])->name('api.backend.cart.delete');
     Route::delete('clear/{id}', [CartApi::class, 'clearCart'])->name('api.backend.cart.clear');
+});
+
+/* Order api */
+Route::group(['prefix' => 'orders'], function () {
+    Route::get('user/prescription/{id}', [OrderApi::class, 'getPrescriptionOrderByUserID'])->name('api.backend.prescription.order.user');
 });
 
 /* Checkout api */

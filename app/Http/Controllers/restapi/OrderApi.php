@@ -104,4 +104,19 @@ class OrderApi extends Controller
     {
 
     }
+
+    public function getPrescriptionOrderByUserID($id)
+    {
+        try {
+            if (!$id) {
+                return response()->json(['error' => -1, 'message' => "You must provide user id"], 400);
+            }
+
+            $getOrder = Order::with('getOrderDetails')-where('user_id', $id)->whereNotNull('prescription_id')->get();
+
+            return response()->json(['error' => 0, 'data' => $getOrder]);
+        } catch (\Exception $e) {
+            return response(['error' => -1, 'message' => $e->getMessage()], 400);
+        }
+    }
 }
