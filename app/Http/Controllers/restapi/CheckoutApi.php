@@ -89,7 +89,7 @@ class CheckoutApi extends Controller
         $order->save();
 
         if ($prescription_id) {
-            $carts = Cart::where('user_id', $userID)->whereNotNull('prescription_id')->get();
+            $carts = Cart::where('user_id', $userID)->where('prescription_id', $prescription_id)->get();
         } else {
             $carts = Cart::where('user_id', $userID)->whereNull('prescription_id')->get();
         }
