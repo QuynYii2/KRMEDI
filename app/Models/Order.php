@@ -80,6 +80,7 @@ class Order extends Model
                         ->select('product_infos.*', 'users.username')
                         ->first();
                 }
+                $product->note = $cart->note; // Add the note value to the product object
                 $array_products[] = $product;
             }
             $order->total_products = count($array_products);
