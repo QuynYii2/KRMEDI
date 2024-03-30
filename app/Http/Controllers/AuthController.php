@@ -49,7 +49,7 @@ class AuthController extends Controller
                 'experienceHospital' => ['nullable'],
                 'fileupload' => ['nullable', 'file'],
                 'name_doctor' => ['nullable', 'required_if:type,MEDICAL'],
-                'contact_phone' => ['nullable', 'required_if:type,MEDICAL', 'unique:users,phone'],
+                'contact_phone' => ['nullable', 'required_if:type,MEDICAL', 'unique:users,phone', 'regex:/^0[1-9][0-9]{8}$/'],
                 'experience' => ['nullable', 'integer'],
                 'hospital' => ['nullable', 'string'],
                 'specialized_services' => ['nullable', 'string'],
