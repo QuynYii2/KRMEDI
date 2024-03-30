@@ -7,6 +7,7 @@ use App\Enums\UserStatus;
 use App\Models\Clinic;
 use App\Models\Role;
 use App\Models\User;
+use App\Rules\NoSpacesRule;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -14,6 +15,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Str;
 
@@ -22,6 +24,46 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         try {
+            $validator = Validator::make($request->all(), [
+                'email' => ['required', 'email', 'unique:users,email'],
+                'username' => ['required', 'string', 'unique:users,username', new NoSpacesRule],
+                'password' => ['required', 'string', new NoSpacesRule],
+                'passwordConfirm' => ['required', 'string', 'same:password', new NoSpacesRule],
+                'member' => ['required', 'string'],
+                'medical_history' => ['nullable'],
+                'type' => ['required', 'string'],
+                'open_date' => ['nullable'],
+                'close_date' => ['nullable'],
+                'province_id' => ['nullable', 'integer'],
+                'district_id' => ['nullable', 'integer'],
+                'commune_id' => ['nullable', 'integer'],
+                'address' => ['nullable', 'string'],
+                'time_work' => ['nullable'],
+                'provider_name' => ['nullable'],
+                'provider_id' => ['nullable'],
+                'invite_code' => ['nullable'],
+                'combined_address' => ['nullable'],
+                'representative' => ['nullable'],
+                'latitude' => ['nullable'],
+                'longitude' => ['nullable'],
+                'experienceHospital' => ['nullable'],
+                'fileupload' => ['nullable', 'file'],
+                'name_doctor' => ['nullable', 'required_if:type,MEDICAL'],
+                'contact_phone' => ['nullable', 'required_if:type,MEDICAL', 'unique:users,phone'],
+                'experience' => ['nullable', 'integer'],
+                'hospital' => ['nullable', 'string'],
+                'specialized_services' => ['nullable', 'string'],
+                'services_info' => ['nullable', 'string'],
+                'identifier' => ['nullable'],
+                'prescription' => ['nullable'],
+                'free' => ['nullable'],
+            ]);
+        
+            if ($validator->fails()) {
+                toast($validator->errors()->first(), 'error', 'top-left');
+                return back();
+            }
+            
             $email = $request->input('email');
             $username = $request->input('username');
             $password = $request->input('password');
