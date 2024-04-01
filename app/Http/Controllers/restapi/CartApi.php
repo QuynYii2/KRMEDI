@@ -101,6 +101,7 @@ class CartApi extends Controller
                 'products.*.id' => 'required|numeric',
                 'products.*.quantity' => 'required|integer|min:1',
                 'products.*.note' => 'nullable|string',
+                'products.*.treatment_days' => 'required|integer',
                 'type_product' => 'nullable|string',
             ]);
 
@@ -146,7 +147,9 @@ class CartApi extends Controller
                     'type_product' => $typeProduct,
                     'status' => CartStatus::PENDING,
                     'note' => $productData['note'] ?? "",
-                    'prescription_id' => $prescription_id
+                    'prescription_id' => $prescription_id,
+                    'treatment_days' => $productData['treatment_days'] ?? 0,
+                    'remind_remain' => $productData['treatment_days'] ?? 0,
                 ]);
             }
             if ($typeProduct == TypeProductCart::MEDICINE) {

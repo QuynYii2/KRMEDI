@@ -26,6 +26,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('voucher:check-expired')->everyMinute();
         //Remind booking schedule
         $schedule->command('booking:check-scheduled')->hourly();
+
+        $schedule->command('cart:prescription-reminder')->dailyAt('07:00')->dailyAt('19:00');
     }
 
     /**

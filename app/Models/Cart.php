@@ -21,7 +21,9 @@ class Cart extends Model
         'total_price',
         'status',
         'prescription_id',
-        'note'
+        'note',
+        'treatment_days',
+        'remind_remain'
     ];
 
     public function users()
