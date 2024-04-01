@@ -81,23 +81,11 @@ class RegisterController extends Controller
 
             $invite_code = $request->input('inviteCode') ?? "";
 
-            $signature = $request->input('signature') ?? "";
+            $signature = $request->file('signature') ?? "";
 
-            if ($signature) {
-                $imageData = str_replace('data:image/png;base64,', '', $signature);
-            
-                // Decode the base64 data
-                $imageData = base64_decode($imageData);
-
-                // Generate a unique filename for the image
-                $filename = uniqid() . '.png';
-                
-                // Define the storage path where you want to store the image
-                $storagePath = 'signature/';
-
-                Storage::put('public/' . $storagePath . $filename, $imageData);
-                
-                $imageUrl = Storage::url($storagePath . $filename);
+            if ($signature) {            
+                $itemPath = $signature->store('signature', 'public');
+                $imageUrl = asset('storage/' . $itemPath);
             }
 
             $identify_number = Str::random(8);
