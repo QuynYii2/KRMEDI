@@ -19,6 +19,7 @@ use App\Rules\NoSpacesRule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -37,9 +38,9 @@ class RegisterController extends Controller
                 'type' => ['required', 'string'],
                 'open_date' => ['nullable'],
                 'close_date' => ['nullable'],
-                'province_id' => ['nullable', 'integer'],
-                'district_id' => ['nullable', 'integer'],
-                'commune_id' => ['nullable', 'integer'],
+                'province_id' => ['nullable'],
+                'district_id' => ['nullable'],
+                'commune_id' => ['nullable'],
                 'address' => ['nullable', 'string'],
                 'time_work' => ['nullable'],
                 'provider_name' => ['nullable'],
@@ -60,6 +61,7 @@ class RegisterController extends Controller
                 'identifier' => ['nullable'],
                 'prescription' => ['nullable'],
                 'free' => ['nullable'],
+                'signature' => ['nullable', 'required_if:member,DOCTORS']
             ]);
         
             if ($validator->fails()) {
@@ -78,6 +80,25 @@ class RegisterController extends Controller
             $provider_id = $request->input('provider_id') ?? "";
 
             $invite_code = $request->input('inviteCode') ?? "";
+
+            $signature = $request->input('signature') ?? "";
+
+            if ($signature) {
+                $imageData = str_replace('data:image/png;base64,', '', $signature);
+            
+                // Decode the base64 data
+                $imageData = base64_decode($imageData);
+
+                // Generate a unique filename for the image
+                $filename = uniqid() . '.png';
+                
+                // Define the storage path where you want to store the image
+                $storagePath = 'signature/';
+
+                Storage::put('public/' . $storagePath . $filename, $imageData);
+                
+                $imageUrl = Storage::url($storagePath . $filename);
+            }
 
             $identify_number = Str::random(8);
             while (User::where('identify_number', $identify_number)->exists()) {
@@ -155,6 +176,11 @@ class RegisterController extends Controller
                 $itemPath = $item->store('license', 'public');
                 $img = asset('storage/' . $itemPath);
                 $user->medical_license_img = $img;
+
+                if ($imageUrl) {
+                    $user->signature = $imageUrl;
+                }
+
                 $checkPending = true;
                 /* Set data for user type with medical */
                 $user->year_of_experience = $experience ?? '';

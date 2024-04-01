@@ -15,6 +15,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Str;
@@ -34,9 +35,9 @@ class AuthController extends Controller
                 'type' => ['required', 'string'],
                 'open_date' => ['nullable'],
                 'close_date' => ['nullable'],
-                'province_id' => ['nullable', 'integer'],
-                'district_id' => ['nullable', 'integer'],
-                'commune_id' => ['nullable', 'integer'],
+                'province_id' => ['nullable'],
+                'district_id' => ['nullable'],
+                'commune_id' => ['nullable'],
                 'address' => ['nullable', 'string'],
                 'time_work' => ['nullable'],
                 'provider_name' => ['nullable'],
@@ -57,6 +58,7 @@ class AuthController extends Controller
                 'identifier' => ['nullable'],
                 'prescription' => ['nullable'],
                 'free' => ['nullable'],
+                'signature' => ['nullable', 'required_if:member,DOCTORS']
             ]);
         
             if ($validator->fails()) {
@@ -82,6 +84,25 @@ class AuthController extends Controller
             $provider_id = $request->input('provider_id') ?? "";
 
             $invite_code = $request->input('inviteCode') ?? "";
+
+            $signature = $request->input('signature') ?? "";
+
+            if ($signature) {
+                $imageData = str_replace('data:image/png;base64,', '', $signature);
+            
+                // Decode the base64 data
+                $imageData = base64_decode($imageData);
+
+                // Generate a unique filename for the image
+                $filename = uniqid() . '.png';
+                
+                // Define the storage path where you want to store the image
+                $storagePath = 'signature/';
+
+                Storage::put('public/' . $storagePath . $filename, $imageData);
+                
+                $imageUrl = Storage::url($storagePath . $filename);
+            }
 
             $identify_number = Str::random(8);
             while (User::where('identify_number', $identify_number)->exists()) {
@@ -170,6 +191,9 @@ class AuthController extends Controller
                 $hospital = $request->input('hospital');
                 $specialized_services = $request->input('specialized_services');
                 $services_info = $request->input('services_info');
+                if ($imageUrl) {
+                    $user->signature = $imageUrl;
+                }
                 $user->name = $name_doctor;
                 $user->identifier = $request->input('identifier');
                 $user->phone = $contact_phone;
@@ -261,6 +285,7 @@ class AuthController extends Controller
             toast('Register fail!', 'error', 'top-left');
             return back();
         } catch (Exception $exception) {
+            dd($exception->getMessage());
             toast('Error, Please try again!', 'error', 'top-left');
             return back();
         }

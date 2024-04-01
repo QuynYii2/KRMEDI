@@ -71,6 +71,20 @@
                 </div>
             </div>
 
+
+            @if (Auth::user()->member == 'DOCTORS')
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <h6 class="card-title">Chữ ký của bạn</h6>
+                        <img id="signatureImg" src="{{ Auth::user()->signature }}" alt="Signature"></br>
+                        <div class="d-flex justify-content-around">
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                data-bs-target="#signatureModal">Sửa chữ ký</button>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <div class="card shadow mb-4">
                 <div class="card-body">
                     <form>
@@ -102,8 +116,8 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1"><i class="fa-brands fa-google"></i></span>
                             </div>
-                            <label for="google_review"></label><input type="text" class="form-control" id="google_review"
-                                name="google_review" value="{{ $socialUser->google_review ?? '' }}">
+                            <label for="google_review"></label><input type="text" class="form-control"
+                                id="google_review" name="google_review" value="{{ $socialUser->google_review ?? '' }}">
                         </div>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
@@ -359,8 +373,9 @@
                                             <input type="text" id="identify_number" class="form-control"
                                                 value="{{ Auth::user()->identify_number ?? '' }}" readonly>
                                             <div class="input-group-append">
-                                                <button onclick="copyToClipboard()" type="button" class="btn btn-outline-primary"
-                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                <button onclick="copyToClipboard()" type="button"
+                                                    class="btn btn-outline-primary" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top"
                                                     title="Gửi mã này cho bạn bè để nhận điểm tích luỹ"><i
                                                         class="fa-regular fa-copy"></i></button>
                                             </div>
@@ -694,6 +709,29 @@
 
     </div>
 
+    <!-- Modal Signature -->
+    <div class="modal fade" id="signatureModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Tạo chữ ký của bạn</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <canvas id="signature-pad" class="signature-pad border" width="460" height="200"></canvas>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" id="save-signature">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@section('page-script')
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.2.0/dist/signature_pad.umd.min.js"></script>
+
     <script>
         callGetAllProvince();
 
@@ -978,8 +1016,56 @@
 
             // Remove the temporary input element
             tempInput.remove();
-            
+
             toastr.success('Copied!!');
         }
     </script>
+
+    <script>
+        var canvas = document.getElementById('signature-pad');
+
+        var signaturePad = new SignaturePad(canvas);
+
+        $('#save-signature').click(function() {
+            if (signaturePad.isEmpty()) {
+                toastr.error("Bạn phải tạo chữ ký trước");
+                return;
+            }
+            var signatureData = signaturePad.toDataURL();
+            var formData = new FormData();
+
+            // Add the user_id field to the form data
+            formData.append('user_id', '{{ Auth::user()->id ?? 0 }}');
+            formData.append('signature', signatureData);
+
+            var csrfToken = `{{ csrf_token() }}`;
+            var header = {
+                'X-CSRF-TOKEN': csrfToken
+            };
+
+            $.ajax({
+                url: "{{ route('user.update.user.signature') }}",
+                method: 'POST',
+                headers: header,
+                contentType: false,
+                cache: false,
+                processData: false,
+                data: formData,
+                success: function(response) {
+                    if (response.error == 0) {
+                        toastr.success('Sửa chữ ký thành công');
+                        $('#signatureModal').modal('hide');
+                        $('#signatureImg').attr('src', signatureData);
+                        signaturePad.clear();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Handle the error here
+                    toastr.error(error);
+                }
+            });
+        });
+    </script>
+@endsection
+
 @endsection

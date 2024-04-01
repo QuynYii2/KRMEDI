@@ -260,6 +260,11 @@
                                         </div>
                                         <div class="form-element" id="element-doctor" style="display: none;">
                                             <div>
+                                                <canvas id="signature-pad" class="signature-pad border" width="560" height="200"></canvas>
+                                                <input type="hidden" id="signature-data" name="signature">
+                                                <a type="button" class="btn btn-outline-primary" id="clear-signature">Xoá chữ ký</a>
+                                            </div>
+                                            <div class="mt-5">
                                                 <label for="name_doctor">{{ __('home.Name') }}</label>
                                                 <input type="text" id="name_doctor" name="name_doctor"
                                                        placeholder="{{ __('home.Name') }}">
@@ -437,6 +442,7 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.2.0/dist/signature_pad.umd.min.js"></script>
 <script>
     function getCookie(name) {
         var value = "; " + document.cookie;
@@ -728,3 +734,18 @@
     }
 </script>
 
+<script>
+    var canvas = document.getElementById('signature-pad');
+
+    var signaturePad = new SignaturePad(canvas);
+
+    signaturePad.addEventListener("endStroke", () => {
+        var signatureData = signaturePad.toDataURL();
+        $('#signature-data').val(signatureData);
+    });
+
+    $('#clear-signature').click(function () {
+        signaturePad.clear();
+        $('#signature-data').val('');
+    });
+</script>
