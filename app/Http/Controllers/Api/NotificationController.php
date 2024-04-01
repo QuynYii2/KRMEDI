@@ -30,7 +30,7 @@ class NotificationController extends Controller
             $limit = $validatedData['limit'] ?? "";
             $user_id = $validatedData['user_id'];
 
-            $notifications  = Notification::with('senders', 'followers')->where('follower', $user_id)->orderBy('created_at', 'desc')->orderBy('updated_at', 'desc');
+            $notifications  = Notification::with('senders', 'followers')->where('follower', $user_id)->orderBy('id', 'desc');
 
             if ($limit) {
                 $page = $validatedData['page'] ?? 1;

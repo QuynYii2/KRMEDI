@@ -57,6 +57,10 @@ class BookingController extends Controller
     public function detailBooking($id)
     {
         $booking = Booking::find($id);
+        if (!$booking) {
+            toast('Booking không tồn tại', 'error', 'top-left');
+            return back();
+        }
         $clinic = Clinic::find($booking->clinic_id);
         $user = Auth::user();
         if ($booking->member_family_id == null) {
