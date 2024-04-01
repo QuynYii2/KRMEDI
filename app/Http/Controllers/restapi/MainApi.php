@@ -243,6 +243,7 @@ class MainApi extends Controller
         }
     }
 
+    //Booking created
     public function sendFcmNotification(Request $request)
     {
         try {

@@ -1189,10 +1189,10 @@
 </script>
 
 <script>
-    // let accessToken = `Bearer ` + token;
-    // let headers = {
-    //     'Authorization': accessToken
-    // };
+    let accessToken = `Bearer ` + token;
+    let headers = {
+        'Authorization': accessToken
+    };
 
     function seenNotify(event, id) {
         event.preventDefault();

@@ -599,7 +599,7 @@ class BookingApi extends Controller
         }
     }
 
-    //Booking reminder through zalo
+    //Booking reminder through zalo & fcm
     public function bookingReminder()
     {
         $currentDateTime = Carbon::now('Asia/Ho_Chi_Minh');
@@ -622,6 +622,18 @@ class BookingApi extends Controller
             $extend['isReminded'] = 1;
             $b->extend = $extend;
             $b->save();
+            
+            //SEND FCM
+            $mainApi = new MainApi();
+            $newRequestData = [
+                'id' => $newBooking->id,
+                'user_id' => $newBooking->user_id,
+                'clinic_id' => $newBooking->clinic_id,
+                'clinic_title' => "Hãy chuẩn bị cho ca khám của bạn",
+                'user_title' => "Hãy nhớ lịch khám sắp tới của bạn",
+            ];
+            $request = new Request($newRequestData);
+            $mainApi->sendFcmNotification($request);
         }
     }
 }
