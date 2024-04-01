@@ -17,6 +17,7 @@ class Notification extends Model
         'target_url',
         'description',
         'booking_id',
+        'cart_id',
         'created_at',
     ];
 
@@ -28,6 +29,11 @@ class Notification extends Model
     public function bookings()
     {
         return $this->belongsTo(Booking::class, 'booking_id', 'id');
+    }
+
+    public function carts()
+    {
+        return $this->belongsTo(Cart::class, 'cart_id', 'id');
     }
 
     public function followers()

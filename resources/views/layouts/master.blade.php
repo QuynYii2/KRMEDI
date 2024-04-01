@@ -131,12 +131,12 @@
                 var newNotificationItem = $('<li><hr class="dropdown-divider">' +
                     '</li><li class="notification-item fw-bold">' +
                     '<a href="'+ url +'" onclick="seenNotify(event, ' + id + ')">' +
-                    '<div class="notification-item">'+
-                    '<img src="' + sender + '" alt="Profile" class="rounded-circle" width="60px">'+
+                    '<div class="notification-item" style="display: flex; align-items: center">'+
+                    '<img src="' + sender + '" alt="Profile" class="rounded-circle" style="width: 80px">'+
                     '<div class="notificationContent ms-3">' +
-                    '<h4>' + title + '</h4>' +
-                    '<p>' + description + '</p>' +
-                    '<p>Vừa xong</p>' +
+                    '<h5 style="font-size: 1rem">' + title + '</h5>' +
+                    '<p style="font-size: 0.9rem">' + description + '</p>' +
+                    '<p style="font-size: 0.9rem">Vừa xong</p>' +
                     '</div>' +
                     '</div>' +
                     '</a>' +

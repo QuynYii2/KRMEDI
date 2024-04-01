@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\online_medicine\ProductMedicine;
 use App\Models\ProductInfo;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -260,6 +261,40 @@ class CartApi extends Controller
             return response('Error, Please try again!', 400);
         } catch (\Exception $exception) {
             return response($exception, 400);
+        }
+    }
+
+    public function prescriptionReminder()
+    {
+        $currentDateTime = Carbon::now('Asia/Ho_Chi_Minh');
+
+        $cart = Cart::query();
+
+        $cart = $cart->where('status', CartStatus::COMPLETE)
+            ->where('type_product', 'MEDICINE')
+            ->whereNotNull('prescription_id')
+            ->where('remind_remain', '>', 0);
+
+        $cart = $cart->get();
+
+        foreach ($cart as $c) {
+            if ($c->type_product == 'MEDICINE') {
+                $c->load('productMedicine');
+            }
+            
+            $c->remind_remain = $c->remind_remain - 1;
+            $c->save();
+
+            //SEND FCM
+            $mainApi = new MainApi();
+            $newRequestData = [
+                'cart_id' => $c->id,
+                'user_id' => $c->user_id,
+                'title' => "Hãy nhớ lịch uống thuốc của bạn",
+                'description' => "Bác sĩ lưu ý: " . $c->note ?? '',
+            ];
+            $request = new Request($newRequestData);
+            $mainApi->sendFcmNotificationOnPrescriptionReminder($request);
         }
     }
 }

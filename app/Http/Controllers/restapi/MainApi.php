@@ -319,6 +319,98 @@ class MainApi extends Controller
         }
     }
 
+    //Prescription reminder
+    public function sendFcmNotificationOnPrescriptionReminder(Request $request)
+    {
+        try {
+            $validated = Validator::make($request->all(), [
+                'cart_id' => 'required|numeric',
+                'user_id' => 'required|numeric',
+                'title' => 'required|string',
+                'description' => 'nullable|string'
+            ]);
+
+            if ($validated->fails()) {
+                return response()->json(['error' => -1, 'message' => $validated->errors()->first()], 400);
+            }
+
+            $validatedData = $validated->validated();
+
+            $userId = $validatedData['user_id'];
+
+            $cartId = $validatedData['cart_id'];
+
+            $title = $validatedData['title'];
+
+            $description = $validatedData['description'] ?? "";
+
+            $userToken = User::find($userId)->token_firebase ?? "";
+
+            $userNotification = Notification::create([
+                'title' => $title,
+                'sender_id' => $userId,
+                'follower' => $userId,
+                'target_url' => '#',
+                'description' => $description,
+                'cart_id' => $cartId
+            ]);
+
+            if ($userToken) {
+                $response = $this->sendPrescriptionReminderNotification($userToken, $userNotification);
+            }
+
+
+            $data = $response->getContents();
+            return response($data);
+        } catch (\Exception $e) {
+            return response(['error' => -1, 'message' => $e->getMessage()], 400);
+        }
+    }
+
+    private function sendPrescriptionReminderNotification($userToken = null, $notification)
+    {
+        $client = new Client();
+        $YOUR_SERVER_KEY = Constants::GG_KEY;
+
+        $data = [];
+
+        if ($userToken) {
+            $notificationWithSender = Notification::with('senders')->find($notification->id);
+
+            $data = [
+                'title' => $notificationWithSender->title ?? "",
+                'sender' => $notificationWithSender->senders->avt ?? "",
+                'url' => $notificationWithSender->target_url ?? "#",
+                'description' => $notificationWithSender->description ?? "",
+                'id' => $notificationWithSender->id,
+                'cart_id' => $notificationWithSender->cart_id,
+            ];
+
+            $response = $client->post('https://fcm.googleapis.com/fcm/send', [
+                'headers' => [
+                    'Authorization' => 'key=' . $YOUR_SERVER_KEY,
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => [
+                    'to' => $userToken,
+                    'data' => $data,
+                    'notification' => [
+                        'title' => 'Bạn vừa nhận được 1 thông báo mới',
+                        'body' => 'Cart',
+                    ],
+                    'web' => [
+                        'notification' => [
+                            'title' => 'Bạn vừa nhận được 1 thông báo mới',
+                            'body' => 'Cart',
+                        ],
+                    ],
+                ],
+            ]);
+        }
+
+        return $response->getBody();
+    }
+
     private function sendBookingNotification($hospitalToken = null, $userToken = null, $notification)
     {
         $client = new Client();
