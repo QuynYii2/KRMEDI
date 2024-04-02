@@ -176,6 +176,7 @@ class CheckoutApi extends Controller
             AhaOrder::updateOrCreate([
                 '_id' => $request->_id
             ], [
+                '_id' => $request->_id,
                 'supplier_id' => $request->supplier_id ?? "",
                 'shared_link' => $request->shared_link ?? "",
                 'path' => $request->path ?? "",
