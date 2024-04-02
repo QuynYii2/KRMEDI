@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('aha_orders', function (Blueprint $table) {
             $table->id();
             $table->string('_id')->unique();
-            $table->string('supplier_id');
-            $table->text('shared_link');
+            $table->string('supplier_id')->nullable();
+            $table->text('shared_link')->nullable();
             $table->text('path');
             $table->timestamps();
             $table->softDeletes();
