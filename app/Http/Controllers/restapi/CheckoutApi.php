@@ -173,14 +173,14 @@ class CheckoutApi extends Controller
                 return response()->json(['error' => -1, 'message' => $validated->errors()->first()], 400);
             }
 
-            // AhaOrder::updateOrCreate([
-            //     '_id' => $request->_id
-            // ], [
-            //     'supplier_id' => $request->supplier_id ?? "",
-            //     'shared_link' => $request->shared_link ?? "",
-            //     'path' => $request->path,
-            //     'status' => $request->status,
-            // ]);
+            AhaOrder::updateOrCreate([
+                '_id' => $request->_id
+            ], [
+                'supplier_id' => $request->supplier_id ?? "",
+                'shared_link' => $request->shared_link ?? "",
+                'path' => $request->path,
+                'status' => $request->status,
+            ]);
 
             $order = Order::where('aha_order_id', $request->_id)->first();
 

@@ -13,6 +13,7 @@ class AhaOrder extends Model
         'supplier_id',
         'shared_link',
         'path',
-        '_id'
+        '_id',
+        'status'
     ];
 }
