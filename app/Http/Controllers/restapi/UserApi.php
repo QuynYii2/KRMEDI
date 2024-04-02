@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class UserApi extends Controller
@@ -321,5 +322,41 @@ class UserApi extends Controller
             }
         }
         return view('ui.my-bookings.show-booking-by-qrcode', compact('bookings', 'id'));
+    }
+
+    public function minusUserPoint(Request $request)
+    {
+        try {
+            $validated = Validator::make($request->all(), [
+                'user_id' => 'required|integer',
+                'minus_by' => 'required|integer',
+            ]);
+
+            if ($validated->fails()) {
+                return response()->json(['error' => -1, 'message' => $validated->errors()->first()], 400);
+            }
+
+            $validatedData = $validated->validated();
+
+            $userId = $validatedData['user_id'];
+            
+            $minusBy = $validatedData['minus_by'];
+
+            $user = User::find($userId);
+
+            $newPoints = 0;
+
+            if($user->points > $minusBy)
+            {
+                $newPoints = $user->points - $minusBy;
+            }
+
+            $user->points = $newPoints;
+            $user->save();
+
+            return response()->json(['error' => 0, 'data' => $user]);
+        } catch (\Exception $e) {
+            return response(['error' => -1, 'message' => $e->getMessage()], 400);
+        }
     }
 }

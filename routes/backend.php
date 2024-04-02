@@ -33,6 +33,7 @@ Route::group(['prefix' => 'users'], function () {
     Route::post('/change-password', [UserApi::class, 'changePassword'])->name('api.backend.user.change.password');
     Route::post('/change-avatar', [UserApi::class, 'changeAvt'])->name('api.backend.user.change.avatar');
     Route::get('/get-user', [UserApi::class, 'getUserFromEmail'])->name('api.backend.user.get.user.email');
+    Route::post('/minus-points', [UserApi::class, 'minusUserPoint'])->name('api.backend.user.minus.point');
 });
 
 Route::group(['prefix' => 'users-social'], function () {
