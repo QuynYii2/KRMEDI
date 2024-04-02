@@ -167,7 +167,7 @@ class CheckoutApi extends Controller
                 '_id' => 'required',
                 'supplier_id' => 'nullable',
                 'shared_link' => 'nullable',
-                'path' => 'nullable',
+                // 'path' => 'nullable',
                 'status' => 'nullable'
             ]);
 
