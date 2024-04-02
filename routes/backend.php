@@ -7,6 +7,7 @@ use App\Http\Controllers\connect\AgoraChatController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\restapi\AddressApi;
+use App\Http\Controllers\restapi\AhaOrderApi;
 use App\Http\Controllers\restapi\AnswerLikeApi;
 use App\Http\Controllers\restapi\BookingApi;
 use App\Http\Controllers\restapi\BusinessFavouriteApi;
@@ -135,6 +136,11 @@ Route::group(['prefix' => 'carts'], function () {
 /* Order api */
 Route::group(['prefix' => 'orders'], function () {
     Route::get('user/prescription/{id}', [OrderApi::class, 'getPrescriptionOrderByUserID'])->name('api.backend.prescription.order.user');
+});
+
+/* AHA Order api */
+Route::group(['prefix' => 'aha-orders'], function () {
+    Route::post('store', [AhaOrderApi::class, 'store'])->name('api.backend.aha.order.store');
 });
 
 /* Checkout api */
