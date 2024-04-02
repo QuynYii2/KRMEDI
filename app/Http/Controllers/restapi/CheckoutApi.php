@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Enums\Constants;
 use App\Models\AhaOrder;
+use Illuminate\Support\Facades\Validator;
 
 class CheckoutApi extends Controller
 {
