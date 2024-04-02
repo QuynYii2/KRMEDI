@@ -175,15 +175,15 @@ class CheckoutApi extends Controller
                 return response()->json(['error' => -1, 'message' => $validated->errors()->first()], 400);
             }
 
-            // $validatedData = $validated->validated();
+            $validatedData = $validated->validated();
 
-            // $aha_order = AhaOrder::where('_id', $request->_id)->first();
+            $aha_order = AhaOrder::where('_id', $request->_id)->first();
 
-            // if ($aha_order) {
-            //     $aha_order->update($validatedData);
-            // } else {
-            //     AhaOrder::create($validatedData);
-            // }
+            if ($aha_order) {
+                $aha_order->update($validatedData);
+            } else {
+                AhaOrder::create($validatedData);
+            }
 
             // AhaOrder::updateOrCreate([
             //     '_id' => $request->_id
