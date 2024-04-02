@@ -19,6 +19,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Enums\Constants;
+use App\Models\AhaOrder;
 
 class CheckoutApi extends Controller
 {
@@ -158,27 +159,54 @@ class CheckoutApi extends Controller
 
     public function statusOrder(Request $request)
     {
-        $order = Order::where('aha_order_id', $request->_id)->first();
-        if (empty($order)) {
-            return response()->json(['status' => false, 'message' => 'Đơn hàng không tồn tại'], 200);
-        }
-        $order->status = $request->status;
-        $order->save();
+        try {
+            $validated = Validator::make($request->all(), [
+                '_id' => 'required',
+                'supplier_id' => 'nullable',
+                'shared_link' => 'nullable',
+                'path' => 'required',
+                'status' => 'required'
+            ]);
 
-        if ($request->status == "ACCEPTED") {
-            $carts = Cart::where('prescription_id', $order->prescription_id)->get();
-            foreach ($carts as $cart) {
-                $cart->status = CartStatus::COMPLETE;
-                $cart->save();
+            if ($validated->fails()) {
+                return response()->json(['error' => -1, 'message' => $validated->errors()->first()], 400);
             }
+
+            AhaOrder::updateOrCreate([
+                '_id' => $request->_id
+            ], [
+                'supplier_id' => $request->supplier_id ?? "",
+                'shared_link' => $request->shared_link ?? "",
+                'path' => $request->path,
+                'status' => $request->status,
+            ]);
+
+            $order = Order::where('aha_order_id', $request->_id)->first();
+
+            if (empty($order)) {
+                return response()->json(['status' => false, 'message' => 'Đơn hàng không tồn tại'], 400);
+            }
+
+            $order->status = $request->status;
+            $order->save();
+
+            if ($request->status == "ACCEPTED") {
+                $carts = Cart::where('prescription_id', $order->prescription_id)->get();
+                foreach ($carts as $cart) {
+                    $cart->status = CartStatus::COMPLETE;
+                    $cart->save();
+                }
+            }
+
+            $data = $request->all();
+            $user = User::find($order->user_id);
+            $token = $user->token_firebase;
+            $response = $this->sendNotification($token, $data);
+
+            return response()->json(['status' => true, 'message' => 'Cập nhật trạng thái đơn hàng thành công'], 200);
+        } catch (\Exception $e) {
+            return response(['status' => false, 'message' => $e->getMessage()], 400);
         }
-
-        $data = $request->all();
-        $user = User::find($order->user_id);
-        $token = $user->token_firebase;
-        $response = $this->sendNotification($token, $data);
-
-        return response()->json(['status' => true, 'message' => 'Cập nhật trạng thái đơn hàng thành công'], 200);
     }
 
     public function sendNotification($device_token, $data)
