@@ -39,18 +39,20 @@ class CheckoutApi extends Controller
 
     public function checkout($request)
     {
-        $discount_price_exchange = $request->input('discount_price_exchange');
-        if ($discount_price_exchange > 999) {
-            $point_exchange = intval($discount_price_exchange / 1000);
-        } else {
-            $point_exchange = 0;
-        }
+        // $discount_price_exchange = $request->input('discount_price_exchange');
+        // if ($discount_price_exchange > 999) {
+        //     $point_exchange = intval($discount_price_exchange / 1000);
+        // } else {
+        //     $point_exchange = 0;
+        // }
 
         $userID = intval($request->input('user_id'));
 
-        $user = User::find($userID);
-        $user->points = $point_exchange;
-        $user->save();
+        // if ($discount_price_exchange) {
+        //     $user = User::find($userID);
+        //     $user->points = $point_exchange;
+        //     $user->save();
+        // }
 
         $full_name = $request->input('full_name');
         $email = $request->input('email');
@@ -173,15 +175,15 @@ class CheckoutApi extends Controller
                 return response()->json(['error' => -1, 'message' => $validated->errors()->first()], 400);
             }
 
-            $validatedData = $validated->validated();
+            // $validatedData = $validated->validated();
 
-            $aha_order = AhaOrder::where('_id', $request->_id)->first();
+            // $aha_order = AhaOrder::where('_id', $request->_id)->first();
 
-            if ($aha_order) {
-                $aha_order->update($validatedData);
-            } else {
-                AhaOrder::create($validatedData);
-            }
+            // if ($aha_order) {
+            //     $aha_order->update($validatedData);
+            // } else {
+            //     AhaOrder::create($validatedData);
+            // }
 
             // AhaOrder::updateOrCreate([
             //     '_id' => $request->_id
