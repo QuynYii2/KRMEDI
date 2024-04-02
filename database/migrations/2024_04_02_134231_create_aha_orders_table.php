@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('_id')->unique();
             $table->string('supplier_id')->nullable();
             $table->text('shared_link')->nullable();
-            $table->text('path');
+            $table->longText('path');
             $table->string('status')->nullable();
             $table->timestamps();
             $table->softDeletes();

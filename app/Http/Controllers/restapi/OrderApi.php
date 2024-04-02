@@ -61,7 +61,13 @@ class OrderApi extends Controller
 
     public function detail($id)
     {
-        $order = Order::find($id);
+        $order = Order::with('ahaOrder')->find($id);
+        $ahaOrder = $order->ahaOrder;
+        if ($ahaOrder) {
+            $decodedPath = json_decode($ahaOrder->path, true);
+
+            $ahaOrder->path = $decodedPath;
+        }
         if (!$order || $order->status == OrderStatus::DELETED) {
             return response('Not found', 404);
         }
@@ -102,7 +108,6 @@ class OrderApi extends Controller
 
     public function deleteOrder($id, Request $request)
     {
-
     }
 
     public function getPrescriptionOrderByUserID($id)

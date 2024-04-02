@@ -30,6 +30,11 @@ class Order extends Model
         'prescription_id'
     ];
 
+    public function ahaOrder()
+    {
+        return $this->belongsTo(AhaOrder::class, 'aha_order_id', '_id');
+    }
+
     public function getOrderDetails()
     {
         $order_items = OrderItem::where('order_id', $this->id)->get();
