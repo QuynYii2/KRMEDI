@@ -167,7 +167,7 @@ class CheckoutApi extends Controller
                 '_id' => 'required',
                 'supplier_id' => 'nullable',
                 'shared_link' => 'nullable',
-                // 'path' => 'nullable',
+                'path' => 'nullable',
                 'status' => 'nullable'
             ]);
 
@@ -175,25 +175,15 @@ class CheckoutApi extends Controller
                 return response()->json(['error' => -1, 'message' => $validated->errors()->first()], 400);
             }
 
-            $validatedData = $validated->validated();
-
-            $aha_order = AhaOrder::where('_id', $request->_id)->first();
-
-            if ($aha_order) {
-                $aha_order->update($validatedData);
-            } else {
-                AhaOrder::create($validatedData);
-            }
-
-            // AhaOrder::updateOrCreate([
-            //     '_id' => $request->_id
-            // ], [
-            //     '_id' => $request->_id,
-            //     'supplier_id' => $request->supplier_id ?? "",
-            //     'shared_link' => $request->shared_link ?? "",
-            //     'path' => $request->path ?? "",
-            //     'status' => $request->status ?? "",
-            // ]);
+            AhaOrder::updateOrCreate([
+                '_id' => $request->_id
+            ], [
+                '_id' => $request->_id,
+                'supplier_id' => $request->supplier_id ?? "",
+                'shared_link' => $request->shared_link ?? "",
+                'path' => $request->path ? json_encode($request->path) : null,
+                'status' => $request->status ?? "",
+            ]);
 
             $order = Order::where('aha_order_id', $request->_id)->first();
 
