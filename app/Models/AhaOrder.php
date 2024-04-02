@@ -10,10 +10,10 @@ class AhaOrder extends Model
 {
     use HasFactory, SoftDeletes;
     protected $fillable = [
+        '_id',
         'supplier_id',
         'shared_link',
         'path',
-        '_id',
         'status'
     ];
 }
