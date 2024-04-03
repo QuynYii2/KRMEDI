@@ -232,6 +232,13 @@ class AuthController extends Controller
             }
             $success = $user->save();
             if ($success) {
+                //Cộng điểm giới thiệu
+                if ($invite_code) {
+                    $getUserInvite = User::where('identify_number', $identify_number)->first();
+                    $getUserInvite->points = $getUserInvite->points + 1;
+                    $getUserInvite->save();
+                }
+
                 (new MainController())->createRoleUser($member, $username);
 
                 if ($user->type == \App\Enums\Role::MEDICAL) {
