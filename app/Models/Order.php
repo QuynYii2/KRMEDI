@@ -60,6 +60,31 @@ class Order extends Model
         $this->products = $array_products;
     }
 
+    public function getPrescriptionOrderDetails()
+    {
+        $order_items = Cart::where('prescription_id', $this->prescription_id)->get();
+        $this->total_order_items = $order_items->count();
+        $this->order_items = $order_items;
+        
+        $array_products = [];
+        foreach ($order_items as $order_item) {
+            if ($order_item->type_product == TypeProductCart::MEDICINE) {
+                $product = ProductMedicine::join('users', 'users.id', '=', 'product_medicines.user_id')
+                    ->where('product_medicines.id', $order_item->product_id)
+                    ->select('product_medicines.*', 'users.username')
+                    ->first();
+            } else {
+                $product = ProductInfo::join('users', 'users.id', '=', 'product_infos.created_by')
+                    ->where('product_infos.id', $order_item->product_id)
+                    ->select('product_infos.*', 'users.username')
+                    ->first();
+            }
+            $array_products[] = $product;
+        }
+        $this->total_products = count($array_products);
+        $this->products = $array_products;
+    }
+
     public function getOrderPrescriptionDetails($userId)
     {
         $orders = $this->where('user_id', $userId)
