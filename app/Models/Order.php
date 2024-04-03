@@ -63,6 +63,8 @@ class Order extends Model
     public function getPrescriptionOrderDetails()
     {
         $order_items = Cart::where('prescription_id', $this->prescription_id)->get();
+        $order_items['price'] = intval($order_items['price']);
+        $order_items['total_price'] = intval($order_items['total_price']);
         $this->total_order_items = $order_items->count();
         $this->order_items = $order_items;
         
