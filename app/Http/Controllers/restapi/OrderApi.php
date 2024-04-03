@@ -5,6 +5,7 @@ namespace App\Http\Controllers\restapi;
 use App\Enums\OrderStatus;
 use App\Enums\TypeProductCart;
 use App\Http\Controllers\Controller;
+use App\Models\Cart;
 use App\Models\online_medicine\ProductMedicine;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -30,7 +31,11 @@ class OrderApi extends Controller
             ->orderBy('id', 'desc')
             ->cursor()
             ->map(function ($item) {
-                $order_items = OrderItem::where('order_id', $item->id)->get();
+                if($item->prescription_id){
+                    $order_items = Cart::where('prescription_id', $item->prescription_id)->get();
+                }else {
+                    $order_items = OrderItem::where('order_id', $item->id)->get();
+                }
                 $order = (array)$item;
                 $order['total_order_items'] = $order_items->count();
                 $order['order_items'] = $order_items->toArray();
