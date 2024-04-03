@@ -120,7 +120,11 @@ class CheckoutApi extends Controller
             $product->quantity -= $cart->quantity;
             $product->save();
 
-            if (!$prescription_id) {
+            if ($prescription_id) {
+                $cart->price = $product->price;
+                $cart->total_price = $product->price * $cart->quantity;
+                $cart->save();
+            }else {
                 $cart->delete();
             }
         }
