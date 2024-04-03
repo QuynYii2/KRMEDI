@@ -126,8 +126,10 @@ class BusinessApi extends Controller
                 /* Show symptoms*/
                 $clinic['total_symptoms'] = $symptoms->count();
                 $clinic['symptoms'] = $symptoms->toArray();
+                $clinic['introduce'] = str_replace(array("\r", "\n", "\""), '', strip_tags(html_entity_decode($clinic['introduce'])));
                 return $clinic;
             });
+
         return response()->json($clinics);
     }
 
