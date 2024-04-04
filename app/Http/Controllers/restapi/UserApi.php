@@ -171,7 +171,7 @@ class UserApi extends Controller
                 $user->avt = $thumbnail;
                 $success = $user->save();
                 if ($success) {
-                    return response((new MainApi())->returnMessage('Change Avatar success!'), 200);
+                    return response()->json(['avt' => $user->avt] ,200);
                 }
                 return response((new MainApi())->returnMessage('Change Avatar error'), 400);
             }
