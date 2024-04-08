@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\restapi;
 
 use App\Enums\OrderStatus;
+use App\Enums\OrderType;
 use App\Enums\TypeProductCart;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
@@ -18,6 +19,7 @@ class OrderApi extends Controller
     public function getAllByUser($id, Request $request)
     {
         $status = $request->input('status');
+        $type = $request->input('type');
 
         $orders = DB::table('orders')
             ->where('user_id', $id)
@@ -27,13 +29,19 @@ class OrderApi extends Controller
                 } else {
                     $query->where('status', '!=', OrderStatus::DELETED);
                 }
+            })->where(function ($query) use ($type) {
+                if ($type == OrderType::SHOPPING) {
+                    $query->where('prescription_id', '=', null);
+                } else if ($type == OrderType::PRESCRIPTION) {
+                    $query->where('prescription_id', '!=', null);
+                }
             })
             ->orderBy('id', 'desc')
             ->cursor()
             ->map(function ($item) {
-                if($item->prescription_id){
+                if ($item->prescription_id) {
                     $order_items = Cart::where('prescription_id', $item->prescription_id)->get();
-                }else {
+                } else {
                     $order_items = OrderItem::where('order_id', $item->id)->get();
                 }
                 $order = (array)$item;
