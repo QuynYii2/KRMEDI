@@ -33,7 +33,7 @@ class BackendQuestionController extends Controller
     {
         $user_id = $request->input('user_id');
         $statusQuestion = Question::find($id);
-        $question = CalcViewQuestion::getViewQuestion($id);
+        $question = CalcViewQuestion::getViewQuestion($id) ?? 0;
 
         $answersQuestion = DB::table('answers')
             ->where('status', '!=', AnswerStatus::DELETED)
@@ -60,14 +60,14 @@ class BackendQuestionController extends Controller
             return response('Not found', 404);
         }
 
-        if ($question === null) {
-            $question = new CalcViewQuestion();
-            $question->views = 1;
-            $question->question_id = $id;
-        } else {
-            $question->views = $question->views + 1;
-        }
-        $question->save();
+        // if ($question === null) {
+        //     $question = new CalcViewQuestion();
+        //     $question->views = 1;
+        //     $question->question_id = $id;
+        // } else {
+        //     $question->views;
+        // }
+        // $question->save();
 
         $responseData = [
             'statusQuestion' => $statusQuestion,
