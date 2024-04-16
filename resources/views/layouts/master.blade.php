@@ -1,7 +1,8 @@
 @php use Illuminate\Support\Facades\Auth; @endphp
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDe6qi9czJ2Z6SLnV9sSUzce0nuzhRm3hg"></script>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,31 +14,30 @@
 
     <title>@yield('title')</title>
 
-    <link rel="icon" type="image/png"
-          href="{{ asset('img/logo.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('img/logo.png') }}">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    {{--    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet"/>--}}
+    {{--    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet"/> --}}
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.cdnfonts.com/css/mulish" rel="stylesheet">
-    {{--    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;0,1000;1,400;1,700&family=Inter:wght@400;500;600;700&family=Mulish:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&family=Nunito+Sans:wght@400;500&family=Poppins:wght@300&family=Roboto+Slab:wght@400;500&family=Roboto:wght@500&family=Rubik:wght@300;400;500&display=swap" rel="stylesheet">--}}
-    <link rel="stylesheet" href="{{asset('css/file.css')}}">
-    <link rel="stylesheet" href="{{asset('css/style.css')}}">
-    <link rel="stylesheet" href="{{asset('css/login.css')}}">
-    <link rel="stylesheet" href="{{asset('css/recruitment.css')}}">
-    <link rel="stylesheet" href="{{asset('css/flea-market.css')}}">
-    <link rel="stylesheet" href="{{asset('css/responsive.css')}}">
-    <link rel="stylesheet" href="{{asset('css/responsive-mobi.css')}}">
-    <link rel="stylesheet" href="{{asset('css/news.css')}}">
+    {{--    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;0,1000;1,400;1,700&family=Inter:wght@400;500;600;700&family=Mulish:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&family=Nunito+Sans:wght@400;500&family=Poppins:wght@300&family=Roboto+Slab:wght@400;500&family=Roboto:wght@500&family=Rubik:wght@300;400;500&display=swap" rel="stylesheet"> --}}
+    <link rel="stylesheet" href="{{ asset('css/file.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/recruitment.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/flea-market.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/responsive-mobi.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/news.css') }}">
     <script>
         const token = `{{ $_COOKIE['accessToken'] ?? '' }}`;
     </script>
@@ -51,9 +51,11 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.textcomplete/1.8.0/jquery.textcomplete.js"></script>
     <script src="{{ asset('constants.js') }}" type="module"></script>
-    @includeWhen(Auth::check(),'components.head.chat-message' )
+    @includeWhen(Auth::check(), 'components.head.chat-message')
     <script type="module">
-        import {initializeApp} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import {
+            initializeApp
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import {
             getMessaging,
             getToken,
@@ -73,8 +75,11 @@
         const app = initializeApp(firebaseConfig);
         const messaging = getMessaging();
 
-        const key_pair_fire_base = 'BIKdl-B84phF636aS0ucw5k-KoGPnivJW4L_a9GNf7gyrWBZt--O9KcEzvsLl3h-3_Ld0rT8YFTsuupknvguW9s';
-        getToken(messaging, {vapidKey: key_pair_fire_base}).then((currentToken) => {
+        const key_pair_fire_base =
+            'BIKdl-B84phF636aS0ucw5k-KoGPnivJW4L_a9GNf7gyrWBZt--O9KcEzvsLl3h-3_Ld0rT8YFTsuupknvguW9s';
+        getToken(messaging, {
+            vapidKey: key_pair_fire_base
+        }).then((currentToken) => {
             if (currentToken) {
                 console.log('token: ', currentToken);
                 saveToken(currentToken);
@@ -91,7 +96,8 @@
         };
 
         async function saveToken(token) {
-            @if(Auth::check() && (!Auth::user()->token_firebase || Auth::user()->token_firebase == '' || Auth::user()->token_firebase == null))
+            @if (Auth::check() &&
+                    (!Auth::user()->token_firebase || Auth::user()->token_firebase == '' || Auth::user()->token_firebase == null))
                 await callSaveToken(token);
             @endif
         }
@@ -108,10 +114,10 @@
                 method: "POST",
                 headers: headers,
                 data: data,
-                success: function (response) {
+                success: function(response) {
                     console.log(response)
                 },
-                error: function (error) {
+                error: function(error) {
                     console.log(error);
                 }
             });
@@ -130,9 +136,9 @@
                 // Create the new notification item
                 var newNotificationItem = $('<li><hr class="dropdown-divider">' +
                     '</li><li class="notification-item fw-bold">' +
-                    '<a href="'+ url +'" onclick="seenNotify(event, ' + id + ')">' +
-                    '<div class="notification-item" style="display: flex; align-items: center">'+
-                    '<img src="' + sender + '" alt="Profile" class="rounded-circle" style="width: 80px">'+
+                    '<a href="' + url + '" onclick="seenNotify(event, ' + id + ')">' +
+                    '<div class="notification-item" style="display: flex; align-items: center">' +
+                    '<img src="' + sender + '" alt="Profile" class="rounded-circle" style="width: 80px">' +
                     '<div class="notificationContent ms-3">' +
                     '<h5 style="font-size: 1rem">' + title + '</h5>' +
                     '<p style="font-size: 0.9rem">' + description + '</p>' +
@@ -155,7 +161,7 @@
                         return parseInt(text) + 1;
                     });
                 } else {
-                    Notification.requestPermission().then(function (p) {
+                    Notification.requestPermission().then(function(p) {
                         if (p === 'granted') {
                             let notify = new Notification('KRMEDI Notification', {
                                 body: payload.notification.title + ': ' + payload.notification.body
@@ -167,7 +173,7 @@
                         } else {
                             console.log('User blocked notifications.');
                         }
-                    }).catch(function (err) {
+                    }).catch(function(err) {
                         console.error(err);
                     });
                 }
@@ -237,7 +243,7 @@
 </style>
 
 <div class="d-none">
-    @if(Auth::check())
+    @if (Auth::check())
         <div class="">
             <input id="input-check" type="number" value="2">
         </div>
@@ -245,50 +251,52 @@
         <input id="input-check" type="number" value="1">
     @endif
 </div>
+
 <body>
-<div class="loading-overlay-master">
-    <span class="fas fa-spinner fa-3x fa-spin"></span>
-</div>
-@include('sweetalert::alert')
-<div id="content">
-    @yield('content')
-</div>
-@include('layouts.partials.footer')
+    <div class="loading-overlay-master">
+        <span class="fas fa-spinner fa-3x fa-spin"></span>
+    </div>
+    @include('sweetalert::alert')
+    <div id="content">
+        @yield('content')
+    </div>
+    @include('layouts.partials.footer')
 
-<!-- Back to top -->
-<div class="btn-back-to-top" id="myBtn">
-    <span class="symbol-btn-back-to-top">
-        <i class="zmdi zmdi-chevron-up"></i>
-    </span>
-</div>
+    <!-- Back to top -->
+    <div class="btn-back-to-top" id="myBtn">
+        <span class="symbol-btn-back-to-top">
+            <i class="zmdi zmdi-chevron-up"></i>
+        </span>
+    </div>
 
 
-<div class="modal fade" id="modal-call-alert" data-backdrop="static" data-keyboard="false" tabindex="-1"
-     aria-labelledby="modal-call-alert-label" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modal-call-alert-label">Modal title</h5>
-                <button type="button" class="close btn_close_m" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn_close_m" data-dismiss="modal">Từ chối</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" id="ReceiveCall">Tiếp nhận</button>
+    <div class="modal fade" id="modal-call-alert" data-backdrop="static" data-keyboard="false" tabindex="-1"
+        aria-labelledby="modal-call-alert-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-call-alert-label">Modal title</h5>
+                    <button type="button" class="close btn_close_m" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn_close_m" data-dismiss="modal">Từ chối</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="ReceiveCall">Tiếp
+                        nhận</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 </body>
 @include('components.head.tinymce-config')
 <script>
-    $(document).ready(function () {
-        $('.btn_close_m').click(function () {
+    $(document).ready(function() {
+        $('.btn_close_m').click(function() {
             $('#modal-call-alert').modal('toggle')
         })
     })
@@ -306,13 +314,12 @@
     // Subscribe to the channel we specified in our Laravel Event
     var channel = pusher.subscribe('send-message');
     // Bind a function to a Event (the full Laravel class)
-    channel.bind('send-message', function (data) {
+    channel.bind('send-message', function(data) {
         callAlert(data);
     });
 
     function callAlert(data, firebase = false) {
-        let thisUser = '{{Auth::user()->id ?? ''}}'
-
+        let thisUser = data.user_id_2;
         if (firebase) {
             data.from = data.notification.body;
             data.content = data.data.link;
@@ -323,13 +330,47 @@
             return;
         }
 
-        $('#modal-call-alert').modal('show')
-        document.getElementById('modal-call-alert-label').innerHTML = 'Cuộc gọi từ ' + data.from
+        // Define an async wrapper function to handle the asynchronous call
+        async function getDoctorName() {
+            try {
+                const user = await getUserById(thisUser);
+                return user.name;
+            } catch (error) {
+                console.error('Error fetching user:', error);
+                throw error;
+            }
+        }
 
-        document.getElementById('ReceiveCall').addEventListener('click', function () {
-            window.open(data.content, '_blank');
-            $('#modal-call-alert').modal('hide')
+        // Call the async wrapper function and handle the result
+        getDoctorName().then(name => {
+            doctor = name;
+            $('#modal-call-alert').modal('show');
+            document.getElementById('modal-call-alert-label').innerHTML = 'Cuộc gọi từ ' + doctor;
+
+            document.getElementById('ReceiveCall').addEventListener('click', function() {
+                window.open(data.content, '_blank');
+                $('#modal-call-alert').modal('hide');
+            });
         });
+    }
+
+    async function getUserById(id) {
+        try {
+            let url_getUser = `{{ route('api.backend.user.get.user.id') }}?id=${id}`;
+            let response = await fetch(url_getUser, {
+                method: 'GET',
+                headers: {
+                    "Authorization": accessToken
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching user:', error);
+            throw error;
+        }
     }
 
     function appendDataForm(arrField, formData) {
@@ -367,24 +408,27 @@
 <script>
     /* Paginate for table with table is id of table and items is numbers element of table */
     function loadPaginate(table, items) {
-        $('table#' + table).each(function () {
+        $('table#' + table).each(function() {
             var $table = $(this);
             var itemsPerPage = items;
             var currentPage = 0;
             var pages = Math.ceil($table.find("tr:not(:has(th))").length / itemsPerPage);
-            $table.bind('repaginate', function () {
+            $table.bind('repaginate', function() {
                 if (pages > 1) {
                     var pager;
                     if ($table.next().hasClass("pager"))
-                        pager = $table.next().empty(); else
-                        pager = $('<div class="pager" style="padding-top: 20px; direction:ltr; " align="center"></div>');
+                        pager = $table.next().empty();
+                    else
+                        pager = $(
+                            '<div class="pager" style="padding-top: 20px; direction:ltr; " align="center"></div>'
+                        );
 
-                    $('<button class="pg-goto"></button>').text(' « First ').bind('click', function () {
+                    $('<button class="pg-goto"></button>').text(' « First ').bind('click', function() {
                         currentPage = 0;
                         $table.trigger('repaginate');
                     }).appendTo(pager);
 
-                    $('<button class="pg-goto"> « Prev </button>').bind('click', function () {
+                    $('<button class="pg-goto"> « Prev </button>').bind('click', function() {
                         if (currentPage > 0)
                             currentPage--;
                         $table.trigger('repaginate');
@@ -400,20 +444,21 @@
                     }
 
                     for (var page = startPager; page < endPager; page++) {
-                        $('<span id="pg' + page + '" class="' + (page == currentPage ? 'pg-selected' : 'pg-normal') + '"></span>').text(page + 1).bind('click', {
+                        $('<span id="pg' + page + '" class="' + (page == currentPage ? 'pg-selected' :
+                            'pg-normal') + '"></span>').text(page + 1).bind('click', {
                             newPage: page
-                        }, function (event) {
+                        }, function(event) {
                             currentPage = event.data['newPage'];
                             $table.trigger('repaginate');
                         }).appendTo(pager);
                     }
 
-                    $('<button class="pg-goto"> Next » </button>').bind('click', function () {
+                    $('<button class="pg-goto"> Next » </button>').bind('click', function() {
                         if (currentPage < pages - 1)
                             currentPage++;
                         $table.trigger('repaginate');
                     }).appendTo(pager);
-                    $('<button class="pg-goto"> Last » </button>').bind('click', function () {
+                    $('<button class="pg-goto"> Last » </button>').bind('click', function() {
                         currentPage = pages - 1;
                         $table.trigger('repaginate');
                     }).appendTo(pager);
@@ -423,42 +468,43 @@
                 }
 
                 $table.find(
-                    'tbody tr:not(:has(th))').hide().slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).show();
+                    'tbody tr:not(:has(th))').hide().slice(currentPage * itemsPerPage, (
+                    currentPage + 1) * itemsPerPage).show();
             });
 
             $table.trigger('repaginate');
         });
     }
 </script>
+
 </html>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="https://sp.zalo.me/plugins/sdk.js"></script>
 <script>
-    function userFollowZaloOA(res)
-    {
+    function userFollowZaloOA(res) {
         const userId = res.userId;
-        const currentUserId = "{{ Auth::user()->id ?? 0}}";
+        const currentUserId = "{{ Auth::user()->id ?? 0 }}";
         if (userId) {
             $.ajax({
                 url: " {{ route('zalo-follower.store') }} ",
                 method: "POST",
-                data: { 
+                data: {
                     userId: userId,
                     currentUserId: currentUserId
                 },
-                success: function (response) {
+                success: function(response) {
                     if (response.error == 0) {
                         toastr.success("Thank you " + response.user.name + " for following", 'Success');
                     }
                 },
-                error: function (xhr, status, error) {
+                error: function(xhr, status, error) {
                     // Handle error response
                     var errorMessage = xhr.responseJSON.message;
                     toastr.error(errorMessage, 'Error');
                 }
             });
         }
-    }                                 
+    }
 </script>
 @yield('pages-script')

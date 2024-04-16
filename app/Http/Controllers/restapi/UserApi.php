@@ -279,6 +279,13 @@ class UserApi extends Controller
         return response()->json($user);
     }
 
+    public function getUserById(Request $request)
+    {
+        $id = $request->input('id');
+        $user = User::find($id);
+        return response()->json($user);
+    }
+
     /* Temporary function */
     public function logout()
     {

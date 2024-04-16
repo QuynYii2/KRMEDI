@@ -4,25 +4,25 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="{{ asset('css/infodoctor.css') }}" rel="stylesheet">
 @section('content')
-    @include('layouts.partials.header_3')
-    @include('component.banner')
-    @if($doctor)
+@include('layouts.partials.header_3')
+@include('component.banner')
+    @if ($doctor)
         <div class="container">
             <div id="show_inf">
                 <div id="title" class="d-flex justify-content-start">
                     <div class="d-flex list-title">
                         <div class="list--doctor p-0">
-                            <a class="back" href="{{route('examination.index')}}"><p
-                                    class="align-items-center fs-title-review d-flex"><i
+                            <a class="back" href="{{ route('examination.index') }}">
+                                <p class="align-items-center fs-title-review d-flex"><i
                                         class="bi bi-arrow-left"></i>{{ __('home.Detailed information Doctor') }}</p>
                             </a>
                         </div>
                     </div>
                 </div>
                 <div id="inf-doctor" class="d-md-flex d-block justify-content-center mt-2 mt-md-0">
-                    <div id="img_info">
+                    {{-- <div id="img_info">
                         <div id="doc">
-                            <img src="{{asset( $doctor->avt )}}">
+                            <img src="{{ asset($doctor->avt) }}">
                         </div>
                         <div id="qr_code">
                             <p>{{ __("home.Doctor's QR Code") }}</p>
@@ -31,26 +31,26 @@
                             </p>
 
                         </div>
-                    </div>
+                    </div> --}}
                     <div id="about">
                         <h5>{{ $doctor->name }}</h5>
                         <div class="dess">
                             <p>{{ __('home.Hospital') }}: </p>
                             <span>
-                                @if(locationHelper() == 'vi')
-                                    {{ ($doctor->hospital ?? __('home.no name') ) }}
+                                @if (locationHelper() == 'vi')
+                                    {{ $doctor->hospital ?? __('home.no name') }}
                                 @else
-                                    {{ ($doctor->hospital_en  ?? __('home.no name') ) }}
+                                    {{ $doctor->hospital_en ?? __('home.no name') }}
                                 @endif
                             </span>
                         </div>
                         <div class="dess">
                             <p>{{ __('home.Specialty') }}:</p>
                             <span>
-                                @if(locationHelper() == 'vi')
-                                    {{ ($doctor->specialty ?? __('home.no name') ) }}
+                                @if (locationHelper() == 'vi')
+                                    {{ $doctor->specialty ?? __('home.no name') }}
                                 @else
-                                    {{ ($doctor->specialty_en  ?? __('home.no name') ) }}
+                                    {{ $doctor->specialty_en ?? __('home.no name') }}
                                 @endif
                             </span>
                         </div>
@@ -61,10 +61,10 @@
                         <div class="dess">
                             <p>{{ __('home.Services') }}: </p>
                             <span>
-                                @if(locationHelper() == 'vi')
-                                    {!! ($doctor->service ?? __('home.no name') ) !!}
+                                @if (locationHelper() == 'vi')
+                                    {!! $doctor->service ?? __('home.no name') !!}
                                 @else
-                                    {!! ($doctor->service_en  ?? __('home.no name') ) !!}
+                                    {!! $doctor->service_en ?? __('home.no name') !!}
                                 @endif
                             </span>
                         </div>
@@ -75,10 +75,10 @@
                         <div class="dess">
                             <p>{{ __('home.Service prices') }}:</p>
                             <span>
-                                @if(locationHelper() == 'vi')
-                                    {{ ($doctor->service_price ?? __('home.no name') ) }}
+                                @if (locationHelper() == 'vi')
+                                    {{ $doctor->service_price ?? __('home.no name') }}
                                 @else
-                                    {{ ($doctor->service_price_en  ?? __('home.no name') ) }}
+                                    {{ $doctor->service_price_en ?? __('home.no name') }}
                                 @endif
                             </span>
                         </div>
@@ -90,12 +90,12 @@
                             <a onclick="handleStartChatWithDoctor('{{ $doctor->id }}')">
                                 <button class="button">{{ __('home.Chat') }}</button>
                             </a>
-                            @if($is_online)
+                            @if ($is_online)
                                 <form method="post" action="{{ route('agora.call') }}" target="_blank"
-                                      onsubmit="return checkDoctorOnline()">
+                                    onsubmit="return checkDoctorOnline()">
                                     {{ csrf_field() }}
                                     <input type="hidden" name="user_id_1"
-                                           value="@if(Auth::check()) {{ Auth::user()->id }} @endif">
+                                        value="@if (Auth::check()) {{ Auth::user()->id }} @endif">
                                     <input type="hidden" name="user_id_2" value="{{ $doctor->id }}">
                                     <button type="submit" class="button">{{ __('home.Videocall') }}</button>
                                 </form>
@@ -107,14 +107,14 @@
                         </div>
                     </div>
                 </div>
-                <div id="review" class="d-flex justify-content-center">
+                <div id="review" class="d-flex justify-content-center mt-5">
                     <div class="d-flex list-title w-100 justify-content-between">
                         <div class="list--doctor p-0">
                             <p>{{ __('home.Review') }}</p>
                         </div>
                         <div class="ms-auto p-2">
                             <button class="btn btn-primary" type="button"
-                                    onclick="showOrHidden(1);">{{ __('home.Add Review') }}</button>
+                                onclick="showOrHidden(1);">{{ __('home.Add Review') }}</button>
                         </div>
                     </div>
                 </div>
@@ -125,7 +125,7 @@
                         <div class="font-weight-600 fs-24px text-center row">
                             <span>{{ __('home.Are you satisfied with') }}
                                 <strong>
-                                    {{ $doctor->name}}
+                                    {{ $doctor->name }}
                                 </strong>
                                 {{ __('home.Services') }}?
                             </span>
@@ -145,7 +145,8 @@
                             <input type="radio" name="star_number" id="star-edit-4" value="4" hidden="">
                             <label for="star-edit-4" onclick="starCheckEdit(4)">
                                 <i id="icon-star-edit-4" class="fa fa-star fa-2xl p-1"></i></label>
-                            <input type="radio" name="star_number" id="star-edit-5" value="5" hidden="" checked>
+                            <input type="radio" name="star_number" id="star-edit-5" value="5" hidden=""
+                                checked>
                             <label for="star-edit-5" onclick="starCheckEdit(5)">
                                 <i id="icon-star-edit-5" class="fa fa-star fa-2xl p-1"></i>
                             </label>
@@ -162,7 +163,7 @@
                     <div class="row">
                         <div class="recruitment-details--btn col-md-6 justify-content-end d-flex mt-2 mt-md-0">
                             <button type="button" onclick="showOrHidden(0);"
-                                    class="btn btn-secondary btnHiddenForm col-md-6">
+                                class="btn btn-secondary btnHiddenForm col-md-6">
                                 {{ __('home.CANCEL') }}
                             </button>
                         </div>
@@ -178,6 +179,7 @@
                 </div>
             </div>
         </div>
+
         <script>
             let accessToken = `Bearer ` + token;
 
@@ -228,14 +230,14 @@
 
                 if (data.title && data.description) {
                     await fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'content-type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        },
-                        body: JSON.stringify(data),
+                            method: 'POST',
+                            headers: {
+                                'content-type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify(data),
 
-                    })
+                        })
                         .then(response => {
                             if (response.status == 200) {
                                 alert('Create success!');
@@ -252,7 +254,7 @@
 
             function checkDoctorOnline() {
 
-                let isOnline = '{{ \Illuminate\Support\Facades\Cache::has('user-is-online|'.$doctor->id) }}';
+                let isOnline = '{{ \Illuminate\Support\Facades\Cache::has('user-is-online|' . $doctor->id) }}';
 
                 if (!isOnline) {
                     alert('Bác sỹ hiện không online');
@@ -267,12 +269,12 @@
                 let url = `{{ route('api.backend.doctor.reviews.doctor', $doctor->id) }}`;
 
                 await fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    },
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        },
 
-                })
+                    })
                     .then(response => {
                         if (response.status == 200) {
                             return response.json();
@@ -340,12 +342,12 @@
                                                     </div>
                                                 </div>
                                                 <div class="cmt flex-column">
-                                                    <p><b>@if(locationHelper() == 'vi')
+                                                    <p><b>@if (locationHelper() == 'vi')
                                                         ${child.title}
                                                         @else
                                                         ${child.title_en}
                                                         @endif</b><br>
-                                                            @if(locationHelper() == 'vi')
+                                                            @if (locationHelper() == 'vi')
                                                         ${child.description}
                                                         @else
                                                         ${child.description_en}
@@ -414,13 +416,13 @@
                             </div>
                         </div>
                         <div class="cmt flex-column">
-                            <p><b>@if(locationHelper() == 'vi')
+                            <p><b>@if (locationHelper() == 'vi')
                     ${parent.title}
                             @else
                     ${parent.title_en}
 
                             @endif</b><br>
-                                                       @if(locationHelper() == 'vi')
+                                                       @if (locationHelper() == 'vi')
                     ${parent.description}
                             @else
                     ${parent.description_en}
@@ -481,9 +483,7 @@
 
                 input.value = star.checked ? value : value - 1;
             }
-
         </script>
 
     @endif
 @endsection
-

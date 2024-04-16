@@ -86,6 +86,12 @@
 
     //#5 - Set remote tracks to store other users
     let remoteTracks = {}
+    // document.getElementById('join-btn').addEventListener('click', async () => {
+    //     config.uid = document.getElementById('username').value
+    //     await joinStreams()
+    //     document.getElementById('join-wrapper').style.display = 'none'
+    //     document.getElementById('footer').style.display = 'flex'
+    // })
 
     document.getElementById('mic-btn').addEventListener('click', async () => {
         //Check if what the state of muted currently is
