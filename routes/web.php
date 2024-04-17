@@ -508,6 +508,7 @@ Route::middleware(['auth'])->group(function () {
     Route::group(['prefix' => 'ui/prescription-result'], function () {
         Route::get('my-list', [PrescriptionResultController::class, 'myPrescription'])->name('view.prescription.result.my.list');
         Route::get('detail/{id}', [PrescriptionResultController::class, 'detail'])->name('view.prescription.result.detail');
+        Route::get('detail-api/{id}', [PrescriptionResultController::class, 'detailApi'])->name('view.prescription.result.detail.api');
         Route::get('list', [PrescriptionResultController::class, 'doctorPrescription'])->name('view.prescription.result.doctor');
         Route::get('create', [PrescriptionResultController::class, 'create'])->name('view.prescription.result.create');
         Route::get('get-medicine', [PrescriptionResultController::class, 'getListMedicine'])->name('view.prescription.result.get-medicine');

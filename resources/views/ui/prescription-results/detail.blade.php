@@ -63,9 +63,9 @@
         </div>
     </div>
     <script>
-        let accessToken = `Bearer ` + token;
-        let headers = {
-            "Authorization": accessToken
+        let accessTokens = `Bearer ` + token;
+        let headeres = {
+            "Authorization": accessTokens
         };
 
         $('#btnAddToCart').click(function () {
@@ -87,7 +87,7 @@
                 await $.ajax({
                     url: `{{ route('api.backend.prescription.result.add.cart.v2') }}`,
                     method: 'POST',
-                    headers: headers,
+                    headers: headeres,
                     data: data,
 
                     success: function (response, textStatus, xhr) {
@@ -118,7 +118,7 @@
                 await $.ajax({
                     url: `{{ route('api.backend.prescription.result.export') }}`,
                     method: 'POST',
-                    headers: headers,
+                    headers: headeres,
                     data: data,
                     xhrFields: {
                         responseType: 'blob'

@@ -221,6 +221,7 @@
         background: #2ecc71;
         color: #fff;
         padding-left: 30px;
+        font-size: 12px;
     }
 
     #widget-chat .btn-2:hover {
@@ -249,6 +250,31 @@
 
     #widget-chat .icon-info:before {
         content: "\f05a";
+    }
+    .box-order-chat{
+        width: 100%;
+        margin: 0 auto;
+        background: #0f5132;
+        padding: 15px;
+        border-radius: 16px;
+    }
+    .title-name{
+        font-size: 12px;
+        color: black;
+        margin-bottom: 5px;
+    }
+    .content-order-chat{
+        font-size: 12px;
+        color: black;
+        margin-bottom: 5px;
+        font-weight: bold;
+        margin-left: 7px;
+    }
+    .content-order-item{
+        width: 100%;
+        background: white;
+        padding: 10px;
+        border-radius: 16px;
     }
 </style>
 
@@ -815,39 +841,163 @@
         }
     }
 
-    function renderMessage(data) {
-        let html = '';
+    {{--function renderMessage(data) {--}}
+    {{--    let html = '';--}}
 
+    {{--    let currentUserId = '{{ Auth::check() ? Auth::user()->id : '' }}';--}}
+    {{--    data.forEach((msg) => {--}}
+    {{--        if (msg.type) {--}}
+    {{--            if (!msg.chat_message) {--}}
+    {{--                return;--}}
+    {{--            }--}}
+
+    {{--            if (msg.type == 'DonThuocMoi') {--}}
+    {{--                let url = `{{ route('view.prescription.result.detail.api', ['id' => ':id']) }}`;--}}
+    {{--                url = url.replace(':id', msg.uuid_session);--}}
+
+    {{--                $.ajax({--}}
+    {{--                    url: url,--}}
+    {{--                    type: 'GET',--}}
+    {{--                    dataType: 'json',--}}
+    {{--                    success: function(response) {--}}
+    {{--                        if(response.status){--}}
+
+    {{--                            html += `<div class="mb-3 d-flex justify-content-center">--}}
+    {{--                                    <a href="${url}">--}}
+
+    {{--                                    <button class="btn btn-1 btn-sep icon-info">Xem đơn thuốc</button>--}}
+
+    {{--                                    </a>--}}
+    {{--                                    <a class="ml-2" onclick="addToCart_WidgetChat(${msg.uuid_session})">--}}
+    {{--                                    <button class="btn btn-2 btn-sep icon-cart">Mua thuốc</button>--}}
+    {{--                                    </a>--}}
+    {{--                                    </div>`;--}}
+    {{--                        }--}}
+    {{--                        $('#chat-messages').append(html);--}}
+    {{--                    },--}}
+    {{--                    error: function(xhr, status, error) {--}}
+    {{--                        console.error(error);--}}
+    {{--                    }--}}
+    {{--                });--}}
+
+    {{--                // html += `<div class="mb-3 d-flex justify-content-center">--}}
+    {{--                //         <a href="${url}">--}}
+    {{--                //--}}
+    {{--                //         <button class="btn btn-1 btn-sep icon-info">Xem đơn thuốc</button>--}}
+    {{--                //--}}
+    {{--                //         </a>--}}
+    {{--                //         <a class="ml-2" onclick="addToCart_WidgetChat(${msg.uuid_session})">--}}
+    {{--                //         <button class="btn btn-2 btn-sep icon-cart">Mua thuốc</button>--}}
+    {{--                //         </a>--}}
+    {{--                //         </div>`;--}}
+
+    {{--                return;--}}
+    {{--            }--}}
+
+    {{--            if (msg.type == 'TaoDonThuoc') {--}}
+    {{--                html += `<div class="message ">--}}
+    {{--                    <span >--}}
+    {{--                        ${msg.chat_message}`;--}}
+
+    {{--                if ('{{ !\App\Models\User::isNormal() }}') {--}}
+    {{--                    html += `, <a class="color-blue" data-toggle="modal" data-target="#modal-create-don-thuoc-widget-chat">tạo ngay?</a>`;--}}
+    {{--                }--}}
+    {{--                html += `</span></div>`;--}}
+    {{--            }--}}
+
+    {{--            return;--}}
+    {{--        }--}}
+
+    {{--        if (!msg.chat_message) {--}}
+    {{--            return;--}}
+    {{--        }--}}
+
+    {{--        let isMySeen = msg.from_user_id === currentUserId ? 'right' : '';--}}
+
+
+    {{--        html += `<div class="message ${isMySeen}">--}}
+    {{--                    <img src="${msg.from_avatar}"/>--}}
+    {{--                    <div class="bubble">--}}
+    {{--                        ${msg.chat_message}--}}
+    {{--                        <div class="corner"></div>--}}
+    {{--                    </div>--}}
+    {{--                </div>`--}}
+    {{--    });--}}
+
+    {{--    document.getElementById('chat-messages').innerHTML = html;--}}
+    {{--    autoScrollChatBox();--}}
+    {{--}--}}
+
+    function renderMessage(data) {
         let currentUserId = '{{ Auth::check() ? Auth::user()->id : '' }}';
-        data.forEach((msg) => {
+        let index = 0;
+
+        function processMessage(index) {
+            if (index >= data.length) {
+                autoScrollChatBox();
+                return;
+            }
+
+            let msg = data[index];
+            let html = '';
+
             if (msg.type) {
                 if (!msg.chat_message) {
+                    processMessage(index + 1);
                     return;
                 }
 
                 if (msg.type == 'DonThuocMoi') {
-                    console.log(msg)
-                    let url = `{{ route('view.prescription.result.detail', ['id' => ':id']) }}`;
+                    let url = `{{ route('view.prescription.result.detail.api', ['id' => ':id']) }}`;
                     url = url.replace(':id', msg.uuid_session);
 
-                    html += `<div class="mb-3 d-flex justify-content-center">
-                            <a href="${url}">
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.status) {
+                                response.listData.forEach(item => {
+                                    html += `<div class="mb-3 box-order-chat">
+                                                <div class="content-order-item">
+                                                        <div class="d-flex ">
+                                                     <p class="title-name">Tên thuốc: </p>
+                                                      <p class="content-order-chat">${item.medicine_name}</p>
+                                                </div>
+                                                <div class="d-flex ">
+                                                     <p class="title-name">Số lượng: </p>
+                                                      <p class="content-order-chat">${item.quantity}</p>
+                                                </div>
+                                                <div class="d-flex ">
+                                                     <p class="title-name">Sử dụng: </p>
+                                                      <p class="content-order-chat">${item.note}</p>
+                                                </div>
+                                                <div class="d-flex justify-content-end">
+                                                    <a class="ml-2" onclick="addToCart_WidgetChat(${msg.uuid_session})">
+                                                    <button class="btn btn-2 btn-sep icon-cart">Mua thuốc</button>
+                                                    </a>
+                                                </div>
 
-                            <button class="btn btn-1 btn-sep icon-info">Xem đơn thuốc</button>
-
-                            </a>
-                            <a class="ml-2" onclick="addToCart_WidgetChat(${msg.uuid_session})">
-                            <button class="btn btn-2 btn-sep icon-cart">Mua thuốc</button>
-                            </a>
-                            </div>`;
+                                                </div>
+                                            </div>`;
+                                });
+                                $('#chat-messages').append(html);
+                            }
+                            processMessage(index + 1);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(error);
+                            processMessage(index + 1);
+                        }
+                    });
 
                     return;
                 }
 
                 if (msg.type == 'TaoDonThuoc') {
-                    html += `<div class="message ">
-                        <span >
-                            ${msg.chat_message}`;
+                    html = `<div class="message ">
+                            <span >
+                                ${msg.chat_message}`;
 
                     if ('{{ !\App\Models\User::isNormal() }}') {
                         html +=
@@ -855,29 +1005,30 @@
                     }
                     html += `</span></div>`;
                 }
+            } else {
+                if (!msg.chat_message) {
+                    processMessage(index + 1);
+                    return;
+                }
 
-                return;
-            }
+                let isMySeen = msg.from_user_id === currentUserId ? 'right' : '';
 
-            if (!msg.chat_message) {
-                return;
-            }
-
-            let isMySeen = msg.from_user_id === currentUserId ? 'right' : '';
-
-
-            html += `<div class="message ${isMySeen}">
+                html = `<div class="message ${isMySeen}">
                         <img src="${msg.from_avatar}"/>
                         <div class="bubble">
                             ${msg.chat_message}
                             <div class="corner"></div>
                         </div>
-                    </div>`
-        });
+                    </div>`;
+            }
 
-        document.getElementById('chat-messages').innerHTML = html;
-        autoScrollChatBox();
+            $('#chat-messages').append(html);
+            processMessage(index + 1);
+        }
+
+        processMessage(index);
     }
+
 
     function addToCart_WidgetChat(id) {
         loadingMasterPage();

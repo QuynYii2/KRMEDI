@@ -68,4 +68,16 @@ class PrescriptionResultController extends Controller
         $array_result = json_decode($value_result, true);
         return view('ui.prescription-results.detail', compact('array_result', 'prescription'));
     }
+
+    public function detailApi($id)
+    {
+        $prescription = PrescriptionResults::find($id);
+        if (!$prescription || $prescription->status == PrescriptionResultStatus::DELETED) {
+            return response()->json(['status'=>false]);
+        }
+
+        $value_result = '[' . $prescription->prescriptions . ']';
+        $array_result = json_decode($value_result, true);
+        return response()->json(['status'=>true,'listData'=>$array_result]);
+    }
 }
