@@ -1,4 +1,7 @@
-@php use Illuminate\Support\Facades\Auth; use \App\Enums\online_medicine\ObjectOnlineMedicine @endphp
+@php
+    use Illuminate\Support\Facades\Auth;
+    use App\Enums\online_medicine\ObjectOnlineMedicine;
+@endphp
 
 <link href="{{ asset('css/chatmessage.css') }}" rel="stylesheet">
 
@@ -136,7 +139,8 @@
         object-fit: cover;
     }
 
-    .find-my-medicine .frame:hover, .find-my-medicine-2 .frame:hover {
+    .find-my-medicine .frame:hover,
+    .find-my-medicine-2 .frame:hover {
         border-radius: 22px;
         background: #088180;
         box-shadow: 0px 8px 10px 0px rgba(0, 0, 0, 0.25);
@@ -272,7 +276,6 @@
         padding: 10px;
         border-radius: 16px;
     }
-
 </style>
 
 <div id="widget-chat">
@@ -291,26 +294,26 @@
             <ul class="nav nav-tabs" role="tablist" id="chat-widget-navbar">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="chat-widget-all-online" data-toggle="tab"
-                            data-target="#chat-widget-all-online-tabs" type="button" role="tab" aria-controls="home"
-                            aria-selected="true">{{ __('home.Đang trực tuyến') }}
+                        data-target="#chat-widget-all-online-tabs" type="button" role="tab" aria-controls="home"
+                        aria-selected="true">{{ __('home.Đang trực tuyến') }}
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="chat-widget-connected" data-toggle="tab"
-                            data-target="#chat-widget-connected-tabs" type="button" role="tab" aria-controls="profile"
-                            aria-selected="false">{{ __('home.Connected') }}
+                        data-target="#chat-widget-connected-tabs" type="button" role="tab" aria-controls="profile"
+                        aria-selected="false">{{ __('home.Connected') }}
                     </button>
                 </li>
             </ul>
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="chat-widget-all-online-tabs" role="tabpanel"
-                     aria-labelledby="chat-widget-all-online">
+                    aria-labelledby="chat-widget-all-online">
                     <div id="friendslist-all-online">
                         <div id="friends-all-online"></div>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="chat-widget-connected-tabs" role="tabpanel"
-                     aria-labelledby="chat-widget-connected">
+                    aria-labelledby="chat-widget-connected">
                     <div id="friendslist-connected">
                         <div id="friends-connected"></div>
                     </div>
@@ -330,8 +333,8 @@
                 <div id="chat-messages"></div>
 
                 <div id="sendmessage">
-                    <input type="text" value="Send message..." id="text-chatMessage"/>
-                    @if(!\App\Models\User::isNormal())
+                    <input type="text" value="Send message..." id="text-chatMessage" />
+                    @if (!\App\Models\User::isNormal())
                         <span class="mr-3" data-toggle="modal" data-target="#modal-create-don-thuoc-widget-chat"><i
                                 class="fa-solid fa-plus"></i></span>
                     @endif
@@ -361,9 +364,8 @@
                         <div id="list-service-result">
 
                         </div>
-                        <button type="button"
-                                class="btn btn-outline-primary mt-3"
-                                onclick="handleAddMedicine_widgetChat()">{{ __('home.Add') }}
+                        <button type="button" class="btn btn-outline-primary mt-3"
+                            onclick="handleAddMedicine_widgetChat()">{{ __('home.Add') }}
                         </button>
                     </div>
                 </div>
@@ -385,25 +387,23 @@
                         <div class="form-group position-relative">
                             <label for="inputSearchNameMedicine" class="form-control-feedback"></label>
                             <input type="search" id="inputSearchNameMedicine" class="form-control"
-                                   oninput="handleSearchMedicine()"
-                                   placeholder="Tìm kiếm theo tên thuốc">
+                                oninput="handleSearchMedicine()" placeholder="Tìm kiếm theo tên thuốc">
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group position-relative">
                             <label for="inputSearchDrugIngredient" class="form-control-feedback"></label>
                             <input type="search" id="inputSearchDrugIngredient" class="form-control"
-                                   oninput="handleSearchMedicine()"
-                                   placeholder="Tìm kếm theo thành phần thuốc">
+                                oninput="handleSearchMedicine()" placeholder="Tìm kếm theo thành phần thuốc">
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group position-relative">
                             <label for="inputSearchNameMedicine" class="form-control-feedback"></label>
                             <select class="form-select position-relative" id="object_search"
-                                    onchange="handleSearchMedicine()">
-                                <option
-                                    value="{{ \App\Enums\online_medicine\ObjectOnlineMedicine::KIDS }}">{{ __('home.For kids') }}</option>
+                                onchange="handleSearchMedicine()">
+                                <option value="{{ \App\Enums\online_medicine\ObjectOnlineMedicine::KIDS }}">
+                                    {{ __('home.For kids') }}</option>
                                 <option value="{{ ObjectOnlineMedicine::FOR_WOMEN }}">{{ __('home.For women') }}
                                 </option>
                                 <option value="{{ ObjectOnlineMedicine::FOR_MEN }}">{{ __('home.For men') }}</option>
@@ -430,7 +430,6 @@
 <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.11.2/dist/echo.iife.js"></script>
 
 <script>
-
     const CHAT_TYPE_ALL_ONLINE = 'all-online';
     const CHAT_TYPE_CONNECTED = 'connected';
 
@@ -453,7 +452,7 @@
         encrypted: true,
     });
 
-    window.Echo.private("messages." + currentUserIdChat).listen('NewMessage', function (e) {
+    window.Echo.private("messages." + currentUserIdChat).listen('NewMessage', function(e) {
         renderMessageReceive(e);
         // handleSeenMessage();
         calculateTotalMessageUnseen(e);
@@ -473,9 +472,8 @@
             type: "GET",
             dataType: "json",
 
-            success: function (data) {
-            },
-            error: function (e) {
+            success: function(data) {},
+            error: function(e) {
                 console.log(e);
             }
         });
@@ -494,7 +492,7 @@
 
         // duyệt class friend, tìm ra div có data-id = e.message.from
         // tăng thêm 1 span.badge
-        $("#friendslist-connected .friend").each(function () {
+        $("#friendslist-connected .friend").each(function() {
 
             if ($(this).data('id') === e.message.from) {
                 let countUnseen = $(this).data('msg-unseen');
@@ -542,7 +540,7 @@
             isShowBadge = true;
         }
 
-        $.each(data, function (index, item) {
+        $.each(data, function(index, item) {
             let countUnseen = item.count_unread_message;
             if (countUnseen === 0 || !countUnseen) {
                 countUnseen = '';
@@ -628,8 +626,8 @@
     }
 
     function setOnclickFriend() {
-        $(".friend").each(function () {
-            $(this).click(function () {
+        $(".friend").each(function() {
+            $(this).click(function() {
                 isShowOpenWidget = true;
 
                 chatUserId = $(this).data('id');
@@ -644,11 +642,11 @@
                 var top = childTop + 12 + "px";
 
 
-                setTimeout(function () {
+                setTimeout(function() {
                     $("#profile p").addClass("animate");
                     $("#profile").addClass("animate");
                 }, 100);
-                setTimeout(function () {
+                setTimeout(function() {
                     $("#chat-messages").addClass("animate");
                 }, 150);
 
@@ -663,7 +661,7 @@
                 $('#chat-widget-navbar').hide();
                 $('#chatview').show();
 
-                $('#close').unbind("click").click(function () {
+                $('#close').unbind("click").click(function() {
                     isShowOpenWidget = false;
 
                     handleCloseButton(uuid_session);
@@ -672,7 +670,7 @@
 
                     $("#chat-messages, #profile, #profile p").removeClass("animate");
 
-                    setTimeout(function () {
+                    setTimeout(function() {
                         $('#chatview').hide();
                         // $(this).parent().show();
                         parent.show();
@@ -697,10 +695,10 @@
                 uuid_session: uuid_session,
                 type: uuid_session
             },
-            success: function (data) {
+            success: function(data) {
                 uuid_session = data.uuid_session;
             },
-            error: function (e) {
+            error: function(e) {
                 console.log(e);
             }
         });
@@ -721,14 +719,13 @@
     }
 
     // Gắn sự kiện keyup cho input
-    $('#text-chatMessage').keypress(function (event) {
+    $('#text-chatMessage').keypress(function(event) {
         // Kiểm tra xem nút nhấn có phải là Enter (mã 13) hay không
         if (event.keyCode === 13) {
             // Xử lý sự kiện khi nhấn Enter
             sendMessageChatWidget();
         }
     });
-
 
     function sendMessageChatWidget() {
         let textChat = $('#text-chatMessage').val();
@@ -748,13 +745,13 @@
                 text: textChat,
                 uuid_session: uuid_session
             },
-            success: function (data) {
+            success: function(data) {
                 uuid_session = data.uuid_session;
 
                 renderMessageFromThisUser(textChat);
                 afterSendMessageChatWidget();
             },
-            error: function (e) {
+            error: function(e) {
                 console.log(e);
             }
         });
@@ -783,14 +780,14 @@
     }
 
 
-    $(function () {
+    $(function() {
 
-        $("#chat-circle").click(function () {
+        $("#chat-circle").click(function() {
             $("#chat-circle").toggle("scale");
             $(".chat-box").toggle("scale");
         });
 
-        $(".chat-box-toggle").click(function () {
+        $(".chat-box-toggle").click(function() {
             isShowOpenWidget = false;
             $("#chat-circle").toggle("scale");
             $(".chat-box").toggle("scale");
@@ -798,18 +795,18 @@
 
     });
 
-    $(document).ready(function () {
+    $(document).ready(function() {
 
 
         var preloadbg = document.createElement("img");
         preloadbg.src = "https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/timeline1.png";
 
-        $("#sendmessage input").focus(function () {
+        $("#sendmessage input").focus(function() {
             if ($(this).val() == "Send message...") {
                 $(this).val("");
             }
         });
-        $("#sendmessage input").focusout(function () {
+        $("#sendmessage input").focusout(function() {
             if ($(this).val() == "") {
                 $(this).val("Send message...");
 
@@ -1003,7 +1000,8 @@
                                 ${msg.chat_message}`;
 
                     if ('{{ !\App\Models\User::isNormal() }}') {
-                        html += `, <a class="color-blue" data-toggle="modal" data-target="#modal-create-don-thuoc-widget-chat">tạo ngay?</a>`;
+                        html +=
+                            `, <a class="color-blue" data-toggle="modal" data-target="#modal-create-don-thuoc-widget-chat">tạo ngay?</a>`;
                     }
                     html += `</span></div>`;
                 }
@@ -1050,7 +1048,7 @@
                 headers: headers,
                 data: data,
 
-                success: function (response, textStatus, xhr) {
+                success: function(response, textStatus, xhr) {
                     loadingMasterPage();
                     alert(response.message);
                     var statusCode = xhr.status;
@@ -1058,15 +1056,13 @@
                         window.location.href = `{{ route('user.checkout.index') }}`;
                     }
                 },
-                error: function (xhr, status, error) {
+                error: function(xhr, status, error) {
                     loadingMasterPage();
                     alert(xhr.responseJSON.message);
                 }
             });
-        } catch (e) {
-        }
+        } catch (e) {}
     }
-
 
     function getListUserWasConnect() {
         if (!'{{ Auth::check() }}') {
@@ -1076,12 +1072,12 @@
             url: "{{ route('api.backend.connect.chat.getListUserWasConnect') }}",
             type: "GET",
             dataType: "json",
-            success: function (data) {
+            success: function(data) {
                 genListUserWasConnect(data.connected, CHAT_TYPE_CONNECTED);
                 genListUserWasConnect(data.online, CHAT_TYPE_ALL_ONLINE);
                 renderTotalMessageUnseen(data.connected);
             },
-            error: function (e) {
+            error: function(e) {
                 console.log(e);
             }
         });
@@ -1096,19 +1092,20 @@
         if (totalMessageUnseen <= 1) {
             totalMessageUnseen = '';
         }
-        $('#chat-circle').append(`<span class="badge badge-light text-black" id="totalMsgUnseen">${totalMessageUnseen}</span>`);
+        $('#chat-circle').append(
+            `<span class="badge badge-light text-black" id="totalMsgUnseen">${totalMessageUnseen}</span>`);
     }
 
     getListUserWasConnect();
 
     function handleStartChatWithDoctor(id = 0) {
         /* tất cả các hàm dưới đây đều ở trong file chat-message.blade.php
-              * id nhận vào là id của người dùng cần chat
-              * hàm hideTabActive() dùng để ẩn tất cả các tab đang active
-              * hàm getMessage(id) dùng để lấy tin nhắn của người dùng đó với người dùng hiện tại
-              * hàm loadDisplayMessage(id) dùng để load tin nhắn của người dùng đó với người dùng hiện tại
-              * hàm showOrHiddenChat() dùng để hiển thị widget chat
-              */
+         * id nhận vào là id của người dùng cần chat
+         * hàm hideTabActive() dùng để ẩn tất cả các tab đang active
+         * hàm getMessage(id) dùng để lấy tin nhắn của người dùng đó với người dùng hiện tại
+         * hàm loadDisplayMessage(id) dùng để load tin nhắn của người dùng đó với người dùng hiện tại
+         * hàm showOrHiddenChat() dùng để hiển thị widget chat
+         */
 
         hideTabActive();
         getMessage(id);
@@ -1118,7 +1115,7 @@
 
     function hideTabActive() {
         let tabActive = document.querySelectorAll('.tab-pane.fade');
-        tabActive.forEach(function (tab) {
+        tabActive.forEach(function(tab) {
             tab.classList.remove('active');
             tab.classList.remove('show');
         });
@@ -1163,7 +1160,7 @@
     function loadDisplayMessage(id) {
         var friendDivs = document.querySelectorAll('.friend');
 
-        friendDivs.forEach(function (div) {
+        friendDivs.forEach(function(div) {
             // Lấy giá trị data-id của từng div
             var dataId = div.getAttribute('data-id');
 
@@ -1182,15 +1179,16 @@
         let object_search = $('#object_search').val().toLowerCase();
 
         let url = '{{ route('view.prescription.result.get-medicine') }}'
-        url = url + `?name_search=${inputNameMedicine_Search}&drug_ingredient_search=${inputDrugIngredient_Search}&object_search=${object_search}`;
+        url = url +
+            `?name_search=${inputNameMedicine_Search}&drug_ingredient_search=${inputDrugIngredient_Search}&object_search=${object_search}`;
 
         $.ajax({
             url: url,
             method: 'GET',
-            success: function (response) {
+            success: function(response) {
                 renderMedicine(response);
             },
-            error: function (error) {
+            error: function(error) {
                 console.log(error)
             }
         });
@@ -1248,19 +1246,19 @@
         // Lấy phần tử cha (div#prescriptionForm)
         var prescriptionForm = document.getElementById('prescriptionForm');
 
-// Lấy các phần tử con có class 'medicine_name'
+        // Lấy các phần tử con có class 'medicine_name'
         var medicine_name = prescriptionForm.getElementsByClassName('medicine_name');
 
-// Lấy các phần tử con có class 'medicine_ingredients'
+        // Lấy các phần tử con có class 'medicine_ingredients'
         var medicine_ingredients = prescriptionForm.getElementsByClassName('medicine_ingredients');
 
-// Lấy các phần tử con có class 'quantity'
+        // Lấy các phần tử con có class 'quantity'
         var quantity = prescriptionForm.getElementsByClassName('quantity');
 
-// Lấy các phần tử con có class 'detail_value'
+        // Lấy các phần tử con có class 'detail_value'
         var detail = prescriptionForm.getElementsByClassName('detail_value');
 
-// Lấy các phần tử con có class 'medicine_id_hidden'
+        // Lấy các phần tử con có class 'medicine_id_hidden'
         var medicine_id_hidden = prescriptionForm.getElementsByClassName('medicine_id_hidden');
 
         for (let j = 0; j < medicine_name.length; j++) {
@@ -1314,11 +1312,11 @@
                 cache: false,
                 processData: false,
                 data: formData,
-                success: function (response) {
+                success: function(response) {
                     alert('Create success!')
                     window.location.href = `{{ route('view.prescription.result.doctor') }}`;
                 },
-                error: function (error) {
+                error: function(error) {
                     alert(error.responseJSON.message);
                 }
             });
@@ -1336,7 +1334,7 @@
         next_elementQuantity_widgetChat.attr('max', quantity);
 
         // Thêm sự kiện onchange
-        next_elementQuantity_widgetChat.on('change', function () {
+        next_elementQuantity_widgetChat.on('change', function() {
             // Lấy giá trị hiện tại của next_elementQuantity_widgetChat
             var currentValue = next_elementQuantity_widgetChat.val();
 
@@ -1360,7 +1358,8 @@
         elementInputMedicine_widgetChat = element;
         next_elementInputMedicine_widgetChat = nextElement;
         next_elementQuantity_widgetChat = $(element).parents().parents().find('input.quantity');
-        next_elementMedicineIngredients_widgetChat = $(element).parents().parents().find('textarea.medicine_ingredients');
+        next_elementMedicineIngredients_widgetChat = $(element).parents().parents().find(
+            'textarea.medicine_ingredients');
     }
 
     loadData_widgetChat();
@@ -1371,10 +1370,10 @@
 
 
     function loadData_widgetChat() {
-        $('.service_name_item').on('click', function () {
+        $('.service_name_item').on('click', function() {
             let my_array = null;
             let my_name = null;
-            $(this).parent().parent().find(':checkbox:checked').each(function (i) {
+            $(this).parent().parent().find(':checkbox:checked').each(function(i) {
                 let value = $(this).val();
                 if (my_array) {
                     my_array = my_array + ',' + value;
@@ -1411,7 +1410,8 @@
             return data;
         }
 
-        return {'compoent_name': ''};
+        return {
+            'compoent_name': ''
+        };
     }
 </script>
-

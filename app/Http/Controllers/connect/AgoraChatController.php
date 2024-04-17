@@ -34,6 +34,15 @@ class AgoraChatController extends Controller
             $agora_chat = $this->createMeeting($request);
         }
 
+        $user_1 = User::find($user_id_1);
+        $user_2 = User::find($user_id_2);
+        $patient = null;
+        if ($user_1->type == 'NORMAL') {
+            $patient = $user_id_1;
+        } elseif ($user_2->type == 'NORMAL') {
+            $patient = $user_id_2;
+        }
+
         $data['content'] = route('agora.joinMeeting', ['user_id_1' => $user_id_2, 'user_id_2' => $user_id_1]);
         $data['user_id_1'] = $user_id_2;
         $data['user_id_2'] = $user_id_1;
@@ -57,8 +66,7 @@ class AgoraChatController extends Controller
 
         $this->sendNotificationToAppByFireBase($userReciveCall->email, $userCall);
 
-        return view('video-call.index', compact('agora_chat'));
-
+        return view('video-call.index', compact('agora_chat', 'patient'));
     }
 
     function createMeeting(Request $request)
@@ -145,7 +153,6 @@ class AgoraChatController extends Controller
         // Access response data
         $responseData = $response->json();
         return $responseData['rtcToken'];
-
     }
 
     function stripVN($str)
@@ -308,8 +315,17 @@ class AgoraChatController extends Controller
             $agora_chat = $this->createMeeting($request);
         }
 
-        return view('video-call.index', compact('agora_chat'));
+        $user_1 = User::find($user_id_1);
+        $user_2 = User::find($user_id_2);
 
+        $patient = null;
+        if ($user_1->type == 'NORMAL') {
+            $patient = $user_id_1;
+        } elseif ($user_2->type == 'NORMAL') {
+            $patient = $user_id_2;
+        }
+
+        return view('video-call.index', compact('agora_chat', 'patient'));
     }
 
     function getPushTokenByUser(Request $request)
@@ -334,5 +350,4 @@ class AgoraChatController extends Controller
 
         return response()->json($result);
     }
-
 }
