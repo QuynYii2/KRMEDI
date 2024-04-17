@@ -74,13 +74,52 @@
                     <p>Tạo đơn thuốc</p>
                 </div>
             @else
-                <div class="icon-wrapper">
+                <div class="icon-wrapper" data-toggle="modal" data-target="#modal-show-prescription">
                     <img class="control-icon" id="prescription-btn"
                         src="{{ asset('img/assets-video-call/leave.svg') }}" />
                     <p>Đơn thuốc</p>
                 </div>
             @endif
 
+        </div>
+
+        <div class="modal fade" id="modal-show-prescription" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-dark" id="exampleModalLongTitle">Đơn thuốc của bác sĩ</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="doctorPrescription">
+
+                        <table class="table text-center">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Sản phẩm</th>
+                                    <th scope="col">Số lượng</th>
+                                    <th scope="col">Ngày điều trị</th>
+                                    <th scope="col">Lưu ý</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="5">
+                                        Chưa có đơn thuốc nào được kê
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <a href="#" target="_blank" type="button" class="btn btn-primary">Đến màn thanh
+                            toán</a>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="modal fade" id="modal-create-don-thuoc-widget-chat" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
@@ -368,6 +407,8 @@
         let next_elementQuantity_widgetChat;
         let next_elementMedicineIngredients_widgetChat;
 
+        let currentUserIdChat = '{{ Auth::check() ? Auth::user()->id : '' }}';
+
         let html_widgetChat = `<div class="service-result-item d-flex align-items-center justify-content-between border p-3">
                     <div class="row w-75">
                         <div class="form-group">
@@ -401,6 +442,96 @@
             cluster: 'eu',
             encrypted: true,
         });
+
+        window.Echo.private("messages." + currentUserIdChat).listen('NewMessage', function(e) {
+            //
+            renderPrescriptionCart(e);
+        });
+
+        function renderPrescriptionCart(element) {
+            let html = '';
+            element = element.message;
+
+            if (element.type != null) {
+                if (!element.text) {
+                    return;
+                }
+
+                if (element.type == 'DonThuocMoi') {
+                    let accessToken = `Bearer ` + token;
+                    let headers = {
+                        'Authorization': accessToken,
+                    };
+                    const formData = new FormData();
+
+                    formData.append("user_id", chatUserId);
+                    formData.append("type_product", `\App\Enums\TypeProductCart::MEDICINE`);
+
+                    try {
+                        $.ajax({
+                            url: `{{ route('api.backend.cart.create.v2') }}`,
+                            method: 'POST',
+                            headers: headers,
+                            data: formData,
+                            success: function(response) {
+                                console.log(response)
+                            },
+                            error: function(error) {
+                                alert(error.responseJSON.message);
+                            }
+                        });
+                    } catch (e) {
+                        alert('Error, Please try again!');
+                    }
+
+                    let content = `
+                        <table class="table text-center">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Sản phẩm</th>
+                                    <th scope="col">Số lượng</th>
+                                    <th scope="col">Ngày điều trị</th>
+                                    <th scope="col">Lưu ý</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row" class="align-middle">1</th>
+                                    <td class="align-middle">
+                                        <p>Sản phẩm 1</p>
+                                        <img width="130px" height="90px"
+                                            src="/storage/product_medicine/5U5nVuYwjh90V2MgWpGM1vQv3qryH3qGd5ZVosw7.webp">
+                                    </td>
+                                    <td class="align-middle">1</td>
+                                    <td class="align-middle">1</td>
+                                    <td class="align-middle">hehe</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row" class="align-middle">1</th>
+                                    <td class="align-middle">
+                                        <img width="130px" height="90px"
+                                            src="/storage/product_medicine/5U5nVuYwjh90V2MgWpGM1vQv3qryH3qGd5ZVosw7.webp">
+                                    </td>
+                                    <td class="align-middle">1</td>
+                                    <td class="align-middle">1</td>
+                                    <td class="align-middle">hehe</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        Chưa có đơn thuốc nào được kê
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>`;
+
+                    html = content;
+                }
+
+            }
+
+            $('#doctorPrescription').empty().append(html);
+        }
 
         function handleAddMedicine_widgetChat() {
             $('#list-service-result').append(html_widgetChat);
@@ -611,6 +742,7 @@
                     processData: false,
                     data: formData,
                     success: function(response) {
+                        console.log(response)
                         alert('Create success!')
                         // window.location.href = `{{ route('view.prescription.result.doctor') }}`;
                     },
