@@ -15,9 +15,14 @@ use Illuminate\Support\Facades\DB;
 
 class CheckoutController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $carts = Cart::where('user_id', Auth::user()->id)->whereNull('prescription_id')->get();
+        if (isset($request->prescription_id) && $request->prescription_id) {
+            $carts = Cart::where('user_id', Auth::user()->id)->where('prescription_id', $request->prescription_id)->get();
+        } else {
+            $carts = Cart::where('user_id', Auth::user()->id)->whereNull('prescription_id')->get();
+        }
+
         $addresses = DB::table('addresses')
             ->where('addresses.status', '!=', AddressStatus::DELETED)
             ->where('addresses.user_id', Auth::user()->id)
@@ -25,10 +30,12 @@ class CheckoutController extends Controller
             ->join('provinces', 'provinces.id', '=', 'addresses.province_id')
             ->join('districts', 'districts.id', '=', 'addresses.district_id')
             ->join('communes', 'communes.id', '=', 'addresses.commune_id')
-            ->select('addresses.*',
+            ->select(
+                'addresses.*',
                 'provinces.full_name as provinces_name',
                 'districts.full_name as districts_name',
-                'communes.full_name as communes_name')
+                'communes.full_name as communes_name'
+            )
             ->get();
         return view('checkout.checkout', compact('carts', 'addresses'));
     }
@@ -171,7 +178,7 @@ class CheckoutController extends Controller
 
         $vnp_Url = $vnp_Url . "?" . $query;
         if (isset($vnp_HashSecret)) {
-            $vnpSecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret);//
+            $vnpSecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret); //
             $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
         }
         return redirect($vnp_Url);

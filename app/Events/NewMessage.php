@@ -13,6 +13,8 @@ class NewMessage implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     public $message;
+    public $carts;
+    public $prescription_id;
     /**
      * Create a new event instance.
      *
@@ -20,6 +22,8 @@ class NewMessage implements ShouldBroadcast
      */
     public function __construct(Message $message)
     {
+        $this->prescription_id = $message->prescription_id;
+        $this->carts = $message->carts;
         $this->message = $message;
     }
 
@@ -30,12 +34,12 @@ class NewMessage implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('messages.'. $this->message->to);
+        return new PrivateChannel('messages.' . $this->message->to);
     }
 
     public function broadcastWith()
     {
         $this->message->load('fromContact');
-        return ["message" => $this->message];
+        return ["message" => $this->message, "carts" => $this->carts, "prescription_id" => $this->prescription_id];
     }
 }

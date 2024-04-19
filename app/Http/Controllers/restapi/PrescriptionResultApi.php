@@ -124,7 +124,21 @@ class PrescriptionResultApi extends Controller
             $prescription_result->status = $status;
             $success = $prescription_result->save();
 
-            $this->noti_after_create_don_thuoc($email, $prescription_result->id);
+            //Add to cart as prescription
+            $cartApi = new CartApi();
+            $cartRequest = new Request();
+
+            $cartRequest->merge([
+                'user_id' => $chatUserId,
+                'products' => json_decode($request->input('products') ?? [], true),
+            ]);
+            $response = $cartApi->addToCartV2($cartRequest);
+            $prescription_id = null;
+            if ($response) {
+                $prescription_id = json_decode($response->getContent())->data[0]->prescription_id;
+            }
+
+            $this->noti_after_create_don_thuoc($email, $prescription_id ?? $prescription_result->id);
 
 
             if ($success) {
@@ -162,6 +176,30 @@ class PrescriptionResultApi extends Controller
             'uuid_session' => $prescription_id,
             'type' => $type,
         ]);
+
+        $cartApi = new CartApi();
+        $cartRequest = new Request();
+
+        $cartRequest->merge([
+            'prescription_id' => $prescription_id,
+        ]);
+        $response = $cartApi->searchCart($cartRequest);
+        $cartData = $response->getData()->data;
+        $carts = [];
+
+        foreach ($cartData as $data) {
+            $cart = [
+                'product_name' => $data->product_medicine->name ?? '',
+                'product_thumbnail' => $data->product_medicine->thumbnail ?? '',
+                'quantity' => $data->quantity ?? 0,
+                'treatment_days' => $data->treatment_days ?? 0,
+                'note' => $data->note ?? '',
+            ];
+            $carts[] = $cart;
+        }
+        $message['carts'] = $carts;
+        $message['prescription_id'] = $prescription_id;
+
         broadcast(new NewMessage($message));
     }
 
