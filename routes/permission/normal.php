@@ -66,5 +66,6 @@ Route::group(['prefix' => 'surveys'], function () {
 
 /* Bookings api */
 Route::group(['prefix' => 'normal/bookings'], function () {
-    Route::get('list', [BookingApi::class, 'getUserListBooking'])->name('api.medical.symptoms.list');
+//    Route::get('list', [BookingApi::class, 'getUserListBooking'])->name('api.medical.symptoms.list');
+    Route::get('list', [BookingApi::class, 'getUserListBooking'])->name('api.medical.symptoms.lists');
 });
