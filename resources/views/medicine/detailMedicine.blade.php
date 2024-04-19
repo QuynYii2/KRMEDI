@@ -159,7 +159,7 @@
                                 @if(Auth::check())
                                     @if($medicine->type_product == 0 || $name_role == 'HOSPITALS' || $name_role == 'DOCTORS')
                                     <button id="btnBuyNow" {{ $prMedicine->quantity == 0 ? 'disabled' : '' }}
-                                    class=" button-buyNow btn btn-primary w-100">{{ __('home.Buy now') }}</button>
+                                    class=" button-buyNow btn btn-primary w-100">{{ __('home.Add cart') }}</button>
                                         @else
                                         <button {{ $prMedicine->quantity == 0 ? 'disabled' : '' }}
                                         class=" button-buyNow btn btn-primary w-100" onclick="checkDoctorOnline({{$prMedicine->user_id}})">Tư vấn</button>
@@ -218,7 +218,7 @@
                         headers: headers,
                         data: data,
                         success: function (response) {
-                            alert('Success!');
+                            alert('Thêm vào giỏ hàng thành công');
                             window.location.reload();
                         },
                         error: function (exception) {
