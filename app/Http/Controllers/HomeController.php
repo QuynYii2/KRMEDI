@@ -68,11 +68,11 @@ class HomeController extends Controller
         $doctorsSpecial = \App\Models\User::where('department_id', $id)
             ->where('status', \App\Enums\UserStatus::ACTIVE)
             ->paginate(12);
-        $clinics = \App\Models\Clinic::where('department', $id)
+        $clinics = \App\Models\Clinic::whereRaw("FIND_IN_SET('$id', department)")
             ->where('type', \App\Enums\TypeBusiness::CLINICS)
             ->where('status', \App\Enums\ClinicStatus::ACTIVE)
             ->get();
-        $pharmacies = \App\Models\Clinic::where('department', $id)
+        $pharmacies = \App\Models\Clinic::whereRaw("FIND_IN_SET('$id', department)")
             ->where('type', \App\Enums\TypeBusiness::PHARMACIES)
             ->where('status', \App\Enums\ClinicStatus::ACTIVE)
             ->get();

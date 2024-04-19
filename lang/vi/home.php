@@ -413,6 +413,7 @@ return [
     'Ready to Leave' => 'Sẵn sàng rời đi',
     'Toggle navigation' => 'Chuyển đổi điều hướng thành',
     'Buy now' => 'Mua ngay',
+    'Add cart' => 'Thêm vào giỏ hàng',
     'Object' => 'Đối tượng',
     'For kids' => 'Cho trẻ em',
     'For women' => 'Dành cho nữ',

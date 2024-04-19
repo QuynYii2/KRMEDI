@@ -143,6 +143,7 @@
             let html = ``;
             for (let i = 0; i < response.length; i++) {
                 let data = response[i];
+                console.log(status)
                 let products = ``;
                 let username = ``;
                 let product_item = data.products;
@@ -164,6 +165,9 @@
                                             ${product_item[j].price}
                                         </p>
                                     </div>
+                                    ${status == ''?`<div class="product-name mb-3">
+                                        Trạng thái đơn hàng: ${data.status}
+                                    </div>`:``}
                                 </div>
                             </div>`;
                     }
