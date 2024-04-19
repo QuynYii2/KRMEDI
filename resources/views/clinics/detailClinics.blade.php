@@ -121,10 +121,11 @@
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAl8bmtXj3F5lPG_mbD5Pj9mGSu2LCzrrE"></script>
     <script>
-        let accessToken = `Bearer ` + token;
-        let headers = {
-            "Authorization": accessToken
+        let accessTokens = `Bearer ` + token;
+        let headeres = {
+            "Authorization": accessTokens
         };
+
         var locations = {!! json_encode($coordinatesArray) !!};
         var jsonServices = {!! json_encode($services) !!};
         var infoWindows = [];
@@ -383,7 +384,7 @@
             await $.ajax({
                 url: url,
                 method: 'GET',
-                headers: headers,
+                headers: headeres,
                 success: function(response) {
                     renderService(response);
                 },
@@ -440,7 +441,7 @@
                 let response = await fetch(
                     '{{ route('api.survey.get-by-department', $bookings->department) }}', {
                         method: 'GET',
-                        headers: headers,
+                        headers: headeres,
                     });
 
                 if (response.ok) {
@@ -615,7 +616,7 @@
             $.ajax({
                 url: checkWorkingTimeUrl,
                 method: "GET",
-                headers: headers,
+                headers: headeres,
                 data: data,
                 success: function(response) {
                     let result = true;

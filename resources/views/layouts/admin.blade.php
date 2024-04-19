@@ -52,7 +52,7 @@
         })
     </script>
 
-    
+
     <script type="module">
         import {initializeApp} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import {
@@ -296,11 +296,11 @@
     </div><!-- End Logo -->
 
     <div class="search-bar">
-        <form class="search-form d-flex align-items-center">
-            <input type="text" name="query" placeholder="{{ __('home.Search for anything…') }}"
-                   title="Enter search keyword">
-            <button type="button" title="Search"><i class="bi bi-search"></i></button>
-        </form>
+{{--        <form class="search-form d-flex align-items-center">--}}
+{{--            <input type="text" name="query" placeholder="{{ __('home.Search for anything…') }}"--}}
+{{--                   title="Enter search keyword">--}}
+{{--            <button type="button" title="Search"><i class="bi bi-search"></i></button>--}}
+{{--        </form>--}}
     </div><!-- End Search Bar -->
 
     <nav class="header-nav ms-auto">
@@ -322,8 +322,8 @@
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications" style="max-height: 500px; overflow-y: auto;" id="notificationList" data-page="1" onscroll="lazyLoadNotifications()">
                     <li class="dropdown-header">
                         Bạn có <span class="countUnseenNotification">{{ $unseenNoti }}</span> thông báo chưa đọc
-                        <a type="button" onclick="seenAllNotify({{ Auth::user()->id ?? 0 }})"><span
-                                class="badge rounded-pill bg-primary p-2 ms-2">{{ __('home.View all') }}</span></a>
+{{--                        <a type="button" onclick="seenAllNotify({{ Auth::user()->id ?? 0 }})"><span--}}
+{{--                                class="badge rounded-pill bg-primary p-2 ms-2">{{ __('home.View all') }}</span></a>--}}
                     </li>
                     <li>
                         <hr class="dropdown-divider">

@@ -79,9 +79,14 @@
                 formData.append('is_default', $('#is_default').val());
             }
 
-            let isValid = true
+            let isValid = true;
             /* Tạo fn appendDataForm ở admin blade */
             isValid = appendDataForm(arrField, formData, isValid);
+            const phoneNumber = $('#phone').val().trim();
+            if (!/^\d{10,11}$/.test(phoneNumber)) {
+                alert('Định dạng số điện thoại không hợp lệ.');
+                isValid = false;
+            }
 
             if (isValid) {
                 try {

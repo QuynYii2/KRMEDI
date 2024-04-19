@@ -1427,12 +1427,12 @@
             <div class="">
                 <div
                     class="titleServiceHomeNew d-flex justify-content-between align-items-center">{{__('home.Chuyên khoa khám')}}
-                    <a class="pc-hidden" href="{{route('home.specialist')}}">{{__('home.see more')}}</a>
+                    <a class="" style="font-size: 16px;color: #929292" href="{{route('home.specialist')}}">{{__('home.see more')}}</a>
                 </div>
                 <div class="mainServiceHomeNew row container">
                     @php
-                        $departments = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->get();
-                        $departmentsMobile = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->get();
+                        $departments = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->take(18)->get();
+                        $departmentsMobile = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->take(6)->get();
                     @endphp
                     @foreach($departments as $index => $departmentItem)
                         @php
