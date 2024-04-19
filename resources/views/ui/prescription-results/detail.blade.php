@@ -45,6 +45,11 @@
                                     <input disabled type="text" class="form-control detail_value" id="detail_value"
                                            value="{{ isset($item['note']) ? $item['note'] : '' }}">
                                 </div>
+                                <div class="form-group">
+                                    <label for="detail_value">Number of days of use</label>
+                                    <input disabled type="text" class="form-control detail_value" id="detail_value"
+                                           value="{{ isset($item['treatment_days']) ? $item['treatment_days'] : '' }}">
+                                </div>
                             </div>
                         </div>
                     @endforeach

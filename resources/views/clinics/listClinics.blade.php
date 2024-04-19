@@ -189,7 +189,7 @@
                                       <i class="fas fa-map-marker-alt mr-2"></i>
                                       <div>${item.address_detail} ${item.addressInfo}</div>
                                  </div>
-                                    <span class="distance"> - ${distance.toFixed(2)} Km</span>
+                                    <span class="distance"> ${distance.toFixed(2)} Km</span>
                             </div>
                             <div class="d-flex justify-content-between">
                                 <div class="time-working">
