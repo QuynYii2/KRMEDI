@@ -1103,29 +1103,35 @@
     }
 
     let html_widgetChat = `<div class="service-result-item d-flex align-items-center justify-content-between border p-3">
-                    <div class="row w-75">
-                        <div class="form-group">
-                            <label for="medicine_name">Medicine Name</label>
-                            <input type="text" class="form-control medicine_name" value=""
-                                   name="medicine_name" onclick="handleClickInputMedicine_widgetChat(this, $(this).next('.medicine_id_hidden'))" data-toggle="modal" data-target="#modal-add-medicine-widget-chat" readonly>
-                            <input type="text" hidden class="form-control medicine_id_hidden" name="medicine_id_hidden" value="">
+                    <div class="prescription-group">            
+                        <div class="row w-75">
+                            <div class="form-group">
+                                <label for="medicine_name">Medicine Name</label>
+                                <input type="text" class="form-control medicine_name" value=""
+                                    name="medicine_name" onclick="handleClickInputMedicine_widgetChat(this, $(this).next('.medicine_id_hidden'))" data-toggle="modal" data-target="#modal-add-medicine-widget-chat" readonly>
+                                <input type="text" hidden class="form-control medicine_id_hidden" name="medicine_id_hidden" value="">
 
+                            </div>
+                            <div class="form-group">
+                                <label for="medicine_ingredients">Medicine Ingredients</label>
+                                <textarea class="form-control medicine_ingredients" readonly name="medicine_ingredients" rows="4"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="quantity">{{ __('home.Quantity') }}</label>
+                                <input type="number" min="1" class="form-control quantity" name="quantity">
+                            </div>
+                            <div class="form-group">
+                                <label for="detail_value">Note</label>
+                                <input type="text" class="form-control detail_value" name="detail_value">
+                            </div>
+                            <div class="form-group">
+                                <label for="treatment_days">Số ngày điều trị</label>
+                                <input type="number" min="1" class="form-control treatment_days" name="treatment_days" value="1">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="medicine_ingredients">Medicine Ingredients</label>
-                            <textarea class="form-control medicine_ingredients" readonly name="medicine_ingredients" rows="4"></textarea>
+                        <div class="action mt-3">
+                            <i class="fa-regular fa-trash-can" onclick="loadTrash_widgetChat(this)" style="cursor: pointer; font-size: 24px"></i>
                         </div>
-                        <div class="form-group">
-                            <label for="quantity">{{ __('home.Quantity') }}</label>
-                            <input type="number" min="1" class="form-control quantity" name="quantity">
-                        </div>
-                        <div class="form-group">
-                            <label for="detail_value">Note</label>
-                            <input type="text" class="form-control detail_value" name="detail_value">
-                        </div>
-                    </div>
-                    <div class="action mt-3">
-                        <i class="fa-regular fa-trash-can" onclick="loadTrash_widgetChat(this)" style="cursor: pointer; font-size: 24px"></i>
                     </div>
                 </div>`;
 
@@ -1235,6 +1241,9 @@
         // Lấy các phần tử con có class 'detail_value'
         var detail = prescriptionForm.getElementsByClassName('detail_value');
 
+        // Lấy các phần tử con có class 'treatment_days'
+        var treatment = prescriptionForm.getElementsByClassName('treatment_days');
+
         // Lấy các phần tử con có class 'medicine_id_hidden'
         var medicine_id_hidden = prescriptionForm.getElementsByClassName('medicine_id_hidden');
 
@@ -1243,6 +1252,7 @@
             let ingredients = medicine_ingredients[j].value;
             let quantity_value = quantity[j].value;
             let detail_value = detail[j].value;
+            let treatment_value = treatment[j].value;
 
             let medicine_id_hidden_value = '';
             if (medicine_id_hidden[j]) {
@@ -1260,6 +1270,7 @@
                 quantity: quantity_value,
                 note: detail_value ?? '',
                 medicine_id: medicine_id_hidden_value ?? '',
+                treatment_days: treatment_value,
             }
             item = JSON.stringify(item);
             my_array.push(item);
@@ -1274,6 +1285,26 @@
         });
 
         formData.append('chatUserId', chatUserId);
+
+        //ADD PRODUCTS TO CART HANDLE
+        var products = [];
+        $('.prescription-group').each(function() {
+            var group = $(this);
+            var medicine_id = group.find('.medicine_id_hidden').val();
+            var quantity = group.find('.quantity').val();
+            var note = group.find('.detail_value').val();
+            var treatmentDays = group.find('.treatment_days').val();
+
+            var product = {
+                id: medicine_id,
+                quantity: parseInt(quantity),
+                note: note || null,
+                treatment_days: parseInt(treatmentDays)
+            };
+
+            products.push(product);
+        });
+        formData.append('products', JSON.stringify(products));
 
         let accessToken = `Bearer ` + token;
         let headers = {
@@ -1298,8 +1329,7 @@
                 }
             });
         } catch (e) {
-            console.log(e)
-            alert('Error, Please try again!');
+            console.log(e);
         }
     }
 

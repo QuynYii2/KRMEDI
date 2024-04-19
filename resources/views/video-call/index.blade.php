@@ -433,7 +433,7 @@
                         </div>
                         <div class="form-group">
                             <label for="treatment_days" class="text-dark">Số ngày điều trị</label>
-                            <input type="number" min="1" class="form-control treatment_days" name="treatment_days" value="0">
+                            <input type="number" min="1" class="form-control treatment_days" name="treatment_days" value="1">
                         </div>
                     </div>
                     <div class="action mt-3">
@@ -714,6 +714,8 @@
                 formData.append(item, my_array.toString());
             });
 
+            formData.append('chatUserId', chatUserId);
+
             //ADD PRODUCTS TO CART HANDLE
             var products = [];
             $('.prescription-group').each(function() {
@@ -733,8 +735,6 @@
                 products.push(product);
             });
             formData.append('products', JSON.stringify(products));
-
-            formData.append('chatUserId', chatUserId);
 
             let accessToken = `Bearer ` + token;
             let headers = {
