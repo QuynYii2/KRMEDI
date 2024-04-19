@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\restapi\MainApi;
 use App\Models\AgoraChat;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -32,6 +33,16 @@ class AgoraChatController extends Controller
 
         if (!$agora_chat) {
             $agora_chat = $this->createMeeting($request);
+        }
+
+        // Check token have last updated more than 10mins then refresh token
+        $currentDateTime = Carbon::now();
+
+        if (Carbon::parse($agora_chat->updated_at)->diffInMinutes($currentDateTime) > 10) {
+            //Refresh token
+            $token = $this->genNewTokenByChanelName($agora_chat->channel, $user_id_1, $user_id_2);
+            $agora_chat->token = $token;
+            $agora_chat->save();
         }
 
         $user_1 = User::find($user_id_1);
@@ -90,7 +101,11 @@ class AgoraChatController extends Controller
         // sort array email
         sort($array_email);
 
-        if ($oldAgora) {
+        // Check token have last updated more than 10mins then refresh token
+        $currentDateTime = Carbon::now();
+            
+        if ($oldAgora && Carbon::parse($oldAgora->updated_at)->diffInMinutes($currentDateTime) < 10) {
+            //Token is new < 10 mins
             $token = $oldAgora->token;
             $channel = $oldAgora->channel;
         } else {
