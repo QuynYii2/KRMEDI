@@ -40,9 +40,7 @@ class AgoraChatController extends Controller
 
         if (Carbon::parse($agora_chat->updated_at)->diffInMinutes($currentDateTime) > 10) {
             //Refresh token
-            $token = $this->genNewTokenByChanelName($agora_chat->channel, $user_id_1, $user_id_2);
-            $agora_chat->token = $token;
-            $agora_chat->save();
+            $this->handleRefreshToken($request);
         }
 
         $user_1 = User::find($user_id_1);
@@ -328,6 +326,13 @@ class AgoraChatController extends Controller
 
         if (!$agora_chat) {
             $agora_chat = $this->createMeeting($request);
+        }
+        
+        // Check token have last updated more than 10mins then refresh token
+        $currentDateTime = Carbon::now();
+        if (Carbon::parse($agora_chat->updated_at)->diffInMinutes($currentDateTime) > 10) {
+            //Refresh token
+            $this->handleRefreshToken($request);
         }
 
         $user_1 = User::find($user_id_1);
