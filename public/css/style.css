@@ -1215,6 +1215,9 @@ span.material-symbols-outlined {
         font-size: 12px;
         font-weight: 400;
     }
+    .contact_doctor{
+        font-size: 12px;
+    }
 }
 @media (min-width: 576px) {
     #mentoring .nav .tab.active {
