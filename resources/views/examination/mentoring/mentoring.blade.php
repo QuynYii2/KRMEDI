@@ -74,7 +74,7 @@
         <div class="border-bottom">
             <div class="div d-md-flex d-block justify-content-between mb-md-3 mb-1">
                 <div class="text-wrapper d-inline-flex header_comment">{{ __('home.All comments') }}</div>
-                <div class="d-inline-flex cl-select">
+                <div class="d-inline-flex cl-select flex-wrap justify-content-between">
                     {{ __('home.Sorted by') }}
                     <div class="form-check mx-1">
                         <input class="form-check-input" type="radio" name="type" id="exampleRadios1"

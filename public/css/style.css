@@ -1218,7 +1218,75 @@ span.material-symbols-outlined {
     .contact_doctor{
         font-size: 12px;
     }
-}
+    .container .mainServiceHomeNew{
+        margin: 0 auto;
+    }
+    .container .tab-chuyen-khoa .titleServiceHomeNew,.container .danh-sach-theo-chuyen-khoa .title-Danh-sach{
+        font-size: 20px !important;
+        padding-top: 10px;
+    }
+    .container .mainServiceHomeNew .border-HomeNew span{
+        font-size: 15px!important;
+    }
+    .title-specialList-clinics,.address-specialList-clinics,.time-working,.button-follow-specialList,.button-direct-specialList,.font-weight-600 label,
+    .frame .p{
+        font-size: 14px!important;
+    }
+    .button-booking-specialList {
+        font-size: 13px!important;
+        padding: 5px 10px !important;
+    }
+    .button-detail-specialList {
+        font-size: 12px!important;
+        padding: 5px 10px !important;
+    }
+    .item-btn-specialist{
+        padding: 0 10px!important;
+    }
+    .specialList-clinics{
+        margin-top: 15px!important;
+    }
+    .search-specialist label select,#search-specialist {
+        padding-right: 20px!important;
+    }
+    .select-memberFamily label,.frame.comment-item .text-wrapper{
+        font-size: 16px!important;
+    }
+    .select-service{
+        margin-bottom: 10px;
+    }
+    #mentoring .list-group{
+        padding-left: 12px !important;
+    }
+    #all_comment .frame{
+        margin-bottom: 15px;
+    }
+    .page-header .d-inline{
+        font-size: 18px!important;
+        margin-bottom: 0;
+    }
+    .icon-back-page{
+        width: 22px;
+        height: 22px;
+    }
+    .card-title{
+        font-size: 17px!important;
+        margin-bottom: 10px;
+        margin-top: 10px;
+    }
+    .frame.mentoring-img .div{
+        width: 100%!important;
+    }
+    .frame.mentoring-img{
+        margin: 0 auto;
+    }
+    .frame.comment-item .text-wrapper-2{
+        font-size: 12px!important;
+    }
+    .comment_list svg {
+        width: 18px;
+    }
+    }
 @media (min-width: 576px) {
     #mentoring .nav .tab.active {
         border-bottom: 4px solid #45C3D2;

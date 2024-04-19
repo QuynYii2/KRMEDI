@@ -93,12 +93,12 @@
                                             </span>
                                             </div>
                                             <div class="group-button d-flex mt-3">
-                                                <a href="{{route('home.specialist.booking.detail', $clinic->id)}}" class="col-md-6">
+                                                <a href="{{route('home.specialist.booking.detail', $clinic->id)}}" class="col-md-6 item-btn-specialist">
                                                     <div class="button-booking-specialList">
                                                         {{ __('home.Đặt khám') }}
                                                     </div>
                                                 </a>
-                                                <a href="{{route('home.specialist.detail', $clinic->id)}}" class="col-md-6">
+                                                <a href="{{route('home.specialist.detail', $clinic->id)}}" class="col-md-6 item-btn-specialist">
                                                     <div class="button-detail-specialList">
                                                         {{ __('home.Xem chi tiết') }}
                                                     </div>

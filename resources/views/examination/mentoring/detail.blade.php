@@ -22,8 +22,8 @@
     @endphp
     <div id="mentoring" class="container">
         <a href="{{ route('examination.mentoring') }}">
-            <div class="page-header">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none"
+            <div class="page-header d-flex align-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon-back-page" width="32" height="32" viewBox="0 0 32 32" fill="none"
                      style="vertical-align: inherit">
                     <path d="M26.6654 16H5.33203M5.33203 16L13.332 24M5.33203 16L13.332 8" stroke="black"
                           stroke-width="4"
