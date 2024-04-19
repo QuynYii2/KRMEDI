@@ -51,7 +51,7 @@
                                             @endphp
                                             <input required type="text" class="form-control address_code" id="province"
                                                    value="{{ $province ? $province->full_name : '' }}"
-                                                   placeholder="Master">
+                                                   placeholder="Tỉnh/Thành phố">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -61,7 +61,7 @@
                                             @endphp
                                             <input required type="text" class="form-control address_code" id="district"
                                                    value="{{ $district ? $district->full_name : '' }}"
-                                                   placeholder="Branch">
+                                                   placeholder="Quận/Huyện">
                                         </div>
                                     </div>
                                     <div class="col">
@@ -69,7 +69,7 @@
                                             <input required type="text" class="form-control address_code"
                                                    id="address_detail"
                                                    value="{{ Auth::user()->detail_address }}"
-                                                   placeholder="1ST E-command Logistic">
+                                                   placeholder="Địa chỉ chi tiết">
                                         </div>
                                     </div>
                                 </div>
@@ -341,9 +341,9 @@
         </div>
     </div>
     <script>
-        let accessToken = `Bearer ` + token;
-        let headers = {
-            "Authorization": accessToken
+        let accessTokens = `Bearer ` + token;
+        let headeres = {
+            "Authorization": accessTokens
         };
 
         $(document).ready(function () {
@@ -485,7 +485,7 @@
             try {
                 let response = await $.ajax({
                     url: urlCalcPoints,
-                    headers: headers,
+                    headers: headeres,
                     method: 'GET',
                 });
                 return response;
@@ -499,7 +499,7 @@
             urlDetail = urlDetail.replace(':id', id);
             await $.ajax({
                 url: urlDetail,
-                headers: headers,
+                headers: headeres,
                 method: 'GET',
                 success: function (response) {
                     changeAddressFromApi(response, province, district)
@@ -532,7 +532,7 @@
             let urlDetail = `{{ route('api.backend.address.order.default') }}` + `?user_id={{Auth::user()->id}}`;
             await $.ajax({
                 url: urlDetail,
-                headers: headers,
+                headers: headeres,
                 method: 'GET',
                 success: function (response) {
                     console.log(response);
