@@ -852,33 +852,8 @@
     {{--            }--}}
 
     {{--            if (msg.type == 'DonThuocMoi') {--}}
-    {{--                let url = `{{ route('view.prescription.result.detail.api', ['id' => ':id']) }}`;--}}
+    {{--                let url = `{{ route('view.prescription.result.detail', ['id' => ':id']) }}`;--}}
     {{--                url = url.replace(':id', msg.uuid_session);--}}
-
-    {{--                $.ajax({--}}
-    {{--                    url: url,--}}
-    {{--                    type: 'GET',--}}
-    {{--                    dataType: 'json',--}}
-    {{--                    success: function(response) {--}}
-    {{--                        if(response.status){--}}
-
-    {{--                            html += `<div class="mb-3 d-flex justify-content-center">--}}
-    {{--                                    <a href="${url}">--}}
-
-    {{--                                    <button class="btn btn-1 btn-sep icon-info">Xem đơn thuốc</button>--}}
-
-    {{--                                    </a>--}}
-    {{--                                    <a class="ml-2" onclick="addToCart_WidgetChat(${msg.uuid_session})">--}}
-    {{--                                    <button class="btn btn-2 btn-sep icon-cart">Mua thuốc</button>--}}
-    {{--                                    </a>--}}
-    {{--                                    </div>`;--}}
-    {{--                        }--}}
-    {{--                        $('#chat-messages').append(html);--}}
-    {{--                    },--}}
-    {{--                    error: function(xhr, status, error) {--}}
-    {{--                        console.error(error);--}}
-    {{--                    }--}}
-    {{--                });--}}
 
     {{--                // html += `<div class="mb-3 d-flex justify-content-center">--}}
     {{--                //         <a href="${url}">--}}
@@ -951,6 +926,8 @@
                     let url = `{{ route('view.prescription.result.detail.api', ['id' => ':id']) }}`;
                     url = url.replace(':id', msg.uuid_session);
 
+                    let url_detail = `{{ route('view.prescription.result.detail', ['id' => ':id']) }}`;
+                    url_detail = url_detail.replace(':id', msg.uuid_session);
                     $.ajax({
                         url: url,
                         type: 'GET',
@@ -958,7 +935,7 @@
                         success: function(response) {
                             if (response.status) {
                                 response.listData.forEach(item => {
-                                    html += `<div class="mb-3 box-order-chat">
+                                    html += `<a href="${url_detail}"><div class="mb-3 box-order-chat">
                                                 <div class="content-order-item">
                                                         <div class="d-flex ">
                                                      <p class="title-name">Tên thuốc: </p>
@@ -979,7 +956,7 @@
                                                 </div>
 
                                                 </div>
-                                            </div>`;
+                                            </div></a>`;
                                 });
                                 $('#chat-messages').append(html);
                             }
