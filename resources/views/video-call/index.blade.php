@@ -68,17 +68,16 @@
                 <p>Leave</p>
             </div>
             @if (!\App\Models\User::isNormal())
-                <div class="icon-wrapper" data-toggle="modal" data-target="#modal-create-don-thuoc-widget-chat">
-                    <img class="control-icon" id="create-prescription-btn"
-                        src="{{ asset('img/assets-video-call/leave.svg') }}" />
-                    <p>Tạo đơn thuốc</p>
-                </div>
+            <div class="icon-wrapper" data-toggle="modal" data-target="#modal-create-don-thuoc-widget-chat">
+                <img class="control-icon" id="create-prescription-btn"
+                    src="{{ asset('img/assets-video-call/prescription2.svg') }}" />
+                <p>Tạo đơn thuốc</p>
+            </div>
             @else
-                <div class="icon-wrapper" data-toggle="modal" data-target="#modal-show-prescription">
-                    <img class="control-icon" id="prescription-btn"
-                        src="{{ asset('img/assets-video-call/leave.svg') }}" />
-                    <p>Đơn thuốc</p>
-                </div>
+            <div class="icon-wrapper" data-toggle="modal" data-target="#modal-show-prescription">
+                <img class="control-icon" id="prescription-btn" src="{{ asset('img/assets-video-call/capsule.svg') }}" />
+                <p>Đơn thuốc</p>
+            </div>
             @endif
 
         </div>
@@ -115,7 +114,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                        <a href="#" target="_blank" type="button" class="btn btn-primary">Đến màn thanh
+                        <a id="checkoutRedirect" href="#" target="_blank" type="button"
+                            class="btn btn-primary">Đến màn thanh
                             toán</a>
                     </div>
                 </div>
@@ -410,6 +410,7 @@
         let currentUserIdChat = '{{ Auth::check() ? Auth::user()->id : '' }}';
 
         let html_widgetChat = `<div class="service-result-item d-flex align-items-center justify-content-between border p-3">
+                <div class="prescription-group">
                     <div class="row w-75">
                         <div class="form-group">
                             <label for="medicine_name" class="text-dark">Medicine Name</label>
@@ -430,11 +431,16 @@
                             <label for="detail_value" class="text-dark">Note</label>
                             <input type="text" class="form-control detail_value" name="detail_value">
                         </div>
+                        <div class="form-group">
+                            <label for="treatment_days" class="text-dark">Số ngày điều trị</label>
+                            <input type="number" min="1" class="form-control treatment_days" name="treatment_days" value="0">
+                        </div>
                     </div>
                     <div class="action mt-3">
                         <i class="fa-regular fa-trash-can" onclick="loadTrash_widgetChat(this)" style="cursor: pointer; font-size: 24px"></i>
                     </div>
-                </div>`;
+                </div>
+            </div>`;
 
         window.Echo = new Echo({
             broadcaster: 'pusher',
@@ -450,6 +456,8 @@
 
         function renderPrescriptionCart(element) {
             let html = '';
+            var carts = element.carts;
+            var prescription_id = element.prescription_id;
             element = element.message;
 
             if (element.type != null) {
@@ -458,31 +466,6 @@
                 }
 
                 if (element.type == 'DonThuocMoi') {
-                    let accessToken = `Bearer ` + token;
-                    let headers = {
-                        'Authorization': accessToken,
-                    };
-                    const formData = new FormData();
-
-                    formData.append("user_id", chatUserId);
-                    formData.append("type_product", `\App\Enums\TypeProductCart::MEDICINE`);
-
-                    try {
-                        $.ajax({
-                            url: `{{ route('api.backend.cart.create.v2') }}`,
-                            method: 'POST',
-                            headers: headers,
-                            data: formData,
-                            success: function(response) {
-                                console.log(response)
-                            },
-                            error: function(error) {
-                                alert(error.responseJSON.message);
-                            }
-                        });
-                    } catch (e) {
-                        alert('Error, Please try again!');
-                    }
 
                     let content = `
                         <table class="table text-center">
@@ -495,36 +478,37 @@
                                     <th scope="col">Lưu ý</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row" class="align-middle">1</th>
-                                    <td class="align-middle">
-                                        <p>Sản phẩm 1</p>
-                                        <img width="130px" height="90px"
-                                            src="/storage/product_medicine/5U5nVuYwjh90V2MgWpGM1vQv3qryH3qGd5ZVosw7.webp">
-                                    </td>
-                                    <td class="align-middle">1</td>
-                                    <td class="align-middle">1</td>
-                                    <td class="align-middle">hehe</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row" class="align-middle">1</th>
-                                    <td class="align-middle">
-                                        <img width="130px" height="90px"
-                                            src="/storage/product_medicine/5U5nVuYwjh90V2MgWpGM1vQv3qryH3qGd5ZVosw7.webp">
-                                    </td>
-                                    <td class="align-middle">1</td>
-                                    <td class="align-middle">1</td>
-                                    <td class="align-middle">hehe</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">
-                                        Chưa có đơn thuốc nào được kê
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>`;
+                            <tbody>`;
 
+                    if (Array.isArray(carts) && carts.length > 0) {
+                        carts.forEach(function(cart, index) {
+                            var productName = cart.product_name;
+                            var productThumbnail = cart.product_thumbnail;
+                            var quantity = cart.quantity;
+                            var treatmentDays = cart.treatment_days;
+                            var note = cart.note;
+
+                            content += `<tr>
+                                            <th scope="row" class="align-middle">${index + 1}</th>
+                                            <td class="align-middle">
+                                                <p>${productName}</p>
+                                                <img width="130px" height="90px" src="${productThumbnail}">
+                                            </td>
+                                            <td class="align-middle">${quantity}</td>
+                                            <td class="align-middle">${treatmentDays}</td>
+                                            <td class="align-middle">${note}</td>
+                                        </tr>`;
+                        });
+                        $('#checkoutRedirect').attr('href', `{{ route('user.checkout.index') }}?prescription_id=` +
+                            prescription_id);
+                    } else {
+                        content += `<tr>
+                                        <td colspan="5">
+                                            Chưa có đơn thuốc nào được kê
+                                        </td>
+                                    </tr>`;
+                    }
+                    content += `</tbody></table>`;
                     html = content;
                 }
 
@@ -687,6 +671,9 @@
             // Lấy các phần tử con có class 'detail_value'
             var detail = prescriptionForm.getElementsByClassName('detail_value');
 
+            // Lấy các phần tử con có class 'treatment_days'
+            var treatment = prescriptionForm.getElementsByClassName('treatment_days');
+
             // Lấy các phần tử con có class 'medicine_id_hidden'
             var medicine_id_hidden = prescriptionForm.getElementsByClassName('medicine_id_hidden');
 
@@ -695,6 +682,7 @@
                 let ingredients = medicine_ingredients[j].value;
                 let quantity_value = quantity[j].value;
                 let detail_value = detail[j].value;
+                let treatment_value = treatment[j].value;
 
                 let medicine_id_hidden_value = '';
                 if (medicine_id_hidden[j]) {
@@ -712,6 +700,7 @@
                     quantity: quantity_value,
                     note: detail_value ?? '',
                     medicine_id: medicine_id_hidden_value ?? '',
+                    treatment_days: treatment_value,
                 }
                 item = JSON.stringify(item);
                 my_array.push(item);
@@ -724,6 +713,26 @@
             itemList.forEach(item => {
                 formData.append(item, my_array.toString());
             });
+
+            //ADD PRODUCTS TO CART HANDLE
+            var products = [];
+            $('.prescription-group').each(function() {
+                var group = $(this);
+                var medicine_id = group.find('.medicine_id_hidden').val();
+                var quantity = group.find('.quantity').val();
+                var note = group.find('.detail_value').val();
+                var treatmentDays = group.find('.treatment_days').val();
+
+                var product = {
+                    id: medicine_id,
+                    quantity: parseInt(quantity),
+                    note: note || null,
+                    treatment_days: parseInt(treatmentDays)
+                };
+
+                products.push(product);
+            });
+            formData.append('products', JSON.stringify(products));
 
             formData.append('chatUserId', chatUserId);
 
@@ -742,8 +751,8 @@
                     processData: false,
                     data: formData,
                     success: function(response) {
-                        console.log(response)
-                        alert('Create success!')
+                        alert('Create success!');
+                        $('#modal-create-don-thuoc-widget-chat').modal('hide');
                         // window.location.href = `{{ route('view.prescription.result.doctor') }}`;
                     },
                     error: function(error) {
@@ -751,8 +760,7 @@
                     }
                 });
             } catch (e) {
-                console.log(e)
-                alert('Error, Please try again!');
+                console.log(e);
             }
         }
 

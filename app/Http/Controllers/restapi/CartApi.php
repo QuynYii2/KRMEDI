@@ -97,12 +97,14 @@ class CartApi extends Controller
     public function addToCartV2(Request $request)
     {
         try {
+            $products = $request->input('products') ?? [];
+            
             $validated = Validator::make($request->all(), [
                 'user_id' => 'required|numeric',
-                'products.*.id' => 'required|numeric',
-                'products.*.quantity' => 'required|integer|min:1',
-                'products.*.note' => 'nullable|string',
-                'products.*.treatment_days' => 'required|integer',
+                // 'products.*.id' => 'required|numeric',
+                // 'products.*.quantity' => 'required|integer|min:1',
+                // 'products.*.note' => 'nullable|string',
+                // 'products.*.treatment_days' => 'required|integer',
                 'type_product' => 'nullable|string',
             ]);
 
@@ -119,7 +121,7 @@ class CartApi extends Controller
             $prescription_id = strtoupper(Str::random(3)) . '_' . time();
 
             // Add each product to the cart
-            foreach ($validatedData['products'] as $productData) {
+            foreach ($products as $productData) {
                 if ($typeProduct == TypeProductCart::MEDICINE) {
                     $product = ProductMedicine::find($productData['id']);
                 } else {
