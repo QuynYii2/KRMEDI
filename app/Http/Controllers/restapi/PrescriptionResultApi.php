@@ -132,7 +132,7 @@ class PrescriptionResultApi extends Controller
                 'user_id' => $chatUserId,
                 'products' => json_decode($request->input('products') ?? [], true),
             ]);
-            $response = $cartApi->addToCartV2($cartRequest);
+            $response = $cartApi->addToCartV2($cartRequest,$prescription_result->id);
             $prescription_id = null;
             if ($response) {
                 $prescription_id = json_decode($response->getContent())->data[0]->prescription_id;

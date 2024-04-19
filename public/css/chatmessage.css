@@ -64,7 +64,7 @@
 
 #widget-chat .chat-box-body {
     position: relative;
-    height: 45vh;
+    height: 430px;
     border: 1px solid #ccc;
     overflow: auto;
 }
