@@ -94,11 +94,11 @@ class CartApi extends Controller
         }
     }
 
-    public function addToCartV2(Request $request)
+    public function addToCartV2(Request $request,$id_prescription)
     {
         try {
             $products = $request->input('products') ?? [];
-            
+
             $validated = Validator::make($request->all(), [
                 'user_id' => 'required|numeric',
                 // 'products.*.id' => 'required|numeric',
@@ -118,7 +118,8 @@ class CartApi extends Controller
 
             $userID = $validatedData['user_id'];
 
-            $prescription_id = strtoupper(Str::random(3)) . '_' . time();
+//            $prescription_id = strtoupper(Str::random(3)) . '_' . time();
+            $prescription_id = $id_prescription;
 
             // Add each product to the cart
             foreach ($products as $productData) {
@@ -283,7 +284,7 @@ class CartApi extends Controller
             if ($c->type_product == 'MEDICINE') {
                 $c->load('productMedicine');
             }
-            
+
             $c->remind_remain = $c->remind_remain - 1;
             $c->save();
 

@@ -949,6 +949,10 @@
                                                      <p class="title-name">Sử dụng: </p>
                                                       <p class="content-order-chat">${item.note}</p>
                                                 </div>
+                                                <div class="d-flex ">
+                                                     <p class="title-name">Số ngày sử dụng: </p>
+                                                      <p class="content-order-chat">${item.treatment_days}</p>
+                                                </div>
                                                 <div class="d-flex justify-content-end">
                                                     <a class="ml-2" onclick="addToCart_WidgetChat(${msg.uuid_session})">
                                                     <button class="btn btn-2 btn-sep icon-cart">Mua thuốc</button>
@@ -1103,7 +1107,7 @@
     }
 
     let html_widgetChat = `<div class="service-result-item d-flex align-items-center justify-content-between border p-3">
-                    <div class="prescription-group">            
+                    <div class="prescription-group">
                         <div class="row w-75">
                             <div class="form-group">
                                 <label for="medicine_name">Medicine Name</label>
