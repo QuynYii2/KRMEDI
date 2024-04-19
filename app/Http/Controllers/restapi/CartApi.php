@@ -188,7 +188,7 @@ class CartApi extends Controller
             $carts = Cart::query()->with('users');
 
             if ($prescription_id) {
-                $carts = $carts->where('prescription_id', $prescription_id);
+                $carts = $carts->where('prescription_id', $prescription_id)->where('status', CartStatus::PENDING);
             }
 
             $carts = $carts->get();
