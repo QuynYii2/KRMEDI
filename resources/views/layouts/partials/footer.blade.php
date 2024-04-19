@@ -96,7 +96,7 @@
         </div>
     </div>
 </footer>
-<div class="pc-hidden container">
+<div class="pc-hidden container mt-4">
     <div class="container d-md-flex mb-md-5">
         <div style="padding: 16px 0;"><img class="w-200" src="{{ asset('img/icons_logo/logo-krmedi-footer.png') }}"></div>
     </div>
