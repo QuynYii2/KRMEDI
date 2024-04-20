@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BookingStatus;
+use App\Enums\ClinicStatus;
 use App\Enums\CouponApplyStatus;
 use App\Enums\CouponStatus;
 use App\Enums\MessageStatus;
@@ -18,11 +19,13 @@ use App\Models\Chat;
 use App\Models\Clinic;
 use App\Models\Coupon;
 use App\Models\CouponApply;
+use App\Models\FamilyManagement;
 use App\Models\NewEvent;
 use App\Models\online_medicine\ProductMedicine;
 use App\Models\ProductInfo;
 use App\Models\Question;
 use App\Models\Review;
+use App\Models\ServiceClinic;
 use App\Models\Setting;
 use App\Models\User;
 
@@ -30,6 +33,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use ReflectionClass;
 
 class HomeController extends Controller
@@ -87,16 +91,16 @@ class HomeController extends Controller
 
     public function bookingDetailSpecialist($id)
     {
-        $clinicDetail = \App\Models\Clinic::where('id', $id)->first();
+        $clinicDetail = Clinic::where('id', $id)->first();
         $arrayService = explode(',', $clinicDetail->service_id);
-        $services = \App\Models\ServiceClinic::whereIn('id', $arrayService)->get();
+        $services = ServiceClinic::whereIn('id', $arrayService)->get();
         if (Auth::check()) {
             $userId = Auth::user()->id;
-            if (!$clinicDetail || $clinicDetail->status != \App\Enums\ClinicStatus::ACTIVE) {
+            if (!$clinicDetail || $clinicDetail->status != ClinicStatus::ACTIVE) {
                 return response("Product not found", 404);
             }
             if ($userId) {
-                $memberFamilys = \DB::table('family_management')
+                $memberFamilys = FamilyManagement::with('users')
                     ->where('user_id', Auth::user()->id)
                     ->get();
             } else {
@@ -105,7 +109,7 @@ class HomeController extends Controller
             return view('clinics.booking-clinic-page', compact('clinicDetail', 'id', 'services', 'memberFamilys'));
         }
         alert('Bạn cần đăng nhập để đặt lịch khám');
-        return back();
+        return redirect(route('home'));
     }
 
     public function specialistReview(Request $request, $id)

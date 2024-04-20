@@ -16,4 +16,9 @@ class FamilyManagement extends Model
         'province_id', 'district_id', 'ward_id', 'detail_address'
     ];
 
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
 }

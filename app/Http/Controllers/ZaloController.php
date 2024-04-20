@@ -425,7 +425,7 @@ class ZaloController extends Controller
                     $user->save();
                     toast('Bạn cần phải đăng nhập lại Zalo OA', 'error', 'top-left');
 
-                    $redirectRoute = route('profile');
+                    $redirectRoute = route('home');
                     $response = new RedirectResponse($redirectRoute);
                     $response->send();
                     exit;
@@ -918,7 +918,7 @@ class ZaloController extends Controller
             $result = $response->getDecodedBody();
             return $result;
         } catch (\Exception $e) {
-            if ($e->getMessage() == "Access token has expired") {
+            if ($e->getCode() == -216) {
                 $admin = User::whereHas('roles', function ($query) {
                     $query->where('name', 'ADMIN');
                 })

@@ -8,6 +8,7 @@ use App\Enums\SurveyType;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ClinicController;
 use App\Http\Controllers\Controller;
+use App\Jobs\ProcessBooking;
 use App\Models\Booking;
 use App\Models\Clinic;
 use App\Models\SurveyAnswer;
@@ -24,11 +25,12 @@ class BookingApi extends Controller
     public function createBooking(Request $request)
     {
         try {
+            dd($request->all());
             $validated = Validator::make($request->all(), [
                 'checkInTime' => 'required|date',
                 'checkOutTime' => 'required|date|after:checkInTime',
-                'member_family_id' => 'nullable|numeric',
-                'department_id' => 'required|numeric',
+                'member_family_id' => 'nullable',
+                'department_id' => 'nullable|numeric',
                 'clinic_id' => 'required|numeric',
                 'user_id' => 'required|numeric'
             ]);
@@ -65,19 +67,7 @@ class BookingApi extends Controller
             $newBooking = Booking::with('user', 'clinic.users')->find($booking->id);
 
             if ($newBooking) {
-                $bookingController = new BookingController();
-                $bookingController->sendMessageToUserOnBookingCreated($newBooking);
-                // $bookingController->sendOAMessageFromAdminToClinic($newBooking);
-
-                //Send Noti
-                $mainApi = new MainApi();
-                $newRequestData = [
-                    'id' => $newBooking->id,
-                    'user_id' => $newBooking->user_id,
-                    'clinic_id' => $newBooking->clinic_id,
-                ];
-                $request = new Request($newRequestData);
-                $mainApi->sendFcmNotification($request);
+                ProcessBooking::dispatch($newBooking);
             }
 
             return response()->json(['error' => 0, 'data' => $booking]);

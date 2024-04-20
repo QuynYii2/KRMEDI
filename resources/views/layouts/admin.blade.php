@@ -323,7 +323,7 @@
                     <li class="dropdown-header">
                         Bạn có <span class="countUnseenNotification">{{ $unseenNoti }}</span> thông báo chưa đọc
 {{--                        <a type="button" onclick="seenAllNotify({{ Auth::user()->id ?? 0 }})"><span--}}
-{{--                                class="badge rounded-pill bg-primary p-2 ms-2">{{ __('home.View all') }}</span></a>--}}
+{{--                                class="badge rounded-pill bg-primary p-2 ms-2">{{ __('home.View all') }}</span--></a>--}}
                     </li>
                     <li>
                         <hr class="dropdown-divider">

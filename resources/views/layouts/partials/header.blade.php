@@ -19,6 +19,37 @@
         background-color: #ffffff;
         border-color: #ffffff;
     }
+    
+    .spinner-loading span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: white;
+    animation: flashing 1.4s infinite linear;
+    margin: 0 4px;
+    display: inline-block;
+    }
+
+    .spinner-loading span:nth-child(2) {
+    animation-delay: 0.2s;
+    }
+
+    .spinner-loading span:nth-child(3) {
+    animation-delay: 0.4s;
+    }
+
+    @keyframes flashing {
+        0% {
+            opacity: 0.2;
+        }
+        20% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0.2;
+        }
+    }
+
 </style>
 <header class="container">
     <div class="main-header">
@@ -77,7 +108,7 @@
                                 Bạn có <span class="countUnseenNotification">{{ $unseenNoti }}</span> thông báo chưa đọc
 {{--                                <a type="button" onclick="seenAllNotify({{ Auth::user()->id ?? 0 }})"--}}
 {{--                                    class="text-decoration-none"><span--}}
-{{--                                        class="badge rounded-pill bg-primary p-2 ms-2">{{ __('home.View all') }}</span></a>--}}
+{{--                                        class="badge rounded-pill bg-primary p-2 ms-2">{{ __('home.View all') }}</span--></a>--}}
                             </li>
                             <li>
                                 <hr class="dropdown-divider">
@@ -1263,20 +1294,33 @@
 
                         const aLink = $('<a>').attr('href', notification.target_url ?? '#').on('click', event => seenNotify(event, notification.id));
 
-                        const divNotification = $('<div>').addClass('notification-item');
+                        const divNotification = $('<div>').addClass('notification-item')
+                        .css({
+                            'display': 'flex', 
+                            'align-items': 'center'
+                        })
+
                         if (notification.seen == 0) {
                             divNotification.addClass('fw-bold');
                         }
 
-                        const imgProfile = $('<img>').attr('src', notification.senders?.avt ?? '').attr('alt', 'Profile').addClass('rounded-circle').attr('width', '60');
+                        const imgProfile = $('<img>').attr('src', notification.senders?.avt ?? '').attr('alt', 'Profile').addClass('rounded-circle').css({
+                            'width': '80px'
+                        });
 
                         const divContent = $('<div>').addClass('notificationContent ms-3');
 
-                        const h4Title = $('<h4>').text(notification.title ?? '');
+                        const h4Title = $('<h4>').text(notification.title ?? '').css({
+                            'font-size': '1rem'
+                        });
 
-                        const pDescription = $('<p>').text(notification.description ?? '');
+                        const pDescription = $('<p>').text(notification.description ?? '').css({
+                            'font-size': '0.9rem'
+                        });
 
-                        const pCreatedAt = $('<p>').text(moment(notification.created_at).locale('vi').fromNow());
+                        const pCreatedAt = $('<p>').text(moment(notification.created_at).locale('vi').fromNow()).css({
+                            'font-size': '0.9rem'
+                        });
 
                         divContent.append(h4Title);
                         divContent.append(pDescription);
@@ -1315,17 +1359,36 @@
         return notificationList.scrollTop() + notificationList.innerHeight() >= notificationList.prop('scrollHeight') - 100
     }
 
+    let spinnerVisible = false; // Flag variable to track spinner visibility
+
     function lazyLoadNotifications() {
-        if (isScrolledToBottom()) {
-            loadMoreNotifications();
+        if (isScrolledToBottom() && !spinnerVisible) {
+            spinnerVisible = true;
+            showSpinner();
+
+            setTimeout(function() {
+                hideSpinner();
+                spinnerVisible = false; // Reset the flag to false after hiding the spinner
+                
+                loadMoreNotifications();
+                
+            }, 1000);
         }
+    }
+
+    function showSpinner() {
+        const $spinner = $('<div>').addClass('spinner-loading text-center').attr('role', 'status')
+                                    .append($('<span>').text('Loading...'));
+
+        $('.notifications').append($spinner);
+    }
+
+    function hideSpinner() {
+        $('.spinner-loading').remove();
     }
 
     // Attach the lazyLoadNotifications function to the scroll event
     $('#notificationList').on('scroll', lazyLoadNotifications);
-
-    // Load initial notifications
-    loadMoreNotifications();
 
 </script>
 

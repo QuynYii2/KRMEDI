@@ -121,11 +121,6 @@
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAl8bmtXj3F5lPG_mbD5Pj9mGSu2LCzrrE"></script>
     <script>
-        let accessTokens = `Bearer ` + token;
-        let headeres = {
-            "Authorization": accessTokens
-        };
-
         var locations = {!! json_encode($coordinatesArray) !!};
         var jsonServices = {!! json_encode($services) !!};
         var infoWindows = [];
@@ -263,11 +258,11 @@
                     <div id="list-review">
                         @foreach ($reviews as $review)
                     <div class="border-top">
-@php
-    $user_review = \App\Models\User::find($review->user_id);
-@endphp
+                        @php
+                            $user_review = \App\Models\User::find($review->user_id);
+                        @endphp
                     <div class="d-flex justify-content-between rv-header align-items-center mt-md-2">
-@if ($user_review)
+                        @if ($user_review)
                     <div class="d-flex rv-header--left">
                         <div class="avt-24 mr-md-2">
                             <img loading="lazy" src="{{ asset($user_review->avt) }}">
@@ -292,7 +287,7 @@
                     </p>
                 </div>
             </div>
-@endforeach
+                    @endforeach
                     </div>
                                     </div>
                                 </div>
@@ -384,7 +379,7 @@
             await $.ajax({
                 url: url,
                 method: 'GET',
-                headers: headeres,
+                headers: headers,
                 success: function(response) {
                     renderService(response);
                 },
@@ -441,7 +436,7 @@
                 let response = await fetch(
                     '{{ route('api.survey.get-by-department', $bookings->department) }}', {
                         method: 'GET',
-                        headers: headeres,
+                        headers: headers,
                     });
 
                 if (response.ok) {
@@ -616,7 +611,7 @@
             $.ajax({
                 url: checkWorkingTimeUrl,
                 method: "GET",
-                headers: headeres,
+                headers: headers,
                 data: data,
                 success: function(response) {
                     let result = true;

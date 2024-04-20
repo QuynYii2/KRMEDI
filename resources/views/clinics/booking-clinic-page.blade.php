@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('title', 'Booking Clinic')
 @section('content')
-    <link rel="stylesheet" href="{{asset('css/homeSpecialist.css')}}">
+    <link rel="stylesheet" href="{{ asset('css/homeSpecialist.css') }}">
     <link href="{{ asset('css/detailclinics.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.0/foundation.min.css">
@@ -11,13 +11,15 @@
         input[type=radio] {
             accent-color: #088180;
         }
-        .border-booking-sv .font-weight-600 label{
+
+        .border-booking-sv .font-weight-600 label {
             color: #000;
             font-size: 18px;
             font-style: normal;
             font-weight: 800;
             line-height: normal;
         }
+
         .date-active {
             background-color: blue;
 
@@ -65,7 +67,9 @@
 
         }
 
-        tbody, tfoot, thead {
+        tbody,
+        tfoot,
+        thead {
             border: none;
             background-color: #FFFFFF;
         }
@@ -115,7 +119,7 @@
             padding: 16px;
         }
 
-        .button-apply-bookingNew {
+        .button-apply-booking {
             display: flex;
             width: 470px;
             padding: 14px 50px;
@@ -145,7 +149,7 @@
     @include('layouts.partials.header')
     <div class="container">
         <div class="detail-clinic-theo-chuyen-khoa-title border-bottom">
-            <a href="{{route('home.specialist')}}">
+            <a href="{{ route('home.specialist') }}">
                 <div class="title-detail-clinic"><i class="fa-solid fa-arrow-left"></i> {{ __('home.Detail') }}</div>
             </a>
             <div class="specialList-clinics col-md-12 mt-5 mb-5">
@@ -156,12 +160,11 @@
 
                         @endphp
                         <div class="specialList-clinics--img">
-                            <img class="content__item__image" src="{{$arrayGallery[0] ?? ''}}"
-                                 alt=""/>
+                            <img class="content__item__image" src="{{ $arrayGallery[0] ?? '' }}" alt="" />
                         </div>
                         <div class="specialList-clinics--main">
                             <div class="title-specialList-clinics">
-                                {{$clinicDetail->name}}
+                                {{ $clinicDetail->name }}
                             </div>
                             <div class="address-specialList-clinics d-flex">
                                 <i class="fas fa-map-marker-alt"></i>
@@ -171,24 +174,24 @@
                                     $addressD = \App\Models\District::where('id', $array[2] ?? null)->first();
                                     $addressC = \App\Models\Commune::where('id', $array[3] ?? null)->first();
                                 @endphp
-                                <div class="ml-1">{{$clinicDetail->address_detail}}
-                                    , {{$addressC->name ?? ''}} , {{$addressD->name ?? ''}}
-                                    , {{$addressP->name ?? ''}}</div>
+                                <div class="ml-1">{{ $clinicDetail->address_detail }}
+                                    , {{ $addressC->name ?? '' }} , {{ $addressD->name ?? '' }}
+                                    , {{ $addressP->name ?? '' }}</div>
                             </div>
                             <div class="time-working">
                                 <i class="fa-solid fa-clock"></i>
-                                {{$clinicDetail->time_work}}
+                                {{ $clinicDetail->time_work }}
                                 | {{ \Carbon\Carbon::parse($clinicDetail->open_date)->format('H:i') }}
                                 - {{ \Carbon\Carbon::parse($clinicDetail->close_date)->format('H:i') }}
                             </div>
                             <div class="group-button d-flex mt-3">
                                 <a href="" class="mr-2">
                                     <div class="button-follow-specialList">
-                                        {{ __('home.Theo dõi') }}
-
+                                        <div style="margin-left: 8px; margin-top: 18px" class="zalo-follow-only-button"
+                                            data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
                                     </div>
                                 </a>
-                                <a href="{{route('clinic.detail',$clinicDetail->id)}}" class="">
+                                <a href="{{ route('clinic.detail', $clinicDetail->id) }}" class="">
                                     <div class="button-direct-specialList">
                                         {{ __('home.Chỉ đường') }}
                                     </div>
@@ -199,12 +202,12 @@
                 </div>
             </div>
         </div>
-        <form action="{{route('booking.create.new')}}" method="post" id="bookingHospitalForm">
+        <form action="{{ route('clinic.booking.store') }}" method="post" id="bookingHospitalForm">
             @csrf
-            @method('POST')
-            <input type="hidden" name="check_in" id="check_in" value=''>
-            <input type="hidden" name="check_in_time" id="check_in_time" value=''>
-            <input type="hidden" name="clinic_id" id="clinic_id" value='{{$clinicDetail->id}}'>
+            <input type="hidden" name="checkInTime" id="checkInTime">
+            <input type="hidden" name="checkOutTime" id="checkOutTime">
+            <input type="hidden" name="clinic_id" id="clinic_id" value='{{ $clinicDetail->id }}'>
+            <input type="hidden" name="user_id" id="user_id" value="{{ Auth::user()->id }}">
             <div>
                 <div></div>
                 <section>
@@ -216,60 +219,55 @@
                         <div class="small-12 col-md-9">
                             <div>{{ __('home.Chọn thời gian') }}</div>
                             <div class="spin-me"></div>
-                            <div class="master-container-slots" id="select-time-booking">
-                                <div class="morning-container fs-16px">
-                                    <p>AM</p>
-                                    <div class="flex-container-morning"></div>
-                                </div>
-                                <div class="afternoon-container fs-16px">
-                                    <p>PM</p>
-                                    <div class="flex-container-afternoon"></div>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 timeContainer">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <input hidden="" type="text" id="selectedTime" name="selectedTime"
-                               readonly>
                     </div>
                 </section>
             </div>
             <div class="mt-5">
-                @if(Auth::check())
-                    <div class="d-flex align-items-center select-memberFamily">
-                        <input class="m-0 inputBookingFor" style="width: 20px;height: 20px;" type="radio" name="memberFamily" checked
-                               id="yourself"  value="yourself"><label for="yourself">{{ __('home.Cho mình') }}</label>
-                        <input class="m-0 inputBookingFor" style="width: 20px;height: 20px;" type="radio" name="memberFamily"
-                               id="family" value="family"><label for="family">{{ __('home.Cho người thân') }}</label>
-                    </div>
-                @endif
+                <div class="d-flex align-items-center select-memberFamily">
+                    <input class="m-0 inputBookingFor" style="width: 20px;height: 20px;" type="radio"
+                        name="member_family_id" checked id="myself" value="myself"><label
+                        for="myself">{{ __('home.Cho mình') }}</label>
+                    <input class="m-0 inputBookingFor" style="width: 20px;height: 20px;" type="radio"
+                        name="member_family_id" id="family" value="family"><label
+                        for="family">{{ __('home.Cho người thân') }}</label>
+                </div>
             </div>
             <div class="d-flex mt-5 d-none" id="my-family">
-                @if($memberFamilys->count() == 0)
+                @if ($memberFamilys->count() == 0)
                     <div class="col-auto mr-3 border-8">
                         <div class="avtMember d-flex justify-content-center align-items-center">
-                            <img
-                                src="https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png"
+                            <img src="https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png"
                                 alt="">
                         </div>
                         <div class="d-flex align-items-center justify-content-center">
                             <label for="yourself">{{ __('home.Bạn chưa có người thân') }}</label>
-                            <input hidden="" type="radio" name="memberFamily" id="yourself"  value="yourself"><label for="yourself">{{ __('home.Cho mình') }}</label>
+                            <input hidden="" type="radio" name="memberFamily" id="yourself" value="yourself"><label
+                                for="yourself">{{ __('home.Cho mình') }}</label>
                         </div>
                     </div>
                 @else
-                    @foreach($memberFamilys as $memberFamily)
+                    @foreach ($memberFamilys as $memberFamily)
                         <div class="col-auto mr-3 border-8">
                             <div class="avtMember">
-                                <img
-                                    src="{{$memberFamily->avatar ?? 'https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png'}}"
+                                <img src="{{ $memberFamily->avatar ?? 'https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png' }}"
                                     alt="">
                             </div>
                             <div class="d-flex align-items-center justify-content-center">
-                                <label for="{{$memberFamily->id}}">{{$memberFamily->name}}</label>
+                                <label for="{{ $memberFamily->id }}">{{ $memberFamily->name }}</label>
                             </div>
                             <div class="d-flex align-items-center justify-content-center">
-                                # {{ \App\Enums\RelationshipFamily::getLabels()[$memberFamily->relationship] ?? $memberFamily->relationship }}</div>
-                            <input style="right: 0" class="position-absolute top-0 m-2" type="radio" name="membersFamily"
-                                   id="{{$memberFamily->id}}" value="{{$memberFamily->id}}">
+                                #
+                                {{ \App\Enums\RelationshipFamily::getLabels()[$memberFamily->relationship] ?? $memberFamily->relationship }}
+                            </div>
+                            <input style="right: 0" class="position-absolute top-0 m-2" type="radio"
+                                name="member_family_id" id="{{ $memberFamily->id }}" value="{{ $memberFamily->id }}">
                         </div>
                     @endforeach
                 @endif
@@ -277,43 +275,41 @@
             <div>
                 <div class="select-service">{{ __('home.Select service') }}</div>
                 <div>
-                    @foreach($services as $service)
+                    @foreach ($services as $service)
                         <div class="d-flex justify-content-between mt-md-2 border-booking-sv align-items-center">
                             <div class="fs-14 font-weight-600">
-                                <label class="d-flex" for="myCheckbox{{$service->id}}">{{$service->name}}</label>
+                                <label class="d-flex" for="myCheckbox{{ $service->id }}">{{ $service->name }}</label>
                             </div>
                             <div class="checkbox-button">
-                                <input type="checkbox" id="myCheckbox{{$service->id}}" value="{{$service->id}}"
-                                       name="service[]">
-                                <label class="d-flex" for="myCheckbox{{$service->id}}"></label>
+                                <input type="checkbox" id="myCheckbox{{ $service->id }}" value="{{ $service->id }}"
+                                    name="service[]">
+                                <label class="d-flex" for="myCheckbox{{ $service->id }}"></label>
                             </div>
                         </div>
                     @endforeach
                 </div>
             </div>
             <div class="d-flex justify-content-center">
-                <button type="submit"
-                        class=" btn col-md-6 mt-4 btn-primary btn-block up-date-button button-apply-bookingNew "
-                        id="activate">{{ __('home.Xác nhận đặt khám') }}
+                <button type="submit" class="btn col-md-6 mt-4 btn-success btn-block up-date-button button-apply-booking"
+                    id="activate">{{ __('home.Xác nhận đặt khám') }}
                 </button>
             </div>
 
         </form>
     </div>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             loadData();
 
-            $('.inputBookingFor').on('change', function () {
+            $('.inputBookingFor').on('change', function() {
                 checkMyFamily();
             });
         });
 
         function checkMyFamily() {
-            let inputChecked = document.querySelector('input[name="memberFamily"]:checked');
+            let inputChecked = document.querySelector('input[name="member_family_id"]:checked');
             let value = inputChecked.value;
-            console.log(value);
-            if (value === 'yourself') {
+            if (value === 'myself') {
                 document.getElementById('my-family').classList.add('d-none');
             } else {
                 document.getElementById('my-family').classList.remove('d-none');
@@ -321,39 +317,6 @@
         }
 
         function loadData() {
-            let cachedData = {};
-
-            function serviceCallSlots(date) {
-                const dt = new Date(date);
-                let ms = dt.getTime();
-                let startMs = ms - (60 * 60 * 24 * 1000 * 2);
-                const dtArr = [1, 2, 3, 4, 5].map((e) => {
-                    const innerDt = new Date(startMs);
-                    startMs += 60 * 60 * 24 * 1000;
-                    return innerDt;
-                });
-                const timeArrs = [
-                    ['9', '10', '11', '12', '1', '2', '3', '4', '5'],
-                    ['9', '10', '11', '1', '2', '3', '4', '5'],
-                    ['9', '10', '11', '12', '3', '4', '5'],
-                    ['10', '11', '2', '4'],
-                    ['11', '12', '1', '4', '5']
-                ];
-                return new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        const obj = dtArr.reduce((accum, e) => {
-                            const randomNum = Math.floor(Math.random() * 5);
-                            const dtString = e.toLocaleDateString();
-                            let parts = dtString.split('/');
-                            parts[0] = parts[0].length === 1 ? '0' + parts[0] : parts[0];
-                            parts[1] = parts[1].length === 1 ? '0' + parts[1] : parts[1];
-                            accum[parts.join('/')] = timeArrs[randomNum];
-                            return accum;
-                        }, {});
-                        resolve(obj);
-                    }, 2000);
-                })
-            }
 
             function spinner(startOrStop) {
                 const spin = document.querySelector('.spin-me');
@@ -366,113 +329,161 @@
                 }
             }
 
-            function createSlotsDom(formSubmit, morning, afternoon, arr) {
-                [9, 10, 11, 12, 1, 2, 3, 4, 5].map((e) => {
-                    const div = document.createElement('div');
-                    div.setAttribute('class', 'item');
+            // Define the working hours
+            var workingHours = [
+                "08:00-09:00",
+                "09:00-10:00",
+                "10:00-11:00",
+                "12:00-13:00",
+                "13:00-14:00",
+                "14:00-15:00",
+                "15:00-16:00",
+                "16:00-17:00"
+            ];
 
-                    const anchor = document.createElement('a');
-                    anchor.setAttribute('class', 'hollow button');
-                    anchor.setAttribute('href', 'javascript:void(0)');
+            var isRendered = false; // Flag to track if working hours are rendered
 
-                    const time = (e < 10 ? '0' : '') + e + ':00';
-                    const txt = document.createTextNode(time);
-                    anchor.appendChild(txt);
+            function renderWorkingHours(selectedDate) {
+                if (isRendered) {
+                    $(".timeContainer").empty(); // Clear existing working hours
+                }
+                var container = $(".timeContainer");
+                for (var i = 0; i < workingHours.length; i++) {
+                    (function() {
+                        var workingHour = workingHours[i];
+                        var button = $("<button>")
+                            .addClass("btn btn-outline-primary")
+                            .attr("type", "button")
+                            .css({
+                                'margin-right': '7px',
+                                'margin-bottom': '5px'
+                            })
+                            .text(workingHour);
 
-                    anchor.onclick = function (event) {
-                        const selectedTime = event.target.innerText;
-                        let date = document.getElementById('check_in').value;
-                        const selectedDateTime = date + ' ' + selectedTime;
+                        //VALIDATE TODAY TIME
+                        var timeParts = workingHour.split("-");
+                        var startTime = timeParts[0];
+                        var endTime = timeParts[1];
 
-                        document.getElementById('selectedTime').value = selectedDateTime;
+                        var currentTime = new Date();
+                        var currentHour = currentTime.getHours();
+                        var currentMinute = currentTime.getMinutes();
 
-                        formSubmit.classList.remove('disabled');
-                    }
+                        if (currentMinute > 0) {
+                            currentHour += 1; //Làm tròn giờ khi đã vào ca
+                        }
 
-                    if (!arr.filter(r => r == e).length) {
-                        anchor.setAttribute('disabled', 'true');
-                    }
+                        var selectedDateTime = new Date(selectedDate);
+                        selectedDateTime.setHours(parseInt(startTime.split(":")[0]));
+                        selectedDateTime.setMinutes(parseInt(startTime.split(":")[1]));
 
-                    div.appendChild(anchor);
+                        // Kiểm tra nếu ngày được chọn là hôm nay và giờ hiện tại nằm trong khoảng từ 08:00 đến currentHour
+                        if (
+                            selectedDateTime.toDateString() === currentTime.toDateString() &&
+                            currentHour > 8 && currentHour > parseInt(startTime.split(":")[0])
+                        ) {
+                            // Vô hiệu hóa các nút từ 08:00 đến currentHour
+                            button.prop("disabled", true);
+                        }
+                        //VALIDATE TODAY TIME
 
-                    if (e >= 9 && e < 12) {
-                        morning.appendChild(div);
-                    } else {
-                        afternoon.appendChild(div);
-                    }
-                });
-                selectTime();
-            }
+                        checkWorkingTime(selectedDate + " " + timeParts[0] + ":00", selectedDate + " " +
+                            timeParts[1] + ":00",
+                            function(result) {
+                                if (!result) {
+                                    button.prop("disabled", true);
+                                }
+                            });
 
-            function selectTime() {
-                const divTime = document.querySelectorAll('#select-time-booking .item > a.hollow.button');
-
-                divTime.forEach((item) => {
-                    item.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        console.log(item.text)
-
-                        divTime.forEach((otherItem) => {
-                            otherItem.classList.remove('bg-primary');
+                        button.on("click", function() {
+                            $(".timeContainer button").removeClass("btn btn-primary").addClass(
+                                "btn btn-outline-primary");
+                            $(this).removeClass("btn btn-outline-primary").addClass("btn btn-primary");
+                            var timeText = $(this).text();
+                            var timeParts = timeText.split("-");
+                            var checkIn = selectedDate + " " + timeParts[0] + ":00";
+                            var checkOut = selectedDate + " " + timeParts[1] + ":00";
+                            console.log("checkIn:", checkIn);
+                            console.log("checkOut:", checkOut);
+                            $('#checkInTime').val(checkIn);
+                            $('#checkOutTime').val(checkOut);
+                            checkDataFullFill();
                         });
 
-                        $(item).toggleClass('bg-primary');
-                        document.getElementById('check_in_time').value = item.text;
-                    })
-                })
+                        container.append(button);
 
+                    })();
+                }
+                checkDataFullFill();
             }
 
-
             $("#datepicker").datepicker({
-                onSelect: function (date) {
-                    const container = document.querySelector('.master-container-slots');
-                    const morning = document.querySelector('.flex-container-morning');
-                    const afternoon = document.querySelector('.flex-container-afternoon');
-                    const formSubmit = document.querySelector('.button-apply-bookingNew');
-                    const checkInInput = document.getElementById('check_in');
-
-                    formSubmit.classList.add('disabled');
-                    container.classList.add('hide');
-
-                    if (cachedData[date]) {
-                        spinner('start');
-                        setTimeout(() => {
-                            morning.innerHTML = '';
-                            afternoon.innerHTML = '';
-                            createSlotsDom(formSubmit, morning, afternoon, cachedData[date]);
-                            spinner('stop');
-                            container.classList.remove('hide');
-                            container.classList.add('fade-in');
-                            checkInInput.value = date;
-                        }, 500);
-                    } else {
-                        spinner('start');
-                        const prom = serviceCallSlots(date);
-                        setTimeout(() => {
-                            morning.innerHTML = '';
-                            afternoon.innerHTML = '';
-                            prom.then((payload) => {
-                                Object.keys(payload).map((e) => {
-                                    const cachedKeys = Object.keys(cachedData);
-                                    if (!cachedKeys.includes(e)) {
-                                        cachedData[e] = payload[e];
-                                    }
-                                });
-                                createSlotsDom(formSubmit, morning, afternoon, cachedData[date]);
-                                spinner('stop');
-                                container.classList.remove('hide');
-                                container.classList.add('fade-in');
-                                checkInInput.value = date;
-                            });
-                        }, 500);
-                    }
-                    document.getElementById('check_in').value = date;
-                    console.log(date)
-                }
+                dateFormat: "yy-mm-dd",
+                minDate: 0, // Ngày hôm nay
+                maxDate: "+1Y" // 1 năm sau ngày hôm nay
             });
 
+            $("#datepicker").on("change", function() {
+                $('#checkInTime').val('');
+                $('#checkOutTime').val('');
+                var selectedDate = $(this).val();
+                if (isRendered) {
+                    $(".timeContainer").empty(); // Clear existing working hours
+                }
+                spinner('start');
+                setTimeout(() => {
+                    renderWorkingHours(selectedDate);
+                    spinner('stop');
+                }, 500);
+                isRendered = true;
+            });
 
+            // Trigger the change event when the datepicker is loaded
+            $("#datepicker").trigger("change");
+        }
+
+        function checkDataFullFill() {
+            const submitButton = $('.button-apply-booking');
+            var checkIn = $('#checkInTime').val();
+            var checkOut = $('#checkOutTime').val();
+            // var memberFamily = $('#member_family_id').val();
+            // var department = $('#department_id').val();
+            if (checkIn && checkOut) {
+                // All values are not null or undefined
+                submitButton.text('Đặt lịch ngay');
+                submitButton.attr("disabled", false);
+            } else {
+                // At least one value is null or undefined
+                submitButton.text('Bạn phải điền đầy đủ thông tin');
+                submitButton.attr("disabled", true);
+            }
+        }
+
+        function checkWorkingTime(check_in, check_out, callback) {
+            let checkWorkingTimeUrl = `{{ route('api.backend.booking.check.time.available') }}`;
+
+            let data = {
+                'clinic_id': `{{ $bookings->id ?? '' }}`,
+                'checkInTime': check_in,
+                'checkOutTime': check_out,
+            };
+            $.ajax({
+                url: checkWorkingTimeUrl,
+                method: "GET",
+                headers: headers,
+                data: data,
+                success: function(response) {
+                    let result = true;
+                    if (response.data >= 10) {
+                        result = false;
+                    }
+                    callback(result);
+                },
+                error: function(error) {
+                    console.log(error);
+                    callback(false);
+                }
+            });
         }
     </script>
 @endsection
