@@ -21,21 +21,21 @@
     }
     
     .spinner-loading span {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: white;
-    animation: flashing 1.4s infinite linear;
-    margin: 0 4px;
-    display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: white;
+        animation: flashing 1.4s infinite linear;
+        margin: 0 4px;
+        display: inline-block;
     }
 
     .spinner-loading span:nth-child(2) {
-    animation-delay: 0.2s;
+        animation-delay: 0.2s;
     }
 
     .spinner-loading span:nth-child(3) {
-    animation-delay: 0.4s;
+        animation-delay: 0.4s;
     }
 
     @keyframes flashing {

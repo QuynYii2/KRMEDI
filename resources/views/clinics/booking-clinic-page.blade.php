@@ -452,6 +452,24 @@
                 // All values are not null or undefined
                 submitButton.text('Đặt lịch ngay');
                 submitButton.attr("disabled", false);
+
+                //Check user followed
+                let followed = fetch(
+                    '{{ route('zalo-follower.show', Auth::user()->id ?? 0) }}', {
+                        method: 'GET',
+                        // headers: {
+                        //     "Authorization": accessToken
+                        // },
+                    });
+
+                if (followed.ok) {
+                    followed = followed.json();
+                    if (followed.error != 0) {
+                        submitButton.text('Bạn phải follow phòng khám này trước');
+                        submitButton.attr("disabled", true);
+                    }
+                }
+                //Check user followed
             } else {
                 // At least one value is null or undefined
                 submitButton.text('Bạn phải điền đầy đủ thông tin');

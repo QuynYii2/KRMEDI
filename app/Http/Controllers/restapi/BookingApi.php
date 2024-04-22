@@ -25,14 +25,14 @@ class BookingApi extends Controller
     public function createBooking(Request $request)
     {
         try {
-            dd($request->all());
             $validated = Validator::make($request->all(), [
                 'checkInTime' => 'required|date',
                 'checkOutTime' => 'required|date|after:checkInTime',
                 'member_family_id' => 'nullable',
                 'department_id' => 'nullable|numeric',
                 'clinic_id' => 'required|numeric',
-                'user_id' => 'required|numeric'
+                'user_id' => 'required|numeric',
+                'service' => 'nullable'
             ]);
 
             if ($validated->fails()) {
@@ -40,6 +40,8 @@ class BookingApi extends Controller
             }
 
             $validatedData = $validated->validated();
+
+            $validatedData['service'] = implode(',', $validatedData['service']);
 
             $checkInTime = Carbon::parse($validatedData['checkInTime']);
             $checkOutTime = Carbon::parse($validatedData['checkOutTime']);
