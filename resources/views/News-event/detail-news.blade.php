@@ -1,10 +1,17 @@
 @extends('layouts.master')
 @section('title', 'News')
+<style>
+    @media (max-width: 992px) {
+        .main-header {
+            display: none;
+        }
+    }
+</style>
 @section('content')
     @include('layouts.partials.header')
     @include('component.banner')
     <div class="recruitment-details ">
-        <div class="container">
+        <div class="container box-detail-news">
             <a href="{{route('index.new')}}">
                 <div class="recruitment-details--title p-md-2 p-0 mb-md-4"><i class="fa-solid fa-arrow-left"></i> {{ __('home.News details') }}</div>
             </a>

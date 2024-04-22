@@ -13,16 +13,16 @@
         <div class="d-flex">
             <div class="col-md-3 mr-2 d-md-block d-none">
                 <div class="">
-                    <div class="flea-adv row align-items-center justify-content-center">
-                        <div class="">
-                            <img src="{{asset('img/image 16.png')}}" alt="" style="width: 270px;height: 682px">
+                    <div class="flea-adv row align-items-center justify-content-center w-auto h-auto" style="width: auto!important;height: auto!important;">
+                        <div class="p-0">
+                            <img src="{{asset('img/image 16.png')}}" alt="" style="width: 100%;">
                         </div>
                     </div>
                 </div>
                 <div class="">
-                    <div class="flea-adv row align-items-center justify-content-center">
-                        <div class="">
-                            <img src="{{asset('img/image 16.png')}}" alt="" style="width: 270px;height: 682px">
+                    <div class="flea-adv row align-items-center justify-content-center w-auto h-auto" style="width: auto!important;height: auto!important;">
+                        <div class="p-0">
+                            <img src="{{asset('img/image 16.png')}}" alt="" style="width: 100%;">
                         </div>
                     </div>
                 </div>
@@ -33,7 +33,7 @@
                         <div class="tab-pane fade show active" id="productList" role="tabpanel"
                              aria-labelledby="productList-tab">
                             <div>
-                                <h3><b>{{ __('home.My personal doctor') }}</b></h3>
+                                <h3 ><b class="title-my-personal-doctor">{{ __('home.My personal doctor') }}</b></h3>
                                 <hr>
                             </div>
                             <div class="list-doctor row" id="listMyDoctor">
@@ -92,7 +92,7 @@
                     let route = `{{route('examination.doctor_info', ['id'=>':id'])}}`;
                     route = route.replace(':id', data['id']);
 
-                    html = html + `<div class="col-md-3 col-6">
+                    html = html + `<div class="col-lg-3 col-md-6 col-6">
                                     <div class="card" >
                                     <i class="bi bi-heart"></i>
                                     <img src="${data.avt}" class="card-img-top" alt="...">

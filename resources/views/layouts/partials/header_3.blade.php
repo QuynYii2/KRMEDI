@@ -5,7 +5,7 @@
 @php use Illuminate\Support\Facades\Auth; @endphp
 @php use App\Enums\Role; @endphp
 <header class="header header-flea mt-0">
-    <div class="container">
+    <div class="container header-3-pc">
         <div class="row header-detail mobile-hidden justify-content-between">
             <div class="col-md-3 header-detail--left d-flex justify-content-around">
                 <a class="logo" href="{{ route('home') }}">
@@ -26,7 +26,7 @@
                 <a class="{{ $routeName == 'examination.mypersonaldoctor' ? 'active' : '' }}"
                     href="{{ route('examination.mypersonaldoctor') }}">{{ __('home.My personal doctor') }}</a>
             </div>
-            <div class="col-md-2 header-detail--right d-flex">
+            <div class="col-md-3 header-detail--right d-flex">
                 <div class="header-right d-flex align-items-center w-100">
                     @if (Auth::check())
                         <div class="dropdown col-md-6 p-0">

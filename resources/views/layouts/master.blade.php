@@ -181,6 +181,7 @@
         });
     </script>
     @yield('pages-style')
+    <link rel="stylesheet" href="{{ asset('css/style-mobile.css') }}">
 </head>
 
 <style>

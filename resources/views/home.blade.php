@@ -1328,7 +1328,7 @@
                                         }
                                         $class = !$isFavourite ? 'bi-heart' : 'bi-heart-fill text-danger';
                                     @endphp
-                                    <div class="col-md-3 col-6">
+                                    <div class="col-lg-3 col-md-4 col-6">
                                         <div class="">
                                             <div class="product-item">
                                                 <div style="min-height: 170px"
@@ -1352,7 +1352,7 @@
                                                             <a class="max-3-line-content-home"
                                                                href="{{ route('examination.doctor_info', $doctor->id) }}">{{$doctor->name}}</a>
                                                         </div>
-                                                        <div class="location-pro webkit-line-clamp-newHome d-flex">
+                                                        <div class="location-pro webkit-line-clamp-newHome d-flex line-service">
                                                             <p>
                                                                 @if(locationHelper() == 'vi')
                                                                     {!! ($doctor->service ?? __('home.no Service Name') ) !!}
@@ -1438,7 +1438,7 @@
                         @php
                             $showDesktop = $index > 5;
                         @endphp
-                        <div class="col-md-2 col-6 p-2 d-none {{ $showDesktop == true ? 'd-md-block' : 'd-sm-block' }}">
+                        <div class="col-lg-2 col-md-3 col-6 p-2 d-none {{ $showDesktop == true ? 'd-md-block' : 'd-sm-block' }}">
                             <a href="{{route('home.specialist.department',$departmentItem->id)}}">
                                 <div class="align-items-center krm-border-chuyen-khoa">
                                     <div class="d-flex justify-content-center align-content-center krm-img-chuyen-khoa">
@@ -1471,7 +1471,7 @@
                     <a href="#">{{ __('home.See all') }} <i class="fa-solid fa-chevron-right pl-2"></i></a>
                 </div>
                 <div class="d-md-flex main-recruitment--homeNew justify-content-between">
-                    <div class="col-md-3">
+                    <div class="col-lg-3 col-md-4 col-6">
                         <div class="border-radius-homeNew">
                             <div>
                                 <img src="{{asset('img/homeNew-img/Container.png')}}" alt="">
@@ -1525,7 +1525,7 @@
                                     $class = !$isFavourite ? 'bi-heart' : 'bi-heart-fill text-danger';
                                             $isSoldOut = $product->quantity == 0;
                                 @endphp
-                                <div class="col-md-3 col-6">
+                                <div class="col-lg-3 col-md-6 col-6">
                                     <div class="">
                                         <div
                                             class="product-item {{ $isSoldOut ? 'sold-out-overlay' : '' }} krm-hover-buy-online">

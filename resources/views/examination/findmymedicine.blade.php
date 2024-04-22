@@ -7,6 +7,9 @@
 <link href="{{ asset('css/findmymedicine.css') }}" rel="stylesheet">
 @section('content')
     <style>
+        .list-title .list--doctor p{
+            font-size: 28px;
+        }
         @media (max-width: 575px) {
             h3.no-data.text-center {
                 font-size: 16px;
@@ -221,9 +224,9 @@
     @include('component.banner')
 
     <div class="container">
-        <div id="examination-scene">
+        <div id="examination-scene w-100">
 
-            <div class="row medicine-search">
+            <div class="row medicine-search justify-content-center">
                 <form action="{{ route('examination.findmymedicine') }}" method="get" class="row" id="searchForm">
                     <div class="col-sm-2">
                         <div class="form-group">
@@ -238,7 +241,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="form-group">
                             <label for="exampleFormControlSelect2">{{ __('home.Danh mục thuoc') }}</label>
                             <select class="form-control" name="category_product" onchange="submitForm()">
@@ -251,7 +254,7 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="form-group">
                             <label for="exampleFormControlSelect2">{{ __('home.Location') }}</label>
                             <select class="form-control" name="province_id" onchange="submitForm()">

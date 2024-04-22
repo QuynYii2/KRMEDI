@@ -2,7 +2,7 @@
     <div class="">
         <div class="container d-md-flex mb-md-5">
             <div class="col-md-6"><img class="w-200" src="{{ asset('img/icons_logo/logo-krmedi-footer.png') }}"></div>
-            <div class="col-md-6 d-flex align-content-center flex-wrap">
+            <div class="col-md-6 d-flex align-content-center flex-wrap right-footer-top">
                 <div class="mr-4 krm-footer-fs">
                     <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="22.2566" cy="22.3542" r="21.5574" fill="#088180"/>
@@ -37,7 +37,7 @@
             </div>
 
         </div>
-        <div class="container justify-content-between d-flex mobile-hidden">
+        <div class="container justify-content-between d-flex mobile-hidden box-footer-mobile">
             <div>
                 <div class="krm-title-footer">{{__('home.Category')}}</div>
                 <div class="krm-title-footer_sub">
@@ -83,7 +83,7 @@
                     <li><a href="#">{{ __('home.News') }}</a></li>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 item-end-footer">
                 <div class="krm-title-footer">{{__('home.Book an appointment')}}</div>
                 <div>
                     <label for="input-email" class="krm-describe-footer">{{ __('home.It is a long established fact that a reader will be distracted') }}</label>
@@ -96,7 +96,7 @@
         </div>
     </div>
 </footer>
-<div class="pc-hidden container mt-4">
+<div class="pc-hidden container mt-4 footer-mobile-box">
     <div class="container d-md-flex mb-md-5">
         <div style="padding: 16px 0;"><img class="w-200" src="{{ asset('img/icons_logo/logo-krmedi-footer.png') }}"></div>
     </div>
