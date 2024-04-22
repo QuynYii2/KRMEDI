@@ -98,7 +98,7 @@
                 <form class="search-box col-12">
                     <input type="search" name="focus" placeholder="{{ __('home.Search for anything…') }}"
                         id="search-input" value="">
-                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <i class="fa-solid fa-magnifying-glass d-none"></i>
                 </form>
             </div>
         </div>
@@ -160,95 +160,22 @@
         <div class="col-md-3 medicine-list--filter">
             <div class="filter">
                 <div class="filter-header d-flex justify-content-between">
-                    <div class="text-wrapper">{{ __('home.Filter') }}</div>
-                    <i class="fa-solid fa-chevron-down"></i>
+                    <div class="text-wrapper">Lọc theo chuyên khoa</div>
+                    <i class="fa-solid fa-chevron-down" id="toggleSpecialist"></i>
                 </div>
-                <div class="filter-body">
-                    <div class="d-flex item">
-                        <input type="checkbox" name="filter_" value="0"
-                            onchange="searchFilterMedicine(this.value)">
-                        <div class="text-all">{{ __('home.All') }}</div>
-                    </div>
-                    <div class="d-flex item">
-                        <input type="checkbox" name="filter_" value="{{ FilterOnlineMedicine::HEALTH }}"
-                            onchange="searchFilterMedicine(this.value)">
-                        <div class="text">{{ __('home.Heath') }}</div>
-                    </div>
-                    <div class="d-flex item">
-                        <input type="checkbox" name="filter_" value="{{ FilterOnlineMedicine::BEAUTY }}"
-                            onchange="searchFilterMedicine(this.value)">
-                        <div class="text">{{ __('home.Beauty') }}</div>
-                    </div>
-                    <div class="d-flex item">
-                        <input type="checkbox" name="filter_" value="{{ FilterOnlineMedicine::PET }}"
-                            onchange="searchFilterMedicine(this.value)">
-                        <div class="text">{{ __('home.Pets') }}</div>
-                    </div>
-                </div>
+                <div class="filter-body" id="clinicMobileSpecialist"></div>
             </div>
             <div class="filter">
                 <div class="filter-header d-flex justify-content-between">
-                    <div class="text-wrapper">{{ __('home.Object') }}</div>
-                    <i class="fa-solid fa-chevron-down"></i>
+                    <div class="text-wrapper">Lọc theo triệu chứng</div>
+                    <i class="fa-solid fa-chevron-down" id="toggleSymptom"></i>
                 </div>
-                <div class="filter-body">
-                    <div class="d-flex item">
-                        <input type="checkbox" value="{{ ObjectOnlineMedicine::KIDS }}"
-                            onchange="objectFilterMedicine(this.value)">
-                        <div class="text">{{ __('home.For kids') }}</div>
-                    </div>
-                    <div class="d-flex item">
-                        <input type="checkbox" value="{{ ObjectOnlineMedicine::FOR_WOMEN }}"
-                            onchange="objectFilterMedicine(this.value)">
-                        <div class="text">{{ __('home.For women') }}</div>
-                    </div>
-                    <div class="d-flex item">
-                        <input type="checkbox" value="{{ ObjectOnlineMedicine::FOR_MEN }}"
-                            onchange="objectFilterMedicine(this.value)">
-                        <div class="text">{{ __('home.For men') }}</div>
-                    </div>
-                    <div class="d-flex item">
-                        <input type="checkbox" value="{{ ObjectOnlineMedicine::FOR_ADULT }}"
-                            onchange="objectFilterMedicine(this.value)">
-                        <div class="text">{{ __('home.For adults') }}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="border-radius mt-3 ">
-                <div class="d-flex">
-                    <div class="wrapper">
-                        <header>
-                            <h2>{{ __('home.Price') }}</h2>
-                        </header>
-                        <div class="price-input">
-                            <div class="field">
-                                <input type="number" onchange="performSearch()" id="inputProductMin"
-                                    class="rangePrice input-min" value="0">
-                            </div>
-                            <div class="separator">-</div>
-                            <div class="field">
-                                <input type="number" onchange="performSearch()" id="inputProductMax"
-                                    class="rangePrice input-max" value="0">
-                            </div>
-                        </div>
-                        <div class="slider">
-                            <div class="progress"></div>
-                        </div>
-                        <div class="range-input">
-                            <input type="range" onchange="performSearch()" class="rangePrice range-min"
-                                min="0" max="10000000" value="2500000" step="1000">
-                            <input type="range" onchange="performSearch()" class="rangePrice range-max"
-                                min="0" max="10000000" value="7500000" step="1000">
-                        </div>
-                    </div>
-                </div>
+                <div class="filter-body" id="clinicMobileSymptom"></div>
             </div>
             <div class="d-flex justify-content-center mt-4">
-                <a class="add-cv-bt w-100 apply-bt_delete col-6">{{ __('home.Refresh') }}</a>
-                <form class="col-6 pr-0">
-                    <button type="button" data-bs-dismiss="offcanvas" aria-label="Close"
-                        class="add-cv-bt apply-bt_edit w-100">{{ __('home.Apply') }}</button>
-                </form>
+                <a class="add-cv-bt w-100 apply-bt_delete col-6">{{ __('home.Reset') }}</a>
+                <button type="button" data-bs-dismiss="offcanvas" aria-label="Close"
+                    class="add-cv-bt apply-bt_edit w-100">{{ __('home.Apply') }}</button>
             </div>
         </div>
     </div>
@@ -419,6 +346,7 @@
     }
 
     function renderSpecialist(response) {
+        //DESKTOP
         let html = `<option value="" selected disabled>Chọn chuyên khoa</option>`;
         for (let i = 0; i < response.length; i++) {
             let data = response[i];
@@ -426,6 +354,29 @@
             html += `<option value="${data.representative_doctor}">${data.name}</option>`;
         }
         $('#clinic_specialist').empty().append(html);
+
+        //MOBILE
+        let htmlMb = `<div class="d-flex item">
+                        <input type="checkbox" name="clinic_specialist" id="selectAllSpecialistMobile" value="all">
+                        <div class="text-all">{{ __('home.All') }}</div>
+                    </div>`;
+        for (let i = 0; i < response.length; i++) {
+            let data = response[i];
+
+            let itemClass = (i <= 3) ? 'd-flex' : 'd-none';
+
+            htmlMb += `<div class="${itemClass} item">
+                        <input type="checkbox" name="clinic_specialist" value="${data.representative_doctor}">
+                        <div class="text-all">${data.name}</div>
+                    </div>`;
+        }
+        $('#clinicMobileSpecialist').empty().append(htmlMb);
+
+        $('#selectAllSpecialistMobile').change(function() {
+            let isChecked = $(this).is(':checked');
+            $('input[name="clinic_specialist"]').prop('checked', isChecked);
+        });
+
     }
 
     async function loadSymptom() {
@@ -456,6 +407,28 @@
             html += `<option value="${data.id}">${data.name}</option>`;
         }
         $('#clinic_symptom').empty().append(html);
+
+        //MOBILE
+        let htmlMb = `<div class="d-flex item">
+                <input type="checkbox" name="clinic_symptom" id="selectAllSymptomMobile" value="all">
+                <div class="text-all">{{ __('home.All') }}</div>
+            </div>`;
+        for (let i = 0; i < response.length; i++) {
+            let data = response[i];
+
+            let itemClass = (i <= 3) ? 'd-flex' : 'd-none';
+
+            htmlMb += `<div class="${itemClass} item">
+                <input type="checkbox" name="clinic_symptom" value="${data.representative_doctor}">
+                <div class="text-all">${data.name}</div>
+            </div>`;
+        }
+        $('#clinicMobileSymptom').empty().append(htmlMb);
+
+        $('#selectAllSymptomMobile').change(function() {
+            let isChecked = $(this).is(':checked');
+            $('input[name="clinic_symptom"]').prop('checked', isChecked);
+        });
     }
 
     function initialSelect2(selectElement) {
@@ -464,4 +437,31 @@
             minimumInputLength: 1,
         });
     }
+</script>
+
+{{-- MOBILE --}}
+<script>
+    $(document).ready(function() {
+        // Toggle the items and change the icon when the button is clicked
+        function toggleItems(buttonId) {
+            $(buttonId).click(function() {
+                $(this).toggleClass('fa-chevron-down fa-chevron-up');
+                $(this).parent().next('.filter-body').find('.item:gt(4)').slideToggle(function() {
+                    if ($(this).hasClass('d-none')) {
+                        $(this).removeClass('d-none').addClass('d-flex').hide().slideDown(
+                            'slow');
+                    } else {
+                        $(this).removeClass('d-flex').addClass('d-none').slideUp('slow');
+                    }
+                });
+            });
+        }
+
+        toggleItems('#toggleSpecialist');
+        toggleItems('#toggleSymptom');
+
+        $('.add-cv-bt.apply-bt_delete').click(function() {
+            $('.medicine-list--filter input[type="checkbox"]').prop('checked', false);
+        });
+    });
 </script>
