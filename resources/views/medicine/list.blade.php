@@ -108,9 +108,9 @@
         }
     </style>
     <div class="medicine container" id="online-medicine">
-        <div class="row medicine-search d-none d-sm-flex">
-            <div class="medicine-search--left col-md-3 d-flex justify-content-around">
-                <div class="title pl-0 col-md-5">
+        <div class="row medicine-search d-none d-sm-flex w-100 justify-content-between">
+            <div class="medicine-search--left col-md-3 d-flex justify-content-around flex-wrap">
+                <div class="title pl-0 col-lg-5 col-md-12">
                     <select class="form-select" id="category_id" name="category_id"
                             onchange="categoryFilterMedicine(this.value)">
                         <option value="">{{ __('home.Category') }}</option>
@@ -121,7 +121,7 @@
                         @endif
                     </select>
                 </div>
-                <div class="title pr-0 col-md-7">
+                <div class="title pr-0 col-lg-7 col-md-12">
                     <select class="form-select" id="category_id" name="category_id"
                             onchange="locationFilterMedicine(this.value)">
                         <option value="">{{ __('home.Location') }}</option>
@@ -151,9 +151,9 @@
                 @endif
                 @include('component.modal-cart')
             </div>
-            <div class="medicine-search--right col-md-3 d-flex row justify-content-between">
-                <div class="col-md-6 ">
-                    <div class="div-wrapper">
+            <div class="medicine-search--right col-md-3 d-flex row justify-content-between p-0">
+                <div class="col-md-6 p-0">
+                    <div class="div-wrapper mr-2">
                         <a type="button"
                            data-toggle="modal"
                            data-target="#modalCreatPrescription"
@@ -162,7 +162,7 @@
                     </div>
                 </div>
                 @include('component.modalCreatPrescription')
-                <div class="col-md-6">
+                <div class="col-md-6 p-0">
                     <div class="div-wrapper">
                         <a href="{{route('medicine.wishList')}}">{{ __('home.Wish list') }}</a>
                     </div>

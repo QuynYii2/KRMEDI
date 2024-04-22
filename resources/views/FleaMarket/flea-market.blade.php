@@ -39,7 +39,7 @@
     <body>
     @include('component.banner')
 
-    <div class="container mt-70">
+    <div class="container mt-70 box-content-market">
         <div class="container pc-hidden">
             <div class="row clinic-search">
                 <div
@@ -67,8 +67,8 @@
             </div>
         </div>
         <div class="d-flex mt-70 mobile-hidden">
-            <div class="col-md-3 flea-content ">{{ __('home.Flea market') }}</div>
-            <div class="col-md-5 flea-search d-flex align-items-center">
+            <div class="col-lg-3 col-md-2 flea-content ">{{ __('home.Flea market') }}</div>
+            <div class="col-lg-4 col-md-3 flea-search d-flex align-items-center">
                 <i class="fa fa-search form-control-search"></i>
                 <label for="inputSearch"></label><input onkeyup="performSearch()" id="inputSearch" type="Search"
                                                         placeholder="{{ __('home.Search for anything…') }}" value="">
@@ -76,23 +76,23 @@
 
             @if(Auth::check())
                 @if(auth()->user()->type!= Role::NORMAL)
-                    <div class="d-flex col-md-4 justify-content-between align-items-center">
+                    <div class="d-flex col-lg-5 col-md-7 justify-content-between align-items-center line-item-menu-header">
                         <a href="#" onclick="checkLogin()" class="col-md-4 flea-button">
                             {{ __('home.Sell my product') }}
                         </a>
-                        <a href="#" onclick="checkLoginWishStore()" class="col-md-4 flea-button flea-btn">
+                        <a href="#" onclick="checkLoginWishStore()" class="col-lg-5 col-md-7 flea-button flea-btn">
                             {{ __('home.Go to my store') }}
                         </a>
-                        <a href="#" onclick="checkLoginWish()" class="col-md-4 flea-button flea-btn">
+                        <a href="#" onclick="checkLoginWish()" class="col-lg-5 col-md-7 flea-button flea-btn">
                             {{ __('home.Wish list') }}
                         </a>
                     </div>
                 @else
-                    <div class="d-flex col-md-4 justify-content-start align-items-center">
+                    <div class="d-flex col-lg-5 col-md-7 justify-content-start align-items-center">
                         <a href="#" onclick="checkLoginWishStore()" class="col-md-4 flea-button flea-btn mr-3">
                             {{ __('home.Go to my store') }}
                         </a>
-                        <a href="#" onclick="checkLoginWish()" class="col-md-4 flea-button flea-btn">
+                        <a href="#" onclick="checkLoginWish()" class="col-lg-5 col-md-7 flea-button flea-btn">
                             {{ __('home.Wish list') }}
                         </a>
                     </div>
@@ -101,7 +101,7 @@
 
         </div>
         <div class="d-flex mt-88">
-            <div class="col-md-3  mobile-hidden">
+            <div class="col-lg-3 col-md-4  mobile-hidden">
                 <div class="border-radius ">
                     <div class="flea-text">{{ __('home.Filter') }}</div>
                     @foreach($departments as $department)
@@ -161,7 +161,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-9">
+            <div class="col-lg-9 col-md-8">
                 <div class="img-union"><img loading="lazy" src="{{asset('img/flea-market/platinum.png')}}"></div>
                 <div class="page d-flex flex-wrap" id="productsAdsPlan1"></div>
                 <div class="img-union "><img loading="lazy" src="{{asset('img/flea-market/premium.png')}}"></div>
@@ -372,7 +372,7 @@
                 let isFavoriteClass = isUserWasWishlist(product.id);
 
                 var productHtml = `
-    <div class="col-md-4 col-6">
+    <div class="col-lg-4 col-md-6 col-6">
         <div class="product-item ${isSoldOut ? 'sold-out-overlay' : ''}">
              <div class="img-pro justify-content-center d-flex img_product--homeNew">
                   <img loading="lazy" src="${product.thumbnail}" alt="">
@@ -570,7 +570,7 @@
                     }
                     var html = `
 
-                    <div class="col-md-4 col-6">
+                    <div class="col-lg-4 col-md-6 col-6">
                         <div class="product-item ${isSoldOut ? 'sold-out-overlay' : ''}">
                              <div class="img-pro justify-content-center d-flex img_product--homeNew">
                                   <img loading="lazy" src="${item.thumbnail}" alt="" >

@@ -9,7 +9,7 @@
     }
 </style>
 <header class="header header-flea mt-0">
-    <div class="container">
+    <div class="container box-header-market">
         <div class="row header-detail mobile-hidden justify-content-between">
             <div class="col-md-4 header-detail--left d-flex justify-content-around">
                 <a class="logo" href="{{ route('home') }}">
@@ -19,12 +19,12 @@
                 <a class="back" href="{{route('home')}}"><h5><i
                             class="fa-solid fa-angles-left"></i>{{ __('home.Flea market') }} </h5></a>
             </div>
-            <div class="col-md-5 header-detail--center d-flex justify-content-sm-around">
+            <div class="col-md-6 header-detail--center d-flex justify-content-sm-around">
                 <a class="active" href="{{route('flea-market.index')}}">{{ __('home.My store') }}</a>
                 <a onclick="checkLoginFl()">{{ __('home.Sell my product') }}</a>
                 <a onclick="checkLoginFlWish()">{{ __('home.Wish list') }}</a>
             </div>
-            <div class="header-right d-flex align-items-center w-25">
+            <div class="header-right d-flex align-items-center box-item-profile-header">
                 @if(Auth::check())
                     <div class="dropdown">
                         <div class="d-flex dropdown-toggle justify-content-between" type="button" data-toggle="dropdown"

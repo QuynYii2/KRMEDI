@@ -18,7 +18,7 @@
 @endphp
 
 <link href="{{ asset('css/component-doctor.css') }}" rel="stylesheet">
-<div class="col-6 col-sm-6 col-md-3 mb-3">
+<div class="col-6 col-sm-6 col-lg-3 col-md-4 mb-3">
     <div class="frame component-doctor">
         <img loading="lazy" class="rectangle border-img"
              src="{{asset($pharmacist->avt)}}"/>

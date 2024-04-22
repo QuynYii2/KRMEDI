@@ -1,5 +1,12 @@
 @extends('layouts.master')
 @section('title', 'News')
+<style>
+    @media (max-width: 992px) {
+        .main-header {
+            display: none;
+        }
+    }
+</style>
 @section('content')
     @include('layouts.partials.header')
     @include('component.banner')

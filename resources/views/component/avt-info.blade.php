@@ -2,7 +2,7 @@
     <div class="col-md-2 d-flex justify-content-center col-2">
         <img class="img-info" src="{{asset('img/flea-market/avatar-phi.png')}}">
     </div>
-    <div class="col-md-8 col-10">
+    <div class="col-lg-8 col-md-10 col-10">
         <div class="d-mb-flex">
             <div class="info col-8 pl-0">
                 @php
@@ -50,21 +50,21 @@
             <div class="col-4 col-md-3 p-1 d-flex font-12-mobi">{{ __('home.Following') }}: <span class="font-weight-800">50</span></div>
         </div>
     </div>
-    <div class="col-md-2 mobile-hidden">
+    <div class="col-lg-2 col-12 mobile-hidden">
 
         <div class="d-flex">
             @if(\Illuminate\Support\Facades\Auth::check())
                 @if( $id != Auth::user()->id)
-                    <a href="" class="flea-button">
+                    <a href="" class="flea-button flea-buttons">
                         {{ __('home.FOLLOW') }}
                     </a>
                 @else
-                    <a href="{{route('flea.market.sell.product')}}" class="flea-button">
+                    <a href="{{route('flea.market.sell.product')}}" class="flea-button flea-buttons">
                         {{ __('home.Sell my product') }}
                     </a>
                 @endif
             @else
-                <a onclick="alertLogin();" class="flea-button">
+                <a onclick="alertLogin();" class="flea-button flea-buttons">
                     {{ __('home.FOLLOW') }}
                 </a>
             @endif

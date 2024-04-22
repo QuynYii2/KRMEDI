@@ -59,7 +59,7 @@
                 let product = res[i];
                 let url = `{{ route('flea.market.product.detail', ['id' => ':id']) }}`.replace(':id', product.id);
                 html += `
-                        <div class="col-md-3 col-6">
+                        <div class="col-xl-3 col-md-4 col-6">
                             <div class="product-item">
                                 <div class="img-pro img-pro-wishList2">
                                     <img loading="lazy" class="b-radius-8px" src="${product.thumbnail}" alt="">

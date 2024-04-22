@@ -39,7 +39,7 @@
         display: block;
     }
 </style>
-<div class="col-sm-3 mb-3 col-6">
+<div class="col-sm-6 col-lg-3 col-md-4 mb-3 col-6">
     <div class="m-md-2 {{ $isSoldOut ? 'sold-out-overlay' : '' }}">
         <div class="frame component-medicine w-100">
             <div class="img-pro justify-content-center d-flex img_product--homeNew">

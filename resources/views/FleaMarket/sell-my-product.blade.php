@@ -139,18 +139,18 @@
                 <div class="text-font-24 mt-4 col-md-12 font-14-mobi">
                     <p><span>{{ __('home.Please choose you adertisement plan') }} </span><span
                             class="red-color">*</span></p>
-                    <div class="mt-2 d-flex font-12-mobi">
-                        <div class="text-wrapper-input col-md-4 d-flex pl-0">
+                    <div class="mt-2 d-flex font-12-mobi align-items-center">
+                        <div class="text-wrapper-input col-md-4 d-flex pl-0 align-items-center">
                             <input type="radio" class="web-tick-box" name="ads_plan" id="ads_plan1" value="1">
-                            <label for="ads_plan1" class="ml-2"><strong>{{ __('home.Platinum') }}</strong></label>
+                            <label for="ads_plan1" class="ml-2 text-ads-plan"><strong>{{ __('home.Platinum') }}</strong></label>
                         </div>
-                        <div class="col-md-4 d-flex text-wrapper-input ">
+                        <div class="col-md-4 d-flex text-wrapper-input align-items-center">
                             <input type="radio" class="web-tick-box" name="ads_plan" id="ads_plan2" value="2">
-                            <label for="ads_plan2" class=" ml-2"><strong>{{ __('home.Premium') }}</strong></label>
+                            <label for="ads_plan2" class=" ml-2 text-ads-plan"><strong>{{ __('home.Premium') }}</strong></label>
                         </div>
-                        <div class="col-md-4 d-flex text-wrapper-input">
+                        <div class="col-md-4 d-flex text-wrapper-input align-items-center">
                             <input type="radio" class="web-tick-box" name="ads_plan" id="ads_plan3" value="3">
-                            <label for="ads_plan3" class=" ml-2"><strong>{{ __('home.Silver') }}</strong></label>
+                            <label for="ads_plan3" class=" ml-2 text-ads-plan"><strong>{{ __('home.Silver') }}</strong></label>
                         </div>
                     </div>
                 </div>
@@ -160,19 +160,19 @@
                         <div class="text-wrapper-input col-md-3 d-flex pl-0">
                             <input type="radio" class="web-tick-box" name="ads_period" id="ads_period1"
                                    value="1">
-                            <label for="ads_period1" class="ml-2"><strong>{{ __('home.5 Day') }}</strong></label>
+                            <label for="ads_period1" class="ml-2 text-ads-plan"><strong>{{ __('home.5 Day') }}</strong></label>
                         </div>
                         <div class="col-md-3 d-flex text-wrapper-input pl-0 ">
                             <input type="radio" class="web-tick-box" name="ads_period" id="ads_period2" value="2">
-                            <label for="ads_period2" class=" ml-2"><strong>{{ __('home.10 Day') }}</strong></label>
+                            <label for="ads_period2" class=" ml-2 text-ads-plan"><strong>{{ __('home.10 Day') }}</strong></label>
                         </div>
                         <div class="col-md-3 d-flex text-wrapper-input pl-0">
                             <input type="radio" class="web-tick-box" name="ads_period" id="ads_period3" value="3">
-                            <label for="ads_period3" class=" ml-2"><strong>{{ __('home.15 Day') }}</strong></label>
+                            <label for="ads_period3" class=" ml-2 text-ads-plan"><strong>{{ __('home.15 Day') }}</strong></label>
                         </div>
                         <div class="col-md-3 d-flex text-wrapper-input pl-0">
                             <input type="radio" class="web-tick-box" name="ads_period" id="ads_period4" value="4">
-                            <label for="ads_period4" class=" ml-2"><strong>{{ __('home.20 Day') }}</strong></label>
+                            <label for="ads_period4" class=" ml-2 text-ads-plan"><strong>{{ __('home.20 Day') }}</strong></label>
                         </div>
                     </div>
                 </div>

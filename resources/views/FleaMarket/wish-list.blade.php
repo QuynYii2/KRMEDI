@@ -13,7 +13,7 @@
             text-overflow: ellipsis;
         }
     </style>
-    <div class="container mt-70">
+    <div class="container mt-70 box-wish-list">
         <div class="pc-hidden">@include('What-free.header-wFree')</div>
         <div class="d-flex mt-88">
             <div class="col-md-3  mobile-hidden">
@@ -44,12 +44,12 @@
                             </header>
                             <div class="price-input">
                                 <div class="field">
-                                    <input type="number" class="input-min" id="input-min" value="2500000"
+                                    <input type="number" class="input-min" id="input-min" value="0"
                                            onchange="callListProduct()">
                                 </div>
                                 <div class="separator">-</div>
                                 <div class="field">
-                                    <input type="number" class="input-max" id="input-max" value="7500000"
+                                    <input type="number" class="input-max" id="input-max" value="0"
                                            onchange="callListProduct()">
                                 </div>
                             </div>
@@ -70,7 +70,7 @@
                 <div class="mt-100">
                     <div class=" w-100 row align-items-center justify-content-center">
                         <div class="p-0">
-                            <img loading="lazy" src="{{asset('img/image 16.png')}}" alt="" style="height: 682px">
+                            <img loading="lazy" src="{{asset('img/image 16.png')}}" alt="">
                         </div>
                     </div>
                 </div>
@@ -80,25 +80,25 @@
                 </div>
             </div>
         </div>
-        <nav aria-label="Page navigation example" class="d-flex justify-content-center">
-            <ul class="pagination">
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                        <span class="sr-only">{{ __('home.Previous') }}</span>
-                    </a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                        <span class="sr-only">{{ __('home.Next') }}</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+{{--        <nav aria-label="Page navigation example" class="d-flex justify-content-center">--}}
+{{--            <ul class="pagination">--}}
+{{--                <li class="page-item">--}}
+{{--                    <a class="page-link" href="#" aria-label="Previous">--}}
+{{--                        <span aria-hidden="true">&laquo;</span>--}}
+{{--                        <span class="sr-only">{{ __('home.Previous') }}</span>--}}
+{{--                    </a>--}}
+{{--                </li>--}}
+{{--                <li class="page-item"><a class="page-link" href="#">1</a></li>--}}
+{{--                <li class="page-item"><a class="page-link" href="#">2</a></li>--}}
+{{--                <li class="page-item"><a class="page-link" href="#">3</a></li>--}}
+{{--                <li class="page-item">--}}
+{{--                    <a class="page-link" href="#" aria-label="Next">--}}
+{{--                        <span aria-hidden="true">&raquo;</span>--}}
+{{--                        <span class="sr-only">{{ __('home.Next') }}</span>--}}
+{{--                    </a>--}}
+{{--                </li>--}}
+{{--            </ul>--}}
+{{--        </nav>--}}
     </div>
     </body>
     <script>
@@ -225,7 +225,7 @@
                 let product = res[i];
                 let url = `{{ route('flea.market.product.detail', ['id' => ':id']) }}`.replace(':id', product.id);
                 html += `
-                        <div class="col-md-3 col-6">
+                        <div class="col-xl-3 col-md-4 col-6">
                             <div class="product-item">
                                 <div class="img-pro">
                                     <img loading="lazy" class="b-radius-8px" src="${product.thumbnail}" alt="">

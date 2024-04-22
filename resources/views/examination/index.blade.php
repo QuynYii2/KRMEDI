@@ -7,8 +7,8 @@
         <div class="d-md-flex d-none
          w-100">
             <div id="filter" class="box--3 w-100 ">
-                <form action="{{ route('examination.index') }}" method="get" class="row" id="searchForm">
-                    <div class="col-sm-2 col">
+                <form action="{{ route('examination.index') }}" method="get" class="row d-flex" id="searchForm">
+                    <div class="col-lg-2 col-md-4 col">
                         <div class="form-group">
                             <label for="exampleFormControlSelect2">{{ __('home.Department') }}</label>
                             <select class="form-control" name="department_id" onchange="submitForm()">
@@ -22,7 +22,7 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-2 col">
+                    <div class="col-lg-2 col-md-4 col">
                         <div class="form-group">
                             <label for="exampleFormControlSelect2">{{ __('home.Location') }}</label>
                             <select class="form-control" name="province_id" onchange="submitForm()">
@@ -35,7 +35,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-sm-2 col">
+                    <div class="col-lg-2 col-md-4 col">
                         <div class="form-group">
                             <label for="exampleFormControlSelect2">{{ __('home.Hospital') }}</label>
                             <select class="form-control" name="hospital_id" onchange="submitForm()">
@@ -48,7 +48,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-sm-2 col">
+                    <div class="col-lg-2 col-md-4 col">
                         <div class="form-group">
                             <label for="exampleFormControlSelect2">{{ __('home.Experience') }}</label>
                             <select class="form-control" name="year_of_experience" onchange="submitForm()">
@@ -61,7 +61,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-sm-4 col">
+                    <div class="col-lg-4 col-md-8 col">
                         <div class="form-group position-relative">
                             <label for="inputSearchDoctor" class="fa fa-search form-control-feedback"></label>
                             <input type="search" id="inputSearchDoctor" class="form-control"
