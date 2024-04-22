@@ -11,6 +11,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Http\Request;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class ProcessBooking implements ShouldQueue
 {
@@ -31,20 +32,25 @@ class ProcessBooking implements ShouldQueue
      */
     public function handle(): void
     {
-        $newBooking = $this->booking;
+        try {
+            $newBooking = $this->booking;
 
-        $bookingController = new BookingController();
-        $bookingController->sendMessageToUserOnBookingCreated($newBooking);
-        // $bookingController->sendOAMessageFromAdminToClinic($newBooking);
+            $bookingController = new BookingController();
+            $bookingController->sendMessageToUserOnBookingCreated($newBooking);
+            // $bookingController->sendOAMessageFromAdminToClinic($newBooking);
 
-        // Send Noti
-        $mainApi = new MainApi();
-        $newRequestData = [
-            'id' => $newBooking->id,
-            'user_id' => $newBooking->user_id,
-            'clinic_id' => $newBooking->clinic_id,
-        ];
-        $request = new Request($newRequestData);
-        $mainApi->sendFcmNotification($request);
+            // Send Noti
+            $mainApi = new MainApi();
+            $newRequestData = [
+                'id' => $newBooking->id,
+                'user_id' => $newBooking->user_id,
+                'clinic_id' => $newBooking->clinic_id,
+            ];
+            $request = new Request($newRequestData);
+            $mainApi->sendFcmNotification($request);
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Error processing booking: ' . $e->getMessage());
+        }
     }
 }

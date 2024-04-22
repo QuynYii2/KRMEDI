@@ -129,7 +129,7 @@ class ClinicController extends Controller
     public function store(Request $request)
     {
         try {
-            if (Auth::user() == null) {
+            if (!Auth::check()) {
                 alert()->error('Error', 'Please login to booking.');
                 return back();
             } else {
@@ -138,7 +138,7 @@ class ClinicController extends Controller
                         alert()->error('Error', 'Bạn chưa chọn thành viên trong gia đình!');
                         return back();
                     } elseif ($request->input('member_family_id') == 'myself') {
-                        $request->merge(['member_family_id' => '']);
+                        $request->merge(['member_family_id' => null]);
                     }
                 }
                 $bookingApi = new BookingApi();
@@ -154,11 +154,11 @@ class ClinicController extends Controller
                     alert()->success('Success', 'Booking success.');
                     return back()->with('success', 'Booking success');
                 }
+                alert()->error('Error', json_decode($booking->getContent())->message ?? "Booking error");
+                return back()->with('error', 'Booking error');
             }
-            alert()->error('Error', 'Booking error.');
-            return back()->with('error', 'Booking error');
         } catch (\Exception $e) {
-            alert()->error('Error', 'Please try again');
+            alert()->error('Error', $e->getMessage());
             return back()->with('error', 'Booking error');
         }
     }

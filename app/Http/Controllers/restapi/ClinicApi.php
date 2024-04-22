@@ -148,18 +148,18 @@ class ClinicApi extends Controller
         $search_input_clinics = $request->input('search_input_clinics');
         $clinic_specialist = $request->input('clinic_specialist');
         $clinic_location = $request->input('clinic_location');
+        $clinic_symptom = $request->input('clinic_symptom');
 
         $clinics = DB::table('clinics')
             ->join('users', 'users.id', '=', 'clinics.user_id')
-            ->where('clinics.status', ClinicStatus::ACTIVE);
+            ->where('clinics.status', ClinicStatus::ACTIVE)
+            ->where('clinics.type', \App\Enums\TypeBusiness::CLINICS);
 
         if ($search_input_clinics) {
             $clinics->where(function ($query) use ($search_input_clinics) {
                 $query->where('clinics.name', 'LIKE', '%' . $search_input_clinics . '%')
                     ->orWhere('clinics.name_en', 'LIKE', '%' . $search_input_clinics . '%')
-                    ->orWhere('clinics.name_laos', 'LIKE', '%' . $search_input_clinics . '%')
-                    ->orWhere('clinics.phone', 'LIKE', '%' . $search_input_clinics . '%')
-                    ->orWhere('clinics.email', 'LIKE', '%' . $search_input_clinics . '%');
+                    ->orWhere('clinics.name_laos', 'LIKE', '%' . $search_input_clinics . '%');
             });
         }
 
@@ -171,6 +171,10 @@ class ClinicApi extends Controller
             $clinics->where('clinics.address', 'LIKE', '%' . $clinic_location . '%')
                 ->where('clinics.address', 'LIKE', '%' . $clinic_location . '%')
                 ->where('clinics.address', 'LIKE', '%' . $clinic_location . '%');
+        }
+
+        if ($clinic_symptom) {
+            $clinics->whereRaw("FIND_IN_SET(?, clinics.symptom)", [$clinic_symptom]);
         }
 
         $clinics = $clinics->select('clinics.*', 'users.email')
