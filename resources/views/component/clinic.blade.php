@@ -150,7 +150,6 @@
                         currentLocation.lat, currentLocation.lng,
                         parseFloat(res[i].latitude), parseFloat(res[i].longitude)
                     );
-                    console.log(distance, res[i].name)
                     // Chọn bán kính tìm kiếm (ví dụ: 10 km)
                     var searchRadius = 10;
                     if (distance <= searchRadius) {

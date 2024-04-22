@@ -247,7 +247,6 @@
                     </div>
                     `;
 
-
                     productInformationDiv.innerHTML += html;
                 }
             });

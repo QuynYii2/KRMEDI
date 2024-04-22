@@ -1,6 +1,18 @@
-@php use App\Enums\online_medicine\FilterOnlineMedicine;use App\Enums\online_medicine\ObjectOnlineMedicine;use App\Http\Controllers\MainController;use App\Models\User;use Illuminate\Support\Facades\Auth; @endphp
+@php
+    use App\Enums\online_medicine\FilterOnlineMedicine;
+    use App\Enums\online_medicine\ObjectOnlineMedicine;
+    use App\Http\Controllers\MainController;
+    use App\Models\User;
+    use Illuminate\Support\Facades\Auth;
+@endphp
 
-<link rel="stylesheet" href="{{asset('css/clinics-style.css')}}">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
+<link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+<link rel="stylesheet" href="{{ asset('css/clinics-style.css') }}">
 
 <style>
     .background-img-clinic-mobile {
@@ -38,17 +50,16 @@
             <div class=" medicine-search ">
                 <div class="medicine-search--center ">
                     <form class="search-box">
-                        <input type="search" name="focus"
-                               placeholder="{{ __('home.Search for anything…') }}" id="search-input" value="">
+                        <input type="search" name="focus" placeholder="{{ __('home.Search for anything…') }}"
+                            id="search-input" value="">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </form>
                 </div>
             </div>
         </div>
         <a class="col-2">
-            <button type="button"
-                    class="btnModalCart shopping-bag"  data-bs-toggle="offcanvas"
-                    data-bs-target="#filterNavbar">
+            <button type="button" class="btnModalCart shopping-bag" data-bs-toggle="offcanvas"
+                data-bs-target="#filterNavbar">
                 <i class="bi bi-filter"></i>
             </button>
         </a>
@@ -58,13 +69,13 @@
 <div class="background-image_Clinics mb-5 d-none d-sm-flex">
     <div class="container">
         <div class=" justify-content-center align-items-center mb-5 d-none d-sm-flex">
-            <div class="title-list-clinic">{{__('home.Y tế gần bạn')}}</div>
+            <div class="title-list-clinic">{{ __('home.Y tế gần bạn') }}</div>
         </div>
         <div class=" medicine-search d-block d-sm-none">
             <div class="medicine-search--center row">
                 <form class="search-box col-12">
-                    <input type="search" name="focus"
-                           placeholder="{{ __('home.Search for anything…') }}" id="search-input" value="">
+                    <input type="search" name="focus" placeholder="{{ __('home.Search for anything…') }}"
+                        id="search-input" value="">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </form>
             </div>
@@ -72,41 +83,45 @@
         <div class="border-search-clinics d-none d-sm-flex">
             <div class="col-md-12 p-0">
                 <label for="search_input_clinics" class="label-input-clinic">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
+                        fill="none">
                         <path fill-rule="evenodd" clip-rule="evenodd"
-                              d="M14.8571 7.42857C14.8571 3.32588 11.5313 0 7.42857 0C3.32588 0 0 3.32588 0 7.42857C0 11.5313 3.32588 14.8571 7.42857 14.8571C9.26857 14.8571 10.96 14.1829 12.2629 13.0743L12.5714 13.3829V14.2857L18.2857 20L20 18.2857L14.2857 12.5714H13.3829L13.0743 12.2629C14.1829 10.96 14.8571 9.26857 14.8571 7.42857ZM2.28571 7.42857C2.28571 4.57143 4.57143 2.28571 7.42857 2.28571C10.2857 2.28571 12.5714 4.57143 12.5714 7.42857C12.5714 10.2857 10.2857 12.5714 7.42857 12.5714C4.57143 12.5714 2.28571 10.2857 2.28571 7.42857Z"
-                              fill="black"/>
+                            d="M14.8571 7.42857C14.8571 3.32588 11.5313 0 7.42857 0C3.32588 0 0 3.32588 0 7.42857C0 11.5313 3.32588 14.8571 7.42857 14.8571C9.26857 14.8571 10.96 14.1829 12.2629 13.0743L12.5714 13.3829V14.2857L18.2857 20L20 18.2857L14.2857 12.5714H13.3829L13.0743 12.2629C14.1829 10.96 14.8571 9.26857 14.8571 7.42857ZM2.28571 7.42857C2.28571 4.57143 4.57143 2.28571 7.42857 2.28571C10.2857 2.28571 12.5714 4.57143 12.5714 7.42857C12.5714 10.2857 10.2857 12.5714 7.42857 12.5714C4.57143 12.5714 2.28571 10.2857 2.28571 7.42857Z"
+                            fill="black" />
                     </svg>
                 </label>
-                <input class="m-0 form-select" type="search" name="focus" onkeypress="processSearchClinics();"
-                       placeholder="{{ __('home.Search for anything…') }}"
-                       id="search_input_clinics" value="">
+                <input class="m-0 form-select" type="search" name="focus" onkeyup="processSearchClinics();"
+                    placeholder="{{ __('home.Search for anything…') }}" id="search_input_clinics" value="">
             </div>
             <div class="col-md-12 p-0 d-flex">
                 <div class="col-md-5 pl-0">
-                    <select class="form-select_clinics" aria-label="Default select example" id="clinic_specialist">
-                        <option selected>{{__('home.Select specialist')}}</option>
+                    <label for="clinic_specialist">Chọn chuyên khoa</label>
+                    <select class="form-select_clinics specialist_selector" aria-label="Default select example"
+                        id="clinic_specialist">
+                        <option selected disabled>Chọn chuyên khoa</option>
                     </select>
                 </div>
                 <div class="col-md-5">
-                    <select class="form-select_clinics" aria-label="Default select example" id="clinic_location">
-                        <option selected>{{__('home.Select location')}}</option>
+                    <label for="clinic_symptom">Chọn triệu chứng</label>
+                    <select class="form-select_clinics symptom_selector" aria-label="Default select example"
+                        id="clinic_symptom">
+                        <option selected disabled>Chọn triệu chứng</option>
                     </select>
                 </div>
-                <div class="col-md-2 d-flex justify-content-between pr-0">
+                <div class="col-md-2 d-flex justify-content-between pr-0 mt-3">
                     <a href="">
                         <div class="reset-button">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                 fill="none">
+                                fill="none">
                                 <path
                                     d="M2 14C2 14 2.12132 14.8492 5.63604 18.364C9.15076 21.8787 14.8492 21.8787 18.364 18.364C19.6092 17.1187 20.4133 15.5993 20.7762 14M2 14V20M2 14H8M22 10C22 10 21.8787 9.15076 18.364 5.63604C14.8492 2.12132 9.15076 2.12132 5.63604 5.63604C4.39076 6.88131 3.58669 8.40072 3.22383 10M22 10V4M22 10H16"
-                                    stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
                         </div>
                     </a>
-                    <div class="search-button--clinics col-md-8 p-0" id="btnSearchClinics" style="cursor: pointer">
-                        {{__('home.Tìm kiếm')}}
-                    </div>
+                    {{-- <div class="search-button--clinics col-md-8 p-0" id="btnSearchClinics" style="cursor: pointer">
+                        {{ __('home.Tìm kiếm') }}
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -117,8 +132,8 @@
 
 <div class="offcanvas offcanvas-end" tabindex="-1" id="filterNavbar" aria-labelledby="offcanvasNavbarLabel">
     <div class="offcanvas-header">
-        <a href="{{route('home')}}" class="offcanvas-title" id="offcanvasNavbarLabel"><img loading="lazy" class="w-100"
-                                                                                           src="{{asset('img/icons_logo/logo-new.png')}}"></a>
+        <a href="{{ route('home') }}" class="offcanvas-title" id="offcanvasNavbarLabel"><img loading="lazy"
+                class="w-100" src="{{ asset('img/icons_logo/logo-new.png') }}"></a>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
@@ -130,25 +145,23 @@
                 </div>
                 <div class="filter-body">
                     <div class="d-flex item">
-                        <input type="checkbox" name="filter_" value="0" onchange="searchFilterMedicine(this.value)">
+                        <input type="checkbox" name="filter_" value="0"
+                            onchange="searchFilterMedicine(this.value)">
                         <div class="text-all">{{ __('home.All') }}</div>
                     </div>
                     <div class="d-flex item">
-                        <input type="checkbox" name="filter_"
-                               value="{{ FilterOnlineMedicine::HEALTH }}"
-                               onchange="searchFilterMedicine(this.value)">
+                        <input type="checkbox" name="filter_" value="{{ FilterOnlineMedicine::HEALTH }}"
+                            onchange="searchFilterMedicine(this.value)">
                         <div class="text">{{ __('home.Heath') }}</div>
                     </div>
                     <div class="d-flex item">
-                        <input type="checkbox" name="filter_"
-                               value="{{ FilterOnlineMedicine::BEAUTY }}"
-                               onchange="searchFilterMedicine(this.value)">
+                        <input type="checkbox" name="filter_" value="{{ FilterOnlineMedicine::BEAUTY }}"
+                            onchange="searchFilterMedicine(this.value)">
                         <div class="text">{{ __('home.Beauty') }}</div>
                     </div>
                     <div class="d-flex item">
-                        <input type="checkbox" name="filter_"
-                               value="{{ FilterOnlineMedicine::PET }}"
-                               onchange="searchFilterMedicine(this.value)">
+                        <input type="checkbox" name="filter_" value="{{ FilterOnlineMedicine::PET }}"
+                            onchange="searchFilterMedicine(this.value)">
                         <div class="text">{{ __('home.Pets') }}</div>
                     </div>
                 </div>
@@ -161,25 +174,22 @@
                 <div class="filter-body">
                     <div class="d-flex item">
                         <input type="checkbox" value="{{ ObjectOnlineMedicine::KIDS }}"
-                               onchange="objectFilterMedicine(this.value)">
+                            onchange="objectFilterMedicine(this.value)">
                         <div class="text">{{ __('home.For kids') }}</div>
                     </div>
                     <div class="d-flex item">
-                        <input type="checkbox"
-                               value="{{ ObjectOnlineMedicine::FOR_WOMEN }}"
-                               onchange="objectFilterMedicine(this.value)">
+                        <input type="checkbox" value="{{ ObjectOnlineMedicine::FOR_WOMEN }}"
+                            onchange="objectFilterMedicine(this.value)">
                         <div class="text">{{ __('home.For women') }}</div>
                     </div>
                     <div class="d-flex item">
-                        <input type="checkbox"
-                               value="{{ ObjectOnlineMedicine::FOR_MEN }}"
-                               onchange="objectFilterMedicine(this.value)">
+                        <input type="checkbox" value="{{ ObjectOnlineMedicine::FOR_MEN }}"
+                            onchange="objectFilterMedicine(this.value)">
                         <div class="text">{{ __('home.For men') }}</div>
                     </div>
                     <div class="d-flex item">
-                        <input type="checkbox"
-                               value="{{ ObjectOnlineMedicine::FOR_ADULT }}"
-                               onchange="objectFilterMedicine(this.value)">
+                        <input type="checkbox" value="{{ ObjectOnlineMedicine::FOR_ADULT }}"
+                            onchange="objectFilterMedicine(this.value)">
                         <div class="text">{{ __('home.For adults') }}</div>
                     </div>
                 </div>
@@ -193,31 +203,31 @@
                         <div class="price-input">
                             <div class="field">
                                 <input type="number" onchange="performSearch()" id="inputProductMin"
-                                       class="rangePrice input-min" value="0">
+                                    class="rangePrice input-min" value="0">
                             </div>
                             <div class="separator">-</div>
                             <div class="field">
                                 <input type="number" onchange="performSearch()" id="inputProductMax"
-                                       class="rangePrice input-max" value="0">
+                                    class="rangePrice input-max" value="0">
                             </div>
                         </div>
                         <div class="slider">
                             <div class="progress"></div>
                         </div>
                         <div class="range-input">
-                            <input type="range" onchange="performSearch()" class="rangePrice range-min" min="0"
-                                   max="10000000" value="2500000" step="1000">
-                            <input type="range" onchange="performSearch()" class="rangePrice range-max" min="0"
-                                   max="10000000" value="7500000" step="1000">
+                            <input type="range" onchange="performSearch()" class="rangePrice range-min"
+                                min="0" max="10000000" value="2500000" step="1000">
+                            <input type="range" onchange="performSearch()" class="rangePrice range-max"
+                                min="0" max="10000000" value="7500000" step="1000">
                         </div>
                     </div>
                 </div>
             </div>
             <div class="d-flex justify-content-center mt-4">
-                <a  class="add-cv-bt w-100 apply-bt_delete col-6">{{ __('home.Refresh') }}</a>
-                <form  class="col-6 pr-0">
+                <a class="add-cv-bt w-100 apply-bt_delete col-6">{{ __('home.Refresh') }}</a>
+                <form class="col-6 pr-0">
                     <button type="button" data-bs-dismiss="offcanvas" aria-label="Close"
-                            class="add-cv-bt apply-bt_edit w-100">{{ __('home.Apply') }}</button>
+                        class="add-cv-bt apply-bt_edit w-100">{{ __('home.Apply') }}</button>
                 </form>
             </div>
         </div>
@@ -225,40 +235,40 @@
 </div>
 
 <script>
-    let accessToken = `Bearer ` + token;
-
-    $(document).ready(function () {
-        $('#btnSearchClinics').click(function () {
+    $(document).ready(function() {
+        $('#btnSearchClinics').click(function() {
             searchClinics();
         })
 
-        $('#clinic_specialist').change(function () {
+        $('#clinic_specialist').change(function() {
             searchClinics();
         })
 
-        $('#clinic_location').change(function () {
+        $('#clinic_symptom').change(function() {
             searchClinics();
         })
 
         loadSpecialist();
-        loadLocation();
+        loadSymptom();
     })
 
     async function processSearchClinics() {
-        if (event.keyCode === 13 && !event.shiftKey) {
+        //Enter press
+        if (event.keyCode == 13) {
             await searchClinics();
         }
     }
 
-    async function searchClinics() {
+    async function searchClinics(searchKey = null) {
         loadingMasterPage();
-        let urlSearch = `{{route('clinics.restapi.search')}}`;
+        let urlSearch = `{{ route('clinics.restapi.search') }}`;
 
         let search_input_clinics = document.getElementById('search_input_clinics').value;
         let clinic_specialist = document.getElementById('clinic_specialist').value;
-        let clinic_location = document.getElementById('clinic_location').value;
+        let clinic_symptom = document.getElementById('clinic_symptom').value;
 
-        urlSearch = urlSearch + `?search_input_clinics=${search_input_clinics}&clinic_specialist=${clinic_specialist}&clinic_location=${clinic_location}`;
+        urlSearch = urlSearch +
+            `?search_input_clinics=${search_input_clinics}&clinic_specialist=${clinic_specialist}&clinic_symptom=${clinic_symptom}`;
 
         await $.ajax({
             url: urlSearch,
@@ -266,13 +276,14 @@
             headers: {
                 "Authorization": accessToken
             },
-            success: function (response) {
+            success: function(response) {
+                console.log(response)
                 renderClinics(response);
                 setTimeout(() => {
                     loadingMasterPage();
                 }, '500');
             },
-            error: function (exception) {
+            error: function(exception) {
                 console.log(exception)
                 setTimeout(() => {
                     loadingMasterPage();
@@ -343,18 +354,18 @@
             headers: {
                 "Authorization": accessToken
             },
-            success: function (response) {
+            success: function(response) {
                 renderSpecialist(response);
+                initialSelect2($('.specialist_selector'));
             },
-            error: function (exception) {
+            error: function(exception) {
                 console.log(exception)
             }
         });
     }
 
     function renderSpecialist(response) {
-        console.log(response);
-        let html = `<option value="">{{__('home.Select specialist')}}</option>`;
+        let html = `<option value="" selected disabled>Chọn chuyên khoa</option>`;
         for (let i = 0; i < response.length; i++) {
             let data = response[i];
 
@@ -363,8 +374,8 @@
         $('#clinic_specialist').empty().append(html);
     }
 
-    async function loadLocation() {
-        let urlList = `{{ route('restapi.get.provinces') }}`;
+    async function loadSymptom() {
+        let urlList = `{{ route('restapi.symptoms.list') }}`;
 
         let accessToken = `Bearer ` + token;
         await $.ajax({
@@ -373,22 +384,30 @@
             headers: {
                 "Authorization": accessToken
             },
-            success: function (response) {
-                renderLocation(response);
+            success: function(response) {
+                renderSymptom(response);
+                initialSelect2($('.symptom_selector'));
             },
-            error: function (exception) {
+            error: function(exception) {
                 console.log(exception)
             }
         });
     }
 
-    function renderLocation(response) {
-        let html = `<option value="">{{__('home.Select location')}}</option>`;
+    function renderSymptom(response) {
+        let html = `<option value="" selected disabled>Chọn triệu chứng</option>`;
         for (let i = 0; i < response.length; i++) {
             let data = response[i];
 
-            html += `<option value="${data.name}">${data.full_name}</option>`;
+            html += `<option value="${data.id}">${data.name}</option>`;
         }
-        $('#clinic_location').empty().append(html);
+        $('#clinic_symptom').empty().append(html);
+    }
+
+    function initialSelect2(selectElement) {
+        selectElement.select2({
+            theme: 'bootstrap-5',
+            minimumInputLength: 1,
+        });
     }
 </script>
