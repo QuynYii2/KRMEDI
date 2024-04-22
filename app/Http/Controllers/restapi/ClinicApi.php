@@ -152,15 +152,14 @@ class ClinicApi extends Controller
 
         $clinics = DB::table('clinics')
             ->join('users', 'users.id', '=', 'clinics.user_id')
-            ->where('clinics.status', ClinicStatus::ACTIVE);
+            ->where('clinics.status', ClinicStatus::ACTIVE)
+            ->where('clinics.type', \App\Enums\TypeBusiness::CLINICS);
 
         if ($search_input_clinics) {
             $clinics->where(function ($query) use ($search_input_clinics) {
                 $query->where('clinics.name', 'LIKE', '%' . $search_input_clinics . '%')
                     ->orWhere('clinics.name_en', 'LIKE', '%' . $search_input_clinics . '%')
-                    ->orWhere('clinics.name_laos', 'LIKE', '%' . $search_input_clinics . '%')
-                    ->orWhere('clinics.phone', 'LIKE', '%' . $search_input_clinics . '%')
-                    ->orWhere('clinics.email', 'LIKE', '%' . $search_input_clinics . '%');
+                    ->orWhere('clinics.name_laos', 'LIKE', '%' . $search_input_clinics . '%');
             });
         }
 

@@ -84,7 +84,7 @@
     @include('layouts.partials.header')
     @include('What-free.header-wFree')
     <div class="container" id="listClinics">
-        @php
+        {{-- @php
             $address = DB::table('clinics')
                 ->join('users', 'users.id', '=', 'clinics.user_id')
                 ->where('clinics.status', \App\Enums\ClinicStatus::ACTIVE)
@@ -111,7 +111,7 @@
                     return $clinic;
                 });
             $adr = $address->toArray();
-        @endphp
+        @endphp --}}
         <div class="clinics-list">
             <div class="clinics-header row">
                 <div class=" d-flex justify-content-between">
@@ -123,18 +123,15 @@
             <div class="body row" id="productInformation"></div>
 
         </div>
-        <div class="other-clinics">
+        {{-- <div class="other-clinics">
             <div class="title">
                 {{ __('home.Other Clinics/Pharmacies') }}
             </div>
             @include('component.clinic')
-        </div>
+        </div> --}}
     </div>
 
     <script>
-        var addressNew = {!! json_encode($adr) !!};
-        var infoWindows = [];
-
         function getCurrentLocation(callback) {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
@@ -168,86 +165,18 @@
             return degrees * (Math.PI / 180);
         }
 
-        function initShowProducts(currentLocation, locations) {
-            var productInformationDiv = document.getElementById('productInformation');
-            locations.forEach(function(item) {
-                var distance = calculateDistance(
-                    currentLocation.lat, currentLocation.lng,
-                    parseFloat(item.latitude), parseFloat(item.longitude)
-                );
-
-                // Chọn bán kính tìm kiếm (ví dụ: 10 km)
-                var searchRadius = 10;
-                if (distance <= searchRadius) {
-                    var urlDetail = "{{ route('clinic.detail', ['id' => ':id']) }}".replace(':id', item.id);
-
-                    let img = '';
-                    let gallery = item.gallery;
-                    let arrayGallery = gallery.split(',');
-                    img += `<img class="mr-2 img-item1" src="${arrayGallery[0]}" alt="">`;
-                    // for (let j = 0; j < arrayGallery.length; j++) {
-                    // }
-                    let serviceHtml = ``;
-                    let service = item.services;
-                    for (let j = 0; j < service.length; j++) {
-                        let serviceItem = service[j];
-                        serviceHtml = serviceHtml + `<span>${serviceItem.name},</span>`;
-                    }
-                    let openDate = new Date(item.open_date);
-                    let closeDate = new Date(item.close_date);
-
-                    let formattedOpenDate = openDate.toLocaleTimeString(undefined, {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-                    let formattedCloseDate = closeDate.toLocaleTimeString(undefined, {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-
-                    let html = `
-                    <div class="specialList-clinics col-md-6 mt-3">
-                        <a href="${urlDetail}">
-                            <div class="border-specialList">
-                                 <div class="content__item d-flex gap-3">
-                                      <div class="specialList-clinics--img">
-                                           ${img}
-                                      </div>
-                                      <div class="specialList-clinics--main w-100">
-                                           <div class="title-specialList-clinics">
-
-                                                @if (locationHelper() == 'vi')
-                                                    ${item.name}
-                                                    @else
-                                                    ${item.name_en}
-                                                    @endif
-                                           </div>
-                                      <div class="address-specialList-clinics">
-                                 <div class="d-flex align-items-center address-clinics">
-                                      <i class="fas fa-map-marker-alt mr-2"></i>
-                                      <div>${item.address_detail} ${item.addressInfo}</div>
-                                 </div>
-                                    <span class="distance"> ${distance.toFixed(2)} Km</span>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                                <div class="time-working">
-                                    <span class="color-timeWorking">
-                                        <span class="fs-14 font-weight-600">${formattedOpenDate} - ${formattedCloseDate}</span>
-                                        </span>
-                                        <span>/ {{ __('home.Dental Clinic') }}</span>
-                                </div>
-                                @if (Auth::check())
-                                    <div class="zalo-follow-only-button" data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
-                                @endif
-                            </div>
-                            </div>
-                            </div>
-                            </div>
-                        </a>
-                    </div>
-                    `;
-
-                    productInformationDiv.innerHTML += html;
+        function initShowProducts() {
+            $.ajax({
+                url: `{{ route('clinics.restapi.search') }}`,
+                method: 'GET',
+                headers: {
+                    "Authorization": accessToken
+                },
+                success: function(response) {
+                    renderClinics(response)
+                },
+                error: function(exception) {
+                    console.log(exception)
                 }
             });
         }
@@ -265,13 +194,98 @@
 
         function loadProductInformation() {
             showSpinner();
-            getCurrentLocation(function(currentLocation) {
-                initShowProducts(currentLocation, addressNew);
-            });
+            initShowProducts();
             hideSpinner();
         }
 
         loadProductInformation();
+
+        function renderClinics(response) {
+            getCurrentLocation(function(currentLocation) {
+                var productInformationDiv = document.getElementById('productInformation');
+                for (let i = 0; i < response.length; i++) {
+                    let item = response[i];
+                    var distance = calculateDistance(
+                        currentLocation.lat, currentLocation.lng,
+                        parseFloat(item.latitude), parseFloat(item.longitude)
+                    );
+
+                    // Chọn bán kính tìm kiếm (ví dụ: 10 km)
+                    var searchRadius = 10;
+                    if (distance >= searchRadius || isNaN(distance)) {
+                        continue;
+                    }
+                    var urlDetail = "{{ route('clinic.detail', ['id' => ':id']) }}".replace(':id', item.id);
+
+                    let img = '';
+                    let gallery = item.gallery;
+                    let arrayGallery = gallery.split(',');
+                    img += `<img class="mr-2 img-item1" src="${arrayGallery[0]}" alt="">`;
+
+                    // let serviceHtml = ``;
+                    // let service = item.services;
+                    // for (let j = 0; j < service.length; j++) {
+                    //     let serviceItem = service[j];
+                    //     serviceHtml = serviceHtml + `<span>${serviceItem.name},</span>`;
+                    // }
+                    let openDate = new Date(item.open_date);
+                    let closeDate = new Date(item.close_date);
+
+                    let formattedOpenDate = openDate.toLocaleTimeString(undefined, {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    let formattedCloseDate = closeDate.toLocaleTimeString(undefined, {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    let html = `
+                            <div class="specialList-clinics col-md-6 mt-3">
+                                <a href="${urlDetail}">
+                                    <div class="border-specialList">
+                                        <div class="content__item d-flex gap-3">
+                                            <div class="specialList-clinics--img">
+                                                ${img}
+                                            </div>
+                                            <div class="specialList-clinics--main w-100">
+                                                <div class="title-specialList-clinics">
+
+                                                        @if (locationHelper() == 'vi')
+                                                            ${item.name}
+                                                            @else
+                                                            ${item.name_en}
+                                                            @endif
+                                                </div>
+                                            <div class="address-specialList-clinics">
+                                        <div class="d-flex align-items-center address-clinics">
+                                            <i class="fas fa-map-marker-alt mr-2"></i>
+                                            <div>${item.address_detail} ${item.addressInfo}</div>
+                                        </div>
+                                            <span class="distance"> ${distance.toFixed(2)} Km</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="time-working">
+                                            <span class="color-timeWorking">
+                                                <span class="fs-14 font-weight-600">${formattedOpenDate} - ${formattedCloseDate}</span>
+                                                </span>
+                                                <span>/ {{ __('home.Dental Clinic') }}</span>
+                                        </div>
+                                        @if (Auth::check())
+                                            <div class="zalo-follow-only-button" data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
+                                        @endif
+                                    </div>
+                                    </div>
+                                    </div>
+                                    </div>
+                                </a>
+                            </div>
+                            `;
+
+                    productInformationDiv.innerHTML += html;
+                }
+            });
+        }
     </script>
 
 @endsection

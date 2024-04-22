@@ -40,6 +40,28 @@
             border: none;
         }
     }
+
+    .address-clinics div {
+        display: -webkit-box;
+        line-height: 1.3;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .title-specialList-clinics {
+        color: #000;
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 800;
+        display: -webkit-box;
+        line-height: 1.3;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 </style>
 <div class="d-block d-sm-none background-img-clinic-mobile">
 
@@ -95,20 +117,18 @@
             </div>
             <div class="col-md-12 p-0 d-flex">
                 <div class="col-md-5 pl-0">
-                    <label for="clinic_specialist">Chọn chuyên khoa</label>
                     <select class="form-select_clinics specialist_selector" aria-label="Default select example"
                         id="clinic_specialist">
                         <option selected disabled>Chọn chuyên khoa</option>
                     </select>
                 </div>
                 <div class="col-md-5">
-                    <label for="clinic_symptom">Chọn triệu chứng</label>
                     <select class="form-select_clinics symptom_selector" aria-label="Default select example"
                         id="clinic_symptom">
                         <option selected disabled>Chọn triệu chứng</option>
                     </select>
                 </div>
-                <div class="col-md-2 d-flex justify-content-between pr-0 mt-3">
+                <div class="col-md-2 d-flex justify-content-between pr-0">
                     <a href="">
                         <div class="reset-button">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -277,8 +297,7 @@
                 "Authorization": accessToken
             },
             success: function(response) {
-                console.log(response)
-                renderClinics(response);
+                renderSearchClinics(response);
                 setTimeout(() => {
                     loadingMasterPage();
                 }, '500');
@@ -292,57 +311,92 @@
         });
     }
 
-    function renderClinics(response) {
-        console.log(response);
-        let html = ``;
-        for (let i = 0; i < response.length; i++) {
-            let data = response[i];
+    function renderSearchClinics(response) {
+        console.log(response)
+        getCurrentLocation(function(currentLocation) {
+            let html = `
+                <div class="clinics-header row">
+                    <div class=" d-flex justify-content-between">
+                        <span class="fs-32px">Phòng khám gần bạn</span>
+                        <span>
+                        </span>
+                    </div>
+                </div>`;
+            for (let i = 0; i < response.length; i++) {
+                let data = response[i];
 
-            let urlDetail = "{{ route('clinic.detail', ['id' => ':id']) }}".replace(':id', data.id);
+                var distance = calculateDistance(
+                    currentLocation.lat, currentLocation.lng,
+                    parseFloat(data.latitude), parseFloat(data.longitude)
+                );
+                // Chọn bán kính tìm kiếm (ví dụ: 10 km)
+                var searchRadius = 10;
+                if (distance >= searchRadius || isNaN(distance)) {
+                    continue;
+                }
 
-            let img = '';
-            let gallery = data.gallery;
-            let arrayGallery = gallery.split(',');
-            img += `<img loading="lazy" class="mr-2 img-item1" src="${arrayGallery[0]}" alt="">`;
+                let urlDetail = "{{ route('clinic.detail', ['id' => ':id']) }}".replace(':id', data.id);
 
+                let img = '';
+                let gallery = data.gallery;
+                let arrayGallery = gallery.split(',');
+                img += `<img loading="lazy" class="mr-2 img-item1" src="${arrayGallery[0]}" alt="">`;
 
-            let openDate = new Date(data.open_date);
-            let closeDate = new Date(data.close_date);
-            let open = openDate.getHours() + ":" + openDate.getMinutes();
-            let close = closeDate.getHours() + ":" + closeDate.getMinutes();
+                let openDate = new Date(data.open_date);
+                let closeDate = new Date(data.close_date);
+                let open = openDate.toLocaleTimeString(undefined, {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                let close = closeDate.toLocaleTimeString(undefined, {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
 
-            html += `
-                    <div class="specialList-clinics col-md-6 mt-5">
+                html += `
+                    <div class="specialList-clinics col-md-6 mt-3">
                         <a href="${urlDetail}">
                             <div class="border-specialList">
-                                 <div class="content__item d-flex gap-3">
-                                      <div class="specialList-clinics--img">
+                                <div class="content__item d-flex gap-3">
+                                    <div class="specialList-clinics--img">
                                            ${img}
-                                      </div>
-                                      <div class="specialList-clinics--main w-100">
-                                           <div class="title-specialList-clinics">
-                                                ${data.name}
-                                           </div>
-                                      <div class="address-specialList-clinics">
-                                 <div class="d-flex align-items-center address-clinics">
-                                      <i class="fas fa-map-marker-alt mr-2"></i>
-                                      <div>${data.address_detail} ${data.addressInfo}</div>
-                                 </div>
-                            </div>
-                            <div class="time-working">
-                                 <span class="color-timeWorking">
-                                    <span class="fs-14 font-weight-600">${open} - ${close}</span>
-                                    </span>
-                            </div>
-                            </div>
-                            </div>
+                                    </div>
+                                    <div class="specialList-clinics--main w-100">
+                                        <div class="title-specialList-clinics">
+                                            ${data.name}
+                                        </div>
+                                        <div class="address-specialList-clinics">
+                                            <div class="d-flex align-items-center address-clinics">
+                                                <i class="fas fa-map-marker-alt mr-2"></i>
+                                                <div>${data.address_detail} ${data.addressInfo}</div>
+                                            </div>
+                                            <span class="distance">${distance.toFixed(2)} Km</span>
+                                        </div>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="time-working">
+                                            <span class="color-timeWorking">
+                                                <span class="fs-14 font-weight-600">${open} - ${close}</span>
+                                            <span>/ {{ __('home.Dental Clinic') }}</span>
+                                            </span>
+                                        </div>
+                                        @if (Auth::check())
+                                            <div class="zalo-follow-only-button" data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
+                                        @endif
+                                    </div>
+                                </div>
+                                </div>
                             </div>
                         </a>
                     </div>
                     `;
-        }
-        let main = `<div class="row">${html}</div>`
-        $('#listClinics').empty().append(main);
+            }
+            if (response.length < 1) {
+                html += 'Không có phòng khám nào phù hợp';
+            }
+            let main = `<div class="row">${html}</div>`
+            $('#productInformation').empty();
+            $('#listClinics').empty().append(main);
+        });
     }
 
     async function loadSpecialist() {
