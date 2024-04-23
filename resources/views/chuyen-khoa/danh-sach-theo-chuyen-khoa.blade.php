@@ -27,6 +27,7 @@
                 </div>
             </form>
 
+
             <div class="d-flex nav-header--homeNew justify-content-center mt-3">
                 <ul class="nav nav-pills nav-fill d-flex justify-content-between">
                     <li class="nav-item">
@@ -49,8 +50,8 @@
                         @foreach ($clinics as $clinic)
                             <div class="specialList-clinics col-md-6 mt-5" data-clinic-id="{{ $clinic->id }}">
                                 <div class="border-specialList">
-                                    <div class="content__item d-flex gap-3">
-                                        <div class="specialList-clinics--img">
+                                    <div class="content__item d-flex gap-3 box-item__content">
+                                        <div class="specialList-clinics--img img-special-line">
                                             @php
                                                 $galleryArray = explode(',', $clinic->gallery);
                                             @endphp

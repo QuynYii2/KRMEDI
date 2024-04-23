@@ -175,6 +175,9 @@
   .content__item__image {
     height: 137px;
   }
+    .content__item__image_detail{
+        height: 137px!important;
+    }
   .thumbnail-title {
     width: 501px;
     height: 334px;

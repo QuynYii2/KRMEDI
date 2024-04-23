@@ -78,6 +78,6 @@ class PrescriptionResultController extends Controller
 
         $value_result = '[' . $prescription->prescriptions . ']';
         $array_result = json_decode($value_result, true);
-        return response()->json(['status'=>true,'listData'=>$array_result]);
+        return response()->json(['status'=>true,'listData'=>$array_result,'prescription'=>$prescription]);
     }
 }

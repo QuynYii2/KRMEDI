@@ -60,12 +60,12 @@ class AuthController extends Controller
                 'free' => ['nullable'],
                 'signature' => ['nullable', 'required_if:member,DOCTORS']
             ]);
-        
+
             if ($validator->fails()) {
                 toast($validator->errors()->first(), 'error', 'top-left');
                 return back();
             }
-            
+
             $email = $request->input('email');
             $username = $request->input('username');
             $password = $request->input('password');
@@ -89,18 +89,18 @@ class AuthController extends Controller
 
             if ($signature) {
                 $imageData = str_replace('data:image/png;base64,', '', $signature);
-            
+
                 // Decode the base64 data
                 $imageData = base64_decode($imageData);
 
                 // Generate a unique filename for the image
                 $filename = uniqid() . '.png';
-                
+
                 // Define the storage path where you want to store the image
                 $storagePath = 'signature/';
 
                 Storage::put('public/' . $storagePath . $filename, $imageData);
-                
+
                 $imageUrl = Storage::url($storagePath . $filename);
             }
 

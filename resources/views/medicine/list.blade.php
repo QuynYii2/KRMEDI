@@ -152,17 +152,17 @@
 {{--                @include('component.modal-cart')--}}
             </div>
             <div class="medicine-search--right col-md-3 d-flex row justify-content-between p-0">
-                <div class="col-md-6 p-0">
-                    <div class="div-wrapper mr-2">
-                        <a type="button"
-                           data-toggle="modal"
-                           data-target="#modalCreatPrescription"
-                        >{{ __('home.Create prescription') }}
-                        </a>
-                    </div>
-                </div>
+{{--                <div class="col-md-6 p-0">--}}
+{{--                    <div class="div-wrapper mr-2">--}}
+{{--                        <a type="button"--}}
+{{--                           data-toggle="modal"--}}
+{{--                           data-target="#modalCreatPrescription"--}}
+{{--                        >{{ __('home.Create prescription') }}--}}
+{{--                        </a>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
 {{--                @include('component.modalCreatPrescription')--}}
-                <div class="col-md-6 p-0">
+                <div class=" col-lg-8 col-12 p-0">
                     <div class="div-wrapper">
                         <a href="{{route('medicine.wishList')}}">{{ __('home.Wish list') }}</a>
                     </div>
