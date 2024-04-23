@@ -42,6 +42,8 @@ class LoginController extends Controller
                     return response($this->returnMessage('User has been blocked!'), 400);
                 } else if ($user && $user->status == UserStatus::PENDING) {
                     return response($this->returnMessage('User not approve!'), 400);
+                } else if ($user && $user->status == UserStatus::DELETED) {
+                    return response($this->returnMessage('User is deleted!'), 400);
                 }
             }
 

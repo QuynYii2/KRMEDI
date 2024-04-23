@@ -4,6 +4,7 @@ namespace App\Http\Controllers\restapi;
 
 use App\Enums\BookingStatus;
 use App\Enums\Constants;
+use App\Enums\Role as EnumsRole;
 use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
@@ -362,6 +363,63 @@ class UserApi extends Controller
             $user->save();
 
             return response()->json(['error' => 0, 'data' => $user]);
+        } catch (\Exception $e) {
+            return response(['error' => -1, 'message' => $e->getMessage()], 400);
+        }
+    }
+
+    public function delete($id)
+    {
+        try {
+            $user = User::find($id);
+            if (!$user || $user->status == UserStatus::DELETED) {
+                return response($this->returnMessage('User not found or deleted!'), 404);
+            }
+
+            $role_user = DB::table('role_users')->where('user_id', $user->id)->first();
+            $isAdmin = false;
+            if ($role_user) {
+                $role = \App\Models\Role::find($role_user->role_id);
+                if ($role->name == EnumsRole::ADMIN) {
+                    $isAdmin = true;
+                }
+            }
+            if ($isAdmin) {
+                return response($this->returnMessage('Permission denied! Cannot delete this account!'), 400);
+            }
+
+            $user->token_firebase = null;
+            $user->token = null;
+            $user->status = UserStatus::DELETED;
+            $success = $user->save();
+            if ($success) {
+                return response($this->returnMessage('Delete success!'), 200);
+            }
+            return response($this->returnMessage('Error, Delete error!'), 400);
+        } catch (\Exception $exception) {
+            return response($this->returnMessage('Error, Please try again!'), 400);
+        }
+    }
+
+    private function returnMessage($message)
+    {
+        return (new MainApi())->returnMessage($message);
+    }
+
+    public function reportData(Request $request, $id)
+    {
+        try {
+            $reason = $request->input('reason');
+
+            if (!$id) {
+                return response()->json(['error' => -1, 'message' => 'Not any id provided'], 400);
+            }
+
+            if (!$reason) {
+                return response()->json(['error' => -1, 'message' => 'You must fill your report reason'], 400);
+            }
+
+            return response()->json(['error' => 0, 'data' => 'We apologize for your experience and will take action if there is a genuine problem']);
         } catch (\Exception $e) {
             return response(['error' => -1, 'message' => $e->getMessage()], 400);
         }
