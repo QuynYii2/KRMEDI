@@ -140,8 +140,8 @@
     @include('layouts.partials.header')
 
     <script src="{{ asset('build/assets/app.dba56e22.js') }}"></script>
-    <div class="container d-md-flex pb-md-5 mt-200 mt-70">
-        <div class="col-md-6 justify-content-center d-flex">
+    <div class="container d-md-flex pb-md-5 mt-200 mt-70 flex-wrap">
+        <div class="col-lg-6 col-12 justify-content-center d-flex">
             <div class="slide-container position-relative">
                 <div class="slide">
                     <img loading="lazy" src="{{asset('img/homeNew-img/Rectangle 23820.png')}}" alt="">
@@ -174,7 +174,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-lg-6 col-12">
             <div class="mainServiceHomeNew row">
                 <div class="mb-md-3 col-6 col-md-4">
                     <a href="#">
@@ -1463,7 +1463,7 @@
         </div>
     </div>
     <div class="bg-tuyen-dung">
-        <div class="container pb-5 mt-4">
+        <div class="container mt-4">
             <div id="recruitment-homeNew">
                 <div class="title-recruitment--homeNew">
                     <div class="krm-title-recruitment">{{ __('home.Recruitment') }}</div>
@@ -1499,7 +1499,7 @@
                 </div>
             </div>
         </div>
-        <div class="container pb-5 mt-4">
+        <div class="container  mt-4">
             <div id="recruitment-homeNew">
                 <div class="title-recruitment--homeNew">
                     <div class="krm-title-recruitment">{{ __('home.Buy online') }}</div>
@@ -1525,7 +1525,7 @@
                                     $class = !$isFavourite ? 'bi-heart' : 'bi-heart-fill text-danger';
                                             $isSoldOut = $product->quantity == 0;
                                 @endphp
-                                <div class="col-lg-3 col-md-6 col-6">
+                                <div class="col-lg-3 col-md-4 col-6">
                                     <div class="">
                                         <div
                                             class="product-item {{ $isSoldOut ? 'sold-out-overlay' : '' }} krm-hover-buy-online">

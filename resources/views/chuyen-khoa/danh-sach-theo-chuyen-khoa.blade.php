@@ -11,7 +11,7 @@
             <a href="{{route('home.specialist')}}">
                 <div class="title-Danh-sach"><i class="fa-solid fa-arrow-left"></i> {{ __('home.Danh sách') }}</div>
             </a>
-            <div class="search-specialist col-md-8">
+            <div class="search-specialist col-lg-8 col-md-10">
                 <label for="search-specialist" class="search-specialist__label w-50">
                     <i class="fas fa-search"></i>
                     <input id="search-specialist" placeholder="{{ __('home.Tìm kiếm cơ sở y tế') }}">
@@ -55,10 +55,10 @@
                      aria-labelledby="clinicList-tab">
                     <div class="row">
                         @foreach($clinics as $clinic)
-                            <div class="specialList-clinics col-md-6 mt-5">
+                            <div class="specialList-clinics col-md-6 col-12 mt-5">
                                 <div class="border-specialList">
-                                    <div class="content__item d-flex gap-3">
-                                        <div class="specialList-clinics--img">
+                                    <div class="content__item d-flex gap-3 box-item__content">
+                                        <div class="specialList-clinics--img img-special-line">
                                             @php
                                                 $galleryArray = explode(',', $clinic->gallery);
                                             @endphp

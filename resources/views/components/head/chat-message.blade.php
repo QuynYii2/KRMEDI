@@ -255,7 +255,7 @@
         width: 100%;
         margin: 0 auto;
         background: #0f5132;
-        padding: 15px;
+        padding: 10px;
         border-radius: 16px;
     }
     .title-name{
@@ -335,7 +335,7 @@
                 <div id="sendmessage">
                     <input type="text" value="Send message..." id="text-chatMessage" />
                     @if (!\App\Models\User::isNormal())
-                        <span class="mr-3" data-toggle="modal" data-target="#modal-create-don-thuoc-widget-chat"><i
+                        <span class="mr-1" data-toggle="modal" data-target="#modal-create-don-thuoc-widget-chat"><i
                                 class="fa-solid fa-plus"></i></span>
                     @endif
                     <span id="send-chatMessage" onclick="sendMessageChatWidget()"><i
@@ -600,16 +600,16 @@
 
             }
 
-            if (element.type == 'TaoDonThuoc') {
-                html = `<div class="message ">
-                        <span >
-                            ${element.text}`;
+            {{--if (element.type == 'TaoDonThuoc') {--}}
+            {{--    html = `<div class="message ">--}}
+            {{--            <span >--}}
+            {{--                ${element.text}`;--}}
 
-                if ('{{ !\App\Models\User::isNormal() }}') {
-                    html += `, <a class="color-blue" data-toggle="modal" data-target="#modal-create-don-thuoc-widget-chat">tạo ngay?</a>
-                             </span></div>`;
-                }
-            }
+            {{--    if ('{{ !\App\Models\User::isNormal() }}') {--}}
+            {{--        html += `, <a class="color-blue" data-toggle="modal" data-target="#modal-create-don-thuoc-widget-chat">tạo ngay?</a>--}}
+            {{--                 </span></div>`;--}}
+            {{--    }--}}
+            {{--}--}}
 
         } else {
             html = `<div class="message">
@@ -955,7 +955,7 @@
                                                 </div>
                                                 <div class="d-flex justify-content-end">
                                                     <a class="ml-2" onclick="addToCart_WidgetChat(${msg.uuid_session})">
-                                                    <button class="btn btn-2 btn-sep icon-cart">Mua thuốc</button>
+                                                    <button class="btn btn-2 btn-sep icon-cart">${response.prescription.isFirstBuy == 1 ?'Mua lại':'Mua thuốc'}</button>
                                                     </a>
                                                 </div>
 
@@ -975,17 +975,17 @@
                     return;
                 }
 
-                if (msg.type == 'TaoDonThuoc') {
-                    html = `<div class="message ">
-                            <span >
-                                ${msg.chat_message}`;
+                {{--if (msg.type == 'TaoDonThuoc') {--}}
+                {{--    html = `<div class="message ">--}}
+                {{--            <span >--}}
+                {{--                ${msg.chat_message}`;--}}
 
-                    if ('{{ !\App\Models\User::isNormal() }}') {
-                        html +=
-                            `, <a class="color-blue" data-toggle="modal" data-target="#modal-create-don-thuoc-widget-chat">tạo ngay?</a>`;
-                    }
-                    html += `</span></div>`;
-                }
+                {{--    if ('{{ !\App\Models\User::isNormal() }}') {--}}
+                {{--        html +=--}}
+                {{--            `, <a class="color-blue" data-toggle="modal" data-target="#modal-create-don-thuoc-widget-chat">tạo ngay?</a>`;--}}
+                {{--    }--}}
+                {{--    html += `</span></div>`;--}}
+                {{--}--}}
             } else {
                 if (!msg.chat_message) {
                     processMessage(index + 1);

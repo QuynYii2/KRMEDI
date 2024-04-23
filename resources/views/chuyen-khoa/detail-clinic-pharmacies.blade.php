@@ -15,7 +15,7 @@
                 <div class="border-specialList">
                     <div class="content__item d-flex gap-3">
                         <div class="specialList-clinics--img">
-                            <img class="content__item__image" src="{{asset('img/icons_logo/image 1.jpeg')}}"
+                            <img class="content__item__image content__item__image_detail" src="{{asset('img/icons_logo/image 1.jpeg')}}"
                                  alt=""/>
                         </div>
                         <div class="specialList-clinics--main">

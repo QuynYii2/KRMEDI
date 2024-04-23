@@ -1,7 +1,9 @@
 .box-item-profile-header {
     width: fit-content;
 }
-
+#send-chatMessage{
+    padding: 15px 9px;
+}
 .no-brand {
     text-align: center;
 }
@@ -124,13 +126,15 @@
         text-align: center;
     }
 
-    .container #map-location .text-map--homeNew h3, .find-my-medicine-2 .frame .text-wrapper-5, .find-my-medicine-2 .frame .text-wrapper-4 {
+    .container #map-location .text-map--homeNew h3, .find-my-medicine-2 .frame .text-wrapper-5, .find-my-medicine-2 .frame .text-wrapper-4,
+    .container .danh-sach-theo-chuyen-khoa .specialList-clinics .border-specialList .specialList-clinics--main .title-specialList-clinics{
         font-size: 16px !important;
     }
 
     .container #map-location .text-map--homeNew p, .max-6-line-title p, .contact_doctor,.container .detail-clinic-theo-chuyen-khoa-title .border-specialList .specialList-clinics--main .time-working,
     .container .detail-clinic-theo-chuyen-khoa-title .border-specialList .specialList-clinics--main .group-button .button-follow-specialList,
-    .container .detail-clinic-theo-chuyen-khoa-title .border-specialList .specialList-clinics--main .group-button .button-direct-specialList{
+    .container .detail-clinic-theo-chuyen-khoa-title .border-specialList .specialList-clinics--main .group-button .button-direct-specialList,
+    .container .danh-sach-theo-chuyen-khoa .nav-item .nav-link.active{
         font-size: 14px !important;
     }
 
@@ -148,7 +152,7 @@
         font-size: 24px !important;
     }
 
-    .krm-title-news, .text-font-24, .text-content-product, .find-my-medicine-2 .frame .text-wrapper-3,.container .danh-sach-theo-chuyen-khoa .specialList-clinics .border-specialList .specialList-clinics--main .title-specialList-clinics,
+    .krm-title-news, .text-font-24, .text-content-product, .find-my-medicine-2 .frame .text-wrapper-3,
     .container .detail-clinic-theo-chuyen-khoa-title .border-specialList .specialList-clinics--main .title-specialList-clinics{
         font-size: 18px !important;
     }
@@ -388,7 +392,8 @@
     }
     .container .danh-sach-theo-chuyen-khoa .specialList-clinics .border-specialList .specialList-clinics--main .group-button .button-booking-specialList,
     .container .danh-sach-theo-chuyen-khoa .specialList-clinics .border-specialList .specialList-clinics--main .group-button .button-detail-specialList,
-    .container .danh-sach-theo-chuyen-khoa .product-item .content-pro .location-pro p,.container .danh-sach-theo-chuyen-khoa .product-item .content-pro .price-pro{
+    .container .danh-sach-theo-chuyen-khoa .product-item .content-pro .location-pro p,.container .danh-sach-theo-chuyen-khoa .product-item .content-pro .price-pro,
+    .col-md-4.col-6 .product-item .content-pro .prices-pro{
         font-size: 16px!important;
     }
     .item-btn-specialist {
@@ -433,6 +438,18 @@
     .text-price,.total-price{
         font-weight: 800;
     }
+    .container #recruitment-homeNew .title-recruitment--homeNew{
+        padding-top: 30px!important;
+    }
+    .box-item__content{
+        flex-wrap: wrap;
+    }
+    .img-special-line{
+        width: 100%;
+    }
+    .content__item__image{
+        height: 100%;
+    }
 }
 
 @media (max-width: 767px) {
@@ -449,7 +466,7 @@
 
     .container #myTabContent .product-item .content-pro .name-product a, .bg-tuyen-dung .border-radius-homeNew .krm-name-recruitment,
     .product-item .content-pro .name-product a, .krm-title-news, .container .font-16-mobi, .find-my-medicine .frame .text-wrapper, .text-content-product,
-    .list-doctor .card .card-body a h5,.modal-content .modal-header .modal-title,.container .danh-sach-theo-chuyen-khoa .specialList-clinics .border-specialList .specialList-clinics--main .title-specialList-clinics,
+    .list-doctor .card .card-body a h5,.modal-content .modal-header .modal-title,
     .container .detail-clinic-theo-chuyen-khoa-title .border-specialList .specialList-clinics--main .title-specialList-clinics,.title-specialList-clinics{
         font-size: 16px !important;
     }
@@ -474,7 +491,8 @@
         font-size: 20px !important;
     }
 
-    .header-center a, .container .mainServiceHomeNew span, .container #recruitment-homeNew .title-recruitment--homeNew a {
+    .header-center a, .container .mainServiceHomeNew span, .container #recruitment-homeNew .title-recruitment--homeNew a,
+    .container .danh-sach-theo-chuyen-khoa .specialList-clinics .border-specialList .specialList-clinics--main .title-specialList-clinics{
         font-size: 15px !important;
     }
 
@@ -697,5 +715,15 @@
     }
     .container .detail-clinic-theo-chuyen-khoa-title .border-specialList .specialList-clinics--main .group-button .button-follow-specialList-zalo{
         height: 40px!important;
+    }
+    .content__item__image{
+        width: 100%;
+    }
+    .container .danh-sach-theo-chuyen-khoa .specialList-clinics .border-specialList .specialList-clinics--main .group-button .button-booking-specialList,
+    .container .danh-sach-theo-chuyen-khoa .specialList-clinics .border-specialList .specialList-clinics--main .group-button .button-detail-specialList{
+        height: 35px!important;
+    }
+    .content__item__image_detail{
+        height: 102px!important;
     }
 }

@@ -57,11 +57,11 @@
             </div>
         </div>
         <div class="d-flex align-items-center justify-content-end">
-            @if(Auth::user()->id == $prescription->user_id)
+{{--            @if(Auth::user()->id == $prescription->user_id)--}}
                 <button type="button" class="btn btn-outline-success mt-3 mr-3" id="btnAddToCart">
                     {{ $prescription->isFirstBuy ? 'Mua lại' : 'Thêm vào giỏ hàng' }}
                 </button>
-            @endif
+{{--            @endif--}}
             <button type="button" class="btn btn-outline-primary mt-3 " id="btnConvert">
                 Export
             </button>
