@@ -6,7 +6,7 @@
 @section('content')
     <link rel="stylesheet" href="{{asset('css/homeSpecialist.css')}}">
     @include('layouts.partials.header')
-    <div class="container mt-200 mt-70">
+    <div class="container mt-200 mt-70 box-ck-new-home">
         <div class="danh-sach-theo-chuyen-khoa">
             <a href="{{route('home.specialist')}}">
                 <div class="title-Danh-sach"><i class="fa-solid fa-arrow-left"></i> {{ __('home.Danh sách') }}</div>
@@ -94,7 +94,7 @@
                                             </div>
                                             <div class="group-button d-flex mt-3">
                                                 <a href="{{route('home.specialist.booking.detail', $clinic->id)}}" class="col-md-6 item-btn-specialist">
-                                                    <div class="button-booking-specialList">
+                                                    <div class="button-booking-specialList line-dk-btn">
                                                         {{ __('home.Đặt khám') }}
                                                     </div>
                                                 </a>
@@ -176,8 +176,8 @@
                             @if($doctor == '')
                                 <h1 class="d-flex align-items-center justify-content-center mt-4">{{ __('home.null') }}</h1>
                             @else
-                                <div class="col-md-3 col-12">
-                                    <div class="p-3">
+                                <div class="col-lg-3 col-md-4 col-6">
+                                    <div class="p-lg-3">
                                         <div class="product-item">
                                             <div class="img-pro h-100 justify-content-center d-flex">
                                                 <img src="{{$doctor->avt}}" alt="">

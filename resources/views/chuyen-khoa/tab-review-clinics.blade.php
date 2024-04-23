@@ -8,7 +8,7 @@
                 @csrf
                 @method('POST')
                 <div class="font-weight-600 fs-24px text-center row">
-                    <span>{{ __('home.Are you satisfied with') }}
+                    <span class="text-title-satisfied">{{ __('home.Are you satisfied with') }}
                         <strong>
                             @php
                                 $shop = \App\Models\Clinic::where('id', $id)->first();
@@ -18,7 +18,7 @@
                         {{ __('home.Services') }}?
                     </span>
                 </div>
-                <div class="mt-md-4 mb-md-5 d-flex justify-content-center">
+                <div class="mt-md-4 mb-md-5 mb-3 d-flex justify-content-center">
                     <input type="radio" name="star_number" id="star-edit-1" value="1" hidden="" required>
                     <label for="star-edit-1" onclick="starCheckEdit(1)"><i id="icon-star-edit-1"
                                                                            class="fa fa-star fa-2xl p-1"></i></label>
@@ -42,11 +42,11 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="recruitment-details--btn col-md-6 justify-content-end d-flex">
+            <div class="row mt-3">
+                <div class="recruitment-details--btn col-md-6 col-6 justify-content-end d-flex">
                     <a href="{{route('home.specialist.detail',$id)}}" class="btn btn-primary button-Reset-booking col-md-6">{{ __('home.CANCEL') }}</a>
                 </div>
-                <div class="recruitment-details--btn col-md-6 justify-content-start d-flex">
+                <div class="recruitment-details--btn col-md-6 col-6 justify-content-start d-flex">
                     <button class="btn btn-primary col-md-6 button-apply-booking" type="submit">{{ __('home.Submit') }}</button>
                 </div>
             </div>
