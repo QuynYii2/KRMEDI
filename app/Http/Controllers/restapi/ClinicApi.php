@@ -150,6 +150,9 @@ class ClinicApi extends Controller
         $clinic_location = $request->input('clinic_location');
         $clinic_symptom = $request->input('clinic_symptom');
 
+        $clinicSpecialists = explode(',', trim($request->input('mobile_clinic_specialist')));
+        $clinicSymptoms = explode(',', trim($request->input('mobile_clinic_symptom')));
+
         $clinics = DB::table('clinics')
             ->join('users', 'users.id', '=', 'clinics.user_id')
             ->where('clinics.status', ClinicStatus::ACTIVE)
@@ -175,6 +178,22 @@ class ClinicApi extends Controller
 
         if ($clinic_symptom) {
             $clinics->whereRaw("FIND_IN_SET(?, clinics.symptom)", [$clinic_symptom]);
+        }
+
+        if (!empty($clinicSpecialists) && ($clinicSpecialists[0] != "")) {
+            if (!in_array('all', $clinicSpecialists)) {
+                $clinics->whereIn('clinics.representative_doctor', $clinicSpecialists);
+            }
+        }
+        
+        if (!empty($clinicSymptoms) && ($clinicSymptoms[0] != "")) {
+            if (!in_array('all', $clinicSymptoms)) {
+                $clinics->where(function ($query) use ($clinicSymptoms) {
+                    foreach ($clinicSymptoms as $symptom) {
+                        $query->orWhereRaw("FIND_IN_SET(?, clinics.symptom)", [$symptom]);
+                    }
+                });
+            }
         }
 
         $clinics = $clinics->select('clinics.*', 'users.email')

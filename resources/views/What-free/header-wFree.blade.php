@@ -71,11 +71,11 @@
         <div class="col-10">
             <div class=" medicine-search ">
                 <div class="medicine-search--center ">
-                    <form class="search-box">
-                        <input type="search" name="focus" placeholder="{{ __('home.Search for anything…') }}"
-                            id="search-input" value="">
+                    <div class="search-box">
+                        <input type="search" placeholder="{{ __('home.Search for anything…') }}"
+                            onkeyup="mobileProcessSearchClinics();" id="mobile_search_input_clinics" value="">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -95,11 +95,10 @@
         </div>
         <div class=" medicine-search d-block d-sm-none">
             <div class="medicine-search--center row">
-                <form class="search-box col-12">
-                    <input type="search" name="focus" placeholder="{{ __('home.Search for anything…') }}"
-                        id="search-input" value="">
+                <div class="search-box col-12">
+                    <input type="search" placeholder="{{ __('home.Search for anything…') }}">
                     <i class="fa-solid fa-magnifying-glass d-none"></i>
-                </form>
+                </div>
             </div>
         </div>
         <div class="border-search-clinics d-none d-sm-flex">
@@ -175,7 +174,7 @@
             <div class="d-flex justify-content-center mt-4 gap-2">
                 <button type="button"
                     class="btn btn-secondary w-100 btnResetMobileFilter">{{ __('home.Reset') }}</button>
-                <button type="button" data-bs-dismiss="offcanvas" aria-label="Close"
+                <button id="mobileApplyFilter" type="button" data-bs-dismiss="offcanvas" aria-label="Close"
                     class="btn btn-info w-100">{{ __('home.Apply') }}</button>
             </div>
         </div>
@@ -207,7 +206,7 @@
         }
     }
 
-    async function searchClinics(searchKey = null) {
+    async function searchClinics() {
         loadingMasterPage();
         let urlSearch = `{{ route('clinics.restapi.search') }}`;
 
@@ -420,7 +419,7 @@
             let itemClass = (i <= 3) ? 'd-flex' : 'd-none';
 
             htmlMb += `<div class="${itemClass} item">
-                <input type="checkbox" name="clinic_symptom" value="${data.representative_doctor}">
+                <input type="checkbox" name="clinic_symptom" value="${data.id}">
                 <div class="text-all">${data.name}</div>
             </div>`;
         }
@@ -441,6 +440,58 @@
 </script>
 
 {{-- MOBILE --}}
+<script>
+    $('#mobileApplyFilter').click(function() {
+        mobileSearchClinics();
+    })
+
+    async function mobileProcessSearchClinics() {
+        //Enter press
+        if (event.keyCode == 13) {
+            await mobileSearchClinics();
+        }
+    }
+
+    async function mobileSearchClinics() {
+        loadingMasterPage();
+        let urlSearch = `{{ route('clinics.restapi.search') }}`;
+
+        let mobile_search_input_clinics = $('#mobile_search_input_clinics').val();
+        let clinic_specialist = $('input[name="clinic_specialist"]:checked').map(function() {
+            return $(this).val();
+        }).get();
+        let clinic_symptom = $('input[name="clinic_symptom"]:checked').map(function() {
+            return $(this).val();
+        }).get();
+
+        let params = new URLSearchParams();
+        params.append('search_input_clinics', mobile_search_input_clinics);
+        params.append('mobile_clinic_specialist', clinic_specialist.join(','));
+        params.append('mobile_clinic_symptom', clinic_symptom.join(','));
+
+        urlSearch = urlSearch + '?' + params.toString();
+
+        try {
+            const response = await $.ajax({
+                url: urlSearch,
+                method: 'GET',
+                headers: {
+                    "Authorization": accessToken
+                }
+            });
+
+            renderSearchClinics(response);
+            setTimeout(() => {
+                loadingMasterPage();
+            }, 500);
+        } catch (error) {
+            console.log(error);
+            setTimeout(() => {
+                loadingMasterPage();
+            }, 500);
+        }
+    }
+</script>
 <script>
     $(document).ready(function() {
         // Toggle the items and change the icon when the button is clicked
