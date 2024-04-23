@@ -585,52 +585,20 @@
             }
 
             if (element.type == 'DonThuocMoi') {
-                let url = `{{ route('view.prescription.result.detail.api', ['id' => ':id']) }}`;
+                let url = `{{ route('view.prescription.result.detail', ['id' => ':id']) }}`;
                 url = url.replace(':id', element.uuid_session);
 
-                let url_detail = `{{ route('view.prescription.result.detail', ['id' => ':id']) }}`;
-                url_detail = url_detail.replace(':id', element.uuid_session);
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.status) {
-                            response.listData.forEach(item => {
-                                html += `<a href="${url_detail}"><div class="mb-3 box-order-chat">
-                                                <div class="content-order-item">
-                                                        <div class="d-flex ">
-                                                     <p class="title-name">Tên thuốc: </p>
-                                                      <p class="content-order-chat">${item.medicine_name}</p>
-                                                </div>
-                                                <div class="d-flex ">
-                                                     <p class="title-name">Số lượng: </p>
-                                                      <p class="content-order-chat">${item.quantity}</p>
-                                                </div>
-                                                <div class="d-flex ">
-                                                     <p class="title-name">Sử dụng: </p>
-                                                      <p class="content-order-chat">${item.note}</p>
-                                                </div>
-                                                <div class="d-flex ">
-                                                     <p class="title-name">Số ngày sử dụng: </p>
-                                                      <p class="content-order-chat">${item.treatment_days}</p>
-                                                </div>
-                                                <div class="d-flex justify-content-end">
-                                                    <a class="ml-2" onclick="addToCart_WidgetChat(${element.uuid_session})">
-                                                    <button class="btn btn-2 btn-sep icon-cart">Mua thuốc</button>
-                                                    </a>
-                                                </div>
+                html = `<div class="mb-3 d-flex justify-content-center">
+                        <a href="${url}">
+                        <button class="btn btn-1 btn-sep icon-info">Xem đơn thuốc</button>
+                        </a>
+                        <a class="ml-2" onclick="addToCart_WidgetChat(${element.uuid_session})">
+                        <button class="btn btn-2 btn-sep icon-cart">Mua thuốc</button>
+                        </a>
+                        </div>`
 
-                                                </div>
-                                            </div></a>`;
-                            });
 
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(error);
-                    }
-            })
+            }
 
             if (element.type == 'TaoDonThuoc') {
                 html = `<div class="message ">
