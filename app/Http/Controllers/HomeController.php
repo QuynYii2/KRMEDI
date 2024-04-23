@@ -63,7 +63,7 @@ class HomeController extends Controller
 
     public function specialist()
     {
-        $departments = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->get();
+        $departments = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->where('isFilter', 1)->get();
         return view('chuyen-khoa.tab-chuyen-khoa-newHome', compact('departments'));
     }
 
