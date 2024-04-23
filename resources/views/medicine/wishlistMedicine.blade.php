@@ -52,8 +52,8 @@
     </style>
     <div class="medicine container" id="online-medicine">
         <div class="row medicine-search d-none d-sm-flex">
-            <div class="medicine-search--left col-md-3 d-flex justify-content-around">
-                <div class="title pl-0 col-md-5">
+            <div class="medicine-search--left col-md-3 d-flex justify-content-around flex-wrap">
+                <div class="title pl-0 col-lg-5 col-md-12">
                     <select class="form-select" id="category_id" name="category_id"
                             onchange="categoryFilterMedicine(this.value)">
                         <option value="">{{ __('home.Category') }}</option>
@@ -64,7 +64,7 @@
                         @endif
                     </select>
                 </div>
-                <div class="title pr-0 col-md-7">
+                <div class="title pr-0 col-lg-7 col-md-12">
                     <select class="form-select" id="category_id" name="category_id"
                             onchange="locationFilterMedicine(this.value)">
                         <option value="">{{ __('home.Location') }}</option>

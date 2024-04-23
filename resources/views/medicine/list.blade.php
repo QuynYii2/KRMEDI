@@ -147,9 +147,9 @@
                             <div class="text-wrapper"> {{ count($carts) }}</div>
                         @endif
                     </button>
-                    @include('component.modal-cart')
+{{--                    @include('component.modal-cart')--}}
                 @endif
-                @include('component.modal-cart')
+{{--                @include('component.modal-cart')--}}
             </div>
             <div class="medicine-search--right col-md-3 d-flex row justify-content-between p-0">
                 <div class="col-md-6 p-0">
@@ -161,7 +161,7 @@
                         </a>
                     </div>
                 </div>
-                @include('component.modalCreatPrescription')
+{{--                @include('component.modalCreatPrescription')--}}
                 <div class="col-md-6 p-0">
                     <div class="div-wrapper">
                         <a href="{{route('medicine.wishList')}}">{{ __('home.Wish list') }}</a>
@@ -196,7 +196,7 @@
                         </button>
                     </a>
 
-                    @include('component.modal-cart')
+{{--                    @include('component.modal-cart')--}}
                 @else
                     <div class="search-box col-12">
                         <input type="search" onkeypress="performSearch()" name="focus"
@@ -204,19 +204,19 @@
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </div>
                 @endif
-                @include('component.modal-cart')
+{{--                @include('component.modal-cart')--}}
             </div>
             <div class="medicine-search--right row mt-3">
                 <div class="col-md-6 col-6">
                     <div class="div-wrapper">
                         <a type="button"
-                            {{--                           data-toggle="modal"--}}
-                            {{--                           data-target="#modalCreatPrescription"--}}
+                                                       data-toggle="modal"
+                                                       data-target="#modalCreatPrescription"
                         >{{ __('home.Create prescription') }}
                         </a>
                     </div>
                 </div>
-                @include('component.modalCreatPrescription')
+{{--                @include('component.modalCreatPrescription')--}}
                 <div class="col-md-6 col-6">
                     <div class="div-wrapper">
                         <a href="{{route('medicine.wishList')}}">{{ __('home.Wish list') }}</a>
@@ -326,7 +326,7 @@
             <div class="col-md-9 medicine-list--item">
                 <div class="page row" id="content-medicine">
                     @foreach($medicines as $medicine)
-                        <div class="col-md-4 col-6 col-sm-4 col-xl-4 d-none d-sm-block">
+                        <div class="col-md-4 col-6 col-sm-4 col-xl-4 d-none d-sm-block box-sp-medicine">
                             @include('component.products')
                         </div>
                     @endforeach
@@ -421,6 +421,8 @@
             </div>
         </div>
     </div>
+    @include('component.modal-cart')
+    @include('component.modalCreatPrescription')
     <script>
         let medical_favourites = `{{ $medical_favourites }}`;
 

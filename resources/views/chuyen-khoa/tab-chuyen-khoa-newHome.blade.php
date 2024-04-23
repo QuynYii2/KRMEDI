@@ -3,7 +3,7 @@
 @section('content')
     <link rel="stylesheet" href="{{asset('css/homeSpecialist.css')}}">
     @include('layouts.partials.header')
-    <div class="container mt-200 mt-70">
+    <div class="container mt-200 mt-70 box-ck-new-home">
         <div class="tab-chuyen-khoa">
             <a href="{{route('home')}}">
                 <div class="titleServiceHomeNew"><i class="fa-solid fa-arrow-left"></i> {{ __('home.Tên chuyên khoa') }}</div>
@@ -36,8 +36,8 @@
                     @foreach($departments as $departmentItem)
                         <div class="col-md-4">
                             <a href="{{route('home.specialist.department',$departmentItem->id)}}">
-                                <div class="border-HomeNew">
-                                    <div class="w-75 d-flex align-items-center ">
+                                <div class="border-HomeNew position-relative">
+                                    <div class="w-100 d-flex align-items-center ">
                                         <img src="{{$departmentItem->thumbnail}}" alt="thumbnail">
                                         <span>
                                             @if(locationHelper() == 'vi')
