@@ -177,13 +177,12 @@
                                                 </span>
                                             </div>
                                             <div class="group-button d-flex mt-3">
-                                                <a href="" class="col-md-6">
-                                                    <div class="button-booking-specialList">
+                                                <a href="" class="col-md-6 item-btn-specialist">
+                                                    <div class="button-booking-specialList line-dk-btn">
                                                         {{ __('home.Đặt khám') }}
                                                     </div>
                                                 </a>
-                                                <a href="{{ route('home.specialist.detail', $pharmacy->id) }}"
-                                                    class="col-md-6">
+                                                <a href="{{route('home.specialist.detail', $pharmacy->id)}}" class="col-md-6 item-btn-specialist">
                                                     <div class="button-detail-specialList">
                                                         {{ __('home.Xem chi tiết') }}
                                                     </div>
@@ -222,14 +221,14 @@
                                                             $doctor->department_id,
                                                         )->value('thumbnail');
                                                     @endphp
-                                                    <img src="{{ $department }}">
+                                                    <img src="{{$department}}" class="icon-ck">
                                                 </s>
                                             </div>
                                             <div class="content-pro p-3">
                                                 <div class="">
                                                     <div class="name-product" style="height: auto">
-                                                        <a class="name-product--fleaMarket"
-                                                            href="{{ route('examination.doctor_info', $doctor->id) }}">{{ $doctor->name }}</a>
+                                                        <a class="name-product--fleaMarket name-doctors"
+                                                           href="{{ route('examination.doctor_info', $doctor->id) }}">{{$doctor->name}}</a>
                                                     </div>
                                                     <div class="location-pro d-flex">
                                                         <p>{!! $doctor->service !!}</p>

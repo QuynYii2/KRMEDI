@@ -143,7 +143,8 @@
     }
 
     .container .titleServiceHomeNew, .title-clinics h2, .container .flea-content, .ac-text_content,.container .danh-sach-theo-chuyen-khoa .title-Danh-sach,
-    .container .detail-clinic-theo-chuyen-khoa-title .title-detail-clinic{
+    .container .detail-clinic-theo-chuyen-khoa-title .title-detail-clinic,.background-image_Clinics .container .title-list-clinic,
+    .fs-32px{
         font-size: 24px !important;
     }
 
@@ -387,14 +388,50 @@
     }
     .container .danh-sach-theo-chuyen-khoa .specialList-clinics .border-specialList .specialList-clinics--main .group-button .button-booking-specialList,
     .container .danh-sach-theo-chuyen-khoa .specialList-clinics .border-specialList .specialList-clinics--main .group-button .button-detail-specialList,
-    .container .danh-sach-theo-chuyen-khoa .product-item .content-pro .location-pro p{
+    .container .danh-sach-theo-chuyen-khoa .product-item .content-pro .location-pro p,.container .danh-sach-theo-chuyen-khoa .product-item .content-pro .price-pro{
         font-size: 16px!important;
+    }
+    .item-btn-specialist {
+        padding: 0px !important;
+        text-align: center;
     }
     .border-specialList{
         padding: 0px!important;
     }
     .other-clinics .title{
         margin-bottom: 16px;
+    }
+    .line-dk-btn {
+        margin-right: 20px !important;
+    }
+    #show_inf #inf-doctor #about h5{
+        font-size: 20px;
+    }
+    #show_inf #inf-doctor #about .dess p,#show_inf #inf-doctor #about .dess span,.name-user-review,
+    .product-details .body .text-wrapper,.product-details .body .price,.product-details .body .brand-name .text-wrapper-3{
+        font-size: 16px;
+    }
+    #show_inf #inf-doctor #about .dess{
+        margin-top: 16px;
+    }
+    .fs-24px{
+        font-size: 18px;
+    }
+    .product-details .body .brand-name .text-wrapper-2,.input-quantity{
+        font-size: 16px;
+        margin-right: 0;
+    }
+    .box-detail-sp{
+        max-width: 100%;
+    }
+    .product-price,.float-right{
+        font-size: 15px!important;
+    }
+    .text-price,.total-price,.value-total-price,.value-price,.select-memberFamily label,.border-booking-sv .font-weight-600 label{
+        font-size: 16px!important;
+    }
+    .text-price,.total-price{
+        font-weight: 800;
     }
 }
 
@@ -405,7 +442,8 @@
 
     .krm-tieuDe-findDoctor, .container .font-18-mobi, .recruitment-details--title, .news-content, .ac-text_content, #show-doctor .list-title .list--doctor p,
     .list--doctor p, .list--doctor p, .list-title .list--doctor p, .header_comment, .title-my-personal-doctor,.container .danh-sach-theo-chuyen-khoa .title-Danh-sach,
-    .container .detail-clinic-theo-chuyen-khoa-title .title-detail-clinic{
+    .container .detail-clinic-theo-chuyen-khoa-title .title-detail-clinic,.container .tab-chuyen-khoa .titleServiceHomeNew,
+    .fs-32px,.text-select-method{
         font-size: 18px !important;
     }
 
@@ -606,15 +644,11 @@
     }
     .container .danh-sach-theo-chuyen-khoa .specialList-clinics .border-specialList .specialList-clinics--main .group-button .button-booking-specialList,
     .container .danh-sach-theo-chuyen-khoa .specialList-clinics .border-specialList .specialList-clinics--main .group-button .button-detail-specialList,
-    .box-content-clinic{
+    .box-content-clinic,.container .danh-sach-theo-chuyen-khoa .product-item .content-pro .location-pro p,.container .danh-sach-theo-chuyen-khoa .product-item .content-pro .price-pro{
         font-size: 14px!important;
     }
     .nav-header--homeNew,.nav-pills{
         width: 100%;
-    }
-    .item-btn-specialist{
-        padding:0px!important;
-        text-align: center;
     }
     .line-dk-btn{
         margin-right: 8px!important;
@@ -633,5 +667,35 @@
         margin-bottom: 5px;
         margin-top: 16px;
         font-size: 18px;
+    }
+    .col-md-4.col-6 .product-item .content-pro .name-product .name-doctors{
+        min-height: auto!important;
+        height: auto!important;
+    }
+    .col-md-4.col-6 .product-item .img-pro .icon-ck{
+        height: 30px!important;
+    }
+    .clinics-list .clinics-header{
+        margin-bottom: 5px;
+        margin-top: 16px;
+    }
+    #show_inf #inf-doctor #about h5{
+        font-size: 18px;
+    }
+    #show_inf #inf-doctor #about .dess{
+        margin-top: 10px;
+    }
+    #show_inf #inf-doctor #about .dess p, #show_inf #inf-doctor #about .dess span, .name-user-review,.cmt {
+        font-size: 14px;
+    }
+    #show_inf #inf-doctor #about #opt_btn .button,#show_inf #inf-doctor #about #opt_btn .none-btn{
+        font-size: 14px;
+        padding: 10px 16px;
+    }
+    .recruitment-details--content{
+        margin-top: 16px;
+    }
+    .container .detail-clinic-theo-chuyen-khoa-title .border-specialList .specialList-clinics--main .group-button .button-follow-specialList-zalo{
+        height: 40px!important;
     }
 }

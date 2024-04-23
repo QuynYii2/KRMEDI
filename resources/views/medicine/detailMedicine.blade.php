@@ -20,7 +20,7 @@
     @include('layouts.partials.header')
     @include('component.banner')
     <div class="recruitment-details ">
-        <div class="container">
+        <div class="container box-detail-sp">
             <div class="row medicine-search">
                 <div class="col-md-10"></div>
                 <div class="medicine-search--center col-md-2">
@@ -141,8 +141,8 @@
                         @php
                             $prMedicine = \Illuminate\Support\Facades\DB::table('product_medicines')->where('id', $medicine->id)->first();
                         @endphp
-                        <div class="row">
-                            <div class="col-6  d-flex align-center justify-center">
+                        <div class="row mt-3">
+                            <div class="col-lg-6 col-12  d-flex align-center justify-center mb-2">
                                 @if(Auth::user() == null || Auth::user()->id != $prMedicine->user_id)
                                     <a href="{{route('flea.market.product.shop.info',$prMedicine->user_id)}}"
                                        class="button-visitStore btn btn-secondary w-100 d-flex align-center justify-center">
@@ -155,7 +155,7 @@
                                     </a>
                                 @endif
                             </div>
-                            <div class="col-6">
+                            <div class="col-lg-6 col-12 mb-2">
                                 @if(Auth::check())
                                     @if($medicine->type_product == 0 || $name_role == 'HOSPITALS' || $name_role == 'DOCTORS')
                                     <button id="btnBuyNow" {{ $prMedicine->quantity == 0 ? 'disabled' : '' }}
