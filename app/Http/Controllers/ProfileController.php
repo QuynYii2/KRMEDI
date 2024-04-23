@@ -453,23 +453,11 @@ class ProfileController extends Controller
         return response()->json('Đổi mật khẩu thành công', 200);
     }
 
-    public function getUsersWithRoleId(Request $request, $roleId)
+    public function getUsersWithMember(Request $request, $member)
     {
         $name = $request->input('name');
 
-        $roleExists = RoleUser::where('role_id', $roleId)->exists();
-
-        if (!$roleExists) {
-            return response()->json(['message' => 'Role not found'], 404);
-        }
-
-        $userIds = RoleUser::where('role_id', $roleId)->pluck('user_id');
-
-        if ($userIds->isEmpty()) {
-            return response()->json(['message' => 'No users found for the given role_id'], 404);
-        }
-
-        $users = User::whereIn('id', $userIds)->where('name', 'LIKE', '%' . $name . '%')->get();
+        $users = User::where('member', $member)->where('name', 'LIKE', '%' . $name . '%')->get();
 
         $data = $users->map(function ($user) {
             return [

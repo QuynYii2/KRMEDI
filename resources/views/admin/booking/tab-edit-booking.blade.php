@@ -625,7 +625,7 @@
                 selectElement.select2({
                     theme: 'bootstrap-5',
                     ajax: {
-                        url: "{{ route('role.user.list', ['role_id' => 39]) }}",
+                        url: "{{ route('role.user.list', ['member' => 'DOCTORS']) }}",
                         dataType: 'json',
                         delay: 250,
                         data: function(params) {
