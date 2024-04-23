@@ -186,7 +186,7 @@
                             </div>
                             <div class="group-button d-flex mt-3">
                                 <a href="" class="mr-2">
-                                    <div class="button-follow-specialList">
+                                    <div class="button-follow-specialList button-follow-specialList-zalo">
                                         <div style="margin-left: 8px; margin-top: 18px" class="zalo-follow-only-button"
                                             data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
                                     </div>
@@ -212,11 +212,11 @@
                 <div></div>
                 <section>
                     <div class="d-md-flex">
-                        <div class="small-12 col-md-3 pl-0">
+                        <div class="small-12 col-md-5 pl-0">
                             <div>{{ __('home.Chọn Ngày') }}</div>
                             <div id="datepicker"></div>
                         </div>
-                        <div class="small-12 col-md-9">
+                        <div class="small-12 col-md-7">
                             <div>{{ __('home.Chọn thời gian') }}</div>
                             <div class="spin-me"></div>
                             <div class="container">
