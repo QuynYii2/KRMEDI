@@ -9,7 +9,7 @@
             <form id="form_checkout" method="post" action="#">
                 @csrf
                 <div class="row">
-                    <div class="col-md-8">
+                    <div class="col-lg-8 col-md-7">
                         <div id="title" class="d-flex justify-content-start">
                             <div class="list-title">
                                 <div class="list--doctor p-0">
@@ -192,7 +192,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-lg-4 col-md-5">
                         <div class="m-auto">
                             @foreach($carts as $cart)
                                 @php
