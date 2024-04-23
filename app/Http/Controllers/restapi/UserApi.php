@@ -405,4 +405,19 @@ class UserApi extends Controller
     {
         return (new MainApi())->returnMessage($message);
     }
+
+    public function reportImage(Request $request)
+    {
+        try {
+            $reason = $request->input('reason');
+
+            if (!$reason) {
+                return response()->json(['error' => -1, 'message' => 'You must fill your report reason'], 400);
+            }
+
+            return response()->json(['error' => 0, 'data' => 'We apologize for your experience and will take action if there is a genuine problem']);
+        } catch (\Exception $e) {
+            return response(['error' => -1, 'message' => $e->getMessage()], 400);
+        }
+    }
 }

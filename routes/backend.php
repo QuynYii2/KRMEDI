@@ -36,6 +36,7 @@ Route::group(['prefix' => 'users'], function () {
     Route::get('/get-user-by-id', [UserApi::class, 'getUserById'])->name('api.backend.user.get.user.id');
     Route::post('/minus-points', [UserApi::class, 'minusUserPoint'])->name('api.backend.user.minus.point');
     Route::delete('delete-account/{id}', [UserApi::class, 'delete'])->name('api.backend.user.delete');
+    Route::post('report/image', [UserApi::class, 'reportImage'])->name('api.backend.report.image');
 });
 
 Route::group(['prefix' => 'users-social'], function () {
@@ -47,27 +48,41 @@ Route::group(['prefix' => 'questions'], function () {
     Route::get('/list', [BackendQuestionController::class, 'getAll'])->name('api.backend.questions.list');
     Route::get('/user/{id}', [BackendQuestionController::class, 'getAllByUserId'])->name('api.backend.questions.user');
     Route::post('/create', [BackendQuestionController::class, 'create'])->name('api.backend.questions.create');
-    Route::put('/change/{id}',
-        [BackendQuestionController::class, 'upgradeStatus'])->name('api.backend.questions.change.status');
+    Route::put(
+        '/change/{id}',
+        [BackendQuestionController::class, 'upgradeStatus']
+    )->name('api.backend.questions.change.status');
     Route::put('/update/{id}', [BackendQuestionController::class, 'update'])->name('api.backend.questions.update');
     Route::delete('/delete/{id}', [BackendQuestionController::class, 'delete'])->name('api.backend.questions.delete');
 });
 
 Route::group(['prefix' => 'coupons-apply'], function () {
     Route::get('/list', [BackendCouponApplyController::class, 'getAll'])->name('api.backend.coupons-apply.list');
-    Route::get('/detail/{id}',
-        [BackendCouponApplyController::class, 'detail'])->name('api.backend.coupons-apply.detail');
-    Route::get('/user/{id}',
-        [BackendCouponApplyController::class, 'getAllByUser'])->name('api.backend.coupons-apply.user');
+    Route::get(
+        '/detail/{id}',
+        [BackendCouponApplyController::class, 'detail']
+    )->name('api.backend.coupons-apply.detail');
+    Route::get(
+        '/user/{id}',
+        [BackendCouponApplyController::class, 'getAllByUser']
+    )->name('api.backend.coupons-apply.user');
     Route::post('/create', [BackendCouponApplyController::class, 'create'])->name('api.backend.coupons-apply.create');
-    Route::put('/update/{id}',
-        [BackendCouponApplyController::class, 'update'])->name('api.backend.coupons-apply.update');
-    Route::delete('/delete/{id}',
-        [BackendCouponApplyController::class, 'delete'])->name('api.backend.coupons-apply.delete');
-    Route::get('/my-coupons',
-        [BackendCouponApplyController::class, 'listMyCoupons'])->name('api.backend.coupons-apply.my.coupon');
-    Route::post('change-status',
-        [BackendCouponApplyController::class, 'updateStatus'])->name('api.backend.coupons-apply.update-status');
+    Route::put(
+        '/update/{id}',
+        [BackendCouponApplyController::class, 'update']
+    )->name('api.backend.coupons-apply.update');
+    Route::delete(
+        '/delete/{id}',
+        [BackendCouponApplyController::class, 'delete']
+    )->name('api.backend.coupons-apply.delete');
+    Route::get(
+        '/my-coupons',
+        [BackendCouponApplyController::class, 'listMyCoupons']
+    )->name('api.backend.coupons-apply.my.coupon');
+    Route::post(
+        'change-status',
+        [BackendCouponApplyController::class, 'updateStatus']
+    )->name('api.backend.coupons-apply.update-status');
     Route::post('checking', [MainApi::class, 'checkCoupon']);
 });
 
@@ -81,10 +96,14 @@ Route::group(['prefix' => 'coupons'], function () {
 
 Route::group(['prefix' => 'service-clinics'], function () {
     Route::get('list', [ServiceClinicApi::class, 'getAll'])->name('api.backend.service.clinic.list');
-    Route::get('list-by-clinics/{id}',
-        [ServiceClinicApi::class, 'getAllByClinics'])->name('api.backend.service.clinic.list.clinics');
-    Route::get('list-by-user/{id}',
-        [ServiceClinicApi::class, 'getAllByUserId'])->name('api.backend.service.clinic.list.user');
+    Route::get(
+        'list-by-clinics/{id}',
+        [ServiceClinicApi::class, 'getAllByClinics']
+    )->name('api.backend.service.clinic.list.clinics');
+    Route::get(
+        'list-by-user/{id}',
+        [ServiceClinicApi::class, 'getAllByUserId']
+    )->name('api.backend.service.clinic.list.user');
     Route::get('detail/{id}', [ServiceClinicApi::class, 'detail'])->name('api.backend.service.clinic.detail');
     Route::post('create', [ServiceClinicApi::class, 'create'])->name('api.backend.service.clinic.create');
 });
@@ -92,11 +111,15 @@ Route::group(['prefix' => 'service-clinics'], function () {
 Route::group(['prefix' => 'business-favourites'], function () {
     Route::get('list-by-users', [BusinessFavouriteApi::class, 'getAll'])->name('api.backend.business.favourites.list');
     Route::get('list-clinics-by-users', [BusinessFavouriteApi::class, 'getAllClinicsByUser'])->name('api.backend.business.favourites.clinics');
-    Route::get('list-by-business',
-        [BusinessFavouriteApi::class, 'findByUserIdAndBusinessID'])->name('api.backend.business.favourites.business');
+    Route::get(
+        'list-by-business',
+        [BusinessFavouriteApi::class, 'findByUserIdAndBusinessID']
+    )->name('api.backend.business.favourites.business');
     Route::post('create', [BusinessFavouriteApi::class, 'create'])->name('api.backend.business.favourites.create');
-    Route::delete('delete/{id}',
-        [BusinessFavouriteApi::class, 'delete'])->name('api.backend.business.favourites.delete');
+    Route::delete(
+        'delete/{id}',
+        [BusinessFavouriteApi::class, 'delete']
+    )->name('api.backend.business.favourites.delete');
 });
 
 Route::group(['prefix' => 'medical-favourites'], function () {
