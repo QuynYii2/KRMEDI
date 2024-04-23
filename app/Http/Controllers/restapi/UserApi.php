@@ -406,10 +406,14 @@ class UserApi extends Controller
         return (new MainApi())->returnMessage($message);
     }
 
-    public function reportImage(Request $request)
+    public function reportData(Request $request, $id)
     {
         try {
             $reason = $request->input('reason');
+
+            if (!$id) {
+                return response()->json(['error' => -1, 'message' => 'Not any id provided'], 400);
+            }
 
             if (!$reason) {
                 return response()->json(['error' => -1, 'message' => 'You must fill your report reason'], 400);

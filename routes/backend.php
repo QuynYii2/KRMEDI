@@ -36,7 +36,7 @@ Route::group(['prefix' => 'users'], function () {
     Route::get('/get-user-by-id', [UserApi::class, 'getUserById'])->name('api.backend.user.get.user.id');
     Route::post('/minus-points', [UserApi::class, 'minusUserPoint'])->name('api.backend.user.minus.point');
     Route::delete('delete-account/{id}', [UserApi::class, 'delete'])->name('api.backend.user.delete');
-    Route::post('report/image', [UserApi::class, 'reportImage'])->name('api.backend.report.image');
+    Route::post('report/{id}', [UserApi::class, 'reportData'])->name('api.backend.report.data');
 });
 
 Route::group(['prefix' => 'users-social'], function () {
