@@ -81,7 +81,7 @@
             <div class="tab-content mt-4" id="myTabContent">
                 <div class="tab-pane fade show active" id="introduce" role="tabpanel"
                      aria-labelledby="introduce-tab">
-                    <div class="">
+                    <div class="box-content-clinic">
                         {!! $clinicDetail->introduce !!}
                     </div>
                 </div>
@@ -91,14 +91,15 @@
                             $galleryArray = explode(',', $clinicDetail->gallery);
                         @endphp
                         @foreach($galleryArray as $gallery)
-                            <img class="p-0"
-                                 style="width: 370px;
-                                 height: 365px;
+                            <div class="col-lg-4 col-md-6 col-12 mb-md-4 mb-3">
+                                <img class="p-0 w-100 h-100"
+                                     style="
                                  object-fit: cover;
                                  border-radius: 16px;
-                                 margin: 15px;
                                  "
-                                 src="{{$gallery}}" alt="">
+                                     src="{{$gallery}}" alt="">
+                            </div>
+
                         @endforeach
                     </div>
                 </div>
