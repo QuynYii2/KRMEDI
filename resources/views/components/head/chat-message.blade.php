@@ -630,7 +630,7 @@
                     error: function(xhr, status, error) {
                         console.error(error);
                     }
-            }
+            })
 
             if (element.type == 'TaoDonThuoc') {
                 html = `<div class="message ">
