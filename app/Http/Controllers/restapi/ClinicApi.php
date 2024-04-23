@@ -167,7 +167,7 @@ class ClinicApi extends Controller
         }
 
         if ($clinic_specialist) {
-            $clinics->where('clinics.representative_doctor', $clinic_specialist);
+            $clinics->whereRaw("FIND_IN_SET(?, clinics.department)", [$clinic_specialist]);
         }
 
         if ($clinic_location) {
@@ -182,7 +182,11 @@ class ClinicApi extends Controller
 
         if (!empty($clinicSpecialists) && ($clinicSpecialists[0] != "")) {
             if (!in_array('all', $clinicSpecialists)) {
-                $clinics->whereIn('clinics.representative_doctor', $clinicSpecialists);
+                $clinics->where(function ($query) use ($clinicSpecialists) {
+                    foreach ($clinicSpecialists as $specialist) {
+                        $query->orWhereRaw("FIND_IN_SET(?, clinics.department)", [$specialist]);
+                    }
+                });
             }
         }
         

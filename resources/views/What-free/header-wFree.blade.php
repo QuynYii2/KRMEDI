@@ -327,7 +327,7 @@
     }
 
     async function loadSpecialist() {
-        let urlList = `{{ route('clinics.restapi.specialist') }}`;
+        let urlList = `{{ route('restapi.departments.list') }}`;
 
         await $.ajax({
             url: urlList,
@@ -351,7 +351,7 @@
         for (let i = 0; i < response.length; i++) {
             let data = response[i];
 
-            html += `<option value="${data.representative_doctor}">${data.name}</option>`;
+            html += `<option value="${data.id}">${data.name}</option>`;
         }
         $('#clinic_specialist').empty().append(html);
 
@@ -366,7 +366,7 @@
             let itemClass = (i <= 3) ? 'd-flex' : 'd-none';
 
             htmlMb += `<div class="${itemClass} item">
-                        <input type="checkbox" name="clinic_specialist" value="${data.representative_doctor}">
+                        <input type="checkbox" name="clinic_specialist" value="${data.id}">
                         <div class="text-all">${data.name}</div>
                     </div>`;
         }
@@ -434,7 +434,7 @@
     function initialSelect2(selectElement) {
         selectElement.select2({
             theme: 'bootstrap-5',
-            minimumInputLength: 1,
+            // minimumInputLength: 1, Disabled search
         });
     }
 </script>
@@ -492,6 +492,7 @@
         }
     }
 </script>
+
 <script>
     $(document).ready(function() {
         // Toggle the items and change the icon when the button is clicked
