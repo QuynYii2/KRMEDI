@@ -172,10 +172,11 @@
                 </div>
                 <div class="filter-body" id="clinicMobileSymptom"></div>
             </div>
-            <div class="d-flex justify-content-center mt-4">
-                <a class="add-cv-bt w-100 apply-bt_delete col-6">{{ __('home.Reset') }}</a>
+            <div class="d-flex justify-content-center mt-4 gap-2">
+                <button type="button"
+                    class="btn btn-secondary w-100 btnResetMobileFilter">{{ __('home.Reset') }}</button>
                 <button type="button" data-bs-dismiss="offcanvas" aria-label="Close"
-                    class="add-cv-bt apply-bt_edit w-100">{{ __('home.Apply') }}</button>
+                    class="btn btn-info w-100">{{ __('home.Apply') }}</button>
             </div>
         </div>
     </div>
@@ -460,7 +461,7 @@
         toggleItems('#toggleSpecialist');
         toggleItems('#toggleSymptom');
 
-        $('.add-cv-bt.apply-bt_delete').click(function() {
+        $('.btnResetMobileFilter').click(function() {
             $('.medicine-list--filter input[type="checkbox"]').prop('checked', false);
         });
     });
