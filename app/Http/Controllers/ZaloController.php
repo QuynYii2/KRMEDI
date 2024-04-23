@@ -423,10 +423,10 @@ class ZaloController extends Controller
                     $extendData['isActivated'] = false;
                     $user->extend = $extendData;
                     $user->save();
-                    toast('Bạn cần phải đăng nhập lại Zalo OA', 'error', 'top-left');
 
                     $redirectRoute = route('home');
                     $response = new RedirectResponse($redirectRoute);
+                    toast('Bạn cần phải đăng nhập lại Zalo OA', 'error', 'top-left');
                     $response->send();
                     exit;
                 }
@@ -970,6 +970,7 @@ class ZaloController extends Controller
             // send request
             $response = $this->zalo->post(ZaloEndPoint::API_OA_SEND_PROMOTION_MESSAGE_V3, $this->access_token, $msgPromotion);
             $result = $response->getDecodedBody();
+            dd($result);
             if ($result['error'] != 0) {
                 //Err
                 toast('Đã xảy ra sự cố', 'error', 'top-left');
