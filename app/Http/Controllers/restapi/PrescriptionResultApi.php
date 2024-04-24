@@ -131,8 +131,9 @@ class PrescriptionResultApi extends Controller
             $cartRequest->merge([
                 'user_id' => $chatUserId,
                 'products' => json_decode($request->input('products') ?? [], true),
+                'doctor_id' => $created_by,
             ]);
-            $response = $cartApi->addToCartV2($cartRequest,$prescription_result->id);
+            $response = $cartApi->addToCartV2($cartRequest);
             $prescription_id = null;
             if ($response) {
                 $prescription_id = json_decode($response->getContent())->data[0]->prescription_id;

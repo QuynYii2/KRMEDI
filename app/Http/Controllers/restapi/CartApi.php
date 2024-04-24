@@ -94,7 +94,7 @@ class CartApi extends Controller
         }
     }
 
-    public function addToCartV2(Request $request,$id_prescription)
+    public function addToCartV2(Request $request)
     {
         try {
             $products = $request->input('products') ?? [];
@@ -106,6 +106,7 @@ class CartApi extends Controller
                 // 'products.*.note' => 'nullable|string',
                 // 'products.*.treatment_days' => 'required|integer',
                 'type_product' => 'nullable|string',
+                'doctor_id' => 'nullable|numeric'
             ]);
 
             if ($validated->fails()) {
@@ -118,8 +119,9 @@ class CartApi extends Controller
 
             $userID = $validatedData['user_id'];
 
-//            $prescription_id = strtoupper(Str::random(3)) . '_' . time();
-            $prescription_id = $id_prescription;
+            $doctorID = $validatedData['doctor_id'];
+
+            $prescription_id = strtoupper(Str::random(3)) . '_' . time();
 
             // Add each product to the cart
             foreach ($products as $productData) {
@@ -154,6 +156,7 @@ class CartApi extends Controller
                     'prescription_id' => $prescription_id,
                     'treatment_days' => $productData['treatment_days'] ?? 0,
                     'remind_remain' => $productData['treatment_days'] ?? 0,
+                    'doctor_id' => $doctorID
                 ]);
             }
             if ($typeProduct == TypeProductCart::MEDICINE) {
