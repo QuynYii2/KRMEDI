@@ -23,7 +23,8 @@ class Cart extends Model
         'prescription_id',
         'note',
         'treatment_days',
-        'remind_remain'
+        'remind_remain',
+        'doctor_id'
     ];
 
     public function users()
@@ -39,5 +40,10 @@ class Cart extends Model
     public function productMedicine()
     {
         return $this->belongsTo(ProductMedicine::class, 'product_id', 'id');
+    }
+
+    public function doctors()
+    {
+        return $this->belongsTo(User::class, 'doctor_id', 'id');
     }
 }

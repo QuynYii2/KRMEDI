@@ -317,7 +317,11 @@
     });
 
     function callAlert(data, firebase = false) {
-        let thisUser = data.user_id_2;
+        let currentUser = `{{ Auth::user()->id ?? 0 }}`;
+        let thisUser = data.user_id_2; // From
+        if (currentUser == 0) {
+            return
+        }
         if (firebase) {
             data.from = data.notification.body;
             data.content = data.data.link;
@@ -325,6 +329,8 @@
                 return;
             }
         } else if (data.user_id_1 != thisUser && data.user_id_2 != thisUser) {
+            return;
+        } else if (currentUser == thisUser) {
             return;
         }
 

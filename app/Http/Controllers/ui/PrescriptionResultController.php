@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\ui;
 
 use App\Enums\PrescriptionResultStatus;
+use App\Enums\TypeProductCart;
 use App\Http\Controllers\Controller;
+use App\Models\Cart;
 use App\Models\DrugIngredients;
 use App\Models\online_medicine\ProductMedicine;
 use App\Models\PrescriptionResults;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PrescriptionResultController extends Controller
 {
@@ -23,7 +26,12 @@ class PrescriptionResultController extends Controller
 
     public function myPrescription()
     {
-        return view('ui.prescription-results.my-prescriptions');
+        $prescription = Cart::with('productMedicine', 'doctors')->where('user_id', Auth::user()->id)
+            ->where('type_product', TypeProductCart::MEDICINE)
+            ->whereNotNull('prescription_id')
+            ->orderBy('id', 'desc')->get();
+
+        return view('ui.prescription-results.my-prescriptions')->with(compact('prescription'));
     }
 
     public function doctorPrescription()
@@ -49,7 +57,7 @@ class PrescriptionResultController extends Controller
         }
 
         if ($object_search) {
-            $listMedicine = $listMedicine->where('object_', $object_search );
+            $listMedicine = $listMedicine->where('object_', $object_search);
         }
 
         $listMedicine = $listMedicine->get();
@@ -73,11 +81,11 @@ class PrescriptionResultController extends Controller
     {
         $prescription = PrescriptionResults::find($id);
         if (!$prescription || $prescription->status == PrescriptionResultStatus::DELETED) {
-            return response()->json(['status'=>false]);
+            return response()->json(['status' => false]);
         }
 
         $value_result = '[' . $prescription->prescriptions . ']';
         $array_result = json_decode($value_result, true);
-        return response()->json(['status'=>true,'listData'=>$array_result,'prescription'=>$prescription]);
+        return response()->json(['status' => true, 'listData' => $array_result, 'prescription' => $prescription]);
     }
 }
