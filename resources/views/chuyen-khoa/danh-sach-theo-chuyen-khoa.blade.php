@@ -11,7 +11,7 @@
                 <div class="title-Danh-sach"><i class="fa-solid fa-arrow-left"></i> {{ __('home.Danh sách') }}</div>
             </a>
             <form>
-                <div class="search-specialist col-md-8">
+                <div class="search-specialist col-lg-8 col-md-10">
                     <label for="search-specialist" class="search-specialist__label w-50">
                         <i class="fas fa-search"></i>
                         <input id="search-specialist" name="q" placeholder="{{ __('home.Tìm kiếm cơ sở y tế') }}" value="{{ request()->query('q') }}">
@@ -48,7 +48,7 @@
                 <div class="tab-pane fade show active" id="clinicList" role="tabpanel" aria-labelledby="clinicList-tab">
                     <div class="row">
                         @foreach ($clinics as $clinic)
-                            <div class="specialList-clinics col-md-6 mt-5" data-clinic-id="{{ $clinic->id }}">
+                            <div class="specialList-clinics col-md-6 col-12 mt-5" data-clinic-id="{{ $clinic->id }}">
                                 <div class="border-specialList">
                                     <div class="content__item d-flex gap-3 box-item__content">
                                         <div class="specialList-clinics--img img-special-line">
@@ -126,8 +126,8 @@
                         @foreach ($pharmacies as $pharmacy)
                             <div class="specialList-clinics col-md-6 mt-5" data-pharmacy-id="{{ $pharmacy->id }}">
                                 <div class="border-specialList">
-                                    <div class="content__item d-flex gap-3">
-                                        <div class="specialList-clinics--img">
+                                    <div class="content__item d-flex gap-3 box-item__content">
+                                        <div class="specialList-clinics--img img-special-line">
                                             @php
                                                 $galleryArray = explode(',', $pharmacy->gallery);
                                             @endphp

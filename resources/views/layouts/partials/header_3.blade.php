@@ -114,7 +114,7 @@
 <div class="offcanvas offcanvas-start" tabindex="-1" id="fleaMarketNavbar" aria-labelledby="offcanvasNavbarLabel">
     <div class="offcanvas-header">
         <a href="{{ route('home') }}" class="offcanvas-title" id="offcanvasNavbarLabel"><img loading="lazy"
-                class="w-100" src="{{ asset('img/icons_logo/logo-new.png') }}" alt=""></a>
+                class="w-100" src="{{ asset('img/icons_logo/logo-new.png') }}" style="max-width: 180px"></a>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
@@ -141,7 +141,7 @@
             </li>
             @if (Auth::check())
                 <li class="nav-item button-nav-header mb-3">
-                    <a class="nav-link" href="#">{{ __('home.Log out') }}</a>
+                    <a class="nav-link" href="#">{{ __('home.Logout') }}</a>
                 </li>
             @else
                 <li class="nav-item button-nav-header mb-3">

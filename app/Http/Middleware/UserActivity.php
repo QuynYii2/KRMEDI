@@ -28,7 +28,7 @@ class UserActivity
                 $user = Auth::user();
             }
 
-            $expiresAt = now()->addMinutes(2); /* keep online for 2 min */
+            $expiresAt = now()->addMinutes(20); /* keep online for 20 min */
             Cache::put('user-is-online|' . $user->id, true, $expiresAt);
 
             /* last seen */
