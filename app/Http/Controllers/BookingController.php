@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\ZaloController;
+use App\Jobs\booking\ChangeBookingStatus;
 use App\Models\User;
 use App\Models\ZaloFollower;
 use Illuminate\Support\Facades\Storage;
@@ -239,6 +240,7 @@ class BookingController extends Controller
     {
         try {
             $isSendOaToUser = false;
+
             $booking = Booking::find($id);
             $status = $request->input('status');
             // $doctor_id = $request->input('doctor_id');
@@ -251,24 +253,34 @@ class BookingController extends Controller
 
             $bookingResultList = $request->booking_result_list;
 
+            //Check booking files changes
+            $isChange = false;
+
+            foreach ($bookingResults as $oldItem) {
+                $valueChange = true;
+
+                foreach ($bookingResultList as $newItem) {
+                    if (
+                        $oldItem['type'] === $newItem['select']
+                        && $oldItem['doctor_id'] === $newItem['doctor_id']
+                        && $oldItem['url'] === $newItem['file_urls']
+                    ) {
+                        $valueChange = false;
+                        break;
+                    }
+                }
+
+                if ($valueChange) {
+                    $isChange = true;
+                    break;
+                }
+            }
+
+            if (!$isChange && count($bookingResults) !== count($bookingResultList)) {
+                $isChange = true;
+            }
+
             if ($status == BookingStatus::COMPLETE && $is_result == 1) {
-                // // Find the missing index
-                // $missingIndex = [];
-                // if ($bookingResults !== null && $oldValues !== null) {
-                //     $missingIndex = array_diff(array_keys($bookingResults), array_keys($oldValues));
-                // }
-
-                // // Remove the missing index from $bookingResults and delete the URL file
-                // if (!empty($missingIndex)) {
-                //     $index = array_keys($missingIndex)[0];
-
-                //     if (isset($bookingResults[$index]['url']) && Storage::exists(str_replace('/storage', 'public', $bookingResults[$index]['url']))) {
-                //         Storage::delete(str_replace('/storage', 'public', $bookingResults[$index]['url']));
-                //     }
-
-                //     unset($bookingResults[$index]);
-                // }
-
                 foreach ($bookingResultList as $index => $result) {
                     if (isset($result['select']) && isset($result['doctor_id']) && (isset($result['file_urls']) || isset($result['file']))) {
                         $validator = Validator::make($result, [
@@ -321,7 +333,7 @@ class BookingController extends Controller
             }
 
             // Check if the status has changed
-            if ($booking->status != $status) {
+            if ($booking->status != $status || $isChange) {
                 // Status has changed, send zalo OA msg to customer
                 $isSendOaToUser = true;
             }
@@ -339,42 +351,8 @@ class BookingController extends Controller
             $success = $booking->save();
             if ($success) {
                 if ($isSendOaToUser) {
-                    $userId = $booking->user_id;
-                    $userFollower = ZaloFollower::where('extend->user_id', $userId)->first();
-                    $admin = User::whereHas('roles', function ($query) {
-                        $query->where('name', 'ADMIN');
-                    })
-                        ->whereNotNull('extend->access_token_zalo')
-                        ->first();
-                    $adminAccessToken = $admin->extend['access_token_zalo'];
-                    $additionalParams = [
-                        'user_id' => $userFollower->user_id,
-                        'booking_clinic' => $booking->clinic->name,
-                        'booking_clinic_id' => $booking->clinic_id,
-                        'user_name' => $booking->user->name . ' ' . $booking->user->last_name,
-                        'booking_status' => $status,
-                        'booking_cancel_reason' => $reason,
-                        'booking_clinic_checkin' => date('d/m/Y h:i A', strtotime($booking->check_in))
-                    ];
-                    // $newRequest = $request->duplicate()->merge($additionalParams);
-                    // $zalo = new ZaloController($adminAccessToken);
-                    // $checkStatus = $zalo->sendBookingMessage($newRequest);
-
-                    // if (isset($checkStatus['error']) && $checkStatus['error'] == 1) {
-                    //     $zalo->sendBookingMessage($newRequest);
-                    // }
-
-                    //Send notification
-                    $mainApi = new MainApi();
-                    $newRequestData = [
-                        'id' => $booking->id,
-                        'user_id' => $booking->user_id,
-                        'clinic_id' => $booking->clinic_id,
-                        'user_title' => 'Trạng thái booking đã thay đổi',
-                        'clinic_title' => 'Thay đổi trạng thái booking thành công',
-                    ];
-                    $request = new Request($newRequestData);
-                    $mainApi->sendFcmNotification($request);
+                    //Queue on change booking status notifications
+                    ChangeBookingStatus::dispatch($booking);
                 }
 
                 alert('Update success');

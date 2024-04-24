@@ -33,7 +33,7 @@
         <div class="row">
             <div class="form-group col-md-6">
                 <label for="department_id">Department</label>
-                <input disabled type="text" class="form-control" id="department_id" value="{{ $department->name }}">
+                <input disabled type="text" class="form-control" id="department_id" value="{{ $department->name ?? "" }}">
             </div>
             <div class="form-group col-md-6">
                 <label for="doctor_id">Doctor Name</label>
@@ -61,7 +61,7 @@
                 </div>
             @endif
         </div>
-        <div class="form-group">
+        <div class="form-group ms-4">
             <input disabled class="form-check-input" {{ $booking->is_result == 1 ? 'checked' : '' }} type="checkbox"
                    id="is_result">
             <label class="form-check-label" for="is_result">
@@ -77,7 +77,7 @@
         @endif
         @if($booking->is_result == 1 && $booking->status == \App\Enums\BookingStatus::COMPLETE)
             <div class="d-flex align-items-center justify-content-start w-50">
-                <a href="{{ route('web.users.my.bookings.result', $booking->id) }}" class="btn btn-primary">
+                <a target="_blank" href="{{ route('web.users.booking.result', ['id' => $booking->id]) }}" class="btn btn-primary">
                     View result
                 </a>
             </div>
