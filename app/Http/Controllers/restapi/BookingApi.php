@@ -8,7 +8,7 @@ use App\Enums\SurveyType;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ClinicController;
 use App\Http\Controllers\Controller;
-use App\Jobs\ProcessBooking;
+use App\Jobs\booking\ProcessBooking;
 use App\Models\Booking;
 use App\Models\Clinic;
 use App\Models\SurveyAnswer;

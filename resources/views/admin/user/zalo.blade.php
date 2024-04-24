@@ -35,7 +35,7 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse ($follower_info as $key => $info)
+                @foreach ($follower_info as $key => $info)
                     <tr>
                         <td class="text-center">
                             {{ $key + 1 }}
@@ -74,11 +74,7 @@
                             {!! $info['address'] ?? '' !!}
                         </td>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="7" class="text-center">Empty data</td>
-                    </tr>
-                @endforelse
+                @endforeach
             </tbody>
         </table>
     </div>

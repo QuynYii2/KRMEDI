@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\booking;
 
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\restapi\MainApi;

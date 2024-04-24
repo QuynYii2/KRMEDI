@@ -114,8 +114,8 @@
             {{-- @if ($bookings_edit->is_result == 1 && $bookings_edit->status === \App\Enums\BookingStatus::COMPLETE) --}}
             <div id="trackFile" style="display: none;">
                 <div id="repeater">
-                    @forelse ($repeaterItems as $index => $item)
-                        <div data-repeater-list="booking_result_list">
+                    <div data-repeater-list="booking_result_list">
+                        @forelse ($repeaterItems as $index => $item)
                             <div class="d-flex align-items-center row" data-repeater-item>
                                 <div class="col-md-1">
                                     <button type="button" data-repeater-delete class="btn btn-danger mt-3"><i
@@ -165,12 +165,10 @@
                                     </div>
                                 @endif
                             </div>
-                        </div>
-                    @empty
-                        <div data-repeater-list="booking_result_list">
+                        @empty
                             <div class="d-flex align-items-center row" data-repeater-item>
                                 <div class="col-md-1">
-                                    <button class="btn btn-danger mt-3" data-repeater-delete><i
+                                    <button type="button" class="btn btn-danger mt-3" data-repeater-delete><i
                                             class="fa-solid fa-x"></i></button>
                                 </div>
                                 <div class="col-md-3 firstSelector">
@@ -196,8 +194,8 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforelse
+                        @endforelse
+                    </div>
                     <button data-repeater-create type="button" class="btn btn-primary" id="addBtn"><i
                             class="fa-solid fa-plus"></i></button>
                 </div>
@@ -599,13 +597,13 @@
                     $item.find('.viewFile').remove();
                     $item.find('.select2Div').remove();
                     $item.find('.firstSelector').after(`
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="in_charged">Bác sĩ phụ trách:</label>
-                    <select class="form-select doctor_selector" name="booking_result_list[${count}][doctor_id]"></select>
-                </div>
-            </div>
-        `);
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="in_charged">Bác sĩ phụ trách:</label>
+                                <select class="form-select doctor_selector" name="booking_result_list[${count}][doctor_id]"></select>
+                            </div>
+                        </div>
+                    `);
 
                     // Find the last data-repeater-item and insert the new item after it
                     var $lastItem = $('[data-repeater-item]').last();

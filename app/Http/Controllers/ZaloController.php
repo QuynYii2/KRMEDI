@@ -938,10 +938,13 @@ class ZaloController extends Controller
     {
         try {
             $guest = ZaloFollower::where('user_id', $userId)->first();
-            $booking = Booking::with('clinic')->find($id);
+            $booking = Booking::with('clinic', 'user')->find($id);
 
-            $msgBuilder = new MessageBuilder(MessageBuilder::MSG_TYPE_PROMOTION);
+            $msgBuilder = new MessageBuilder(MessageBuilder::MSG_TYPE_TRANSACTION);
             $msgBuilder->withUserId($userId);
+
+            $msgBuilder->withTemplateType(TransactionTemplateType::TRANSACTION_ORDER);
+            $msgBuilder->withLanguage("VI");
 
             $bannerElement = array(
                 'image_url' => 'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/311942959/original/c064dac2df0c204b234b395ece39fa4f9d87661e/medical-website-healthcare-website-clinic-website-doctor-website-dental-website-22dd.jpg',
@@ -950,7 +953,7 @@ class ZaloController extends Controller
             $msgBuilder->addElement($bannerElement);
 
             $headerElement = array(
-                'content' => 'Xin chào quý khách ' . $guest->name . ',',
+                'content' => 'Xin chào quý khách ' . $guest->name ?? $booking->user->name ?? '' . ',',
                 'align' => 'center',
                 'type' => 'header'
             );
@@ -963,14 +966,63 @@ class ZaloController extends Controller
             );
             $msgBuilder->addElement($text1Element);
 
+            $tableContent1 = array(
+                'key' => 'Tên khách hàng',
+                'value' => $booking->user->name
+            );
+
+            switch ($booking->status) {
+                case 'PENDING':
+                    $tableContent2 = array(
+                        'key' => 'Trạng thái',
+                        'value' => 'Đang chờ',
+                        'style' => 'yellow',
+                    );
+                    break;
+                case 'COMPLETE':
+                    $tableContent2 = array(
+                        'key' => 'Trạng thái',
+                        'value' => 'Hoàn thành',
+                        'style' => 'green',
+                    );
+                    break;
+                case 'APPROVED':
+                    $tableContent2 = array(
+                        'key' => 'Trạng thái',
+                        'value' => 'Được duyệt',
+                        'style' => 'blue',
+                    );
+                    break;
+                case 'CANCEL':
+                    $tableContent2 = array(
+                        'key' => 'Trạng thái',
+                        'value' => 'Bị huỷ (' . $booking->reason_cancel . ')',
+                        'style' => 'red',
+                    );
+                    break;
+
+                default:
+                    $tableContent2 = array(
+                        'key' => 'Trạng thái',
+                        'value' => 'Something went wrong',
+                        'style' => 'grey',
+                    );
+                    break;
+            }
+
+            $tableElement = array(
+                'content' => array($tableContent1, $tableContent2),
+                'type' => 'table'
+            );
+            $msgBuilder->addElement($tableElement);
+
             $actionOpenUrl = $msgBuilder->buildActionOpenURL(route('web.users.booking.result', ['id' => $id]));
             $msgBuilder->addButton('Tìm hiểu thêm', '', $actionOpenUrl);
 
             $msgPromotion = $msgBuilder->build();
             // send request
-            $response = $this->zalo->post(ZaloEndPoint::API_OA_SEND_PROMOTION_MESSAGE_V3, $this->access_token, $msgPromotion);
+            $response = $this->zalo->post(ZaloEndPoint::API_OA_SEND_TRANSACTION_MESSAGE_V3, $this->access_token, $msgPromotion);
             $result = $response->getDecodedBody();
-            dd($result);
             if ($result['error'] != 0) {
                 //Err
                 toast('Đã xảy ra sự cố', 'error', 'top-left');
@@ -978,6 +1030,7 @@ class ZaloController extends Controller
             toast('Thành công', 'success', 'top-left');
             return back();
         } catch (\Exception $e) {
+            dd($e);
             return response()->json(['error' => -1, 'message' => $e->getMessage()], 404);
         }
     }
