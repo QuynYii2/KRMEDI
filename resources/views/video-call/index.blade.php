@@ -31,7 +31,7 @@
 
 <body>
 
-    <main>
+    <main class="container">
         @php
             $role_name = null;
             if (Auth::check()) {
@@ -49,8 +49,6 @@
             <button id="join-btn">Bắt đầu</button>
         </div>
         <div id="user-streams" class="mt-5"></div>
-
-
         <!-- Wrapper for join button -->
         <div id="footer" class="mb-3" style="display: flex">
             <div class="icon-wrapper">
@@ -68,16 +66,17 @@
                 <p>Leave</p>
             </div>
             @if (!\App\Models\User::isNormal())
-            <div class="icon-wrapper" data-toggle="modal" data-target="#modal-create-don-thuoc-widget-chat">
-                <img class="control-icon" id="create-prescription-btn"
-                    src="{{ asset('img/assets-video-call/prescription2.svg') }}" />
-                <p>Tạo đơn thuốc</p>
-            </div>
+                <div class="icon-wrapper" data-toggle="modal" data-target="#modal-create-don-thuoc-widget-chat">
+                    <img class="control-icon" id="create-prescription-btn"
+                        src="{{ asset('img/assets-video-call/prescription2.svg') }}" />
+                    <p>Tạo đơn thuốc</p>
+                </div>
             @else
-            <div class="icon-wrapper" data-toggle="modal" data-target="#modal-show-prescription">
-                <img class="control-icon" id="prescription-btn" src="{{ asset('img/assets-video-call/capsule.svg') }}" />
-                <p>Đơn thuốc</p>
-            </div>
+                <div class="icon-wrapper" data-toggle="modal" data-target="#modal-show-prescription">
+                    <img class="control-icon" id="prescription-btn"
+                        src="{{ asset('img/assets-video-call/capsule.svg') }}" />
+                    <p>Đơn thuốc</p>
+                </div>
             @endif
 
         </div>
