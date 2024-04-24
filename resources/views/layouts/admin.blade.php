@@ -79,7 +79,7 @@
         const messaging = getMessaging();
 
         const key_pair_fire_base =
-        'BIKdl-B84phF636aS0ucw5k-KoGPnivJW4L_a9GNf7gyrWBZt--O9KcEzvsLl3h-3_Ld0rT8YFTsuupknvguW9s';
+            'BIKdl-B84phF636aS0ucw5k-KoGPnivJW4L_a9GNf7gyrWBZt--O9KcEzvsLl3h-3_Ld0rT8YFTsuupknvguW9s';
         getToken(messaging, {
             vapidKey: key_pair_fire_base
         }).then((currentToken) => {
@@ -333,8 +333,8 @@
                         onscroll="lazyLoadNotifications()">
                         <li class="dropdown-header">
                             Bạn có <span class="countUnseenNotification">{{ $unseenNoti }}</span> thông báo chưa đọc
-                            {{--                        <a type="button" onclick="seenAllNotify({{ Auth::user()->id ?? 0 }})"><span --}}
-                            {{--                                class="badge rounded-pill bg-primary p-2 ms-2">{{ __('home.View all') }}</span--></a> --}}
+                            <a type="button" onclick="seenAllNotify({{ Auth::user()->id ?? 0 }})"><span
+                                    class="badge rounded-pill bg-primary p-2 ms-2">{{ __('home.View all') }}</span--></a>
                         </li>
                         <li>
                             <hr class="dropdown-divider">
@@ -1227,7 +1227,7 @@
                     else
                         pager = $(
                             '<div class="pager" style="padding-top: 20px; direction:ltr; " align="center"></div>'
-                            );
+                        );
 
                     $('<button class="pg-goto"></button>').text(' « First ').bind('click', function() {
                         currentPage = 0;
