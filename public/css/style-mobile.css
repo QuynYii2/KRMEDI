@@ -26,6 +26,16 @@
 .box-dat-kham{
     margin-top: 190px;
 }
+.pg-goto{
+    background-color: #e9ecef;
+    border: 1px solid #e9ecef;
+}
+#list-user td{
+    border: none;
+}
+.nav .nav-item .nav-link.active,.nav .nav-item .nav-link{
+    font-size: 24px;
+}
 @media (max-width: 1400px) {
     .header .header-detail--left .back h5 {
         font-size: 16px;
@@ -479,6 +489,36 @@
     .input-quantity{
         text-align: center;
     }
+    .box-tv{
+        margin-top: 90px!important;
+    }
+    .text-point-membership{
+        margin-bottom: 20px;
+    }
+    .text-point-membership,#list-user .number{
+        font-size: 20px;
+    }
+    .username p,.points span,#writeReviewBtn{
+        font-size: 14px;
+    }
+    .box-shop-info{
+        max-width: 100%;
+    }
+    .recruitment-details--title a{
+        font-size: 18px;
+    }
+    .flea-buttons{
+        font-size: 13px;
+    }
+    .col-md-4.col-6 .product-item .content-pro .name-product .name-product--fleaMarket{
+        min-height: 45px;
+    }
+    .fa-2xl{
+        font-size: 1.7em;
+    }
+    .nav .nav-item .nav-link.active,.nav .nav-item .nav-link{
+        font-size: 16px;
+    }
 }
 
 @media (max-width: 767px) {
@@ -663,7 +703,7 @@
     .modal-body .product-cart .title .title-name{
         font-size: 13px!important;
     }
-    .btnGetFile{
+    .btnGetFile,.button-Reset-booking,.button-apply-booking{
         font-size: 14px;
     }
     .text-short-description{
@@ -781,5 +821,22 @@
     }
     .flea-button{
         height: auto;
+    }
+    .text-point-membership{
+        font-size: 16px;
+    }
+
+    .username p, .points span{
+        max-width: 200px;
+        width: 100%;
+    }
+    .gold-medal{
+        margin-left: 0px;
+    }
+    .fa-2xl{
+        font-size: 1.5em;
+    }
+    .nav .nav-item .nav-link.active,.nav .nav-item .nav-link{
+        font-size: 16px!important;
     }
 }

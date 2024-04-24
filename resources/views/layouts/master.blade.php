@@ -421,12 +421,12 @@
                             '<div class="pager" style="padding-top: 20px; direction:ltr; " align="center"></div>'
                         );
 
-                    $('<button class="pg-goto"></button>').text(' « First ').bind('click', function() {
-                        currentPage = 0;
-                        $table.trigger('repaginate');
-                    }).appendTo(pager);
+                    // $('<button class="pg-goto"></button>').text(' « First ').bind('click', function() {
+                    //     currentPage = 0;
+                    //     $table.trigger('repaginate');
+                    // }).appendTo(pager);
 
-                    $('<button class="pg-goto"> « Prev </button>').bind('click', function() {
+                    $('<button class="pg-goto"> « </button>').bind('click', function() {
                         if (currentPage > 0)
                             currentPage--;
                         $table.trigger('repaginate');
@@ -451,15 +451,15 @@
                         }).appendTo(pager);
                     }
 
-                    $('<button class="pg-goto"> Next » </button>').bind('click', function() {
+                    $('<button class="pg-goto">  » </button>').bind('click', function() {
                         if (currentPage < pages - 1)
                             currentPage++;
                         $table.trigger('repaginate');
                     }).appendTo(pager);
-                    $('<button class="pg-goto"> Last » </button>').bind('click', function() {
-                        currentPage = pages - 1;
-                        $table.trigger('repaginate');
-                    }).appendTo(pager);
+                    // $('<button class="pg-goto"> Last » </button>').bind('click', function() {
+                    //     currentPage = pages - 1;
+                    //     $table.trigger('repaginate');
+                    // }).appendTo(pager);
 
                     if (!$table.next().hasClass("pager"))
                         pager.insertAfter($table);
