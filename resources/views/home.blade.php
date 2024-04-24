@@ -2490,9 +2490,9 @@
 
     </script>
     <script>
-        let accessToken = `Bearer ` + token;
-        let headers = {
-            "Authorization": accessToken
+        let accessTokens = `Bearer ` + token;
+        let iheaders = {
+            "Authorization": accessTokens
         };
 
         $(document).ready(function () {
@@ -2537,7 +2537,7 @@
             await $.ajax({
                 url: productWishListUrl,
                 method: 'POST',
-                headers: headers,
+                headers: iheaders,
                 data: data,
                 success: function (response) {
                     loadingMasterPage();
@@ -2574,7 +2574,7 @@
             await $.ajax({
                 url: doctorWishListUrl,
                 method: 'POST',
-                headers: headers,
+                headers: iheaders,
                 data: data,
                 success: function (response) {
                     isFavourite = response.isFavourite
@@ -2804,67 +2804,67 @@
             initMap(currentLocation, locations);
         });
     </script>
-    <script>
-        const prevFlea = document.getElementById("prevFlea");
-        const nextFlea = document.getElementById("nextFlea");
+{{--    <script>--}}
+{{--        const prevFlea = document.getElementById("prevFlea");--}}
+{{--        const nextFlea = document.getElementById("nextFlea");--}}
 
-        let carouselVp = document.getElementById("carousel-vp");
+{{--        let carouselVp = document.getElementById("carousel-vp");--}}
 
-        let cCarouselInner = document.getElementById("cCarousel-inner");
-        let carouselInnerWidth = cCarouselInner.getBoundingClientRect().width;
+{{--        let cCarouselInner = document.getElementById("cCarousel-inner");--}}
+{{--        let carouselInnerWidth = cCarouselInner.getBoundingClientRect().width;--}}
 
-        let leftValue = 0;
+{{--        let leftValue = 0;--}}
 
-        // Variable used to set the carousel movement value (card's width + gap)
-        const totalMovementSize =
-            parseFloat(
-                document.querySelector(".cCarousel-item").getBoundingClientRect().width,
-                10
-            ) +
-            parseFloat(
-                window.getComputedStyle(cCarouselInner).getPropertyValue("gap"),
-                10
-            );
+{{--        // Variable used to set the carousel movement value (card's width + gap)--}}
+{{--        const totalMovementSize =--}}
+{{--            parseFloat(--}}
+{{--                document.querySelector(".cCarousel-item").getBoundingClientRect().width,--}}
+{{--                10--}}
+{{--            ) +--}}
+{{--            parseFloat(--}}
+{{--                window.getComputedStyle(cCarouselInner).getPropertyValue("gap"),--}}
+{{--                10--}}
+{{--            );--}}
 
-        prevFlea.addEventListener("click", () => {
-            if (leftValue !== 0) {
-                leftValue -= -totalMovementSize;
-                cCarouselInner.style.left = leftValue + "px";
-            }
-        });
+{{--        prevFlea.addEventListener("click", () => {--}}
+{{--            if (leftValue !== 0) {--}}
+{{--                leftValue -= -totalMovementSize;--}}
+{{--                cCarouselInner.style.left = leftValue + "px";--}}
+{{--            }--}}
+{{--        });--}}
 
-        nextFlea.addEventListener("click", () => {
-            const carouselVpWidth = carouselVp.getBoundingClientRect().width;
-            if (carouselInnerWidth - Math.abs(leftValue) > carouselVpWidth) {
-                leftValue -= totalMovementSize;
-                cCarouselInner.style.left = leftValue + "px";
-            }
-        });
+{{--        nextFlea.addEventListener("click", () => {--}}
+{{--            const carouselVpWidth = carouselVp.getBoundingClientRect().width;--}}
+{{--            if (carouselInnerWidth - Math.abs(leftValue) > carouselVpWidth) {--}}
+{{--                leftValue -= totalMovementSize;--}}
+{{--                cCarouselInner.style.left = leftValue + "px";--}}
+{{--            }--}}
+{{--        });--}}
 
-        const mediaQuery510 = window.matchMedia("(max-width: 510px)");
-        const mediaQuery770 = window.matchMedia("(max-width: 770px)");
+{{--        const mediaQuery510 = window.matchMedia("(max-width: 510px)");--}}
+{{--        const mediaQuery770 = window.matchMedia("(max-width: 770px)");--}}
 
-        mediaQuery510.addEventListener("change", mediaManagement);
-        mediaQuery770.addEventListener("change", mediaManagement);
+{{--        mediaQuery510.addEventListener("change", mediaManagement);--}}
+{{--        mediaQuery770.addEventListener("change", mediaManagement);--}}
 
-        let oldViewportWidth = window.innerWidth;
+{{--        let oldViewportWidth = window.innerWidth;--}}
 
-        function mediaManagement() {
-            const newViewportWidth = window.innerWidth;
+{{--        function mediaManagement() {--}}
+{{--            const newViewportWidth = window.innerWidth;--}}
 
-            if (leftValue <= -totalMovementSize && oldViewportWidth < newViewportWidth) {
-                leftValue += totalMovementSize;
-                cCarouselInner.style.left = leftValue + "px";
-                oldViewportWidth = newViewportWidth;
-            } else if (
-                leftValue <= -totalMovementSize &&
-                oldViewportWidth > newViewportWidth
-            ) {
-                leftValue -= totalMovementSize;
-                cCarouselInner.style.left = leftValue + "px";
-                oldViewportWidth = newViewportWidth;
-            }
-        }
+{{--            if (leftValue <= -totalMovementSize && oldViewportWidth < newViewportWidth) {--}}
+{{--                leftValue += totalMovementSize;--}}
+{{--                cCarouselInner.style.left = leftValue + "px";--}}
+{{--                oldViewportWidth = newViewportWidth;--}}
+{{--            } else if (--}}
+{{--                leftValue <= -totalMovementSize &&--}}
+{{--                oldViewportWidth > newViewportWidth--}}
+{{--            ) {--}}
+{{--                leftValue -= totalMovementSize;--}}
+{{--                cCarouselInner.style.left = leftValue + "px";--}}
+{{--                oldViewportWidth = newViewportWidth;--}}
+{{--            }--}}
+{{--        }--}}
 
-    </script>
+{{--    </script>--}}
 @endsection

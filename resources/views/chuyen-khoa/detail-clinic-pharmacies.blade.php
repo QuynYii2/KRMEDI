@@ -4,6 +4,7 @@
 @extends('layouts.master')
 @section('title', 'Detail')
 @section('content')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.12/css/lightgallery.min.css">
     <link rel="stylesheet" href="{{asset('css/homeSpecialist.css')}}">
     @include('layouts.partials.header')
     <div class="container mt-200 mt-70">
@@ -86,12 +87,12 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="image" role="tabpanel" aria-labelledby="image-tab">
-                    <div class="row">
+                    <div class="row" id="lightgallery">
                         @php
                             $galleryArray = explode(',', $clinicDetail->gallery);
                         @endphp
                         @foreach($galleryArray as $gallery)
-                            <div class="col-lg-4 col-md-6 col-12 mb-md-4 mb-3">
+                            <div class="col-lg-4 col-md-6 col-12 mb-md-4 mb-3" data-src="{{$gallery}}" data-lg-size="1600-1067">
                                 <img class="p-0 w-100 h-100"
                                      style="
                                  object-fit: cover;
@@ -125,7 +126,16 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.12/dist/js/lightgallery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lg-thumbnail/1.1.0/lg-thumbnail.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lg-fullscreen/1.1.0/lg-fullscreen.min.js"></script>
     <script>
+        $(document).ready(function () {
+            $("#lightgallery").lightGallery();
+        });
         document.addEventListener("DOMContentLoaded", function () {
             var writeReviewBtn = document.getElementById('writeReviewBtn');
             var reviewItemClinic = document.getElementById('reviewItemClinic');

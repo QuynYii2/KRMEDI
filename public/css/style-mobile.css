@@ -17,6 +17,15 @@
     right: unset!important;
     left: 30px!important;
 }
+.zalo-follow-only-button iframe{
+    width: 90px!important;
+}
+.text-time{
+    font-weight: 800;
+}
+.box-dat-kham{
+    margin-top: 190px;
+}
 @media (max-width: 1400px) {
     .header .header-detail--left .back h5 {
         font-size: 16px;
@@ -417,9 +426,9 @@
         font-size: 16px;
     }
     #show_inf #inf-doctor #about .dess{
-        margin-top: 16px;
+        margin-top: 12px;
     }
-    .fs-24px{
+    .fs-24px,#show_inf #inf-doctor #img_info #qr_code p{
         font-size: 18px;
     }
     .product-details .body .brand-name .text-wrapper-2,.input-quantity{
@@ -450,6 +459,26 @@
     .content__item__image{
         height: 100%;
     }
+    .box-footer-md{
+        max-width: 93%;
+    }
+    .container .danh-sach-theo-chuyen-khoa .nav-item .nav-link{
+        padding: 12px 16px!important;
+        line-height: normal;
+    }
+    .box-dat-kham{
+        margin-top: 80px;
+    }
+    .specialList-clinics-mobile{
+        margin-top: 20px!important;
+    }
+    #qrContent svg{
+        width: 240px;
+        height: auto;
+    }
+    .input-quantity{
+        text-align: center;
+    }
 }
 
 @media (max-width: 767px) {
@@ -467,7 +496,8 @@
     .container #myTabContent .product-item .content-pro .name-product a, .bg-tuyen-dung .border-radius-homeNew .krm-name-recruitment,
     .product-item .content-pro .name-product a, .krm-title-news, .container .font-16-mobi, .find-my-medicine .frame .text-wrapper, .text-content-product,
     .list-doctor .card .card-body a h5,.modal-content .modal-header .modal-title,
-    .container .detail-clinic-theo-chuyen-khoa-title .border-specialList .specialList-clinics--main .title-specialList-clinics,.title-specialList-clinics{
+    .container .detail-clinic-theo-chuyen-khoa-title .border-specialList .specialList-clinics--main .title-specialList-clinics,.title-specialList-clinics,
+    .text-title-satisfied,#show_inf #inf-doctor #img_info #qr_code p{
         font-size: 16px !important;
     }
 
@@ -655,7 +685,7 @@
         margin-bottom: 20px!important;
     }
     .contact_doctor{
-        padding: 5px 15px!important;
+        padding: 2px 10px!important;
     }
     .container .danh-sach-theo-chuyen-khoa .nav-item .nav-link{
         padding: 8px 16px!important;
@@ -725,5 +755,31 @@
     }
     .content__item__image_detail{
         height: 102px!important;
+    }
+    .time-kham{
+        margin-top: 20px;
+    }
+    #qr_code{
+        margin-bottom: 20px;
+        width: 65%;
+    }
+    #qrContent svg {
+        width: 160px;
+    }
+    #show_inf #inf-doctor #img_info #qr_code{
+        padding: 24px 0px;
+        gap: 10px;
+    }
+    #doctor_paginate ul{
+        flex-wrap: wrap;
+    }
+    .list-doctor .card{
+        margin-bottom: 18px;
+    }
+    .input-quantity{
+        width: 15% !important;
+    }
+    .flea-button{
+        height: auto;
     }
 }

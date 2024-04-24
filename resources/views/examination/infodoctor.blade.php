@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div id="inf-doctor" class="d-md-flex d-block justify-content-center mt-2 mt-md-0">
-                    {{-- <div id="img_info">
+                     <div id="img_info" class="col-md-6 d-flex justify-content-center align-items-center flex-column">
                         <div id="doc">
                             <img src="{{ asset($doctor->avt) }}">
                         </div>
@@ -31,8 +31,8 @@
                             </p>
 
                         </div>
-                    </div> --}}
-                    <div id="about">
+                    </div>
+                    <div id="about" class="col-md-6">
                         <h5>{{ $doctor->name }}</h5>
                         <div class="dess">
                             <p>{{ __('home.Hospital') }}: </p>
@@ -86,7 +86,7 @@
                             <p>{{ __('home.Respond rate') }}: </p>
                             <span>{{ $doctor->response_rate }}%</span>
                         </div>
-                        <div id="opt_btn" class="d-flex justify-content-between justify-content-md-center">
+                        <div id="opt_btn" class="d-flex justify-content-center">
                             <a onclick="handleStartChatWithDoctor('{{ $doctor->id }}')">
                                 <button class="button">{{ __('home.Chat') }}</button>
                             </a>
@@ -108,7 +108,7 @@
                     </div>
                 </div>
                 <div id="review" class="d-flex justify-content-center mt-5">
-                    <div class="d-flex list-title w-100 justify-content-between">
+                    <div class="d-flex list-title w-100 justify-content-between align-items-center">
                         <div class="list--doctor p-0">
                             <p>{{ __('home.Review') }}</p>
                         </div>

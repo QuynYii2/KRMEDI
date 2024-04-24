@@ -1,6 +1,6 @@
 <footer class="d-block mt-5 mobile-hidden">
     <div class="">
-        <div class="container d-md-flex mb-md-5">
+        <div class="container d-md-flex mb-md-5 box-footer-md">
             <div class="col-md-6"><img class="w-200" src="{{ asset('img/icons_logo/logo-krmedi-footer.png') }}"></div>
             <div class="col-md-6 d-flex align-content-center flex-wrap right-footer-top">
                 <div class="mr-4 krm-footer-fs">

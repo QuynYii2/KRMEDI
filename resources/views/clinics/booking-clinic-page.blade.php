@@ -147,12 +147,12 @@
         }
     </style>
     @include('layouts.partials.header')
-    <div class="container">
+    <div class="container box-dat-kham">
         <div class="detail-clinic-theo-chuyen-khoa-title border-bottom">
             <a href="{{ route('home.specialist') }}">
                 <div class="title-detail-clinic"><i class="fa-solid fa-arrow-left"></i> {{ __('home.Detail') }}</div>
             </a>
-            <div class="specialList-clinics col-md-12 mt-5 mb-5">
+            <div class="specialList-clinics specialList-clinics-mobile col-md-12 mt-5 mb-5">
                 <div class="border-specialList">
                     <div class="content__item d-md-flex gap-3">
                         @php
@@ -212,16 +212,16 @@
                 <div></div>
                 <section>
                     <div class="d-md-flex">
-                        <div class="small-12 col-md-5 pl-0">
-                            <div>{{ __('home.Chọn Ngày') }}</div>
+                        <div class="small-12 col-lg-5 col-md-6 pl-0 pr-0">
+                            <div class="text-time">{{ __('home.Chọn Ngày') }}</div>
                             <div id="datepicker"></div>
                         </div>
-                        <div class="small-12 col-md-7">
-                            <div>{{ __('home.Chọn thời gian') }}</div>
+                        <div class="small-12 col-lg-7 col-md-6">
+                            <div class="time-kham text-time">{{ __('home.Chọn thời gian') }}</div>
                             <div class="spin-me"></div>
-                            <div class="container">
+                            <div class="container p-0">
                                 <div class="row">
-                                    <div class="col-12 timeContainer">
+                                    <div class="col-12 timeContainer p-0">
                                     </div>
                                 </div>
                             </div>

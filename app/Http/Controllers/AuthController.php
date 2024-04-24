@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -395,6 +396,7 @@ class AuthController extends Controller
             $user->token = null;
             $user->token_firebase = null;
             $user->save();
+            Cache::forget('user-is-online|' . $user->id);
         }
         (new MainController())->removeCouponExpiredAndAddCouponActive();
         Auth::logout();
