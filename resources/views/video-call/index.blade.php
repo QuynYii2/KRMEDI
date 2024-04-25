@@ -240,12 +240,12 @@
 
         //#5 - Set remote tracks to store other users
         let remoteTracks = {}
-        // document.getElementById('join-btn').addEventListener('click', async () => {
-        //     config.uid = document.getElementById('username').value
-        //     await joinStreams()
-        //     document.getElementById('join-wrapper').style.display = 'none'
-        //     document.getElementById('footer').style.display = 'flex'
-        // })
+        document.getElementById('join-btn').addEventListener('click', async () => {
+            config.uid = document.getElementById('username').value
+            await joinStreams()
+            document.getElementById('join-wrapper').style.display = 'none'
+            document.getElementById('footer').style.display = 'flex'
+        })
 
         document.getElementById('mic-btn').addEventListener('click', async () => {
             //Check if what the state of muted currently is
@@ -277,7 +277,7 @@
             }
         })
 
-        document.getElementById('leave-btn').addEventListener('click', async () => {
+        async function leaveCall() {
             //Loop threw local tracks and stop them so unpublish event gets triggered, then set to undefined
             //Hide footer
             for (trackName in localTracks) {
@@ -294,7 +294,8 @@
             document.getElementById('footer').style.display = 'none'
             document.getElementById('user-streams').innerHTML = ''
             document.getElementById('join-wrapper').style.display = 'flex'
-        })
+            window.close();
+        }
 
         //Method will take all my info and set user stream in frame
         let joinStreams = async () => {
@@ -397,6 +398,25 @@
             const footer = document.querySelector('#footer');
             joinWrapper.style.display = 'none';
             footer.style.display = 'flex';
+        });
+
+        let leaveConfirmation = false;
+
+        document.getElementById('leave-btn').addEventListener('click', async () => {
+            if (confirm('Are you sure you want to leave?')) {
+                leaveConfirmation = true;
+                leaveCall();
+            }
+        });
+
+        $(window).on('beforeunload', function() {
+            if (!leaveConfirmation) {
+                return 'Are you sure you want to leave?';
+            }
+        });
+
+        $(window).on('unload', function() {
+            leaveCall();
         });
     </script>
 
