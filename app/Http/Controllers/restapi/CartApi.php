@@ -119,7 +119,7 @@ class CartApi extends Controller
 
             $userID = $validatedData['user_id'];
 
-            $doctorID = $validatedData['doctor_id'];
+            $doctorID = isset($validatedData['doctor_id']) ? $validatedData['doctor_id'] : null;
 
             $prescription_id = strtoupper(Str::random(3)) . '_' . time();
 

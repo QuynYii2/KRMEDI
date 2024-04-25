@@ -933,7 +933,7 @@
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {
-                            if (response.status) {
+                            if (response.status && response.listData) {
                                 response.listData.forEach(item => {
                                     html += `<a href="${url_detail}"><div class="mb-3 box-order-chat">
                                                 <div class="content-order-item">
