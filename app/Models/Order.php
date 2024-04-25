@@ -93,6 +93,7 @@ class Order extends Model
     {
         $orders = $this->where('user_id', $userId)
             ->whereNotNull('prescription_id')
+            ->orderBy('id', 'desc')
             ->get();
     
         $array_products = [];

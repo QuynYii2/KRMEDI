@@ -273,6 +273,7 @@
                                 <input id="value_discount_fee" name="discount_fee" value="">
                                 <input id="value_total_order" name="total_order" value="">
                                 <input id="discount_price_exchange" name="discount_price_exchange" value="">
+                                <input id="prescription_id" name="prescription_id" value="{{ request()->query('prescription_id') }}">
                             </div>
                             <div class="mt-5">
                                 <button id="btnOrder" type="button" class="btn w-100 p-2"
