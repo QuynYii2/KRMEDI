@@ -121,7 +121,9 @@ class Order extends Model
                 $array_products[] = $product;
             }
             if ($getCart) {
-                $order->doctor = User::find($getCart->user_id);
+                if ($getCart->doctor_id) {
+                    $order->doctor = User::find($getCart->doctor_id);
+                }
             }
             $order->total_products = count($array_products);
             $order->products = $array_products;
