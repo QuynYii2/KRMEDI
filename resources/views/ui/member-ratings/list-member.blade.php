@@ -79,9 +79,9 @@
 </style>
 @section('content')
     @include('layouts.partials.header')
-    <div class="container pb-5" style="margin-top: 168px;">
+    <div class="container pb-5 box-tv" style="margin-top: 168px;">
         <div class="list-user d-flex justify-content-center align-items-center">
-            <h3 class="">{{ __('home.Membership points') }}</h3>
+            <h3 class="text-point-membership">{{ __('home.Membership points') }}</h3>
         </div>
         <table class="table table-striped" id="table-list-user">
             <tbody id="list-user">
@@ -94,7 +94,7 @@
         let no1 = `<img class="gold-medal" src="{{ asset('img/icon/no1.png') }}" alt="" style="">`;
         let no2 = `<img class="gold-medal" src="{{ asset('img/icon/no2.png') }}" alt="" style="">`;
         let no3 = `<img class="gold-medal" src="{{ asset('img/icon/no3.png') }}" alt="" style="">`;
-        let accessToken = `Bearer ` + token;
+        let accessTokenss = `Bearer ` + token;
 
         let html = ``;
 
@@ -108,7 +108,7 @@
                 url: `{{ route('api.backend.user.list.points') }}`,
                 method: 'GET',
                 headers: {
-                    "Authorization": accessToken
+                    "Authorization": accessTokenss
                 },
                 success: function (response) {
                     renderUser(response);
