@@ -923,8 +923,9 @@
                 }
 
                 if (msg.type == 'DonThuocMoi') {
-                    let url = `{{ route('view.prescription.result.detail.api', ['id' => ':id']) }}`;
-                    url = url.replace(':id', msg.uuid_session);
+                    //Search cart
+                    let url = "{{ route('api.backend.cart.search', ['prescription_id' => 'REPLACE_ID']) }}";
+                    url = url.replace('REPLACE_ID', msg.uuid_session);
 
                     let url_detail = `{{ route('view.prescription.result.detail', ['id' => ':id']) }}`;
                     url_detail = url_detail.replace(':id', msg.uuid_session);
@@ -932,14 +933,16 @@
                         url: url,
                         type: 'GET',
                         dataType: 'json',
+                        headers: headers,
                         success: function(response) {
-                            if (response.status && response.listData) {
-                                response.listData.forEach(item => {
-                                    html += `<a href="${url_detail}"><div class="mb-3 box-order-chat">
-                                                <div class="content-order-item">
+                            if (response.error == 0 && response.data) {
+                                console.log(response.data)
+                                html += `<a href="${url_detail}"><div class="mb-3 box-order-chat">`;
+                                response.data.forEach(item => {
+                                    html += `<div class="content-order-item mb-2">
                                                         <div class="d-flex ">
                                                      <p class="title-name">Tên thuốc: </p>
-                                                      <p class="content-order-chat">${item.medicine_name}</p>
+                                                      <p class="content-order-chat">${item.product_medicine.name}</p>
                                                 </div>
                                                 <div class="d-flex ">
                                                      <p class="title-name">Số lượng: </p>
@@ -953,15 +956,25 @@
                                                      <p class="title-name">Số ngày sử dụng: </p>
                                                       <p class="content-order-chat">${item.treatment_days}</p>
                                                 </div>
-                                                <div class="d-flex justify-content-end">
-                                                    <a class="ml-2" onclick="addToCart_WidgetChat(${msg.uuid_session})">
-                                                    <button class="btn btn-2 btn-sep icon-cart">${response.prescription.isFirstBuy == 1 ?'Mua lại':'Mua thuốc'}</button>
-                                                    </a>
-                                                </div>
-
-                                                </div>
-                                            </div></a>`;
+                                                </div>`;
                                 });
+
+                                if (response.data[0].status == 'COMPLETE') {
+                                    html += `<div class="d-flex justify-content-end">
+                                                <a class="ml-2" type="button" href="{{ route('user.checkout.reorder', ['prescription_id' => '']) }}${msg.uuid_session}">
+                                                <button class="btn btn-2 btn-sep icon-cart">Mua lại</button>
+                                                </a>
+                                            </div>`;
+                                } else {
+                                    html += `<div class="d-flex justify-content-end">
+                                                <a class="ml-2" onclick="addToCart_WidgetChat(${msg.uuid_session})">
+                                                <button class="btn btn-2 btn-sep icon-cart">Mua thuốc</button>
+                                                </a>
+                                            </div>`;
+                                }
+
+                                html += `</div></a>`;
+
                                 $('#chat-messages').append(html);
                             }
                             processMessage(index + 1);
