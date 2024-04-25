@@ -59,6 +59,19 @@ class ProfileController extends Controller
 
         return response()->json($responseData);
     }
+    public function infoUserByEmail($email)
+    {
+        $user = User::where('email', $email)->first();
+        $roleUser = DB::table('role_users')->where('user_id', $user->id)->first();
+        $role = Role::find($roleUser->role_id);
+
+        $responseData = [
+            'infoUser' => $user,
+            'roleUser' => $role,
+        ];
+
+        return response()->json($responseData);
+    }
 
     public function getUsersByRoleId($roleId)
     {

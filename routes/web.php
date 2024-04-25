@@ -442,7 +442,7 @@ Route::middleware(['auth'])->group(function () {
                 'seen-message/{id}',
                 [WidgetChatController::class, 'handleSeenMessage']
             )->name('api.backend.connect.chat.seen-message');
-            Route::get('check-doctor-online/{id}', [ChatMessageController::class,'checkDoctorOnline']);
+            Route::get('check-doctor-online/{id}', [ChatMessageController::class, 'checkDoctorOnline']);
         });
     });
     /* User view points */
@@ -647,6 +647,7 @@ Route::get('/checkZaloSocialApi/{app_id}', [AuthSocialController::class, 'userEx
 
 Route::get('explore', [MapController::class, 'explore'])->name('explore.list');
 Route::get('/info-user/{id}', [ProfileController::class, 'infoUser'])->name('info.user');
+Route::get('/info-user-email/{email}', [ProfileController::class, 'infoUserByEmail'])->name('info.user.email');
 Route::get('/department', [DoctorInfoController::class, 'listDepartment'])->name('list.department');
 
 Route::get('/upload-form', [ImportController::class, 'showForm'])->name('upload.form');
