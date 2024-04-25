@@ -26,12 +26,29 @@ class PrescriptionResultController extends Controller
 
     public function myPrescription()
     {
-        $prescription = Cart::with('productMedicine', 'doctors')->where('user_id', Auth::user()->id)
+        $listPrescriptions = Cart::with('doctors')
+            ->where('user_id', Auth::user()->id)
             ->where('type_product', TypeProductCart::MEDICINE)
             ->whereNotNull('prescription_id')
-            ->orderBy('id', 'desc')->get();
+            ->orderBy('id', 'desc')
+            ->get(['id', 'prescription_id', 'created_at', 'status', 'doctor_id'])
+            ->groupBy('prescription_id')
+            ->map(fn ($group) => $group->first())
+            ->values();
 
-        return view('ui.prescription-results.my-prescriptions')->with(compact('prescription'));
+        $prescriptionIds = $listPrescriptions->pluck('prescription_id')->toArray();
+
+        $prescriptions = [];
+
+        foreach ($prescriptionIds as $prescriptionId) {
+            $data = Cart::with('productMedicine')->where('prescription_id', $prescriptionId)->get();
+            $prescriptions[] = [
+                'prescription_id' => $prescriptionId,
+                'data' => $data
+            ];
+        }
+
+        return view('ui.prescription-results.my-prescriptions')->with(compact('listPrescriptions', 'prescriptions'));
     }
 
     public function doctorPrescription()

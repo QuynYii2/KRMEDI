@@ -341,6 +341,7 @@ Route::middleware(['auth'])->group(function () {
         )->name('return.checkout.payment');
         Route::post('/imm', [CheckoutController::class, 'checkoutByImm'])->name('user.checkout.imm');
         Route::post('/vnpay', [CheckoutController::class, 'checkoutByVNPay'])->name('user.checkout.vnpay');
+        Route::get('/reorder', [CheckoutController::class, 'rePurchasePrescription'])->name('user.checkout.reorder');
     });
 
     Route::group(['prefix' => 'web/orders'], function () {

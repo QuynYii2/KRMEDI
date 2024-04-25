@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\AddressStatus;
+use App\Enums\CartStatus;
 use App\Enums\OrderMethod;
 use App\Http\Controllers\restapi\CheckoutApi;
 use App\Models\Address;
@@ -12,6 +13,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
 {
@@ -182,5 +184,35 @@ class CheckoutController extends Controller
             $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
         }
         return redirect($vnp_Url);
+    }
+
+    public function rePurchasePrescription(Request $request)
+    {
+        try {
+            $prescription_id = $request->prescription_id;
+            if (!$prescription_id) {
+                alert()->error('Error', 'Not have prescription_id');
+                return back();
+            }
+
+            $carts = Cart::where('prescription_id', $prescription_id)->get();
+
+            $new_prescription_id = strtoupper(Str::random(3)) . '_' . time();
+
+            //Duplicate cart
+            foreach ($carts as $cart) {
+                $newCart = $cart->replicate();
+                $newCart->prescription_id = $new_prescription_id;
+                $newCart->doctor_id = null;
+                $newCart->status = CartStatus::PENDING;
+                $newCart->save();
+            }
+
+            // Call the index method and pass the new prescription_id
+            return $this->index($request->merge(['prescription_id' => $new_prescription_id]));
+        } catch (\Exception $e) {
+            alert()->error('Error', $e->getMessage());
+            return back();
+        }
     }
 }
