@@ -428,7 +428,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::group(['prefix' => 'chat'], function () {
             Route::get('index', [ChatMessageController::class, 'index'])->name('api.backend.connect.chat.index');
-            Route::get('show', [ChatMessageController::class, 'show'])->name('api.backend.connect.chat.show');
+            Route::get('show', [ConnectChatMessageController::class, 'show'])->name('api.backend.connect.chat.show');
 
             Route::get('getListUserWasConnect', [
                 WidgetChatController::class,

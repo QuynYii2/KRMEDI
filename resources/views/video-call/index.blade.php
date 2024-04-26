@@ -79,6 +79,8 @@
                 </div>
             @endif
 
+            <span id="counter" class="d-none"></span>
+
         </div>
 
         <div class="modal fade" id="modal-show-prescription" tabindex="-1" aria-hidden="true">
@@ -294,6 +296,42 @@
             document.getElementById('footer').style.display = 'none'
             document.getElementById('user-streams').innerHTML = ''
             document.getElementById('join-wrapper').style.display = 'flex'
+
+            stopCounter();
+
+            fromUser = $('#patient').val();
+            toUser = `{{ Auth::user()->id ?? 0 }}`;
+            if (fromUser != toUser) {
+                let formData = new FormData();
+
+                formData.append('id', fromUser);
+
+                formData.append('counter', $('#counter').text());
+
+                let accessToken = `Bearer ` + token;
+                let headers = {
+                    'Authorization': accessToken,
+                };
+                try {
+                    await $.ajax({
+                        url: `{{ route('api.backend.call.history') }}`,
+                        method: 'POST',
+                        headers: headers,
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        data: formData,
+                        success: function(response) {
+                            //
+                        },
+                        error: function(error) {
+                            alert(error.responseJSON.message);
+                        }
+                    });
+                } catch (e) {
+                    alert(e);
+                }
+            }
             window.close();
         }
 
@@ -354,6 +392,8 @@
 
             //#10 - Publish my local video tracks to entire channel so everyone can see it
             await client.publish([localTracks.audioTrack, localTracks.videoTrack])
+            
+            startCounter();
         }
 
         let handleUserJoined = async (user, mediaType) => {
@@ -383,6 +423,7 @@
             if (mediaType === 'audio') {
                 user.audioTrack.play();
             }
+            startCounter()
         }
 
         let handleUserLeft = (user) => {
@@ -407,16 +448,6 @@
                 leaveConfirmation = true;
                 leaveCall();
             }
-        });
-
-        $(window).on('beforeunload', function() {
-            if (!leaveConfirmation) {
-                return 'Are you sure you want to leave?';
-            }
-        });
-
-        $(window).on('unload', function() {
-            leaveCall();
         });
     </script>
 
@@ -801,6 +832,25 @@
             return {
                 'compoent_name': ''
             };
+        }
+    </script>
+
+    <script>
+        var counterElement = $('#counter');
+        var counterInterval;
+        var counterValue = 0;
+
+        function startCounter() {
+            counterInterval = setInterval(incrementCounter, 1000);
+        }
+
+        function stopCounter() {
+            clearInterval(counterInterval);
+        }
+
+        function incrementCounter() {
+            counterValue++;
+            counterElement.text(counterValue);
         }
     </script>
 </body>

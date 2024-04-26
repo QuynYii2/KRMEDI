@@ -22,6 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Str;
 
 class PrescriptionResultApi extends Controller
 {
@@ -410,5 +411,38 @@ class PrescriptionResultApi extends Controller
 
             return response((new MainApi())->returnMessage($exception->getMessage()), 400);
         }
+    }
+    public function handleCallHistory(Request $request)
+    {
+        $id = $request->id;
+        $counter = $request->counter;
+        $user = User::find($id);
+
+        if (!$user) {
+            return;
+        }
+
+        $type = 'EndCall-'. $counter;
+
+        $uuid = Str::uuid()->toString();
+
+        $message = Message::create([
+            'from' => $user->id,
+            'to' => Auth::id(),
+            'text' => 'Bạn đã kết thúc cuộc gọi',
+            'uuid_session' => $uuid,
+            'type' => $type,
+        ]);
+
+        Chat::create([
+            'from_user_id' => $user->id,
+            'to_user_id' => Auth::id(),
+            'chat_message' => 'Bạn đã kết thúc cuộc gọi',
+            'message_status' => MessageStatus::UNSEEN,
+            'uuid_session' => $uuid,
+            'type' => $type,
+        ]);
+
+        broadcast(new NewMessage($message));
     }
 }

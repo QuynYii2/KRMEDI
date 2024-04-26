@@ -194,6 +194,7 @@ Route::group(['prefix' => 'mentorings'], function () {
 
 /* Prescription result api */
 Route::group(['prefix' => 'prescription-result'], function () {
+    Route::post('handleCallHistory', [PrescriptionResultApi::class, 'handleCallHistory'])->name('api.backend.call.history');
     Route::get('list', [PrescriptionResultApi::class, 'listPrescription'])->name('api.backend.prescription.result.list');
     Route::get('user', [PrescriptionResultApi::class, 'listPrescriptionByUser'])->name('api.backend.prescription.result.user');
     Route::get('doctor', [PrescriptionResultApi::class, 'listPrescriptionByDoctor'])->name('api.backend.prescription.result.doctor');
