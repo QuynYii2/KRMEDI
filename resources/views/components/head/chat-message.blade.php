@@ -904,6 +904,10 @@
     {{--}--}}
 
     function renderMessage(data) {
+        let accessToken = `Bearer ` + token;
+        let headers = {
+            'Authorization': accessToken,
+        };
         let currentUserId = '{{ Auth::check() ? Auth::user()->id : '' }}';
         let index = 0;
 
@@ -936,7 +940,6 @@
                         headers: headers,
                         success: function(response) {
                             if (response.error == 0 && response.data) {
-                                console.log(response.data)
                                 html += `<a href="${url_detail}"><div class="mb-3 box-order-chat">`;
                                 response.data.forEach(item => {
                                     html += `<div class="content-order-item mb-2">
