@@ -22,11 +22,11 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ asset('bootstrap@4.0.0/dist/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('bootstrap@5.3.2/dist/css/bootstrap.min.css') }}">
     <link rel='stylesheet' type='text/css' media='screen' href='{{ asset('agora-video/style.css') }}'>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('bootstrap@4.0.0/dist/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js') }}"></script>
 </head>
 
 <body>
@@ -202,10 +202,10 @@
         </div>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('bootstrap@4.0.0/dist/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js') }}"></script>
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.11.2/dist/echo.iife.js"></script>
+    <script src="{{ asset('laravel-echo@1.11.2/dist/echo.iife.js') }}"></script>
     <script src="https://download.agora.io/sdk/release/AgoraRTC_N.js"></script>
 
     <script>
@@ -392,7 +392,7 @@
 
             //#10 - Publish my local video tracks to entire channel so everyone can see it
             await client.publish([localTracks.audioTrack, localTracks.videoTrack])
-            
+
             startCounter();
         }
 

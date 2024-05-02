@@ -457,7 +457,7 @@
         </div>
     </div>
 </div>
-    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.2.0/dist/signature_pad.umd.min.js"></script>
+    <script src="{{ asset('signature_pad@4.2.0/dist/signature_pad.umd.min.js') }}"></script>
     <script>
         function getCookie(name) {
             var value = "; " + document.cookie;

@@ -771,7 +771,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/vi.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.2.0/dist/signature_pad.umd.min.js"></script>
+<script src="{{ asset('signature_pad@4.2.0/dist/signature_pad.umd.min.js') }}"></script>
 {{--script modal forget password--}}
 <script>
     var steps = $("fieldset").length;

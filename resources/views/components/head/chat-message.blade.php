@@ -427,7 +427,7 @@
 </div>
 
 <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.11.2/dist/echo.iife.js"></script>
+<script src="{{ asset('laravel-echo@1.11.2/dist/echo.iife.js') }}"></script>
 
 <script>
     const CHAT_TYPE_ALL_ONLINE = 'all-online';
