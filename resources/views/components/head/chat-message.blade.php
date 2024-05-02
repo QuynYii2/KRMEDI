@@ -600,6 +600,35 @@
 
             }
 
+            if (element.type.indexOf("-") !== -1 &&  element.type.split("-")[0] == 'EndCall') {
+                let callUrl = "{{ route('agora.call') }}";
+                if (element.from != currentUserIdChat) {
+                    callUrl += "?user_id_1=" + currentUserIdChat + "&user_id_2=" + element.from
+                }else{
+                    callUrl += "?user_id_1=" + currentUserIdChat + "&user_id_2=" + element.to
+                }
+
+                let callingMinutes = element.type.split("-")[1];
+                // Convert calling minutes to time format (hours:minutes)
+                var hours = Math.floor(callingMinutes / 60);
+                var minutes = callingMinutes % 60;
+
+                // Format the time as a string
+                var timeFormat = hours + ":" + (minutes < 10 ? "0" : "") + minutes;
+
+                let isMySeen = element.from === currentUserIdChat ? 'right' : '';
+
+                html = `<div class="message ${isMySeen}">
+                        <img src="${element.from_contact.avt}"/>
+                        <div class="bubble mb-3">
+                            Cuộc gọi đi - ${timeFormat}
+                            <hr class="my-2">
+                            <a href="${callUrl}" onclick="recallUser(event)">Gọi lại</a>
+                            <div class="corner"></div>
+                        </div>
+                    </div>`;
+            }
+
             {{--if (element.type == 'TaoDonThuoc') {--}}
             {{--    html = `<div class="message ">--}}
             {{--            <span >--}}
@@ -903,6 +932,28 @@
     {{--    autoScrollChatBox();--}}
     {{--}--}}
 
+    function recallUser(event) {
+        event.preventDefault();
+
+        let callUrl = event.target.href;
+
+        let form = $('<form>')
+            .attr('method', 'post')
+            .attr('action', callUrl)
+            .attr('target', '_blank');
+
+        let csrfToken = `{{ csrf_token() }}`;
+        let csrfInput = $('<input>')
+            .attr('type', 'hidden')
+            .attr('name', '_token')
+            .val(csrfToken);
+
+        form.append(csrfInput);
+
+        $('body').append(form);
+        form.submit();
+    }
+
     function renderMessage(data) {
         let accessToken = `Bearer ` + token;
         let headers = {
@@ -991,6 +1042,35 @@
                     return;
                 }
 
+                if (msg.type.indexOf("-") !== -1 &&  msg.type.split("-")[0] == 'EndCall') {
+                    let callUrl = "{{ route('agora.call') }}";
+                    if (msg.from_user_id != currentUserId) {
+                        callUrl += "?user_id_1=" + currentUserId + "&user_id_2=" + msg.from_user_id
+                    }else{
+                        callUrl += "?user_id_1=" + currentUserId + "&user_id_2=" + msg.to_user_id
+                    }
+
+                    let callingMinutes = msg.type.split("-")[1];
+                    // Convert calling minutes to time format (hours:minutes)
+                    var hours = Math.floor(callingMinutes / 60);
+                    var minutes = callingMinutes % 60;
+
+                    // Format the time as a string
+                    var timeFormat = hours + ":" + (minutes < 10 ? "0" : "") + minutes;
+
+                    let isMySeen = msg.from_user_id === currentUserId ? 'right' : '';
+
+                    html = `<div class="message ${isMySeen}">
+                            <img src="${msg.from_avatar}"/>
+                            <div class="bubble mb-3">
+                                Cuộc gọi đi - ${timeFormat}
+                                <hr class="my-2">
+                                <a href="${callUrl}" onclick="recallUser(event)">Gọi lại</a>
+                                <div class="corner"></div>
+                            </div>
+                        </div>`;
+                }
+
                 {{--if (msg.type == 'TaoDonThuoc') {--}}
                 {{--    html = `<div class="message ">--}}
                 {{--            <span >--}}
@@ -1025,7 +1105,6 @@
 
         processMessage(index);
     }
-
 
     function addToCart_WidgetChat(id) {
         loadingMasterPage();

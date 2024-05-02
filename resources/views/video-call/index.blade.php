@@ -209,6 +209,8 @@
     <script src="https://download.agora.io/sdk/release/AgoraRTC_N.js"></script>
 
     <script>
+        let leaveConfirmation = false;
+        var startCounting = false;
         let username = document.getElementById('username');
 
         username.value = '{{ Auth::user()->name ?? 'default name' }}';
@@ -298,10 +300,11 @@
             document.getElementById('join-wrapper').style.display = 'flex'
 
             stopCounter();
-
             fromUser = $('#patient').val();
             toUser = `{{ Auth::user()->id ?? 0 }}`;
-            if (fromUser != toUser) {
+
+            //Người gọi tắt
+            if (fromUser == toUser) {
                 let formData = new FormData();
 
                 formData.append('id', fromUser);
@@ -332,7 +335,6 @@
                     alert(e);
                 }
             }
-            window.close();
         }
 
         //Method will take all my info and set user stream in frame
@@ -393,7 +395,6 @@
             //#10 - Publish my local video tracks to entire channel so everyone can see it
             await client.publish([localTracks.audioTrack, localTracks.videoTrack])
 
-            startCounter();
         }
 
         let handleUserJoined = async (user, mediaType) => {
@@ -423,7 +424,9 @@
             if (mediaType === 'audio') {
                 user.audioTrack.play();
             }
-            startCounter()
+            if (!startCounting) {
+                startCounter()
+            }
         }
 
         let handleUserLeft = (user) => {
@@ -440,8 +443,6 @@
             joinWrapper.style.display = 'none';
             footer.style.display = 'flex';
         });
-
-        let leaveConfirmation = false;
 
         document.getElementById('leave-btn').addEventListener('click', async () => {
             if (confirm('Are you sure you want to leave?')) {
@@ -841,17 +842,32 @@
         var counterValue = 0;
 
         function startCounter() {
-            counterInterval = setInterval(incrementCounter, 1000);
+            if (currentUserIdChat == $('#patient').val()) {
+                startCounting = true;
+                counterInterval = setInterval(incrementCounter, 1000);
+            }
         }
 
         function stopCounter() {
-            clearInterval(counterInterval);
+            if (currentUserIdChat == $('#patient').val()) {
+                startCounting = false;
+                clearInterval(counterInterval);
+            }
         }
 
         function incrementCounter() {
-            counterValue++;
-            counterElement.text(counterValue);
+            if (currentUserIdChat == $('#patient').val()) {
+                counterValue++;
+                counterElement.text(counterValue);
+            }
         }
+    </script>
+
+    <script>
+        $(window).on('beforeunload', function(e) {
+            e.preventDefault()
+            leaveCall()
+        });
     </script>
 </body>
 
