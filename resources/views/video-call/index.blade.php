@@ -122,6 +122,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade" id="modal-create-don-thuoc-widget-chat" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
                 <div class="modal-content overflow-scroll">
