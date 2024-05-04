@@ -1165,6 +1165,45 @@
 
             }
 
+            if (element.type.indexOf("-") !== -1 &&  element.type.split("-")[0] == 'EndCall') {
+                let callUrl = "{{ route('agora.call') }}";
+                if (element.from != currentUserIdChat) {
+                    callUrl += "?user_id_1=" + currentUserIdChat + "&user_id_2=" + element.from
+                }else{
+                    callUrl += "?user_id_1=" + currentUserIdChat + "&user_id_2=" + element.to
+                }
+
+                let callingMinutes = element.type.split("-")[1];
+                // Convert calling minutes to time format (hours:minutes)
+                var hours = Math.floor(callingMinutes / 60);
+                var minutes = callingMinutes % 60;
+
+                // Format the time as a string
+                var timeFormat = hours + ":" + (minutes < 10 ? "0" : "") + minutes;
+
+                let isMySeen = element.from === currentUserIdChat ? 'right' : '';
+
+                html = `<div class="message ${isMySeen}">
+                        <img src="${element.from_contact.avt}"/>
+                        <div class="bubble mb-3">
+                            Cuộc gọi đi - ${timeFormat}
+                            <hr class="my-2">
+                            <a href="${callUrl}" onclick="recallUser(event)">Gọi lại</a>
+                            <div class="corner"></div>
+                        </div>
+                    </div>`;
+            }
+
+            {{--if (element.type == 'TaoDonThuoc') {--}}
+            {{--    html = `<div class="message ">--}}
+            {{--            <span >--}}
+            {{--                ${element.text}`;--}}
+
+            {{--    if ('{{ !\App\Models\User::isNormal() }}') {--}}
+            {{--        html += `, <a class="color-blue" data-toggle="modal" data-target="#modal-create-don-thuoc-widget-chat">tạo ngay?</a>--}}
+            {{--                 </span></div>`;--}}
+            {{--    }--}}
+            {{--}--}}
 
         } else {
             html = `<div class="message">
@@ -1340,6 +1379,242 @@
             renderMessage(data);
         }
     }
+
+    {{--function renderMessage(data) {--}}
+    {{--    let html = '';--}}
+
+    {{--    let currentUserId = '{{ Auth::check() ? Auth::user()->id : '' }}';--}}
+    {{--    data.forEach((msg) => {--}}
+    {{--        if (msg.type) {--}}
+    {{--            if (!msg.chat_message) {--}}
+    {{--                return;--}}
+    {{--            }--}}
+
+    {{--            if (msg.type == 'DonThuocMoi') {--}}
+    {{--                let url = `{{ route('view.prescription.result.detail', ['id' => ':id']) }}`;--}}
+    {{--                url = url.replace(':id', msg.uuid_session);--}}
+
+    {{--                // html += `<div class="mb-3 d-flex justify-content-center">--}}
+    {{--                //         <a href="${url}">--}}
+    {{--                //--}}
+    {{--                //         <button class="btn btn-1 btn-sep icon-info">Xem đơn thuốc</button>--}}
+    {{--                //--}}
+    {{--                //         </a>--}}
+    {{--                //         <a class="ml-2" onclick="addToCart_WidgetChat(${msg.uuid_session})">--}}
+    {{--                //         <button class="btn btn-2 btn-sep icon-cart">Mua thuốc</button>--}}
+    {{--                //         </a>--}}
+    {{--                //         </div>`;--}}
+
+    {{--                return;--}}
+    {{--            }--}}
+
+    {{--            if (msg.type == 'TaoDonThuoc') {--}}
+    {{--                html += `<div class="message ">--}}
+    {{--                    <span >--}}
+    {{--                        ${msg.chat_message}`;--}}
+
+    {{--                if ('{{ !\App\Models\User::isNormal() }}') {--}}
+    {{--                    html += `, <a class="color-blue" data-toggle="modal" data-target="#modal-create-don-thuoc-widget-chat">tạo ngay?</a>`;--}}
+    {{--                }--}}
+    {{--                html += `</span></div>`;--}}
+    {{--            }--}}
+
+    {{--            return;--}}
+    {{--        }--}}
+
+    {{--        if (!msg.chat_message) {--}}
+    {{--            return;--}}
+    {{--        }--}}
+
+    {{--        let isMySeen = msg.from_user_id === currentUserId ? 'right' : '';--}}
+
+
+    {{--        html += `<div class="message ${isMySeen}">--}}
+    {{--                    <img src="${msg.from_avatar}"/>--}}
+    {{--                    <div class="bubble">--}}
+    {{--                        ${msg.chat_message}--}}
+    {{--                        <div class="corner"></div>--}}
+    {{--                    </div>--}}
+    {{--                </div>`--}}
+    {{--    });--}}
+
+    {{--    document.getElementById('chat-messages').innerHTML = html;--}}
+    {{--    autoScrollChatBox();--}}
+    {{--}--}}
+
+    function recallUser(event) {
+        event.preventDefault();
+
+        let callUrl = event.target.href;
+
+        let form = $('<form>')
+            .attr('method', 'post')
+            .attr('action', callUrl)
+            .attr('target', '_blank');
+
+        let csrfToken = `{{ csrf_token() }}`;
+        let csrfInput = $('<input>')
+            .attr('type', 'hidden')
+            .attr('name', '_token')
+            .val(csrfToken);
+
+        form.append(csrfInput);
+
+        $('body').append(form);
+        form.submit();
+    }
+
+    {{--function renderMessage(data) {--}}
+    {{--    let accessToken = `Bearer ` + token;--}}
+    {{--    let headers = {--}}
+    {{--        'Authorization': accessToken,--}}
+    {{--    };--}}
+    {{--    let currentUserId = '{{ Auth::check() ? Auth::user()->id : '' }}';--}}
+    {{--    let index = 0;--}}
+
+    {{--    function processMessage(index) {--}}
+    {{--        if (index >= data.length) {--}}
+    {{--            autoScrollChatBox();--}}
+    {{--            return;--}}
+    {{--        }--}}
+
+    {{--        let msg = data[index];--}}
+    {{--        let html = '';--}}
+
+    {{--        if (msg.type) {--}}
+    {{--            if (!msg.chat_message) {--}}
+    {{--                processMessage(index + 1);--}}
+    {{--                return;--}}
+    {{--            }--}}
+
+    {{--            if (msg.type == 'DonThuocMoi') {--}}
+    {{--                //Search cart--}}
+    {{--                let url = "{{ route('api.backend.cart.search', ['prescription_id' => 'REPLACE_ID']) }}";--}}
+    {{--                url = url.replace('REPLACE_ID', msg.uuid_session);--}}
+
+    {{--                let url_detail = `{{ route('view.prescription.result.detail', ['id' => ':id']) }}`;--}}
+    {{--                url_detail = url_detail.replace(':id', msg.uuid_session);--}}
+    {{--                $.ajax({--}}
+    {{--                    url: url,--}}
+    {{--                    type: 'GET',--}}
+    {{--                    dataType: 'json',--}}
+    {{--                    headers: headers,--}}
+    {{--                    success: function(response) {--}}
+    {{--                        if (response.error == 0 && response.data) {--}}
+    {{--                            html += `<a href="${url_detail}"><div class="mb-3 box-order-chat">`;--}}
+    {{--                            response.data.forEach(item => {--}}
+    {{--                                html += `<div class="content-order-item mb-2">--}}
+    {{--                                                    <div class="d-flex ">--}}
+    {{--                                                 <p class="title-name">Tên thuốc: </p>--}}
+    {{--                                                  <p class="content-order-chat">${item.product_medicine.name}</p>--}}
+    {{--                                            </div>--}}
+    {{--                                            <div class="d-flex ">--}}
+    {{--                                                 <p class="title-name">Số lượng: </p>--}}
+    {{--                                                  <p class="content-order-chat">${item.quantity}</p>--}}
+    {{--                                            </div>--}}
+    {{--                                            <div class="d-flex ">--}}
+    {{--                                                 <p class="title-name">Sử dụng: </p>--}}
+    {{--                                                  <p class="content-order-chat">${item.note}</p>--}}
+    {{--                                            </div>--}}
+    {{--                                            <div class="d-flex ">--}}
+    {{--                                                 <p class="title-name">Số ngày sử dụng: </p>--}}
+    {{--                                                  <p class="content-order-chat">${item.treatment_days}</p>--}}
+    {{--                                            </div>--}}
+    {{--                                            </div>`;--}}
+    {{--                            });--}}
+
+    {{--                            if (response.data[0].status == 'COMPLETE') {--}}
+    {{--                                html += `<div class="d-flex justify-content-end">--}}
+    {{--                                            <a class="ml-2" type="button" href="{{ route('user.checkout.reorder', ['prescription_id' => '']) }}${msg.uuid_session}">--}}
+    {{--                                            <button class="btn btn-2 btn-sep icon-cart">Mua lại</button>--}}
+    {{--                                            </a>--}}
+    {{--                                        </div>`;--}}
+    {{--                            } else {--}}
+    {{--                                html += `<div class="d-flex justify-content-end">--}}
+    {{--                                            <a class="ml-2" onclick="addToCart_WidgetChat(${msg.uuid_session})">--}}
+    {{--                                            <button class="btn btn-2 btn-sep icon-cart">Mua thuốc</button>--}}
+    {{--                                            </a>--}}
+    {{--                                        </div>`;--}}
+    {{--                            }--}}
+
+    {{--                            html += `</div></a>`;--}}
+
+    {{--                            $('#chat-messages').append(html);--}}
+    {{--                        }--}}
+    {{--                        processMessage(index + 1);--}}
+    {{--                    },--}}
+    {{--                    error: function(xhr, status, error) {--}}
+    {{--                        console.error(error);--}}
+    {{--                        processMessage(index + 1);--}}
+    {{--                    }--}}
+    {{--                });--}}
+
+    {{--                return;--}}
+    {{--            }--}}
+
+    {{--            if (msg.type.indexOf("-") !== -1 &&  msg.type.split("-")[0] == 'EndCall') {--}}
+    {{--                let callUrl = "{{ route('agora.call') }}";--}}
+    {{--                if (msg.from_user_id != currentUserId) {--}}
+    {{--                    callUrl += "?user_id_1=" + currentUserId + "&user_id_2=" + msg.from_user_id--}}
+    {{--                }else{--}}
+    {{--                    callUrl += "?user_id_1=" + currentUserId + "&user_id_2=" + msg.to_user_id--}}
+    {{--                }--}}
+
+    {{--                let callingMinutes = msg.type.split("-")[1];--}}
+    {{--                // Convert calling minutes to time format (hours:minutes)--}}
+    {{--                var hours = Math.floor(callingMinutes / 60);--}}
+    {{--                var minutes = callingMinutes % 60;--}}
+
+    {{--                // Format the time as a string--}}
+    {{--                var timeFormat = hours + ":" + (minutes < 10 ? "0" : "") + minutes;--}}
+
+    {{--                let isMySeen = msg.from_user_id === currentUserId ? 'right' : '';--}}
+
+    {{--                html = `<div class="message ${isMySeen}">--}}
+    {{--                        <img src="${msg.from_avatar}"/>--}}
+    {{--                        <div class="bubble mb-3">--}}
+    {{--                            Cuộc gọi đi - ${timeFormat}--}}
+    {{--                            <hr class="my-2">--}}
+    {{--                            <a href="${callUrl}" onclick="recallUser(event)">Gọi lại</a>--}}
+    {{--                            <div class="corner"></div>--}}
+    {{--                        </div>--}}
+    {{--                    </div>`;--}}
+    {{--            }--}}
+
+    {{--            --}}{{--if (msg.type == 'TaoDonThuoc') {--}}
+    {{--            --}}{{--    html = `<div class="message ">--}}
+    {{--            --}}{{--            <span >--}}
+    {{--            --}}{{--                ${msg.chat_message}`;--}}
+
+    {{--            --}}{{--    if ('{{ !\App\Models\User::isNormal() }}') {--}}
+    {{--            --}}{{--        html +=--}}
+    {{--            --}}{{--            `, <a class="color-blue" data-toggle="modal" data-target="#modal-create-don-thuoc-widget-chat">tạo ngay?</a>`;--}}
+    {{--            --}}{{--    }--}}
+    {{--            --}}{{--    html += `</span></div>`;--}}
+    {{--            --}}{{--}--}}
+    {{--        } else {--}}
+    {{--            if (!msg.chat_message) {--}}
+    {{--                processMessage(index + 1);--}}
+    {{--                return;--}}
+    {{--            }--}}
+
+    {{--            let isMySeen = msg.from_user_id === currentUserId ? 'right' : '';--}}
+
+    {{--            html = `<div class="message ${isMySeen}">--}}
+    {{--                    <img src="${msg.from_avatar}"/>--}}
+    {{--                    <div class="bubble">--}}
+    {{--                        ${msg.chat_message}--}}
+    {{--                        <div class="corner"></div>--}}
+    {{--                    </div>--}}
+    {{--                </div>`;--}}
+    {{--        }--}}
+
+    {{--        $('#chat-messages').append(html);--}}
+    {{--        processMessage(index + 1);--}}
+    {{--    }--}}
+
+    {{--    processMessage(index);--}}
+    {{--}--}}
 
 
     function addToCart_WidgetChat(id) {

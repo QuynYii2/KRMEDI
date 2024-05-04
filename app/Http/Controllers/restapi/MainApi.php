@@ -172,7 +172,7 @@ class MainApi extends Controller
             }
 
             $response = $this->sendNotification($token, $data, $notification);
-            $data = $response->getContents();
+            $data = $response->getContents();            
             return response($data);
         } catch (\Exception $exception) {
             return response($this->returnMessage($exception->getMessage()), 400);

@@ -9,7 +9,7 @@ class AccountController extends Controller
 
     public function needHelp()
     {
-        RateLimiter::attempt()
+        RateLimiter::attempt();
         return view('ui.need-helps.need-help');
 
     }

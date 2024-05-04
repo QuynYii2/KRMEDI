@@ -123,8 +123,49 @@
             });
         }
 
+        function appCallAlert(data) {
+            var searchParams = new URLSearchParams(data.link.split('?')[1]);
+
+            var fromUser = searchParams.get('user_id_1');
+            var toUser = searchParams.get('user_id_2');
+
+            let currentUserId = `{{ Auth::user()->id ?? 0 }}`;
+
+            if (currentUserId == 0 || fromUser == currentUserId || fromUser == toUser) {
+                return
+            }
+
+
+            // Define an async wrapper function to handle the asynchronous call
+            async function getDoctorName() {
+                try {
+                    const user = await getUserById(fromUser);
+                    return user.name;
+                } catch (error) {
+                    console.error('Error fetching user:', error);
+                    throw error;
+                }
+            }
+
+            // Call the async wrapper function and handle the result
+            getDoctorName().then(name => {
+                $('#modal-call-alert').modal('show');
+                document.getElementById('modal-call-alert-label').innerHTML = 'Cuộc gọi từ ' + name;
+
+                document.getElementById('ReceiveCall').addEventListener('click', function() {
+                    window.open(data.link, '_blank');
+                    $('#modal-call-alert').modal('hide');
+                });
+            });
+        }
+
         onMessage(messaging, (payload) => {
             console.log('Message received. ', payload);
+            if (payload.data.type == "1" && payload.data.actionType != "END_REQUEST") {
+                // Incoming call from app
+                appCallAlert(payload.data)
+            }
+
             if (!window.Notification) {
                 console.log('Browser does not support notifications.');
             } else {
