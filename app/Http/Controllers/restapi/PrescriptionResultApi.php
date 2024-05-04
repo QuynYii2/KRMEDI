@@ -82,6 +82,9 @@ class PrescriptionResultApi extends Controller
                 if ($user) {
                     $email = $user->email;
                     $full_name = $user->name ?? 'No name';
+                }else{
+                    $full_name = $request->input('full_name');
+                    $email = $request->input('email');
                 }
             } else {
                 $full_name = $request->input('full_name');
@@ -110,7 +113,7 @@ class PrescriptionResultApi extends Controller
 
             $prescription_result = new PrescriptionResults();
 
-            $prescription_result->full_name = $full_name;
+            $prescription_result->full_name = $user->username;
             $prescription_result->email = $email;
             $prescription_result->user_id = $user_id;
 
@@ -130,7 +133,7 @@ class PrescriptionResultApi extends Controller
             $cartRequest = new Request();
 
             $cartRequest->merge([
-                'user_id' => $chatUserId,
+                'user_id' => $user_id,
                 'products' => json_decode($request->input('products') ?? [], true),
                 'doctor_id' => $created_by,
             ]);
@@ -144,7 +147,7 @@ class PrescriptionResultApi extends Controller
 
 
             if ($success) {
-                return response()->json($prescription_result);
+                return response()->json($prescription_id ?? $prescription_result);
             }
             return response((new MainApi())->returnMessage('Error, Create error!'), 400);
         } catch (\Exception $exception) {

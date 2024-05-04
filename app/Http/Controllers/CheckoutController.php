@@ -20,7 +20,7 @@ class CheckoutController extends Controller
     public function index(Request $request)
     {
         if (isset($request->prescription_id) && $request->prescription_id) {
-            $carts = Cart::where('user_id', Auth::user()->id)->where('prescription_id', $request->prescription_id)->get();
+            $carts = Cart::where('prescription_id', $request->prescription_id)->get();
         } else {
             $carts = Cart::where('user_id', Auth::user()->id)->whereNull('prescription_id')->get();
         }
