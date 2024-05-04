@@ -689,8 +689,8 @@
 
                     </div>`;
             } else {
-                doctorChatList.forEach(chatId => {
-                    if (res.id === chatId) {
+                // doctorChatList.forEach(chatId => {
+                //     if (res.id === chatId) {
                         html += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}">
                                     <img src="../../../../img/avt_default.jpg"/>
                                     <p>
@@ -698,8 +698,8 @@
                                         <span>${email}</span>
                                     </p>
                                 </div>`;
-                            }
-                        });
+                        //     }
+                        // });
             }
 
         }
