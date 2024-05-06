@@ -162,7 +162,7 @@
                                     class=" button-buyNow btn btn-primary w-100">{{ __('home.Add cart') }}</button>
                                         @else
                                         <button {{ $prMedicine->quantity == 0 ? 'disabled' : '' }}
-                                        class=" button-buyNow btn btn-primary w-100" onclick="checkDoctorOnline({{$prMedicine->user_id}})">Tư vấn</button>
+                                        class=" button-buyNow btn btn-primary w-100 contact_doctor" style="padding: 11px 50px" data-mail="{{$user_email}}">Liên hệ</button>
                                         @endif
                                 @else
                                     <button onclick="alertLogin();"
@@ -243,28 +243,29 @@
             $(this).addClass('selected');
             $(".main").attr("src", $(this).attr('src'));
         })
-        function checkDoctorOnline(doctor_id) {
-            let accessToken = `Bearer ` + token;
-            $.ajax({
-                url: window.location.origin +'/connect/chat/check-doctor-online/'+doctor_id,
-                type: 'GET',
-                headers: {
-                    'Authorization': accessToken
-                },
-                contentType: false,
-                cache: false,
-                processData: false,
-                success: function(response) {
-                    if (response.isOnline) {
-                        handleStartChatWithDoctor(`${doctor_id}`)
-                    } else {
-                        alert('Bác sĩ hiện không online. Vui lòng liên hệ lại sau.');
-                    }
-                },
-                error: function(xhr, status, error) {
-                    alert('Vui lòng đăng nhập để tiếp tục.');
-                }
-            });
-        }
+        // function checkDoctorOnline(doctor_id) {
+        //     let accessToken = `Bearer ` + token;
+        //     $.ajax({
+        //         url: window.location.origin +'/connect/chat/check-doctor-online/'+doctor_id,
+        //         type: 'GET',
+        //         headers: {
+        //             'Authorization': accessToken
+        //         },
+        //         contentType: false,
+        //         cache: false,
+        //         processData: false,
+        //         success: function(response) {
+        //             if (response.isOnline) {
+        //                 handleStartChatWithDoctor(`${doctor_id}`)
+        //             } else {
+        //                 alert('Bác sĩ hiện không online. Vui lòng liên hệ lại sau.');
+        //             }
+        //         },
+        //         error: function(xhr, status, error) {
+        //             alert('Vui lòng đăng nhập để tiếp tục.');
+        //         }
+        //     });
+        // }
     </script>
+    <script src="{{asset('js/send-mess.js')}}" type="module"></script>
 @endsection

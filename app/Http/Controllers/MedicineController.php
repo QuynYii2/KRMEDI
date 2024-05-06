@@ -24,7 +24,7 @@ class MedicineController extends Controller
         $medicines = ProductMedicine::where('product_medicines.status', OnlineMedicineStatus::APPROVED)
             ->leftJoin('users', 'product_medicines.user_id', '=', 'users.id')
             ->leftJoin('provinces', 'provinces.id', '=', 'users.province_id')
-            ->select('product_medicines.*', 'provinces.name as location_name');
+            ->select('product_medicines.*', 'provinces.name as location_name','users.email');
 
         $medicine10 = $medicines->get();
         $medicines = $medicines->get();
@@ -68,6 +68,7 @@ class MedicineController extends Controller
     public function detail($id)
     {
         $medicine = ProductMedicine::find($id);
+        $user_email = User::find($medicine->user_id)->email;
         $categoryMedicines = CategoryProduct::where('status', true)->get();
         $carts = null;
         $name_role = '';
@@ -79,7 +80,7 @@ class MedicineController extends Controller
             $role = RoleUser::where('user_id',Auth::user()->id)->first();
             $name_role = Role::find($role->role_id)->name;
         }
-        return view('medicine.detailMedicine', compact('medicine', 'categoryMedicines', 'carts', 'id','name_role'));
+        return view('medicine.detailMedicine', compact('medicine', 'categoryMedicines', 'carts', 'id','name_role','user_email'));
     }
 
     public function wishList()
@@ -188,7 +189,7 @@ class MedicineController extends Controller
         /* Join và select */
         $medicines->leftJoin('users', 'product_medicines.user_id', '=', 'users.id')
             ->leftJoin('provinces', 'provinces.id', '=', 'users.province_id')
-            ->select('product_medicines.*', 'provinces.name as location_name');
+            ->select('product_medicines.*', 'provinces.name as location_name','users.email');
 
         $medicines = $medicines->distinct()->get();
 
@@ -258,7 +259,7 @@ class MedicineController extends Controller
             ->select('product_medicines.*', 'provinces.name as location_name');
 
         // Paginate
-        $medicines = $medicines->get();        
+        $medicines = $medicines->get();
 
         $medicines->map(function ($medicine) {
             $medicine->description = str_replace(array("\r", "\n"), '', strip_tags(html_entity_decode($medicine->description)));

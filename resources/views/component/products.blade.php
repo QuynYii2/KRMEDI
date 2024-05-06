@@ -79,7 +79,7 @@
             {{ number_format($medicine->price, 0, ',', '.') }} {{ $medicine->unit_price ?? 'VND' }}
         </div>
             @else
-            <div class="contact_doctor" onclick="checkDoctorOnline({{$medicine->user_id}})">
+            <div class="contact_doctor" data-mail="{{$medicine->email}}">
                 Tư vấn
             </div>
         @endif
@@ -163,3 +163,4 @@
 
     }
 </script>
+<script src="{{asset('js/send-mess.js')}}" type="module"></script>
