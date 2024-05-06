@@ -677,7 +677,7 @@
             let email = res.email;
 
             let is_online = res.is_online;
-            if (is_online === true || (is_online === true && (res.role == 'DOCTORS' || res.role == 'PHAMACISTS' || res.role == 'HOSPITALS')) && res.id != current_user.uid) {
+            if (is_online === true && (res.role == 'DOCTORS' || res.role == 'PHAMACISTS' || res.role == 'HOSPITALS') && res.id != current_user.uid) {
                 count++;
                 html_online += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}">
                         <img src="../../../../img/avt_default.jpg"/>
@@ -689,8 +689,8 @@
 
                     </div>`;
             } else {
-                // doctorChatList.forEach(chatId => {
-                //     if (res.id === chatId) {
+                doctorChatList.forEach(chatId => {
+                    if (res.id === chatId && res.id != current_user.uid) {
                         html += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}">
                                     <img src="../../../../img/avt_default.jpg"/>
                                     <p>
@@ -698,8 +698,8 @@
                                         <span>${email}</span>
                                     </p>
                                 </div>`;
-                        //     }
-                        // });
+                            }
+                        });
             }
 
         }

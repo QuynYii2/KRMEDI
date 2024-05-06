@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\ui;
 
 use App\Http\Controllers\Controller;
+use App\Models\FooterModel;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -61,5 +62,11 @@ class UserController extends Controller
         } catch (\Exception $e) {
             return response(['error' => -1, 'message' => $e->getMessage()], 400);
         }
+    }
+
+    public function support($slug)
+    {
+        $footer = FooterModel::where('slug',$slug)->first();
+        return view('support',compact('footer'));
     }
 }
