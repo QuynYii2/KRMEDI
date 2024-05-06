@@ -733,7 +733,10 @@
                     // Search cart
                     let url = "{{ route('api.backend.cart.search', ['prescription_id' => 'REPLACE_ID']) }}";
                     url = url.replace('REPLACE_ID', message.msg);
-
+                    let accessToken = `Bearer ` + token;
+                    let headers = {
+                        "Authorization": accessToken
+                    };
                     $.ajax({
                         url: url,
                         type: 'GET',
