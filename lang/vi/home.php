@@ -112,7 +112,7 @@ return [
     'Obstetrics gynecology' => 'sản phụ khoa',
     'Pediatrics' => 'Nhi khoa',
     'Ophthalmology' => 'nhãn khoa',
-    'Explore' => 'Khám phá',
+    'Customer support' => 'Hỗ trợ khách hàng',
     'Book an appointment' => 'Đặt lịch hẹn',
     'It is a long established fact that a reader will be distracted' => 'Một thực tế đã được chứng minh từ lâu là người đọc sẽ bị phân tâm',
     'your email address' => 'địa chỉ email của bạn',

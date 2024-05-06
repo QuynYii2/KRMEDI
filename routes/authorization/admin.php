@@ -10,6 +10,7 @@ use App\Http\Controllers\restapi\admin\AminServiceClinicApi;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ShortVideoController;
 use Illuminate\Support\Facades\Route;
+use \App\Http\Controllers\admin\FooterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,4 +60,13 @@ Route::group(['prefix' => 'home-medicine'], function () {
 /* Main admin */
 Route::group(['prefix' => 'home'], function () {
     Route::get('list-config', [HomeController::class, 'listConfig'])->name('view.admin.list.config');
+});
+
+Route::group(['prefix' => 'footer'], function () {
+    Route::get('', [FooterController::class, 'index'])->name('view.admin.footer.index');
+    Route::get('create', [FooterController::class, 'create'])->name('view.admin.footer.create');
+    Route::post('store', [FooterController::class, 'store'])->name('view.admin.footer.store');
+    Route::get('edit/{id}', [FooterController::class, 'edit'])->name('view.admin.footer.edit');
+    Route::post('update/{id}', [FooterController::class, 'update'])->name('view.admin.footer.update');
+    Route::get('delete/{id}', [FooterController::class, 'delete'])->name('view.admin.footer.delete');
 });

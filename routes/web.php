@@ -662,3 +662,4 @@ Route::get('test/translate', [MainApi::class, 'translateLanguage']);
 Route::get('booking-result/{id}', [MyBookingController::class, 'fileBookingResult'])->name('web.users.booking.result');
 
 Route::post('/update-signature', [UserController::class, 'updateSignature'])->name('user.update.user.signature');
+Route::get('support/{slug}', [UserController::class, 'support'])->name('user.support');

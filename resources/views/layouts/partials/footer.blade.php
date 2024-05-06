@@ -1,3 +1,6 @@
+@php
+    $footer = \App\Models\FooterModel::all();
+@endphp
 <footer class="d-block mt-5 mobile-hidden">
     <div class="">
         <div class="container d-md-flex mb-md-5 box-footer-md">
@@ -75,12 +78,17 @@
                 </div>
             </div>
             <div>
-                <div class="krm-title-footer">{{__('home.Explore')}}</div>
+                <div class="krm-title-footer">{{__('home.Customer support')}}</div>
                 <div class="krm-title-footer_sub">
-                    <li><a href="#">{{ __('home.Home') }}</a></li>
-                    <li><a href="#">{{ __('home.Services') }}</a></li>
-                    <li><a href="#">{{ __('home.About us') }}</a></li>
-                    <li><a href="#">{{ __('home.News') }}</a></li>
+                    @if(count($footer) > 0)
+                        @foreach($footer as $item)
+                            <li><a href="{{route('user.support',$item->slug)}}">{{ $item->title }}</a></li>
+                        @endforeach
+                    @endif
+{{--                    <li><a href="#">{{ __('home.Home') }}</a></li>--}}
+{{--                    <li><a href="#">{{ __('home.Services') }}</a></li>--}}
+{{--                    <li><a href="#">{{ __('home.About us') }}</a></li>--}}
+{{--                    <li><a href="#">{{ __('home.News') }}</a></li>--}}
                 </div>
             </div>
             <div class="col-md-4 item-end-footer">
@@ -128,6 +136,31 @@
                 <span class="status_color" style="--status_color: #a4a4a4"></span>
                 <p class="status_message">{{ __('home.Bussiness Relation') }}</p>
             </li>
+        </ul>
+    </div>
+    <div class="container status mt-3 pc-hidden">
+        <input type="checkbox" id="status2" class="status_input" />
+        <div class="current_status">
+            <span class="status_color" style="--status_color: #11d10a"></span>
+            <p class="font-16-600 status_message mt-0 ">{{ __('home.Customer support') }}</p>
+            <span class="expand">
+            					<label for="status2">
+            						<span class="material-symbols-outlined"> <i class="fa-solid fa-angle-down"></i> </span>
+            					</label>
+            				</span>
+        </div>
+        <ul class="other">
+            @if(count($footer) > 0)
+                @foreach($footer as $item)
+            <li class="other_card">
+                <a href="{{route('user.support',$item->slug)}}">
+                <span class="status_color" style="--status_color: #d1ba0a"></span>
+                <p class="status_message">{{ $item->title }}</p>
+                </a>
+            </li>
+                @endforeach
+                @endif
+
         </ul>
     </div>
     <div class="container status mt-3 pc-hidden">
