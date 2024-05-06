@@ -350,7 +350,7 @@
                 <div id="chat-messages"></div>
 
                 <div id="sendmessage">
-                    <input type="text" value="Send message..." id="msger-input"/>
+                    <input type="text" value="Send message..." id="msger-input" onkeypress="supSendMessage()"/>
                     @if (!\App\Models\User::isNormal())
                         <span class="mr-1" style="padding: 15px 9px" data-toggle="modal"
                               data-target="#modal-create-don-thuoc-widget-chat"><i
@@ -677,7 +677,7 @@
             let email = res.email;
 
             let is_online = res.is_online;
-            if (is_online === true && (res.role == 'DOCTORS' || res.role == 'PHAMACISTS' || res.role == 'HOSPITALS') && res.id != current_user.uid) {
+            if (is_online === true || (is_online === true && (res.role == 'DOCTORS' || res.role == 'PHAMACISTS' || res.role == 'HOSPITALS')) && res.id != current_user.uid) {
                 count++;
                 html_online += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}">
                         <img src="../../../../img/avt_default.jpg"/>
@@ -847,7 +847,7 @@
 
         try {
             await setDoc(doc(ref, time), message);
-            // await pushNotification(to_email, msg);
+            await pushNotification(to_email, msg);
             await updateLastMessage(chatUserID, message);
             await saveMessage(`{{ Auth::user()->email }}`, to_email, message);
             console.log('Message sent successfully');
@@ -1736,7 +1736,7 @@
     });
 
     function loadDisplayMessage(id) {
-        var friendDivs = document.querySelectorAll('.friend');
+        var friendDivs = document.querySelectorAll('.user_connect');
 
         friendDivs.forEach(function (div) {
             // Lấy giá trị data-id của từng div

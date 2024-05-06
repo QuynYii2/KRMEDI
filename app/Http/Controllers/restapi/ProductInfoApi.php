@@ -15,7 +15,7 @@ class ProductInfoApi extends Controller
         $products = ProductInfo::where('product_infos.status', ProductStatus::ACTIVE)
             ->leftJoin('users', 'product_infos.created_by', '=', 'users.id')
             ->leftJoin('provinces', 'provinces.id', '=', 'users.province_id')
-            ->select('product_infos.*', 'provinces.name as location_name')
+            ->select('product_infos.*', 'provinces.name as location_name','users.email')
             ->orderBy('id', 'desc')
             ->get();
 

@@ -108,8 +108,7 @@
                                 </a>
                             @endif
                             @if(Auth::check())
-                                <button id="button-apply" class="text-wrapper-5"
-                                        onclick="handleStartChatWithDoctor('{{ $pr_json->created_by }}')">{{ __('home.Send message') }}</button>
+                                <button id="button-apply" class="text-wrapper-5 contact_doctor" data-mail="{{$userId->email}}">{{ __('home.Send message') }}</button>
                             @else
                                 <button id="button-apply" class="text-wrapper-5"
                                         onclick="alert('Bạn cần đăng nhập')">{{ __('home.Send message') }}</button>
@@ -160,4 +159,5 @@
             </script>
         </div>
     </div>
+    <script src="{{asset('js/send-mess.js')}}" type="module"></script>
 @endsection

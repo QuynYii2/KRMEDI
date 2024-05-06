@@ -25,10 +25,11 @@ class BackendProductInfoController extends Controller
         }
 
         $products = DB::table('product_infos')
-            ->join('provinces', 'provinces.id', '=', 'product_infos.province_id')
+            ->leftJoin('users', 'product_infos.created_by', '=', 'users.id')
+            ->leftJoin('provinces', 'provinces.id', '=', 'product_infos.province_id')
             ->where('product_infos.status', '!=', ProductStatus::DELETED)
             ->where('product_infos.created_by', '=', $userId)
-            ->select('product_infos.*', 'provinces.name as province_name')
+            ->select('product_infos.*', 'provinces.name as province_name','users.email')
             ->get();
 
         $isAdmin = (new MainApi())->isAdmin($userId);

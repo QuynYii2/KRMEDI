@@ -415,7 +415,7 @@
                 </div>
                  ${product.type_product == 0? `<div class="prices-pro">
                     ${formatCurrency(product.price)} ${product.price_unit}
-                </div>`:`<div class="contact_doctor" onclick="checkDoctorOnline(${product.created_by})">
+                </div>`:`<div class="contact_doctor" data-mail="${product.email}">
                                     Tư vấn
                                 </div>`}
 
@@ -450,7 +450,7 @@
 
 
     </script>
-    <script>
+    <script >
         function addProductToWishList(id) {
             let productId = id;
             let userId = `{{ Auth::check() ? Auth::user()->id : null }}`;
@@ -609,7 +609,7 @@
                                 </div>
                                 ${item.type_product == 0? `<div class="prices-pro">
                                     ${formatCurrency(item.price)} ${item.price_unit}
-                                </div>`:`<div class="contact_doctor" onclick="checkDoctorOnline(${item.created_by})">
+                                </div>`:`<div class="contact_doctor" data-mail="${item.email}">
                                     Tư vấn
                                 </div>`}
 
@@ -685,4 +685,5 @@
         }
 
     </script>
+    <script src="{{asset('js/send-mess.js')}}" type="module"></script>
 @endsection

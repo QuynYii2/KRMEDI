@@ -81,7 +81,7 @@
             vapidKey: key_pair_fire_base
         }).then((currentToken) => {
             if (currentToken) {
-                console.log('token: ', currentToken);
+                // console.log('token: ', currentToken);
                 saveToken(currentToken);
             } else {
                 console.log('No registration token available. Request permission to generate one.');

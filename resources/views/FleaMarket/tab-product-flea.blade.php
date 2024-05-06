@@ -140,7 +140,7 @@
                                 </div>
                                 ${item.type_product == 0? `<div class="prices-pro">
                     ${formatCurrency(item.price)} ${item.price_unit}
-                </div>`:`<div class="contact_doctor" onclick="checkDoctorOnline(${item.created_by})">
+                </div>`:`<div class="contact_doctor" data-mail="${item.email}">
                                     Tư vấn
                                 </div>`}
                             </div>
@@ -190,3 +190,4 @@
         });
     }
 </script>
+<script src="{{asset('js/send-mess.js')}}" type="module"></script>
