@@ -973,7 +973,7 @@
                 unreadMessageCount: {[current_user.uid]: 0, [user.id]: 0},
                 createdAt: new Date().getTime().toString(),
                 channelTypes: [
-                    `${current_user.uid}_${targetChannelType}`,
+                    `${current_user.uid}_${myChannelType}`,
                     `${user.id}_${myChannelType}`
                 ]
             };
