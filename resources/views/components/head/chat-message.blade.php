@@ -645,7 +645,7 @@
             const user = current_user;
             const doctorChatListQuery = query(
                 collection(database, 'chats'),
-                where('channelTypes', 'array-contains', `${user.uid}_DOCTORS`)
+                where('channelTypes', 'array-contains-any', [`${user.uid}_DOCTORS`, `${user.uid}_PHAMACISTS`, `${user.uid}_HOSPITALS`])
             );
             const unsubscribe = onSnapshot(doctorChatListQuery, (querySnapshot) => {
                 doctorChatList = [];
