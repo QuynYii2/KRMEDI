@@ -75,7 +75,7 @@ class AgoraChatController extends Controller
 
         $this->sendNotificationToAppByFireBase($userReciveCall->email, $userCall);
 
-        return view('video-call.index', compact('agora_chat', 'patient'));
+        return view('video-call.index_backup', compact('agora_chat', 'patient'));
     }
 
     function createMeeting(Request $request)
@@ -101,7 +101,7 @@ class AgoraChatController extends Controller
 
         // Check token have last updated more than 10mins then refresh token
         $currentDateTime = Carbon::now();
-            
+
         if ($oldAgora && Carbon::parse($oldAgora->updated_at)->diffInMinutes($currentDateTime) < 10) {
             //Token is new < 10 mins
             $token = $oldAgora->token;
@@ -285,15 +285,19 @@ class AgoraChatController extends Controller
             ['user_id_2', $user_id_1],
         ])->first();
 
-        $token_1 = $agora_chat_1->token;
-        $token_2 = $agora_chat_2->token;
+        $token_1 = $agora_chat_1->token ?? '';
+        $token_2 = $agora_chat_2->token ?? '';
 
-        if ($token_1 == $token_2) {
+        if ($token_1 == $token_2 || !$token_1 || !$token_2) {
             $token = $this->genNewTokenByChanelName($agora_chat_1->channel, $user_id_1, $user_id_2);
-            $agora_chat_1->token = $token;
-            $agora_chat_2->token = $token;
-            $agora_chat_1->save();
-            $agora_chat_2->save();
+            if ($agora_chat_1) {
+                $agora_chat_1->token = $token;
+                $agora_chat_1->save();
+            }
+            if ($agora_chat_2) {
+                $agora_chat_2->token = $token;
+                $agora_chat_2->save();
+            }
         }
     }
 
@@ -327,7 +331,7 @@ class AgoraChatController extends Controller
         if (!$agora_chat) {
             $agora_chat = $this->createMeeting($request);
         }
-        
+
         // Check token have last updated more than 10mins then refresh token
         $currentDateTime = Carbon::now();
         if (Carbon::parse($agora_chat->updated_at)->diffInMinutes($currentDateTime) > 10) {
