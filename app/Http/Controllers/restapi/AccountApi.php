@@ -82,4 +82,19 @@ class AccountApi extends Controller
             return response((new MainApi())->returnMessage('Error, please try again!'), 400);
         }
     }
+
+    public function getRoleByUserId($user_id)
+    {
+        if (!$user_id) {
+            return response()->json(['error' => 1, 'message' => 'User id can not be null'], 404);
+        }
+
+        $user = User::find($user_id);
+
+        if (!$user) {
+            return response()->json(['error' => 1, 'message' => 'User not existed'], 404);
+        }
+
+        return response()->json(['error' => 0, 'data' => $user->member]);
+    }
 }

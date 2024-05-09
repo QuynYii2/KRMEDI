@@ -247,3 +247,5 @@ Route::group(['prefix' => 'api/zalo'], function () {
 });
 
 Route::post('api/set-status-order', [\App\Http\Controllers\restapi\CheckoutApi::class, 'statusOrder']);
+
+Route::get('api/users/get-role/{user_id}', [AccountApi::class, 'getRoleByUserId'])->name('restapi.account.get.role.by.user.id');
