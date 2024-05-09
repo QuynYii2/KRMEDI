@@ -143,7 +143,6 @@
             let html = ``;
             for (let i = 0; i < response.length; i++) {
                 let data = response[i];
-                console.log(status)
                 let products = ``;
                 let username = ``;
                 let product_item = data.products;
@@ -177,7 +176,7 @@
 
                 html = html + `<div class="order-item p-2 border mt-2">
                          <div class="shop-info">
-                            ${username}
+                            <b>Shop: </b> ${username}
                         </div>
                         <div class="order-info">
                             ${products}

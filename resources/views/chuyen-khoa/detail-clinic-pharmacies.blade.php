@@ -3,6 +3,16 @@
 @endphp
 @extends('layouts.master')
 @section('title', 'Detail')
+<style>
+    @media (max-width: 575px) {
+        .content__item{
+            flex-wrap: wrap;
+        }
+        .specialList-clinics--img,.specialList-clinics--main{
+            width: 100%;
+        }
+    }
+</style>
 @section('content')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.12/css/lightgallery.min.css">
     <link rel="stylesheet" href="{{asset('css/homeSpecialist.css')}}">

@@ -44,6 +44,11 @@ document.addEventListener("readystatechange", function() {
                 getDoctorByEmailOnline(email);
             });
         });
+
+        document.querySelector('.doctor_mess').addEventListener('click', function(event) {
+            const email = $(this).data('mail');
+            getDoctorByEmailOnline(email);
+        });
     }
     function hideTabActive() {
         let tabActive = document.querySelectorAll('.tab-pane.fade');
