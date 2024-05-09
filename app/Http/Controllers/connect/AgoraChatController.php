@@ -16,7 +16,8 @@ class AgoraChatController extends Controller
 {
     function index()
     {
-        return view('video-call.index');
+        return redirect(env('CALL_APP_URL '));
+        // return view('video-call.index');
     }
 
     function handleCallVideo(Request $request)
@@ -30,7 +31,6 @@ class AgoraChatController extends Controller
             ['user_id_2', $user_id_2],
         ])->first();
 
-
         if (!$agora_chat) {
             $agora_chat = $this->createMeeting($request);
         }
@@ -43,16 +43,27 @@ class AgoraChatController extends Controller
             $this->handleRefreshToken($request);
         }
 
-        $user_1 = User::find($user_id_1);
-        $user_2 = User::find($user_id_2);
-        $patient = null;
-        if ($user_1->type == 'NORMAL') {
-            $patient = $user_id_1;
-        } elseif ($user_2->type == 'NORMAL') {
-            $patient = $user_id_2;
-        }
+        $token      = $agora_chat->token ?? null;
+        $channel    = $agora_chat->channel ?? null;
+        $fromUser     = $agora_chat->user_id_1 ?? 0;
+        $toUser     = $agora_chat->user_id_2 ?? 0;
 
-        $data['content'] = route('agora.joinMeeting', ['user_id_1' => $user_id_2, 'user_id_2' => $user_id_1]);
+        //Params của user tạo cuộc gọi
+        $callFromParams = [
+            'token' => $token,
+            'channel' => $channel,
+            'user_id' => $fromUser
+        ];
+
+        //Params của user nhận cuộc gọi
+        $callToParams = [
+            'token' => $token,
+            'channel' => $channel,
+            'user_id' => $toUser
+        ];
+
+        $data['content'] = env('CALL_APP_URL') . '?' . http_build_query($callToParams);
+
         $data['user_id_1'] = $user_id_2;
         $data['user_id_2'] = $user_id_1;
 
@@ -67,15 +78,18 @@ class AgoraChatController extends Controller
 
         $pusher = new Pusher($PUSHER_APP_KEY, $PUSHER_APP_SECRET, $PUSHER_APP_ID, $options);
 
+        //DATA WEB CALL WEB
         $pusher->trigger('send-message', 'send-message', $data);
 
         // gui notification den user_id_1
-        $userReciveCall = User::find($user_id_2);
+        $userReceiveCall = User::find($user_id_2);
         $userCall = User::find($user_id_1);
 
-        $this->sendNotificationToAppByFireBase($userReciveCall->email, $userCall);
+        $this->sendNotificationToAppByFireBase($userReceiveCall->email, $userCall);
 
-        return view('video-call.index_backup', compact('agora_chat', 'patient'));
+        return redirect(env('CALL_APP_URL') . '?' . http_build_query($callFromParams));
+
+        // return view('video-call.index', compact('agora_chat'));
     }
 
     function createMeeting(Request $request)
@@ -339,17 +353,28 @@ class AgoraChatController extends Controller
             $this->handleRefreshToken($request);
         }
 
-        $user_1 = User::find($user_id_1);
-        $user_2 = User::find($user_id_2);
+        $token      = $agora_chat->token ?? null;
+        $channel    = $agora_chat->channel ?? null;
+        $fromUser   = $agora_chat->user_id_1 ?? 0;
+        $toUser     = $agora_chat->user_id_2 ?? 0;
 
-        $patient = null;
-        if ($user_1->type == 'NORMAL') {
-            $patient = $user_id_1;
-        } elseif ($user_2->type == 'NORMAL') {
-            $patient = $user_id_2;
-        }
+        //Params của user tạo cuộc gọi
+        $callFromParams = [
+            'token' => $token,
+            'channel' => $channel,
+            'user_id' => $fromUser
+        ];
 
-        return view('video-call.index', compact('agora_chat', 'patient'));
+        //Params của user nhận cuộc gọi
+        $callToParams = [
+            'token' => $token,
+            'channel' => $channel,
+            'user_id' => $toUser
+        ];
+
+        return redirect(env('CALL_APP_URL') . '?' . http_build_query($callToParams));
+
+        // return view('video-call.index', compact('agora_chat', 'patient'));
     }
 
     function getPushTokenByUser(Request $request)

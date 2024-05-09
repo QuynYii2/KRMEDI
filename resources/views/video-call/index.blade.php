@@ -245,6 +245,7 @@
 
         //#5 - Set remote tracks to store other users
         let remoteTracks = {}
+
         document.getElementById('join-btn').addEventListener('click', async () => {
             config.uid = document.getElementById('username').value
             await joinStreams()
@@ -282,6 +283,13 @@
             }
         })
 
+        document.getElementById('leave-btn').addEventListener('click', async () => {
+            if (confirm('Are you sure you want to leave?')) {
+                leaveConfirmation = true;
+                leaveCall();
+            }
+        });
+
         async function leaveCall() {
             //Loop threw local tracks and stop them so unpublish event gets triggered, then set to undefined
             //Hide footer
@@ -293,6 +301,9 @@
                     localTracks[trackName] = null
                 }
             }
+
+            // remove remote users and player views
+            remoteTracks = {};
 
             //Leave the channel
             await client.leave()
@@ -443,13 +454,6 @@
             const footer = document.querySelector('#footer');
             joinWrapper.style.display = 'none';
             footer.style.display = 'flex';
-        });
-
-        document.getElementById('leave-btn').addEventListener('click', async () => {
-            if (confirm('Are you sure you want to leave?')) {
-                leaveConfirmation = true;
-                leaveCall();
-            }
         });
     </script>
 
