@@ -218,7 +218,7 @@
                             </div>
                             @if(Auth::user()->id == $userCheck->id && $infoDoctorAnswer != null)
                                 <div id="opt_btn" class="d-flex justify-content-between justify-content-md-center">
-                                    <a onclick="handleStartChatWithDoctor('{{ $infoDoctorAnswer->id }}')" class="mr-2">
+                                    <a data-mail="{{$infoDoctorAnswer->email}}" class="mr-2 doctor_mess">
                                         <button class="p-1">{{ __('home.Chat') }}</button>
                                     </a>
                                     <form method="post" action="{{ route('createMeeting') }}" target="_blank">
@@ -491,4 +491,5 @@
         }
 
     </script>
+    <script src="{{asset('js/send-mess.js')}}" type="module"></script>
 @endsection

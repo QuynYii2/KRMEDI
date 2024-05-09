@@ -71,7 +71,7 @@
     font-weight: 800;
     line-height: normal;
   }
-  .modal-body .popup .form .form-element #email, .modal-body .popup .form .form-element #password, .modal-body .popup .form .form-element #username, .modal-body .popup .form .form-element #passwordConfirm, .modal-body .popup .form .form-element #type, .modal-body .popup .form .form-element #member {
+    .popup .form .form-element input[type=text],.modal-body .popup .form .form-element #email, .modal-body .popup .form .form-element #password, .modal-body .popup .form .form-element #username, .modal-body .popup .form .form-element #passwordConfirm, .modal-body .popup .form .form-element #type, .modal-body .popup .form .form-element #member {
     display: flex;
     width: 100%;
     height: 48px;
@@ -119,7 +119,8 @@
     width: 770px;
     border-radius: 16px;
     background: #FFF;
-    right: 110px;
+    /*right: 110px;*/
+      right: 0;
   }
   .popup .form .form-element {
     margin: 16px;

@@ -87,7 +87,7 @@
                             <span>{{ $doctor->response_rate }}%</span>
                         </div>
                         <div id="opt_btn" class="d-flex justify-content-center">
-                            <a onclick="handleStartChatWithDoctor('{{ $doctor->id }}')">
+                            <a class="doctor_mess" data-mail="{{$doctor->email}}">
                                 <button class="button">{{ __('home.Chat') }}</button>
                             </a>
                             @if ($is_online)
@@ -484,6 +484,6 @@
                 input.value = star.checked ? value : value - 1;
             }
         </script>
-
+        <script src="{{asset('js/send-mess.js')}}" type="module"></script>
     @endif
 @endsection

@@ -688,7 +688,7 @@
                         </p>
 
                     </div>`;
-            } else {
+            }
                 doctorChatList.forEach(chatId => {
                     if (res.id === chatId && res.id != current_user.uid) {
                         html += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}">
@@ -700,7 +700,7 @@
                                 </div>`;
                             }
                         });
-            }
+
 
         }
         $('#friendslist-all-online #friends-all-online').html(html_online);

@@ -19,7 +19,7 @@
         background-color: #ffffff;
         border-color: #ffffff;
     }
-    
+
     .spinner-loading span {
         width: 8px;
         height: 8px;
@@ -610,10 +610,10 @@
                                                    placeholder="Nhập mã giới thiệu">
                                         </div>
 
-                                        <div class="form-element remember-me">
+                                        <div class="form-element remember-me d-flex align-items-center mt-2">
                                             <input id="remember-me" type="checkbox" required>
                                             <label
-                                                for="remember-me">{{ __('home.Agree to Terms of Service and Privacy Policy') }}</label>
+                                                for="remember-me" style="margin-left: 10px">{{ __('home.Agree to Terms of Service and Privacy Policy') }}</label>
                                         </div>
                                     </div>
                                 </div>
@@ -1296,7 +1296,7 @@
 
                         const divNotification = $('<div>').addClass('notification-item')
                         .css({
-                            'display': 'flex', 
+                            'display': 'flex',
                             'align-items': 'center'
                         })
 
@@ -1369,9 +1369,9 @@
             setTimeout(function() {
                 hideSpinner();
                 spinnerVisible = false; // Reset the flag to false after hiding the spinner
-                
+
                 loadMoreNotifications();
-                
+
             }, 1000);
         }
     }
