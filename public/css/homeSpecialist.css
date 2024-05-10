@@ -190,10 +190,10 @@
   gap: 10px;
   border: none;
   color: #FFF;
-  font-size: 18px;
+  font-size: 24px;
   font-style: normal;
   font-weight: 600;
-  line-height: normal;
+  line-height: unset;
   height: auto;
 }
 .container .danh-sach-theo-chuyen-khoa .nav-item .nav-link {

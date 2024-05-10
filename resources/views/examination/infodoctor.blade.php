@@ -59,6 +59,16 @@
                             <span> {{ $doctor->year_of_experience }} years</span>
                         </div>
                         <div class="dess">
+                            <p>{{ __('home.About') }}: </p>
+                            <span>
+                                @if (locationHelper() == 'vi')
+                                    {!! $doctor->abouts ?? __('home.no name') !!}
+                                @else
+                                    {!! $doctor->abouts_en ?? __('home.no name') !!}
+                                @endif
+                            </span>
+                        </div>
+                        <div class="dess">
                             <p>{{ __('home.Services') }}: </p>
                             <span>
                                 @if (locationHelper() == 'vi')

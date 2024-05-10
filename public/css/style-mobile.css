@@ -39,6 +39,9 @@
 #chat-widget-all-online,#chat-widget-connected{
     font-size: 14px!important;
 }
+.noti_number{
+    color: red;font-size: 16px;position: absolute;left: 52%;top: 50%;transform: translate(-50%,-50%);font-weight: bold
+}
 @media (max-width: 1400px) {
     .header .header-detail--left .back h5 {
         font-size: 16px;
@@ -841,5 +844,8 @@
     }
     .nav .nav-item .nav-link.active,.nav .nav-item .nav-link{
         font-size: 16px!important;
+    }
+    .noti_number{
+        font-size: 14px;left: 50%;top: 47%
     }
 }
