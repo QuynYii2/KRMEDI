@@ -13,6 +13,7 @@ use App\Http\Controllers\Controller;
 use App\Imports\ExcelImportClass;
 use App\Models\Cart;
 use App\Models\Chat;
+use App\Models\DrugIngredients;
 use App\Models\Message;
 use App\Models\online_medicine\ProductMedicine;
 use App\Models\PrescriptionResults;
@@ -21,6 +22,7 @@ use Faker\Provider\Uuid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Str;
 
@@ -82,7 +84,7 @@ class PrescriptionResultApi extends Controller
                 if ($user) {
                     $email = $user->email;
                     $full_name = $user->name ?? 'No name';
-                }else{
+                } else {
                     $full_name = $request->input('full_name');
                     $email = $request->input('email');
                 }
@@ -425,7 +427,7 @@ class PrescriptionResultApi extends Controller
             return;
         }
 
-        $type = 'EndCall-'. $counter;
+        $type = 'EndCall-' . $counter;
 
         $uuid = Str::uuid()->toString();
 
@@ -447,30 +449,40 @@ class PrescriptionResultApi extends Controller
         ]);
 
         broadcast(new NewMessage($message));
-    }    
+    }
 
-    public function getListMedicine(Request $request)
+    public function searchMedicine(Request $request)
     {
-        $name_search = $request->input('name_search');
-        $drug_ingredient_search = $request->input('drug_ingredient_search');
-        $object_search = $request->input('object_search');
+        try {
+            $validated = Validator::make($request->all(), [
+                'search_key' => 'nullable|string',
+                'object_search' => 'nullable|integer',
+            ]);
 
-        $listMedicine = ProductMedicine::where('quantity', '>', 0);
+            if ($validated->fails()) {
+                return response()->json(['error' => -1, 'message' => $validated->errors()->first()], 400);
+            }
 
-        if ($drug_ingredient_search) {
-            $listMedicineId = DrugIngredients::where('component_name', 'like', '%' . $drug_ingredient_search . '%')->pluck('product_id');
-            $listMedicine = $listMedicine->whereIn('id', $listMedicineId);
+            $validatedData = $validated->validated();
+
+            $listMedicine = ProductMedicine::where('quantity', '>', 0);
+
+            if (isset($validatedData['search_key']) && $validatedData['search_key']) {
+                $listMedicine = $listMedicine->where(function ($query) use ($validatedData) {
+                    $query->where('name', 'like', '%' . $validatedData['search_key'] . '%')
+                        ->orWhere('name_en', 'like', '%' . $validatedData['search_key'] . '%');
+                });
+            }
+
+            if (isset($validatedData['object_search']) && $validatedData['object_search']) {
+                $listMedicine = $listMedicine->where('object_', $validatedData['object_search']);
+            }
+
+            $listMedicine = $listMedicine->get();
+
+            return response()->json(['error' => 0, 'data' => $listMedicine]);
+        } catch (\Exception $e) {
+            return response(['error' => -1, 'message' => $e->getMessage()], 400);
         }
-
-        if ($name_search) {
-            $listMedicine = $listMedicine->where('name', 'like', '%' . $name_search . '%');
-        }
-
-        if ($object_search) {
-            $listMedicine = $listMedicine->where('object_', $object_search);
-        }
-
-        $listMedicine = $listMedicine->get();
-        return response()->json($listMedicine);
     }
 }
