@@ -447,5 +447,30 @@ class PrescriptionResultApi extends Controller
         ]);
 
         broadcast(new NewMessage($message));
+    }    
+
+    public function getListMedicine(Request $request)
+    {
+        $name_search = $request->input('name_search');
+        $drug_ingredient_search = $request->input('drug_ingredient_search');
+        $object_search = $request->input('object_search');
+
+        $listMedicine = ProductMedicine::where('quantity', '>', 0);
+
+        if ($drug_ingredient_search) {
+            $listMedicineId = DrugIngredients::where('component_name', 'like', '%' . $drug_ingredient_search . '%')->pluck('product_id');
+            $listMedicine = $listMedicine->whereIn('id', $listMedicineId);
+        }
+
+        if ($name_search) {
+            $listMedicine = $listMedicine->where('name', 'like', '%' . $name_search . '%');
+        }
+
+        if ($object_search) {
+            $listMedicine = $listMedicine->where('object_', $object_search);
+        }
+
+        $listMedicine = $listMedicine->get();
+        return response()->json($listMedicine);
     }
 }
