@@ -18,6 +18,7 @@ use App\Http\Controllers\restapi\MedicineApi;
 use App\Http\Controllers\restapi\NewsApi;
 use App\Http\Controllers\restapi\OrderApi;
 use App\Http\Controllers\restapi\PharmacyApi;
+use App\Http\Controllers\restapi\PrescriptionResultApi;
 use App\Http\Controllers\restapi\ProductInfoApi;
 use App\Http\Controllers\restapi\ProductMedicineApi;
 use App\Http\Controllers\restapi\QrCodeApi;
@@ -247,3 +248,10 @@ Route::group(['prefix' => 'api/zalo'], function () {
 });
 
 Route::post('api/set-status-order', [\App\Http\Controllers\restapi\CheckoutApi::class, 'statusOrder']);
+
+Route::get('api/users/get-role/{user_id}', [AccountApi::class, 'getRoleByUserId'])->name('restapi.account.get.role.by.user.id');
+
+
+Route::group(['prefix' => 'api/prescription'], function () {
+    Route::get('search', [PrescriptionResultApi::class, 'getListMedicine'])->name('restapi.prescription.search');
+});

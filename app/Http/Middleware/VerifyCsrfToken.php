@@ -77,6 +77,8 @@ class VerifyCsrfToken extends Middleware
         '/api/zalo/**',
         '/api/notifications',
         '/api/aha-orders/**',
-        '/api/set-status-order'
+        '/api/set-status-order',
+        //KÊ ĐƠN
+        '/api/prescription/*'
     ];
 }

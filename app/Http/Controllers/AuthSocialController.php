@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Str;
 
 class AuthSocialController extends Controller
 {
@@ -443,13 +444,20 @@ class AuthSocialController extends Controller
                 toast('Register logged in!', 'success', 'top-left');
                 return redirect(route('home'));
             } else {
+                $identify_number = Str::random(8);
+                while (User::where('identify_number', $identify_number)->exists()) {
+                    $identify_number = Str::random(8);
+                }
+
+                $randomUsername = 'zalo' . (new MainController())->generateRandomString(8);
+
                 $newUser = User::create([
                     'provider_name' => 'zalo',
                     'provider_id' => $zaloUser['id'],
                     'name' => $zaloUser['name'],
-                    'email' => 'zalo' . (new MainController())->generateRandomString(8) . '@gmail.com',
+                    'email' => $randomUsername . '@gmail.com',
                     'phone' => '',
-                    'username' => '',
+                    'username' => $randomUsername,
                     'address_code' => '',
                     'password' => $passwordHash,
                     'type' => 'OTHERS',
@@ -458,7 +466,11 @@ class AuthSocialController extends Controller
                     'abouts' => '',
                     'abouts_en' => '',
                     'abouts_lao' => '',
+                    'identifier' => $identify_number
                 ]);
+
+                //SET ROLE
+                (new MainController())->createRoleUser('NORMAL', $randomUsername);
 
                 auth()->login($newUser, true);
                 $token = JWTAuth::fromUser($newUser);
