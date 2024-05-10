@@ -297,12 +297,13 @@
 
 <div id="widget-chat">
 
-    <div id="chat-circle" class="btn btn-raised">
+    <div id="chat-circle" class="btn btn-raised" style="display: none">
         <div id="chat-overlay"></div>
         <i class="fa-solid fa-message"></i>
+        <span class="noti_number"></span>
     </div>
 
-    <div class="chat-box">
+    <div class="chat-box" style="display: block">
         <div class="chat-box-header">
             <span class="chat-box-toggle"><i class="fa-solid fa-x"></i></span>
         </div>
@@ -533,9 +534,13 @@
     const database = getFirestore(app);
     const auth = getAuth();
 
-    let current_user, list_user = [], doctorChatList = [],
+    let current_user, list_user = [], doctorChatList = [], list_user_not_seen = [],
         current_role = `{{ (new \App\Http\Controllers\MainController())->getRoleUser(Auth::user()->id)}}`,
         user_chat;
+
+    const usersCollection = collection(database, "users");
+
+    const chatsCollection = collection(database, "chats");
 
     login();
 
@@ -547,17 +552,6 @@
                 setOnline(uid, true);
                 setCookie("is_login", true, 1);
                 getAllChatRoomWithDoctor();
-                const unsubscribe = onSnapshot(usersCollection, (querySnapshot) => {
-                    list_user = [];
-                    querySnapshot.forEach((doc) => {
-                        let res = doc.data();
-                        list_user.push(res);
-                    });
-                    renderUser();
-                    getMessageFirebase();
-                }, (error) => {
-                    console.error("Error getting: ", error);
-                });
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -599,10 +593,6 @@
         }
     }
 
-    const usersCollection = collection(database, "users");
-
-    const chatsCollection = collection(database, "chats");
-
     function getConversationID(userUid) {
         let id = current_user.uid;
 
@@ -627,18 +617,6 @@
         return hash_value;
     }
 
-    // const unsubscribe = onSnapshot(usersCollection, (querySnapshot) => {
-    //     list_user = [];
-    //     querySnapshot.forEach((doc) => {
-    //         let res = doc.data();
-    //         list_user.push(res);
-    //     });
-    //     console.log(623,list_user)
-    //     renderUser();
-    //     getMessageFirebase();
-    // }, (error) => {
-    //     console.error("Error getting: ", error);
-    // });
 
     function getAllChatRoomWithDoctor() {
         if (current_user) {
@@ -657,11 +635,52 @@
                             doctorChatList.push(userId);
                         }
                     });
+                    countUnreadMessages();
                 });
             }, (error) => {
                 console.error("Error getting: ", error);
             });
         }
+    }
+
+    async function countUnreadMessages() {
+        list_user_not_seen = [];
+        for (let i = 0;i<doctorChatList.length;i++) {
+            const roomRef = doc(chatsCollection, getConversationID(doctorChatList[i]));
+            const messagesRef = collection(roomRef, "messages");
+            const roomSnapshot = await getDoc(roomRef);
+            if (roomSnapshot.exists()) {
+                const roomData = roomSnapshot.data();
+                const roomJson = roomData;
+                const unreadUserId = roomJson.lastMessage?.fromId == doctorChatList[i] ? doctorChatList[i] : current_user.uid;
+                const unreadCount = await getDocs(query(messagesRef, where("readUsers." + unreadUserId, "==", false)))
+                    .then((querySnapshot) => querySnapshot.docs);
+                if(unreadCount.length>0){
+                    unreadCount.forEach((docSnapshot) => {
+                        const messageData = docSnapshot.data();
+                        const senderId = messageData.fromId;
+                        if (!list_user_not_seen.includes(senderId)) {
+                            list_user_not_seen.push(senderId);
+                        }
+                    });
+                }
+
+            } else {
+                console.log("Không tìm thấy dữ liệu cho phòng chat.");
+            }
+        }
+        $('.noti_number').html(list_user_not_seen.length>0?list_user_not_seen.length:'');
+        const unsubscribeUser = onSnapshot(usersCollection, (querySnapshot) => {
+            list_user = [];
+            querySnapshot.forEach((doc) => {
+                let res = doc.data();
+                list_user.push(res);
+            });
+            renderUser();
+            getMessageFirebase();
+        }, (error) => {
+            console.error("Error getting: ", error);
+        });
     }
 
     let un_message = `<p class="unread">Not connected!</p>`;
@@ -675,20 +694,21 @@
         for (let i = 0; i < list_user.length; i++) {
             let res = list_user[i];
             let email = res.email;
-
             let is_online = res.is_online;
+
             if (is_online === true && (res.role == 'DOCTORS' || res.role == 'PHAMACISTS' || res.role == 'HOSPITALS') && res.id != current_user.uid) {
                 count++;
                 html_online += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}">
                         <img src="../../../../img/avt_default.jpg"/>
                         <p>
-                            <strong class="max-1-line-title-widget-chat">${name}</strong>
+                            <strong class="max-1-line-title-widget-chat"></strong>
                             <span>${email}</span>
 
                         </p>
 
                     </div>`;
             }
+            let redDotHtml = list_user_not_seen.includes(res.id) ? `<div class="${res.id}" style="position: absolute;right: 15px;top: 50%;transform: translateY(-50%);background-color: red;border-radius: 50%;width: 10px;height:10px"></div>` : '';
                 doctorChatList.forEach(chatId => {
                     if (res.id === chatId && res.id != current_user.uid) {
                         html += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}">
@@ -697,6 +717,7 @@
                                         <strong class="max-1-line-title-widget-chat">${name}</strong>
                                         <span>${email}</span>
                                     </p>
+                                    ${redDotHtml}
                                 </div>`;
                             }
                         });
@@ -867,8 +888,10 @@
     }
 
     function getMessageFirebase() {
+        let conversationID = 0;
+        let id = 0;
         $('.user_connect').click(function () {
-            let id = $(this).data('id');
+            id = $(this).data('id');
             let email = $(this).data('email');
             let role = $(this).data('role');
 
@@ -916,7 +939,7 @@
                 }, 50);
             });
 
-            let conversationID = getConversationID(id);
+            conversationID = getConversationID(id);
 
             const messagesCollectionRef = collection(database, `chats/${conversationID}/messages`);
 
@@ -948,7 +971,40 @@
             };
 
             initialChatRoom(user);
-        })
+        });
+
+        $('.friend').click(function () {
+            markAllMessagesAsRead(id, conversationID);
+        });
+    }
+
+    async function markAllMessagesAsRead(userId, conversationId) {
+        try {
+            const roomRef = doc(chatsCollection, conversationId);
+            await updateDoc(roomRef, {
+                [`unreadMessageCount.${current_user.uid}`]: 0
+            });
+
+            const messagesCollectionRef = collection(roomRef, 'messages');
+            const querySnapshot = await getDocs(query(messagesCollectionRef, where(`readUsers.${current_user.uid}`, '==', false)));
+
+            querySnapshot.forEach(async (doc) => {
+                try {
+                    const messageRef = doc.ref;
+                    await setDoc(messageRef, {
+                        readUsers: {
+                            [current_user.uid]: true
+                        }
+                    }, { merge: true });
+                } catch (error) {
+                    console.error("Error marking message as read: ", error);
+                }
+            });
+            $('.' + userId).hide();
+            $('.noti_number').html('');
+        } catch (error) {
+            console.error("Error marking messages as read: ", error);
+        }
     }
 
     async function initialChatRoom(user) {

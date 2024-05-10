@@ -73,11 +73,11 @@ class HomeController extends Controller
             ->where('status', \App\Enums\UserStatus::ACTIVE)
             ->paginate(12);
         $clinics = \App\Models\Clinic::whereRaw("FIND_IN_SET('$id', department)")
-            ->where('type', \App\Enums\TypeBusiness::CLINICS)
+            ->where('type', \App\Enums\TypeBusiness::HOSPITALS)
             ->where('status', \App\Enums\ClinicStatus::ACTIVE)
             ->get();
         $pharmacies = \App\Models\Clinic::whereRaw("FIND_IN_SET('$id', department)")
-            ->where('type', \App\Enums\TypeBusiness::PHARMACIES)
+            ->where('type', \App\Enums\TypeBusiness::CLINICS)
             ->where('status', \App\Enums\ClinicStatus::ACTIVE)
             ->get();
         return view('chuyen-khoa.danh-sach-theo-chuyen-khoa', compact('id', 'doctorsSpecial', 'clinics', 'pharmacies'));

@@ -1333,7 +1333,9 @@
                                             <div class="product-item">
                                                 <div style="min-height: 170px"
                                                      class="img-pro justify-content-center d-flex">
-                                                    <img loading="lazy" src="{{$doctor->avt}}" alt="">
+                                                    <a href="{{ route('examination.doctor_info', $doctor->id) }}">
+                                                        <img loading="lazy" src="{{$doctor->avt}}" alt="">
+                                                    </a>
                                                     <a class="button-heart button-doctor-heart"
                                                        data-doctor="{{$doctor->id}}"
                                                        data-isFavourite="{{ $isFavourite ? 1 : 0 }}">
@@ -1352,7 +1354,7 @@
                                                             <a class="max-3-line-content-home"
                                                                href="{{ route('examination.doctor_info', $doctor->id) }}">{{$doctor->name}}</a>
                                                         </div>
-                                                        <div class="location-pro webkit-line-clamp-newHome d-flex line-service">
+                                                        <a href="{{ route('examination.doctor_info', $doctor->id) }}" class="location-pro webkit-line-clamp-newHome d-flex line-service">
                                                             <p>
                                                                 @if(locationHelper() == 'vi')
                                                                     {!! ($doctor->service ?? __('home.no Service Name') ) !!}
@@ -1360,7 +1362,7 @@
                                                                     {!! ($doctor->service_en  ?? __('home.no Service Name') ) !!}
                                                                 @endif
                                                             </p>
-                                                        </div>
+                                                        </a>
                                                         <div class="price-pro">
                                                             @php
                                                                 if ($doctor->province_id == null) {
@@ -1431,8 +1433,8 @@
                 </div>
                 <div class="mainServiceHomeNew row container">
                     @php
-                        $departments = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->take(18)->get();
-                        $departmentsMobile = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->take(6)->get();
+                        $departments = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->where('isFilter', 1)->take(18)->get();
+                        $departmentsMobile = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->where('isFilter', 1)->take(6)->get();
                     @endphp
                     @foreach($departments as $index => $departmentItem)
                         @php
