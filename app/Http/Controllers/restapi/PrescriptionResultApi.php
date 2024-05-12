@@ -105,7 +105,7 @@ class PrescriptionResultApi extends Controller
 
             $created_by = $request->input('created_by');
 
-            $prescriptions = $request->input('prescriptions');
+            $prescriptions = $request->input('prescriptions') ?? '{}';
 
             $notes = $request->input('notes');
             $notes_en = $request->input('notes_en') ?? $notes;
@@ -145,7 +145,7 @@ class PrescriptionResultApi extends Controller
                 $prescription_id = json_decode($response->getContent())->data[0]->prescription_id;
             }
 
-            $this->noti_after_create_don_thuoc($email, $prescription_id ?? $prescription_result->id);
+            $this->noti_after_create_don_thuoc($email, $prescription_id ?? $prescription_result->id, $created_by, $user_id);
 
 
             if ($success) {
@@ -157,7 +157,7 @@ class PrescriptionResultApi extends Controller
         }
     }
 
-    private function noti_after_create_don_thuoc($email, $prescription_id)
+    private function noti_after_create_don_thuoc($email, $prescription_id, $created_by = null, $user_id = null)
     {
         $user = User::where('email', $email)->first();
 
@@ -168,16 +168,16 @@ class PrescriptionResultApi extends Controller
         $type = 'DonThuocMoi';
 
         $message = Message::create([
-            'from' => Auth::id(),
-            'to' => $user->id,
+            'from' => $created_by ?? Auth::id(),
+            'to' => $user_id ?? $user->id,
             'text' => 'Bạn có đơn thuốc',
             'uuid_session' => $prescription_id,
             'type' => $type,
         ]);
 
         Chat::create([
-            'from_user_id' => Auth::id(),
-            'to_user_id' => $user->id,
+            'from_user_id' => $created_by ?? Auth::id(),
+            'to_user_id' => $user_id ?? $user->id,
             'chat_message' => 'Bạn có đơn thuốc',
             'message_status' => MessageStatus::UNSEEN,
             'uuid_session' => $prescription_id,
