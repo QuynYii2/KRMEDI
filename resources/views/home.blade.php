@@ -1355,13 +1355,13 @@
                                                                href="{{ route('examination.doctor_info', $doctor->id) }}">{{$doctor->name}}</a>
                                                         </div>
                                                         <a href="{{ route('examination.doctor_info', $doctor->id) }}" class="location-pro webkit-line-clamp-newHome d-flex line-service">
-                                                            <p>
+                                                            <div class="box-about-doctor">
                                                                 @if(locationHelper() == 'vi')
-                                                                    {!! ($doctor->service ?? __('home.no Service Name') ) !!}
+                                                                    {!! ($doctor->abouts ?? __('home.no Service Name') ) !!}
                                                                 @else
-                                                                    {!! ($doctor->service_en  ?? __('home.no Service Name') ) !!}
+                                                                    {!! ($doctor->abouts_en  ?? __('home.no Service Name') ) !!}
                                                                 @endif
-                                                            </p>
+                                                            </div>
                                                         </a>
                                                         <div class="price-pro">
                                                             @php

@@ -319,7 +319,7 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="chat-widget-connected" data-toggle="tab"
                             data-target="#chat-widget-connected-tabs" type="button" role="tab" aria-controls="profile"
-                            aria-selected="false">{{ __('home.Connected') }}
+                            aria-selected="false">{{ __('home.Connected') }} <span class="number_not_screen" style="color: red;margin-left: 5px"></span>
                     </button>
                 </li>
             </ul>
@@ -618,14 +618,15 @@
     }
 
 
-    function getAllChatRoomWithDoctor() {
+    async function getAllChatRoomWithDoctor() {
         if (current_user) {
             const user = current_user;
             const doctorChatListQuery = query(
                 collection(database, 'chats'),
                 where('channelTypes', 'array-contains-any', [`${user.uid}_DOCTORS`, `${user.uid}_PHAMACISTS`, `${user.uid}_HOSPITALS`])
             );
-            const unsubscribe = onSnapshot(doctorChatListQuery, (querySnapshot) => {
+            try {
+                const querySnapshot = await getDocs(doctorChatListQuery);
                 doctorChatList = [];
                 querySnapshot.forEach((doc) => {
                     const res = doc.data();
@@ -635,11 +636,26 @@
                             doctorChatList.push(userId);
                         }
                     });
-                    countUnreadMessages();
                 });
-            }, (error) => {
+                countUnreadMessages();
+            } catch (error) {
                 console.error("Error getting: ", error);
-            });
+            }
+            // const unsubscribe = onSnapshot(doctorChatListQuery, (querySnapshot) => {
+            //     doctorChatList = [];
+            //     querySnapshot.forEach((doc) => {
+            //         const res = doc.data();
+            //         const userIds = res.userIds;
+            //         userIds.forEach(userId => {
+            //             if (userId !== user.uid) {
+            //                 doctorChatList.push(userId);
+            //             }
+            //         });
+            //         countUnreadMessages();
+            //     });
+            // }, (error) => {
+            //     console.error("Error getting: ", error);
+            // });
         }
     }
 
@@ -652,7 +668,7 @@
             if (roomSnapshot.exists()) {
                 const roomData = roomSnapshot.data();
                 const roomJson = roomData;
-                const unreadUserId = roomJson.lastMessage?.fromId == doctorChatList[i] ? doctorChatList[i] : current_user.uid;
+                const unreadUserId = roomJson.lastMessage?.fromId == doctorChatList[i] ? current_user.uid : doctorChatList[i];
                 const unreadCount = await getDocs(query(messagesRef, where("readUsers." + unreadUserId, "==", false)))
                     .then((querySnapshot) => querySnapshot.docs);
                 if(unreadCount.length>0){
@@ -670,17 +686,28 @@
             }
         }
         $('.noti_number').html(list_user_not_seen.length>0?list_user_not_seen.length:'');
-        const unsubscribeUser = onSnapshot(usersCollection, (querySnapshot) => {
+        $('.number_not_screen').html(list_user_not_seen.length>0?'('+list_user_not_seen.length+')':'');
+        // const unsubscribeUser = onSnapshot(usersCollection, (querySnapshot) => {
+        //     list_user = [];
+        //     querySnapshot.forEach((doc) => {
+        //         let res = doc.data();
+        //         list_user.push(res);
+        //     });
+        //     renderUser();
+        //     // getMessageFirebase();
+        // }, (error) => {
+        //     console.error("Error getting: ", error);
+        // });
+        try {
+            const querySnapshot = await getDocs(usersCollection);
             list_user = [];
             querySnapshot.forEach((doc) => {
-                let res = doc.data();
-                list_user.push(res);
+                list_user.push(doc.data());
             });
             renderUser();
-            // getMessageFirebase();
-        }, (error) => {
-            console.error("Error getting: ", error);
-        });
+        } catch (error) {
+            console.error("Error getting data: ", error);
+        }
     }
 
     let un_message = `<p class="unread">Not connected!</p>`;
@@ -698,15 +725,17 @@
             let is_online = res.is_online;
             let name_doctor = '';
             let hospital = '';
+            let avt = '';
 
             if (is_online === true && (res.role == 'DOCTORS' || res.role == 'PHAMACISTS' || res.role == 'HOSPITALS') && res.id != current_user.uid) {
                 count++;
                 promises.push(getUserInfo(email).then((response) => {
                     name_doctor = response.infoUser.name;
                     hospital = response.infoUser.hospital ? response.infoUser.hospital : '';
+                    avt = response.infoUser.avt ? window.location.origin + response.infoUser.avt : '../../../../img/avt_default.jpg';
 
                     html_online += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}">
-                    <img src="../../../../img/avt_default.jpg"/>
+                    <img src="${avt}"/>
                     <p>
                         <strong class="max-1-line-title-widget-chat">${name_doctor}</strong>
                         <span>${hospital}</span>
@@ -721,9 +750,10 @@
                 promises.push(getUserInfo(email).then((response) => {
                     name_doctor = response.infoUser.name;
                     hospital = response.infoUser.hospital ? response.infoUser.hospital : '';
+                    avt = response.infoUser.avt ? window.location.origin + response.infoUser.avt : '../../../../img/avt_default.jpg';
 
                     html += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}">
-                    <img src="../../../../img/avt_default.jpg"/>
+                    <img src="${avt}"/>
                     <p>
                         <strong class="max-1-line-title-widget-chat">${name_doctor}</strong>
                         <span>${hospital}</span>
@@ -948,10 +978,10 @@
             setTimeout(function () {
                 $("#profile p").addClass("animate");
                 $("#profile").addClass("animate");
-            }, 100);
+            }, 10);
             setTimeout(function () {
                 $("#chat-messages").addClass("animate");
-            }, 150);
+            }, 10);
 
             var name = $(this).find("p strong").html();
             $("#profile p").html(name);
@@ -972,7 +1002,7 @@
                     $('#chatview').hide();
                     parent.show();
                     $('#chat-widget-navbar').show();
-                }, 50);
+                }, 10);
             });
 
             conversationID = getConversationID(id);
@@ -1032,16 +1062,31 @@
                             [current_user.uid]: true
                         }
                     }, { merge: true });
-                    setTimeout(function() {
-                        $('.' + userId).hide();
-                        $('.noti_number').html('');
-                    }, 1000);
+                    await updateUnreadMessageCount(userId,conversationId);
                 } catch (error) {
                     console.error("Error marking message as read: ", error);
                 }
             });
         } catch (error) {
             console.error("Error marking messages as read: ", error);
+        }
+    }
+
+    async function updateUnreadMessageCount(userId,conversationId) {
+        try {
+            $('.' + userId).hide();
+            const roomRef = doc(chatsCollection, conversationId);
+            await updateDoc(roomRef, {
+                [`unreadMessageCount.${current_user.uid}`]: 0
+            });
+            const messagesCollectionRef = collection(roomRef, 'messages');
+            const querySnapshot = await getDocs(query(messagesCollectionRef, where(`readUsers.${current_user.uid}`, '==', false)));
+            const unreadCount = querySnapshot.size;
+
+            $('.noti_number').html(unreadCount > 0 ? unreadCount : '');
+            $('.number_not_screen').html(unreadCount > 0 ? '(' + unreadCount + ')' : '');
+        } catch (error) {
+            console.error("Error updating unread message count: ", error);
         }
     }
 
