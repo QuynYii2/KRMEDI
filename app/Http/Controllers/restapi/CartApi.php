@@ -159,6 +159,7 @@ class CartApi extends Controller
                     'doctor_id' => $doctorID
                 ]);
             }
+
             if ($typeProduct == TypeProductCart::MEDICINE) {
                 $carts = Cart::with(['users', 'productMedicine'])
                     ->where('prescription_id', $prescription_id)

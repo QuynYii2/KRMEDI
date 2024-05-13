@@ -48,18 +48,25 @@ class AgoraChatController extends Controller
         $fromUser     = $agora_chat->user_id_1 ?? 0;
         $toUser     = $agora_chat->user_id_2 ?? 0;
 
+        $accessTokenFromUser = User::find($fromUser)->token ?? '';
+        $accessTokenToUser   = User::find($toUser)->token ?? '';
+
         //Params của user tạo cuộc gọi
         $callFromParams = [
-            'token' => $token,
-            'channel' => $channel,
-            'user_id' => $fromUser
+            'token'         => $token,
+            'channel'       => $channel,
+            'user_id'       => $fromUser,
+            'guest_id'      => $toUser,
+            'accessToken'   => $accessTokenFromUser
         ];
 
         //Params của user nhận cuộc gọi
         $callToParams = [
-            'token' => $token,
-            'channel' => $channel,
-            'user_id' => $toUser
+            'token'         => $token,
+            'channel'       => $channel,
+            'user_id'       => $toUser,
+            'guest_id'      => $fromUser,
+            'accessToken'   => $accessTokenToUser
         ];
 
         $data['content'] = env('CALL_APP_URL') . '?' . http_build_query($callToParams);
@@ -358,18 +365,27 @@ class AgoraChatController extends Controller
         $fromUser   = $agora_chat->user_id_1 ?? 0;
         $toUser     = $agora_chat->user_id_2 ?? 0;
 
+        $accessTokenFromUser = User::find($fromUser)->token ?? '';
+        $accessTokenToUser   = User::find($toUser)->token ?? '';
+
         //Params của user tạo cuộc gọi
         $callFromParams = [
-            'token' => $token,
-            'channel' => $channel,
-            'user_id' => $fromUser
+            'token'         => $token,
+            'channel'       => $channel,
+            'user_id'       => $fromUser,
+            'guest_id'      => $toUser,
+            'accessToken'   => $accessTokenFromUser
+            // 'to_user'       => $toUser,
         ];
 
         //Params của user nhận cuộc gọi
         $callToParams = [
-            'token' => $token,
-            'channel' => $channel,
-            'user_id' => $toUser
+            'token'         => $token,
+            'channel'       => $channel,
+            'from_user'     => $fromUser,
+            'user_id'       => $toUser,
+            'guest_id'      => $fromUser,
+            'accessToken'   => $accessTokenToUser
         ];
 
         return redirect(env('CALL_APP_URL') . '?' . http_build_query($callToParams));
