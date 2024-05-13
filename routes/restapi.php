@@ -253,5 +253,5 @@ Route::get('api/users/get-role/{user_id}', [AccountApi::class, 'getRoleByUserId'
 
 
 Route::group(['prefix' => 'api/prescription'], function () {
-    Route::get('search', [PrescriptionResultApi::class, 'getListMedicine'])->name('restapi.prescription.search');
+    Route::get('search/medicine', [PrescriptionResultApi::class, 'searchMedicine'])->name('restapi.prescription.search');
 });
