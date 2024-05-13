@@ -346,7 +346,7 @@
                     </div>
 
                     <p></p>
-                    <span></span>
+{{--                    <span></span>--}}
                 </div>
                 <div id="chat-messages"></div>
 
@@ -677,7 +677,7 @@
                 list_user.push(res);
             });
             renderUser();
-            getMessageFirebase();
+            // getMessageFirebase();
         }, (error) => {
             console.error("Error getting: ", error);
         });
@@ -691,39 +691,51 @@
         $('#friendslist-all-online #friends-all-online').html(html_online);
         $('#friendslist-connected #friends-connected').html(html);
         let count = 0;
+        let promises = [];
         for (let i = 0; i < list_user.length; i++) {
             let res = list_user[i];
             let email = res.email;
             let is_online = res.is_online;
+            let name_doctor = '';
+            let hospital = '';
 
             if (is_online === true && (res.role == 'DOCTORS' || res.role == 'PHAMACISTS' || res.role == 'HOSPITALS') && res.id != current_user.uid) {
                 count++;
-                html_online += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}">
-                        <img src="../../../../img/avt_default.jpg"/>
-                        <p>
-                            <strong class="max-1-line-title-widget-chat"></strong>
-                            <span>${email}</span>
+                promises.push(getUserInfo(email).then((response) => {
+                    name_doctor = response.infoUser.name;
+                    hospital = response.infoUser.hospital ? response.infoUser.hospital : '';
 
-                        </p>
-
-                    </div>`;
+                    html_online += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}">
+                    <img src="../../../../img/avt_default.jpg"/>
+                    <p>
+                        <strong class="max-1-line-title-widget-chat">${name_doctor}</strong>
+                        <span>${hospital}</span>
+                    </p>
+                </div>`;
+                }).catch((error) => {
+                    console.error(error);
+                }));
             }
             let redDotHtml = list_user_not_seen.includes(res.id) ? `<div class="${res.id}" style="position: absolute;right: 15px;top: 50%;transform: translateY(-50%);background-color: red;border-radius: 50%;width: 10px;height:10px"></div>` : '';
-                doctorChatList.forEach(chatId => {
-                    if (res.id === chatId && res.id != current_user.uid) {
-                        html += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}">
-                                    <img src="../../../../img/avt_default.jpg"/>
-                                    <p>
-                                        <strong class="max-1-line-title-widget-chat">${name}</strong>
-                                        <span>${email}</span>
-                                    </p>
-                                    ${redDotHtml}
-                                </div>`;
-                            }
-                        });
+            if (doctorChatList.includes(res.id) && res.id != current_user.uid) {
+                promises.push(getUserInfo(email).then((response) => {
+                    name_doctor = response.infoUser.name;
+                    hospital = response.infoUser.hospital ? response.infoUser.hospital : '';
 
-
+                    html += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}">
+                    <img src="../../../../img/avt_default.jpg"/>
+                    <p>
+                        <strong class="max-1-line-title-widget-chat">${name_doctor}</strong>
+                        <span>${hospital}</span>
+                    </p>
+                    ${redDotHtml}
+                </div>`;
+                }).catch((error) => {
+                    console.error(error);
+                }));
+            }
         }
+        await Promise.all(promises);
         $('#friendslist-all-online #friends-all-online').html(html_online);
         $('#friendslist-connected #friends-connected').html(html);
         if (count == 0) {
@@ -733,6 +745,30 @@
 
             $('#friendslist-all-online #friends-all-online').html(html_not_user);
         }
+        getMessageFirebase()
+    }
+
+    function getUserInfo(email) {
+        let url = "{{ route('info.user.email', ['email' => 'EMAIL']) }}";
+        url = url.replace('EMAIL', email);
+        let accessToken = `Bearer ` + token;
+        let headers = {
+            "Authorization": accessToken
+        };
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                headers: headers,
+                success: function (response) {
+                    resolve(response);
+                },
+                error: function (xhr, status, error) {
+                    reject(error);
+                }
+            });
+        });
     }
 
     function renderMessage(list_message, html) {
@@ -996,12 +1032,14 @@
                             [current_user.uid]: true
                         }
                     }, { merge: true });
+                    setTimeout(function() {
+                        $('.' + userId).hide();
+                        $('.noti_number').html('');
+                    }, 1000);
                 } catch (error) {
                     console.error("Error marking message as read: ", error);
                 }
             });
-            $('.' + userId).hide();
-            $('.noti_number').html('');
         } catch (error) {
             console.error("Error marking messages as read: ", error);
         }
