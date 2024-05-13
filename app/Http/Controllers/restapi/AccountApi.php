@@ -95,6 +95,6 @@ class AccountApi extends Controller
             return response()->json(['error' => 1, 'message' => 'User not existed'], 404);
         }
 
-        return response()->json(['error' => 0, 'data' => $user->member]);
+        return response()->json(['error' => 0, 'data' => $user->member, 'token' => $user->token, 'token_firebase' => $user->token_firebase]);
     }
 }
