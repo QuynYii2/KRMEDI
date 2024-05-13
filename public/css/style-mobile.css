@@ -42,6 +42,13 @@
 .noti_number{
     color: red;font-size: 16px;position: absolute;left: 52%;top: 50%;transform: translate(-50%,-50%);font-weight: bold
 }
+.box-about-doctor{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 3;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}
 @media (max-width: 1400px) {
     .header .header-detail--left .back h5 {
         font-size: 16px;
@@ -847,5 +854,11 @@
     }
     .noti_number{
         font-size: 14px;left: 50%;top: 47%
+    }
+    .box-about-doctor{
+        margin-bottom: 10px;
+        min-height: 55px;
+        max-height: 55px;
+        font-size: 14px;
     }
 }
