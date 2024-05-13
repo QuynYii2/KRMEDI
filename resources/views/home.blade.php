@@ -1312,7 +1312,7 @@
                     <div class="tab-pane fade show active" id="available" role="tabpanel"
                          aria-labelledby="available-tab">
                         @php
-                            $doctors = \App\Models\User::where('member', \App\Enums\TypeUser::DOCTORS)->paginate(12);
+                            $doctors = \App\Models\User::where('member', \App\Enums\TypeUser::DOCTORS)->where('status', 'ACTIVE')->paginate(12);
                         @endphp
                         <div class="row">
                             @foreach($doctors as $doctor)
