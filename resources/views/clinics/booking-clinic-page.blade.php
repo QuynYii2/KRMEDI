@@ -208,6 +208,7 @@
             <input type="hidden" name="checkOutTime" id="checkOutTime">
             <input type="hidden" name="clinic_id" id="clinic_id" value='{{ $clinicDetail->id }}'>
             <input type="hidden" name="user_id" id="user_id" value="{{ Auth::user()->id }}">
+            <input type="hidden" name="department_id" id="department_id" value="">
             <div>
                 <div></div>
                 <section>
@@ -503,5 +504,11 @@
                 }
             });
         }
+        document.addEventListener('DOMContentLoaded', function() {
+            const departmentId = localStorage.getItem('departmentId');
+            if (departmentId) {
+                document.getElementById('department_id').value = departmentId;
+            }
+        });
     </script>
 @endsection

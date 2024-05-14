@@ -77,9 +77,9 @@
                                                         $array[3] ?? null,
                                                     )->first();
                                                 @endphp
-                                                <div class="d-flex">
+                                                <div class="d-flex align-items-center">
                                                     <i class="fas fa-map-marker-alt mr-2"></i>
-                                                    <div>{{ $clinic->address_detail }}
+                                                    <div class="text-address">{{ $clinic->address_detail }}
                                                         , {{ $addressC->name ?? '' }} , {{ $addressD->name ?? '' }}
                                                         , {{ $addressP->name ?? '' }}</div>
                                                 </div>
@@ -99,6 +99,7 @@
                                                     / {{ __('home.Dental Clinic') }}
                                                 </span>
                                             </div>
+                                            <a href="https://www.google.com/maps?q={{$clinic->latitude}},{{$clinic->longitude}}" class="search-way" target="_blank">Chỉ đường</a>
                                             <div class="group-button d-flex mt-3">
                                                 <a href="{{ route('home.specialist.booking.detail', $clinic->id) }}"
                                                     class="col-md-6 item-btn-specialist">

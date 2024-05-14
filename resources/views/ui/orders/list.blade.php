@@ -149,6 +149,7 @@
                 let order_item = data.order_items;
                 if (product_item) {
                     for (let j = 0; j < product_item.length; j++) {
+                        let formattedPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product_item[j].price);
                         products = products + `<div class="d-flex align-items-center">
                                 <img src="${product_item[j].thumbnail}"
                                      alt="" class="product-thumbnail">
@@ -161,7 +162,7 @@
                                             x${order_item[j].quantity}
                                         </p>
                                         <p class="price">
-                                            ${product_item[j].price}
+                                             ${formattedPrice}
                                         </p>
                                     </div>
                                     ${status == ''?`<div class="product-name mb-3">

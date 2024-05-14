@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Enums\Constants;
 use App\Models\AhaOrder;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
 class CheckoutApi extends Controller
@@ -97,7 +98,7 @@ class CheckoutApi extends Controller
         } else {
             $carts = Cart::where('user_id', $userID)->whereNull('prescription_id')->get();
         }
-
+        $items = [];
         foreach ($carts as $cart) {
             if ($cart->type_product == TypeProductCart::MEDICINE) {
                 $product = ProductMedicine::find($cart->product_id);
@@ -119,7 +120,12 @@ class CheckoutApi extends Controller
 
             $product->quantity -= $cart->quantity;
             $product->save();
-
+            $items[] = [
+                '_id' => $product->id,
+                'num' => $cart->quantity,
+                'name' => $product->name,
+                'price' => $product->price * $cart->quantity
+            ];
             if ($prescription_id) {
                 $cart->price = $product->price;
                 $cart->total_price = $product->price * $cart->quantity;
@@ -129,6 +135,45 @@ class CheckoutApi extends Controller
             }
         }
 
+        $orderData = [
+            'path' => [
+                [
+                    'address' => '102 P. Nguyễn Thanh Bình, La Khê, Hà Đông, Hà Nội, Việt Nam',
+                    'short_address' => 'Xã La Khê',
+                    'name' => 'Hoàng Nguyễn',
+                    'mobile' => '0978125456',
+                    'remarks' => 'Call me'
+                ],
+                [
+                    'address' => $address,
+                    'name' => $full_name,
+                    'mobile' => $phone
+                ]
+            ],
+        ];
+
+        $pathJson = json_encode($orderData['path']);
+        $itemsJson = json_encode($items);
+
+        $params = [
+            'token' => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhaGEiLCJ0eXAiOiJ1c2VyIiwiY2lkIjoiODQ5NzM1NjY3OTIiLCJzdGF0dXMiOiJPTkxJTkUiLCJlb2MiOiJuZ3V5ZW5raGFjcXV5MDkwOTE5OTNAZ21haWwuY29tIiwibm9jIjoiS1JNRURJIiwiY3R5IjoiU0dOIiwiYWNjb3VudF9zdGF0dXMiOiJBQ1RJVkFURUQiLCJleHAiOjE3NDcxMDg4NzgsInBhcnRuZXIiOiJpbGdsb2JhbCIsInR5cGUiOiJhcGkifQ.T5no2lX0b9B0dqVxMPl-uyjKJu8LRhaI19vrbuU_pT0',
+            'order_time' => '0',
+            'path' => $pathJson,
+            'service_id' => 'SGN-BIKE',
+            'requests' => '[]',
+            'items' => $itemsJson
+        ];
+        $url = 'https://apistg.ahamove.com/v1/order/create?' . http_build_query($params);
+        $response = Http::post($url);
+        if ($response->successful()) {
+            $data = $response->json();
+            $order->aha_order_id = $data['order_id'];
+            $order->save();
+        } else {
+            $errorCode = $response->status();
+            $errorMessage = $response->body();
+            dd("Error {$errorCode}: {$errorMessage}");
+        }
         $roleAdmin = Role::where('name', \App\Enums\Role::ADMIN)->first();
         $role_user = DB::table('role_users')->where('role_id', $roleAdmin->id)->first();
         $admin = User::where('id', $role_user->user_id)->first();

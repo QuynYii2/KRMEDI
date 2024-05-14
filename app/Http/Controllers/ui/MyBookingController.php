@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\restapi\BookingResultApi;
 use App\Models\Booking;
 use App\Models\BookingResult;
+use App\Models\Department;
 use App\Models\ServiceClinic;
 use Exception;
 use Illuminate\Http\Request;
@@ -18,13 +19,20 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class MyBookingController extends Controller
 {
-    public function listBooking(Request $request)
+    public function listBooking(Request $request,$status)
     {
         $bookings = Booking::where('status', '!=', BookingStatus::DELETE)
             ->where('user_id', Auth::user()->id)
-            ->orderBy('id', 'desc')
-            ->paginate(20);
-        return view('ui.my-bookings.list-booking', compact('bookings'));
+            ->orderBy('id', 'desc');
+        if ($status !== 'all') {
+            $bookings = $bookings->where('department_id', $status);
+        }
+        $bookings = $bookings->paginate(20);
+        $department_id = Booking::where('status', '!=', BookingStatus::DELETE)
+            ->where('user_id', Auth::user()->id)->distinct('department_id')->pluck('department_id')->toArray();
+        $department = Department::whereIn('id',$department_id)->get();
+
+        return view('ui.my-bookings.list-booking', compact('bookings','department','status'));
     }
 
     public function detailBooking(Request $request, $id)
