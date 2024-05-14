@@ -883,7 +883,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="{{ route('web.users.my.bookings.list') }}">
+                    <a class="nav-link collapsed" href="{{url('my-bookings/list/all')}}">
                         <i class="bi bi-bookmark"></i><span>Quản lý booking</span>
                     </a>
                 </li>

@@ -1441,7 +1441,7 @@
                             $showDesktop = $index > 5;
                         @endphp
                         <div class="col-lg-2 col-md-3 col-6 p-2 d-none {{ $showDesktop == true ? 'd-md-block' : 'd-sm-block' }}">
-                            <a href="{{route('home.specialist.department',$departmentItem->id)}}">
+                            <a href="{{route('home.specialist.department',$departmentItem->id)}}" class="department-link" data-id="{{$departmentItem->id}}">
                                 <div class="align-items-center krm-border-chuyen-khoa">
                                     <div class="d-flex justify-content-center align-content-center krm-img-chuyen-khoa">
                                         <img loading="lazy" src="{{$departmentItem->thumbnail}}" alt="thumbnail"
@@ -2804,6 +2804,18 @@
 
         getCurrentLocation(function (currentLocation) {
             initMap(currentLocation, locations);
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            const departmentLinks = document.querySelectorAll('.department-link');
+
+            departmentLinks.forEach(link => {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    const departmentId = this.getAttribute('data-id');
+                    localStorage.setItem('departmentId', departmentId);
+                    window.location.href = this.href;
+                });
+            });
         });
     </script>
 {{--    <script>--}}

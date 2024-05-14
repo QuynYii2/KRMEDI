@@ -6,6 +6,16 @@
     <!-- Page Heading -->
     <h1 class="h3 mb-4 text-gray-800">{{ __('home.List Booking') }}</h1>
     <link href="{{ asset('css/listbooking.css') }}" rel="stylesheet">
+    <div class="card-body d-flex align-items-center flex-wrap pt-0">
+        <a href="{{url('my-bookings/list/all')}}" type="button"
+           class="btn btn-outline-secondary mx-2 mb-2  @if($status == 'all') active @endif"> Tất cả</a>
+        @if(isset($department) && count($department)>0)
+            @foreach($department as $item)
+                <a href="{{url('my-bookings/list/'.$item->id)}}"
+                   class="btn btn-outline-success mx-2 mb-2 @if($status == $item->id) active @endif">{{$item->name}}</a>
+            @endforeach
+            @endif
+    </div>
     <div class="">
         <table class="table table-striped" id="tableBooking">
             <thead>
