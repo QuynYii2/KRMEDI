@@ -17,38 +17,38 @@
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="all_order_tab" data-bs-toggle="tab" data-bs-target="#all_order"
                         type="button" role="tab" aria-controls="all_order" aria-selected="true">
-                    All Order
+                    Tất cả đơn hàng
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="process_order_tab" data-bs-toggle="tab" data-bs-target="#process_order"
                         type="button" role="tab" aria-controls="process_order" aria-selected="false">
-                    Processing Order
+                    Tìm tài xế
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="wait_payment_order_tab" data-bs-toggle="tab"
                         data-bs-target="#wait_payment_order" type="button" role="tab" aria-controls="wait_payment_order"
                         aria-selected="false">
-                    Waiting Payment Order
+                    Đang chờ giao hàng
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="ship_order_tab" data-bs-toggle="tab" data-bs-target="#ship_order"
                         type="button" role="tab" aria-controls="ship_order" aria-selected="false">
-                    Shipping Order
+                    Đang giao hàng
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="deliver_order_tab" data-bs-toggle="tab" data-bs-target="#deliver_order"
                         type="button" role="tab" aria-controls="deliver_order" aria-selected="false">
-                    Deliver Order
+                    Đã giao hàng
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="cancel_order_tab" data-bs-toggle="tab" data-bs-target="#cancel_order"
                         type="button" role="tab" aria-controls="cancel_order" aria-selected="false">
-                    Cancel Order
+                    Đơn hàng hủy
                 </button>
             </li>
         </ul>
@@ -100,19 +100,19 @@
             })
 
             $('#process_order_tab').click(function () {
-                loadOrders('PROCESSING');
+                loadOrders('ASSIGNING');
             })
 
             $('#wait_payment_order_tab').click(function () {
-                loadOrders('WAITING FOR PAYMENT');
+                loadOrders('ACCEPTED');
             })
 
             $('#ship_order_tab').click(function () {
-                loadOrders('SHIPPING');
+                loadOrders('IN PROCESS');
             })
 
             $('#deliver_order_tab').click(function () {
-                loadOrders('DELIVERED');
+                loadOrders('COMPLETED');
             })
 
             $('#cancel_order_tab').click(function () {
@@ -186,16 +186,16 @@
             }
 
             switch (status) {
-                case 'PROCESSING':
+                case 'ASSIGNING':
                     $('.list_process_order').empty().append(html);
                     break;
-                case 'WAITING FOR PAYMENT':
+                case 'ACCEPTED':
                     $('.list_wait_payment_order').empty().append(html);
                     break;
-                case 'SHIPPING':
+                case 'IN PROCESS':
                     $('.list_ship_order').empty().append(html);
                     break;
-                case 'DELIVERED':
+                case 'COMPLETED':
                     $('.list_deliver_order').empty().append(html);
                     break;
                 case 'CANCELED':
