@@ -453,7 +453,7 @@ Route::middleware(['auth'])->group(function () {
     /*  User blade */
     /* My booking */
     Route::group(['prefix' => 'my-bookings'], function () {
-        Route::get('list/{status}', [MyBookingController::class, 'listBooking'])->name('web.users.my.bookings.list');
+        Route::get('list', [MyBookingController::class, 'listBooking'])->name('web.users.my.bookings.list');
         Route::get('detail/{id}', [MyBookingController::class, 'detailBooking'])->name('web.users.my.bookings.detail');
         Route::get('result/{id}', [MyBookingController::class, 'bookingResult'])->name('web.users.my.bookings.result');
         Route::get('list-products/{id}', [MyBookingController::class, 'listProductResult'])->name('web.users.my.bookings.products');

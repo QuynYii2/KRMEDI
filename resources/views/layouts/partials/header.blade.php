@@ -76,6 +76,7 @@
                             @if(Auth::user()->type != Role::NORMAL)
                                 <a class="dropdown-item" href="{{ route('view.prescription.result.create') }}">Create Prescription</a>
                             @else
+                                <a class="dropdown-item" href="{{url('my-bookings/list')}}">{{ __('home.Examination history') }}</a>
                                 <a class="dropdown-item" href="{{ route('view.prescription.result.my.list') }}">{{__('home.My Prescription')}}</a>
                             @endif
                             <a class="dropdown-item" href="{{route('booking.list.by.user')}}">{{ __('home.My booking') }}</a>

@@ -5,34 +5,75 @@ namespace App\Http\Controllers\ui;
 use App\Enums\BookingResultStatus;
 use App\Enums\BookingStatus;
 use App\Enums\ServiceClinicStatus;
+use App\ExportExcel\BookingExport;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\restapi\BookingResultApi;
 use App\Models\Booking;
 use App\Models\BookingResult;
+use App\Models\Clinic;
 use App\Models\Department;
 use App\Models\ServiceClinic;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
+use Maatwebsite\Excel\Facades\Excel;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class MyBookingController extends Controller
 {
-    public function listBooking(Request $request,$status)
+    public function listBooking(Request $request)
     {
-        $bookings = Booking::where('status', '!=', BookingStatus::DELETE)
-            ->where('user_id', Auth::user()->id)
-            ->orderBy('id', 'desc');
-        if ($status !== 'all') {
-            $bookings = $bookings->where('department_id', $status);
+        $query = Booking::where('bookings.status', '!=', BookingStatus::DELETE)
+            ->where('bookings.user_id', Auth::user()->id)
+            ->orderBy('bookings.id', 'desc');
+        if ($request->filled('key_search')) {
+            $key_search = $request->input('key_search');
+            $query->join('clinics', 'bookings.clinic_id', '=', 'clinics.id')
+                ->select('bookings.*', 'clinics.name as clinic_name')
+                ->where('clinics.name', 'LIKE', "%$key_search%");
         }
-        $bookings = $bookings->paginate(20);
+
+        if ($request->filled('date_range')) {
+            $dates = explode(' - ', $request->input('date_range'));
+            $start_date = $dates[0];
+            $end_date = $dates[1];
+            $query->whereDate('bookings.check_in', '>=', $start_date)
+                ->whereDate('bookings.check_in', '<=', $end_date);
+        }
+
+        if ($request->filled('specialist')) {
+            $query->where('bookings.department_id', $request->input('specialist'));
+        }
+
+        if ($request->filled('service')) {
+            $serviceId = $request->input('service');
+            $query->whereRaw("FIND_IN_SET(?, bookings.service)", [$serviceId]);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('bookings.status', $request->input('status'));
+        }
+
+        if ($request->excel == 2) {
+            $bookings = $query->get();
+            foreach ($bookings as $item){
+                $item->name_clinic = Clinic::where('id',$item->clinic_id)->pluck('name')->first();
+                $service_name = explode(',', $item->service);
+                $services = ServiceClinic::whereIn('id', $service_name)->get();
+                $service_names = $services->pluck('name')->implode(', ');
+                $item->service_names = $service_names;
+            }
+            return Excel::download(new BookingExport($bookings), 'lichsukham.xlsx');
+        } else {
+            $bookings = $query->paginate(20);
+        }
         $department_id = Booking::where('status', '!=', BookingStatus::DELETE)
             ->where('user_id', Auth::user()->id)->distinct('department_id')->pluck('department_id')->toArray();
         $department = Department::whereIn('id',$department_id)->get();
+        $service = ServiceClinic::all();
 
-        return view('ui.my-bookings.list-booking', compact('bookings','department','status'));
+        return view('ui.my-bookings.list-booking', compact('bookings','department','service'));
     }
 
     public function detailBooking(Request $request, $id)
