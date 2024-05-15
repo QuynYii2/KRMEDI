@@ -26,7 +26,10 @@
                 <div class="border-specialList">
                     <div class="content__item d-flex gap-3">
                         <div class="specialList-clinics--img">
-                            <img class="content__item__image content__item__image_detail" src="{{asset('img/icons_logo/image 1.jpeg')}}"
+                            @php
+                                $galleryArray = explode(',', $clinicDetail->gallery);
+                            @endphp
+                            <img class="content__item__image content__item__image_detail" src="{{ $galleryArray[0] }}"
                                  alt=""/>
                         </div>
                         <div class="specialList-clinics--main">
@@ -56,11 +59,16 @@
 
                                     </div>
                                 </a>
-                                <a href="{{route('clinic.detail',$clinicDetail->id)}}" class="">
+                                <a href="https://www.google.com/maps?q={{$clinicDetail->latitude}},{{$clinicDetail->longitude}}" target="_blank">
                                     <div class="button-direct-specialList">
                                         {{ __('home.Chỉ đường') }}
                                     </div>
                                 </a>
+{{--                                <a href="{{route('clinic.detail',$clinicDetail->id)}}" class="">--}}
+{{--                                    <div class="button-direct-specialList">--}}
+{{--                                        {{ __('home.Chỉ đường') }}--}}
+{{--                                    </div>--}}
+{{--                                </a>--}}
                             </div>
                         </div>
                     </div>

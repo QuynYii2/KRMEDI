@@ -35,7 +35,7 @@
 {{--                    </style>--}}
                     @foreach($departments as $departmentItem)
                         <div class="col-md-4">
-                            <a href="{{route('home.specialist.department',$departmentItem->id)}}">
+                            <a href="{{route('home.specialist.department',$departmentItem->id)}}" class="department-link" data-id="{{$departmentItem->id}}">
                                 <div class="border-HomeNew position-relative">
                                     <div class="w-100 d-flex align-items-center ">
                                         <img src="{{$departmentItem->thumbnail}}" alt="thumbnail">
@@ -72,3 +72,17 @@
         </div>
     </div>
 @endsection
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const departmentLinks = document.querySelectorAll('.department-link');
+
+        departmentLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                const departmentId = this.getAttribute('data-id');
+                localStorage.setItem('departmentId', departmentId);
+                window.location.href = this.href;
+            });
+        });
+    });
+</script>
