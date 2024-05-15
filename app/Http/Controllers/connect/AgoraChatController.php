@@ -94,7 +94,7 @@ class AgoraChatController extends Controller
 
         $this->sendNotificationToAppByFireBase($userReceiveCall->email, $userCall);
 
-        return redirect(env('CALL_APP_URL') . '?' . http_build_query($callFromParams));
+        return redirect()->to(env('CALL_APP_URL') . '?' . http_build_query($callFromParams));
 
         // return view('video-call.index', compact('agora_chat'));
     }
