@@ -53,6 +53,7 @@ Route::group(['prefix' => 'home'], function () {
     Route::get('list-doctor', [HomeController::class, 'listDoctor'])->name('homeAdmin.list.doctors');
     Route::get('list-staff', [HomeController::class, 'listStaff'])->name('homeAdmin.list.staff');
     Route::get('list-booking', [HomeController::class, 'listBooking'])->name('homeAdmin.list.booking');
+    Route::get('list-booking-doctor', [HomeController::class, 'listBookingDoctor'])->name('homeAdmin.list.booking.doctor');
 });
 
 Route::group(['prefix' => 'new-event'], function () {

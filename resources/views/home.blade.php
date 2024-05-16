@@ -1333,7 +1333,7 @@
                                             <div class="product-item">
                                                 <div style="min-height: 170px"
                                                      class="img-pro justify-content-center d-flex">
-                                                    <a href="{{ route('examination.doctor_info', $doctor->id) }}">
+                                                    <a href="{{ route('examination.doctor_info', $doctor->id) }}" class="d-inline-block w-100">
                                                         <img loading="lazy" src="{{$doctor->avt}}" alt="">
                                                     </a>
                                                     <a class="button-heart button-doctor-heart"

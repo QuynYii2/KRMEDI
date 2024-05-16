@@ -266,6 +266,7 @@
         ->toArray();
     $isStaff = false;
     $isNormal = false;
+    $isDoctor = false;
     foreach ($roles as $role) {
         $roleNames = Role::where('id', $role)->pluck('name');
         if ($roleNames->contains('PAITENTS') || $roleNames->contains('NORMAL PEOPLE')) {
@@ -281,6 +282,10 @@
             $roleNames->contains('NURSES')
         ) {
             $isStaff = true;
+            break;
+        }
+        if ($roleNames->contains('DOCTORS')) {
+            $isDoctor = true;
             break;
         }
     }
@@ -575,6 +580,23 @@
                     </a>
                 </li>
                 <!-- End Doctor Prescription Page Nav -->
+
+                    @if (!$isDoctor)
+                        <li class="nav-item">
+                            <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse"
+                               href="#">
+                                <i class="bi bi-bar-chart"></i><span>{{ __('home.Booking Management') }}</span><i
+                                    class="bi bi-chevron-down ms-auto"></i>
+                            </a>
+                            <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                                <li>
+                                    <a href="{{ route('homeAdmin.list.booking.doctor') }}">
+                                        <i class="bi bi-circle"></i><span>{{ __('home.Booking') }}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    @endif
 
                 @if (!$isStaff)
                     <!-- List Coupon Nav -->
