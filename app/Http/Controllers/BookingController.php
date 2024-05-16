@@ -314,8 +314,9 @@ class BookingController extends Controller
                             $fileUrl = asset('storage/' . $itemPath);
 
                             if ($fileUrl) {
-                                $doctorName = User::find($result['doctor_id'])->name ?? "";
-                                $this->insertQRCodeIntoPDF($fileUrl, $qrCode, $booking, $doctorName);
+                                $doctorName        = User::find($result['doctor_id'])->name ?? "";
+                                $doctorSignature   = User::find($result['doctor_id'])->signature ?? "";
+                                $this->insertQRCodeIntoPDF($fileUrl, $qrCode, $booking, $doctorName, $doctorSignature);
                             }
                         } else if ($result['file_urls']) {
                             // If file input is not set, use the existing value with file_urls
@@ -452,7 +453,7 @@ class BookingController extends Controller
         }
     }
 
-    public function insertQRCodeIntoPDF($pdfPath, $qrCode, $booking, $doctorName)
+    public function insertQRCodeIntoPDF($pdfPath, $qrCode, $booking, $doctorName, $doctorSignature)
     {
         $filePath = $pdfPath;
 
@@ -463,12 +464,12 @@ class BookingController extends Controller
 
         $outputFilePath = $outputDirectory . '/' . basename($filePath);
 
-        $this->fillPdfFile(public_path($filePath), $outputFilePath, $qrCode, $booking, $doctorName);
+        $this->fillPdfFile(public_path($filePath), $outputFilePath, $qrCode, $booking, $doctorName, $doctorSignature);
 
         return response()->json(['message' => 'QR code inserted into PDF successfully.']);
     }
 
-    public function fillPdfFile($file, $outputFilePath, $qrCode, $booking, $doctorName)
+    public function fillPdfFile($file, $outputFilePath, $qrCode, $booking, $doctorName, $doctorSignature)
     {
         try {
             $fpdi = new Fpdi();
@@ -517,8 +518,17 @@ class BookingController extends Controller
 
                 $textLine3 = iconv('UTF-8', 'cp1258', $doctorName);
                 $fpdi->SetFont('arial-unicode-ms', '', 9, '', true);
-                $fpdi->SetXY($right - $fpdi->GetStringWidth($textLine3) - 19, $bottom - 27);
+                $fpdi->SetXY($right - $fpdi->GetStringWidth($textLine3) - 33, $bottom - 27);
                 $fpdi->Cell(0, 0, $textLine3, 0, 0, 'C');
+
+                if ($doctorSignature) {
+                    $signaturePath = public_path($doctorSignature);
+                    $signatureWidth = 60;
+                    $signatureHeight = 20;
+                    $signatureX = $right - $signatureWidth;
+                    $signatureY = $bottom - 20;
+                    $fpdi->Image($signaturePath, $signatureX, $signatureY, $signatureWidth, $signatureHeight);
+                }
             }
 
             if ($qrCode) {
