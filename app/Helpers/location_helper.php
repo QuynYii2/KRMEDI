@@ -4,7 +4,11 @@
 if (!function_exists('locationHelper')) {
     function locationHelper()
     {
-        $locale = Session::get('locale');
+        if (Session::get('locale') == null ){
+            $locale = 'vi';
+        }else{
+            $locale = Session::get('locale');
+        }
         return $locale;
     }
 
