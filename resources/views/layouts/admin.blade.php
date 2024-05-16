@@ -581,7 +581,7 @@
                 </li>
                 <!-- End Doctor Prescription Page Nav -->
 
-                    @if (!$isDoctor)
+                    @if ($isDoctor)
                         <li class="nav-item">
                             <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse"
                                href="#">
