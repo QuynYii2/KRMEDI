@@ -208,7 +208,7 @@
                                 </h1>
                             @else
                                 <div class="col-lg-3 col-md-4 col-6">
-                                    <div class="p-lg-3">
+                                    <div class="p-lg-0">
                                         <div class="product-item">
                                             <div class="img-pro h-100 justify-content-center d-flex">
                                                 <img src="{{ $doctor->avt }}" alt="">
