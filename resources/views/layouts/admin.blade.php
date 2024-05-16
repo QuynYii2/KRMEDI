@@ -273,6 +273,9 @@
             $isNormal = true;
             break;
         }
+        if ($roleNames->contains('DOCTORS')) {
+            $isDoctor = true;
+        }
         if (
             $roleNames->contains('DOCTORS') ||
             $roleNames->contains('PHAMACISTS') ||
@@ -282,10 +285,6 @@
             $roleNames->contains('NURSES')
         ) {
             $isStaff = true;
-            break;
-        }
-        if ($roleNames->contains('DOCTORS')) {
-            $isDoctor = true;
             break;
         }
     }
