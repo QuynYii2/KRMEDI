@@ -351,6 +351,7 @@ return [
     'Clinic/Pharmacies' => 'Phòng Khám/ Hiệu thuốc',
     "What's free" => "Voucher",
     'Dashboar' => 'bảng điều khiển',
+    'Examination history'=>'Lịch sử khám',
     'Trang cá nhân' => 'Trang cá nhân',
     'Tìm kiếm cơ sở y tế, nhà thuốc, bác sĩ, thuốc, triệu chứng' => 'Tìm kiếm cơ sở y tế, nhà thuốc, bác sĩ, thuốc, triệu chứng',
     'My booking' => 'Đặt phòng của tôi',

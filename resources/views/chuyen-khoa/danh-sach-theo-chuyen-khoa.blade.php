@@ -178,6 +178,7 @@
                                                     / {{ __('home.Dental Clinic') }}
                                                 </span>
                                             </div>
+                                            <a href="https://www.google.com/maps?q={{$pharmacy->latitude}},{{$pharmacy->longitude}}" class="search-way" target="_blank">Chỉ đường</a>
                                             <div class="group-button d-flex mt-3">
                                                 <a href="" class="col-md-6 item-btn-specialist">
                                                     <div class="button-booking-specialList line-dk-btn">
@@ -207,7 +208,7 @@
                                 </h1>
                             @else
                                 <div class="col-lg-3 col-md-4 col-6">
-                                    <div class="p-lg-3">
+                                    <div class="p-lg-0">
                                         <div class="product-item">
                                             <div class="img-pro h-100 justify-content-center d-flex">
                                                 <img src="{{ $doctor->avt }}" alt="">
@@ -232,8 +233,8 @@
                                                         <a class="name-product--fleaMarket name-doctors"
                                                            href="{{ route('examination.doctor_info', $doctor->id) }}">{{$doctor->name}}</a>
                                                     </div>
-                                                    <div class="location-pro d-flex">
-                                                        <p>{!! $doctor->service !!}</p>
+                                                    <div class="location-pro box-about-doctor box-about-doctor-specialist">
+                                                        {!! $doctor->abouts !!}
                                                     </div>
                                                     <div class="price-pro">
                                                         @php

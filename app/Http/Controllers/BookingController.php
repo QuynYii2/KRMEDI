@@ -10,6 +10,8 @@ use App\Http\Controllers\restapi\MainApi;
 use App\Models\Booking;
 use App\Models\BookingResult;
 use App\Models\Clinic;
+use App\Models\Role;
+use App\Models\RoleUser;
 use App\Models\ServiceClinic;
 use App\Models\SurveyAnswer;
 use App\Models\SurveyAnswerUser;
@@ -109,6 +111,9 @@ class BookingController extends Controller
         $arrayService = explode(',', $serviceID);
         $services = ServiceClinic::where('status', ServiceClinicStatus::ACTIVE)->get();
         $isAdmin = (new MainController())->checkAdmin();
+        $role_id = RoleUser::where('user_id',Auth::id())->first();
+        $role_name = Role::find($role_id->role_id);
+        $isDoctor = $role_name->name == 'DOCTORS';
 
         $userId = $bookings_edit->user_id;
         $userFollower = ZaloFollower::where('extend->user_id', $userId)->first();
@@ -148,9 +153,10 @@ class BookingController extends Controller
                 $repeaterItems[] = $item;
             }
         }
+        $list_doctor = User::where('department_id',$bookings_edit->department_id)->get();
 
-        if ($owner == Auth::id() || $isAdmin) {
-            return view('admin.booking.tab-edit-booking', compact('bookings_edit', 'isAdmin', 'services', 'reasons', 'repeaterItems', 'user_zalo_id', 'doctor_id', 'doctor_name'));
+        if ($owner == Auth::id() || $isAdmin || $isDoctor) {
+            return view('admin.booking.tab-edit-booking', compact('bookings_edit', 'isAdmin', 'services', 'reasons', 'repeaterItems', 'user_zalo_id', 'doctor_id', 'doctor_name','list_doctor','isDoctor'));
         } else {
             session()->flash('error', 'You do not have permission.');
             return \redirect()->back();
@@ -339,7 +345,7 @@ class BookingController extends Controller
                 $isSendOaToUser = true;
             }
 
-            // $booking->doctor_id = $doctor_id;
+            $booking->doctor_id = $request->input('doctor_id');
             $booking->is_result = $is_result;
             $booking->status = $status;
 
