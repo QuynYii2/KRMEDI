@@ -41,7 +41,9 @@ class BookingApi extends Controller
 
             $validatedData = $validated->validated();
 
-            $validatedData['service'] = implode(',', $validatedData['service']);
+            if (isset($validatedData['service'])) {
+                $validatedData['service'] = implode(',', $validatedData['service']);
+            }
 
             $checkInTime = Carbon::parse($validatedData['checkInTime']);
             $checkOutTime = Carbon::parse($validatedData['checkOutTime']);
