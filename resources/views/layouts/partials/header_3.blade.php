@@ -169,16 +169,16 @@
                     <div class="popup d-lg-flex justify-content-center">
                         <div class="form">
                             <div class="form-element">
-                                <label for="email">{{ __('home.Email') }}</label>
-                                <input id="email" name="email" type="text" placeholder="exmaple@gmail.com">
+                                <label for="emai-header3">{{ __('home.Email') }}</label>
+                                <input id="email-header3" name="email" type="text" placeholder="exmaple@gmail.com">
                             </div>
                             <div class="form-element">
-                                <label for="password">{{ __('home.Password') }}</label>
-                                <input id="password" name="password" type="password" placeholder="********">
+                                <label for="password-header3">{{ __('home.Password') }}</label>
+                                <input id="password-header3" name="password" type="password" placeholder="********">
                             </div>
                             <div class="form-element">
-                                <input id="remember-me" type="checkbox">
-                                <label for="remember-me">{{ __('home.Remember password') }}</label>
+                                <input id="remember-me-header3" type="checkbox">
+                                <label for="remember-me-header3">{{ __('home.Remember password') }}</label>
                                 <a href="#">{{ __('home.Forgot Password') }}?</a>
                             </div>
                             <div class="form-element text-center">

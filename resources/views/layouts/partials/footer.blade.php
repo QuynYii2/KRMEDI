@@ -164,12 +164,12 @@
         </ul>
     </div>
     <div class="container status mt-3 pc-hidden">
-        <input type="checkbox" id="status2" class="status_input" />
+        <input type="checkbox" id="status4" class="status_input" />
         <div class="current_status">
             <span class="status_color" style="--status_color: #11d10a"></span>
             <p class="font-16-600 status_message mt-0 ">{{ __('home.Community') }}</p>
             <span class="expand">
-            					<label for="status2">
+            					<label for="status4">
             						<span class="material-symbols-outlined"> <i class="fa-solid fa-angle-down"></i> </span>
             					</label>
             				</span>

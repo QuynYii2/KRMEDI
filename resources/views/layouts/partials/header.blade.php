@@ -367,17 +367,17 @@
                     <div class="popup d-lg-flex justify-content-center">
                         <div class="form">
                             <div class="form-element">
-                                <label for="email">{{ __('home.Email') }}</label>
-                                <input id="email" name="email" type="text" placeholder="exmaple@gmail.com">
+                                <label for="email-header">{{ __('home.Email') }}</label>
+                                <input id="email-header" name="email" type="text" placeholder="exmaple@gmail.com">
                             </div>
                             <div class="form-element">
-                                <label for="password">{{ __('home.Password') }}</label>
-                                <input id="password" name="password" type="password" placeholder="********">
+                                <label for="password-header">{{ __('home.Password') }}</label>
+                                <input id="password-header" name="password" type="password" placeholder="********">
                             </div>
                             <div class="form-element d-flex justify-content-between align-items-center mt-md-0 mt-2">
                                 <div class="remember-me">
-                                    <input id="remember-me" type="checkbox">
-                                    <label for="remember-me">{{ __('home.Remember password') }}</label>
+                                    <input id="remember-me-header" type="checkbox">
+                                    <label for="remember-me-header">{{ __('home.Remember password') }}</label>
                                 </div>
                                 <a href="#" data-toggle="modal" data-target="#modalForgetPassword">
                                     {{ __('home.Forgot Password') }}</a>
@@ -583,12 +583,12 @@
                                         </div>
                                         <div id="action-doctor" style="display: none">
                                             <div class="form-element">
-                                                <input name="prescription" type="checkbox" value="1">
+                                                <input id="prescription" name="prescription" type="checkbox" value="1">
                                                 <label
                                                     for="prescription">{{ __('home.prescription') }}</label>
                                             </div>
                                             <div class="form-element">
-                                                <input name="free" type="checkbox" value="1">
+                                                <input id="free" name="free" type="checkbox" value="1">
                                                 <label
                                                     for="free">{{ __('home.free') }}</label>
                                             </div>

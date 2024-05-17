@@ -3,12 +3,12 @@
     <div class="popup d-lg-flex justify-content-center">
         <div class="form">
             <div class="form-element">
-                <label for="email">{{ __('home.Email') }}</label>
-                <input id="email" name="email" type="text" placeholder="exmaple@gmail.com">
+                <label for="email-auth-check">{{ __('home.Email') }}</label>
+                <input id="email-auth-check" name="email" type="text" placeholder="exmaple@gmail.com">
             </div>
             <div class="form-element">
-                <label for="password">{{ __('home.Password') }}</label>
-                <input id="password" name="password" type="password" placeholder="********">
+                <label for="password-auth-check">{{ __('home.Password') }}</label>
+                <input id="password-auth-check" name="password" type="password" placeholder="********">
             </div>
             <div class="d-none">
                 <label for="call_back_url">{{ __('home.Password') }}</label>
@@ -16,8 +16,8 @@
             </div>
             <div class="form-element d-flex justify-content-between align-items-center mt-md-0 mt-2">
                 <div class="remember-me">
-                    <input id="remember-me" type="checkbox">
-                    <label for="remember-me">{{ __('home.Remember password') }}</label>
+                    <input id="remember-me-auth-check" type="checkbox">
+                    <label for="remember-me-auth-check">{{ __('home.Remember password') }}</label>
                 </div>
                 <a href="#" data-toggle="modal" data-target="#modalForgetPassword">
                     {{ __('home.Forgot Password') }}</a>
