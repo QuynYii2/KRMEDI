@@ -141,6 +141,14 @@ class CartApi extends Controller
 
                 $quantity = $productData['quantity'];
 
+                if ($quantity < 0) {
+                    return response((new MainApi())->returnMessage('Quantity input is invalid'), 400);
+                }
+
+                if ($productData['treatment_days'] <= 0) {
+                    return response((new MainApi())->returnMessage('Treatment days input is invalid'), 400);
+                }
+
                 if ($productData['quantity'] && $productData['quantity'] > $product->quantity) {
                     $quantity = $product->quantity;
                 }
