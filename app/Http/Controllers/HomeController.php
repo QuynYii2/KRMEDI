@@ -48,8 +48,10 @@ class HomeController extends Controller
             setCookie('accessToken', null);
         }
         $coupons = Coupon::where('status', CouponStatus::ACTIVE)->paginate(6);
-        $products = ProductMedicine::where('status', OnlineMedicineStatus::APPROVED)->orderBy('id',
-            'desc')->paginate(4);
+        $products = ProductMedicine::where('status', OnlineMedicineStatus::APPROVED)->orderBy(
+            'id',
+            'desc'
+        )->paginate(4);
         $productsFlea = ProductInfo::where('status', ProductStatus::ACTIVE)->get();
         $medicines = ProductMedicine::where('product_medicines.status', OnlineMedicineStatus::APPROVED)
             ->leftJoin('users', 'product_medicines.user_id', '=', 'users.id')
@@ -57,9 +59,11 @@ class HomeController extends Controller
             ->select('product_medicines.*', 'provinces.name as location_name')
             ->paginate(15);
 
-        $questions = Question::withCount('answers')->where('status', QuestionStatus::APPROVED)->orderBy('answers_count',
-            'desc') // Order by answer_count in descending order
-        ->take(5)->get();
+        $questions = Question::withCount('answers')->where('status', QuestionStatus::APPROVED)->orderBy(
+            'answers_count',
+            'desc'
+        ) // Order by answer_count in descending order
+            ->take(5)->get();
         $newEvens = NewEvent::where('status', NewEventStatus::ACTIVE)->orderBy('id', 'desc')->limit(4)->get();
         return view('home', compact('coupons', 'products', 'medicines', 'productsFlea', 'questions', 'newEvens'));
     }
@@ -72,17 +76,48 @@ class HomeController extends Controller
 
     public function specialistDepartment($id)
     {
+        $q = request()->query('q');
+
         $doctorsSpecial = \App\Models\User::where('department_id', $id)
-            ->where('status', \App\Enums\UserStatus::ACTIVE)
-            ->paginate(12);
+            ->where('status', \App\Enums\UserStatus::ACTIVE);
+
+        if ($q) {
+            $doctorsSpecial->where(function ($query) use ($q) {
+                $query->where('name', 'LIKE', "%$q%")
+                    ->orWhere('last_name', 'LIKE', "%$q%")
+                    ->orWhere('email', 'LIKE', "%$q%")
+                    ->orWhere('username', 'LIKE', "%$q%");
+            });
+        }
+
+        $doctorsSpecial = $doctorsSpecial->paginate(12);
+
         $clinics = \App\Models\Clinic::whereRaw("FIND_IN_SET('$id', department)")
             ->where('type', \App\Enums\TypeBusiness::HOSPITALS)
-            ->where('status', \App\Enums\ClinicStatus::ACTIVE)
-            ->get();
+            ->where('status', \App\Enums\ClinicStatus::ACTIVE);
+
+        if ($q) {
+            $clinics->where(function ($query) use ($q) {
+                $query->where('name', 'LIKE', "%$q%")
+                    ->orWhere('name_en', 'LIKE', "%$q%");
+            });
+        }
+
+        $clinics = $clinics->get();
+
         $pharmacies = \App\Models\Clinic::whereRaw("FIND_IN_SET('$id', department)")
             ->where('type', \App\Enums\TypeBusiness::CLINICS)
-            ->where('status', \App\Enums\ClinicStatus::ACTIVE)
-            ->get();
+            ->where('status', \App\Enums\ClinicStatus::ACTIVE);
+
+        if ($q) {
+            $pharmacies->where(function ($query) use ($q) {
+                $query->where('name', 'LIKE', "%$q%")
+                    ->orWhere('name_en', 'LIKE', "%$q%");
+            });
+        }
+
+        $pharmacies = $pharmacies->get();
+
         return view('chuyen-khoa.danh-sach-theo-chuyen-khoa', compact('id', 'doctorsSpecial', 'clinics', 'pharmacies'));
     }
 
@@ -162,7 +197,6 @@ class HomeController extends Controller
             $message->chat_message = $this->limitText($message->chat_message);
             $message->timeAgo = $this->textTimeAgo($message->created_at);
             $message->total = $messages->count();
-
         });
 
         return response()->json([
@@ -282,7 +316,7 @@ class HomeController extends Controller
             $query->join('clinics', 'bookings.clinic_id', '=', 'clinics.id')
                 ->join('users', 'bookings.user_id', '=', 'users.id')
                 ->select('bookings.*', 'clinics.name as clinic_name', 'users.name as user_name')
-                ->where(function($q) use ($key_search) {
+                ->where(function ($q) use ($key_search) {
                     $q->where('clinics.name', 'LIKE', "%$key_search%")
                         ->orWhere('users.name', 'LIKE', "%$key_search%");
                 });
@@ -311,11 +345,11 @@ class HomeController extends Controller
 
         if ($request->excel == 2) {
             $bookings = $query->get();
-            foreach ($bookings as $item){
+            foreach ($bookings as $item) {
                 $item->user_name = User::find($item->user_id)->name;
-                $item->name_clinic = Clinic::where('id',$item->clinic_id)->pluck('name')->first();
+                $item->name_clinic = Clinic::where('id', $item->clinic_id)->pluck('name')->first();
                 $item->department = Department::find($item->department_id)->name;
-                $item->doctor_name = User::find($item->doctor_id)->username??'';
+                $item->doctor_name = User::find($item->doctor_id)->username ?? '';
             }
             return Excel::download(new BookingDoctorExport($bookings), 'lichsukham.xlsx');
         } else {
@@ -325,20 +359,20 @@ class HomeController extends Controller
         $department = Department::all();
         $service = ServiceClinic::all();
 
-        return view('admin.booking.list-booking', compact('bookings','service','department'));
+        return view('admin.booking.list-booking', compact('bookings', 'service', 'department'));
     }
 
     public function listBookingDoctor(Request $request)
     {
         $query = Booking::where('bookings.status', '!=', BookingStatus::DELETE)
-                ->where('bookings.doctor_id', Auth::user()->id)
-                ->orderBy('id', 'desc');
+            ->where('bookings.doctor_id', Auth::user()->id)
+            ->orderBy('id', 'desc');
         if ($request->filled('key_search')) {
             $key_search = $request->input('key_search');
             $query->join('clinics', 'bookings.clinic_id', '=', 'clinics.id')
                 ->join('users', 'bookings.user_id', '=', 'users.id')
                 ->select('bookings.*', 'clinics.name as clinic_name', 'users.name as user_name')
-                ->where(function($q) use ($key_search) {
+                ->where(function ($q) use ($key_search) {
                     $q->where('clinics.name', 'LIKE', "%$key_search%")
                         ->orWhere('users.name', 'LIKE', "%$key_search%");
                 });
@@ -363,11 +397,11 @@ class HomeController extends Controller
 
         if ($request->excel == 2) {
             $bookings = $query->get();
-            foreach ($bookings as $item){
+            foreach ($bookings as $item) {
                 $item->user_name = User::find($item->user_id)->name;
-                $item->name_clinic = Clinic::where('id',$item->clinic_id)->pluck('name')->first();
+                $item->name_clinic = Clinic::where('id', $item->clinic_id)->pluck('name')->first();
                 $item->department = Department::find($item->department_id)->name;
-                $item->doctor_name = User::find($item->doctor_id)->username??'';
+                $item->doctor_name = User::find($item->doctor_id)->username ?? '';
             }
             return Excel::download(new BookingDoctorExport($bookings), 'lichsukham.xlsx');
         } else {
@@ -377,7 +411,6 @@ class HomeController extends Controller
         $department = Department::all();
         $service = ServiceClinic::all();
 
-        return view('admin.booking.list-booking', compact('bookings','service','department'));
+        return view('admin.booking.list-booking', compact('bookings', 'service', 'department'));
     }
-
 }
