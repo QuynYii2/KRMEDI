@@ -12,6 +12,12 @@
 @section('main-content')
     <h3 class="text-center">{{ __('home.Order Management') }}</h3>
     <br>
+    @if (session('success'))
+        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+            {{session('success')}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
     <div class="container">
         <ul class="nav nav-tabs" id="myTabOrder" role="tablist">
             <li class="nav-item" role="presentation">
@@ -51,6 +57,12 @@
                     Đơn hàng hủy
                 </button>
             </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="refund_order_tab" data-bs-toggle="tab" data-bs-target="#refund_order"
+                        type="button" role="tab" aria-controls="refund_order" aria-selected="false">
+                    Đơn hàng hoàn
+                </button>
+            </li>
         </ul>
         <div class="tab-content" id="myTabOrderContent">
             <div class="tab-pane fade show active" id="all_order" role="tabpanel" aria-labelledby="all_order_tab">
@@ -80,6 +92,11 @@
             </div>
             <div class="tab-pane fade" id="cancel_order" role="tabpanel" aria-labelledby="cancel_order_tab">
                 <div class="list-order mt-3 list_cancel_order">
+
+                </div>
+            </div>
+            <div class="tab-pane fade" id="refund_order" role="tabpanel" aria-labelledby="refund_order_tab">
+                <div class="list-order mt-3 list_refund_order">
 
                 </div>
             </div>
@@ -117,6 +134,10 @@
 
             $('#cancel_order_tab').click(function () {
                 loadOrders('CANCELED');
+            })
+
+            $('#refund_order_tab').click(function () {
+                loadOrders('REFUND');
             })
         })
 
@@ -168,6 +189,13 @@
                                     ${status == ''?`<div class="product-name mb-3">
                                         Trạng thái đơn hàng: ${data.status}
                                     </div>`:``}
+                                    ${data.status == 'COMPLETED'? `<a href="${window.location.origin}/orders/status/${data.id}" class="btn btn-danger">Hoàn đơn</a>`:''}
+                                    ${data.status == 'REFUND' && data.type_order == 0?`<div class="product-name mb-3" style="color: red">
+                                                    Hoàn hàng: chờ duyệt
+                                     </div>`:``}
+                                    ${data.status == 'REFUND' && data.type_order == 1?`<div class="product-name mb-3" style="color: green">
+                                                    Hoàn hàng: đã duyệt
+                                     </div>`:``}
                                 </div>
                             </div>`;
                     }
@@ -200,6 +228,9 @@
                     break;
                 case 'CANCELED':
                     $('.list_cancel_order').empty().append(html);
+                    break;
+                case 'REFUND':
+                    $('.list_refund_order').empty().append(html);
                     break;
                 default:
                     $('.list_all_order').empty().append(html);

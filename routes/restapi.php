@@ -57,6 +57,8 @@ Route::group(['prefix' => 'orders'], function () {
     Route::get('/get-by-user/{id}', [OrderApi::class, 'getAllByUser'])->name('restapi.api.orders.list.user');
     Route::get('/detail/{id}', [OrderApi::class, 'detail'])->name('restapi.api.orders.detail');
     Route::put('/cancel/{id}', [OrderApi::class, 'cancelOrder'])->name('restapi.api.orders.cancel');
+    Route::get('status/{id}', [OrderApi::class,'statusOrder'])->name('restapi.api.orders.status');
+    Route::get('refund-approval/{id}', [OrderApi::class,'refundApproval'])->name('restapi.api.orders.refund-approval');
 });
 
 Route::group(['prefix' => 'business'], function () {

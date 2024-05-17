@@ -297,13 +297,13 @@
 
 <div id="widget-chat">
 
-    <div id="chat-circle" class="btn btn-raised" style="display: none">
+    <div id="chat-circle" class="btn btn-raised">
         <div id="chat-overlay"></div>
         <i class="fa-solid fa-message"></i>
         <span class="noti_number"></span>
     </div>
 
-    <div class="chat-box" style="display: block">
+    <div class="chat-box" id="chat-box-mess">
         <div class="chat-box-header">
             <span class="chat-box-toggle"><i class="fa-solid fa-x"></i></span>
         </div>
@@ -475,7 +475,15 @@
         }
         return null;
     }
-
+    checkHomePageAndToggleDisplay();
+    function checkHomePageAndToggleDisplay() {
+        let chatCircle = document.getElementById('chat-circle');
+        let chatBoxes = document.getElementById('chat-box-mess');
+        if (window.location.href === window.location.origin || window.location.pathname === '/') {
+            chatCircle.style.display = 'none';
+            chatBoxes.style.display = 'block';
+        }
+    }
 
 </script>
 
@@ -503,7 +511,7 @@
     //     forceTLS: true,
     //     encrypted: true,
     // });
-    
+
     // window.Echo.channel("messages." + currentUserIdChat).listen('NewMessage', function (e) {
     //     renderMessageReceive(e);
     //     // handleSeenMessage();

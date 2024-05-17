@@ -119,6 +119,25 @@ class OrderApi extends Controller
         }
     }
 
+    public function statusOrder($id)
+    {
+        $order = Order::find($id);
+        if ($order->status == 'COMPLETED') {
+            $order->status = 'REFUND';
+            $order->type_order = 0;
+            $order->save();
+        }
+        return \redirect()->route('view.web.orders.index')->with(['success' => 'Xét trạng thái đơn hàng thành công']);
+    }
+
+    public function refundApproval($id)
+    {
+        $order = Order::find($id);
+        $order->type_order = 1;
+        $order->save();
+        return \redirect()->back()->with(['success' => 'Duyệt hoàn hàng thành công']);
+    }
+
     public function deleteOrder($id, Request $request)
     {
     }
