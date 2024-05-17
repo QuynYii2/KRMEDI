@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\online_medicine\ProductMedicine;
 use App\Models\ProductInfo;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -177,6 +178,12 @@ class CartApi extends Controller
                     ->where('prescription_id', $prescription_id)
                     ->get();
             }
+
+            $user = User::find($userID);
+
+            $prescriptionResultApi = new PrescriptionResultApi();
+
+            $prescriptionResultApi->noti_after_create_don_thuoc($user->email, $prescription_id, $userID, $doctorID);
 
             return response()->json(['error' => 0, 'data' => $carts]);
         } catch (\Exception $e) {

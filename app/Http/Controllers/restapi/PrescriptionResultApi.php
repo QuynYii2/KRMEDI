@@ -145,7 +145,7 @@ class PrescriptionResultApi extends Controller
                 $prescription_id = json_decode($response->getContent())->data[0]->prescription_id;
             }
 
-            $this->noti_after_create_don_thuoc($email, $prescription_id ?? $prescription_result->id, $created_by, $user_id);
+            // $this->noti_after_create_don_thuoc($email, $prescription_id ?? $prescription_result->id, $created_by, $user_id);
 
 
             if ($success) {
@@ -157,7 +157,7 @@ class PrescriptionResultApi extends Controller
         }
     }
 
-    private function noti_after_create_don_thuoc($email, $prescription_id, $created_by = null, $user_id = null)
+    public function noti_after_create_don_thuoc($email, $prescription_id, $created_by = null, $user_id = null)
     {
         $user = User::where('email', $email)->first();
 
