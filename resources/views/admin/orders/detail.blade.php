@@ -61,6 +61,13 @@
                 </select>
             </div>
         </div>
+        @if($order->status == 'REFUND' && $order->type_order == 0)
+            <p class="mb-1">Duyệt trạng thái hoàn hàng</p>
+            <a href="{{route('restapi.api.orders.refund-approval',$order->id)}}" class="btn btn-success">Duyệt hoàn hàng</a>
+            @endif
+        @if($order->status == 'REFUND' && $order->type_order == 1)
+            <p style="color: green">Duyệt trạng thái hoàn hàng: Đã duyệt</p>
+        @endif
         <h3 class="mt-3">{{ __('home.Order Item') }}</h3>
         <table class="table table-striped" id="tableOrderItem">
             <thead>
