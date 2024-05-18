@@ -573,13 +573,18 @@
         min-height: 63px;
         max-height: 63px;
     }
+    .background-image_Clinics{
+        margin-top: 70px!important;
+    }
 }
 
 @media (max-width: 767px) {
     .container {
         max-width: 100%;
     }
-
+    .background-img-clinic-mobile{
+        margin-top: 70px!important;
+    }
     .krm-tieuDe-findDoctor, .container .font-18-mobi, .recruitment-details--title, .news-content, .ac-text_content, #show-doctor .list-title .list--doctor p,
     .list--doctor p, .list--doctor p, .list-title .list--doctor p, .header_comment, .title-my-personal-doctor,.container .danh-sach-theo-chuyen-khoa .title-Danh-sach,
     .container .detail-clinic-theo-chuyen-khoa-title .title-detail-clinic,.container .tab-chuyen-khoa .titleServiceHomeNew,

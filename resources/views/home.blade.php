@@ -2602,6 +2602,7 @@
             window.location.href = "/coupon/" + id;
         }
     </script>
+{{--    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBw3G5DUAOaV9CFr3Pft_X-949-64zXaBg&libraries=geometry"></script>--}}
     <script>
         var locations = {!! json_encode($coordinatesArray) !!};
         var infoWindows = [];

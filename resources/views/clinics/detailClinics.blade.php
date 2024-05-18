@@ -119,7 +119,7 @@
         </div>
     </div>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAl8bmtXj3F5lPG_mbD5Pj9mGSu2LCzrrE"></script>
+{{--    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBw3G5DUAOaV9CFr3Pft_X-949-64zXaBg&libraries=geometry"></script>--}}
     <script>
         var locations = {!! json_encode($coordinatesArray) !!};
         var jsonServices = {!! json_encode($services) !!};
