@@ -207,7 +207,7 @@
     }
 
     async function searchClinics() {
-        loadingMasterPage();
+        // loadingMasterPage();
         let urlSearch = `{{ route('clinics.restapi.search') }}`;
 
         let search_input_clinics = document.getElementById('search_input_clinics').value;
@@ -224,10 +224,11 @@
                 "Authorization": accessToken
             },
             success: function(response) {
-                renderSearchClinics(response);
-                setTimeout(() => {
-                    loadingMasterPage();
-                }, '500');
+                mapClinic(response);
+                // renderSearchClinics(response);
+                // setTimeout(() => {
+                //     loadingMasterPage();
+                // }, '500');
             },
             error: function(exception) {
                 console.log(exception)

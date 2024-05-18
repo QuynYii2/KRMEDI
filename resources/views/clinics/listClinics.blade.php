@@ -120,6 +120,10 @@
                     </span>
                 </div>
             </div>
+            <p style="color: red;text-align: center;margin:30px 0;display: none" class="text-not-address">Không có phòng khám nào như bạn cần tìm quanh bạn</p>
+            <div id="allAddressesMap" class="show active fade" style="height: 800px;">
+
+            </div>
             <div class="body row" id="productInformation"></div>
 
         </div>
@@ -132,38 +136,227 @@
     </div>
 
     <script>
-        function getCurrentLocation(callback) {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    var currentLocation = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    };
-                    callback(currentLocation);
+
+        function mapClinic(coordinatesArray) {
+            var locations = coordinatesArray;
+            var infoWindows = [];
+            if (locations.length > 0){
+                function getCurrentLocation(callback) {
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(function(position) {
+                            var currentLocation = {
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude
+                            };
+                            callback(currentLocation);
+                        });
+                    } else {
+                        alert('Geolocation is not supported by this browser.');
+                    }
+                }
+
+                function calculateDistance(lat1, lng1, lat2, lng2) {
+                    var R = 6371; // Độ dài trung bình của trái đất trong km
+                    var dLat = toRadians(lat2 - lat1);
+                    var dLng = toRadians(lng2 - lng1);
+
+                    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                        Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
+                        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+
+                    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+                    var distance = R * c;
+                    return distance;
+                }
+
+                function toRadians(degrees) {
+                    return degrees * (Math.PI / 180);
+                }
+                function formatTime(dateTimeString) {
+                    const date = new Date(dateTimeString);
+                    const hours = date.getHours().toString().padStart(2, '0');
+                    const minutes = date.getMinutes().toString().padStart(2, '0');
+                    return `${hours}:${minutes}`;
+                }
+
+                function initMap(currentLocation, locations) {
+                    var map = new google.maps.Map(document.getElementById('allAddressesMap'), {
+                        center: currentLocation,
+                        zoom: 12.3
+                    });
+
+                    var currentLocationMarker = new google.maps.Marker({
+                        position: currentLocation,
+                        map: map,
+                        title: 'Your Location'
+                    });
+
+                    locations.forEach(function (location) {
+                        var distance = calculateDistance(
+                            currentLocation.lat, currentLocation.lng,
+                            parseFloat(location.latitude), parseFloat(location.longitude)
+                        );
+
+                        // Chọn bán kính tìm kiếm (ví dụ: 5 km)
+                        var searchRadius = 10;
+
+                        if (distance <= searchRadius) {
+                            var marker = new google.maps.Marker({
+                                position: {lat: parseFloat(location.latitude), lng: parseFloat(location.longitude)},
+                                map: map,
+                                title: 'Location'
+                            });
+                            var urlDetail = "{{ route('clinic.detail', ['id' => ':id']) }}".replace(':id', location.id);
+                            let img = '';
+                            let gallery = location.gallery;
+                            let arrayGallery = gallery.split(',');
+
+
+                            var infoWindowContent = `<div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
+                <div>
+
+                    <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img">
+                </div>
+                <div class="p-md-3 p-2">
+                    <div class="form-group">
+                        <div class="d-flex justify-content-between mt-md-2">
+                            <div class="fs-18px">${location.name}</div>
+                            <div class="button-follow fs-12p ">
+                                <a class="text-follow-12" href="">{{ __('home.FOLLOW') }}</a>
+                            </div>
+                        </div>
+                        <div class="d-flex mt-md-2">
+                            <div class="d-flex col-md-6 justify-content-center align-items-center">
+                                <a class="row p-2" href="">
+                                    <div class="justify-content-center d-flex">
+                                        <i class="border-button-address fa-solid fa-bullseye"></i>
+                                    </div>
+                                    <div class="d-flex justify-content-center">{{ __('home.Start') }}</div>
+                                </a>
+                            </div>
+                            <div class="d-flex col-md-6 justify-content-center align-items-center">
+                                <a class="row p-2" href="">
+                                    <div class="justify-content-center d-flex">
+                                        <i class="border-button-address fa-regular fa-circle-right"></i>
+                                    </div>
+                                    <div class="d-flex justify-content-center">{{ __('home.Direction') }}</div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-md-3 mb-md-3">
+                    <a class="w-100 btn btn-secondary border-button-address font-weight-800 fs-14 justify-content-center" href="${urlDetail}" >
+                    {{ __('home.Booking') }}
+                            </a>
+                            </div>
+                            <div class="border-top">
+                                <div class="mt-md-2 mt-1"><i class="text-gray mr-md-2 fa-solid fa-location-dot"></i>
+                                    <span class="fs-14 font-weight-600">${location.address_detail}</span>
+                        </div>
+                        <div class="mt-md-2 mt-1">
+                            <i class="text-gray mr-md-2 fa-regular fa-clock"></i>
+                            <span class="fs-14 font-weight-600">
+                                Open: ${formatTime(location.open_date)} - ${formatTime(location.close_date)}
+                            </span>
+                        </div>
+                        <div class="mt-md-2 mt-1">
+                            <i class="text-gray mr-md-2 fa-solid fa-globe"></i>
+                            <span class="fs-14 font-weight-600"> ${location.email}</span>
+                        </div>
+                        <div class="mt-md-2 mt-1">
+                            <i class="text-gray mr-md-2 fa-solid fa-phone-volume"></i> <span
+                                class="fs-14 font-weight-600"> ${location.phone}</span>
+                        </div>
+                        <div class="mt-md-2 mt-1 mb-md-2">
+                            <i class="text-gray mr-md-2 fa-solid fa-bookmark"></i> <span
+                                class="fs-14 font-weight-600"> ${location.type}</span>
+                        </div>
+                        @for($i=0; $i<3; $i++)
+                            <div class="border-top mb-md-2">
+                                <div
+                                    class="d-flex justify-content-between rv-header align-items-center mt-md-2 mt-1">
+                                    <div class="d-flex rv-header--left">
+                                        <div class="avt-24 mr-md-2">
+                                            <img loading="lazy" src="{{asset('img/detail_doctor/ellipse _14.png')}}">
+                                        </div>
+                                        <p class="fs-16px">Trần Đình Phi</p>
+                                    </div>
+                                    <div class="rv-header--right">
+                                        <p class="fs-14 font-weight-400">10:20 07/04/2023</p>
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    <p>
+                                        {{ __('home.Lần đầu tiên sử dụng dịch vụ qua app nhưng chất lượng và dịch vụ tại salon quá tốt. Book giờ nào thì cứ đúng giờ đến k sợ phải chờ đợi như mọi chỗ khác. Hy vọng thi thoảng app có nhiều ưu đãi để giới thiệu cho bạn bè cùng sử dụng') }}
+                            </p>
+                        </div>
+                    </div>
+@endfor
+                            <div class="border-top">
+                                <div
+                                    class="d-flex justify-content-between rv-header align-items-center mt-md-2 mt-1">
+                                    <div class="d-flex rv-header--left">
+                                        <div class="avt-24 mr-md-2">
+                                            <img loading="lazy" src="{{asset('img/detail_doctor/ellipse _14.png')}}">
+                                    </div>
+                                    <p class="fs-16px">Trần Đình Phi</p>
+                                </div>
+                                <div class="rv-header--right">
+                                    <p class="fs-14 font-weight-400">10:20 07/04/2023</p>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <p>
+                                    {{ __('home.Lần đầu tiên sử dụng dịch vụ qua app nhưng chất lượng và dịch vụ tại salon quá tốt. Book giờ nào thì cứ đúng giờ đến k sợ phải chờ đợi như mọi chỗ khác. Hy vọng thi thoảng app có nhiều ưu đãi để giới thiệu cho bạn bè cùng sử dụng') }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+
+                            var infoWindow = new google.maps.InfoWindow({
+                                content: infoWindowContent
+                            });
+
+                            marker.addListener('click', function () {
+                                closeAllInfoWindows();
+                                infoWindow.open(map, marker);
+                            });
+
+                            infoWindows.push(infoWindow);
+                        }
+                    });
+                }
+
+                function closeAllInfoWindows() {
+                    infoWindows.forEach(function(infoWindow) {
+                        infoWindow.open();
+                    });
+                }
+
+                getCurrentLocation(function(currentLocation) {
+                    initMap(currentLocation, locations);
                 });
-            } else {
-                alert('Geolocation is not supported by this browser.');
+                document.addEventListener('DOMContentLoaded', function() {
+                    const departmentLinks = document.querySelectorAll('.department-link');
+
+                    departmentLinks.forEach(link => {
+                        link.addEventListener('click', function(event) {
+                            event.preventDefault();
+                            const departmentId = this.getAttribute('data-id');
+                            localStorage.setItem('departmentId', departmentId);
+                            window.location.href = this.href;
+                        });
+                    });
+                });
+            }else{
+                $('.text-not-address').css('display','inline-block')
             }
+
         }
 
-        function calculateDistance(lat1, lng1, lat2, lng2) {
-            var R = 6371; // Độ dài trung bình của trái đất trong km
-            var dLat = toRadians(lat2 - lat1);
-            var dLng = toRadians(lng2 - lng1);
-
-            var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
-                Math.sin(dLng / 2) * Math.sin(dLng / 2);
-
-            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-            var distance = R * c;
-            return distance;
-        }
-
-        function toRadians(degrees) {
-            return degrees * (Math.PI / 180);
-        }
 
         function initShowProducts() {
             $.ajax({
@@ -173,7 +366,8 @@
                     "Authorization": accessToken
                 },
                 success: function(response) {
-                    renderClinics(response)
+                    mapClinic(response);
+                    // renderClinics(response)
                 },
                 error: function(exception) {
                     console.log(exception)
@@ -181,112 +375,112 @@
             });
         }
 
-        function showSpinner() {
-            const $spinner = $('<div>').addClass('spinner-loading text-center').attr('role', 'status')
-                .append($('<span>').text('Loading...'));
+        {{--function showSpinner() {--}}
+        {{--    const $spinner = $('<div>').addClass('spinner-loading text-center').attr('role', 'status')--}}
+        {{--        .append($('<span>').text('Loading...'));--}}
 
-            $('#productInformation').append($spinner);
-        }
+        {{--    $('#productInformation').append($spinner);--}}
+        {{--}--}}
 
-        function hideSpinner() {
-            $('.spinner-loading').remove();
-        }
+        {{--function hideSpinner() {--}}
+        {{--    $('.spinner-loading').remove();--}}
+        {{--}--}}
 
         function loadProductInformation() {
-            showSpinner();
+            // showSpinner();
             initShowProducts();
-            hideSpinner();
+            // hideSpinner();
         }
 
         loadProductInformation();
 
-        function renderClinics(response) {
-            getCurrentLocation(function(currentLocation) {
-                var productInformationDiv = document.getElementById('productInformation');
-                for (let i = 0; i < response.length; i++) {
-                    let item = response[i];
-                    var distance = calculateDistance(
-                        currentLocation.lat, currentLocation.lng,
-                        parseFloat(item.latitude), parseFloat(item.longitude)
-                    );
+        {{--function renderClinics(response) {--}}
+        {{--    getCurrentLocation(function(currentLocation) {--}}
+        {{--        var productInformationDiv = document.getElementById('productInformation');--}}
+        {{--        for (let i = 0; i < response.length; i++) {--}}
+        {{--            let item = response[i];--}}
+        {{--            var distance = calculateDistance(--}}
+        {{--                currentLocation.lat, currentLocation.lng,--}}
+        {{--                parseFloat(item.latitude), parseFloat(item.longitude)--}}
+        {{--            );--}}
 
-                    // Chọn bán kính tìm kiếm (ví dụ: 10 km)
-                    var searchRadius = 10;
-                    if (distance >= searchRadius || isNaN(distance)) {
-                        continue;
-                    }
-                    var urlDetail = "{{ route('clinic.detail', ['id' => ':id']) }}".replace(':id', item.id);
+        {{--            // Chọn bán kính tìm kiếm (ví dụ: 10 km)--}}
+        {{--            var searchRadius = 10;--}}
+        {{--            if (distance >= searchRadius || isNaN(distance)) {--}}
+        {{--                continue;--}}
+        {{--            }--}}
+        {{--            var urlDetail = "{{ route('clinic.detail', ['id' => ':id']) }}".replace(':id', item.id);--}}
 
-                    let img = '';
-                    let gallery = item.gallery;
-                    let arrayGallery = gallery.split(',');
-                    img += `<img class="mr-2 img-item1" src="${arrayGallery[0]}" alt="">`;
+        {{--            let img = '';--}}
+        {{--            let gallery = item.gallery;--}}
+        {{--            let arrayGallery = gallery.split(',');--}}
+        {{--            img += `<img class="mr-2 img-item1" src="${arrayGallery[0]}" alt="">`;--}}
 
-                    // let serviceHtml = ``;
-                    // let service = item.services;
-                    // for (let j = 0; j < service.length; j++) {
-                    //     let serviceItem = service[j];
-                    //     serviceHtml = serviceHtml + `<span>${serviceItem.name},</span>`;
-                    // }
-                    let openDate = new Date(item.open_date);
-                    let closeDate = new Date(item.close_date);
+        {{--            // let serviceHtml = ``;--}}
+        {{--            // let service = item.services;--}}
+        {{--            // for (let j = 0; j < service.length; j++) {--}}
+        {{--            //     let serviceItem = service[j];--}}
+        {{--            //     serviceHtml = serviceHtml + `<span>${serviceItem.name},</span>`;--}}
+        {{--            // }--}}
+        {{--            let openDate = new Date(item.open_date);--}}
+        {{--            let closeDate = new Date(item.close_date);--}}
 
-                    let formattedOpenDate = openDate.toLocaleTimeString(undefined, {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-                    let formattedCloseDate = closeDate.toLocaleTimeString(undefined, {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
+        {{--            let formattedOpenDate = openDate.toLocaleTimeString(undefined, {--}}
+        {{--                hour: '2-digit',--}}
+        {{--                minute: '2-digit'--}}
+        {{--            });--}}
+        {{--            let formattedCloseDate = closeDate.toLocaleTimeString(undefined, {--}}
+        {{--                hour: '2-digit',--}}
+        {{--                minute: '2-digit'--}}
+        {{--            });--}}
 
-                    let html = `
-                            <div class="specialList-clinics col-md-6 mt-3">
-                                <a href="${urlDetail}">
-                                    <div class="border-specialList">
-                                        <div class="content__item d-flex gap-3">
-                                            <div class="specialList-clinics--img">
-                                                ${img}
-                                            </div>
-                                            <div class="specialList-clinics--main w-100">
-                                                <div class="title-specialList-clinics">
+        {{--            let html = `--}}
+        {{--                    <div class="specialList-clinics col-md-6 mt-3">--}}
+        {{--                        <a href="${urlDetail}">--}}
+        {{--                            <div class="border-specialList">--}}
+        {{--                                <div class="content__item d-flex gap-3">--}}
+        {{--                                    <div class="specialList-clinics--img">--}}
+        {{--                                        ${img}--}}
+        {{--                                    </div>--}}
+        {{--                                    <div class="specialList-clinics--main w-100">--}}
+        {{--                                        <div class="title-specialList-clinics">--}}
 
-                                                        @if (locationHelper() == 'vi')
-                                                            ${item.name}
-                                                            @else
-                                                            ${item.name_en}
-                                                            @endif
-                                                </div>
-                                            <div class="address-specialList-clinics">
-                                        <div class="d-flex align-items-center address-clinics">
-                                            <i class="fas fa-map-marker-alt mr-2"></i>
-                                            <div>${item.address_detail} ${item.addressInfo}</div>
-                                        </div>
-                                            <span class="distance"> ${distance.toFixed(2)} Km</span>
-                                    </div>
-                                    <div class="d-flex justify-content-between align-items-center flex-wrap">
-                                        <div class="time-working">
-                                            <span class="color-timeWorking">
-                                                <span class="fs-14 font-weight-600">${formattedOpenDate} - ${formattedCloseDate}</span>
-                                                </span>
-                                                <span>/ {{ __('home.Dental Clinic') }}</span>
-                                        </div>
-                                       <a href="https://www.google.com/maps?q=${item.latitude},${item.longitude}" class="search-way mb-1" target="_blank">Chỉ đường</a>
-                                    </div>
-                                    @if (Auth::check())
-                                    <div class="zalo-follow-only-button" data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
-                                    @endif
-                                    </div>
-                                    </div>
-                                    </div>
-                                </a>
-                            </div>
-                            `;
+        {{--                                                @if (locationHelper() == 'vi')--}}
+        {{--                                                    ${item.name}--}}
+        {{--                                                    @else--}}
+        {{--                                                    ${item.name_en}--}}
+        {{--                                                    @endif--}}
+        {{--                                        </div>--}}
+        {{--                                    <div class="address-specialList-clinics">--}}
+        {{--                                <div class="d-flex align-items-center address-clinics">--}}
+        {{--                                    <i class="fas fa-map-marker-alt mr-2"></i>--}}
+        {{--                                    <div>${item.address_detail} ${item.addressInfo}</div>--}}
+        {{--                                </div>--}}
+        {{--                                    <span class="distance"> ${distance.toFixed(2)} Km</span>--}}
+        {{--                            </div>--}}
+        {{--                            <div class="d-flex justify-content-between align-items-center flex-wrap">--}}
+        {{--                                <div class="time-working">--}}
+        {{--                                    <span class="color-timeWorking">--}}
+        {{--                                        <span class="fs-14 font-weight-600">${formattedOpenDate} - ${formattedCloseDate}</span>--}}
+        {{--                                        </span>--}}
+        {{--                                        <span>/ {{ __('home.Dental Clinic') }}</span>--}}
+        {{--                                </div>--}}
+        {{--                               <a href="https://www.google.com/maps?q=${item.latitude},${item.longitude}" class="search-way mb-1" target="_blank">Chỉ đường</a>--}}
+        {{--                            </div>--}}
+        {{--                            @if (Auth::check())--}}
+        {{--                            <div class="zalo-follow-only-button" data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>--}}
+        {{--                            @endif--}}
+        {{--                            </div>--}}
+        {{--                            </div>--}}
+        {{--                            </div>--}}
+        {{--                        </a>--}}
+        {{--                    </div>--}}
+        {{--                    `;--}}
 
-                    productInformationDiv.innerHTML += html;
-                }
-            });
-        }
+        {{--            productInformationDiv.innerHTML += html;--}}
+        {{--        }--}}
+        {{--    });--}}
+        {{--}--}}
     </script>
 
 @endsection

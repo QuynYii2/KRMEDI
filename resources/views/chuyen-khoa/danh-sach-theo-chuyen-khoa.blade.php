@@ -47,155 +47,161 @@
             <div class="tab-content mt-4" id="myTabContent">
                 <div class="tab-pane fade show active" id="clinicList" role="tabpanel" aria-labelledby="clinicList-tab">
                     <div class="row">
-                        @foreach ($clinics as $clinic)
-                            <div class="specialList-clinics col-md-6 col-12 mt-5" data-clinic-id="{{ $clinic->id }}">
-                                <div class="border-specialList">
-                                    <div class="content__item d-flex gap-3 box-item__content">
-                                        <div class="specialList-clinics--img img-special-line">
-                                            @php
-                                                $galleryArray = explode(',', $clinic->gallery);
-                                            @endphp
-                                            <img class="content__item__image" src="{{ $galleryArray[0] }}" alt="" />
-                                        </div>
-                                        <div class="specialList-clinics--main w-100">
-                                            <div class="title-specialList-clinics">
-                                                {{ $clinic->name }}
-                                            </div>
-                                            <div class="address-specialList-clinics d-flex align-items-center">
-                                                @php
-                                                    $array = explode(',', $clinic->address);
-                                                    $addressP = \App\Models\Province::where(
-                                                        'id',
-                                                        $array[1] ?? null,
-                                                    )->first();
-                                                    $addressD = \App\Models\District::where(
-                                                        'id',
-                                                        $array[2] ?? null,
-                                                    )->first();
-                                                    $addressC = \App\Models\Commune::where(
-                                                        'id',
-                                                        $array[3] ?? null,
-                                                    )->first();
-                                                @endphp
-                                                <div class="d-flex align-items-center">
-                                                    <i class="fas fa-map-marker-alt mr-2"></i>
-                                                    <div class="text-address">{{ $clinic->address_detail }}
-                                                        , {{ $addressC->name ?? '' }} , {{ $addressD->name ?? '' }}
-                                                        , {{ $addressP->name ?? '' }}</div>
-                                                </div>
-                                                <span class="clinicDistanceSpan">
-                                                    <p class="lat">{{ $clinic->latitude }}</p>
-                                                    <p class="long">{{ $clinic->longitude }}</p>
-                                                </span>
-                                            </div>
-                                            <div class="time-working">
-                                                <span class="color-timeWorking">
-                                                    <span
-                                                        class="fs-14 font-weight-600">{{ \Carbon\Carbon::parse($clinic->open_date)->format('H:i') }}
-                                                        -
-                                                        {{ \Carbon\Carbon::parse($clinic->close_date)->format('H:i') }}</span>
-                                                </span>
-                                                <span>
-                                                    / {{ __('home.Dental Clinic') }}
-                                                </span>
-                                            </div>
-                                            <a href="https://www.google.com/maps?q={{$clinic->latitude}},{{$clinic->longitude}}" class="search-way" target="_blank">Chỉ đường</a>
-                                            <div class="group-button d-flex mt-3">
-                                                <a href="{{ route('home.specialist.booking.detail', $clinic->id) }}"
-                                                    class="col-md-6 item-btn-specialist">
-                                                    <div class="button-booking-specialList line-dk-btn">
-                                                        {{ __('home.Đặt khám') }}
-                                                    </div>
-                                                </a>
-                                                <a href="{{ route('home.specialist.detail', $clinic->id) }}"
-                                                    class="col-md-6 item-btn-specialist">
-                                                    <div class="button-detail-specialList">
-                                                        {{ __('home.Xem chi tiết') }}
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
+                        <div id="allAddressesMap" class="show active fade" style="height: 800px;">
+
+                        </div>
+{{--                        @foreach ($clinics as $clinic)--}}
+{{--                            <div class="specialList-clinics col-md-6 col-12 mt-5" data-clinic-id="{{ $clinic->id }}">--}}
+{{--                                <div class="border-specialList">--}}
+{{--                                    <div class="content__item d-flex gap-3 box-item__content">--}}
+{{--                                        <div class="specialList-clinics--img img-special-line">--}}
+{{--                                            @php--}}
+{{--                                                $galleryArray = explode(',', $clinic->gallery);--}}
+{{--                                            @endphp--}}
+{{--                                            <img class="content__item__image" src="{{ $galleryArray[0] }}" alt="" />--}}
+{{--                                        </div>--}}
+{{--                                        <div class="specialList-clinics--main w-100">--}}
+{{--                                            <div class="title-specialList-clinics">--}}
+{{--                                                {{ $clinic->name }}--}}
+{{--                                            </div>--}}
+{{--                                            <div class="address-specialList-clinics d-flex align-items-center">--}}
+{{--                                                @php--}}
+{{--                                                    $array = explode(',', $clinic->address);--}}
+{{--                                                    $addressP = \App\Models\Province::where(--}}
+{{--                                                        'id',--}}
+{{--                                                        $array[1] ?? null,--}}
+{{--                                                    )->first();--}}
+{{--                                                    $addressD = \App\Models\District::where(--}}
+{{--                                                        'id',--}}
+{{--                                                        $array[2] ?? null,--}}
+{{--                                                    )->first();--}}
+{{--                                                    $addressC = \App\Models\Commune::where(--}}
+{{--                                                        'id',--}}
+{{--                                                        $array[3] ?? null,--}}
+{{--                                                    )->first();--}}
+{{--                                                @endphp--}}
+{{--                                                <div class="d-flex align-items-center">--}}
+{{--                                                    <i class="fas fa-map-marker-alt mr-2"></i>--}}
+{{--                                                    <div class="text-address">{{ $clinic->address_detail }}--}}
+{{--                                                        , {{ $addressC->name ?? '' }} , {{ $addressD->name ?? '' }}--}}
+{{--                                                        , {{ $addressP->name ?? '' }}</div>--}}
+{{--                                                </div>--}}
+{{--                                                <span class="clinicDistanceSpan">--}}
+{{--                                                    <p class="lat">{{ $clinic->latitude }}</p>--}}
+{{--                                                    <p class="long">{{ $clinic->longitude }}</p>--}}
+{{--                                                </span>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="time-working">--}}
+{{--                                                <span class="color-timeWorking">--}}
+{{--                                                    <span--}}
+{{--                                                        class="fs-14 font-weight-600">{{ \Carbon\Carbon::parse($clinic->open_date)->format('H:i') }}--}}
+{{--                                                        ---}}
+{{--                                                        {{ \Carbon\Carbon::parse($clinic->close_date)->format('H:i') }}</span>--}}
+{{--                                                </span>--}}
+{{--                                                <span>--}}
+{{--                                                    / {{ __('home.Dental Clinic') }}--}}
+{{--                                                </span>--}}
+{{--                                            </div>--}}
+{{--                                            <a href="https://www.google.com/maps?q={{$clinic->latitude}},{{$clinic->longitude}}" class="search-way" target="_blank">Chỉ đường</a>--}}
+{{--                                            <div class="group-button d-flex mt-3">--}}
+{{--                                                <a href="{{ route('home.specialist.booking.detail', $clinic->id) }}"--}}
+{{--                                                    class="col-md-6 item-btn-specialist">--}}
+{{--                                                    <div class="button-booking-specialList line-dk-btn">--}}
+{{--                                                        {{ __('home.Đặt khám') }}--}}
+{{--                                                    </div>--}}
+{{--                                                </a>--}}
+{{--                                                <a href="{{ route('home.specialist.detail', $clinic->id) }}"--}}
+{{--                                                    class="col-md-6 item-btn-specialist">--}}
+{{--                                                    <div class="button-detail-specialList">--}}
+{{--                                                        {{ __('home.Xem chi tiết') }}--}}
+{{--                                                    </div>--}}
+{{--                                                </a>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        @endforeach--}}
                     </div>
                 </div>
 
                 <div class="tab-pane fade" id="pharmacies" role="tabpanel" aria-labelledby="pharmacies-tab">
                     <div class="row">
-                        @foreach ($pharmacies as $pharmacy)
-                            <div class="specialList-clinics col-md-6 mt-5" data-pharmacy-id="{{ $pharmacy->id }}">
-                                <div class="border-specialList">
-                                    <div class="content__item d-flex gap-3 box-item__content">
-                                        <div class="specialList-clinics--img img-special-line">
-                                            @php
-                                                $galleryArray = explode(',', $pharmacy->gallery);
-                                            @endphp
-                                            <img class="content__item__image" src="{{ $galleryArray[0] }}"
-                                                alt="" />
-                                        </div>
-                                        <div class="specialList-clinics--main w-100">
-                                            <div class="title-specialList-clinics">
-                                                {{ $pharmacy->name }}
-                                            </div>
-                                            <div class="address-specialList-clinics d-flex align-items-center">
-                                                <div class="d-flex">
-                                                    <i class="fas fa-map-marker-alt mr-2"></i>
-                                                    @php
-                                                        $array = explode(',', $pharmacy->address);
-                                                        $addressP = \App\Models\Province::where(
-                                                            'id',
-                                                            $array[1] ?? null,
-                                                        )->first();
-                                                        $addressD = \App\Models\District::where(
-                                                            'id',
-                                                            $array[2] ?? null,
-                                                        )->first();
-                                                        $addressC = \App\Models\Commune::where(
-                                                            'id',
-                                                            $array[3] ?? null,
-                                                        )->first();
-                                                    @endphp
-                                                    <div>{{ $pharmacy->address_detail }}
-                                                        , {{ $addressC->name ?? '' }} , {{ $addressD->name ?? '' }}
-                                                        , {{ $addressP->name ?? '' }}</div>
-                                                </div>
-                                                <span class="pharmacyDistanceSpan">
-                                                    <p class="lat">{{ $pharmacy->latitude }}</p>
-                                                    <p class="long">{{ $pharmacy->longitude }}</p>
-                                                </span>
-                                            </div>
-                                            <div class="time-working">
-                                                <span class="color-timeWorking">
-                                                    <span
-                                                        class="fs-14 font-weight-600">{{ \Carbon\Carbon::parse($pharmacy->open_date)->format('H:i') }}
-                                                        -
-                                                        {{ \Carbon\Carbon::parse($pharmacy->close_date)->format('H:i') }}</span>
-                                                    {{--                                                09:00 - 19:00 --}}
-                                                </span>
-                                                <span>
-                                                    / {{ __('home.Dental Clinic') }}
-                                                </span>
-                                            </div>
-                                            <a href="https://www.google.com/maps?q={{$pharmacy->latitude}},{{$pharmacy->longitude}}" class="search-way" target="_blank">Chỉ đường</a>
-                                            <div class="group-button d-flex mt-3">
-                                                <a href="" class="col-md-6 item-btn-specialist">
-                                                    <div class="button-booking-specialList line-dk-btn">
-                                                        {{ __('home.Đặt khám') }}
-                                                    </div>
-                                                </a>
-                                                <a href="{{route('home.specialist.detail', $pharmacy->id)}}" class="col-md-6 item-btn-specialist">
-                                                    <div class="button-detail-specialList">
-                                                        {{ __('home.Xem chi tiết') }}
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
+                        <div id="allAddressesMapPharmacies" class="show active fade" style="height: 800px;">
+
+                        </div>
+{{--                        @foreach ($pharmacies as $pharmacy)--}}
+{{--                            <div class="specialList-clinics col-md-6 mt-5" data-pharmacy-id="{{ $pharmacy->id }}">--}}
+{{--                                <div class="border-specialList">--}}
+{{--                                    <div class="content__item d-flex gap-3 box-item__content">--}}
+{{--                                        <div class="specialList-clinics--img img-special-line">--}}
+{{--                                            @php--}}
+{{--                                                $galleryArray = explode(',', $pharmacy->gallery);--}}
+{{--                                            @endphp--}}
+{{--                                            <img class="content__item__image" src="{{ $galleryArray[0] }}"--}}
+{{--                                                alt="" />--}}
+{{--                                        </div>--}}
+{{--                                        <div class="specialList-clinics--main w-100">--}}
+{{--                                            <div class="title-specialList-clinics">--}}
+{{--                                                {{ $pharmacy->name }}--}}
+{{--                                            </div>--}}
+{{--                                            <div class="address-specialList-clinics d-flex align-items-center">--}}
+{{--                                                <div class="d-flex">--}}
+{{--                                                    <i class="fas fa-map-marker-alt mr-2"></i>--}}
+{{--                                                    @php--}}
+{{--                                                        $array = explode(',', $pharmacy->address);--}}
+{{--                                                        $addressP = \App\Models\Province::where(--}}
+{{--                                                            'id',--}}
+{{--                                                            $array[1] ?? null,--}}
+{{--                                                        )->first();--}}
+{{--                                                        $addressD = \App\Models\District::where(--}}
+{{--                                                            'id',--}}
+{{--                                                            $array[2] ?? null,--}}
+{{--                                                        )->first();--}}
+{{--                                                        $addressC = \App\Models\Commune::where(--}}
+{{--                                                            'id',--}}
+{{--                                                            $array[3] ?? null,--}}
+{{--                                                        )->first();--}}
+{{--                                                    @endphp--}}
+{{--                                                    <div>{{ $pharmacy->address_detail }}--}}
+{{--                                                        , {{ $addressC->name ?? '' }} , {{ $addressD->name ?? '' }}--}}
+{{--                                                        , {{ $addressP->name ?? '' }}</div>--}}
+{{--                                                </div>--}}
+{{--                                                <span class="pharmacyDistanceSpan">--}}
+{{--                                                    <p class="lat">{{ $pharmacy->latitude }}</p>--}}
+{{--                                                    <p class="long">{{ $pharmacy->longitude }}</p>--}}
+{{--                                                </span>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="time-working">--}}
+{{--                                                <span class="color-timeWorking">--}}
+{{--                                                    <span--}}
+{{--                                                        class="fs-14 font-weight-600">{{ \Carbon\Carbon::parse($pharmacy->open_date)->format('H:i') }}--}}
+{{--                                                        ---}}
+{{--                                                        {{ \Carbon\Carbon::parse($pharmacy->close_date)->format('H:i') }}</span>--}}
+{{--                                                    --}}{{--                                                09:00 - 19:00 --}}
+{{--                                                </span>--}}
+{{--                                                <span>--}}
+{{--                                                    / {{ __('home.Dental Clinic') }}--}}
+{{--                                                </span>--}}
+{{--                                            </div>--}}
+{{--                                            <a href="https://www.google.com/maps?q={{$pharmacy->latitude}},{{$pharmacy->longitude}}" class="search-way" target="_blank">Chỉ đường</a>--}}
+{{--                                            <div class="group-button d-flex mt-3">--}}
+{{--                                                <a href="" class="col-md-6 item-btn-specialist">--}}
+{{--                                                    <div class="button-booking-specialList line-dk-btn">--}}
+{{--                                                        {{ __('home.Đặt khám') }}--}}
+{{--                                                    </div>--}}
+{{--                                                </a>--}}
+{{--                                                <a href="{{route('home.specialist.detail', $pharmacy->id)}}" class="col-md-6 item-btn-specialist">--}}
+{{--                                                    <div class="button-detail-specialList">--}}
+{{--                                                        {{ __('home.Xem chi tiết') }}--}}
+{{--                                                    </div>--}}
+{{--                                                </a>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        @endforeach--}}
                     </div>
                 </div>
 
@@ -297,45 +303,63 @@
     </div>
     <script>
         $(document).ready(function() {
-            var clinics = {!! json_encode($clinics) !!};
+            {{--var clinics = {!! json_encode($clinics) !!};--}}
 
-            var pharmacies = {!! json_encode($pharmacies) !!};
+            {{--var pharmacies = {!! json_encode($pharmacies) !!};--}}
 
-            for (var i = 0; i < clinics.length; i++) {
-                (function() {
-                    var clinic = clinics[i];
-                    var distanceSpan = $('.specialList-clinics[data-clinic-id="' + clinic.id + '"]').find(
-                        '.clinicDistanceSpan');
-                    var latitude = distanceSpan.find('.lat').text();
-                    var longitude = distanceSpan.find('.long').text();
+            {{--for (var i = 0; i < clinics.length; i++) {--}}
+            {{--    (function() {--}}
+            {{--        var clinic = clinics[i];--}}
+            {{--        var distanceSpan = $('.specialList-clinics[data-clinic-id="' + clinic.id + '"]').find(--}}
+            {{--            '.clinicDistanceSpan');--}}
+            {{--        var latitude = distanceSpan.find('.lat').text();--}}
+            {{--        var longitude = distanceSpan.find('.long').text();--}}
 
-                    getCurrentLocation(function(currentLocation) {
-                        var newDistance = calculateDistance(currentLocation.lat, currentLocation.lng,
-                            parseFloat(latitude), parseFloat(longitude));
+            {{--        getCurrentLocation(function(currentLocation) {--}}
+            {{--            var newDistance = calculateDistance(currentLocation.lat, currentLocation.lng,--}}
+            {{--                parseFloat(latitude), parseFloat(longitude));--}}
 
-                        distanceSpan.text(newDistance.toFixed(2) + 'Km');
-                    });
-                })();
-            }
+            {{--            distanceSpan.text(newDistance.toFixed(2) + 'Km');--}}
+            {{--        });--}}
+            {{--    })();--}}
+            {{--}--}}
 
-            for (var i = 0; i < pharmacies.length; i++) {
-                (function() {
-                    var clinic = pharmacies[i];
-                    var distanceSpan = $('.specialList-clinics[data-pharmacy-id="' + clinic.id + '"]').find(
-                        '.pharmacyDistanceSpan');
-                    var latitude = distanceSpan.find('.lat').text();
-                    var longitude = distanceSpan.find('.long').text();
+            {{--for (var i = 0; i < pharmacies.length; i++) {--}}
+            {{--    (function() {--}}
+            {{--        var clinic = pharmacies[i];--}}
+            {{--        var distanceSpan = $('.specialList-clinics[data-pharmacy-id="' + clinic.id + '"]').find(--}}
+            {{--            '.pharmacyDistanceSpan');--}}
+            {{--        var latitude = distanceSpan.find('.lat').text();--}}
+            {{--        var longitude = distanceSpan.find('.long').text();--}}
 
-                    getCurrentLocation(function(currentLocation) {
-                        var newDistance = calculateDistance(currentLocation.lat, currentLocation.lng,
-                            parseFloat(latitude), parseFloat(longitude));
+            {{--        getCurrentLocation(function(currentLocation) {--}}
+            {{--            var newDistance = calculateDistance(currentLocation.lat, currentLocation.lng,--}}
+            {{--                parseFloat(latitude), parseFloat(longitude));--}}
 
-                        distanceSpan.text(newDistance.toFixed(2) + 'Km');
-                    });
-                })();
-            }
+            {{--            distanceSpan.text(newDistance.toFixed(2) + 'Km');--}}
+            {{--        });--}}
+            {{--    })();--}}
+            {{--}--}}
+
+            var locations = {!! json_encode($clinics) !!};
+            var locationsPharmacies = {!! json_encode($pharmacies) !!};
+            var infoWindows = [];
 
             function getCurrentLocation(callback) {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        var currentLocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        callback(currentLocation);
+                    });
+                } else {
+                    alert('Geolocation is not supported by this browser.');
+                }
+            }
+
+            function getCurrentLocationPharmacies(callback) {
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(function(position) {
                         var currentLocation = {
@@ -367,6 +391,341 @@
             function toRadians(degrees) {
                 return degrees * (Math.PI / 180);
             }
+
+            function formatTime(dateTimeString) {
+                const date = new Date(dateTimeString);
+                const hours = date.getHours().toString().padStart(2, '0');
+                const minutes = date.getMinutes().toString().padStart(2, '0');
+                return `${hours}:${minutes}`;
+            }
+
+            function initMap(currentLocation, locations) {
+                var map = new google.maps.Map(document.getElementById('allAddressesMap'), {
+                    center: currentLocation,
+                    zoom: 12.3
+                });
+
+                var currentLocationMarker = new google.maps.Marker({
+                    position: currentLocation,
+                    map: map,
+                    title: 'Your Location'
+                });
+
+                locations.forEach(function (location) {
+                    var distance = calculateDistance(
+                        currentLocation.lat, currentLocation.lng,
+                        parseFloat(location.latitude), parseFloat(location.longitude)
+                    );
+
+                    // Chọn bán kính tìm kiếm (ví dụ: 5 km)
+                    var searchRadius = 10;
+
+                    if (distance <= searchRadius) {
+                        var marker = new google.maps.Marker({
+                            position: {lat: parseFloat(location.latitude), lng: parseFloat(location.longitude)},
+                            map: map,
+                            title: 'Location'
+                        });
+                        var urlDetail = "{{ route('clinic.detail', ['id' => ':id']) }}".replace(':id', location.id);
+                        let img = '';
+                        let gallery = location.gallery;
+                        let arrayGallery = gallery.split(',');
+
+
+                        var infoWindowContent = `<div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
+                <div>
+
+                    <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img">
+                </div>
+                <div class="p-md-3 p-2">
+                    <div class="form-group">
+                        <div class="d-flex justify-content-between mt-md-2">
+                            <div class="fs-18px">${location.name}</div>
+                            <div class="button-follow fs-12p ">
+                                <a class="text-follow-12" href="">{{ __('home.FOLLOW') }}</a>
+                            </div>
+                        </div>
+                        <div class="d-flex mt-md-2">
+                            <div class="d-flex col-md-6 justify-content-center align-items-center">
+                                <a class="row p-2" href="">
+                                    <div class="justify-content-center d-flex">
+                                        <i class="border-button-address fa-solid fa-bullseye"></i>
+                                    </div>
+                                    <div class="d-flex justify-content-center">{{ __('home.Start') }}</div>
+                                </a>
+                            </div>
+                            <div class="d-flex col-md-6 justify-content-center align-items-center">
+                                <a class="row p-2" href="">
+                                    <div class="justify-content-center d-flex">
+                                        <i class="border-button-address fa-regular fa-circle-right"></i>
+                                    </div>
+                                    <div class="d-flex justify-content-center">{{ __('home.Direction') }}</div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-md-3 mb-md-3">
+                    <a class="w-100 btn btn-secondary border-button-address font-weight-800 fs-14 justify-content-center" href="${urlDetail}" >
+                    {{ __('home.Booking') }}
+                        </a>
+                        </div>
+                        <div class="border-top">
+                            <div class="mt-md-2 mt-1"><i class="text-gray mr-md-2 fa-solid fa-location-dot"></i>
+                                <span class="fs-14 font-weight-600">${location.address_detail}</span>
+                        </div>
+                        <div class="mt-md-2 mt-1">
+                            <i class="text-gray mr-md-2 fa-regular fa-clock"></i>
+                            <span class="fs-14 font-weight-600">
+                                Open: ${formatTime(location.open_date)} - ${formatTime(location.close_date)}
+                            </span>
+                        </div>
+                        <div class="mt-md-2 mt-1">
+                            <i class="text-gray mr-md-2 fa-solid fa-globe"></i>
+                            <span class="fs-14 font-weight-600"> ${location.email}</span>
+                        </div>
+                        <div class="mt-md-2 mt-1">
+                            <i class="text-gray mr-md-2 fa-solid fa-phone-volume"></i> <span
+                                class="fs-14 font-weight-600"> ${location.phone}</span>
+                        </div>
+                        <div class="mt-md-2 mt-1 mb-md-2">
+                            <i class="text-gray mr-md-2 fa-solid fa-bookmark"></i> <span
+                                class="fs-14 font-weight-600"> ${location.type}</span>
+                        </div>
+                        @for($i=0; $i<3; $i++)
+                        <div class="border-top mb-md-2">
+                            <div
+                                class="d-flex justify-content-between rv-header align-items-center mt-md-2 mt-1">
+                                <div class="d-flex rv-header--left">
+                                    <div class="avt-24 mr-md-2">
+                                        <img loading="lazy" src="{{asset('img/detail_doctor/ellipse _14.png')}}">
+                                        </div>
+                                        <p class="fs-16px">Trần Đình Phi</p>
+                                    </div>
+                                    <div class="rv-header--right">
+                                        <p class="fs-14 font-weight-400">10:20 07/04/2023</p>
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    <p>
+                                        {{ __('home.Lần đầu tiên sử dụng dịch vụ qua app nhưng chất lượng và dịch vụ tại salon quá tốt. Book giờ nào thì cứ đúng giờ đến k sợ phải chờ đợi như mọi chỗ khác. Hy vọng thi thoảng app có nhiều ưu đãi để giới thiệu cho bạn bè cùng sử dụng') }}
+                        </p>
+                    </div>
+                </div>
+@endfor
+                        <div class="border-top">
+                            <div
+                                class="d-flex justify-content-between rv-header align-items-center mt-md-2 mt-1">
+                                <div class="d-flex rv-header--left">
+                                    <div class="avt-24 mr-md-2">
+                                        <img loading="lazy" src="{{asset('img/detail_doctor/ellipse _14.png')}}">
+                                    </div>
+                                    <p class="fs-16px">Trần Đình Phi</p>
+                                </div>
+                                <div class="rv-header--right">
+                                    <p class="fs-14 font-weight-400">10:20 07/04/2023</p>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <p>
+                                    {{ __('home.Lần đầu tiên sử dụng dịch vụ qua app nhưng chất lượng và dịch vụ tại salon quá tốt. Book giờ nào thì cứ đúng giờ đến k sợ phải chờ đợi như mọi chỗ khác. Hy vọng thi thoảng app có nhiều ưu đãi để giới thiệu cho bạn bè cùng sử dụng') }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>`;
+
+                        var infoWindow = new google.maps.InfoWindow({
+                            content: infoWindowContent
+                        });
+
+                        marker.addListener('click', function () {
+                            closeAllInfoWindows();
+                            infoWindow.open(map, marker);
+                        });
+
+                        infoWindows.push(infoWindow);
+                    }
+                });
+            }
+
+            function initMapPharmacies(currentLocation, locationsPharmacies) {
+                var map2 = new google.maps.Map(document.getElementById('allAddressesMapPharmacies'), {
+                    center: currentLocation,
+                    zoom: 12.3
+                });
+
+                var currentLocationMarker = new google.maps.Marker({
+                    position: currentLocation,
+                    map: map2,
+                    title: 'Your Location'
+                });
+
+                locationsPharmacies.forEach(function (locationsPharmacies) {
+                    var distance = calculateDistance(
+                        currentLocation.lat, currentLocation.lng,
+                        parseFloat(locationsPharmacies.latitude), parseFloat(locationsPharmacies.longitude)
+                    );
+
+                    // Chọn bán kính tìm kiếm (ví dụ: 5 km)
+                    var searchRadius = 10;
+
+                    if (distance <= searchRadius) {
+                        var markerPharmacies = new google.maps.Marker({
+                            position: {lat: parseFloat(locationsPharmacies.latitude), lng: parseFloat(locationsPharmacies.longitude)},
+                            map: map2,
+                            title: 'Location'
+                        });
+                        var urlDetail = "{{ route('clinic.detail', ['id' => ':id']) }}".replace(':id', locationsPharmacies.id);
+                        let img = '';
+                        let gallery = locationsPharmacies.gallery;
+                        let arrayGallery = gallery.split(',');
+
+
+                        var infoWindowContent = `<div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
+                <div>
+
+                    <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img">
+                </div>
+                <div class="p-md-3 p-2">
+                    <div class="form-group">
+                        <div class="d-flex justify-content-between mt-md-2">
+                            <div class="fs-18px">${locationsPharmacies.name}</div>
+                            <div class="button-follow fs-12p ">
+                                <a class="text-follow-12" href="">{{ __('home.FOLLOW') }}</a>
+                            </div>
+                        </div>
+                        <div class="d-flex mt-md-2">
+                            <div class="d-flex col-md-6 justify-content-center align-items-center">
+                                <a class="row p-2" href="">
+                                    <div class="justify-content-center d-flex">
+                                        <i class="border-button-address fa-solid fa-bullseye"></i>
+                                    </div>
+                                    <div class="d-flex justify-content-center">{{ __('home.Start') }}</div>
+                                </a>
+                            </div>
+                            <div class="d-flex col-md-6 justify-content-center align-items-center">
+                                <a class="row p-2" href="">
+                                    <div class="justify-content-center d-flex">
+                                        <i class="border-button-address fa-regular fa-circle-right"></i>
+                                    </div>
+                                    <div class="d-flex justify-content-center">{{ __('home.Direction') }}</div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-md-3 mb-md-3">
+                    <a class="w-100 btn btn-secondary border-button-address font-weight-800 fs-14 justify-content-center" href="${urlDetail}" >
+                    {{ __('home.Booking') }}
+                        </a>
+                        </div>
+                        <div class="border-top">
+                            <div class="mt-md-2 mt-1"><i class="text-gray mr-md-2 fa-solid fa-location-dot"></i>
+                                <span class="fs-14 font-weight-600">${locationsPharmacies.address_detail}</span>
+                        </div>
+                        <div class="mt-md-2 mt-1">
+                            <i class="text-gray mr-md-2 fa-regular fa-clock"></i>
+                            <span class="fs-14 font-weight-600">
+                                Open: ${formatTime(locationsPharmacies.open_date)} - ${formatTime(locationsPharmacies.close_date)}
+                            </span>
+                        </div>
+                        <div class="mt-md-2 mt-1">
+                            <i class="text-gray mr-md-2 fa-solid fa-globe"></i>
+                            <span class="fs-14 font-weight-600"> ${locationsPharmacies.email}</span>
+                        </div>
+                        <div class="mt-md-2 mt-1">
+                            <i class="text-gray mr-md-2 fa-solid fa-phone-volume"></i> <span
+                                class="fs-14 font-weight-600"> ${locationsPharmacies.phone}</span>
+                        </div>
+                        <div class="mt-md-2 mt-1 mb-md-2">
+                            <i class="text-gray mr-md-2 fa-solid fa-bookmark"></i> <span
+                                class="fs-14 font-weight-600"> ${locationsPharmacies.type}</span>
+                        </div>
+                        @for($i=0; $i<3; $i++)
+                        <div class="border-top mb-md-2">
+                            <div
+                                class="d-flex justify-content-between rv-header align-items-center mt-md-2 mt-1">
+                                <div class="d-flex rv-header--left">
+                                    <div class="avt-24 mr-md-2">
+                                        <img loading="lazy" src="{{asset('img/detail_doctor/ellipse _14.png')}}">
+                                        </div>
+                                        <p class="fs-16px">Trần Đình Phi</p>
+                                    </div>
+                                    <div class="rv-header--right">
+                                        <p class="fs-14 font-weight-400">10:20 07/04/2023</p>
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    <p>
+                                        {{ __('home.Lần đầu tiên sử dụng dịch vụ qua app nhưng chất lượng và dịch vụ tại salon quá tốt. Book giờ nào thì cứ đúng giờ đến k sợ phải chờ đợi như mọi chỗ khác. Hy vọng thi thoảng app có nhiều ưu đãi để giới thiệu cho bạn bè cùng sử dụng') }}
+                        </p>
+                    </div>
+                </div>
+@endfor
+                        <div class="border-top">
+                            <div
+                                class="d-flex justify-content-between rv-header align-items-center mt-md-2 mt-1">
+                                <div class="d-flex rv-header--left">
+                                    <div class="avt-24 mr-md-2">
+                                        <img loading="lazy" src="{{asset('img/detail_doctor/ellipse _14.png')}}">
+                                    </div>
+                                    <p class="fs-16px">Trần Đình Phi</p>
+                                </div>
+                                <div class="rv-header--right">
+                                    <p class="fs-14 font-weight-400">10:20 07/04/2023</p>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <p>
+                                    {{ __('home.Lần đầu tiên sử dụng dịch vụ qua app nhưng chất lượng và dịch vụ tại salon quá tốt. Book giờ nào thì cứ đúng giờ đến k sợ phải chờ đợi như mọi chỗ khác. Hy vọng thi thoảng app có nhiều ưu đãi để giới thiệu cho bạn bè cùng sử dụng') }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>`;
+
+                        var infoWindow2 = new google.maps.InfoWindow({
+                            content: infoWindowContent
+                        });
+
+                        markerPharmacies.addListener('click', function () {
+                            closeAllInfoWindows();
+                            infoWindow2.open(map2, markerPharmacies);
+                        });
+
+                        infoWindows.push(infoWindow2);
+                    }
+                });
+            }
+
+            function closeAllInfoWindows() {
+                infoWindows.forEach(function(infoWindow) {
+                    infoWindow.open();
+                });
+            }
+
+            getCurrentLocation(function(currentLocation) {
+                initMap(currentLocation, locations);
+            });
+
+            getCurrentLocationPharmacies(function(currentLocation) {
+                initMapPharmacies(currentLocation, locationsPharmacies);
+            });
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const departmentLinks = document.querySelectorAll('.department-link');
+
+                departmentLinks.forEach(link => {
+                    link.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        const departmentId = this.getAttribute('data-id');
+                        localStorage.setItem('departmentId', departmentId);
+                        window.location.href = this.href;
+                    });
+                });
+            });
+
         });
     </script>
 @endsection

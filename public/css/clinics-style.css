@@ -1,7 +1,8 @@
 .background-image_Clinics {
   background: url(../img/homeNew-img/background/image_31.png) no-repeat;
   background-size: 100%;
-  min-height: 900px;
+  /*min-height: 900px;*/
+    margin-top: 158px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,6 +16,7 @@
   font-style: normal;
   font-weight: 800;
   line-height: normal;
+    margin-top: 50px;
 }
 .background-image_Clinics .container .border-search-clinics {
   position: relative;
@@ -25,6 +27,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 16px;
+    margin-bottom: 50px;
 }
 .background-image_Clinics .container .border-search-clinics .label-input-clinic {
   position: absolute;
