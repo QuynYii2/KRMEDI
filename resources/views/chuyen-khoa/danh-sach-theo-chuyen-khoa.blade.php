@@ -46,162 +46,168 @@
             </div>
             <div class="tab-content mt-4" id="myTabContent">
                 <div class="tab-pane fade show active" id="clinicList" role="tabpanel" aria-labelledby="clinicList-tab">
-                    <div class="row">
+                    <div class="box-list-clinic-address">
+                        <div class="body row" id="productInformation">
+                            @foreach ($clinics as $clinic)
+                                <div class="specialList-clinics col-lg-12 col-md-6 mb-3" data-clinic-id="{{ $clinic->id }}">
+                                    <div class="border-specialList">
+                                        <div class="content__item d-flex gap-3 box-item__content">
+                                            <div class="specialList-clinics--img img-special-line">
+                                                @php
+                                                    $galleryArray = explode(',', $clinic->gallery);
+                                                @endphp
+                                                <img class="content__item__image" src="{{ $galleryArray[0] }}" alt="" />
+                                            </div>
+                                            <div class="specialList-clinics--main w-100">
+                                                <div class="title-specialList-clinics">
+                                                    {{ $clinic->name }}
+                                                </div>
+                                                <div class="address-specialList-clinics d-flex align-items-center">
+                                                    @php
+                                                        $array = explode(',', $clinic->address);
+                                                        $addressP = \App\Models\Province::where(
+                                                            'id',
+                                                            $array[1] ?? null,
+                                                        )->first();
+                                                        $addressD = \App\Models\District::where(
+                                                            'id',
+                                                            $array[2] ?? null,
+                                                        )->first();
+                                                        $addressC = \App\Models\Commune::where(
+                                                            'id',
+                                                            $array[3] ?? null,
+                                                        )->first();
+                                                    @endphp
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="fas fa-map-marker-alt mr-2"></i>
+                                                        <div class="text-address">{{ $clinic->address_detail }}
+                                                            , {{ $addressC->name ?? '' }} , {{ $addressD->name ?? '' }}
+                                                            , {{ $addressP->name ?? '' }}</div>
+                                                    </div>
+                                                    <span class="clinicDistanceSpan">
+                                                    <p class="lat">{{ $clinic->latitude }}</p>
+                                                    <p class="long">{{ $clinic->longitude }}</p>
+                                                </span>
+                                                </div>
+                                                <div class="time-working justify-content-between mt-0">
+                                                    <div style="display: inline-block">
+                                                <span class="color-timeWorking">
+                                                    <span
+                                                        class="fs-14 font-weight-600">{{ \Carbon\Carbon::parse($clinic->open_date)->format('H:i') }}
+                                                        -
+                                                        {{ \Carbon\Carbon::parse($clinic->close_date)->format('H:i') }}</span>
+                                                </span>
+                                                    <span>
+                                                    / {{ __('home.Dental Clinic') }}
+                                                </span>
+                                                    </div>
+                                                    <a href="https://www.google.com/maps?q={{$clinic->latitude}},{{$clinic->longitude}}" class="search-way" target="_blank">Chỉ đường</a>
+                                                </div>
+                                                <div class="group-button d-flex mt-3">
+                                                    <a href="{{ route('home.specialist.booking.detail', $clinic->id) }}"
+                                                       class="col-md-6 item-btn-specialist">
+                                                        <div class="button-booking-specialList line-dk-btn">
+                                                            {{ __('home.Đặt khám') }}
+                                                        </div>
+                                                    </a>
+                                                    <a href="{{ route('home.specialist.detail', $clinic->id) }}"
+                                                       class="col-md-6 item-btn-specialist">
+                                                        <div class="button-detail-specialList">
+                                                            {{ __('home.Xem chi tiết') }}
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
                         <div id="allAddressesMap" class="show active fade" style="height: 800px;">
 
                         </div>
-{{--                        @foreach ($clinics as $clinic)--}}
-{{--                            <div class="specialList-clinics col-md-6 col-12 mt-5" data-clinic-id="{{ $clinic->id }}">--}}
-{{--                                <div class="border-specialList">--}}
-{{--                                    <div class="content__item d-flex gap-3 box-item__content">--}}
-{{--                                        <div class="specialList-clinics--img img-special-line">--}}
-{{--                                            @php--}}
-{{--                                                $galleryArray = explode(',', $clinic->gallery);--}}
-{{--                                            @endphp--}}
-{{--                                            <img class="content__item__image" src="{{ $galleryArray[0] }}" alt="" />--}}
-{{--                                        </div>--}}
-{{--                                        <div class="specialList-clinics--main w-100">--}}
-{{--                                            <div class="title-specialList-clinics">--}}
-{{--                                                {{ $clinic->name }}--}}
-{{--                                            </div>--}}
-{{--                                            <div class="address-specialList-clinics d-flex align-items-center">--}}
-{{--                                                @php--}}
-{{--                                                    $array = explode(',', $clinic->address);--}}
-{{--                                                    $addressP = \App\Models\Province::where(--}}
-{{--                                                        'id',--}}
-{{--                                                        $array[1] ?? null,--}}
-{{--                                                    )->first();--}}
-{{--                                                    $addressD = \App\Models\District::where(--}}
-{{--                                                        'id',--}}
-{{--                                                        $array[2] ?? null,--}}
-{{--                                                    )->first();--}}
-{{--                                                    $addressC = \App\Models\Commune::where(--}}
-{{--                                                        'id',--}}
-{{--                                                        $array[3] ?? null,--}}
-{{--                                                    )->first();--}}
-{{--                                                @endphp--}}
-{{--                                                <div class="d-flex align-items-center">--}}
-{{--                                                    <i class="fas fa-map-marker-alt mr-2"></i>--}}
-{{--                                                    <div class="text-address">{{ $clinic->address_detail }}--}}
-{{--                                                        , {{ $addressC->name ?? '' }} , {{ $addressD->name ?? '' }}--}}
-{{--                                                        , {{ $addressP->name ?? '' }}</div>--}}
-{{--                                                </div>--}}
-{{--                                                <span class="clinicDistanceSpan">--}}
-{{--                                                    <p class="lat">{{ $clinic->latitude }}</p>--}}
-{{--                                                    <p class="long">{{ $clinic->longitude }}</p>--}}
-{{--                                                </span>--}}
-{{--                                            </div>--}}
-{{--                                            <div class="time-working">--}}
-{{--                                                <span class="color-timeWorking">--}}
-{{--                                                    <span--}}
-{{--                                                        class="fs-14 font-weight-600">{{ \Carbon\Carbon::parse($clinic->open_date)->format('H:i') }}--}}
-{{--                                                        ---}}
-{{--                                                        {{ \Carbon\Carbon::parse($clinic->close_date)->format('H:i') }}</span>--}}
-{{--                                                </span>--}}
-{{--                                                <span>--}}
-{{--                                                    / {{ __('home.Dental Clinic') }}--}}
-{{--                                                </span>--}}
-{{--                                            </div>--}}
-{{--                                            <a href="https://www.google.com/maps?q={{$clinic->latitude}},{{$clinic->longitude}}" class="search-way" target="_blank">Chỉ đường</a>--}}
-{{--                                            <div class="group-button d-flex mt-3">--}}
-{{--                                                <a href="{{ route('home.specialist.booking.detail', $clinic->id) }}"--}}
-{{--                                                    class="col-md-6 item-btn-specialist">--}}
-{{--                                                    <div class="button-booking-specialList line-dk-btn">--}}
-{{--                                                        {{ __('home.Đặt khám') }}--}}
-{{--                                                    </div>--}}
-{{--                                                </a>--}}
-{{--                                                <a href="{{ route('home.specialist.detail', $clinic->id) }}"--}}
-{{--                                                    class="col-md-6 item-btn-specialist">--}}
-{{--                                                    <div class="button-detail-specialList">--}}
-{{--                                                        {{ __('home.Xem chi tiết') }}--}}
-{{--                                                    </div>--}}
-{{--                                                </a>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        @endforeach--}}
                     </div>
                 </div>
 
                 <div class="tab-pane fade" id="pharmacies" role="tabpanel" aria-labelledby="pharmacies-tab">
-                    <div class="row">
+                    <div class="box-list-clinic-address">
+                        <div class="body row" id="productInformation">
+                            @foreach ($pharmacies as $pharmacy)
+                                <div class="specialList-clinics col-lg-12 col-md-6 mb-3" data-pharmacy-id="{{ $pharmacy->id }}">
+                                    <div class="border-specialList">
+                                        <div class="content__item d-flex gap-3 box-item__content">
+                                            <div class="specialList-clinics--img img-special-line">
+                                                @php
+                                                    $galleryArray = explode(',', $pharmacy->gallery);
+                                                @endphp
+                                                <img class="content__item__image" src="{{ $galleryArray[0] }}"
+                                                     alt="" />
+                                            </div>
+                                            <div class="specialList-clinics--main w-100">
+                                                <div class="title-specialList-clinics">
+                                                    {{ $pharmacy->name }}
+                                                </div>
+                                                <div class="address-specialList-clinics d-flex align-items-center">
+                                                    <div class="d-flex">
+                                                        <i class="fas fa-map-marker-alt mr-2"></i>
+                                                        @php
+                                                            $array = explode(',', $pharmacy->address);
+                                                            $addressP = \App\Models\Province::where(
+                                                                'id',
+                                                                $array[1] ?? null,
+                                                            )->first();
+                                                            $addressD = \App\Models\District::where(
+                                                                'id',
+                                                                $array[2] ?? null,
+                                                            )->first();
+                                                            $addressC = \App\Models\Commune::where(
+                                                                'id',
+                                                                $array[3] ?? null,
+                                                            )->first();
+                                                        @endphp
+                                                        <div>{{ $pharmacy->address_detail }}
+                                                            , {{ $addressC->name ?? '' }} , {{ $addressD->name ?? '' }}
+                                                            , {{ $addressP->name ?? '' }}</div>
+                                                    </div>
+                                                    <span class="pharmacyDistanceSpan">
+                                                    <p class="lat">{{ $pharmacy->latitude }}</p>
+                                                    <p class="long">{{ $pharmacy->longitude }}</p>
+                                                </span>
+                                                </div>
+                                                <div class="time-working">
+                                                <span class="color-timeWorking">
+                                                    <span
+                                                        class="fs-14 font-weight-600">{{ \Carbon\Carbon::parse($pharmacy->open_date)->format('H:i') }}
+                                                        -
+                                                        {{ \Carbon\Carbon::parse($pharmacy->close_date)->format('H:i') }}</span>
+                                                                                                    09:00 - 19:00
+                                                </span>
+                                                    <span>
+                                                    / {{ __('home.Dental Clinic') }}
+                                                </span>
+                                                </div>
+                                                <a href="https://www.google.com/maps?q={{$pharmacy->latitude}},{{$pharmacy->longitude}}" class="search-way" target="_blank">Chỉ đường</a>
+                                                <div class="group-button d-flex mt-3">
+                                                    <a href="" class="col-md-6 item-btn-specialist">
+                                                        <div class="button-booking-specialList line-dk-btn">
+                                                            {{ __('home.Đặt khám') }}
+                                                        </div>
+                                                    </a>
+                                                    <a href="{{route('home.specialist.detail', $pharmacy->id)}}" class="col-md-6 item-btn-specialist">
+                                                        <div class="button-detail-specialList">
+                                                            {{ __('home.Xem chi tiết') }}
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
                         <div id="allAddressesMapPharmacies" class="show active fade" style="height: 800px;">
 
                         </div>
-{{--                        @foreach ($pharmacies as $pharmacy)--}}
-{{--                            <div class="specialList-clinics col-md-6 mt-5" data-pharmacy-id="{{ $pharmacy->id }}">--}}
-{{--                                <div class="border-specialList">--}}
-{{--                                    <div class="content__item d-flex gap-3 box-item__content">--}}
-{{--                                        <div class="specialList-clinics--img img-special-line">--}}
-{{--                                            @php--}}
-{{--                                                $galleryArray = explode(',', $pharmacy->gallery);--}}
-{{--                                            @endphp--}}
-{{--                                            <img class="content__item__image" src="{{ $galleryArray[0] }}"--}}
-{{--                                                alt="" />--}}
-{{--                                        </div>--}}
-{{--                                        <div class="specialList-clinics--main w-100">--}}
-{{--                                            <div class="title-specialList-clinics">--}}
-{{--                                                {{ $pharmacy->name }}--}}
-{{--                                            </div>--}}
-{{--                                            <div class="address-specialList-clinics d-flex align-items-center">--}}
-{{--                                                <div class="d-flex">--}}
-{{--                                                    <i class="fas fa-map-marker-alt mr-2"></i>--}}
-{{--                                                    @php--}}
-{{--                                                        $array = explode(',', $pharmacy->address);--}}
-{{--                                                        $addressP = \App\Models\Province::where(--}}
-{{--                                                            'id',--}}
-{{--                                                            $array[1] ?? null,--}}
-{{--                                                        )->first();--}}
-{{--                                                        $addressD = \App\Models\District::where(--}}
-{{--                                                            'id',--}}
-{{--                                                            $array[2] ?? null,--}}
-{{--                                                        )->first();--}}
-{{--                                                        $addressC = \App\Models\Commune::where(--}}
-{{--                                                            'id',--}}
-{{--                                                            $array[3] ?? null,--}}
-{{--                                                        )->first();--}}
-{{--                                                    @endphp--}}
-{{--                                                    <div>{{ $pharmacy->address_detail }}--}}
-{{--                                                        , {{ $addressC->name ?? '' }} , {{ $addressD->name ?? '' }}--}}
-{{--                                                        , {{ $addressP->name ?? '' }}</div>--}}
-{{--                                                </div>--}}
-{{--                                                <span class="pharmacyDistanceSpan">--}}
-{{--                                                    <p class="lat">{{ $pharmacy->latitude }}</p>--}}
-{{--                                                    <p class="long">{{ $pharmacy->longitude }}</p>--}}
-{{--                                                </span>--}}
-{{--                                            </div>--}}
-{{--                                            <div class="time-working">--}}
-{{--                                                <span class="color-timeWorking">--}}
-{{--                                                    <span--}}
-{{--                                                        class="fs-14 font-weight-600">{{ \Carbon\Carbon::parse($pharmacy->open_date)->format('H:i') }}--}}
-{{--                                                        ---}}
-{{--                                                        {{ \Carbon\Carbon::parse($pharmacy->close_date)->format('H:i') }}</span>--}}
-{{--                                                    --}}{{--                                                09:00 - 19:00 --}}
-{{--                                                </span>--}}
-{{--                                                <span>--}}
-{{--                                                    / {{ __('home.Dental Clinic') }}--}}
-{{--                                                </span>--}}
-{{--                                            </div>--}}
-{{--                                            <a href="https://www.google.com/maps?q={{$pharmacy->latitude}},{{$pharmacy->longitude}}" class="search-way" target="_blank">Chỉ đường</a>--}}
-{{--                                            <div class="group-button d-flex mt-3">--}}
-{{--                                                <a href="" class="col-md-6 item-btn-specialist">--}}
-{{--                                                    <div class="button-booking-specialList line-dk-btn">--}}
-{{--                                                        {{ __('home.Đặt khám') }}--}}
-{{--                                                    </div>--}}
-{{--                                                </a>--}}
-{{--                                                <a href="{{route('home.specialist.detail', $pharmacy->id)}}" class="col-md-6 item-btn-specialist">--}}
-{{--                                                    <div class="button-detail-specialList">--}}
-{{--                                                        {{ __('home.Xem chi tiết') }}--}}
-{{--                                                    </div>--}}
-{{--                                                </a>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        @endforeach--}}
                     </div>
                 </div>
 
@@ -303,43 +309,43 @@
     </div>
     <script>
         $(document).ready(function() {
-            {{--var clinics = {!! json_encode($clinics) !!};--}}
+            var clinics = {!! json_encode($clinics) !!};
 
-            {{--var pharmacies = {!! json_encode($pharmacies) !!};--}}
+            var pharmacies = {!! json_encode($pharmacies) !!};
 
-            {{--for (var i = 0; i < clinics.length; i++) {--}}
-            {{--    (function() {--}}
-            {{--        var clinic = clinics[i];--}}
-            {{--        var distanceSpan = $('.specialList-clinics[data-clinic-id="' + clinic.id + '"]').find(--}}
-            {{--            '.clinicDistanceSpan');--}}
-            {{--        var latitude = distanceSpan.find('.lat').text();--}}
-            {{--        var longitude = distanceSpan.find('.long').text();--}}
+            for (var i = 0; i < clinics.length; i++) {
+                (function() {
+                    var clinic = clinics[i];
+                    var distanceSpan = $('.specialList-clinics[data-clinic-id="' + clinic.id + '"]').find(
+                        '.clinicDistanceSpan');
+                    var latitude = distanceSpan.find('.lat').text();
+                    var longitude = distanceSpan.find('.long').text();
 
-            {{--        getCurrentLocation(function(currentLocation) {--}}
-            {{--            var newDistance = calculateDistance(currentLocation.lat, currentLocation.lng,--}}
-            {{--                parseFloat(latitude), parseFloat(longitude));--}}
+                    getCurrentLocation(function(currentLocation) {
+                        var newDistance = calculateDistance(currentLocation.lat, currentLocation.lng,
+                            parseFloat(latitude), parseFloat(longitude));
 
-            {{--            distanceSpan.text(newDistance.toFixed(2) + 'Km');--}}
-            {{--        });--}}
-            {{--    })();--}}
-            {{--}--}}
+                        distanceSpan.text(newDistance.toFixed(2) + 'Km');
+                    });
+                })();
+            }
 
-            {{--for (var i = 0; i < pharmacies.length; i++) {--}}
-            {{--    (function() {--}}
-            {{--        var clinic = pharmacies[i];--}}
-            {{--        var distanceSpan = $('.specialList-clinics[data-pharmacy-id="' + clinic.id + '"]').find(--}}
-            {{--            '.pharmacyDistanceSpan');--}}
-            {{--        var latitude = distanceSpan.find('.lat').text();--}}
-            {{--        var longitude = distanceSpan.find('.long').text();--}}
+            for (var i = 0; i < pharmacies.length; i++) {
+                (function() {
+                    var clinic = pharmacies[i];
+                    var distanceSpan = $('.specialList-clinics[data-pharmacy-id="' + clinic.id + '"]').find(
+                        '.pharmacyDistanceSpan');
+                    var latitude = distanceSpan.find('.lat').text();
+                    var longitude = distanceSpan.find('.long').text();
 
-            {{--        getCurrentLocation(function(currentLocation) {--}}
-            {{--            var newDistance = calculateDistance(currentLocation.lat, currentLocation.lng,--}}
-            {{--                parseFloat(latitude), parseFloat(longitude));--}}
+                    getCurrentLocation(function(currentLocation) {
+                        var newDistance = calculateDistance(currentLocation.lat, currentLocation.lng,
+                            parseFloat(latitude), parseFloat(longitude));
 
-            {{--            distanceSpan.text(newDistance.toFixed(2) + 'Km');--}}
-            {{--        });--}}
-            {{--    })();--}}
-            {{--}--}}
+                        distanceSpan.text(newDistance.toFixed(2) + 'Km');
+                    });
+                })();
+            }
 
             var locations = {!! json_encode($clinics) !!};
             var locationsPharmacies = {!! json_encode($pharmacies) !!};
@@ -701,7 +707,7 @@
 
             function closeAllInfoWindows() {
                 infoWindows.forEach(function(infoWindow) {
-                    infoWindow.open();
+                    infoWindow.close();
                 });
             }
 

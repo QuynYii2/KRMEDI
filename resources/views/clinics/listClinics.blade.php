@@ -120,11 +120,14 @@
                     </span>
                 </div>
             </div>
-            <p style="color: red;text-align: center;margin:30px 0;display: none" class="text-not-address">Không có phòng khám nào như bạn cần tìm quanh bạn</p>
-            <div id="allAddressesMap" class="show active fade" style="height: 800px;">
+            <p style="color: red;text-align: center;margin:30px 0;display: none" class="text-not-address w-100">Không có phòng khám nào như bạn cần tìm quanh bạn</p>
+            <div class="box-list-clinic-address ">
+                <div class="body row" id="productInformation"></div>
+                <div id="allAddressesMap" class="show active fade" style="height: 800px;">
+
+                </div>
 
             </div>
-            <div class="body row" id="productInformation"></div>
 
         </div>
         {{-- <div class="other-clinics">
@@ -136,43 +139,43 @@
     </div>
 
     <script>
+        function getCurrentLocation(callback) {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var currentLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    callback(currentLocation);
+                });
+            } else {
+                alert('Geolocation is not supported by this browser.');
+            }
+        }
+
+        function calculateDistance(lat1, lng1, lat2, lng2) {
+            var R = 6371; // Độ dài trung bình của trái đất trong km
+            var dLat = toRadians(lat2 - lat1);
+            var dLng = toRadians(lng2 - lng1);
+
+            var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
+                Math.sin(dLng / 2) * Math.sin(dLng / 2);
+
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+            var distance = R * c;
+            return distance;
+        }
+
+        function toRadians(degrees) {
+            return degrees * (Math.PI / 180);
+        }
 
         function mapClinic(coordinatesArray) {
             var locations = coordinatesArray;
             var infoWindows = [];
             if (locations.length > 0){
-                function getCurrentLocation(callback) {
-                    if (navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition(function(position) {
-                            var currentLocation = {
-                                lat: position.coords.latitude,
-                                lng: position.coords.longitude
-                            };
-                            callback(currentLocation);
-                        });
-                    } else {
-                        alert('Geolocation is not supported by this browser.');
-                    }
-                }
-
-                function calculateDistance(lat1, lng1, lat2, lng2) {
-                    var R = 6371; // Độ dài trung bình của trái đất trong km
-                    var dLat = toRadians(lat2 - lat1);
-                    var dLng = toRadians(lng2 - lng1);
-
-                    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                        Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
-                        Math.sin(dLng / 2) * Math.sin(dLng / 2);
-
-                    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-                    var distance = R * c;
-                    return distance;
-                }
-
-                function toRadians(degrees) {
-                    return degrees * (Math.PI / 180);
-                }
                 function formatTime(dateTimeString) {
                     const date = new Date(dateTimeString);
                     const hours = date.getHours().toString().padStart(2, '0');
@@ -201,7 +204,7 @@
                         // Chọn bán kính tìm kiếm (ví dụ: 5 km)
                         var searchRadius = 10;
 
-                        if (distance <= searchRadius) {
+                        if (distance <= searchRadius && !isNaN(distance)) {
                             var marker = new google.maps.Marker({
                                 position: {lat: parseFloat(location.latitude), lng: parseFloat(location.longitude)},
                                 map: map,
@@ -315,7 +318,6 @@
                 </div>
             </div>
         </div>`;
-
                             var infoWindow = new google.maps.InfoWindow({
                                 content: infoWindowContent
                             });
@@ -332,7 +334,7 @@
 
                 function closeAllInfoWindows() {
                     infoWindows.forEach(function(infoWindow) {
-                        infoWindow.open();
+                        infoWindow.close();
                     });
                 }
 
@@ -353,6 +355,8 @@
                 });
             }else{
                 $('.text-not-address').css('display','inline-block')
+                $('#productInformation').html('');
+                $('#allAddressesMap').html('');
             }
 
         }
@@ -367,7 +371,7 @@
                 },
                 success: function(response) {
                     mapClinic(response);
-                    // renderClinics(response)
+                    renderClinics(response)
                 },
                 error: function(exception) {
                     console.log(exception)
@@ -375,16 +379,16 @@
             });
         }
 
-        {{--function showSpinner() {--}}
-        {{--    const $spinner = $('<div>').addClass('spinner-loading text-center').attr('role', 'status')--}}
-        {{--        .append($('<span>').text('Loading...'));--}}
-
-        {{--    $('#productInformation').append($spinner);--}}
-        {{--}--}}
-
-        {{--function hideSpinner() {--}}
-        {{--    $('.spinner-loading').remove();--}}
-        {{--}--}}
+        // function showSpinner() {
+        //     const $spinner = $('<div>').addClass('spinner-loading text-center').attr('role', 'status')
+        //         .append($('<span>').text('Loading...'));
+        //
+        //     $('#productInformation').append($spinner);
+        // }
+        //
+        // function hideSpinner() {
+        //     $('.spinner-loading').remove();
+        // }
 
         function loadProductInformation() {
             // showSpinner();
@@ -394,93 +398,94 @@
 
         loadProductInformation();
 
-        {{--function renderClinics(response) {--}}
-        {{--    getCurrentLocation(function(currentLocation) {--}}
-        {{--        var productInformationDiv = document.getElementById('productInformation');--}}
-        {{--        for (let i = 0; i < response.length; i++) {--}}
-        {{--            let item = response[i];--}}
-        {{--            var distance = calculateDistance(--}}
-        {{--                currentLocation.lat, currentLocation.lng,--}}
-        {{--                parseFloat(item.latitude), parseFloat(item.longitude)--}}
-        {{--            );--}}
+        function renderClinics(response) {
+            var productInformationDiv = document.getElementById('productInformation');
+            productInformationDiv.innerHTML = '';
+            getCurrentLocation(function(currentLocation) {
+                for (let i = 0; i < response.length; i++) {
+                    let item = response[i];
+                    var distance = calculateDistance(
+                        currentLocation.lat, currentLocation.lng,
+                        parseFloat(item.latitude), parseFloat(item.longitude)
+                    );
 
-        {{--            // Chọn bán kính tìm kiếm (ví dụ: 10 km)--}}
-        {{--            var searchRadius = 10;--}}
-        {{--            if (distance >= searchRadius || isNaN(distance)) {--}}
-        {{--                continue;--}}
-        {{--            }--}}
-        {{--            var urlDetail = "{{ route('clinic.detail', ['id' => ':id']) }}".replace(':id', item.id);--}}
+                    // Chọn bán kính tìm kiếm (ví dụ: 10 km)
+                    var searchRadius = 10;
+                    if (distance >= searchRadius || isNaN(distance)) {
+                        continue;
+                    }
+                    var urlDetail = "{{ route('clinic.detail', ['id' => ':id']) }}".replace(':id', item.id);
 
-        {{--            let img = '';--}}
-        {{--            let gallery = item.gallery;--}}
-        {{--            let arrayGallery = gallery.split(',');--}}
-        {{--            img += `<img class="mr-2 img-item1" src="${arrayGallery[0]}" alt="">`;--}}
+                    let img = '';
+                    let gallery = item.gallery;
+                    let arrayGallery = gallery.split(',');
+                    img += `<img class="mr-2 img-item1 w-100 h-auto" src="${arrayGallery[0]}" alt="">`;
 
-        {{--            // let serviceHtml = ``;--}}
-        {{--            // let service = item.services;--}}
-        {{--            // for (let j = 0; j < service.length; j++) {--}}
-        {{--            //     let serviceItem = service[j];--}}
-        {{--            //     serviceHtml = serviceHtml + `<span>${serviceItem.name},</span>`;--}}
-        {{--            // }--}}
-        {{--            let openDate = new Date(item.open_date);--}}
-        {{--            let closeDate = new Date(item.close_date);--}}
+                    // let serviceHtml = ``;
+                    // let service = item.services;
+                    // for (let j = 0; j < service.length; j++) {
+                    //     let serviceItem = service[j];
+                    //     serviceHtml = serviceHtml + `<span>${serviceItem.name},</span>`;
+                    // }
+                    let openDate = new Date(item.open_date);
+                    let closeDate = new Date(item.close_date);
 
-        {{--            let formattedOpenDate = openDate.toLocaleTimeString(undefined, {--}}
-        {{--                hour: '2-digit',--}}
-        {{--                minute: '2-digit'--}}
-        {{--            });--}}
-        {{--            let formattedCloseDate = closeDate.toLocaleTimeString(undefined, {--}}
-        {{--                hour: '2-digit',--}}
-        {{--                minute: '2-digit'--}}
-        {{--            });--}}
+                    let formattedOpenDate = openDate.toLocaleTimeString(undefined, {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    let formattedCloseDate = closeDate.toLocaleTimeString(undefined, {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
 
-        {{--            let html = `--}}
-        {{--                    <div class="specialList-clinics col-md-6 mt-3">--}}
-        {{--                        <a href="${urlDetail}">--}}
-        {{--                            <div class="border-specialList">--}}
-        {{--                                <div class="content__item d-flex gap-3">--}}
-        {{--                                    <div class="specialList-clinics--img">--}}
-        {{--                                        ${img}--}}
-        {{--                                    </div>--}}
-        {{--                                    <div class="specialList-clinics--main w-100">--}}
-        {{--                                        <div class="title-specialList-clinics">--}}
+                    let html = `
+                            <div class="specialList-clinics col-lg-12 col-md-6 mb-3">
+                                <a href="${urlDetail}">
+                                    <div class="border-specialList" style="gap:unset;padding:5px">
+                                        <div class="content__item d-flex flex-column">
+                                            <div class="specialList-clinics--img w-100">
+                                                ${img}
+                                            </div>
+                                            <div class="specialList-clinics--main w-100 mt-2">
+                                                <div class="title-specialList-clinics">
 
-        {{--                                                @if (locationHelper() == 'vi')--}}
-        {{--                                                    ${item.name}--}}
-        {{--                                                    @else--}}
-        {{--                                                    ${item.name_en}--}}
-        {{--                                                    @endif--}}
-        {{--                                        </div>--}}
-        {{--                                    <div class="address-specialList-clinics">--}}
-        {{--                                <div class="d-flex align-items-center address-clinics">--}}
-        {{--                                    <i class="fas fa-map-marker-alt mr-2"></i>--}}
-        {{--                                    <div>${item.address_detail} ${item.addressInfo}</div>--}}
-        {{--                                </div>--}}
-        {{--                                    <span class="distance"> ${distance.toFixed(2)} Km</span>--}}
-        {{--                            </div>--}}
-        {{--                            <div class="d-flex justify-content-between align-items-center flex-wrap">--}}
-        {{--                                <div class="time-working">--}}
-        {{--                                    <span class="color-timeWorking">--}}
-        {{--                                        <span class="fs-14 font-weight-600">${formattedOpenDate} - ${formattedCloseDate}</span>--}}
-        {{--                                        </span>--}}
-        {{--                                        <span>/ {{ __('home.Dental Clinic') }}</span>--}}
-        {{--                                </div>--}}
-        {{--                               <a href="https://www.google.com/maps?q=${item.latitude},${item.longitude}" class="search-way mb-1" target="_blank">Chỉ đường</a>--}}
-        {{--                            </div>--}}
-        {{--                            @if (Auth::check())--}}
-        {{--                            <div class="zalo-follow-only-button" data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>--}}
-        {{--                            @endif--}}
-        {{--                            </div>--}}
-        {{--                            </div>--}}
-        {{--                            </div>--}}
-        {{--                        </a>--}}
-        {{--                    </div>--}}
-        {{--                    `;--}}
+                                                        @if (locationHelper() == 'vi')
+                                                            ${item.name}
+                                                            @else
+                                                            ${item.name_en}
+                                                            @endif
+                                                </div>
+                                            <div class="address-specialList-clinics">
+                                        <div class="d-flex align-items-center address-clinics">
+                                            <i class="fas fa-map-marker-alt mr-2"></i>
+                                            <div style="-webkit-line-clamp: 3!important;">${item.address_detail} ${item.addressInfo}</div>
+                                        </div>
+                                            <span class="distance"> ${distance.toFixed(2)} Km</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center flex-wrap">
+                                        <div class="time-working">
+                                            <span class="color-timeWorking">
+                                                <span class="fs-14 font-weight-600">${formattedOpenDate} - ${formattedCloseDate}</span>
+                                                </span>
+                                                <span>/ {{ __('home.Dental Clinic') }}</span>
+                                        </div>
+                                       <a href="https://www.google.com/maps?q=${item.latitude},${item.longitude}" class="search-way mb-1" target="_blank">Chỉ đường</a>
+                                    </div>
+                                    @if (Auth::check())
+                                    <div class="zalo-follow-only-button" data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
+                                    @endif
+                                    </div>
+                                    </div>
+                                    </div>
+                                </a>
+                            </div>
+                            `;
 
-        {{--            productInformationDiv.innerHTML += html;--}}
-        {{--        }--}}
-        {{--    });--}}
-        {{--}--}}
+                    productInformationDiv.innerHTML += html;
+                }
+            });
+        }
     </script>
 
 @endsection

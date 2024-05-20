@@ -225,6 +225,7 @@
             },
             success: function(response) {
                 mapClinic(response);
+                renderClinics(response);
                 // renderSearchClinics(response);
                 // setTimeout(() => {
                 //     loadingMasterPage();
@@ -240,7 +241,6 @@
     }
 
     function renderSearchClinics(response) {
-        console.log(response)
         getCurrentLocation(function(currentLocation) {
             let html = `
                 <div class="clinics-header row">
@@ -481,7 +481,9 @@
                 }
             });
 
-            renderSearchClinics(response);
+            mapClinic(response);
+            renderClinics(response);
+            // renderSearchClinics(response);
             setTimeout(() => {
                 loadingMasterPage();
             }, 500);
