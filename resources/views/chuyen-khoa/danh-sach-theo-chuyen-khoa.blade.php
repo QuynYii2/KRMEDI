@@ -51,8 +51,8 @@
                 <div class="tab-pane fade show active" id="clinicList" role="tabpanel" aria-labelledby="clinicList-tab">
                     <div class="box-list-clinic-address">
                         <div class="body row" id="productInformation">
-                            @foreach ($clinics as $clinic)
-                                <div class="specialList-clinics col-lg-12 col-md-6 mb-3"
+                            @foreach ($clinics as $key => $clinic)
+                                <div class="specialList-clinics specialList-clinics-address col-lg-12 col-md-6 mb-3" data-marker-index=""
                                      data-clinic-id="{{ $clinic->id }}">
                                     <div class="border-specialList">
                                         <div class="content__item d-flex box-item__content">
@@ -151,24 +151,39 @@
                 <div class="tab-pane fade" id="pharmacies" role="tabpanel" aria-labelledby="pharmacies-tab">
                     <div class="box-list-clinic-address">
                         <div class="body row" id="productInformation">
-                            @foreach ($pharmacies as $pharmacy)
-                                <div class="specialList-clinics col-lg-12 col-md-6 mb-3"
+                            @foreach ($pharmacies as $index => $pharmacy)
+                                <div class="specialList-clinics specialList-pharmacy-address col-lg-12 col-md-6 mb-3" data-marker-index="{{$index}}"
                                      data-pharmacy-id="{{ $pharmacy->id }}">
                                     <div class="border-specialList">
-                                        <div class="content__item d-flex gap-3 box-item__content">
+                                        <div class="content__item d-flex box-item__content">
                                             <div class="specialList-clinics--img img-special-line">
                                                 @php
                                                     $galleryArray = explode(',', $pharmacy->gallery);
                                                 @endphp
                                                 <img class="content__item__image" src="{{ $galleryArray[0] }}"
                                                      alt=""/>
+                                                <a href="https://www.google.com/maps?q={{$pharmacy->latitude}},{{$pharmacy->longitude}}"
+                                                   class="search-way" target="_blank">Chỉ đường</a>
+                                                <div class="group-button d-flex flex-column box-desktop-line-address mt-2">
+                                                    <a href="" class="item-btn-specialist">
+                                                        <div class="button-booking-specialList line-dk-btn">
+                                                            {{ __('home.Đặt khám') }}
+                                                        </div>
+                                                    </a>
+                                                    <a href="{{route('home.specialist.detail', $pharmacy->id)}}"
+                                                       class="item-btn-specialist">
+                                                        <div class="button-detail-specialList">
+                                                            {{ __('home.Xem chi tiết') }}
+                                                        </div>
+                                                    </a>
+                                                </div>
                                             </div>
                                             <div class="specialList-clinics--main w-100">
                                                 <div class="title-specialList-clinics">
                                                     {{ $pharmacy->name }}
                                                 </div>
                                                 <div class="address-specialList-clinics d-flex align-items-center">
-                                                    <div class="d-flex">
+                                                    <div class="d-flex align-items-center">
                                                         <i class="fas fa-map-marker-alt mr-2"></i>
                                                         @php
                                                             $array = explode(',', $pharmacy->address);
@@ -189,33 +204,32 @@
                                                             , {{ $addressC->name ?? '' }} , {{ $addressD->name ?? '' }}
                                                             , {{ $addressP->name ?? '' }}</div>
                                                     </div>
-                                                    <span class="pharmacyDistanceSpan">
-                                                    <p class="lat">{{ $pharmacy->latitude }}</p>
-                                                    <p class="long">{{ $pharmacy->longitude }}</p>
-                                                </span>
                                                 </div>
-                                                <div class="time-working">
+                                                <div class="time-working d-flex justify-content-between mt-2">
                                                 <span class="color-timeWorking">
                                                     <span
                                                         class="fs-14 font-weight-600">{{ \Carbon\Carbon::parse($pharmacy->open_date)->format('H:i') }}
                                                         -
                                                         {{ \Carbon\Carbon::parse($pharmacy->close_date)->format('H:i') }}</span>
-                                                                                                    09:00 - 19:00
                                                 </span>
-                                                    <span>
-                                                    / {{ __('home.Dental Clinic') }}
+                                                    <div style="width: fit-content">
+                                                        <i class="fas fa-map-marker-alt"
+                                                           style="color: #088180"></i>
+                                                    <span class="pharmacyDistanceSpan">
+                                                    <p class="lat">{{ $pharmacy->latitude }}</p>
+                                                    <p class="long">{{ $pharmacy->longitude }}</p>
                                                 </span>
+                                                    </div>
                                                 </div>
-                                                <a href="https://www.google.com/maps?q={{$pharmacy->latitude}},{{$pharmacy->longitude}}"
-                                                   class="search-way" target="_blank">Chỉ đường</a>
-                                                <div class="group-button d-flex mt-3">
-                                                    <a href="" class="col-md-6 item-btn-specialist">
+
+                                                <div class="group-button d-flex box-mobile-line-address mt-2">
+                                                    <a href="" class="item-btn-specialist">
                                                         <div class="button-booking-specialList line-dk-btn">
                                                             {{ __('home.Đặt khám') }}
                                                         </div>
                                                     </a>
                                                     <a href="{{route('home.specialist.detail', $pharmacy->id)}}"
-                                                       class="col-md-6 item-btn-specialist">
+                                                       class="item-btn-specialist">
                                                         <div class="button-detail-specialList">
                                                             {{ __('home.Xem chi tiết') }}
                                                         </div>
@@ -235,7 +249,6 @@
 
                 <div class="tab-pane fade" id="doctorList" role="tabpanel" aria-labelledby="doctorList-tab">
                     <div class="row">
-
                         @foreach ($doctorsSpecial as $doctor)
                             @if ($doctor == '')
                                 <h1 class="d-flex align-items-center justify-content-center mt-4">{{ __('home.null') }}
@@ -333,46 +346,73 @@
     <script>
         $(document).ready(function () {
             var clinics = {!! json_encode($clinics) !!};
-
             var pharmacies = {!! json_encode($pharmacies) !!};
 
-            for (var i = 0; i < clinics.length; i++) {
-                (function () {
-                    var clinic = clinics[i];
-                    var distanceSpan = $('.specialList-clinics[data-clinic-id="' + clinic.id + '"]').find(
-                        '.clinicDistanceSpan');
-                    var latitude = distanceSpan.find('.lat').text();
-                    var longitude = distanceSpan.find('.long').text();
+            function waitForAllLocations(clinics) {
+                var promises = clinics.map(function(clinic) {
+                    return new Promise(function(resolve) {
+                        var distanceSpan = $('.specialList-clinics[data-clinic-id="' + clinic.id + '"]').find('.clinicDistanceSpan');
+                        var latitude = distanceSpan.find('.lat').text();
+                        var longitude = distanceSpan.find('.long').text();
 
-                    getCurrentLocation(function (currentLocation) {
-                        var newDistance = calculateDistance(currentLocation.lat, currentLocation.lng,
-                            parseFloat(latitude), parseFloat(longitude));
-
-                        distanceSpan.text(newDistance.toFixed(2) + 'Km');
+                        getCurrentLocation(function(currentLocation) {
+                            var newDistance = calculateDistance(currentLocation.lat, currentLocation.lng, parseFloat(latitude), parseFloat(longitude));
+                            distanceSpan.text(newDistance.toFixed(2) + 'Km');
+                            resolve(newDistance);
+                        });
                     });
-                })();
+                });
+                return Promise.all(promises);
             }
+            waitForAllLocations(clinics).then(function(distances) {
+                var clinicIndex = 0;
+                clinics.forEach(function(clinic, index) {
+                    var distance = distances[index];
+                    var clinicElement = $('.specialList-clinics[data-clinic-id="' + clinic.id + '"]');
+                    if (distance <= 10) {
+                        clinicElement.attr('data-marker-index', clinicIndex++);
+                    } else {
+                        clinicElement.hide();
+                    }
+                });
+            });
 
-            for (var i = 0; i < pharmacies.length; i++) {
-                (function () {
-                    var clinic = pharmacies[i];
-                    var distanceSpan = $('.specialList-clinics[data-pharmacy-id="' + clinic.id + '"]').find(
-                        '.pharmacyDistanceSpan');
-                    var latitude = distanceSpan.find('.lat').text();
-                    var longitude = distanceSpan.find('.long').text();
+            function waitForAllPharmacyLocations(pharmacies) {
+                var promises = pharmacies.map(function(pharmacy) {
+                    return new Promise(function(resolve) {
+                        var pharmacyElement = $('.specialList-clinics[data-pharmacy-id="' + pharmacy.id + '"]');
+                        var distanceSpan = $('.specialList-clinics[data-pharmacy-id="' + pharmacy.id + '"]').find('.pharmacyDistanceSpan');
+                        var latitude = distanceSpan.find('.lat').text();
+                        var longitude = distanceSpan.find('.long').text();
 
-                    getCurrentLocation(function (currentLocation) {
-                        var newDistance = calculateDistance(currentLocation.lat, currentLocation.lng,
-                            parseFloat(latitude), parseFloat(longitude));
-
-                        distanceSpan.text(newDistance.toFixed(2) + 'Km');
+                        getCurrentLocation(function(currentLocation) {
+                            var newDistance = calculateDistance(currentLocation.lat, currentLocation.lng, parseFloat(latitude), parseFloat(longitude));
+                            distanceSpan.text(newDistance.toFixed(2) + 'Km');
+                            resolve({distance: newDistance, pharmacyElement: pharmacyElement});
+                        });
                     });
-                })();
+                });
+                return Promise.all(promises);
             }
+            waitForAllPharmacyLocations(pharmacies).then(function(results) {
+                var pharmacyIndex = 0;
+                results.forEach(function(result) {
+                    var distance = result.distance;
+                    var pharmacyElement = result.pharmacyElement;
+                    if (distance <= 10) {
+                        pharmacyElement.attr('data-marker-index', pharmacyIndex++);
+                    } else {
+                        pharmacyElement.hide();
+                    }
+                });
+            });
 
             var locations = {!! json_encode($clinics) !!};
             var locationsPharmacies = {!! json_encode($pharmacies) !!};
+            var markers = [];
+            var markersPharmacy = [];
             var infoWindows = [];
+            var infoWindowsPharmacy = [];
 
             function getCurrentLocation(callback) {
                 if (navigator.geolocation) {
@@ -520,46 +560,6 @@
                             <i class="text-gray mr-md-2 fa-solid fa-bookmark"></i> <span
                                 class="fs-14 font-weight-600"> ${location.type}</span>
                         </div>
-                        @for($i=0; $i<3; $i++)
-                        <div class="border-top mb-md-2">
-                            <div
-                                class="d-flex justify-content-between rv-header align-items-center mt-md-2 mt-1">
-                                <div class="d-flex rv-header--left">
-                                    <div class="avt-24 mr-md-2">
-                                        <img loading="lazy" src="{{asset('img/detail_doctor/ellipse _14.png')}}">
-                                        </div>
-                                        <p class="fs-16px">Trần Đình Phi</p>
-                                    </div>
-                                    <div class="rv-header--right">
-                                        <p class="fs-14 font-weight-400">10:20 07/04/2023</p>
-                                    </div>
-                                </div>
-                                <div class="content">
-                                    <p>
-                                        {{ __('home.Lần đầu tiên sử dụng dịch vụ qua app nhưng chất lượng và dịch vụ tại salon quá tốt. Book giờ nào thì cứ đúng giờ đến k sợ phải chờ đợi như mọi chỗ khác. Hy vọng thi thoảng app có nhiều ưu đãi để giới thiệu cho bạn bè cùng sử dụng') }}
-                        </p>
-                    </div>
-                </div>
-@endfor
-                        <div class="border-top">
-                            <div
-                                class="d-flex justify-content-between rv-header align-items-center mt-md-2 mt-1">
-                                <div class="d-flex rv-header--left">
-                                    <div class="avt-24 mr-md-2">
-                                        <img loading="lazy" src="{{asset('img/detail_doctor/ellipse _14.png')}}">
-                                    </div>
-                                    <p class="fs-16px">Trần Đình Phi</p>
-                                </div>
-                                <div class="rv-header--right">
-                                    <p class="fs-14 font-weight-400">10:20 07/04/2023</p>
-                                </div>
-                            </div>
-                            <div class="content">
-                                <p>
-                                    {{ __('home.Lần đầu tiên sử dụng dịch vụ qua app nhưng chất lượng và dịch vụ tại salon quá tốt. Book giờ nào thì cứ đúng giờ đến k sợ phải chờ đợi như mọi chỗ khác. Hy vọng thi thoảng app có nhiều ưu đãi để giới thiệu cho bạn bè cùng sử dụng') }}
-                        </p>
-                    </div>
-                </div>
             </div>
         </div>
     </div>`;
@@ -573,9 +573,20 @@
                             infoWindow.open(map, marker);
                         });
 
+                        markers.push(marker);
                         infoWindows.push(infoWindow);
+                        location.markerIndex = markers.length - 1;
                     }
                 });
+
+                document.querySelectorAll('.specialList-clinics-address').forEach(function (item, index) {
+                    item.addEventListener('click', function () {
+                        var markerIndex = parseInt(item.getAttribute('data-marker-index'));
+                        closeAllInfoWindows();
+                        infoWindows[markerIndex].open(map, markers[markerIndex]);
+                    });
+                });
+
             }
 
             function initMapPharmacies(currentLocation, locationsPharmacies) {
@@ -673,47 +684,6 @@
                             <i class="text-gray mr-md-2 fa-solid fa-bookmark"></i> <span
                                 class="fs-14 font-weight-600"> ${locationsPharmacies.type}</span>
                         </div>
-                        @for($i=0; $i<3; $i++)
-                        <div class="border-top mb-md-2">
-                            <div
-                                class="d-flex justify-content-between rv-header align-items-center mt-md-2 mt-1">
-                                <div class="d-flex rv-header--left">
-                                    <div class="avt-24 mr-md-2">
-                                        <img loading="lazy" src="{{asset('img/detail_doctor/ellipse _14.png')}}">
-                                        </div>
-                                        <p class="fs-16px">Trần Đình Phi</p>
-                                    </div>
-                                    <div class="rv-header--right">
-                                        <p class="fs-14 font-weight-400">10:20 07/04/2023</p>
-                                    </div>
-                                </div>
-                                <div class="content">
-                                    <p>
-                                        {{ __('home.Lần đầu tiên sử dụng dịch vụ qua app nhưng chất lượng và dịch vụ tại salon quá tốt. Book giờ nào thì cứ đúng giờ đến k sợ phải chờ đợi như mọi chỗ khác. Hy vọng thi thoảng app có nhiều ưu đãi để giới thiệu cho bạn bè cùng sử dụng') }}
-                        </p>
-                    </div>
-                </div>
-@endfor
-                        <div class="border-top">
-                            <div
-                                class="d-flex justify-content-between rv-header align-items-center mt-md-2 mt-1">
-                                <div class="d-flex rv-header--left">
-                                    <div class="avt-24 mr-md-2">
-                                        <img loading="lazy" src="{{asset('img/detail_doctor/ellipse _14.png')}}">
-                                    </div>
-                                    <p class="fs-16px">Trần Đình Phi</p>
-                                </div>
-                                <div class="rv-header--right">
-                                    <p class="fs-14 font-weight-400">10:20 07/04/2023</p>
-                                </div>
-                            </div>
-                            <div class="content">
-                                <p>
-                                    {{ __('home.Lần đầu tiên sử dụng dịch vụ qua app nhưng chất lượng và dịch vụ tại salon quá tốt. Book giờ nào thì cứ đúng giờ đến k sợ phải chờ đợi như mọi chỗ khác. Hy vọng thi thoảng app có nhiều ưu đãi để giới thiệu cho bạn bè cùng sử dụng') }}
-                        </p>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>`;
 
@@ -722,17 +692,33 @@
                         });
 
                         markerPharmacies.addListener('click', function () {
-                            closeAllInfoWindows();
+                            closeAllInfoWindowsPharmacy();
                             infoWindow2.open(map2, markerPharmacies);
                         });
-
-                        infoWindows.push(infoWindow2);
+                        markersPharmacy.push(markerPharmacies);
+                        infoWindowsPharmacy.push(infoWindow2);
+                        locationsPharmacies.markerIndex = markersPharmacy.length - 1;
                     }
                 });
+
+                document.querySelectorAll('.specialList-pharmacy-address').forEach(function (item, index) {
+                    item.addEventListener('click', function () {
+                        var markerIndex = parseInt(item.getAttribute('data-marker-index'));
+                        closeAllInfoWindowsPharmacy();
+                        infoWindowsPharmacy[markerIndex].open(map2, markersPharmacy[markerIndex]);
+                    });
+                });
+
             }
 
             function closeAllInfoWindows() {
                 infoWindows.forEach(function (infoWindow) {
+                    infoWindow.close();
+                });
+            }
+
+            function closeAllInfoWindowsPharmacy() {
+                infoWindowsPharmacy.forEach(function (infoWindow) {
                     infoWindow.close();
                 });
             }

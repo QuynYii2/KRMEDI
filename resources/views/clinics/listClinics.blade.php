@@ -139,6 +139,8 @@
     </div>
 
     <script>
+        var markers = [];
+        var infoWindows = [];
         function getCurrentLocation(callback) {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
@@ -174,7 +176,6 @@
 
         function mapClinic(coordinatesArray) {
             var locations = coordinatesArray;
-            var infoWindows = [];
             if (locations.length > 0){
                 function formatTime(dateTimeString) {
                     const date = new Date(dateTimeString);
@@ -211,7 +212,6 @@
                                 title: 'Location'
                             });
                             var urlDetail = "{{ route('clinic.detail', ['id' => ':id']) }}".replace(':id', location.id);
-                            let img = '';
                             let gallery = location.gallery;
                             let arrayGallery = gallery.split(',');
 
@@ -275,47 +275,6 @@
                             <i class="text-gray mr-md-2 fa-solid fa-bookmark"></i> <span
                                 class="fs-14 font-weight-600"> ${location.type}</span>
                         </div>
-                        @for($i=0; $i<3; $i++)
-                            <div class="border-top mb-md-2">
-                                <div
-                                    class="d-flex justify-content-between rv-header align-items-center mt-md-2 mt-1">
-                                    <div class="d-flex rv-header--left">
-                                        <div class="avt-24 mr-md-2">
-                                            <img loading="lazy" src="{{asset('img/detail_doctor/ellipse _14.png')}}">
-                                        </div>
-                                        <p class="fs-16px">Trần Đình Phi</p>
-                                    </div>
-                                    <div class="rv-header--right">
-                                        <p class="fs-14 font-weight-400">10:20 07/04/2023</p>
-                                    </div>
-                                </div>
-                                <div class="content">
-                                    <p>
-                                        {{ __('home.Lần đầu tiên sử dụng dịch vụ qua app nhưng chất lượng và dịch vụ tại salon quá tốt. Book giờ nào thì cứ đúng giờ đến k sợ phải chờ đợi như mọi chỗ khác. Hy vọng thi thoảng app có nhiều ưu đãi để giới thiệu cho bạn bè cùng sử dụng') }}
-                            </p>
-                        </div>
-                    </div>
-@endfor
-                            <div class="border-top">
-                                <div
-                                    class="d-flex justify-content-between rv-header align-items-center mt-md-2 mt-1">
-                                    <div class="d-flex rv-header--left">
-                                        <div class="avt-24 mr-md-2">
-                                            <img loading="lazy" src="{{asset('img/detail_doctor/ellipse _14.png')}}">
-                                    </div>
-                                    <p class="fs-16px">Trần Đình Phi</p>
-                                </div>
-                                <div class="rv-header--right">
-                                    <p class="fs-14 font-weight-400">10:20 07/04/2023</p>
-                                </div>
-                            </div>
-                            <div class="content">
-                                <p>
-                                    {{ __('home.Lần đầu tiên sử dụng dịch vụ qua app nhưng chất lượng và dịch vụ tại salon quá tốt. Book giờ nào thì cứ đúng giờ đến k sợ phải chờ đợi như mọi chỗ khác. Hy vọng thi thoảng app có nhiều ưu đãi để giới thiệu cho bạn bè cùng sử dụng') }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>`;
                             var infoWindow = new google.maps.InfoWindow({
@@ -326,10 +285,20 @@
                                 closeAllInfoWindows();
                                 infoWindow.open(map, marker);
                             });
-
+                            markers.push(marker);
                             infoWindows.push(infoWindow);
+                            location.markerIndex = markers.length - 1;
                         }
                     });
+
+                    document.querySelectorAll('.border-specialList').forEach(function (item, index) {
+                        item.addEventListener('click', function () {
+                            var markerIndex = parseInt(item.getAttribute('data-marker-index'));
+                            closeAllInfoWindows();
+                            infoWindows[markerIndex].open(map, markers[markerIndex]);
+                        });
+                    });
+
                 }
 
                 function closeAllInfoWindows() {
@@ -402,6 +371,7 @@
             var productInformationDiv = document.getElementById('productInformation');
             productInformationDiv.innerHTML = '';
             getCurrentLocation(function(currentLocation) {
+                let index_map = 0;
                 for (let i = 0; i < response.length; i++) {
                     let item = response[i];
                     var distance = calculateDistance(
@@ -441,8 +411,8 @@
 
                     let html = `
                             <div class="specialList-clinics col-lg-12 col-md-6 mb-3">
-                                <a href="${urlDetail}">
-                                    <div class="border-specialList" style="gap:unset;padding:5px">
+
+                                    <div class="border-specialList" data-marker-index="${index_map}" style="gap:unset;padding:5px">
                                         <div class="content__item d-flex">
                                             <div class="specialList-clinics--img d-flex flex-column">
                                                 ${img}
@@ -477,11 +447,12 @@
                                     </div>
                                     </div>
                                     </div>
-                                </a>
+
                             </div>
                             `;
 
                     productInformationDiv.innerHTML += html;
+                    index_map += 1;
                 }
             });
         }
