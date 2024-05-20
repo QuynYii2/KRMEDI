@@ -251,6 +251,7 @@ class ProfileController extends Controller
         if ($zaloAppID || $zaloSecretID) {
             $extendData['isActivated'] = false;
         }
+        $user->is_check_medical_history = $request->has('is_check_medical_history');
 
         $user->extend = $extendData;
 
