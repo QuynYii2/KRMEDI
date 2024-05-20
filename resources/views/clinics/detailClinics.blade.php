@@ -16,7 +16,7 @@
             $addresses = \App\Models\Clinic::where('id', $bookings->id)->get();
             $coordinatesArray = $addresses->toArray();
         @endphp
-        <div id="allAddressesMap" class="show active fade" style="height: 800px;">
+        <div id="allAddressesMap" class="show active fade w-100" style="height: 800px;">
 
         </div>
 
