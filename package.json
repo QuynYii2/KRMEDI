@@ -33,8 +33,8 @@
         "@stream-io/video-client": "^0.4.8",
         "laravel-echo": "^1.15.3",
         "pusher-js": "^8.3.0",
-        "socket.io-client": "^4.7.2"
+        "socket.io-client": "^4.7.2",
         "firebase": "^10.8.0",
-        "jquery": "^3.7.0",
+        "jquery": "^3.7.0"
     }
 }

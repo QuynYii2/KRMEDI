@@ -413,6 +413,12 @@
 
                             @if (Auth::user()->type == 'NORMAL')
                                 <div class="row">
+                                    <div class="col-12">
+                                        <label for="is_check_medical_history">Lịch sử khám</label>
+                                        <input name="is_check_medical_history" id="is_check_medical_history" type="checkbox" value="1" {{ Auth::user()->is_check_medical_history ? 'checked' : '' }}>
+                                    </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-12"><label
                                             for="medical_history">{{ __('home.Tiền sử bệnh án') }}</label>
                                         <textarea id="medical_history" name="medical_history">{{ old('medical_history', Auth::user()->medical_history) }}</textarea>

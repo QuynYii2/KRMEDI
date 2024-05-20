@@ -366,7 +366,7 @@ class HomeController extends Controller
     {
         $query = Booking::where('bookings.status', '!=', BookingStatus::DELETE)
             ->where('bookings.doctor_id', Auth::user()->id)
-            ->orderBy('id', 'desc');
+            ->orderBy('bookings.id', 'desc');
         if ($request->filled('key_search')) {
             $key_search = $request->input('key_search');
             $query->join('clinics', 'bookings.clinic_id', '=', 'clinics.id')
@@ -406,6 +406,20 @@ class HomeController extends Controller
             return Excel::download(new BookingDoctorExport($bookings), 'lichsukham.xlsx');
         } else {
             $bookings = $query->paginate(20);
+            foreach ($bookings as $booking){
+                $getMedicalHistory = $query->join('users', 'bookings.user_id', '=', 'users.id')->where('users.id', $booking->user_id)->get();
+                foreach ($getMedicalHistory as $checkMedicalHistory){
+                    if($checkMedicalHistory->is_check_medical_history){
+                        $query = Booking::where('bookings.status', '!=', BookingStatus::DELETE)
+                            ->where('bookings.user_id', $checkMedicalHistory->id)
+                            ->orderBy('bookings.id', 'desc');
+                        $bookings = $query->paginate(20);
+                    }
+                    else{
+                        $bookings = $query->paginate(20);
+                    }
+                }
+            }
         }
 
         $department = Department::all();
