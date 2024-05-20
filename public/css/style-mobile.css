@@ -67,6 +67,9 @@
 .clinicDistanceSpan{
     font-size: 16px;
 }
+.address-specialList-clinics{
+    font-size: 16px!important;
+}
 .time-working{
     font-size: 14px!important;
     margin-top: 5px;
@@ -98,7 +101,7 @@
     overflow: auto;
     flex-wrap: nowrap;
 }
-#allAddressesMap{
+#allAddressesMap,#allAddressesMapPharmacies{
     width: 68%;
 }
 .text-not-address{
@@ -654,7 +657,7 @@
         height: auto;
         margin-top: 30px;
     }
-    #allAddressesMap{
+    #allAddressesMap,#allAddressesMapPharmacies{
         width: 100%;
         height: 600px!important;
     }
@@ -663,6 +666,9 @@
     }
     .text-not-address{
         font-size: 18px;
+    }
+    .address-specialList-clinics{
+        margin: 10px 0;
     }
 }
 
