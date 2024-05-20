@@ -121,7 +121,7 @@
                 </div>
             </div>
             <p style="color: red;text-align: center;margin:30px 0;display: none" class="text-not-address w-100">Không có phòng khám nào như bạn cần tìm quanh bạn</p>
-            <div class="box-list-clinic-address ">
+            <div class="box-list-clinic-address">
                 <div class="body row" id="productInformation"></div>
                 <div id="allAddressesMap" class="show active fade" style="height: 800px;">
 
@@ -419,7 +419,7 @@
                     let img = '';
                     let gallery = item.gallery;
                     let arrayGallery = gallery.split(',');
-                    img += `<img class="mr-2 img-item1 w-100 h-auto" src="${arrayGallery[0]}" alt="">`;
+                    img += `<img class="mr-2 img-item1" src="${arrayGallery[0]}" alt="">`;
 
                     // let serviceHtml = ``;
                     // let service = item.services;
@@ -443,11 +443,15 @@
                             <div class="specialList-clinics col-lg-12 col-md-6 mb-3">
                                 <a href="${urlDetail}">
                                     <div class="border-specialList" style="gap:unset;padding:5px">
-                                        <div class="content__item d-flex flex-column">
-                                            <div class="specialList-clinics--img w-100">
+                                        <div class="content__item d-flex">
+                                            <div class="specialList-clinics--img d-flex flex-column">
                                                 ${img}
+                                                 <a href="https://www.google.com/maps?q=${item.latitude},${item.longitude}" class="search-way mb-1" target="_blank">Chỉ đường</a>
+                                     @if (Auth::check())
+                    <div class="zalo-follow-only-button" style="height:20px" data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
+@endif
                                             </div>
-                                            <div class="specialList-clinics--main w-100 mt-2">
+                                            <div class="specialList-clinics--main w-100">
                                                 <div class="title-specialList-clinics">
 
                                                         @if (locationHelper() == 'vi')
@@ -461,20 +465,15 @@
                                             <i class="fas fa-map-marker-alt mr-2"></i>
                                             <div style="-webkit-line-clamp: 3!important;">${item.address_detail} ${item.addressInfo}</div>
                                         </div>
-                                            <span class="distance"> ${distance.toFixed(2)} Km</span>
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center flex-wrap">
-                                        <div class="time-working">
+                                        <div class="time-working w-100 d-flex justify-content-between">
                                             <span class="color-timeWorking">
-                                                <span class="fs-14 font-weight-600">${formattedOpenDate} - ${formattedCloseDate}</span>
+                                                <span class="fs-14 font-weight-600"><i class="fa-regular fa-clock"></i> ${formattedOpenDate} - ${formattedCloseDate}</span>
                                                 </span>
-                                                <span>/ {{ __('home.Dental Clinic') }}</span>
+                                                <span class="distance"><i class="fas fa-map-marker-alt mr-2"></i>${distance.toFixed(2)} Km</span>
                                         </div>
-                                       <a href="https://www.google.com/maps?q=${item.latitude},${item.longitude}" class="search-way mb-1" target="_blank">Chỉ đường</a>
                                     </div>
-                                    @if (Auth::check())
-                                    <div class="zalo-follow-only-button" data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
-                                    @endif
                                     </div>
                                     </div>
                                     </div>
