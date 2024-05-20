@@ -58,7 +58,7 @@
 }
 .title-specialList-clinics{
     -webkit-line-clamp:2!important;
-    font-size: 20px!important;
+    font-size: 18px!important;
 }
 .text-address{
     font-size: 16px;
@@ -72,10 +72,11 @@
     margin-top: 5px;
 }
 .search-way{
-    font-size: 14px;
+    width: fit-content;
+    font-size: 12px;
     background-color: #ffa20d;
-    border-radius: 16px;
-    padding: 3px 12px;
+    border-radius: 8px;
+    padding: 3px 10px;
     margin-top: 10px;
     display: inline-block;
     color: white;
@@ -103,11 +104,50 @@
 .text-not-address{
     font-size: 22px;
 }
-.img-special-line {
-    width: 100%;
+.content__item__image{
+    width: 80px;
+    height: 80px;
+    margin-right: 10px;
 }
-.box-item__content {
-    flex-wrap: wrap;
+.address-clinics,.distance{
+    font-size: 15px!important;
+}
+ .button-booking-specialList {
+    display: flex;
+     width: fit-content;
+    padding: 4px 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    flex: 1 0 0;
+    border-radius: 8px;
+    background: var(--secon1, #088180);
+    color: #FFF;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+.button-detail-specialList {
+    display: flex;
+    width: fit-content;
+    padding: 4px 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    flex: 1 0 0;
+    border-radius: 8px;
+    background: var(--White-Light, #F3F3F3);
+    color: var(--secon1, #088180);
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    border: 1px solid var(--secon1, #088180);
+    margin-top: 8px;
+}
+.box-mobile-line-address{
+    display: none!important;
 }
 @media (max-width: 1400px) {
     .header .header-detail--left .back h5 {
@@ -533,14 +573,17 @@
     .container #recruitment-homeNew .title-recruitment--homeNew{
         padding-top: 30px!important;
     }
-    .box-item__content{
-        flex-wrap: wrap;
-    }
-    .img-special-line{
-        width: 100%;
-    }
-    .content__item__image{
-        height: 100%;
+    /*.box-item__content{*/
+    /*    flex-wrap: wrap;*/
+    /*}*/
+    /*.img-special-line{*/
+    /*    width: 100%;*/
+    /*}*/
+    /*.content__item__image{*/
+    /*    height: 100%;*/
+    /*}*/
+    .clinicDistanceSpan{
+        font-size: 14px;
     }
     .box-footer-md{
         max-width: 93%;
@@ -960,5 +1003,17 @@
     }
     #productInformation {
         margin-top: 5px;
+    }
+    .box-desktop-line-address{
+        display: none!important;
+    }
+    .box-mobile-line-address{
+        display: flex!important;
+    }
+    .button-detail-specialList{
+        margin-top: 0px;
+    }
+    .img-special-line{
+        margin-right: 10px;
     }
 }
