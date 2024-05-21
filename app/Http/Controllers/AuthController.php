@@ -346,8 +346,9 @@ class AuthController extends Controller
             if ($existToken) {
                 try {
                     $user = JWTAuth::setToken($existToken)->toUser();
-                    toast('The account is already logged in elsewhere!', 'error', 'top-left');
-                    return back();
+                    session()->flash('showLogoutModal', true);
+//                    toast('The account is already logged in elsewhere!', 'error', 'top-left');
+                    return back()->withInput();
                 } catch (Exception $e) {
                 }
             }
@@ -410,5 +411,19 @@ class AuthController extends Controller
         $response = new Response('Set Cookie');
         $response->withCookie(cookie($name, $value, $minutes));
         return $response;
+    }
+
+    public function checkLogin(Request $request)
+    {
+        $user = Auth::user();
+
+        if ($user && $user->token) {
+            $user->token = null;
+            $user->save();
+
+            return redirect('/home')->with('message', 'Logged out from other devices successfully.');
+        }
+
+        return back()->withErrors('Unable to clear token.');
     }
 }

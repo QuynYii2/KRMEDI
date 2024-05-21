@@ -84,6 +84,7 @@ Route::middleware(['user.active'])->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('loginProcess');
     Route::post('/register', [AuthController::class, 'register'])->name('registerProcess');
     Route::get('/logout', [AuthController::class, 'logout'])->name('logoutProcess');
+    Route::post('/check-login', [AuthController::class, 'checkLogin'])->name('checkLogin');
 
     /* Start login social */
     /* Google */
