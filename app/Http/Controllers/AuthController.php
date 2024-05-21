@@ -420,7 +420,7 @@ class AuthController extends Controller
         if ($user && $user->token) {
             $user->token = null;
             $user->save();
-
+            Auth::logout();
             return redirect('/home')->with('message', 'Logged out from other devices successfully.');
         }
 
