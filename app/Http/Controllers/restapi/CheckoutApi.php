@@ -9,6 +9,7 @@ use App\Enums\TypeProductCart;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\MailController;
 use App\Models\Cart;
+use App\Models\Notification;
 use App\Models\online_medicine\ProductMedicine;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -259,6 +260,14 @@ class CheckoutApi extends Controller
             $user = User::find($order->user_id);
             $token = $user->token_firebase;
             $response = $this->sendNotification($token, $data);
+            $notification = Notification::create([
+                'title' => 'Thay đổi trạng thái đơn hàng',
+                'sender_id' => $user->id,
+                'follower' => $user->id,
+                'target_url' => route('view.web.orders.index'),
+                'description' => 'Trạng thái đơn hàng của bạn đã thay đổi, Vui lòng vào kiểm tra!',
+            ]);
+            $notification->save();
 
             return response()->json(['status' => true, 'message' => 'Cập nhật trạng thái đơn hàng thành công'], 200);
         } catch (\Exception $e) {

@@ -364,17 +364,21 @@ class HomeController extends Controller
 
     public function listBookingDoctor(Request $request)
     {
-        $query = Booking::where('bookings.status', '!=', BookingStatus::DELETE)
-            ->where('bookings.doctor_id', Auth::user()->id)
-            ->orderBy('bookings.id', 'desc');
+        $baseQuery = Booking::join('clinics', 'bookings.clinic_id', '=', 'clinics.id')
+            ->join('users as users_patient', 'bookings.user_id', '=', 'users_patient.id')
+            ->select('bookings.*', 'clinics.name as clinic_name', 'users_patient.name as user_name')
+            ->where('bookings.status', '!=', BookingStatus::DELETE);
+        $subQuery = Booking::select('user_id')
+            ->where('doctor_id', Auth::user()->id)
+            ->where('is_check_medical_history', 1)
+            ->groupBy('user_id');
+        $query = $baseQuery->whereIn('bookings.user_id', $subQuery);
+
         if ($request->filled('key_search')) {
             $key_search = $request->input('key_search');
-            $query->join('clinics', 'bookings.clinic_id', '=', 'clinics.id')
-                ->join('users', 'bookings.user_id', '=', 'users.id')
-                ->select('bookings.*', 'clinics.name as clinic_name', 'users.name as user_name')
-                ->where(function ($q) use ($key_search) {
+            $query->where(function ($q) use ($key_search) {
                     $q->where('clinics.name', 'LIKE', "%$key_search%")
-                        ->orWhere('users.name', 'LIKE', "%$key_search%");
+                        ->orWhere('users_patient.name', 'LIKE', "%$key_search%");
                 });
         }
 
@@ -406,20 +410,6 @@ class HomeController extends Controller
             return Excel::download(new BookingDoctorExport($bookings), 'lichsukham.xlsx');
         } else {
             $bookings = $query->paginate(20);
-            foreach ($bookings as $booking){
-                $getMedicalHistory = $query->join('users', 'bookings.user_id', '=', 'users.id')->where('users.id', $booking->user_id)->get();
-                foreach ($getMedicalHistory as $checkMedicalHistory){
-                    if($checkMedicalHistory->is_check_medical_history){
-                        $query = Booking::where('bookings.status', '!=', BookingStatus::DELETE)
-                            ->where('bookings.user_id', $checkMedicalHistory->id)
-                            ->orderBy('bookings.id', 'desc');
-                        $bookings = $query->paginate(20);
-                    }
-                    else{
-                        $bookings = $query->paginate(20);
-                    }
-                }
-            }
         }
 
         $department = Department::all();

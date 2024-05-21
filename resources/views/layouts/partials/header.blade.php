@@ -119,11 +119,11 @@
                                     <a href="{{ $noti->target_url ?? '#' }}" onclick="seenNotify(event, {{ $noti->id }})">
                                         <div class="notification-item {{ $noti->seen == 0 ? "fw-bold" : "" }}" style="display: flex; align-items: center">
                                             <img src="{{ asset($noti->senders->avt) }}" alt="Profile"
-                                                class="rounded-circle" style="width: 80px">
+                                                class="rounded-circle" style="width: 70px">
                                             <div class="notificationContent ms-3">
-                                                <h5 style="font-size: 1rem">{{ $noti->title ?? "" }}</h5>
-                                                <p style="font-size: 0.9rem">{{ $noti->description ?? "" }}</p>
-                                                <p style="font-size: 0.9rem">{{ \Carbon\Carbon::parse($noti->created_at)->diffForHumans() }}</p>
+                                                <h5 style="font-size: 0.9rem">{{ $noti->title ?? "" }}</h5>
+                                                <p style="font-size: 0.85rem">{{ $noti->description ?? "" }}</p>
+                                                <p style="font-size: 0.8rem">{{ \Carbon\Carbon::parse($noti->created_at)->diffForHumans() }}</p>
                                             </div>
                                         </div>
                                     </a>

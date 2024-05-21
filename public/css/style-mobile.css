@@ -77,12 +77,13 @@
 .search-way{
     width: fit-content;
     font-size: 12px;
-    background-color: #ffa20d;
     border-radius: 8px;
-    padding: 3px 10px;
     margin-top: 10px;
     display: inline-block;
-    color: white;
+    color: #0070E0;
+}
+.search-way:hover{
+    color: #0070E0;
 }
 .box-about-doctor-specialist{
     min-height: 72px;
@@ -100,6 +101,18 @@
     flex-direction: column;
     overflow: auto;
     flex-wrap: nowrap;
+}
+#productInformation::-webkit-scrollbar {
+    width: 8px;
+}
+#productInformation::-webkit-scrollbar-track {
+    background: #ebebeb;
+    border-radius: 10px;
+}
+
+#productInformation::-webkit-scrollbar-thumb {
+    background: #a5a5a5;
+    border-radius: 10px;
 }
 #allAddressesMap,#allAddressesMapPharmacies{
     width: 68%;
@@ -151,6 +164,9 @@
 }
 .box-mobile-line-address{
     display: none!important;
+}
+.gm-style .gm-style-iw-c{
+    max-width: 465px!important;
 }
 @media (max-width: 1400px) {
     .header .header-detail--left .back h5 {
@@ -1021,5 +1037,11 @@
     }
     .img-special-line{
         margin-right: 10px;
+    }
+    .gm-style .gm-style-iw-c{
+        max-width: 300px!important;
+    }
+    .name-address-map{
+        font-size: 14px;
     }
 }
