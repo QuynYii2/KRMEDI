@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
+    <meta name="zalo-platform-site-verification" content="SEM28xdx92D5zw0zb_yh453_lnAyYMn9CZas" />
     <title>@yield('title')</title>
 
     <link rel="icon" type="image/png" href="{{ asset('img/logo.png') }}">
