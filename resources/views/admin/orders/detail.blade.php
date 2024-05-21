@@ -62,11 +62,31 @@
             </div>
         </div>
         @if($order->status == 'REFUND' && $order->type_order == 0)
-            <p class="mb-1">Duyệt trạng thái hoàn hàng</p>
+            <div class="row">
+                <div class="col-md-6">
+            <p class="mb-1 font-bold">Lý do hoàn hàng</p>
+            <p style="color: red">{{@$order->reason_refund	}}</p>
+            <p class="mb-1 font-bold">Duyệt trạng thái hoàn hàng</p>
             <a href="{{route('restapi.api.orders.refund-approval',$order->id)}}" class="btn btn-success">Duyệt hoàn hàng</a>
-            @endif
+                </div>
+                    <div class="col-md-6">
+                <p class="mb-1 font-bold">Hình ảnh sản phẩm hoàn hàng </p>
+                <img src="{{asset($order->image_reason)}}" class="w-100">
+            </div>
+            </div>
+        @endif
         @if($order->status == 'REFUND' && $order->type_order == 1)
-            <p style="color: green">Duyệt trạng thái hoàn hàng: Đã duyệt</p>
+            <div class="row">
+            <div class="col-md-6">
+            <p class="mb-1 font-bold">Lý do hoàn hàng</p>
+            <p style="color: red">{{@$order->reason_refund	}}</p>
+                <p class="font-bold" style="color: green;margin-top: 10px;font-size: 18px">Trạng thái hoàn hàng: Đã được duyệt</p>
+            </div>
+            <div class="col-md-6">
+            <p class="mb-1 font-bold">Hình ảnh sản phẩm hoàn hàng </p>
+            <img src="{{asset($order->image_reason)}}" class="w-100">
+            </div>
+            </div>
         @endif
         <h3 class="mt-3">{{ __('home.Order Item') }}</h3>
         <table class="table table-striped" id="tableOrderItem">

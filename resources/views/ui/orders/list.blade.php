@@ -101,6 +101,8 @@
                 </div>
             </div>
         </div>
+
+        <div class="box-content-order"></div>
     </div>
 
     <script>
@@ -162,6 +164,7 @@
 
         async function renderOrders(response, status) {
             let html = ``;
+            let model = ``;
             for (let i = 0; i < response.length; i++) {
                 let data = response[i];
                 let products = ``;
@@ -189,7 +192,7 @@
                                     ${status == ''?`<div class="product-name mb-3">
                                         Trạng thái đơn hàng: ${data.status}
                                     </div>`:``}
-                                    ${data.status == 'COMPLETED'? `<a href="${window.location.origin}/orders/status/${data.id}" class="btn btn-danger">Hoàn đơn</a>`:''}
+                                    ${data.status == 'COMPLETED'? `<button data-bs-toggle="modal" data-bs-target="#staticBackdrop${j}" class="btn btn-danger">Hoàn đơn</button>`:''}
                                     ${data.status == 'REFUND' && data.type_order == 0?`<div class="product-name mb-3" style="color: red">
                                                     Hoàn hàng: chờ duyệt
                                      </div>`:``}
@@ -198,6 +201,40 @@
                                      </div>`:``}
                                 </div>
                             </div>`;
+                        if (data.status == 'COMPLETED'){
+                            model += `<div class="modal fade" id="staticBackdrop${j}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel${j}" aria-hidden="true">
+                                      <div class="modal-dialog">
+                                        <div class="modal-content">
+                                          <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Lý do hoàn đơn</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                          </div>
+                                            <form action="${window.location.origin}/orders/status/${data.id}" method="post" id="bookingHospitalForm" enctype="multipart/form-data">
+                                            @csrf
+                                          <div class="modal-body">
+                                                <lable style="font-size: 15px">Lý do hoàn đơn</lable>
+                                                <textarea name="reason_refund" class="w-100 mt-2" rows="3" required></textarea>
+                                                 <div class="row mt-3">
+                                                    <div class="col-12">Hình ảnh :</div>
+                                                    <div class="col-12">
+                                                        <div class="form-control position-relative" style="padding-top: 50%">
+                                                            <button type="button" class="position-absolute border-0 bg-transparent select-image" data-target="file${j}" style="top: 50%;left: 50%;transform: translate(-50%,-50%)">
+                                                                <i style="font-size: 30px" class="bi bi-download"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <input type="file" name="file" id="file${j}" accept="image/x-png,image/gif,image/jpeg" hidden>
+                                          </div>
+                                          <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">hủy</button>
+                                            <button type="submit" class="btn btn-success">Hoàn đơn</button>
+                                          </div>
+                                           </form>
+                                        </div>
+                                      </div>
+                                    </div>`
+                        }
                     }
 
                     username = `<b>${product_item[0].username}</b>`;
@@ -236,6 +273,7 @@
                     $('.list_all_order').empty().append(html);
                     break;
             }
+            $('.box-content-order').empty().append(model);
         }
 
         function confirmCancelOrder(id) {
@@ -261,5 +299,43 @@
                 }
             });
         }
+
+        let parent;
+        $(document).on("click", ".select-image", function () {
+            let target = $(this).data('target');
+            $('#'+target ).click();
+            parent = $(this).parent();
+            $('#'+target).change(function(e){
+                imgPreview(this);
+            });
+        });
+
+        function imgPreview(input) {
+            let file = input.files[0];
+            let mixedfile = file['type'].split("/");
+            let filetype = mixedfile[0];
+            if(filetype == "image"){
+                let reader = new FileReader();
+                reader.onload = function(e){
+                    $("#preview-img").show().attr("src", );
+                    let html = '<div class="position-absolute w-100 h-100 div-file" style="top: 0; left: 0;z-index: 10">' +
+                        '<button type="button" class="position-absolute clear border-0 bg-danger p-0 d-flex justify-content-center align-items-center" style="top: -10px;right: -10px;width: 30px;height: 30px;border-radius: 50%"><i class="bi bi-x-lg text-white"></i></button>'+
+                        '<img src="'+e.target.result+'" class="w-100 h-100" style="object-fit: cover">' +
+                        '</div>';
+                    parent.html(html);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }else {
+                alert("Invalid file type");
+            }
+        }
+        $(document).on("click", "button.clear", function () {
+            $(".div-file").remove();
+            let html = '<button type="button" class="position-absolute border-0 bg-transparent select-image" style="top: 50%;left: 50%;transform: translate(-50%,-50%)">\n' +
+                '                                    <i style="font-size: 30px" class="bi bi-download"></i>\n' +
+                '                                </button>';
+            parent.html(html);
+            $('input[type="file"]').val("");
+        });
     </script>
 @endsection

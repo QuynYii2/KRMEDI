@@ -258,6 +258,15 @@
         background-color: #007bff;
         border-color: #007bff;
     }
+    .noti_number {
+        color: red;
+        font-size: 16px;
+        position: absolute;
+        left: 52%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-weight: bold;
+    }
 </style>
 @php
     //lấy ra toàn bộ role của user hiện tại
@@ -1315,20 +1324,15 @@
 </script>
 
 <script>
-    let accessToken = `Bearer ` + token;
-    let headers = {
-        'Authorization': accessToken
-    };
-
     function seenNotify(event, id) {
         event.preventDefault();
-
+        const targetUrl = event.currentTarget.getAttribute('href');
         $.ajax({
             url: `/api/notifications/${id}/edit`,
             type: 'GET',
             headers: headers,
             success: function(response) {
-                console.log(response)
+                window.location.href = targetUrl;
             },
             error: function(error) {
                 console.log(error);

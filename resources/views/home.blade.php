@@ -2602,7 +2602,6 @@
             window.location.href = "/coupon/" + id;
         }
     </script>
-{{--    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBw3G5DUAOaV9CFr3Pft_X-949-64zXaBg&libraries=geometry"></script>--}}
     <script>
         var locations = {!! json_encode($coordinatesArray) !!};
         var infoWindows = [];
@@ -2688,7 +2687,7 @@
                 <div class="p-md-3 p-2">
                     <div class="form-group">
                         <div class="d-flex justify-content-between mt-md-2">
-                            <div class="fs-18px">${location.name}</div>
+                            <div class="fs-18px name-address-map">${location.name}</div>
                             <div class="button-follow fs-12p ">
                                 <a class="text-follow-12" href="">{{ __('home.FOLLOW') }}</a>
                             </div>
@@ -2739,47 +2738,6 @@
                             <i class="text-gray mr-md-2 fa-solid fa-bookmark"></i> <span
                                 class="fs-14 font-weight-600"> ${location.type}</span>
                         </div>
-                        @for($i=0; $i<3; $i++)
-                    <div class="border-top mb-md-2">
-                        <div
-                            class="d-flex justify-content-between rv-header align-items-center mt-md-2 mt-1">
-                            <div class="d-flex rv-header--left">
-                                <div class="avt-24 mr-md-2">
-                                    <img loading="lazy" src="{{asset('img/detail_doctor/ellipse _14.png')}}">
-                                        </div>
-                                        <p class="fs-16px">Trần Đình Phi</p>
-                                    </div>
-                                    <div class="rv-header--right">
-                                        <p class="fs-14 font-weight-400">10:20 07/04/2023</p>
-                                    </div>
-                                </div>
-                                <div class="content">
-                                    <p>
-                                        {{ __('home.Lần đầu tiên sử dụng dịch vụ qua app nhưng chất lượng và dịch vụ tại salon quá tốt. Book giờ nào thì cứ đúng giờ đến k sợ phải chờ đợi như mọi chỗ khác. Hy vọng thi thoảng app có nhiều ưu đãi để giới thiệu cho bạn bè cùng sử dụng') }}
-                    </p>
-                </div>
-            </div>
-@endfor
-                    <div class="border-top">
-                        <div
-                            class="d-flex justify-content-between rv-header align-items-center mt-md-2 mt-1">
-                            <div class="d-flex rv-header--left">
-                                <div class="avt-24 mr-md-2">
-                                    <img loading="lazy" src="{{asset('img/detail_doctor/ellipse _14.png')}}">
-                                    </div>
-                                    <p class="fs-16px">Trần Đình Phi</p>
-                                </div>
-                                <div class="rv-header--right">
-                                    <p class="fs-14 font-weight-400">10:20 07/04/2023</p>
-                                </div>
-                            </div>
-                            <div class="content">
-                                <p>
-                                    {{ __('home.Lần đầu tiên sử dụng dịch vụ qua app nhưng chất lượng và dịch vụ tại salon quá tốt. Book giờ nào thì cứ đúng giờ đến k sợ phải chờ đợi như mọi chỗ khác. Hy vọng thi thoảng app có nhiều ưu đãi để giới thiệu cho bạn bè cùng sử dụng') }}
-                    </p>
-                </div>
-            </div>
-        </div>
     </div>
 </div>`;
 

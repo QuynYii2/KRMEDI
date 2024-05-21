@@ -62,7 +62,7 @@
                                                 @endphp
                                                 <img class="content__item__image" src="{{ $galleryArray[0] }}" alt=""/>
                                                 <a href="https://www.google.com/maps?q={{$clinic->latitude}},{{$clinic->longitude}}"
-                                                   class="search-way" target="_blank">Chỉ đường</a>
+                                                   class="search-way" target="_blank"><i class="fa-solid fa-location-arrow"></i> Chỉ đường</a>
                                                 <div class="group-button d-flex flex-column box-desktop-line-address mt-2">
                                                     <a href="{{ route('home.specialist.booking.detail', $clinic->id) }}"
                                                        class="item-btn-specialist">
@@ -163,7 +163,7 @@
                                                 <img class="content__item__image" src="{{ $galleryArray[0] }}"
                                                      alt=""/>
                                                 <a href="https://www.google.com/maps?q={{$pharmacy->latitude}},{{$pharmacy->longitude}}"
-                                                   class="search-way" target="_blank">Chỉ đường</a>
+                                                   class="search-way" target="_blank"><i class="fa-solid fa-location-arrow"></i> Chỉ đường</a>
                                                 <div class="group-button d-flex flex-column box-desktop-line-address mt-2">
                                                     <a href="" class="item-btn-specialist">
                                                         <div class="button-booking-specialList line-dk-btn">
@@ -509,7 +509,7 @@
                 <div class="p-md-3 p-2">
                     <div class="form-group">
                         <div class="d-flex justify-content-between mt-md-2">
-                            <div class="fs-18px">${location.name}</div>
+                            <div class="fs-18px name-address-map">${location.name}</div>
                             <div class="button-follow fs-12p ">
                                 <a class="text-follow-12" href="">{{ __('home.FOLLOW') }}</a>
                             </div>
@@ -633,7 +633,7 @@
                 <div class="p-md-3 p-2">
                     <div class="form-group">
                         <div class="d-flex justify-content-between mt-md-2">
-                            <div class="fs-18px">${locationsPharmacies.name}</div>
+                            <div class="fs-18px name-address-map">${locationsPharmacies.name}</div>
                             <div class="button-follow fs-12p ">
                                 <a class="text-follow-12" href="">{{ __('home.FOLLOW') }}</a>
                             </div>

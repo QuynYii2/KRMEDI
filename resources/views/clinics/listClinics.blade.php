@@ -224,7 +224,7 @@
                 <div class="p-md-3 p-2">
                     <div class="form-group">
                         <div class="d-flex justify-content-between mt-md-2">
-                            <div class="fs-18px">${location.name}</div>
+                            <div class="fs-18px name-address-map">${location.name}</div>
                             <div class="button-follow fs-12p ">
                                 <a class="text-follow-12" href="">{{ __('home.FOLLOW') }}</a>
                             </div>
@@ -416,7 +416,7 @@
                                         <div class="content__item d-flex">
                                             <div class="specialList-clinics--img d-flex flex-column">
                                                 ${img}
-                                                 <a href="https://www.google.com/maps?q=${item.latitude},${item.longitude}" class="search-way mb-1" target="_blank">Chỉ đường</a>
+                                                 <a href="https://www.google.com/maps?q=${item.latitude},${item.longitude}" class="search-way mb-1" target="_blank"><i class="fa-solid fa-location-arrow"></i> Chỉ đường</a>
                                      @if (Auth::check())
                     <div class="zalo-follow-only-button" style="height:20px" data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
 @endif
