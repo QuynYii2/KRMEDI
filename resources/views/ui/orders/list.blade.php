@@ -8,6 +8,13 @@
         border: 1px solid #ccc;
         margin-right: 10px;
     }
+    @media(min-width: 992px)
+    {
+    .col-lg-6 {
+        width: 49.6%!important;
+    }
+
+    }
 </style>
 @section('main-content')
     <h3 class="text-center">{{ __('home.Order Management') }}</h3>
@@ -66,37 +73,37 @@
         </ul>
         <div class="tab-content" id="myTabOrderContent">
             <div class="tab-pane fade show active" id="all_order" role="tabpanel" aria-labelledby="all_order_tab">
-                <div class="list-order mt-3 list_all_order">
+                <div class="list-order mt-3 list_all_order row justify-content-between">
 
                 </div>
             </div>
             <div class="tab-pane fade" id="process_order" role="tabpanel" aria-labelledby="process_order_tab">
-                <div class="list-order mt-3 list_process_order">
+                <div class="list-order mt-3 list_process_order row justify-content-between">
 
                 </div>
             </div>
             <div class="tab-pane fade" id="wait_payment_order" role="tabpanel" aria-labelledby="wait_payment_order_tab">
-                <div class="list-order mt-3 list_wait_payment_order">
+                <div class="list-order mt-3 list_wait_payment_order row justify-content-between">
 
                 </div>
             </div>
             <div class="tab-pane fade" id="ship_order" role="tabpanel" aria-labelledby="ship_order_tab">
-                <div class="list-order mt-3 list_ship_order">
+                <div class="list-order mt-3 list_ship_order row justify-content-between">
 
                 </div>
             </div>
             <div class="tab-pane fade" id="deliver_order" role="tabpanel" aria-labelledby="deliver_order_tab">
-                <div class="list-order mt-3 list_deliver_order">
+                <div class="list-order mt-3 list_deliver_order row justify-content-between">
 
                 </div>
             </div>
             <div class="tab-pane fade" id="cancel_order" role="tabpanel" aria-labelledby="cancel_order_tab">
-                <div class="list-order mt-3 list_cancel_order">
+                <div class="list-order mt-3 list_cancel_order row justify-content-between">
 
                 </div>
             </div>
             <div class="tab-pane fade" id="refund_order" role="tabpanel" aria-labelledby="refund_order_tab">
-                <div class="list-order mt-3 list_refund_order">
+                <div class="list-order mt-3 list_refund_order row justify-content-between">
 
                 </div>
             </div>
@@ -240,7 +247,7 @@
                     username = `<b>${product_item[0].username}</b>`;
                 }
 
-                html = html + `<div class="order-item p-2 border mt-2">
+                html = html + `<div class="order-item p-2 border mt-2 col-lg-6 col-12">
                          <div class="shop-info">
                             <b>Shop: </b> ${username}
                         </div>
