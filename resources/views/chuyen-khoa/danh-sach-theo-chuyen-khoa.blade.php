@@ -101,7 +101,7 @@
                                                     / {{ __('home.Dental Clinic') }}
                                                 </span>
                                                     </div>
-                                                    <a href="https://www.google.com/maps?q={{$clinic->latitude}},{{$clinic->longitude}}" class="search-way" target="_blank">Chỉ đường</a>
+                                                    <button id="showMapBtn" class="search-way">Chỉ đường</button>
                                                 </div>
                                                 <div class="group-button d-flex mt-3">
                                                     <a href="{{ route('home.specialist.booking.detail', $clinic->id) }}"
@@ -314,20 +314,32 @@
             var pharmacies = {!! json_encode($pharmacies) !!};
 
             for (var i = 0; i < clinics.length; i++) {
-                (function() {
+                (function(i) {
                     var clinic = clinics[i];
-                    var distanceSpan = $('.specialList-clinics[data-clinic-id="' + clinic.id + '"]').find(
-                        '.clinicDistanceSpan');
+                    var clinicElement = $('.specialList-clinics[data-clinic-id="' + clinic.id + '"]');
+                    var distanceSpan = clinicElement.find('.clinicDistanceSpan');
                     var latitude = distanceSpan.find('.lat').text();
                     var longitude = distanceSpan.find('.long').text();
 
-                    getCurrentLocation(function(currentLocation) {
-                        var newDistance = calculateDistance(currentLocation.lat, currentLocation.lng,
-                            parseFloat(latitude), parseFloat(longitude));
+                    if (latitude && longitude) {
+                        getCurrentLocation(function(currentLocation) {
+                            var newDistance = calculateDistance(currentLocation.lat, currentLocation.lng,
+                                parseFloat(latitude), parseFloat(longitude));
 
-                        distanceSpan.text(newDistance.toFixed(2) + 'Km');
-                    });
-                })();
+                            distanceSpan.text(newDistance.toFixed(2) + 'Km');
+                        });
+
+                        var showMapBtn = clinicElement.find('#showMapBtn');
+
+                        showMapBtn.on('click', function() {
+                            var clinicLocation = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
+                            document.getElementById('allAddressesMap').style.display = 'block';
+                            initMap(clinicLocation, clinics);
+                        });
+                    } else {
+                        console.error("Latitude or Longitude is missing for clinic ID:", clinic.id);
+                    }
+                })(i);
             }
 
             for (var i = 0; i < pharmacies.length; i++) {
