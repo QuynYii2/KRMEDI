@@ -264,7 +264,7 @@
                                     </div>
                                 </div>
                             </div>`;
-
+                            
                             $(document).on('click', '#showMapBtnTab', function() {
                                 getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
                             });
@@ -276,6 +276,9 @@
                             marker.addListener('click', function () {
                                 closeAllInfoWindows();
                                 infoWindow.open(map, marker);
+                                $(document).on('click', '#showMapBtnTab', function() {
+                                    getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                                });
                             });
                             markers.push(marker);
                             infoWindows.push(infoWindow);
