@@ -60,6 +60,12 @@
     -webkit-line-clamp:2!important;
     font-size: 18px!important;
 }
+.header-mobile-clinics{
+    display: none;
+}
+.map_clinic_mobile{
+    display: none;
+}
 .text-address{
     font-size: 16px;
     margin: 0 10px;
@@ -1043,5 +1049,35 @@
     }
     .name-address-map{
         font-size: 14px;
+    }
+    .header_clinic_desktop,.bg-mobile-clinics{
+        display: none!important;
+    }
+    .header-mobile-clinics{
+        display: flex;
+    }
+    .text-phong-mall{
+        font-size: 16px!important;
+    }
+    .box-productInformation-clinic{
+        flex-direction: column!important;
+        height: 800px!important;
+        margin: 0px;
+    }
+    .specialList-clinics{
+        padding-left: 0px;
+        margin-top: 0px!important;
+    }
+    #productInformation::-webkit-scrollbar {
+        width: 3px;
+    }
+    #offcanvasRightMap{
+        width: 100%;
+    }
+    .map_clinic_desktop{
+        display: none;
+    }
+    .map_clinic_mobile{
+        display: inline-block;
     }
 }

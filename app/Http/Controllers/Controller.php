@@ -11,6 +11,14 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
+    public function check_mobile ()
+    {
+        $agent = new \Jenssegers\Agent\Agent;
+
+        $result = $agent->isPhone();
+        return $result;
+    }
+
     public function getTokenZaloZns()
     {
         $token = ZaloOaModel::first();
