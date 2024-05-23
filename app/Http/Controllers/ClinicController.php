@@ -151,6 +151,11 @@ class ClinicController extends Controller
                 }
                 $booking = $bookingApi->createBooking($request);
                 if ($booking->getStatusCode() == 200) {
+                    $data_booking = $booking->getData()->data;
+                    $user = User::find($data_booking->user_id);
+                    $clinic = Clinic::find($data_booking->clinic_id);
+                    $specialist = Department::find($data_booking->department_id);
+//                    $this->sendZaloMessageBooking($booking,$user,$clinic,$specialist->name);
                     alert()->success('Success', 'Booking success.');
                     return back()->with('success', 'Booking success');
                 }
