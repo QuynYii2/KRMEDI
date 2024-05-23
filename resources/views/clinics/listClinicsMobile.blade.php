@@ -97,12 +97,21 @@
             <p style="color: red;text-align: center;margin:30px 0;display: none" class="text-not-address w-100">Không có phòng khám nào như bạn cần tìm quanh bạn</p>
             <div class="box-list-clinic-address">
                 <div class="body row box-productInformation-clinic" id="productInformation"></div>
-                <div id="allAddressesMap" class="show active fade map_clinic_desktop" style="height: 800px;">
-
-                </div>
-
             </div>
 
+        </div>
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRightMap" aria-labelledby="offcanvasRightMap">
+            <div class="offcanvas-header">
+                <div data-bs-dismiss="offcanvas" aria-label="Close">
+                    <svg viewBox="0 0 24 24" style="width: 24px" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.29231 12.7138L15.2863 21.7048C15.6809 22.0984 16.3203 22.0984 16.7159 21.7048C17.1106 21.3111 17.1106 20.6717 16.7159 20.2781L8.43539 12.0005L16.7149 3.72293C17.1096 3.32928 17.1096 2.68989 16.7149 2.29524C16.3203 1.90159 15.6799 1.90159 15.2853 2.29524L6.29131 11.2861C5.90273 11.6757 5.90273 12.3251 6.29231 12.7138Z" fill="currentColor"></path></svg>
+                </div>
+                <span style="font-weight: 700;width: 100%;text-align: center">Chọn từ bản đồ</span>
+            </div>
+            <div class="offcanvas-body p-0">
+                <div id="allAddressesMap" class="show active fade map_clinic_mobile" style="height: auto;">
+
+                </div>
+            </div>
         </div>
     </div>
 

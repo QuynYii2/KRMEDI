@@ -41,7 +41,11 @@ class ClinicController extends Controller
 
     public function index()
     {
-        return view('clinics.listClinics');
+        if ($this->check_mobile()){
+            return view('clinics.listClinicsMobile');
+        }else{
+            return view('clinics.listClinics');
+        }
     }
 
     public function detail($id)
