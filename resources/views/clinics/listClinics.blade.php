@@ -141,6 +141,9 @@
     <script>
         var markers = [];
         var infoWindows = [];
+        var directionsService;
+        var directionsRenderer;
+
         function getCurrentLocation(callback) {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
@@ -156,7 +159,7 @@
         }
 
         function calculateDistance(lat1, lng1, lat2, lng2) {
-            var R = 6371; // Độ dài trung bình của trái đất trong km
+            var R = 6371; // Radius of the earth in km
             var dLat = toRadians(lat2 - lat1);
             var dLng = toRadians(lng2 - lng1);
 
@@ -190,6 +193,10 @@
                         zoom: 12.3
                     });
 
+                    directionsService = new google.maps.DirectionsService();
+                    directionsRenderer = new google.maps.DirectionsRenderer();
+                    directionsRenderer.setMap(map);
+
                     var currentLocationMarker = new google.maps.Marker({
                         position: currentLocation,
                         map: map,
@@ -215,68 +222,67 @@
                             let gallery = location.gallery;
                             let arrayGallery = gallery.split(',');
 
-
                             var infoWindowContent = `<div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
-                <div>
-
-                    <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img">
-                </div>
-                <div class="p-md-3 p-2">
-                    <div class="form-group">
-                        <div class="d-flex justify-content-between mt-md-2">
-                            <div class="fs-18px name-address-map">${location.name}</div>
-                            <div class="button-follow fs-12p ">
-                                <a class="text-follow-12" href="">{{ __('home.FOLLOW') }}</a>
-                            </div>
-                        </div>
-                        <div class="d-flex mt-md-2">
-                            <div class="d-flex col-md-6 justify-content-center align-items-center">
-                                <a class="row p-2" href="">
-                                    <div class="justify-content-center d-flex">
-                                        <i class="border-button-address fa-solid fa-bullseye"></i>
+                                <div>
+                                    <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img">
+                                </div>
+                                <div class="p-md-3 p-2">
+                                    <div class="form-group">
+                                        <div class="d-flex justify-content-between mt-md-2">
+                                            <div class="fs-18px name-address-map">${location.name}</div>
+                                            <div class="button-follow fs-12p ">
+                                                <a class="text-follow-12" href="">{{ __('home.FOLLOW') }}</a>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex mt-md-2">
+                                            <div class="d-flex col-md-6 justify-content-center align-items-center">
+                                                <a class="row p-2" href="">
+                                                    <div class="justify-content-center d-flex">
+                                                        <i class="border-button-address fa-solid fa-bullseye"></i>
+                                                    </div>
+                                                    <div class="d-flex justify-content-center">{{ __('home.Start') }}</div>
+                                                </a>
+                                            </div>
+                                            <div class="d-flex col-md-6 justify-content-center align-items-center">
+                                                <a class="row p-2" href="">
+                                                    <div class="justify-content-center d-flex">
+                                                        <i class="border-button-address fa-regular fa-circle-right"></i>
+                                                    </div>
+                                                    <div class="d-flex justify-content-center">{{ __('home.Direction') }}</div>
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="d-flex justify-content-center">{{ __('home.Start') }}</div>
-                                </a>
-                            </div>
-                            <div class="d-flex col-md-6 justify-content-center align-items-center">
-                                <a class="row p-2" href="">
-                                    <div class="justify-content-center d-flex">
-                                        <i class="border-button-address fa-regular fa-circle-right"></i>
-                                    </div>
-                                    <div class="d-flex justify-content-center">{{ __('home.Direction') }}</div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-md-3 mb-md-3">
-                    <a class="w-100 btn btn-secondary border-button-address font-weight-800 fs-14 justify-content-center" href="${urlDetail}" >
-                    {{ __('home.Booking') }}
+                                    <div class="mt-md-3 mb-md-3">
+                                        <a class="w-100 btn btn-secondary border-button-address font-weight-800 fs-14 justify-content-center" href="${urlDetail}">
+                                            {{ __('home.Booking') }}
                             </a>
-                            </div>
-                            <div class="border-top">
-                                <div class="mt-md-2 mt-1"><i class="text-gray mr-md-2 fa-solid fa-location-dot"></i>
-                                    <span class="fs-14 font-weight-600">${location.address_detail}</span>
                         </div>
-                        <div class="mt-md-2 mt-1">
-                            <i class="text-gray mr-md-2 fa-regular fa-clock"></i>
-                            <span class="fs-14 font-weight-600">
-                                Open: ${formatTime(location.open_date)} - ${formatTime(location.close_date)}
-                            </span>
-                        </div>
-                        <div class="mt-md-2 mt-1">
-                            <i class="text-gray mr-md-2 fa-solid fa-globe"></i>
-                            <span class="fs-14 font-weight-600"> ${location.email}</span>
-                        </div>
-                        <div class="mt-md-2 mt-1">
-                            <i class="text-gray mr-md-2 fa-solid fa-phone-volume"></i> <span
-                                class="fs-14 font-weight-600"> ${location.phone}</span>
-                        </div>
-                        <div class="mt-md-2 mt-1 mb-md-2">
-                            <i class="text-gray mr-md-2 fa-solid fa-bookmark"></i> <span
-                                class="fs-14 font-weight-600"> ${location.type}</span>
-                        </div>
-            </div>
-        </div>`;
+                        <div class="border-top">
+                            <div class="mt-md-2 mt-1"><i class="text-gray mr-md-2 fa-solid fa-location-dot"></i>
+                                <span class="fs-14 font-weight-600">${location.address_detail}</span>
+                                        </div>
+                                        <div class="mt-md-2 mt-1">
+                                            <i class="text-gray mr-md-2 fa-regular fa-clock"></i>
+                                            <span class="fs-14 font-weight-600">
+                                                Open: ${formatTime(location.open_date)} - ${formatTime(location.close_date)}
+                                            </span>
+                                        </div>
+                                        <div class="mt-md-2 mt-1">
+                                            <i class="text-gray mr-md-2 fa-solid fa-globe"></i>
+                                            <span class="fs-14 font-weight-600">${location.email}</span>
+                                        </div>
+                                        <div class="mt-md-2 mt-1">
+                                            <i class="text-gray mr-md-2 fa-solid fa-phone-volume"></i>
+                                            <span class="fs-14 font-weight-600">${location.phone}</span>
+                                        </div>
+                                        <div class="mt-md-2 mt-1 mb-md-2">
+                                            <i class="text-gray mr-md-2 fa-solid fa-bookmark"></i>
+                                            <span class="fs-14 font-weight-600">${location.type}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
                             var infoWindow = new google.maps.InfoWindow({
                                 content: infoWindowContent
                             });
@@ -288,6 +294,14 @@
                             markers.push(marker);
                             infoWindows.push(infoWindow);
                             location.markerIndex = markers.length - 1;
+
+                            // Define clinicElement here
+                            var clinicElement = $('.border-specialList[data-marker-index="' + location.markerIndex + '"]');
+                            console.log(clinicElement);
+                            // Add click event for directions
+                            clinicElement.find('#showMapBtn').on('click', function() {
+                                getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                            });
                         }
                     });
 
@@ -298,7 +312,6 @@
                             infoWindows[markerIndex].open(map, markers[markerIndex]);
                         });
                     });
-
                 }
 
                 function closeAllInfoWindows() {
@@ -310,26 +323,29 @@
                 getCurrentLocation(function(currentLocation) {
                     initMap(currentLocation, locations);
                 });
-                document.addEventListener('DOMContentLoaded', function() {
-                    const departmentLinks = document.querySelectorAll('.department-link');
-
-                    departmentLinks.forEach(link => {
-                        link.addEventListener('click', function(event) {
-                            event.preventDefault();
-                            const departmentId = this.getAttribute('data-id');
-                            localStorage.setItem('departmentId', departmentId);
-                            window.location.href = this.href;
-                        });
-                    });
-                });
-            }else{
-                $('.text-not-address').css('display','inline-block')
+            } else {
+                $('.text-not-address').css('display', 'inline-block');
                 $('#productInformation').html('');
                 $('#allAddressesMap').html('');
             }
-
         }
 
+        function getDirections(currentLocation, clinicLocation) {
+            var request = {
+                origin: currentLocation,
+                destination: clinicLocation,
+                travelMode: 'DRIVING'
+            };
+
+            directionsService.route(request, function(result, status) {
+                if (status === 'OK') {
+                    directionsRenderer.setDirections(result);
+                    document.getElementById('allAddressesMap').style.display = 'block';
+                } else {
+                    console.error('Directions request failed due to ' + status);
+                }
+            });
+        }
 
         function initShowProducts() {
             $.ajax({
@@ -340,29 +356,16 @@
                 },
                 success: function(response) {
                     mapClinic(response);
-                    renderClinics(response)
+                    renderClinics(response);
                 },
                 error: function(exception) {
-                    console.log(exception)
+                    console.log(exception);
                 }
             });
         }
 
-        // function showSpinner() {
-        //     const $spinner = $('<div>').addClass('spinner-loading text-center').attr('role', 'status')
-        //         .append($('<span>').text('Loading...'));
-        //
-        //     $('#productInformation').append($spinner);
-        // }
-        //
-        // function hideSpinner() {
-        //     $('.spinner-loading').remove();
-        // }
-
         function loadProductInformation() {
-            // showSpinner();
             initShowProducts();
-            // hideSpinner();
         }
 
         loadProductInformation();
@@ -379,8 +382,7 @@
                         parseFloat(item.latitude), parseFloat(item.longitude)
                     );
 
-                    // Chọn bán kính tìm kiếm (ví dụ: 10 km)
-                    var searchRadius = 10;
+                    var searchRadius = 10; // Example search radius: 10 km
                     if (distance >= searchRadius || isNaN(distance)) {
                         continue;
                     }
@@ -391,12 +393,6 @@
                     let arrayGallery = gallery.split(',');
                     img += `<img class="mr-2 img-item1" src="${arrayGallery[0]}" alt="">`;
 
-                    // let serviceHtml = ``;
-                    // let service = item.services;
-                    // for (let j = 0; j < service.length; j++) {
-                    //     let serviceItem = service[j];
-                    //     serviceHtml = serviceHtml + `<span>${serviceItem.name},</span>`;
-                    // }
                     let openDate = new Date(item.open_date);
                     let closeDate = new Date(item.close_date);
 
@@ -410,46 +406,43 @@
                     });
 
                     let html = `
-                            <div class="specialList-clinics col-lg-12 col-md-6 mb-3">
-
-                                    <div class="border-specialList" data-marker-index="${index_map}" style="gap:unset;padding:5px">
-                                        <div class="content__item d-flex">
-                                            <div class="specialList-clinics--img d-flex flex-column">
-                                                ${img}
-                                                 <a href="https://www.google.com/maps?q=${item.latitude},${item.longitude}" class="search-way mb-1" target="_blank"><i class="fa-solid fa-location-arrow"></i> Chỉ đường</a>
-                                     @if (Auth::check())
+                        <div class="specialList-clinics col-lg-12 col-md-6 mb-3">
+                            <div class="border-specialList" data-marker-index="${index_map}" style="gap:unset;padding:5px">
+                                <div class="content__item d-flex">
+                                    <div class="specialList-clinics--img d-flex flex-column">
+                                        ${img}
+                                        <button id="showMapBtn" class="search-way" style="border:none; background-color: transparent"><i class="fa-solid fa-location-arrow"></i>Chỉ đường</button>
+                                        @if (Auth::check())
                     <div class="zalo-follow-only-button" style="height:20px" data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
 @endif
+                    </div>
+                    <div class="specialList-clinics--main w-100">
+                        <div class="title-specialList-clinics">
+@if (locationHelper() == 'vi')
+                    ${item.name}
+                                            @else
+                    ${item.name_en}
+                                            @endif
+                    </div>
+                    <div class="address-specialList-clinics">
+                        <div class="d-flex align-items-center address-clinics">
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            <div style="-webkit-line-clamp: 3!important;">${item.address_detail} ${item.addressInfo}</div>
                                             </div>
-                                            <div class="specialList-clinics--main w-100">
-                                                <div class="title-specialList-clinics">
-
-                                                        @if (locationHelper() == 'vi')
-                                                            ${item.name}
-                                                            @else
-                                                            ${item.name_en}
-                                                            @endif
-                                                </div>
-                                            <div class="address-specialList-clinics">
-                                        <div class="d-flex align-items-center address-clinics">
-                                            <i class="fas fa-map-marker-alt mr-2"></i>
-                                            <div style="-webkit-line-clamp: 3!important;">${item.address_detail} ${item.addressInfo}</div>
                                         </div>
-                                    </div>
-                                    <div class="d-flex justify-content-between align-items-center flex-wrap">
-                                        <div class="time-working w-100 d-flex justify-content-between">
-                                            <span class="color-timeWorking">
-                                                <span class="fs-14 font-weight-600"><i class="fa-regular fa-clock"></i> ${formattedOpenDate} - ${formattedCloseDate}</span>
+                                        <div class="d-flex justify-content-between align-items-center flex-wrap">
+                                            <div class="time-working w-100 d-flex justify-content-between">
+                                                <span class="color-timeWorking">
+                                                    <span class="fs-14 font-weight-600"><i class="fa-regular fa-clock"></i> ${formattedOpenDate} - ${formattedCloseDate}</span>
                                                 </span>
                                                 <span class="distance"><i class="fas fa-map-marker-alt mr-2"></i>${distance.toFixed(2)} Km</span>
+                                            </div>
                                         </div>
                                     </div>
-                                    </div>
-                                    </div>
-                                    </div>
-
+                                </div>
                             </div>
-                            `;
+                        </div>
+                    `;
 
                     productInformationDiv.innerHTML += html;
                     index_map += 1;
