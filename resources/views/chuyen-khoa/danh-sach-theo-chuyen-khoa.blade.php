@@ -61,8 +61,7 @@
                                                     $galleryArray = explode(',', $clinic->gallery);
                                                 @endphp
                                                 <img class="content__item__image" src="{{ $galleryArray[0] }}" alt=""/>
-                                                <a href="https://www.google.com/maps?q={{$clinic->latitude}},{{$clinic->longitude}}"
-                                                   class="search-way" target="_blank"><i class="fa-solid fa-location-arrow"></i> Chỉ đường</a>
+                                                <button id="showMapBtn" class="search-way" style="border: none; background-color: transparent">Chỉ đường</button>
                                                 <div class="group-button d-flex flex-column box-desktop-line-address mt-2">
                                                     <a href="{{ route('home.specialist.booking.detail', $clinic->id) }}"
                                                        class="item-btn-specialist">
@@ -162,8 +161,7 @@
                                                 @endphp
                                                 <img class="content__item__image" src="{{ $galleryArray[0] }}"
                                                      alt=""/>
-                                                <a href="https://www.google.com/maps?q={{$pharmacy->latitude}},{{$pharmacy->longitude}}"
-                                                   class="search-way" target="_blank"><i class="fa-solid fa-location-arrow"></i> Chỉ đường</a>
+                                                <button id="showMapBtnPharmacy" class="search-way" style="border: none; background-color: transparent">Chỉ đường</button>
                                                 <div class="group-button d-flex flex-column box-desktop-line-address mt-2">
                                                     <a href="" class="item-btn-specialist">
                                                         <div class="button-booking-specialList line-dk-btn">
@@ -351,7 +349,8 @@
             function waitForAllLocations(clinics) {
                 var promises = clinics.map(function(clinic) {
                     return new Promise(function(resolve) {
-                        var distanceSpan = $('.specialList-clinics[data-clinic-id="' + clinic.id + '"]').find('.clinicDistanceSpan');
+                        var clinicElement = $('.specialList-clinics[data-clinic-id="' + clinic.id + '"]');
+                        var distanceSpan = clinicElement.find('.clinicDistanceSpan');
                         var latitude = distanceSpan.find('.lat').text();
                         var longitude = distanceSpan.find('.long').text();
 
@@ -359,6 +358,16 @@
                             var newDistance = calculateDistance(currentLocation.lat, currentLocation.lng, parseFloat(latitude), parseFloat(longitude));
                             distanceSpan.text(newDistance.toFixed(2) + 'Km');
                             resolve(newDistance);
+                        });
+
+                        var showMapBtn = clinicElement.find('#showMapBtn');
+
+                        showMapBtn.on('click', function() {
+                            var clinicLocation = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
+                            document.getElementById('allAddressesMap').style.display = 'block';
+                            getCurrentLocation(function(currentLocation) {
+                                initMap(currentLocation, clinicLocation, clinics);
+                            });
                         });
                     });
                 });
@@ -389,6 +398,16 @@
                             var newDistance = calculateDistance(currentLocation.lat, currentLocation.lng, parseFloat(latitude), parseFloat(longitude));
                             distanceSpan.text(newDistance.toFixed(2) + 'Km');
                             resolve({distance: newDistance, pharmacyElement: pharmacyElement});
+                        });
+
+                        var showMapBtnPharmacy = pharmacyElement.find('#showMapBtnPharmacy');
+
+                        showMapBtnPharmacy.on('click', function() {
+                            var clinicLocationPharmacy = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
+                            document.getElementById('allAddressesMapPharmacies').style.display = 'block';
+                            getCurrentLocation(function(currentLocation) {
+                                initMapPharmacies(currentLocation, clinicLocationPharmacy, clinics);
+                            });
                         });
                     });
                 });
@@ -468,12 +487,30 @@
                 return `${hours}:${minutes}`;
             }
 
-            function initMap(currentLocation, locations) {
+            function initMap(currentLocation, clinicLocation, locations) {
                 var map = new google.maps.Map(document.getElementById('allAddressesMap'), {
                     center: currentLocation,
                     zoom: 12.3
                 });
 
+                var directionsService = new google.maps.DirectionsService();
+                var directionsRenderer = new google.maps.DirectionsRenderer();
+                directionsRenderer.setMap(map);
+
+                var request = {
+                    origin: currentLocation,
+                    destination: clinicLocation,
+                    travelMode: 'DRIVING'
+                };
+
+                directionsService.route(request, function(result, status) {
+                    if (status === 'OK') {
+                        directionsRenderer.setDirections(result);
+                    } else {
+                        console.error('Directions request failed due to ' + status);
+                        alert('Directions request failed: ' + status);
+                    }
+                });
                 var currentLocationMarker = new google.maps.Marker({
                     position: currentLocation,
                     map: map,
@@ -589,12 +626,29 @@
 
             }
 
-            function initMapPharmacies(currentLocation, locationsPharmacies) {
+            function initMapPharmacies(currentLocation, clinicLocationPharmacy,  locationsPharmacies) {
                 var map2 = new google.maps.Map(document.getElementById('allAddressesMapPharmacies'), {
                     center: currentLocation,
                     zoom: 12.3
                 });
+                var directionsService = new google.maps.DirectionsService();
+                var directionsRenderer = new google.maps.DirectionsRenderer();
+                directionsRenderer.setMap(map2);
 
+                var request = {
+                    origin: currentLocation,
+                    destination: clinicLocationPharmacy,
+                    travelMode: 'DRIVING'
+                };
+
+                directionsService.route(request, function(result, status) {
+                    if (status === 'OK') {
+                        directionsRenderer.setDirections(result);
+                    } else {
+                        console.error('Directions request failed due to ' + status);
+                        alert('Directions request failed: ' + status);
+                    }
+                });
                 var currentLocationMarker = new google.maps.Marker({
                     position: currentLocation,
                     map: map2,
