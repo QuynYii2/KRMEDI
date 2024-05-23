@@ -417,17 +417,37 @@
                 return `${hours}:${minutes}`;
             }
 
-            function initMap(currentLocation, locations) {
-                var map = new google.maps.Map(document.getElementById('allAddressesMap'), {
-                    center: currentLocation,
-                    zoom: 12.3
-                });
+            function initMap(clinicLocation, locations) {
+                getCurrentLocation(function(currentLocation) {
+                    var map = new google.maps.Map(document.getElementById('allAddressesMap'), {
+                        center: currentLocation,
+                        zoom: 12.3
+                    });
 
-                var currentLocationMarker = new google.maps.Marker({
-                    position: currentLocation,
-                    map: map,
-                    title: 'Your Location'
-                });
+                    var directionsService = new google.maps.DirectionsService();
+                    var directionsRenderer = new google.maps.DirectionsRenderer();
+                    directionsRenderer.setMap(map);
+
+                    var request = {
+                        origin: currentLocation,
+                        destination: clinicLocation,
+                        travelMode: 'DRIVING'
+                    };
+
+                    console.log(directionsService);
+                    directionsService.route(request, function(result, status) {
+                        if (status === 'OK') {
+                            directionsRenderer.setDirections(result);
+                        } else {
+                            console.error('Directions request failed due to ' + status);
+                        }
+                    });
+
+                    var currentLocationMarker = new google.maps.Marker({
+                        position: currentLocation,
+                        map: map,
+                        title: 'Your Location'
+                    });
 
                 locations.forEach(function (location) {
                     var distance = calculateDistance(
@@ -564,6 +584,7 @@
 
                         infoWindows.push(infoWindow);
                     }
+                });
                 });
             }
 
