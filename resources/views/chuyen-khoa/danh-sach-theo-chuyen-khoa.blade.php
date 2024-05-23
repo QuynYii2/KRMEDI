@@ -61,7 +61,7 @@
                                                     $galleryArray = explode(',', $clinic->gallery);
                                                 @endphp
                                                 <img class="content__item__image" src="{{ $galleryArray[0] }}" alt=""/>
-                                                <button id="showMapBtn" class="search-way" style="border: none; background-color: transparent">Chỉ đường</button>
+                                                <button id="showMapBtn" class="search-way" style="border: none"><i class="fa-solid fa-location-arrow"></i>Chỉ đường</button>
                                                 <div class="group-button d-flex flex-column box-desktop-line-address mt-2">
                                                     <a href="{{ route('home.specialist.booking.detail', $clinic->id) }}"
                                                        class="item-btn-specialist">
@@ -161,7 +161,7 @@
                                                 @endphp
                                                 <img class="content__item__image" src="{{ $galleryArray[0] }}"
                                                      alt=""/>
-                                                <button id="showMapBtnPharmacy" class="search-way" style="border: none; background-color: transparent">Chỉ đường</button>
+                                                <button id="showMapBtnPharmacy" class="search-way" style="border: none"><i class="fa-solid fa-location-arrow"></i>Chỉ đường</button>
                                                 <div class="group-button d-flex flex-column box-desktop-line-address mt-2">
                                                     <a href="" class="item-btn-specialist">
                                                         <div class="button-booking-specialList line-dk-btn">
@@ -778,11 +778,11 @@
             }
 
             getCurrentLocation(function (currentLocation) {
-                initMap(currentLocation, locations);
+                initMap(currentLocation, null, locations);
             });
 
             getCurrentLocationPharmacies(function (currentLocation) {
-                initMapPharmacies(currentLocation, locationsPharmacies);
+                initMapPharmacies(currentLocation, null, locationsPharmacies);
             });
 
             document.addEventListener('DOMContentLoaded', function () {
