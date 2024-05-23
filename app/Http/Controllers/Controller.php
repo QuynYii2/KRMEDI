@@ -11,7 +11,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
-    public function getToken()
+    public function getTokenZaloZns()
     {
         $token = ZaloOaModel::first();
         $curl = curl_init();
@@ -48,7 +48,7 @@ class Controller extends BaseController
 
 //    public function sendZaloMessageBooking($booking,$user,$hospital,$specialist)
 //    {
-//        $data = $this->getToken();
+//        $data = $this->getTokenZaloZns();
 //        if ($data['status'] == false) {
 //            return back()->with(['error' => 'Refresh Token đã hết hạn']);
 //        }
@@ -95,7 +95,7 @@ class Controller extends BaseController
 //
 //    public function sendZaloMessageBookingComplete($booking,$user,$hospital,$specialist,$doctor)
 //    {
-//        $data = $this->getToken();
+//        $data = $this->getTokenZaloZns();
 //        if ($data['status'] == false) {
 //            return back()->with(['error' => 'Refresh Token đã hết hạn']);
 //        }
@@ -143,7 +143,7 @@ class Controller extends BaseController
 //
 //    public function sendZaloMessageOrder($order,$user,$hospital,$specialist,$doctor)
 //    {
-//        $data = $this->getToken();
+//        $data = $this->getTokenZaloZns();
 //        if ($data['status'] == false) {
 //            return back()->with(['error' => 'Refresh Token đã hết hạn']);
 //        }
