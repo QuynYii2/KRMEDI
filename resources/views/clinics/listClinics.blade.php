@@ -244,12 +244,12 @@
                                                 </a>
                                             </div>
                                             <div class="d-flex col-md-6 justify-content-center align-items-center">
-                                                <a class="row p-2" href="">
+                                                <button class="row p-2" id="showMapBtnTab" style="background-color: transparent; border:none">
                                                     <div class="justify-content-center d-flex">
                                                         <i class="border-button-address fa-regular fa-circle-right"></i>
                                                     </div>
                                                     <div class="d-flex justify-content-center">{{ __('home.Direction') }}</div>
-                                                </a>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -283,6 +283,11 @@
                                     </div>
                                 </div>
                             </div>`;
+
+                            $(document).on('click', '#showMapBtnTab', function() {
+                                getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                            });
+                            
                             var infoWindow = new google.maps.InfoWindow({
                                 content: infoWindowContent
                             });
@@ -295,12 +300,13 @@
                             infoWindows.push(infoWindow);
                             location.markerIndex = markers.length - 1;
 
-                            // Define clinicElement here
-                            var clinicElement = $('.border-specialList[data-marker-index="' + location.markerIndex + '"]');
-                            console.log(clinicElement);
-                            // Add click event for directions
-                            clinicElement.find('#showMapBtn').on('click', function() {
-                                getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                            // Define clinicElement after DOM is ready
+                            $(document).ready(function() {
+                                var clinicElement = $('.border-specialList[data-marker-index="' + location.markerIndex + '"]');
+                                // Add click event for directions
+                                clinicElement.find('#showMapBtn').on('click', function() {
+                                    getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                                });
                             });
                         }
                     });
