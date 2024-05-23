@@ -561,12 +561,12 @@
                                 </a>
                             </div>
                             <div class="d-flex col-md-6 justify-content-center align-items-center">
-                                <a class="row p-2" href="">
+                                <button class="row p-2" id="showMapBtnTab" style="background-color: transparent; border:none">
                                     <div class="justify-content-center d-flex">
                                         <i class="border-button-address fa-regular fa-circle-right"></i>
                                     </div>
                                     <div class="d-flex justify-content-center">{{ __('home.Direction') }}</div>
-                                </a>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -608,6 +608,9 @@
                         marker.addListener('click', function () {
                             closeAllInfoWindows();
                             infoWindow.open(map, marker);
+                            $(document).on('click', '#showMapBtnTab', function() {
+                                getDirections(currentLocation, {lat: parseFloat(location.latitude), lng: parseFloat(location.longitude)});
+                            });
                         });
 
                         markers.push(marker);
@@ -678,7 +681,6 @@
                         let gallery = locationsPharmacies.gallery;
                         let arrayGallery = gallery.split(',');
 
-
                         var infoWindowContent = `<div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
                 <div>
 
@@ -702,12 +704,12 @@
                                 </a>
                             </div>
                             <div class="d-flex col-md-6 justify-content-center align-items-center">
-                                <a class="row p-2" href="">
+                                <button class="row p-2" id="showMapBtnPharmacyTab" style="background-color: transparent; border:none">
                                     <div class="justify-content-center d-flex">
                                         <i class="border-button-address fa-regular fa-circle-right"></i>
                                     </div>
                                     <div class="d-flex justify-content-center">{{ __('home.Direction') }}</div>
-                                </a>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -748,6 +750,9 @@
                         markerPharmacies.addListener('click', function () {
                             closeAllInfoWindowsPharmacy();
                             infoWindow2.open(map2, markerPharmacies);
+                            $(document).on('click', '#showMapBtnPharmacyTab', function() {
+                                getDirectionsPharmacies(currentLocation, { lat: parseFloat(locationsPharmacies.latitude), lng: parseFloat(locationsPharmacies.longitude) });
+                            });
                         });
                         markersPharmacy.push(markerPharmacies);
                         infoWindowsPharmacy.push(infoWindow2);
@@ -764,7 +769,52 @@
                 });
 
             }
+            function getDirectionsPharmacies(currentLocation, clinicLocation) {
+                var map2 = new google.maps.Map(document.getElementById('allAddressesMapPharmacies'), {
+                    center: currentLocation,
+                    zoom: 12.3
+                });
+                var directionsService = new google.maps.DirectionsService();
+                var directionsRenderer = new google.maps.DirectionsRenderer();
+                directionsRenderer.setMap(map2);
+                var request = {
+                    origin: currentLocation,
+                    destination: clinicLocation,
+                    travelMode: 'DRIVING'
+                };
 
+                directionsService.route(request, function(result, status) {
+                    if (status === 'OK') {
+                        directionsRenderer.setDirections(result);
+                        document.getElementById('allAddressesMapPharmacies').style.display = 'block';
+                    } else {
+                        console.error('Directions request failed due to ' + status);
+                    }
+                });
+            }
+            function getDirections(currentLocation, clinicLocation) {
+                var map = new google.maps.Map(document.getElementById('allAddressesMap'), {
+                    center: currentLocation,
+                    zoom: 12.3
+                });
+                var directionsService = new google.maps.DirectionsService();
+                var directionsRenderer = new google.maps.DirectionsRenderer();
+                directionsRenderer.setMap(map);
+                var request = {
+                    origin: currentLocation,
+                    destination: clinicLocation,
+                    travelMode: 'DRIVING'
+                };
+
+                directionsService.route(request, function(result, status) {
+                    if (status === 'OK') {
+                        directionsRenderer.setDirections(result);
+                        document.getElementById('allAddressesMap').style.display = 'block';
+                    } else {
+                        console.error('Directions request failed due to ' + status);
+                    }
+                });
+            }
             function closeAllInfoWindows() {
                 infoWindows.forEach(function (infoWindow) {
                     infoWindow.close();
