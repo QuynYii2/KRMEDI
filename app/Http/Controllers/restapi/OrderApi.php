@@ -189,6 +189,14 @@ class OrderApi extends Controller
         $order = Order::find($id);
         $order->type_order = 1;
         $order->save();
+        $notificationAdmin = Notification::create([
+            'title' => 'Yêu cầu hoàn đơn hàng',
+            'sender_id' => $order->user_id,
+            'follower' => $order->user_id,
+            'target_url' => route('view.web.orders.index'),
+            'description' => 'Yêu cầu hoàn hàng của bạn đã được duyệt, Vui lòng vào kiểm tra!',
+        ]);
+        $notificationAdmin->save();
         return \redirect()->back()->with(['success' => 'Duyệt hoàn hàng thành công']);
     }
 

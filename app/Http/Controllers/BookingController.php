@@ -10,6 +10,7 @@ use App\Http\Controllers\restapi\MainApi;
 use App\Models\Booking;
 use App\Models\BookingResult;
 use App\Models\Clinic;
+use App\Models\Department;
 use App\Models\Role;
 use App\Models\RoleUser;
 use App\Models\ServiceClinic;
@@ -337,6 +338,12 @@ class BookingController extends Controller
 
                 $extendData['booking_results'] = array_values($bookingResults);
                 $booking->extend = $extendData;
+            }elseif ($status == BookingStatus::COMPLETE){
+                $user = User::find($booking->user_id);
+                $clinic = Clinic::find($booking->clinic_id);
+                $specialist = Department::find($booking->department_id);
+                $doctor = User::find($booking->doctor_id);
+//                $this->sendZaloMessageBookingComplete($booking,$user,$clinic,$specialist->name,$doctor);
             }
 
             // Check if the status has changed
