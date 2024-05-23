@@ -278,6 +278,7 @@
                                 infoWindow.open(map, marker);
                                 $(document).on('click', '#showMapBtnTab', function() {
                                     getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                                    location = [];
                                 });
                             });
                             markers.push(marker);
@@ -295,7 +296,8 @@
                         }
                     });
 
-                    document.querySelectorAll('.border-specialList').forEach(function (item, index) {
+                    document.querySelectorAll('.border-specialList').forEach(function (item) {
+                        console.log(12)
                         item.addEventListener('click', function () {
                             var markerIndex = parseInt(item.getAttribute('data-marker-index'));
                             closeAllInfoWindows();
