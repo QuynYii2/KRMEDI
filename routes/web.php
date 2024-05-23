@@ -353,8 +353,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('admin/list_medicine', [OrderController::class, 'index'])->name('view.admin.orders.index');
         Route::get('admin/list_market', [OrderController::class, 'list'])->name('view.admin.orders.list');
         Route::get('admin/detail/{id}', [OrderController::class, 'detail'])->name('view.admin.orders.detail');
+        Route::post('refund/status', [OrderController::class, 'orderStatus'])->name('view.orders.refund.status');
     });
-    Route::post('orders-refund/status', [OrderController::class, 'orderStatus'])->name('view.orders.status');
+
 
     Route::group(['prefix' => 'short-video'], function () {
         Route::get('show', [ShortVideoController::class, 'showVideo'])->name('short.videos.show');
