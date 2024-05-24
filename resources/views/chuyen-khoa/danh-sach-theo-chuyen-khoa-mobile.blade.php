@@ -35,11 +35,12 @@
             width: 80px!important;
         }
     </style>
-    <div class="justify-content-between align-items-center header-mobile-clinics" style="padding: 10px 16px;box-shadow: 0 0 #0000, 0 0 #0000, 0px 1px 4px 0px #dedede">
+    <div class=" align-items-center header-mobile-clinics" style="padding: 10px 16px;box-shadow: 0 0 #0000, 0 0 #0000, 0px 1px 4px 0px #dedede">
         <a href="{{route('home')}}"> <svg viewBox="0 0 24 24" style="width: 24px" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.29231 12.7138L15.2863 21.7048C15.6809 22.0984 16.3203 22.0984 16.7159 21.7048C17.1106 21.3111 17.1106 20.6717 16.7159 20.2781L8.43539 12.0005L16.7149 3.72293C17.1096 3.32928 17.1096 2.68989 16.7149 2.29524C16.3203 1.90159 15.6799 1.90159 15.2853 2.29524L6.29131 11.2861C5.90273 11.6757 5.90273 12.3251 6.29231 12.7138Z" fill="currentColor"></path></svg>
         </a>
-        <span style="font-weight: 700">Đặt lịch khám</span>
-        <div></div>
+        <div class="d-flex justify-content-center w-100">
+            <span style="font-weight: 700">Đặt lịch khám</span>
+        </div>
     </div>
     <div class="container mt-200 mt-70 box-ck-new-home" style="margin-top: 16px!important;">
         <div class="danh-sach-theo-chuyen-khoa">
@@ -427,15 +428,6 @@
                             resolve(newDistance);
                         });
 
-                        var showMapBtn = clinicElement.find('#showMapBtn');
-
-                        showMapBtn.on('click', function() {
-                            var clinicLocation = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
-                            document.getElementById('allAddressesMap').style.display = 'block';
-                            getCurrentLocation(function(currentLocation) {
-                                initMap(currentLocation, clinicLocation, clinics);
-                            });
-                        });
                     });
                 });
                 return Promise.all(promises);
@@ -467,15 +459,6 @@
                             resolve({distance: newDistance, pharmacyElement: pharmacyElement});
                         });
 
-                        var showMapBtnPharmacy = pharmacyElement.find('#showMapBtnPharmacy');
-
-                        showMapBtnPharmacy.on('click', function() {
-                            var clinicLocationPharmacy = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
-                            document.getElementById('allAddressesMapPharmacies').style.display = 'block';
-                            getCurrentLocation(function(currentLocation) {
-                                initMapPharmacies(currentLocation, clinicLocationPharmacy, clinics);
-                            });
-                        });
                     });
                 });
                 return Promise.all(promises);
@@ -499,6 +482,10 @@
             var markersPharmacy = [];
             var infoWindows = [];
             var infoWindowsPharmacy = [];
+            var directionsService;
+            var directionsRenderer;
+            var directionsService2;
+            var directionsRenderer2;
 
             function getCurrentLocation(callback) {
                 if (navigator.geolocation) {
@@ -560,24 +547,10 @@
                     zoom: 12.3
                 });
 
-                var directionsService = new google.maps.DirectionsService();
-                var directionsRenderer = new google.maps.DirectionsRenderer();
+                directionsService = new google.maps.DirectionsService();
+                directionsRenderer = new google.maps.DirectionsRenderer();
                 directionsRenderer.setMap(map);
 
-                var request = {
-                    origin: currentLocation,
-                    destination: clinicLocation,
-                    travelMode: 'DRIVING'
-                };
-
-                directionsService.route(request, function(result, status) {
-                    if (status === 'OK') {
-                        directionsRenderer.setDirections(result);
-                    } else {
-                        console.error('Directions request failed due to ' + status);
-                        alert('Directions request failed: ' + status);
-                    }
-                });
                 var currentLocationMarker = new google.maps.Marker({
                     position: currentLocation,
                     map: map,
@@ -683,6 +656,10 @@
                         markers.push(marker);
                         infoWindows.push(infoWindow);
                         location.markerIndex = markers.length - 1;
+
+                        $('body').on('click', '.specialList-clinics[data-clinic-id="' + location.id + '"] #showMapBtn', function() {
+                            getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                        });
                     }
                 });
 
@@ -701,24 +678,10 @@
                     center: currentLocation,
                     zoom: 12.3
                 });
-                var directionsService = new google.maps.DirectionsService();
-                var directionsRenderer = new google.maps.DirectionsRenderer();
-                directionsRenderer.setMap(map2);
+                directionsService2 = new google.maps.DirectionsService();
+                directionsRenderer2 = new google.maps.DirectionsRenderer();
+                directionsRenderer2.setMap(map2);
 
-                var request = {
-                    origin: currentLocation,
-                    destination: clinicLocationPharmacy,
-                    travelMode: 'DRIVING'
-                };
-
-                directionsService.route(request, function(result, status) {
-                    if (status === 'OK') {
-                        directionsRenderer.setDirections(result);
-                    } else {
-                        console.error('Directions request failed due to ' + status);
-                        alert('Directions request failed: ' + status);
-                    }
-                });
                 var currentLocationMarker = new google.maps.Marker({
                     position: currentLocation,
                     map: map2,
@@ -824,6 +787,10 @@
                         markersPharmacy.push(markerPharmacies);
                         infoWindowsPharmacy.push(infoWindow2);
                         locationsPharmacies.markerIndex = markersPharmacy.length - 1;
+
+                        $('body').on('click', '.specialList-pharmacy-address[data-pharmacy-id="' + locationsPharmacies.id + '"] #showMapBtnPharmacy', function() {
+                            getDirectionsPharmacies(currentLocation, { lat: parseFloat(locationsPharmacies.latitude), lng: parseFloat(locationsPharmacies.longitude) });
+                        });
                     }
                 });
 
@@ -837,22 +804,15 @@
 
             }
             function getDirectionsPharmacies(currentLocation, clinicLocation) {
-                var map2 = new google.maps.Map(document.getElementById('allAddressesMapPharmacies'), {
-                    center: currentLocation,
-                    zoom: 12.3
-                });
-                var directionsService = new google.maps.DirectionsService();
-                var directionsRenderer = new google.maps.DirectionsRenderer();
-                directionsRenderer.setMap(map2);
                 var request = {
                     origin: currentLocation,
                     destination: clinicLocation,
                     travelMode: 'DRIVING'
                 };
 
-                directionsService.route(request, function(result, status) {
+                directionsService2.route(request, function(result, status) {
                     if (status === 'OK') {
-                        directionsRenderer.setDirections(result);
+                        directionsRenderer2.setDirections(result);
                         document.getElementById('allAddressesMapPharmacies').style.display = 'block';
                     } else {
                         console.error('Directions request failed due to ' + status);
@@ -860,13 +820,6 @@
                 });
             }
             function getDirections(currentLocation, clinicLocation) {
-                var map = new google.maps.Map(document.getElementById('allAddressesMap'), {
-                    center: currentLocation,
-                    zoom: 12.3
-                });
-                var directionsService = new google.maps.DirectionsService();
-                var directionsRenderer = new google.maps.DirectionsRenderer();
-                directionsRenderer.setMap(map);
                 var request = {
                     origin: currentLocation,
                     destination: clinicLocation,

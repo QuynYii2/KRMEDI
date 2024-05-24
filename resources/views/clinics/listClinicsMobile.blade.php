@@ -294,9 +294,9 @@
                                 </div>
                             </div>`;
 
-                            $(document).on('click', '#showMapBtnTab', function() {
-                                getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
-                            });
+                            // $(document).on('click', '#showMapBtnTab', function() {
+                            //     getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                            // });
 
                             var infoWindow = new google.maps.InfoWindow({
                                 content: infoWindowContent
@@ -425,14 +425,14 @@
                         hour: '2-digit',
                         minute: '2-digit'
                     });
-
+                // <button id="showMapBtn" class="search-way" style="border:none; background-color: transparent"><i class="fa-solid fa-location-arrow"></i>Chỉ đường</button>
                     let html = `
                         <div class="specialList-clinics col-lg-12 col-md-6 mb-3">
                             <div class="border-specialList" data-marker-index="${index_map}" style="gap:unset;padding:5px">
                                 <div class="content__item d-flex">
                                     <div class="specialList-clinics--img d-flex flex-column">
                                         ${img}
-                                        <button id="showMapBtn" class="search-way" style="border:none; background-color: transparent"><i class="fa-solid fa-location-arrow"></i>Chỉ đường</button>
+
                                         @if (Auth::check())
                     <div class="zalo-follow-only-button" style="height:20px" data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
 @endif

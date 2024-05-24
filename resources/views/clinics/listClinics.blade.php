@@ -252,10 +252,6 @@
                                 </div>
                             </div>`;
 
-                            $(document).on('click', '#showMapBtnTab', function() {
-                                getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
-                            });
-
                             var infoWindow = new google.maps.InfoWindow({
                                 content: infoWindowContent
                             });
