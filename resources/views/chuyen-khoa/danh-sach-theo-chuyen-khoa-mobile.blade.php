@@ -20,8 +20,9 @@
             font-size: 14px !important;
         }
         .button-booking-specialList,.button-detail-specialList{
-            padding: 6px 20px!important;
+            padding: 5px 16px!important;
             height: auto!important;
+            border-radius: 12px!important;
         }
         .container .danh-sach-theo-chuyen-khoa .specialList-clinics .border-specialList .specialList-clinics--main .group-button .button-booking-specialList,
         .container .danh-sach-theo-chuyen-khoa .specialList-clinics .border-specialList .specialList-clinics--main .group-button .button-detail-specialList{
@@ -29,6 +30,9 @@
         }
         .line-dk-btn{
             margin-right: 13px!important;
+        }
+        .content__item__image{
+            width: 80px!important;
         }
     </style>
     <div class="justify-content-between align-items-center header-mobile-clinics" style="padding: 10px 16px;box-shadow: 0 0 #0000, 0 0 #0000, 0px 1px 4px 0px #dedede">
