@@ -80,6 +80,38 @@
                 opacity: 0.2;
             }
         }
+        #productInformation::-webkit-scrollbar {
+            width: 8px;
+        }
+        #productInformation::-webkit-scrollbar-track {
+            background: #ebebeb;
+            border-radius: 10px;
+        }
+
+        #productInformation::-webkit-scrollbar-thumb {
+            background: #a5a5a5;
+            border-radius: 10px;
+        }
+        .search-way{
+            width: fit-content;
+            font-size: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: inline-block;
+            color: #0070E0;
+        }
+        .search-way:hover{
+            color: #0070E0;
+        }
+        .header-mobile-clinics{
+            display: none;
+        }
+        .gm-style .gm-style-iw-c {
+            max-width: 465px !important;
+        }
+        .zalo-follow-only-button{
+            margin-top: 5px;
+        }
     </style>
     <div class="header_clinic_desktop">
         @include('layouts.partials.header')
