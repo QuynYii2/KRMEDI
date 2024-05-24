@@ -113,6 +113,32 @@
         .map_clinic_mobile{
             display: inline-block;
         }
+        #productInformation::-webkit-scrollbar {
+            width: 8px;
+        }
+        #productInformation::-webkit-scrollbar-track {
+            background: #ebebeb;
+            border-radius: 10px;
+        }
+
+        #productInformation::-webkit-scrollbar-thumb {
+            background: #a5a5a5;
+            border-radius: 10px;
+        }
+        .search-way{
+            width: fit-content;
+            font-size: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: inline-block;
+            color: #0070E0;
+        }
+        .search-way:hover{
+            color: #0070E0;
+        }
+        .gm-style .gm-style-iw-c {
+            max-width: 400px !important;
+        }
     </style>
     <div class="header_clinic_desktop">
         @include('layouts.partials.header')
@@ -434,7 +460,7 @@
                                         ${img}
 
                                         @if (Auth::check())
-                    <div class="zalo-follow-only-button" style="height:20px" data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
+                    <div class="zalo-follow-only-button" style="height:20px;margin-top: 10px" data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
 @endif
                     </div>
                     <div class="specialList-clinics--main w-100">

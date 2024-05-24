@@ -4,6 +4,14 @@
 @section('title', 'Specialist')
 @section('content')
     <link rel="stylesheet" href="{{ asset('css/homeSpecialist.css') }}">
+    <style>
+        #showMapBtn{
+            background: white;
+        }
+        .gm-style .gm-style-iw-d{
+            max-width: 465px !important;
+        }
+    </style>
     @include('layouts.partials.header')
     <div class="container mt-200 mt-70 box-ck-new-home">
         <div class="danh-sach-theo-chuyen-khoa">
