@@ -479,10 +479,10 @@
     function checkHomePageAndToggleDisplay() {
         let chatCircle = document.getElementById('chat-circle');
         let chatBoxes = document.getElementById('chat-box-mess');
-        if (window.location.href === window.location.origin || window.location.pathname === '/') {
-            chatCircle.style.display = 'none';
-            chatBoxes.style.display = 'block';
-        }
+        // if (window.location.href === window.location.origin || window.location.pathname === '/') {
+        //     chatCircle.style.display = 'none';
+        //     chatBoxes.style.display = 'block';
+        // }
     }
 
 </script>

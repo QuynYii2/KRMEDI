@@ -157,7 +157,7 @@ class CheckoutApi extends Controller
         $itemsJson = json_encode($items);
 
         $params = [
-            'token' => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhaGEiLCJ0eXAiOiJ1c2VyIiwiY2lkIjoiODQ5NzM1NjY3OTIiLCJzdGF0dXMiOiJPTkxJTkUiLCJlb2MiOiJuZ3V5ZW5raGFjcXV5MDkwOTE5OTNAZ21haWwuY29tIiwibm9jIjoiS1JNRURJIiwiY3R5IjoiU0dOIiwiYWNjb3VudF9zdGF0dXMiOiJBQ1RJVkFURUQiLCJleHAiOjE3NDcxMDg4NzgsInBhcnRuZXIiOiJpbGdsb2JhbCIsInR5cGUiOiJhcGkifQ.T5no2lX0b9B0dqVxMPl-uyjKJu8LRhaI19vrbuU_pT0',
+            'token' => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhaGEiLCJ0eXAiOiJ1c2VyIiwiY2lkIjoiODQ5NzM1NjY3OTIiLCJzdGF0dXMiOiJPTkxJTkUiLCJlb2MiOiJuZ3V5ZW5raGFjcXV5MDkwOTE5OTNAZ21haWwuY29tIiwibm9jIjoiS1JNRURJIiwiY3R5IjoiU0dOIiwiYWNjb3VudF9zdGF0dXMiOiJBQ1RJVkFURUQiLCJleHAiOjE3NDgwNzg4MTcsInBhcnRuZXIiOiJpbGdsb2JhbCIsInR5cGUiOiJhcGkifQ.d-cPgLIt3mpa2QprJ9VuBWgHniykTNY4ZTf2MsvNa-U',
             'order_time' => '0',
             'path' => $pathJson,
             'service_id' => 'SGN-BIKE',
