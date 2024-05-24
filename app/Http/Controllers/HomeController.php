@@ -117,8 +117,11 @@ class HomeController extends Controller
         }
 
         $pharmacies = $pharmacies->get();
-
-        return view('chuyen-khoa.danh-sach-theo-chuyen-khoa', compact('id', 'doctorsSpecial', 'clinics', 'pharmacies'));
+        if ($this->check_mobile()){
+            return view('chuyen-khoa.danh-sach-theo-chuyen-khoa-mobile', compact('id', 'doctorsSpecial', 'clinics', 'pharmacies'));
+        }else{
+            return view('chuyen-khoa.danh-sach-theo-chuyen-khoa', compact('id', 'doctorsSpecial', 'clinics', 'pharmacies'));
+        }
     }
 
     public function specialistDetail($id)

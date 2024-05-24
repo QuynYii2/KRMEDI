@@ -141,7 +141,7 @@
                 <span style="font-weight: 700;width: 100%;text-align: center">Chọn từ bản đồ</span>
             </div>
             <div class="offcanvas-body p-0">
-                <div id="allAddressesMap" class="show active fade map_clinic_mobile" style="height: 100%;">
+                <div id="allAddressesMap" class="show active fade map_clinic_mobile" style="height: 100%!important;">
 
                 </div>
             </div>
