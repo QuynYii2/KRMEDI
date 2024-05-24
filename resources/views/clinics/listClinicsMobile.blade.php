@@ -80,6 +80,39 @@
                 opacity: 0.2;
             }
         }
+        .map_clinic_mobile{
+            display: inline-block;
+        }
+        .name-address-map{
+            font-size: 14px;
+        }
+        .header_clinic_desktop,.bg-mobile-clinics{
+            display: none!important;
+        }
+        .header-mobile-clinics{
+            display: flex;
+        }
+        .text-phong-mall{
+            font-size: 16px!important;
+        }
+        .box-productInformation-clinic{
+            flex-direction: column!important;
+            height: 800px!important;
+            margin: 0px;
+        }
+        .specialList-clinics{
+            padding-left: 0px;
+            margin-top: 0px!important;
+        }
+        #productInformation::-webkit-scrollbar {
+            width: 3px;
+        }
+        #offcanvasRightMap{
+            width: 100%;
+        }
+        .map_clinic_mobile{
+            display: inline-block;
+        }
     </style>
     <div class="header_clinic_desktop">
         @include('layouts.partials.header')
@@ -108,7 +141,7 @@
                 <span style="font-weight: 700;width: 100%;text-align: center">Chọn từ bản đồ</span>
             </div>
             <div class="offcanvas-body p-0">
-                <div id="allAddressesMap" class="show active fade map_clinic_mobile" style="height: auto;">
+                <div id="allAddressesMap" class="show active fade map_clinic_mobile" style="height: 100%;">
 
                 </div>
             </div>
