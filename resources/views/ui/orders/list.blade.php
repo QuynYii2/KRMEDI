@@ -26,7 +26,7 @@
         </div>
     @endif
     <div class="container">
-        <ul class="nav nav-tabs" id="myTabOrder" role="tablist">
+        <ul class="nav nav-tabs justify-content-between" id="myTabOrder" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="all_order_tab" data-bs-toggle="tab" data-bs-target="#all_order"
                         type="button" role="tab" aria-controls="all_order" aria-selected="true">
