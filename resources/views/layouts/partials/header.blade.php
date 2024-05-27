@@ -385,6 +385,31 @@
     </div>
 @endif
 
+@if(session('checkout_success'))
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#orderModal').modal('show');
+        });
+    </script>
+
+    <div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="logoutModalLabel">Checkout success</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-dismiss="modal">Tiếp tục mua hàng</button>
+                        <a href="{{route('view.web.orders.index')}}" class="btn btn-primary">Theo dõi đơn hàng</a>
+                    </div>
+            </div>
+        </div>
+    </div>
+@endif
+
 <div class="modal fade" id="staticBackdrop" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
      aria-hidden="true">
     <div class="modal-dialog">

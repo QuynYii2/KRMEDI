@@ -6,6 +6,7 @@ use App\Enums\CartStatus;
 use App\Enums\OrderItemStatus;
 use App\Enums\OrderStatus;
 use App\Enums\TypeProductCart;
+use App\Events\AhamoveEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\MailController;
 use App\Models\Cart;
@@ -268,6 +269,7 @@ class CheckoutApi extends Controller
                 'description' => 'Trạng thái đơn hàng của bạn đã thay đổi, Vui lòng vào kiểm tra!',
             ]);
             $notification->save();
+            broadcast(new AhamoveEvent($data));
 
             return response()->json(['status' => true, 'message' => 'Cập nhật trạng thái đơn hàng thành công'], 200);
         } catch (\Exception $e) {
