@@ -228,9 +228,10 @@
 {{--    </div>--}}
     <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <script>
-        var pusher = new Pusher('3ac4f810445d089829e8', {
-            cluster: 'ap1',
+        var pusher = new Pusher('e700f994f98dbb41ea9f', {
+            cluster: 'eu',
             encrypted: true
         });
 
