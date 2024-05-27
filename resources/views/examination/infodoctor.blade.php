@@ -7,6 +7,12 @@
     #show_inf #inf-doctor #img_info #qr_code {
         padding: 24px 50px 24px 50px!important;
     }
+    #doc {
+        width: 100%;
+        height: 500px;
+        background-size: cover;
+        background-position: center center;
+    }
     @media (max-width: 992px) {
         #show_inf #inf-doctor #img_info #qr_code{
             padding: 10px!important;
@@ -19,6 +25,14 @@
         }
         #show_inf #inf-doctor #about{
             margin-left: 0px!important;
+        }
+        #doc {
+            height: 220px;
+        }
+        @media (max-width: 700px) {
+            #doc {
+                height: 360px;
+            }
         }
     }
 
@@ -40,9 +54,9 @@
                     </div>
                 </div>
                 <div id="inf-doctor" class="d-md-flex d-block justify-content-center mt-2 mt-md-0">
-                     <div id="img_info" class="col-md-4 d-flex justify-content-center align-items-center flex-column">
-                        <div id="doc">
-                            <img src="{{ asset($doctor->avt) }}">
+                     <div id="img_info" class="col-md-4 d-flex align-items-center flex-column">
+                        <div id="doc" style="background-image: url({{ asset($doctor->avt) }});">
+{{--                            <img src="{{ asset($doctor->avt) }}">--}}
                         </div>
                         <div id="qr_code">
                             <p>{{ __("home.Doctor's QR Code") }}</p>
