@@ -11,6 +11,9 @@ use App\Models\online_medicine\ProductMedicine;
 use App\Models\PrescriptionResults;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class PrescriptionResultController extends Controller
@@ -24,12 +27,24 @@ class PrescriptionResultController extends Controller
         return view('ui.prescription-results.create', compact('user', 'listMedicine'));
     }
 
-    public function myPrescription()
+    public function myPrescription(Request $request)
     {
+        $searchTerm = $request->input('search', '');
+
+        // Fetch the prescriptions with pagination and searching
         $listPrescriptions = Cart::with('doctors')
+            ->select(['id', 'prescription_id', 'created_at', 'status', 'doctor_id'])
             ->where('user_id', Auth::user()->id)
             ->where('type_product', TypeProductCart::MEDICINE)
             ->whereNotNull('prescription_id')
+            ->when($searchTerm, function ($query, $searchTerm) {
+                return $query->where(function($query) use ($searchTerm) {
+                    $query->whereHas('doctors', function ($q) use ($searchTerm) {
+                        $q->where('name', 'like', '%' . $searchTerm . '%');
+                    })
+                        ->orWhere('prescription_id', 'like', '%' . $searchTerm . '%');
+                });
+            })
             ->orderBy('id', 'desc')
             ->get(['id', 'prescription_id', 'created_at', 'status', 'doctor_id'])
             ->groupBy('prescription_id')
@@ -48,7 +63,16 @@ class PrescriptionResultController extends Controller
             ];
         }
 
+        $listPrescriptions = $this->paginateCustom($listPrescriptions, 25, $request->input('page'), ['path' => $request->url(), 'query' => $request->query()]);
+
         return view('ui.prescription-results.my-prescriptions')->with(compact('listPrescriptions', 'prescriptions'));
+    }
+
+    private function paginateCustom($items, $perPage, $page = null, $options = [])
+    {
+        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+        $items = $items instanceof Collection ? $items : Collection::make($items);
+        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
 
     public function doctorPrescription()
