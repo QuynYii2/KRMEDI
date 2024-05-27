@@ -616,7 +616,7 @@ class BookingApi extends Controller
             $extend['isReminded'] = 1;
             $b->extend = $extend;
             $b->save();
-            
+
             //SEND FCM
             $mainApi = new MainApi();
             $newRequestData = [
