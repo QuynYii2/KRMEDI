@@ -171,7 +171,7 @@
                                                      alt=""/>
                                                 <button id="showMapBtnPharmacy" class="search-way" style="border: none"><i class="fa-solid fa-location-arrow"></i>Chỉ đường</button>
                                                 <div class="group-button d-flex flex-column box-desktop-line-address mt-2">
-                                                    <a href="" class="item-btn-specialist">
+                                                    <a href="{{ route('home.specialist.booking.detail', $pharmacy->id) }}" class="item-btn-specialist">
                                                         <div class="button-booking-specialList line-dk-btn">
                                                             {{ __('home.Đặt khám') }}
                                                         </div>
@@ -229,7 +229,7 @@
                                                 </div>
 
                                                 <div class="group-button d-flex box-mobile-line-address mt-2">
-                                                    <a href="" class="item-btn-specialist">
+                                                    <a href="{{ route('home.specialist.booking.detail', $pharmacy->id) }}" class="item-btn-specialist">
                                                         <div class="button-booking-specialList line-dk-btn">
                                                             {{ __('home.Đặt khám') }}
                                                         </div>
