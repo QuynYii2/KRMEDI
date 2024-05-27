@@ -292,8 +292,12 @@
                                 closeAllInfoWindows();
                                 infoWindow.open(map, marker);
                                 $(document).on('click', '#showMapBtnTab', function() {
-                                    getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
-                                    location = [];
+                                    if (location && !isNaN(location.latitude) && !isNaN(location.longitude)) {
+                                        getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                                        location = [];
+                                    } else {
+                                        console.error('Invalid location data:', location);
+                                    }
                                 });
                             });
                             markers.push(marker);
