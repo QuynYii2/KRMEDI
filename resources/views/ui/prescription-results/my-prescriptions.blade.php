@@ -2,21 +2,20 @@
 @section('title')
     List Prescription
 @endsection
-@section('page-style')
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.1/css/dataTables.dataTables.css" />
-@endsection
 @section('main-content')
     <div class="container-fluid">
         <!-- Page Heading -->
         <h1 class="h3 mb-4 text-gray-800">{{ __('home.My Prescription') }}</h1>
-        <div class="d-flex align-items-center justify-content-between">
-            <div class="mb-3 col-md-3">
-                <input class="form-control" id="inputSearch" type="text" placeholder="Search.." />
-            </div>
+        <div>
+            <form class="d-flex form-prescription" method="GET" action="{{ route('view.prescription.result.my.list') }}" style="padding-left: 0; column-gap: 10px">
+                <input class="form-control" name="search" id="inputSearch" type="text" placeholder="Search.." value="{{ request('search') }}" />
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
         </div>
         <br>
-        <table class="table table-responsive" id="tableListPrescription">
-            <thead>
+        <div class="table-responsive">
+            <table class="table table-vcenter text-nowrap table-bordered border-bottom">
+                <thead>
                 <tr>
                     <th class="text-center" scope="col">{{ __('home.STT') }}</th>
                     <th class="text-center" scope="col">Mã đơn thuốc</th>
@@ -24,8 +23,8 @@
                     <th class="text-center" scope="col">Ngày kê đơn</th>
                     <th class="text-center" scope="col">{{ __('home.Status') }}</th>
                 </tr>
-            </thead>
-            <tbody id="tbodyListPrescription">
+                </thead>
+                <tbody id="tbodyListPrescription">
                 @foreach ($listPrescriptions as $key => $pre)
                     <tr>
                         <td class="text-center">{{ $key + 1 }}</td>
@@ -37,8 +36,13 @@
                         <td class="text-center">{{ $pre->status }}</td>
                     </tr>
                 @endforeach
-            </tbody>
-        </table>
+                </tbody>
+
+            </table>
+            <div class="d-flex justify-content-center">
+                {!! $listPrescriptions->appends(Request::except('page'))->links() !!}
+            </div>
+        </div>
     </div>
 
     <!-- Prescription details -->
@@ -106,12 +110,4 @@
         </div>
     @endforeach
     <!-- Prescription details -->
-@endsection
-@section('page-script')
-    <script src="https://cdn.datatables.net/2.0.1/js/dataTables.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#tableListPrescription').DataTable();
-        });
-    </script>
 @endsection

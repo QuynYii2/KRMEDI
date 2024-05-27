@@ -75,18 +75,18 @@
             @foreach($bookings as $item)
                 <tr>
                     <th scope="row">{{ $loop->index + 1 }}</th>
-                    <td>@php
+                    <td style="text-wrap: initial; min-width: 150px">@php
                             $clinic = \App\Models\Clinic::where('id',$item->clinic_id)->pluck('name')->first();
                         @endphp
                         {{$clinic}}
                     </td>
-                    <td>{{$item->check_in}} </td>
+                    <td style="text-wrap: initial; min-width: 150px">{{$item->check_in}} </td>
                     @php
                         $service_name = explode(',', $item->service);
                         $services = \App\Models\ServiceClinic::whereIn('id', $service_name)->get();
                         $service_names = $services->pluck('name')->implode(', ');
                     @endphp
-                    <td>{{$service_names}}</td>
+                    <td style="text-wrap: initial; min-width: 150px">{{$service_names}}</td>
                     <td>{{$item->status}}</td>
                     <td class="d-flex">
                         <form action="{{ route('web.users.my.bookings.detail', $item->id) }}" method="get">
