@@ -15,7 +15,7 @@
             </div>
         </div>
         <br>
-        <table class="table" id="tableListPrescription">
+        <table class="table table-responsive" id="tableListPrescription">
             <thead>
                 <tr>
                     <th class="text-center" scope="col">{{ __('home.STT') }}</th>

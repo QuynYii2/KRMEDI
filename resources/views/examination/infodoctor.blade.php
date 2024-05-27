@@ -3,6 +3,26 @@
 @section('title', 'Doctor Info')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="{{ asset('css/infodoctor.css') }}" rel="stylesheet">
+<style>
+    #show_inf #inf-doctor #img_info #qr_code {
+        padding: 24px 50px 24px 50px!important;
+    }
+    @media (max-width: 992px) {
+        #show_inf #inf-doctor #img_info #qr_code{
+            padding: 10px!important;
+        }
+        #qrContent svg {
+            width: 170px!important;
+        }
+        #show_inf #inf-doctor #img_info{
+            margin-right: 0px!important;
+        }
+        #show_inf #inf-doctor #about{
+            margin-left: 0px!important;
+        }
+    }
+
+</style>
 @section('content')
 @include('layouts.partials.header_3')
 @include('component.banner')
@@ -20,7 +40,7 @@
                     </div>
                 </div>
                 <div id="inf-doctor" class="d-md-flex d-block justify-content-center mt-2 mt-md-0">
-                     <div id="img_info" class="col-md-6 d-flex justify-content-center align-items-center flex-column">
+                     <div id="img_info" class="col-md-4 d-flex justify-content-center align-items-center flex-column">
                         <div id="doc">
                             <img src="{{ asset($doctor->avt) }}">
                         </div>
@@ -32,7 +52,7 @@
 
                         </div>
                     </div>
-                    <div id="about" class="col-md-6">
+                    <div id="about" class="col-md-8">
                         <h5>{{ $doctor->name }}</h5>
                         <div class="dess">
                             <p>{{ __('home.Hospital') }}: </p>

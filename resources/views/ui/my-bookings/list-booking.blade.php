@@ -59,7 +59,7 @@
         <button type="submit" class="btn btn-info" name="excel" value="2">Xuất Excel</button>
     </div>
     </form>
-    <div class="">
+    <div class="table-responsive">
         <table class="table table-striped" id="tableBooking">
             <thead>
             <tr>
