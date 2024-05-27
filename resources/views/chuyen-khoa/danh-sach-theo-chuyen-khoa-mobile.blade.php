@@ -206,7 +206,7 @@
                                                      alt=""/>
 {{--                                                <button id="showMapBtnPharmacy" class="search-way" style="border: none"><i class="fa-solid fa-location-arrow"></i>Chỉ đường</button>--}}
                                                 <div class="group-button d-flex flex-column box-desktop-line-address mt-2">
-                                                    <a href="" class="item-btn-specialist">
+                                                    <a href="{{ route('home.specialist.booking.detail', $pharmacy->id) }}" class="item-btn-specialist">
                                                         <div class="button-booking-specialList line-dk-btn">
                                                             {{ __('home.Đặt khám') }}
                                                         </div>
@@ -264,7 +264,7 @@
                                                 </div>
 
                                                 <div class="group-button d-flex box-mobile-line-address mt-2">
-                                                    <a href="" class="item-btn-specialist">
+                                                    <a href="{{ route('home.specialist.booking.detail', $pharmacy->id) }}" class="item-btn-specialist">
                                                         <div class="button-booking-specialList line-dk-btn">
                                                             {{ __('home.Đặt khám') }}
                                                         </div>
@@ -572,7 +572,7 @@
                             map: map,
                             title: 'Location'
                         });
-                        var urlDetail = "{{ route('clinic.detail', ['id' => ':id']) }}".replace(':id', location.id);
+                        var urlDetail = "{{ route('home.specialist.booking.detail', ['id' => ':id']) }}".replace(':id', location.id);
                         let img = '';
                         let gallery = location.gallery;
                         let arrayGallery = gallery.split(',');
@@ -706,7 +706,7 @@
                             map: map2,
                             title: 'Location'
                         });
-                        var urlDetail = "{{ route('clinic.detail', ['id' => ':id']) }}".replace(':id', locationsPharmacies.id);
+                        var urlDetail = "{{ route('home.specialist.booking.detail', ['id' => ':id']) }}".replace(':id', locationsPharmacies.id);
                         let img = '';
                         let gallery = locationsPharmacies.gallery;
                         let arrayGallery = gallery.split(',');

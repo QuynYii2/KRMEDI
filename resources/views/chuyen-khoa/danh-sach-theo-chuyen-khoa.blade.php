@@ -512,7 +512,7 @@
                             map: map,
                             title: 'Location'
                         });
-                        var urlDetail = "{{ route('clinic.detail', ['id' => ':id']) }}".replace(':id', location.id);
+                        var urlDetail = "{{ route('home.specialist.booking.detail', ['id' => ':id']) }}".replace(':id', location.id);
                         let img = '';
                         let gallery = location.gallery;
                         let arrayGallery = gallery.split(',');
@@ -646,7 +646,7 @@
                             map: map2,
                             title: 'Location'
                         });
-                        var urlDetail = "{{ route('clinic.detail', ['id' => ':id']) }}".replace(':id', locationsPharmacies.id);
+                        var urlDetail = "{{ route('home.specialist.booking.detail', ['id' => ':id']) }}".replace(':id', locationsPharmacies.id);
                         let img = '';
                         let gallery = locationsPharmacies.gallery;
                         let arrayGallery = gallery.split(',');
