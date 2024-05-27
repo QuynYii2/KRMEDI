@@ -47,7 +47,7 @@ class CheckoutController extends Controller
         try {
             $success = (new CheckoutApi())->checkout($request);
             if ($success) {
-                alert()->success('Success', 'Checkout success!');
+                session()->flash('checkout_success', true);
                 return redirect(route('home'));
             }
             alert()->error('Error', 'Checkout error!');
