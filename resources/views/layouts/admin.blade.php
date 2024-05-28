@@ -267,11 +267,6 @@
         transform: translate(-50%, -50%);
         font-weight: bold;
     }
-    @media (max-width: 767px) {
-        td,th{
-            min-width: 200px;
-        }
-    }
 </style>
 @php
     //lấy ra toàn bộ role của user hiện tại
