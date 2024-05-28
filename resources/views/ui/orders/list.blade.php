@@ -238,7 +238,48 @@
 
         var channels = pushers.subscribe('aha-move-events');
         channels.bind('aha-move-events', function(data) {
-            location.reload();
+            let currentUserId = "{{\Illuminate\Support\Facades\Auth::id()}}";
+            if (data.user_id == currentUserId){
+                function sendNotification(title, options) {
+                    if (Notification.permission === "granted") {
+                        new Notification(title, options);
+                    }
+                }
+                function requestNotificationPermission() {
+                    if (Notification.permission === "granted") {
+                        sendNotification('Thông báo đã đơn hàng', { body: 'Trạng thái đơn hàng của bạn đã được thay đổi thành '+data.status });
+                    } else if (Notification.permission !== "denied") {
+                        Notification.requestPermission().then(permission => {
+                            if (permission === "granted") {
+                                sendNotification('Thông báo đơn hàng', { body: 'Trạng thái đơn hàng của bạn đã được thay đổi thành '+data.status });
+                            }
+                        });
+                    }
+                }
+                requestNotificationPermission();
+                location.reload();
+            }
+
+            if (data.user_shop == currentUserId){
+                function sendNotifications(title, options) {
+                    if (Notification.permission === "granted") {
+                        new Notification(title, options);
+                    }
+                }
+                function requestNotificationPermissions() {
+                    if (Notification.permission === "granted") {
+                        sendNotifications('Thông báo đã đơn hàng', { body: 'Trạng thái đơn hàng của '+data.full_name+' đã được thay đổi thành '+data.status });
+                    } else if (Notification.permission !== "denied") {
+                        Notification.requestPermission().then(permission => {
+                            if (permission === "granted") {
+                                sendNotifications('Thông báo đơn hàng', { body: 'Trạng thái đơn hàng của '+data.full_name+' đã được thay đổi thành '+data.status });
+                            }
+                        });
+                    }
+                }
+                requestNotificationPermissions();
+            }
+
         });
 
         let accessToken = `Bearer ` + token;

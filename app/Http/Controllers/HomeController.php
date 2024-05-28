@@ -314,6 +314,7 @@ class HomeController extends Controller
                 ->where('clinic_id', $clinic ? $clinic->id : '')
                 ->orderBy('id', 'desc');
         }
+        $id_user = $query->pluck('user_id')->unique()->toArray();
         if ($request->filled('key_search')) {
             $key_search = $request->input('key_search');
             $query->join('clinics', 'bookings.clinic_id', '=', 'clinics.id')
@@ -346,6 +347,10 @@ class HomeController extends Controller
             $query->where('bookings.status', $request->input('status'));
         }
 
+        if ($request->filled('user_id')) {
+            $query->where('bookings.user_id', $request->input('user_id'));
+        }
+
         if ($request->excel == 2) {
             $bookings = $query->get();
             foreach ($bookings as $item) {
@@ -361,8 +366,9 @@ class HomeController extends Controller
 
         $department = Department::all();
         $service = ServiceClinic::all();
+        $users = User::whereIn('id',$id_user)->get();
 
-        return view('admin.booking.list-booking', compact('bookings', 'service', 'department'));
+        return view('admin.booking.list-booking', compact('bookings', 'service', 'department','users'));
     }
 
     public function listBookingDoctor(Request $request)
@@ -376,6 +382,7 @@ class HomeController extends Controller
             ->where('is_check_medical_history', 1)
             ->groupBy('user_id');
         $query = $baseQuery->whereIn('bookings.user_id', $subQuery);
+        $id_user = $query->pluck('user_id')->unique()->toArray();
 
         if ($request->filled('key_search')) {
             $key_search = $request->input('key_search');
@@ -393,6 +400,10 @@ class HomeController extends Controller
                 ->whereDate('bookings.check_in', '<=', $end_date);
         }
 
+        if ($request->filled('specialist')) {
+            $query->where('bookings.department_id', $request->input('specialist'));
+        }
+
         if ($request->filled('service')) {
             $serviceId = $request->input('service');
             $query->whereRaw("FIND_IN_SET(?, bookings.service)", [$serviceId]);
@@ -400,6 +411,10 @@ class HomeController extends Controller
 
         if ($request->filled('status')) {
             $query->where('bookings.status', $request->input('status'));
+        }
+
+        if ($request->filled('user_id')) {
+            $query->where('bookings.user_id', $request->input('user_id'));
         }
 
         if ($request->excel == 2) {
@@ -417,7 +432,8 @@ class HomeController extends Controller
 
         $department = Department::all();
         $service = ServiceClinic::all();
+        $users = User::whereIn('id',$id_user)->get();
 
-        return view('admin.booking.list-booking', compact('bookings', 'service', 'department'));
+        return view('admin.booking.list-booking', compact('bookings', 'service', 'department','users'));
     }
 }

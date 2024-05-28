@@ -31,8 +31,39 @@
 
         </tbody>
     </table>
-
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.11.2/dist/echo.iife.js"></script>
     <script>
+        var pushers = new Pusher('3ac4f810445d089829e8', {
+            cluster: 'ap1',
+            encrypted: true
+        });
+
+        var channels = pushers.subscribe('aha-move-events');
+        channels.bind('aha-move-events', function(data) {
+            let currentUserId = "{{\Illuminate\Support\Facades\Auth::id()}}";
+            if (data.user_shop == currentUserId){
+                function sendNotifications(title, options) {
+                    if (Notification.permission === "granted") {
+                        new Notification(title, options);
+                    }
+                }
+                function requestNotificationPermissions() {
+                    if (Notification.permission === "granted") {
+                        sendNotifications('Thông báo đã đơn hàng', { body: 'Trạng thái đơn hàng của '+data.full_name+' đã được thay đổi thành '+data.status });
+                    } else if (Notification.permission !== "denied") {
+                        Notification.requestPermission().then(permission => {
+                            if (permission === "granted") {
+                                sendNotifications('Thông báo đơn hàng', { body: 'Trạng thái đơn hàng của '+data.full_name+' đã được thay đổi thành '+data.status });
+                            }
+                        });
+                    }
+                }
+                requestNotificationPermissions();
+            }
+
+        });
+
         let accessToken = `Bearer ` + token;
         let headers = {
             "Authorization": accessToken

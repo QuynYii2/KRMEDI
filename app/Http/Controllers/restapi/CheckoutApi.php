@@ -270,6 +270,14 @@ class CheckoutApi extends Controller
                 'description' => 'Trạng thái đơn hàng của bạn đã thay đổi, Vui lòng vào kiểm tra!',
             ]);
             $notification->save();
+            $order_item = OrderItem::where('order_id',$order->id)->first();
+            if ($order_item->type_product == "MEDICINE"){
+                $product_medicine = ProductMedicine::find($order_item->product_id);
+                $order->user_shop = $product_medicine->user_id;
+            }else{
+                $product_info = ProductInfo::find($order_item->product_id);
+                $order->user_shop = $product_info->created_by;
+            }
             $options = array(
                 'cluster' => 'ap1',
                 'encrypted' => true
@@ -282,7 +290,7 @@ class CheckoutApi extends Controller
             $pusher = new Pusher($PUSHER_APP_KEY, $PUSHER_APP_SECRET, $PUSHER_APP_ID, $options);
 
             //DATA WEB CALL WEB
-            $pusher->trigger('aha-move-events', 'aha-move-events', true);
+            $pusher->trigger('aha-move-events', 'aha-move-events', $order);
 
             return response()->json(['status' => true, 'message' => 'Cập nhật trạng thái đơn hàng thành công'], 200);
         } catch (\Exception $e) {

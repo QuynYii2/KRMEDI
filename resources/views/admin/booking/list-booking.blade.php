@@ -4,6 +4,16 @@
 @endsection
 @section('page-style')
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <style>
+        @media (max-width: 767px) {
+            .line-fillter-user{
+                margin-bottom: 15px;
+            }
+            .text-search-booking{
+                margin-left: 0px!important;
+            }
+        }
+    </style>
 @endsection
 @section('main-content')
     <!-- Page Heading -->
@@ -21,13 +31,12 @@
     <form action="{{route('homeAdmin.list.booking')}}" method="get">
         @else
             <form action="{{route('homeAdmin.list.booking.doctor')}}" method="get">
-        @endif
+                @endif
         <div class="card-body d-flex align-items-center flex-wrap p-0 pb-3">
             <div class="col-lg-3 col-md-6 col-12 px-1">
                 <lable>Từ khóa</lable>
                 <input type="text" class="form-control" name="key_search" placeholder="Tìm kiếm..." value="{{request()->get('key_search')}}">
             </div>
-            @if($role_name->name != 'DOCTORS')
             <div class="col-lg-3 col-md-6 col-6 px-1">
                 <lable>Chuyên khoa</lable>
                 <select class="form-select w-100" name="specialist" >
@@ -37,7 +46,6 @@
                     @endforeach
                 </select>
             </div>
-            @endif
             <div class="col-lg-2 col-md-4 col-6 px-1">
                 <lable>Dịch vụ</lable>
                 <select class="form-select w-100" name="service" >
@@ -66,22 +74,29 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex align-items-center justify-content-between mb-3">
-            <div class="d-flex align-items-center">
-                <button type="submit" class="btn btn-warning mr-3" name="excel" value="1">Tìm kiếm</button>
+        <div class="d-flex align-items-end flex-wrap mb-3">
+                <div class="col-lg-3 col-md-5 col-12 px-1 line-fillter-user">
+                    <lable>Người khám bệnh</lable>
+                    <select class="form-select w-100" name="user_id" >
+                        <option class="bg-white" value="">--Tên người khám--</option>
+                        @foreach($users as $user)
+                            <option class="bg-white" value="{{$user->id}}" @if(request()->get('user_id') == $user->id) selected @endif>{{$user->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-warning mx-3 text-search-booking" name="excel" value="1">Tìm kiếm</button>
                 @if($role_name->name != 'DOCTORS')
-                <a href="{{route('homeAdmin.list.booking')}}" class="btn btn-dark">Làm mới</a>
+                <a href="{{route('homeAdmin.list.booking')}}" class="btn btn-dark mr-3">Làm mới</a>
                     @else
-                    <a href="{{route('homeAdmin.list.booking.doctor')}}" class="btn btn-dark">Làm mới</a>
+                    <a href="{{route('homeAdmin.list.booking.doctor')}}" class="btn btn-dark mr-3">Làm mới</a>
                 @endif
-            </div>
             <button type="submit" class="btn btn-info" name="excel" value="2">Xuất Excel</button>
         </div>
     </form>
     <br>
     <link href="{{ asset('css/listbooking.css') }}" rel="stylesheet">
-    <div class="">
-        <table class="table table-striped" id="tableBooking">
+    <div class="table-responsive">
+        <table class="table table-striped text-nowrap" id="tableBooking">
             <thead>
             <tr>
                 <th scope="col">#</th>
