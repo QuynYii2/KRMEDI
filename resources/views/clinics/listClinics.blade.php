@@ -295,6 +295,7 @@
                                     if (location && !isNaN(location.latitude) && !isNaN(location.longitude)) {
                                         getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
                                         location = [];
+                                        closeAllInfoWindows();
                                     } else {
                                         console.error('Invalid location data:', location);
                                     }
@@ -311,6 +312,7 @@
                                 clinicElement.find('#showMapBtn').on('click', function() {
                                     getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
                                 });
+                                closeAllInfoWindows();
                             });
                         }
                     });
@@ -318,18 +320,21 @@
                     document.querySelectorAll('.border-specialList').forEach(function (item) {
                         console.log(12)
                         item.addEventListener('click', function () {
+                            console.log(1)
                             var markerIndex = parseInt(item.getAttribute('data-marker-index'));
                             closeAllInfoWindows();
                             infoWindows[markerIndex].open(map, markers[markerIndex]);
 
-                            $(document).on('click', '.showMapBtnTab', function() {
-                                var location = locations[markerIndex];
-                                if (location && !isNaN(location.latitude) && !isNaN(location.longitude)) {
+                            var location = locations[markerIndex];
+                            if (location && !isNaN(location.latitude) && !isNaN(location.longitude)) {
+                                $(document).on('click', '#showMapBtnTab', function() {
+                                    console.log('click');
                                     getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
-                                } else {
-                                    console.error('Invalid location data:', location);
-                                }
-                            });
+                                    closeAllInfoWindows();
+                                })
+                            } else {
+                                console.error('Invalid location data:', location);
+                            }
                         });
                     });
                 }

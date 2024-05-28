@@ -590,6 +590,7 @@
                             infoWindow.open(map, marker);
                             $(document).on('click', '#showMapBtnTab', function() {
                                 getDirections(currentLocation, {lat: parseFloat(location.latitude), lng: parseFloat(location.longitude)});
+                                closeAllInfoWindows();
                             });
                         });
 
@@ -608,6 +609,17 @@
                         var markerIndex = parseInt(item.getAttribute('data-marker-index'));
                         closeAllInfoWindows();
                         infoWindows[markerIndex].open(map, markers[markerIndex]);
+
+                        var location = locations[markerIndex];
+                        if (location && !isNaN(location.latitude) && !isNaN(location.longitude)) {
+                            $(document).on('click', '#showMapBtnTab', function() {
+                                console.log('click');
+                                getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                            })
+                            closeAllInfoWindows();
+                        } else {
+                            console.error('Invalid location data:', location);
+                        }
                     });
                 });
 
@@ -722,6 +734,7 @@
                             infoWindow2.open(map2, markerPharmacies);
                             $(document).on('click', '#showMapBtnPharmacyTab', function() {
                                 getDirectionsPharmacies(currentLocation, { lat: parseFloat(locationsPharmacies.latitude), lng: parseFloat(locationsPharmacies.longitude) });
+                                closeAllInfoWindowsPharmacy();
                             });
                         });
                         markersPharmacy.push(markerPharmacies);
@@ -730,6 +743,7 @@
 
                         $('body').on('click', '.specialList-pharmacy-address[data-pharmacy-id="' + locationsPharmacies.id + '"] #showMapBtnPharmacy', function() {
                             getDirectionsPharmacies(currentLocation, { lat: parseFloat(locationsPharmacies.latitude), lng: parseFloat(locationsPharmacies.longitude) });
+                            closeAllInfoWindowsPharmacy();
                         });
                     }
                 });
@@ -739,6 +753,17 @@
                         var markerIndex = parseInt(item.getAttribute('data-marker-index'));
                         closeAllInfoWindowsPharmacy();
                         infoWindowsPharmacy[markerIndex].open(map2, markersPharmacy[markerIndex]);
+
+                        var location = locationsPharmacies[markerIndex];
+                        if (location && !isNaN(location.latitude) && !isNaN(location.longitude)) {
+                            $(document).on('click', '#showMapBtnPharmacyTab', function() {
+                                console.log('click');
+                                getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                                closeAllInfoWindowsPharmacy();
+                            })
+                        } else {
+                            console.error('Invalid location data:', location);
+                        }
                     });
                 });
 
