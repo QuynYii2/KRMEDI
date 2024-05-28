@@ -295,6 +295,7 @@
                                     if (location && !isNaN(location.latitude) && !isNaN(location.longitude)) {
                                         getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
                                         location = [];
+                                        closeAllInfoWindows();
                                     } else {
                                         console.error('Invalid location data:', location);
                                     }
@@ -311,6 +312,7 @@
                                 clinicElement.find('#showMapBtn').on('click', function() {
                                     getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
                                 });
+                                closeAllInfoWindows();
                             });
                         }
                     });
@@ -328,6 +330,7 @@
                                 $(document).on('click', '#showMapBtnTab', function() {
                                     console.log('click');
                                     getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                                    closeAllInfoWindows();
                                 })
                             } else {
                                 console.error('Invalid location data:', location);

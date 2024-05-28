@@ -2605,6 +2605,8 @@
     <script>
         var locations = {!! json_encode($coordinatesArray) !!};
         var infoWindows = [];
+        var directionsService;
+        var directionsRenderer;
 
         function getCurrentLocation(callback) {
             if (navigator.geolocation) {
@@ -2651,6 +2653,10 @@
                 center: currentLocation,
                 zoom: 10
             });
+
+            directionsService = new google.maps.DirectionsService();
+            directionsRenderer = new google.maps.DirectionsRenderer();
+            directionsRenderer.setMap(map);
 
             var currentLocationMarker = new google.maps.Marker({
                 position: currentLocation,
@@ -2702,12 +2708,12 @@
                                 </a>
                             </div>
                             <div class="d-flex col-md-6 justify-content-center align-items-center">
-                                <a class="row p-2" href="">
+                                <button class="row p-2" id="showMapBtnTab" style="background-color: transparent; border:none">
                                     <div class="justify-content-center d-flex">
                                         <i class="border-button-address fa-regular fa-circle-right"></i>
                                     </div>
                                     <div class="d-flex justify-content-center">{{ __('home.Direction') }}</div>
-                                </a>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -2748,6 +2754,14 @@
                     marker.addListener('click', function () {
                         closeAllInfoWindows();
                         infoWindow.open(map, marker);
+                        $(document).on('click', '#showMapBtnTab', function() {
+                            if (location && !isNaN(location.latitude) && !isNaN(location.longitude)) {
+                                getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                                closeAllInfoWindows();
+                            } else {
+                                console.error('Invalid location data:', location);
+                            }
+                        });
                     });
 
                     infoWindows.push(infoWindow);
@@ -2776,6 +2790,22 @@
                 });
             });
         });
+        function getDirections(currentLocation, clinicLocation) {
+            var request = {
+                origin: currentLocation,
+                destination: clinicLocation,
+                travelMode: 'DRIVING'
+            };
+
+            directionsService.route(request, function(result, status) {
+                if (status === 'OK') {
+                    directionsRenderer.setDirections(result);
+                    document.getElementById('allAddressesMap').style.display = 'block';
+                } else {
+                    console.error('Directions request failed due to ' + status);
+                }
+            });
+        }
     </script>
 {{--    <script>--}}
 {{--        const prevFlea = document.getElementById("prevFlea");--}}
