@@ -24,6 +24,7 @@ use App\Enums\Constants;
 use App\Models\AhaOrder;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
+use Pusher\Pusher;
 
 class CheckoutApi extends Controller
 {
@@ -269,7 +270,19 @@ class CheckoutApi extends Controller
                 'description' => 'Trạng thái đơn hàng của bạn đã thay đổi, Vui lòng vào kiểm tra!',
             ]);
             $notification->save();
-            broadcast(new AhamoveEvent($data));
+            $options = array(
+                'cluster' => 'ap1',
+                'encrypted' => true
+            );
+
+            $PUSHER_APP_KEY = '3ac4f810445d089829e8';
+            $PUSHER_APP_SECRET = 'c6cafb046a45494f80b2';
+            $PUSHER_APP_ID = '1714303';
+
+            $pusher = new Pusher($PUSHER_APP_KEY, $PUSHER_APP_SECRET, $PUSHER_APP_ID, $options);
+
+            //DATA WEB CALL WEB
+            $pusher->trigger('aha-move-events', 'aha-move-events', true);
 
             return response()->json(['status' => true, 'message' => 'Cập nhật trạng thái đơn hàng thành công'], 200);
         } catch (\Exception $e) {

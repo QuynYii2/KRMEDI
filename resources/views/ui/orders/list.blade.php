@@ -229,16 +229,18 @@
     <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.11.2/dist/echo.iife.js"></script>
     <script>
-        var pusher = new Pusher('e700f994f98dbb41ea9f', {
-            cluster: 'eu',
+        var pushers = new Pusher('3ac4f810445d089829e8', {
+            cluster: 'ap1',
             encrypted: true
         });
 
-        var channel = pusher.subscribe('aha-move-events');
-        channel.bind('aha-move-events', function(data) {
-            console.log(99,data)
+        var channels = pushers.subscribe('aha-move-events');
+        channels.bind('aha-move-events', function(data) {
+            location.reload();
         });
+
         let accessToken = `Bearer ` + token;
         let headers = {
             'Authorization': accessToken
