@@ -608,6 +608,16 @@
                         var markerIndex = parseInt(item.getAttribute('data-marker-index'));
                         closeAllInfoWindows();
                         infoWindows[markerIndex].open(map, markers[markerIndex]);
+
+                        var location = locations[markerIndex];
+                        if (location && !isNaN(location.latitude) && !isNaN(location.longitude)) {
+                            $(document).on('click', '#showMapBtnTab', function() {
+                                console.log('click');
+                                getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                            })
+                        } else {
+                            console.error('Invalid location data:', location);
+                        }
                     });
                 });
 
@@ -739,6 +749,16 @@
                         var markerIndex = parseInt(item.getAttribute('data-marker-index'));
                         closeAllInfoWindowsPharmacy();
                         infoWindowsPharmacy[markerIndex].open(map2, markersPharmacy[markerIndex]);
+
+                        var location = locationsPharmacies[markerIndex];
+                        if (location && !isNaN(location.latitude) && !isNaN(location.longitude)) {
+                            $(document).on('click', '#showMapBtnPharmacyTab', function() {
+                                console.log('click');
+                                getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                            })
+                        } else {
+                            console.error('Invalid location data:', location);
+                        }
                     });
                 });
 
