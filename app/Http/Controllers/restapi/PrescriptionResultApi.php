@@ -157,7 +157,7 @@ class PrescriptionResultApi extends Controller
         }
     }
 
-    public function noti_after_create_don_thuoc($email, $prescription_id, $created_by = null, $user_id = null)
+    public function noti_after_create_don_thuoc($email, $prescription_id, $user_id = null, $created_by = null)
     {
         $user = User::where('email', $email)->first();
 
