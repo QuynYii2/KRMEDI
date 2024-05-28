@@ -590,6 +590,7 @@
                             infoWindow.open(map, marker);
                             $(document).on('click', '#showMapBtnTab', function() {
                                 getDirections(currentLocation, {lat: parseFloat(location.latitude), lng: parseFloat(location.longitude)});
+                                closeAllInfoWindows();
                             });
                         });
 
@@ -615,6 +616,7 @@
                                 console.log('click');
                                 getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
                             })
+                            closeAllInfoWindows();
                         } else {
                             console.error('Invalid location data:', location);
                         }
@@ -732,6 +734,7 @@
                             infoWindow2.open(map2, markerPharmacies);
                             $(document).on('click', '#showMapBtnPharmacyTab', function() {
                                 getDirectionsPharmacies(currentLocation, { lat: parseFloat(locationsPharmacies.latitude), lng: parseFloat(locationsPharmacies.longitude) });
+                                closeAllInfoWindowsPharmacy();
                             });
                         });
                         markersPharmacy.push(markerPharmacies);
@@ -740,6 +743,7 @@
 
                         $('body').on('click', '.specialList-pharmacy-address[data-pharmacy-id="' + locationsPharmacies.id + '"] #showMapBtnPharmacy', function() {
                             getDirectionsPharmacies(currentLocation, { lat: parseFloat(locationsPharmacies.latitude), lng: parseFloat(locationsPharmacies.longitude) });
+                            closeAllInfoWindowsPharmacy();
                         });
                     }
                 });
@@ -755,6 +759,7 @@
                             $(document).on('click', '#showMapBtnPharmacyTab', function() {
                                 console.log('click');
                                 getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                                closeAllInfoWindowsPharmacy();
                             })
                         } else {
                             console.error('Invalid location data:', location);
