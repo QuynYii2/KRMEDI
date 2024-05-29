@@ -141,6 +141,24 @@
 
     <script src="{{ asset('build/assets/app.dba56e22.js') }}"></script>
     <div class="container d-md-flex pb-md-5 mt-200 mt-70 flex-wrap">
+        <div class="modal fade" id="activationModal" tabindex="-1" role="dialog" aria-labelledby="activationModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="activationModalLabel">Xác Thực Tài Khoản</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Bạn cần phải điền thông tin để tài khoản được xác thực.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="modalOkButton">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="col-lg-6 col-12 justify-content-center d-flex">
             <div class="slide-container position-relative">
                 <div class="slide">
@@ -2432,7 +2450,14 @@
     @endphp
 
     <script>
-
+        @if(session('show_modal'))
+        $(document).ready(function() {
+            $('#activationModal').modal('show');
+            $('#modalOkButton').on('click', function() {
+                window.location.href = "{{ route('profile') }}";
+            });
+        });
+        @endif
         $('.carousel').slick({
             dots: true,
             slidesPerRow: 2,

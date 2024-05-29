@@ -71,23 +71,6 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-md-4">
-                        <label for="detail_address">{{ __('home.địa chỉ chi tiết việt') }}</label>
-                        <input class="form-control" name="detail_address" id="detail_address"
-                               value="{{ $user->detail_address }}">
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="detail_address_en">{{ __('home.địa chỉ chi tiết anh') }}</label>
-                        <input class="form-control" name="detail_address_en" id="detail_address_en"
-                               value="{{ $user->detail_address_en }}">
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="detail_address_laos">{{ __('home.địa chỉ chi tiết lào') }}</label>
-                        <input class="form-control" name="detail_address_laos" id="detail_address_laos"
-                               value="{{ $user->detail_address_laos }}">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-4">
                         <label for="province_id">{{ __('home.Tỉnh') }}</label>
                         <select name="province_id" id="province_id" class="form-control form-select"
                                 onchange="callGetAllDistricts($('#province_id').find(':selected').data('code'))">
@@ -108,12 +91,19 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-6">
                         <label class="form-control-label" for="address_code">{{ __('home.AddressCode') }}</label>
                         <input type="text" id="address_code" class="form-control" name="address_code"
                                placeholder="ha_noi" value="{{ $user->address_code }}" required>
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-6">
+                        <label for="detail_address">{{ __('home.địa chỉ chi tiết việt') }}</label>
+                        <input class="form-control" name="detail_address" id="detail_address"
+                               value="{{ $user->detail_address }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-4">
                         <label for="type">{{ __('home.Type Account') }}</label>
                         <select id="type" name="type" class="form-select form-control">
                             <option value="NORMAL">Choose...</option>
@@ -125,7 +115,7 @@
                                 {{ $user->type == 'NORMAL' ? 'selected' : '' }} value="NORMAL">{{ __('home.NORMAL') }}</option>
                         </select>
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label class="form-control-label" for="member">{{ __('home.Member') }}<span
                                 class="small text-danger">*</span></label>
                         <select id="member" name="member" class="form-control form-select">
@@ -135,7 +125,7 @@
                                 {{ $user->member == 'NORMAL PEOPLE' ? 'selected' : '' }} value="NORMAL PEOPLE">{{ __('home.NORMAL PEOPLE') }}</option>
                         </select>
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label class="form-control-label" for="status">{{ __('home.Status') }}</label>
                         <select id="status" name="status" class="form-control form-select">
                             <option {{ $user->status == 'ACTIVE' ? 'selected' : '' }} value="ACTIVE">
@@ -153,10 +143,8 @@
                         </select>
                     </div>
                 </div>
-
                 <!-- Normal -->
                 <div class="only-normal" id="only_normal">
-
                 </div>
 
                 <div id="two_level">
@@ -321,55 +309,24 @@
         function showOnlyMedical() {
             let html = `<h1>Info doctor</h1>
                         <div class="row">
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-6">
                                 <label for="specialty">{{ __('home.chuyên môn việt') }}</label>
                                 <input type="text" class="form-control" id="specialty" name="specialty" value="{{ $user->specialty }}">
                             </div>
-                            <div class="form-group col-md-4">
-                                <label for="specialty_en">{{ __('home.chuyên môn anh') }}</label>
-                                <input type="text" class="form-control" id="specialty_en" name="specialty_en" value="{{ $user->specialty_en }}">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="specialty_laos">{{ __('home.chuyên môn lào') }}</label>
-                                <input type="text" class="form-control" id="specialty_laos" name="specialty_laos"
-                                       value="{{ $user->specialty_laos }}">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <label for="identifier">{{ __('home.Mã định danh trên giấy hành nghề') }}</label>
                                 <input type="text" class="form-control" id="identifier" name="identifier" value="{{ $user->identifier }}">
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-6">
                                 <label for="service">{{ __('home.Dịch vụ cung cấp việt') }}</label>
                                 <textarea class="form-control" name="service" id="service">{{ $user->service }}</textarea>
                             </div>
-                            <div class="form-group col-md-4">
-                                <label for="service_en">{{ __('home.Dịch vụ cung cấp anh') }}</label>
-                                <textarea class="form-control" name="service_en" id="service_en">{{ $user->service_en }}</textarea>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="service_laos">{{ __('home.Dịch vụ cung cấp lào') }}</label>
-                                <textarea class="form-control" name="service_laos" id="service_laos">{{ $user->service_laos }}</textarea>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-6">
                                 <label for="service_price">{{ __('home.Giá dịch vụ việt') }}</label>
                                 <input class="form-control" type="number" name="service_price" id="service_price"
                                        value="{{ $user->service_price }}">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="service_price_en">{{ __('home.Giá dịch vụ anh') }}</label>
-                                <input class="form-control" type="number" name="service_price_en" id="service_price_en"
-                                       value="{{ $user->service_price_en }}">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="service_price_laos">{{ __('home.Giá dịch vụ lào') }}</label>
-                                <input class="form-control" type="number" name="service_price_laos"
-                                       id="service_price_laos" value="{{ $user->service_price_laos }}">
                             </div>
                         </div>
                          @php
