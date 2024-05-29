@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -31,7 +32,7 @@ class AuthController extends Controller
                 'username' => ['required', 'string', 'unique:users,username', new NoSpacesRule],
                 'password' => ['required', 'string', new NoSpacesRule],
                 'passwordConfirm' => ['required', 'string', 'same:password', new NoSpacesRule],
-                'member' => ['required', 'string'],
+                'member' => ['nullable', 'string'],
                 'medical_history' => ['nullable'],
                 'type' => ['required', 'string'],
                 'open_date' => ['nullable'],
@@ -50,8 +51,8 @@ class AuthController extends Controller
                 'longitude' => ['nullable'],
                 'experienceHospital' => ['nullable'],
                 'fileupload' => ['nullable', 'file'],
-                'name_doctor' => ['nullable', 'required_if:type,MEDICAL'],
-                'contact_phone' => ['nullable', 'required_if:type,MEDICAL', 'unique:users,phone', 'regex:/^0[1-9][0-9]{8}$/'],
+                'name_doctor' => ['nullable'],
+                'contact_phone' => ['nullable', 'unique:users,phone', 'regex:/^0[1-9][0-9]{8}$/'],
                 'experience' => ['nullable', 'integer'],
                 'hospital' => ['nullable', 'string'],
                 'specialized_services' => ['nullable', 'string'],
@@ -59,7 +60,8 @@ class AuthController extends Controller
                 'identifier' => ['nullable'],
                 'prescription' => ['nullable'],
                 'free' => ['nullable'],
-                'signature' => ['nullable', 'required_if:member,DOCTORS']
+                'signature' => ['nullable'],
+                'phone' => ['required', 'regex:/^0[3|5|7|8|9][0-9]{8}$/'],
             ]);
 
             if ($validator->fails()) {
@@ -74,8 +76,8 @@ class AuthController extends Controller
             $member = $request->input('member');
             $medical_history = $request->input('medical_history');
             $type = $request->input('type');
-            $openDate = $request->input('open_date');
-            $closeDate = $request->input('close_date');
+            $openDate = $request->input('open_date', '00:00');
+            $closeDate = $request->input('close_date', '23:59');
             $province_id = $request->input('province_id');
             $district_id = $request->input('district_id');
             $commune_id = $request->input('commune_id');
@@ -83,27 +85,10 @@ class AuthController extends Controller
             $time_work = $request->input('time_work');
             $provider_name = $request->input('provider_name') ?? "";
             $provider_id = $request->input('provider_id') ?? "";
-
+            $phone = $request->input('phone');
             $invite_code = $request->input('inviteCode') ?? "";
 
             $signature = $request->input('signature') ?? "";
-
-            if ($signature) {
-                $imageData = str_replace('data:image/png;base64,', '', $signature);
-
-                // Decode the base64 data
-                $imageData = base64_decode($imageData);
-
-                // Generate a unique filename for the image
-                $filename = uniqid() . '.png';
-
-                // Define the storage path where you want to store the image
-                $storagePath = 'signature/';
-
-                Storage::put('public/' . $storagePath . $filename, $imageData);
-
-                $imageUrl = Storage::url($storagePath . $filename);
-            }
 
             $identify_number = Str::random(8);
             while (User::where('identify_number', $identify_number)->exists()) {
@@ -112,8 +97,8 @@ class AuthController extends Controller
 
             $address = $request->input('combined_address');
             $representative = $request->input('representative');
-            $latitude = $request->input('latitude');
-            $longitude = $request->input('longitude');
+            $latitude = $request->input('latitude', '0.0');
+            $longitude = $request->input('longitude', '0.0');
             $experienceHospital = $request->input('experienceHospital');
             if ($province_id && $district_id && $commune_id) {
                 $province = explode('-', $province_id);
@@ -187,18 +172,14 @@ class AuthController extends Controller
             $user->email = $email;
             if ($type == \App\Enums\Role::MEDICAL) {
                 $name_doctor = $request->input('name_doctor');
-                $contact_phone = $request->input('contact_phone');
                 $experience = $request->input('experience');
                 $hospital = $request->input('hospital');
                 $specialized_services = $request->input('specialized_services');
                 $services_info = $request->input('services_info');
-                if ($imageUrl) {
-                    $user->signature = $imageUrl;
-                }
                 $user->name = $name_doctor;
                 $user->identifier = $request->input('identifier');
-                $user->phone = $contact_phone;
-                $user->year_of_experience = $experience ?? '';
+                $user->phone = $phone;
+                $user->year_of_experience = $experience ?? '0';
                 $user->hospital = $hospital ?? '';
                 $user->specialty = $specialized_services ?? '';
                 $user->service = $services_info ?? '';
@@ -206,22 +187,23 @@ class AuthController extends Controller
                 $user->free = $request->has('free') ? (int)$request->input('free') : 0;
             } else {
                 $user->name = '';
-                $user->phone = '';
+                $user->phone = $phone;
             }
 
             if ($member == \App\Enums\Role::NORMAL_PEOPLE || $member == \App\Enums\Role::PAITENTS) {
                 $user->medical_history = $medical_history;
             }
 
+            $user->name = '';
             $user->last_name = '';
             $user->password = $passwordHash;
             $user->username = $username;
             $user->address_code = '';
             $user->type = $type;
-            $user->member = $member;
-            $user->provider_id = $provider_id;
-            $user->provider_name = $provider_name;
-            $user->identify_number = $identify_number;
+            $user->member = $member ?? '';
+            $user->provider_id = $provider_id ?? null;
+            $user->provider_name = $provider_name ?? null;
+            $user->identify_number = $identify_number ?? null;
             $user->abouts = 'default';
             $user->abouts_en = 'default';
             $user->abouts_lao = 'default';
@@ -244,49 +226,58 @@ class AuthController extends Controller
 
                 if ($user->type == \App\Enums\Role::MEDICAL) {
                     auth()->login($user, true);
-                    toast('Register success!', 'success', 'top-left');
-                    return redirect()->route('profile');
-                }
-                if ($user->type == \App\Enums\Role::BUSINESS) {
-
-                    $openDateTime = Carbon::createFromFormat('Y-m-d H:i', $currentDate->format('Y-m-d') . ' ' . $openDate);
-                    $closeDateTime = Carbon::createFromFormat('Y-m-d H:i', $currentDate->format('Y-m-d') . ' ' . $closeDate);
-                    $formattedOpenDateTime = $openDateTime->format('Y-m-d\TH:i');
-                    $formattedCloseDateTime = $closeDateTime->format('Y-m-d\TH:i');
-
-                    $hospital = new Clinic();
-                    $hospital->address_detail = $address_detail;
-                    $hospital->address = ',' . $province[0] . ',' . $district[0] . ',' . $commune[0];
-
-                    $hospital->name = $representative;
-                    $hospital->latitude = $latitude;
-                    $hospital->longitude = $longitude;
-                    $hospital->open_date = $formattedOpenDateTime ?? '';
-                    $hospital->close_date = $formattedCloseDateTime ?? '';
-                    $hospital->experience = $experienceHospital;
-                    $hospital->gallery = $img ?? '';
-                    $hospital->user_id = $user->id;
-                    $hospital->time_work = $time_work;
-                    $hospital->status = ClinicStatus::ACTIVE;
-                    $hospital->type = $user->member;
-                    $hospital->save();
-
-                    $newUser = User::find($user->id);
-                    $newUser->province_id = $province[0];
-                    $newUser->district_id = $district[0];
-                    $newUser->commune_id = $commune[0];
-                    $newUser->address_code = $province[2];
-                    $newUser->detail_address = $address_detail;
-                    $newUser->year_of_experience = $experienceHospital;
-                    $newUser->bac_si_dai_dien = $representative;
-                    $newUser->name = $representative;
-                    $newUser->save();
-
-
+                    session()->put('show_modal', true);
                     toast('Register success!', 'success', 'top-left');
                     return redirect()->route('home');
                 }
+                if ($user->type == \App\Enums\Role::BUSINESS) {
+                    try {
+                        $currentDate = Carbon::now();
+                        $openDateTime = Carbon::createFromFormat('Y-m-d H:i', $currentDate->format('Y-m-d') . ' ' . $openDate);
+                        $closeDateTime = Carbon::createFromFormat('Y-m-d H:i', $currentDate->format('Y-m-d') . ' ' . $closeDate);
+                        $formattedOpenDateTime = $openDateTime->format('Y-m-d\TH:i');
+                        $formattedCloseDateTime = $closeDateTime->format('Y-m-d\TH:i');
 
+                        $hospital = new Clinic();
+                        $hospital->address_detail = $request->input('address_detail', '');
+                        $hospital->address = ',' . ($province[0] ?? '') . ',' . ($district[0] ?? '') . ',' . ($commune[0] ?? '');
+                        $hospital->name = $request->input('representative', '');
+                        $hospital->latitude = $latitude;
+                        $hospital->longitude = $longitude;
+                        $hospital->open_date = $formattedOpenDateTime;
+                        $hospital->close_date = $formattedCloseDateTime;
+                        $hospital->experience = $request->input('experienceHospital', '1');
+                        $hospital->gallery = $request->input('img', '1');
+                        $hospital->user_id = $user->id;
+                        $hospital->time_work = $request->input('time_work', '');
+                        $hospital->status = ClinicStatus::ACTIVE;
+                        $hospital->type = $user->member;
+                        $hospital->phone = $request->input('phone', '');
+                        $hospital->representative_doctor = '';
+                        $hospital->save();
+
+                        $newUser = User::find($user->id);
+                        $newUser->province_id = $province[0] ?? null;
+                        $newUser->district_id = $district[0] ?? null;
+                        $newUser->commune_id = $commune[0] ?? null;
+                        $newUser->address_code = $province[2] ?? '1';
+                        $newUser->detail_address = $request->input('address_detail', '');
+                        $newUser->year_of_experience = $request->input('experienceHospital', '1');
+                        $newUser->bac_si_dai_dien = $request->input('representative', '1');
+                        $newUser->name = $request->input('representative', '1');
+                        $newUser->save();
+
+                        auth()->login($user, true);
+                        session()->put('show_modal', true);
+                        toast('Register success!', 'success', 'top-left');
+                        return redirect()->route('home');
+                    } catch (\Exception $e) {
+                        Log::error('Date format error: ' . $e->getMessage());
+                        return redirect()->back()->withErrors(['error' => 'An error occurred during registration. Please ensure all fields are filled out correctly.']);
+                    }
+                }
+                auth()->login($user, true);
+                session()->put('show_modal', true);
                 toast('Register success!', 'success', 'top-left');
                 return redirect(route('home'));
             }
@@ -400,6 +391,7 @@ class AuthController extends Controller
         }
         (new MainController())->removeCouponExpiredAndAddCouponActive();
         Auth::logout();
+        session()->forget('show_modal');
         setCookie('accessToken', null);
         return redirect('/');
     }

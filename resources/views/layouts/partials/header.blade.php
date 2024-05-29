@@ -515,140 +515,144 @@
 {{--                                                </option>--}}
                                             </select>
                                         </div>
-                                        <div class="form-elementt m-16" id="element-normal" style="display: none;">
-                                            <div>
-                                                <label for="medical_history">{{ __('home.Tiền sử bệnh án') }}</label>
-                                                <textarea id="medical_history" name="medical_history"
-                                                          placeholder="{{ __('home.Tiền sử bệnh án') }}"></textarea>
-                                            </div>
-                                        </div>
+{{--                                        <div class="form-element m-16" id="element-normal" style="display: none;">--}}
+{{--                                            <div>--}}
+{{--                                                <label for="medical_history">{{ __('home.Tiền sử bệnh án') }}</label>--}}
+{{--                                                <textarea id="medical_history" name="medical_history"--}}
+{{--                                                          placeholder="{{ __('home.Tiền sử bệnh án') }}"></textarea>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
                                         <div class="form-element" id="elemet-upload-file-sign-up">
                                             <label for="member" id="labelFileUploadSignup"></label>
                                             <input type="file" id="fileupload" name="fileupload"
                                                    accept="image/*, .pdf, .doc, .docx">
                                         </div>
                                         <div class="form-element" id="element-doctor" style="display: none;">
-                                            <div>
-                                                <canvas id="signature-pad" class="signature-pad border" width="560" height="200"></canvas>
-                                                <input type="hidden" id="signature-data" name="signature">
-                                                <a type="button" class="btn btn-outline-primary" id="clear-signature">Xoá chữ ký</a>
-                                            </div>
-                                            <div class="mt-5">
-                                                <label for="name_doctor">{{ __('home.Name') }}</label>
-                                                <input type="text" id="name_doctor" name="name_doctor"
-                                                       placeholder="{{ __('home.Name') }}">
-                                            </div>
-                                            <div class="mt-3">
-                                                <label for="identifier">{{ __('home.Mã định danh trên giấy hành nghề') }}</label>
-                                                <input type="text" id="identifier" name="identifier"
-                                                       placeholder="{{ __('home.Mã định danh trên giấy hành nghề') }}">
-                                            </div>
-                                            <div class="mt-3">
-                                                <label for="contact_phone">{{ __('home.CONTACT INFO') }}</label>
-                                                <input type="number" id="contact_phone" name="contact_phone"
-                                                       placeholder="0123456789">
-                                            </div>
-                                            <div class="mt-3">
-                                                <label for="experience">{{ __('home.EXPERIENCE') }}</label>
-                                                <input type="text" id="experience" name="experience"
-                                                       placeholder="{{ __('home.EXPERIENCE') }}">
-                                            </div>
-                                            <div class="mt-3">
-                                                <label for="hospital">{{ __('home.HOSPITAL NAME') }}</label>
-                                                <input type="text" id="hospital" name="hospital"
-                                                       placeholder="{{ __('home.HOSPITAL NAME') }}">
-                                            </div>
-                                            <div class="mt-3">
-                                                <label
-                                                    for="specialized_services">{{ __('home.SPECIALIZED SERVICES') }}</label>
-                                                <input type="text" id="specialized_services" name="specialized_services"
-                                                       placeholder="{{ __('home.SPECIALIZED SERVICES') }}">
-                                            </div>
-                                            <div class="mt-3">
-                                                <label for="services_info">{{ __('home.SERVICE INFO') }}</label>
-                                                <input type="text" id="services_info" name="services_info"
-                                                       placeholder="{{ __('home.SERVICE INFO') }}">
-                                            </div>
+{{--                                            <div>--}}
+{{--                                                <canvas id="signature-pad" class="signature-pad border" width="560" height="200"></canvas>--}}
+{{--                                                <input type="hidden" id="signature-data" name="signature">--}}
+{{--                                                <a type="button" class="btn btn-outline-primary" id="clear-signature">Xoá chữ ký</a>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="mt-5">--}}
+{{--                                                <label for="name_doctor">{{ __('home.Name') }}</label>--}}
+{{--                                                <input type="text" id="name_doctor" name="name_doctor"--}}
+{{--                                                       placeholder="{{ __('home.Name') }}">--}}
+{{--                                            </div>--}}
+{{--                                            <div class="mt-3">--}}
+{{--                                                <label for="identifier">{{ __('home.Mã định danh trên giấy hành nghề') }}</label>--}}
+{{--                                                <input type="text" id="identifier" name="identifier"--}}
+{{--                                                       placeholder="{{ __('home.Mã định danh trên giấy hành nghề') }}">--}}
+{{--                                            </div>--}}
+{{--                                            <div class="mt-3">--}}
+{{--                                                <label for="contact_phone">{{ __('home.CONTACT INFO') }}</label>--}}
+{{--                                                <input type="number" id="contact_phone" name="contact_phone"--}}
+{{--                                                       placeholder="0123456789">--}}
+{{--                                            </div>--}}
+{{--                                            <div class="mt-3">--}}
+{{--                                                <label for="experience">{{ __('home.EXPERIENCE') }}</label>--}}
+{{--                                                <input type="text" id="experience" name="experience"--}}
+{{--                                                       placeholder="{{ __('home.EXPERIENCE') }}">--}}
+{{--                                            </div>--}}
+{{--                                            <div class="mt-3">--}}
+{{--                                                <label for="hospital">{{ __('home.HOSPITAL NAME') }}</label>--}}
+{{--                                                <input type="text" id="hospital" name="hospital"--}}
+{{--                                                       placeholder="{{ __('home.HOSPITAL NAME') }}">--}}
+{{--                                            </div>--}}
+{{--                                            <div class="mt-3">--}}
+{{--                                                <label--}}
+{{--                                                    for="specialized_services">{{ __('home.SPECIALIZED SERVICES') }}</label>--}}
+{{--                                                <input type="text" id="specialized_services" name="specialized_services"--}}
+{{--                                                       placeholder="{{ __('home.SPECIALIZED SERVICES') }}">--}}
+{{--                                            </div>--}}
+{{--                                            <div class="mt-3">--}}
+{{--                                                <label for="services_info">{{ __('home.SERVICE INFO') }}</label>--}}
+{{--                                                <input type="text" id="services_info" name="services_info"--}}
+{{--                                                       placeholder="{{ __('home.SERVICE INFO') }}">--}}
+{{--                                            </div>--}}
                                         </div>
                                         <div id="element-hospital" style="display: none;">
-                                            <div class="d-flex form-element">
-                                                <div class="col-md-6 pl-0">
-                                                    <label for="open_date">{{ __('home.Thời gian bắt đầu') }}</label>
-                                                    <input class="input-time" id="open_date" name="open_date"
-                                                           type="time" placeholder="">
-                                                </div>
-                                                <div class="col-md-6 pr-0">
-                                                    <label for="close_date">{{ __('home.Thời gian kết thúc') }}</label>
-                                                    <input class="input-time" id="close_date" name="close_date"
-                                                           type="time" placeholder="">
-                                                </div>
-                                            </div>
-                                            <div class="mt-3 form-element">
-                                                <label for="experienceHospital">{{ __('home.EXPERIENCE') }}</label>
-                                                <input type="number" id="experienceHospital" name="experienceHospital"
-                                                       placeholder="{{ __('home.EXPERIENCE') }}">
-                                            </div>
-                                            <div class="form-element">
-                                                <label for="address">{{ __('home.Addresses') }}</label>
-                                                <input id="address" name="address" type="text"
-                                                       placeholder="{{ __('home.Addresses') }}">
-                                            </div>
-                                            <div class="form-element">
-                                                <label for="province_id">{{ __('home.Tỉnh') }}</label>
-                                                <select name="province_id" id="province_id" class="form-control">
-                                                </select>
-                                            </div>
-                                            <div class="form-element">
-                                                <label for="district_id">{{ __('home.Quận') }}</label>
-                                                <select name="district_id" id="district_id" class="form-control">
-                                                </select>
-                                            </div>
-                                            <div class="form-element">
-                                                <label for="commune_id">{{ __('home.Xã') }}</label>
-                                                <select name="commune_id" id="commune_id" class="form-control">
-                                                </select>
-                                            </div>
-                                            <div class="form-element">
-                                                <label
-                                                    for="representative">{{ __('home.REPRESENTATIVE DOCTOR') }}</label>
-                                                <input id="representative" name="representative" type="text"
-                                                       placeholder="{{ __('home.REPRESENTATIVE DOCTOR') }}">
-                                            </div>
-                                            <div class="form-element">
-                                                <label for="time_work">{{ __('home.Time work') }}</label>
-                                                <select class="form-select" id="time_work" name="time_work">
-                                                    <option
-                                                        value="{{TypeTimeWork::ALL}}">{{TypeTimeWork::ALL}}</option>
-                                                    <option
-                                                        value="{{TypeTimeWork::NONE}}">{{TypeTimeWork::NONE}}</option>
-                                                    <option
-                                                        value="{{TypeTimeWork::OFFICE_HOURS}}">{{TypeTimeWork::OFFICE_HOURS}}</option>
-                                                    <option
-                                                        value="{{TypeTimeWork::ONLY_AFTERNOON}}">{{TypeTimeWork::ONLY_MORNING}}</option>
-                                                    <option
-                                                        value="{{TypeTimeWork::ONLY_AFTERNOON}}">{{TypeTimeWork::ONLY_AFTERNOON}}</option>
-                                                    <option
-                                                        value="{{TypeTimeWork::OTHER}}">{{TypeTimeWork::OTHER}}</option>
-                                                </select>
-                                            </div>
+{{--                                            <div class="d-flex form-element">--}}
+{{--                                                <div class="col-md-6 pl-0">--}}
+{{--                                                    <label for="open_date">{{ __('home.Thời gian bắt đầu') }}</label>--}}
+{{--                                                    <input class="input-time" id="open_date" name="open_date"--}}
+{{--                                                           type="time" placeholder="">--}}
+{{--                                                </div>--}}
+{{--                                                <div class="col-md-6 pr-0">--}}
+{{--                                                    <label for="close_date">{{ __('home.Thời gian kết thúc') }}</label>--}}
+{{--                                                    <input class="input-time" id="close_date" name="close_date"--}}
+{{--                                                           type="time" placeholder="">--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="mt-3 form-element">--}}
+{{--                                                <label for="experienceHospital">{{ __('home.EXPERIENCE') }}</label>--}}
+{{--                                                <input type="number" id="experienceHospital" name="experienceHospital"--}}
+{{--                                                       placeholder="{{ __('home.EXPERIENCE') }}">--}}
+{{--                                            </div>--}}
+{{--                                            <div class="form-element">--}}
+{{--                                                <label for="address">{{ __('home.Addresses') }}</label>--}}
+{{--                                                <input id="address" name="address" type="text"--}}
+{{--                                                       placeholder="{{ __('home.Addresses') }}">--}}
+{{--                                            </div>--}}
+{{--                                            <div class="form-element">--}}
+{{--                                                <label for="province_id">{{ __('home.Tỉnh') }}</label>--}}
+{{--                                                <select name="province_id" id="province_id" class="form-control">--}}
+{{--                                                </select>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="form-element">--}}
+{{--                                                <label for="district_id">{{ __('home.Quận') }}</label>--}}
+{{--                                                <select name="district_id" id="district_id" class="form-control">--}}
+{{--                                                </select>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="form-element">--}}
+{{--                                                <label for="commune_id">{{ __('home.Xã') }}</label>--}}
+{{--                                                <select name="commune_id" id="commune_id" class="form-control">--}}
+{{--                                                </select>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="form-element">--}}
+{{--                                                <label--}}
+{{--                                                    for="representative">{{ __('home.REPRESENTATIVE DOCTOR') }}</label>--}}
+{{--                                                <input id="representative" name="representative" type="text"--}}
+{{--                                                       placeholder="{{ __('home.REPRESENTATIVE DOCTOR') }}">--}}
+{{--                                            </div>--}}
+{{--                                            <div class="form-element">--}}
+{{--                                                <label for="time_work">{{ __('home.Time work') }}</label>--}}
+{{--                                                <select class="form-select" id="time_work" name="time_work">--}}
+{{--                                                    <option--}}
+{{--                                                        value="{{TypeTimeWork::ALL}}">{{TypeTimeWork::ALL}}</option>--}}
+{{--                                                    <option--}}
+{{--                                                        value="{{TypeTimeWork::NONE}}">{{TypeTimeWork::NONE}}</option>--}}
+{{--                                                    <option--}}
+{{--                                                        value="{{TypeTimeWork::OFFICE_HOURS}}">{{TypeTimeWork::OFFICE_HOURS}}</option>--}}
+{{--                                                    <option--}}
+{{--                                                        value="{{TypeTimeWork::ONLY_AFTERNOON}}">{{TypeTimeWork::ONLY_MORNING}}</option>--}}
+{{--                                                    <option--}}
+{{--                                                        value="{{TypeTimeWork::ONLY_AFTERNOON}}">{{TypeTimeWork::ONLY_AFTERNOON}}</option>--}}
+{{--                                                    <option--}}
+{{--                                                        value="{{TypeTimeWork::OTHER}}">{{TypeTimeWork::OTHER}}</option>--}}
+{{--                                                </select>--}}
+{{--                                            </div>--}}
                                         </div>
                                         <div class="form-element">
                                             <label for="email">Email</label>
                                             <input id="email" name="email" type="email" placeholder="example@gmail.com"
                                                    required>
                                         </div>
-                                        <div id="action-doctor" style="display: none">
-                                            <div class="form-element">
-                                                <input id="prescription" name="prescription" type="checkbox" value="1">
-                                                <label
-                                                    for="prescription">{{ __('home.prescription') }}</label>
-                                            </div>
-                                            <div class="form-element">
-                                                <input id="free" name="free" type="checkbox" value="1">
-                                                <label
-                                                    for="free">{{ __('home.free') }}</label>
-                                            </div>
+                                        <div class="form-element">
+                                            <label for="phone">Số điện thoại</label>
+                                            <input id="phone" name="phone" type="text" placeholder="(+84) 123 456 789" required/>
                                         </div>
+{{--                                        <div id="action-doctor" style="display: none">--}}
+{{--                                            <div class="form-element">--}}
+{{--                                                <input id="prescription" name="prescription" type="checkbox" value="1">--}}
+{{--                                                <label--}}
+{{--                                                    for="prescription">{{ __('home.prescription') }}</label>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="form-element">--}}
+{{--                                                <input id="free" name="free" type="checkbox" value="1">--}}
+{{--                                                <label--}}
+{{--                                                    for="free">{{ __('home.free') }}</label>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
 
                                         <div class="form-element">
                                             <label for="password">{{ __('home.Password') }}</label>
