@@ -319,6 +319,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('web/home', [HomeController::class, 'admin'])->name('admin.home');
 
     Route::get('web/chat-unseen', [HomeController::class, 'listMessageUnseen'])->name('admin.list.chat.unseen');
+    Route::get('web/list-chat-unseen', [HomeController::class, 'listChatUnseen'])->name('admin.list.chat.mess.unseen');
 
     Route::post(
         '/save-user-login-social',

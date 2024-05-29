@@ -334,12 +334,110 @@
 
 </body>
 @include('components.head.tinymce-config')
+<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.11.2/dist/echo.iife.js"></script>
 <script>
     $(document).ready(function() {
         $('.btn_close_m').click(function() {
             $('#modal-call-alert').modal('toggle')
         })
     })
+    var pushers = new Pusher('3ac4f810445d089829e8', {
+        cluster: 'ap1',
+        encrypted: true
+    });
+
+    var channels = pushers.subscribe('noti-events');
+    channels.bind('noti-events', function(data) {
+        let currentUserId = "{{\Illuminate\Support\Facades\Auth::id()}}";
+        if (data.user_id == currentUserId){
+            function sendNotification(title, options) {
+                if (Notification.permission === "granted") {
+                    new Notification(title, options);
+                }
+            }
+            function requestNotificationPermission() {
+                if (Notification.permission === "granted") {
+                    sendNotification('Thông báo mới', { body: data.title });
+                } else if (Notification.permission !== "denied") {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === "granted") {
+                            sendNotification('Thông báo mới', { body: data.title });
+                        }
+                    });
+                }
+            }
+            requestNotificationPermission();
+            fetchNotifications()
+        }
+    });
+
+    function fetchNotifications() {
+        $.ajax({
+            url: '{{ route('admin.list.chat.mess.unseen') }}',
+            method: 'GET',
+            success: function(data) {
+                updateNotificationList(data.data.notifications.data, data.data.unseenNoti);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('Error fetching notifications:', textStatus, errorThrown);
+            }
+        });
+    }
+
+    function updateNotificationList(notifications, unseenNoti) {
+        const notificationList = document.getElementById('notificationList');
+        notificationList.innerHTML = ''; // Clear existing notifications
+
+        // Add the dropdown header
+        const headerItem = document.createElement('li');
+        headerItem.classList.add('dropdown-header');
+        headerItem.innerHTML = `
+            Bạn có <span class="countUnseenNotification">${unseenNoti}</span> thông báo chưa đọc
+            <a type="button" onclick="seenAllNotify({{ Auth::user()->id ?? 0 }})" class="text-decoration-none">
+                <span class="badge rounded-pill bg-primary p-2 ms-2">{{ __('home.View all') }}</span>
+            </a>
+        `;
+        notificationList.appendChild(headerItem);
+
+        // Add the divider
+        const dividerItem = document.createElement('li');
+        dividerItem.innerHTML = '<hr class="dropdown-divider">';
+        notificationList.appendChild(dividerItem);
+
+        // Update unseen notification count
+        const unseenCountElem = document.querySelector('.countUnseenNotification');
+        unseenCountElem.innerText = unseenNoti;
+
+        if (notifications.length === 0) {
+            const noNotificationItem = document.createElement('li');
+            noNotificationItem.innerText = 'Không có thông báo nào';
+            notificationList.appendChild(noNotificationItem);
+            return;
+        }
+
+        notifications.forEach(noti => {
+            const notiItem = document.createElement('li');
+            notiItem.classList.add('notification-item');
+            notiItem.innerHTML = `
+                <a href="${noti.target_url ?? '#'}" onclick="seenNotify(event, ${noti.id})">
+                    <div class="notification-item ${noti.seen == 0 ? 'fw-bold' : ''}" style="display: flex; align-items: center">
+                        <img src="${noti.senders.avt}" alt="Profile" class="rounded-circle" style="width: 70px">
+                        <div class="notificationContent ms-3">
+                            <h5 style="font-size: 0.9rem">${noti.title ?? ''}</h5>
+                            <p style="font-size: 0.85rem">${noti.description ?? ''}</p>
+                            <p style="font-size: 0.8rem">${new Date(noti.created_at).toLocaleString()}</p>
+                        </div>
+                    </div>
+                </a>
+            `;
+            notificationList.appendChild(notiItem);
+
+            const divider = document.createElement('li');
+            divider.innerHTML = '<hr class="dropdown-divider">';
+            notificationList.appendChild(divider);
+        });
+    }
 </script>
 <script>
     function loadingMasterPage() {

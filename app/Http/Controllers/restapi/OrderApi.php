@@ -15,6 +15,7 @@ use App\Models\ProductInfo;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Pusher\Pusher;
 
 class OrderApi extends Controller
 {
@@ -178,6 +179,23 @@ class OrderApi extends Controller
                 'description' => 'Có đơn hàng yêu cầu hoàn trả, Vui lòng vào kiểm tra!',
             ]);
             $notificationAdmin->save();
+            $options = array(
+                'cluster' => 'ap1',
+                'encrypted' => true
+            );
+
+            $PUSHER_APP_KEY = '3ac4f810445d089829e8';
+            $PUSHER_APP_SECRET = 'c6cafb046a45494f80b2';
+            $PUSHER_APP_ID = '1714303';
+
+            $pusher = new Pusher($PUSHER_APP_KEY, $PUSHER_APP_SECRET, $PUSHER_APP_ID, $options);
+
+            $requestData = [
+                'user_id' => $key,
+                'title' => 'Có đơn hàng yêu cầu hoàn trả',
+            ];
+
+            $pusher->trigger('noti-events', 'noti-events', $requestData);
         }
 
 
@@ -197,6 +215,23 @@ class OrderApi extends Controller
             'description' => 'Yêu cầu hoàn hàng của bạn đã được duyệt, Vui lòng vào kiểm tra!',
         ]);
         $notificationAdmin->save();
+        $options = array(
+            'cluster' => 'ap1',
+            'encrypted' => true
+        );
+
+        $PUSHER_APP_KEY = '3ac4f810445d089829e8';
+        $PUSHER_APP_SECRET = 'c6cafb046a45494f80b2';
+        $PUSHER_APP_ID = '1714303';
+
+        $pusher = new Pusher($PUSHER_APP_KEY, $PUSHER_APP_SECRET, $PUSHER_APP_ID, $options);
+
+        $requestData = [
+            'user_id' => $order->user_id,
+            'title' => 'Yêu cầu hoàn hàng của bạn đã được duyệt, Vui lòng vào kiểm tra!',
+        ];
+
+        $pusher->trigger('noti-events', 'noti-events', $requestData);
         return \redirect()->back()->with(['success' => 'Duyệt hoàn hàng thành công']);
     }
 

@@ -35,7 +35,7 @@ class AdminOrderApi extends Controller
                 ->when($status, function ($query) use ($status) {
                     $query->where('status', $status);
                 })
-                ->orderBy('id', 'desc')
+                ->orderBy('created_at', 'desc')
                 ->cursor()
                 ->map(function ($item) {
                     $orderItems = OrderItem::where('order_id', $item->id)
@@ -57,6 +57,7 @@ class AdminOrderApi extends Controller
                         ->where('orders.status', '!=', OrderStatus::DELETED)
                         ->where('orders.status', '=', $status)
                         ->select('orders.*')
+                        ->orderBy('orders.created_at','desc')
                         ->get();
                 } else {
                     $orders = DB::table('orders')
@@ -67,6 +68,7 @@ class AdminOrderApi extends Controller
                         ->where('orders.status', '!=', OrderStatus::DELETED)
                         ->where('orders.status', '=', $status)
                         ->select('orders.*')
+                        ->orderBy('orders.created_at','desc')
                         ->get();
                 }
 
@@ -79,6 +81,7 @@ class AdminOrderApi extends Controller
                         ->where('orders.type_product', TypeProductCart::MEDICINE)
                         ->where('orders.status', '!=', OrderStatus::DELETED)
                         ->select('orders.*')
+                        ->orderBy('orders.created_at','desc')
                         ->get();
                 } else {
                     $orders = DB::table('orders')
@@ -88,6 +91,7 @@ class AdminOrderApi extends Controller
                         ->where('product_infos.created_by', $userID)
                         ->where('orders.status', '!=', OrderStatus::DELETED)
                         ->select('orders.*')
+                        ->orderBy('orders.created_at','desc')
                         ->get();
 
                 }

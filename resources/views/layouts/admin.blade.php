@@ -52,6 +52,10 @@
         var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl)
         })
+        let accessToken = `Bearer ` + token;
+        let headers = {
+            'Authorization': accessToken
+        };
     </script>
 
 
@@ -93,10 +97,10 @@
             console.log('An error occurred while retrieving token. ', err);
         });
 
-        let accessToken = `Bearer ` + token;
-        let headers = {
-            'Authorization': accessToken
-        };
+        // let accessToken = `Bearer ` + token;
+        // let headers = {
+        //     'Authorization': accessToken
+        // };
 
         async function saveToken(token) {
             @if (Auth::check() &&
@@ -1067,6 +1071,95 @@
     $(function() {
         $('[data-toggle="tooltip"]').tooltip()
     })
+    var pushers = new Pusher('3ac4f810445d089829e8', {
+        cluster: 'ap1',
+        encrypted: true
+    });
+
+    var channels = pushers.subscribe('noti-events');
+    channels.bind('noti-events', function(data) {
+        let currentUserId = "{{\Illuminate\Support\Facades\Auth::id()}}";
+        if (data.user_id == currentUserId){
+            function sendNotification(title, options) {
+                if (Notification.permission === "granted") {
+                    new Notification(title, options);
+                }
+            }
+            function requestNotificationPermission() {
+                if (Notification.permission === "granted") {
+                    sendNotification('Thông báo mới', { body: data.title });
+                } else if (Notification.permission !== "denied") {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === "granted") {
+                            sendNotification('Thông báo mới', { body: data.title });
+                        }
+                    });
+                }
+            }
+            requestNotificationPermission();
+            fetchNotifications()
+        }
+    });
+
+    function fetchNotifications() {
+        $.ajax({
+            url: '{{ route('admin.list.chat.mess.unseen') }}',
+            method: 'GET',
+            success: function(data) {
+                updateNotificationList(data.data.notifications.data, data.data.unseenNoti);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('Error fetching notifications:', textStatus, errorThrown);
+            }
+        });
+    }
+
+    function updateNotificationList(notifications, unseenNoti) {
+        const notificationList = document.getElementById('notificationList');
+        notificationList.innerHTML = '';
+
+        const headerItem = document.createElement('li');
+        headerItem.classList.add('dropdown-header');
+        headerItem.innerHTML = `
+            Bạn có <span class="countUnseenNotification">${unseenNoti}</span> thông báo chưa đọc
+            <a type="button" onclick="seenAllNotify({{ Auth::user()->id ?? 0 }})">
+                <span class="badge rounded-pill bg-primary p-2 ms-2">{{ __('home.View all') }}</span>
+            </a>
+        `;
+        notificationList.appendChild(headerItem);
+        const dividerItem = document.createElement('li');
+        dividerItem.innerHTML = '<hr class="dropdown-divider">';
+        notificationList.appendChild(dividerItem);
+
+        const unseenCountElem = document.querySelector('.countUnseenNotification');
+        unseenCountElem.innerText = unseenNoti;
+        if (notifications.length === 0) {
+            notificationList.innerHTML = '<li>Không có thông báo nào</li>';
+            return;
+        }
+
+        notifications.forEach(noti => {
+            const notiItem = document.createElement('li');
+            notiItem.classList.add('notification-item');
+            notiItem.innerHTML = `
+                <a href="${noti.target_url ?? '#'}" onclick="seenNotify(event, ${noti.id})">
+                    <div class="notification-item ${noti.seen == 0 ? 'fw-bold' : ''}">
+                        <img src="${noti.senders.avt}" alt="Profile" class="rounded-circle" width="60px">
+                        <div class="notificationContent ms-3">
+                            <h4>${noti.title ?? ''}</h4>
+                            <p>${noti.description ?? ''}</p>
+                            <p>${new Date(noti.created_at).toLocaleString()}</p>
+                        </div>
+                    </div>
+                </a>
+            `;
+            notificationList.appendChild(notiItem);
+
+            const divider = document.createElement('li');
+            divider.innerHTML = '<hr class="dropdown-divider">';
+            notificationList.appendChild(divider);
+        });
+    }
 </script>
 
 <script>
