@@ -22,6 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Pusher\Pusher;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class MainApi extends Controller
@@ -172,7 +173,7 @@ class MainApi extends Controller
             }
 
             $response = $this->sendNotification($token, $data, $notification);
-            $data = $response->getContents();            
+            $data = $response->getContents();
             return response($data);
         } catch (\Exception $exception) {
             return response($this->returnMessage($exception->getMessage()), 400);
@@ -291,6 +292,24 @@ class MainApi extends Controller
                 'description' => 'Kiểm tra lịch khám ngay!!',
                 'booking_id' => $bookingId
             ]);
+
+            $options = array(
+                'cluster' => 'ap1',
+                'encrypted' => true
+            );
+
+            $PUSHER_APP_KEY = '3ac4f810445d089829e8';
+            $PUSHER_APP_SECRET = 'c6cafb046a45494f80b2';
+            $PUSHER_APP_ID = '1714303';
+
+            $pusher = new Pusher($PUSHER_APP_KEY, $PUSHER_APP_SECRET, $PUSHER_APP_ID, $options);
+
+            $requestData = [
+                'user_id' => $hospitalUser->users->id,
+                'title' => 'Lịch khám mới đã được đặt , Vui lòng kiểm tra lịch khám ngay!!',
+            ];
+
+            $pusher->trigger('noti-events', 'noti-events', $requestData);
 
             if ($hospitalToken) {
                 $response = $this->sendBookingNotification($hospitalToken, null, $hospitalNotification);
