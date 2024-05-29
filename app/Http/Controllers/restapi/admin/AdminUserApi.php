@@ -281,6 +281,7 @@ class AdminUserApi extends Controller
 
     public function update($id, Request $request)
     {
+        dd(1);
         try {
             $user = User::find($id);
             if (!$user || $user->status == UserStatus::DELETED) {

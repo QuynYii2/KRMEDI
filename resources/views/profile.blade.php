@@ -283,45 +283,34 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <label for="detail_address">{{ __('home.địa chỉ chi tiết việt') }}</label>
-                                    <input class="form-control" name="detail_address" id="detail_address"
-                                        value="{{ $doctor->detail_address }}">
-                                </div>
-                                <div class="col-sm-4">
-                                    <label for="detail_address_en">{{ __('home.địa chỉ chi tiết anh') }}</label>
-                                    <input class="form-control" name="detail_address_en" id="detail_address_en"
-                                        value="{{ $doctor->detail_address_en }}">
-                                </div>
-                                <div class="col-sm-4">
-                                    <label for="detail_address_laos">{{ __('home.địa chỉ chi tiết lào') }}</label>
-                                    <input class="form-control" name="detail_address_laos" id="detail_address_laos"
-                                        value="{{ $doctor->detail_address_laos }}">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <label for="province_id">{{ __('home.Tỉnh') }}</label>
-                                    <select name="province_id" id="province_id" class="form-control"
-                                        onchange="callGetAllDistricts(this.value)">
+                                    <div class="form-group focused">
+                                        <label for="province_id">{{ __('home.Tỉnh') }}</label>
+                                        <select name="province_id" id="province_id" class="form-control"
+                                            onchange="callGetAllDistricts(this.value)">
 
-                                    </select>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label for="district_id">{{ __('home.Quận') }}</label>
-                                    <select name="district_id" id="district_id" class="form-control"
-                                        onchange="callGetAllCommunes(this.value)">
-                                        <option value="">{{ __('home.Chọn quận') }}</option>
-                                    </select>
+                                    <div class="form-group focused">
+                                        <label for="district_id">{{ __('home.Quận') }}</label>
+                                        <select name="district_id" id="district_id" class="form-control"
+                                            onchange="callGetAllCommunes(this.value)">
+                                            <option value="">{{ __('home.Chọn quận') }}</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label for="commune_id">{{ __('home.Xã') }}</label>
-                                    <select name="commune_id" id="commune_id" class="form-control">
-                                        <option value="">{{ __('home.Chọn xã') }}</option>
-                                    </select>
+                                    <div class="form-group focused">
+                                        <label for="commune_id">{{ __('home.Xã') }}</label>
+                                        <select name="commune_id" id="commune_id" class="form-control">
+                                            <option value="">{{ __('home.Chọn xã') }}</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-4">
+                                <div class="col-sm-4">
                                     <div class="form-group focused">
                                         <label class="form-control-label"
                                             for="address_code">{{ __('home.AddressCode') }}</label>
@@ -330,7 +319,12 @@
                                             value="{{ old('address_code', Auth::user()->address_code) }}" required>
                                     </div>
                                 </div>
-                                <div class="col-lg-4">
+                                <div class="col-sm-4">
+                                    <label for="detail_address">{{ __('home.địa chỉ chi tiết việt') }}</label>
+                                    <input class="form-control" name="detail_address" id="detail_address"
+                                           value="{{ $doctor->detail_address }}">
+                                </div>
+                                <div class="col-sm-4">
                                     <div class="form-group focused">
                                         <label class="form-control-label" for="member">{{ __('home.Member') }}<span
                                                 class="small text-danger">*</span></label>
@@ -348,24 +342,24 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-lg-4">
-                                    <div class="form-group focused">
-                                        <label class="form-control-label" for="status">{{ __('home.Status') }}</label>
-                                        <input type="text" id="status" class="form-control" name="status"
-                                            disabled value="{{ old('status', Auth::user()->status) }}">
-                                    </div>
-                                </div>
                             </div>
 
                             <div class="row">
-                                <div class="col-lg-4">
+                                <div class="col-sm-4">
+                                    <div class="form-group focused">
+                                        <label class="form-control-label" for="status">{{ __('home.Status') }}</label>
+                                        <input type="text" id="status" class="form-control" name="status"
+                                               disabled value="{{ old('status', Auth::user()->status) }}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
                                     <div class="form-group focused">
                                         <label class="form-control-label" for="role">{{ __('home.role') }}</label>
                                         <input type="text" id="role" class="form-control"
                                             value="{{ Auth::user()->roles->first()->name ?? '' }}" readonly>
                                     </div>
                                 </div>
-                                <div class="col-lg-7">
+                                <div class="col-sm-4">
                                     <div class="form-group focused">
                                         <label class="form-control-label"
                                             for="identify_number">{{ __('home.identify_number') }}</label>

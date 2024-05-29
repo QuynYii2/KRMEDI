@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ClinicStatus;
 use App\Enums\CommonType;
 use App\Enums\DoctorDepartmentStatus;
 use App\Enums\UserStatus;
@@ -254,9 +255,9 @@ class ProfileController extends Controller
         $user->is_check_medical_history = $request->has('is_check_medical_history');
 
         $user->extend = $extendData;
-
+        $user->status = ClinicStatus::ACTIVE;
         $user->save();
-
+        session()->forget('show_modal');
         toast('Success, Update profile success!', 'success', 'top-left');
         return redirect()->route('profile');
     }

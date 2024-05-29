@@ -174,27 +174,23 @@
     <form>
         <div>
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label for="name">{{ __('home.Name') }}</label>
                     <input type="text" class="form-control" id="name" name="name" required value="">
                 </div>
-                <div class="col-md-4">
-                    <label for="name_en">{{ __('home.name_en') }}</label>
-                    <input type="text" class="form-control" id="name_en" name="name_en" value="">
-                </div>
-                <div class="col-md-4">
-                    <label for="name_laos">{{ __('home.name_laos') }}</label>
-                    <input type="text" class="form-control" id="name_laos" name="name_laos" value="">
-                </div>
-            </div>
-            <div class="row">
                 <div class="col-md-6">
                     <label for="phone">{{ __('home.PhoneNumber') }}</label>
                     <input type="number" class="form-control" id="phone" name="phone" required value="">
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-md-6">
                     <label for="email">{{ __('home.Email') }}</label>
                     <input type="email" class="form-control" id="email" name="email" required value="">
+                </div>
+                <div class="col-sm-6">
+                    <label for="address_detail">{{ __('home.địa chỉ chi tiết việt') }}</label>
+                    <input type="text" class="form-control" name="address_detail" id="address_detail" value="">
                 </div>
             </div>
             <div class="row">
@@ -209,21 +205,6 @@
                 <div class="col-md-4">
                     <label for="passwordConfirm">{{ __('home.Confirm Password') }}</label>
                     <input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm" value="">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-4">
-                    <label for="address_detail">{{ __('home.địa chỉ chi tiết việt') }}</label>
-                    <input type="text" class="form-control" name="address_detail" id="address_detail" value="">
-                </div>
-                <div class="col-sm-4">
-                    <label for="address_detail_en">{{ __('home.địa chỉ chi tiết anh') }}</label>
-                    <input type="text" class="form-control" name="address_detail_en" id="address_detail_en" value="">
-                </div>
-                <div class="col-sm-4">
-                    <label for="address_detail_laos">{{ __('home.địa chỉ chi tiết lào') }}</label>
-                    <input type="text" class="form-control" name="address_detail_laos" id="address_detail_laos"
-                           value="">
                 </div>
             </div>
             <div class="row">
