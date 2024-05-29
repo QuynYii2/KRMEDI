@@ -15,6 +15,7 @@ use App\Enums\QuestionStatus;
 use App\Enums\SettingStatus;
 use App\Enums\UserStatus;
 use App\ExportExcel\BookingDoctorExport;
+use App\Http\Controllers\Api\NotificationController;
 use App\Models\Booking;
 use App\Models\Chat;
 use App\Models\Clinic;
@@ -204,6 +205,28 @@ class HomeController extends Controller
 
         return response()->json([
             'messages' => $messages,
+        ]);
+    }
+
+    public function listChatUnseen()
+    {
+        $notificationController = app()->make(NotificationController::class);
+
+        $request = new Request();
+        $request->merge(['limit' => 4, 'user_id' => Auth::user()->id]);
+
+        $notifications = $notificationController->index($request);
+
+        $notificationData = json_decode($notifications->getContent())->data ?? [];
+
+        $unseenNoti = json_decode($notifications->getContent())->unseenNoti ?? 0;
+        $data_noti = [
+            'notifications'=>$notificationData,
+            'unseenNoti'=>$unseenNoti
+        ];
+
+        return response()->json([
+            'data' => $data_noti,
         ]);
     }
 
