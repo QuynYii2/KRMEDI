@@ -11,6 +11,7 @@ use App\Models\Booking;
 use App\Models\BookingResult;
 use App\Models\Clinic;
 use App\Models\Department;
+use App\Models\Notification;
 use App\Models\Role;
 use App\Models\RoleUser;
 use App\Models\ServiceClinic;
@@ -29,6 +30,7 @@ use App\Models\User;
 use App\Models\ZaloFollower;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Pusher\Pusher;
 use setasign\Fpdi\Fpdi;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -366,6 +368,33 @@ class BookingController extends Controller
             if ($success) {
                 if ($isSendOaToUser) {
                     //Queue on change booking status notifications
+                    $notifi = Notification::create([
+                        'title' => 'Thông báo trạng thái lịch khám',
+                        'sender_id' => $booking->user_id,
+                        'follower' => $booking->user_id,
+                        'target_url' => route('web.users.my.bookings.detail', ['id' => $booking->id]),
+                        'description' => 'Trạng thái lịch khám của bạn đã thay đổi, Vui lòng đến kiểm tra!',
+                        'booking_id' => $booking->id
+                    ]);
+                    $notifi->save();
+
+                    $options = array(
+                        'cluster' => 'ap1',
+                        'encrypted' => true
+                    );
+
+                    $PUSHER_APP_KEY = '3ac4f810445d089829e8';
+                    $PUSHER_APP_SECRET = 'c6cafb046a45494f80b2';
+                    $PUSHER_APP_ID = '1714303';
+
+                    $pusher = new Pusher($PUSHER_APP_KEY, $PUSHER_APP_SECRET, $PUSHER_APP_ID, $options);
+
+                    $requestData = [
+                        'user_id' => $booking->user_id,
+                        'title' => 'Trạng thái booking đã thay đổi',
+                    ];
+
+                    $pusher->trigger('noti-events', 'noti-events', $requestData);
                     ChangeBookingStatus::dispatch($booking);
                 }
 
