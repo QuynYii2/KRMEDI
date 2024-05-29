@@ -50,6 +50,23 @@
         }
     }
 
+    @media (max-width: 575px) {
+        .popup .form .form-element #password-header, .popup .form .form-element #phone{
+            display: flex;
+            width: 100%;
+            height: 48px;
+            padding: 20px 16px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 10px;
+            align-self: stretch;
+            border-radius: 8px;
+            border: 1px solid var(--Grey-medium, #BFBFBF);
+            background: var(--White-Light, #F3F3F3);
+        }
+    }
+
 </style>
 <header class="container">
     <div class="main-header">
