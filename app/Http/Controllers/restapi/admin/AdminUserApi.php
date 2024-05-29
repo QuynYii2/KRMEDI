@@ -45,20 +45,19 @@ class AdminUserApi extends Controller
 
     public function create(Request $request)
     {
-        try {
-            $user = new User();
-            $array = $this->saveUser($request, $user);
-            if ($array['status'] == 200) {
-                $success = $user->save();
-                if ($success) {
-                    return response()->json($user);
-                }
-                return response($this->returnMessage('Error, Create error!'), 400);
-            } else {
-                return response($this->returnMessage($array['data']), $array['status']);
+        $user = new User();
+        $array = $this->saveUser($request, $user);
+        if ($array['status'] == 200) {
+            $success = $user->save();
+            if ($success) {
+                toast('Success, Create profile success!', 'success', 'top-left');
+                return redirect()->route('view.admin.user.list');
             }
-        } catch (\Exception $exception) {
-            return response($this->returnMessage('Error, Please try again!'), 400);
+            toast('Error, Create error!', 'error', 'top-left');
+            return back();
+        } else {
+            toast('Error, Create error!', 'error', 'top-left');
+            return back();
         }
     }
 
@@ -281,37 +280,53 @@ class AdminUserApi extends Controller
 
     public function update($id, Request $request)
     {
-        dd(1);
-        try {
-            $user = User::find($id);
-            if (!$user || $user->status == UserStatus::DELETED) {
-                return response($this->returnMessage('User not found!'), 404);
-            }
+        $user = User::find($id);
+        if (!$user || $user->status == UserStatus::DELETED) {
+            toast('Error, User not found!', 'error', 'top-left');
+            return back();
+        }
 
-            $role_user = DB::table('role_users')->where('user_id', $user->id)->first();
-            $isAdmin = false;
-            if ($role_user) {
-                $role = \App\Models\Role::find($role_user->role_id);
-                if ($role->name == Role::ADMIN) {
-                    $isAdmin = true;
-                }
+        $role_user = DB::table('role_users')->where('user_id', $user->id)->first();
+        $isAdmin = false;
+        if ($role_user) {
+            $role = \App\Models\Role::find($role_user->role_id);
+            if ($role->name == Role::ADMIN) {
+                $isAdmin = true;
             }
-            if ($isAdmin) {
-                return response($this->returnMessage('Permission denied! Unable to access account information!'), 400);
-            }
+        }
+        if ($isAdmin) {
+            toast('Error, Permission denied! Unable to access account information!', 'error', 'top-left');
+            return back();
+        }
 
-            $array = $this->saveUser($request, $user);
-            if ($array['status'] == 200) {
-                $success = $user->save();
-                if ($success) {
-                    return response()->json($user);
-                }
-                return response($this->returnMessage('Error, Update error!'), 400);
-            } else {
-                return response($this->returnMessage($array['data']), $array['status']);
-            }
-        } catch (\Exception $exception) {
-            return response($this->returnMessage('Error, Please try again!'), 400);
+        $request->validate([
+            'username' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+            'phone' => 'required|string|max:15',
+            'password' => 'nullable|string|min:8|confirmed',
+            'address_code' => 'required|string|max:255',
+            'detail_address' => 'required|string|max:255',
+        ]);
+
+        $user->username = $request->input('username');
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->phone = $request->input('phone');
+        $user->address_code = $request->input('address_code');
+        $user->detail_address = $request->input('detail_address');
+
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->input('password'));
+        }
+
+        $success = $user->save();
+        if ($success) {
+            toast('Success, Update profile success!', 'success', 'top-left');
+            return redirect()->route('view.admin.user.list');
+        } else {
+            toast('Error, Update error!', 'error', 'top-left');
+            return back();
         }
     }
 
