@@ -205,10 +205,10 @@
         </table>
     </div>
     <script>
-        let accessToken = `Bearer ` + token;
-        let headers = {
-            'Authorization': accessToken
-        };
+        // let accessToken = `Bearer ` + token;
+        // let headers = {
+        //     'Authorization': accessToken
+        // };
 
         $(document).ready(function () {
             loadPaginate('tableListProduct', 20);
