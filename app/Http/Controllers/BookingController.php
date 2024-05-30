@@ -436,8 +436,7 @@ class BookingController extends Controller
     {
         $reflector = new \ReflectionClass('App\Enums\ReasonCancel');
         $reasons = $reflector->getConstants();
-        $role_id = RoleUser::where('role_id',39)->pluck('user_id')->toArray();
-        $list_doctor = User::whereIn('id',$role_id)->get();
+        $list_doctor = User::where('member','DOCTORS')->get();
 
         return view('admin.booking.tab-create-booking', compact( 'reasons','list_doctor'));
     }
