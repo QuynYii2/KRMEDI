@@ -606,6 +606,11 @@
                                         <i class="bi bi-circle"></i><span>{{ __('home.Booking') }}</span>
                                     </a>
                                 </li>
+                                <li>
+                                    <a href="{{ route('api.backend.booking.create') }}">
+                                        <i class="bi bi-circle"></i><span>Trả kết quả</span>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     @endif
@@ -639,6 +644,11 @@
                             <li>
                                 <a href="{{ route('homeAdmin.list.booking') }}">
                                     <i class="bi bi-circle"></i><span>{{ __('home.Booking') }}</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('api.backend.booking.create') }}">
+                                    <i class="bi bi-circle"></i><span>Trả kết quả</span>
                                 </a>
                             </li>
                         </ul>
