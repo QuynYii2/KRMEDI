@@ -56,11 +56,11 @@
         </form>
     </div>
     <script>
-        let accessToken = `Bearer ` + token;
-        let headers = {
-            'content-type': 'application/json',
-            "Authorization": accessToken
-        };
+        // let accessToken = `Bearer ` + token;
+        // let headers = {
+        //     'content-type': 'application/json',
+        //     "Authorization": accessToken
+        // };
 
         $(document).ready(function () {
             $('#btnUpdate').on('click', function () {
