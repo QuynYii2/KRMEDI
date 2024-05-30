@@ -60,7 +60,7 @@
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="doctor_id">{{ __('home.Doctor Name') }}</label>
-                     <select class="form-select doctor_name" id="doctor_id" name="doctor_id" >
+                     <select class="form-select doctor_name" name="doctor_id" >
                          <option value="">Bác sĩ phụ trách</option>
                         @foreach($list_doctor as $item_doctor)
                             <option value="{{ $item_doctor->id }}" >{{ $item_doctor->name }}</option>
@@ -537,7 +537,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="in_charged">Bác sĩ phụ trách:</label>
-                                <select class="form-select doctor_selector" name="booking_result_list[${count}][doctor_id]"></select>
+                                <select class="form-select doctor_selector" name="booking_result_list[${count}][doctors_id]"></select>
                             </div>
                         </div>
                     `);
