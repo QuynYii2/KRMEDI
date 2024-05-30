@@ -330,12 +330,12 @@ class HomeController extends Controller
         $isAdmin = (new MainController())->checkAdmin();
         if ($isAdmin) {
             $query = Booking::where('bookings.status', '!=', BookingStatus::DELETE)
-                ->orderBy('id', 'desc');
+                ->orderBy('bookings.created_at', 'desc');
         } else {
             $clinic = Clinic::where('user_id', Auth::user()->id)->first();
             $query = Booking::where('bookings.status', '!=', BookingStatus::DELETE)
                 ->where('clinic_id', $clinic ? $clinic->id : '')
-                ->orderBy('id', 'desc');
+                ->orderBy('bookings.created_at', 'desc');
         }
         $id_user = $query->pluck('user_id')->unique()->toArray();
         if ($request->filled('key_search')) {
@@ -441,7 +441,7 @@ class HomeController extends Controller
         }
 
         if ($request->excel == 2) {
-            $bookings = $query->get();
+            $bookings = $query->orderBy('bookings.created_at','desc')->get();
             foreach ($bookings as $item) {
                 $item->user_name = User::find($item->user_id)->name;
                 $item->name_clinic = Clinic::where('id', $item->clinic_id)->pluck('name')->first();
@@ -450,7 +450,7 @@ class HomeController extends Controller
             }
             return Excel::download(new BookingDoctorExport($bookings), 'lichsukham.xlsx');
         } else {
-            $bookings = $query->paginate(20);
+            $bookings = $query->orderBy('bookings.created_at','desc')->paginate(20);
         }
 
         $department = Department::all();
