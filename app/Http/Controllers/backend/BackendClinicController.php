@@ -120,15 +120,6 @@ class BackendClinicController extends Controller
             $address_detail_en = $translate->translateText($address_detail, 'en');
             $address_detail_laos = $translate->translateText($address_detail, 'lo');
 
-            if ($address_detail == null) {
-                return response("Address not null!", 400);
-            }
-            if ($address_detail_en == null) {
-                return response("Address English not null!", 400);
-            }
-            if ($address_detail_laos == null) {
-                return response("Address Laos not null!", 400);
-            }
 
             $nation_id = $request->input('nation_id');
             $province_id = $request->input('province_id');
@@ -146,9 +137,6 @@ class BackendClinicController extends Controller
                 return response("Commune not null!", 400);
             }
             $introduce = $request->input('introduce');
-            if ($introduce == null) {
-                return response("Introduce not null!", 400);
-            }
             if ($request->hasFile('gallery')) {
                 $galleryPaths = array_map(function ($image) {
                     $itemPath = $image->store('gallery', 'public');
@@ -160,49 +148,19 @@ class BackendClinicController extends Controller
             }
 
             $time_work = $request->input('time_work');
-            if ($time_work == null) {
-                return response("Time work not null!", 400);
-            }
-
             $clinics_service = $request->input('clinics_service');
-            if ($clinics_service == null) {
-                return response("Clinics service not null!", 400);
-            }
-
             $open_date = $request->input('open_date');
-            if ($open_date == null) {
-                return response("Open date not null!", 400);
-            }
             $close_date = $request->input('close_date');
-            if ($close_date == null) {
-                return response("Close date not null!", 400);
-            }
-
             $type = $request->input('type');
 
             $emergency = $request->has('emergency') ? $request->input('emergency') : 0;
             $insurance = $request->has('insurance') ? $request->input('insurance') : 0;
             $parking = $request->has('parking') ? $request->input('parking') : 0;
             $information = $request->input('hospital_information');
-            if ($information == null) {
-                return response("Hospital information not null!", 400);
-            }
             $facilities = $request->input('hospital_facilities');
-            if ($facilities == null) {
-                return response("Hospital facilities not null!", 400);
-            }
             $equipment = $request->input('hospital_equipment');
-            if ($equipment == null) {
-                return response("Hospital equipment not null!", 400);
-            }
             $costs = $request->input('costs');
-            if ($costs == null) {
-                return response("Costs not null!", 400);
-            }
             $representativeDoctor = $request->input('representative_doctor');
-            if ($representativeDoctor == null) {
-                return response("Representative doctor not null!", 400);
-            }
 
             $department = $request->input('departments');
             $symptoms = $request->input('symptoms');
@@ -210,49 +168,6 @@ class BackendClinicController extends Controller
             $status = $request->input('status');
 
             $user_id = $request->input('user_id');
-            $clinic->name = $name;
-            $clinic->phone = $phone;
-            $clinic->email = $email;
-            $clinic->name_en = $name_en ?? '';
-            $clinic->name_laos = $name_laos ?? '';
-            $clinic->longitude = $longitude;
-            $clinic->latitude = $latitude;
-            $clinic->address_detail = $address_detail;
-            $clinic->address_detail_en = $address_detail_en ?? '';
-            $clinic->address_detail_laos = $address_detail_laos ?? '';
-
-            $clinic->time_work = $time_work;
-            $clinic->type = $type;
-            $clinic->service_id = $clinics_service;
-            $clinic->representative_doctor = $representativeDoctor;
-
-            $clinic->department = $department;
-            $clinic->symptom = $symptoms;
-
-            $address = [
-                'nation_id' => $nation_id,
-                'province_id' => $province_id,
-                'district_id' => $district_id,
-                'commune_id' => $commune_id
-            ];
-
-            $clinic->created_by = $user_id ?? null;
-
-            $clinic->address = implode(',', $address);
-
-            $clinic->open_date = $open_date ?? Carbon::now()->addHours(7);
-            $clinic->close_date = $close_date ?? Carbon::now()->addHours(7)->addDay();
-            $clinic->introduce = $introduce;
-            $clinic->gallery = $gallery;
-            $clinic->status = $status ?? ClinicStatus::ACTIVE;
-            $clinic->emergency = $emergency;
-            $clinic->insurance = $insurance;
-            $clinic->parking = $parking;
-            $clinic->information = $information;
-            $clinic->facilities = $facilities;
-            $clinic->equipment = $equipment;
-            $clinic->costs = $costs;
-
             /* Save user */
             $user = new User();
 
@@ -310,15 +225,58 @@ class BackendClinicController extends Controller
             $user->status = UserStatus::ACTIVE;
             $user->save();
 
+            $clinic->name = $name;
+            $clinic->phone = $phone;
+            $clinic->email = $email;
+            $clinic->name_en = $name_en ?? '';
+            $clinic->name_laos = $name_laos ?? '';
+            $clinic->longitude = $longitude;
+            $clinic->latitude = $latitude;
+            $clinic->address_detail = $address_detail;
+            $clinic->address_detail_en = $address_detail_en ?? '';
+            $clinic->address_detail_laos = $address_detail_laos ?? '';
+
+            $clinic->time_work = $time_work;
+            $clinic->type = $type;
+            $clinic->service_id = $clinics_service;
+            $clinic->representative_doctor = $representativeDoctor;
+
+            $clinic->department = $department;
+            $clinic->symptom = $symptoms;
+
+            $address = [
+                'nation_id' => $nation_id,
+                'province_id' => $province_id,
+                'district_id' => $district_id,
+                'commune_id' => $commune_id
+            ];
+
+            $clinic->created_by = $user_id ?? null;
+
+            $clinic->address = implode(',', $address);
+
+            $clinic->open_date = $open_date ?? Carbon::now()->addHours(7);
+            $clinic->close_date = $close_date ?? Carbon::now()->addHours(7)->addDay();
+            $clinic->introduce = $introduce;
+            $clinic->gallery = $gallery;
+            $clinic->status = $status ?? ClinicStatus::ACTIVE;
+            $clinic->emergency = $emergency;
+            $clinic->insurance = $insurance;
+            $clinic->parking = $parking;
+            $clinic->information = $information;
+            $clinic->facilities = $facilities;
+            $clinic->equipment = $equipment;
+            $clinic->costs = $costs;
             (new MainController())->createRoleUser($type, $username);
 
             $clinic->user_id = $user->id;
 
             $success = $clinic->save();
             if ($success) {
-                return response()->json($clinic);
+                toast('Success, Create profile success!', 'success', 'top-left');
+                return redirect()->route('homeAdmin.list.clinics');
             }
-            return response("Error, Please try again!", 400);
+            return redirect()->back()->withInput();
         } catch (Exception $exception) {
             return response($exception, 400);
         }
@@ -330,12 +288,12 @@ class BackendClinicController extends Controller
         return response()->json($clinic);
     }
 
-    public function update($id, Request $request)
+    public function updateNew($id, Request $request)
     {
         try {
             $clinic = Clinic::find($id);
 
-            $name = $request->input('name') ?? $clinic->name;
+            $name = $request->input('name');
 
             $translate = new TranslateController();
             $name_en = $translate->translateText($name, 'en');
@@ -426,9 +384,10 @@ class BackendClinicController extends Controller
 
             $success = $clinic->save();
             if ($success) {
-                return response()->json($clinic);
+                toast('Success, Update profile success!', 'success', 'top-left');
+                return redirect()->route('homeAdmin.list.clinics');
             }
-            return response("Error, Please try again!", 400);
+            return redirect()->back()->withInput();
         } catch (Exception $exception) {
             return response($exception, 400);
         }

@@ -344,9 +344,12 @@
                             $(document).ready(function() {
                                 var clinicElement = $('.border-specialList[data-marker-index="' + location.markerIndex + '"]');
                                 // Add click event for directions
-                                clinicElement.find('#showMapBtn').on('click', function() {
-                                    getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                                clinicElement.on('click', function() {
+                                    window.location.href = urlDetail;
                                 });
+                                // clinicElement.find('#showMapBtn').on('click', function() {
+                                //     getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                                // });
                             });
                         }
                     });
