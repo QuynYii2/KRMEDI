@@ -7,6 +7,163 @@
     {{ __('home.Profile') }}
 @endsection
 @section('main-content')
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .dropdown {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .dropdown .dropdown-list {
+            padding: 25px 20px;
+            background: #fff;
+            position: absolute;
+            top: 50px;
+            left: 0;
+            right: 0;
+            border: 1px solid rgba(0, 0, 0, .2);
+            max-height: 223px;
+            overflow-y: auto;
+            background: #fff;
+            display: none;
+            z-index: 10;
+        }
+
+        .dropdown .checkbox {
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .dropdown .dropdown-label {
+            display: block;
+            height: 44px;
+            font-size: 16px;
+            line-height: 42px;
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, .2);
+            padding: 0 40px 0 20px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .dropdown .dropdown-label:before {
+            content: '▼';
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: transform 0.25s;
+            transform-origin: center center;
+        }
+
+        .dropdown.open .dropdown-list {
+            display: block;
+        }
+
+        .dropdown.open .checkbox {
+            transition: 2s opacity 2s;
+            opacity: 1;
+        }
+
+        .dropdown.open .dropdown-label:before {
+            transform: translateY(-50%) rotate(-180deg);
+        }
+
+        .checkbox {
+            margin-bottom: 20px;
+        }
+
+        .checkbox:last-child {
+            margin-bottom: 0;
+        }
+
+        .checkbox .checkbox-custom {
+            display: none;
+        }
+
+        .checkbox .checkbox-custom-label {
+            display: inline-block;
+            position: relative;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+
+        .checkbox .checkbox-custom + .checkbox-custom-label:before {
+            content: '';
+            background: transparent;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;
+            text-align: center;
+            width: 12px;
+            height: 12px;
+            border: 1px solid rgba(0, 0, 0, .3);
+            border-radius: 2px;
+            margin-top: -2px;
+        }
+
+        .checkbox .checkbox-custom:checked + .checkbox-custom-label:after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 4px;
+            height: 4px;
+            padding: 2px;
+            transform: rotate(45deg);
+            text-align: center;
+            border: solid #000;
+            border-width: 0 2px 2px 0;
+        }
+
+        .checkbox .checkbox-custom-label {
+            line-height: 16px;
+            font-size: 16px;
+            margin-right: 0;
+            margin-left: 0;
+            color: black;
+        }
+
+
+        .list-department,
+        .list-symptoms,
+        .list-service {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .list-department li,
+        .list-symptoms li,
+        .list-service li {
+            margin-right: 20px; /* Adjust as needed */
+        }
+
+        .list-department li:last-child,
+        .list-symptoms li:last-child,
+        .list-service li:last-child {
+            margin-right: 0;
+        }
+
+        .new-select {
+            display: flex;
+            align-items: center;
+        }
+
+        .new-select input {
+            margin-right: 5px; /* Adjust as needed */
+        }
+
+        .new-select label {
+            margin-top: 10px;
+        }
+
+        /* Add more styles as needed */
+
+    </style>
     <link href="{{ asset('css/profile.css') }}" rel="stylesheet">
     <!-- Page Heading -->
     <h1 class="h3 mb-4 text-gray-800">{{ __('home.Profile') }}</h1>
@@ -355,7 +512,7 @@
                                 <div class="col-sm-4">
                                     <div class="form-group focused">
                                         <label class="form-control-label" for="role">{{ __('home.role') }}</label>
-                                        <input type="text" id="role" class="form-control"
+                                        <input type="text" id="role" name="type" class="form-control"
                                             value="{{ Auth::user()->roles->first()->name ?? '' }}" readonly>
                                     </div>
                                 </div>
@@ -377,33 +534,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            @if (Auth::user()->type == 'BUSINESS' || (new MainController())->checkAdmin())
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="form-group focused">
-                                            <label class="form-control-label" for="zalo_app_id"><a
-                                                    href="https://oa.zalo.me/home">{{ __('home.zalo_app_id') }}</a></label>
-                                            <input type="text" id="zalo_app_id" class="form-control"
-                                                name="zalo_app_id" placeholder="<Enter your zalo app id>"
-                                                value="{{ old('zalo_app_id', Auth::user()->extend['zalo_app_id'] ?? '') }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group focused">
-                                            <label class="form-control-label" for="zalo_secret_id"><a
-                                                    href="https://oa.zalo.me/home">{{ __('home.zalo_secret_id') }}</a></label>
-                                            <input type="text" id="zalo_secret_id" class="form-control"
-                                                name="zalo_secret_id" placeholder="<Enter your zalo secret id>"
-                                                value="{{ old('zalo_secret_id', Auth::user()->extend['zalo_secret_id'] ?? '') }}">
-                                        </div>
-                                    </div>
-                                </div>
-                                @if (!isset(Auth::user()->extend['isActivated']) || !Auth::user()->extend['isActivated'])
-                                    <a href="{{ route('zalo.service.auth.verify') }}" type="button"
-                                        class="btn btn-outline-primary">{{ __('home.activate_zalo_oa') }}</a>
-                                @endif
-                            @endif
 
                             @if (Auth::user()->type == 'NORMAL')
                                 <div class="row">
@@ -647,26 +777,49 @@
                             @endif
 
                             {{-- Business only --}}
-                            @if (Auth::user()->type == 'BUSINESS')
-                                <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <label for="open_date">{{ __('home.Thời gian bắt đầu') }}</label>
-                                        <input class="form-control" id="open_date" name="open_date" type="time"
-                                            placeholder="">
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="close_date">{{ __('home.Thời gian kết thúc') }}</label>
-                                        <input class="form-control" id="close_date" name="close_date" type="time"
-                                            placeholder="">
-                                    </div>
+                            @if (Auth::user()->type == 'BUSINESS' || (new MainController())->checkAdmin())
+                                <div>
+                                    <label for="introduce">{{ __('home.introduce') }}</label>
+                                    <textarea type="text" class="form-control" id="introduce" name="introduce" >
+                                        {{$clinic->introduce}}
+                                    </textarea>
+                                </div>
+                                <div>
+                                    <label>{{ __('home.gallery') }}</label>
+                                    <input type="file" class="form-control" id="gallery" name="gallery" multiple>
+                                    @php
+                                        $galleryArray = explode(',', $clinic->gallery);
+                                    @endphp
+                                    @foreach($galleryArray as $productImg)
+                                        <img loading="lazy" width="50px" src="{{$productImg}}" alt="">
+                                    @endforeach
                                 </div>
                                 <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <label for="experienceHospital">{{ __('home.EXPERIENCE') }}</label>
-                                        <input class="form-control" type="number" id="experienceHospital"
-                                            name="experienceHospital" placeholder="{{ __('home.EXPERIENCE') }}">
+                                    <div class="col-lg-6">
+                                        <div class="form-group focused">
+                                            <label class="form-control-label" for="zalo_app_id"><a
+                                                    href="https://oa.zalo.me/home">{{ __('home.zalo_app_id') }}</a></label>
+                                            <input type="text" id="zalo_app_id" class="form-control"
+                                                   name="zalo_app_id" placeholder="<Enter your zalo app id>"
+                                                   value="{{ old('zalo_app_id', Auth::user()->extend['zalo_app_id'] ?? '') }}">
+                                        </div>
                                     </div>
-                                    <div class="form-group col-md-6">
+                                    <div class="col-lg-6">
+                                        <div class="form-group focused">
+                                            <label class="form-control-label" for="zalo_secret_id"><a
+                                                    href="https://oa.zalo.me/home">{{ __('home.zalo_secret_id') }}</a></label>
+                                            <input type="text" id="zalo_secret_id" class="form-control"
+                                                   name="zalo_secret_id" placeholder="<Enter your zalo secret id>"
+                                                   value="{{ old('zalo_secret_id', Auth::user()->extend['zalo_secret_id'] ?? '') }}">
+                                        </div>
+                                    </div>
+                                </div>
+                                @if (!isset(Auth::user()->extend['isActivated']) || !Auth::user()->extend['isActivated'])
+                                    <a href="{{ route('zalo.service.auth.verify') }}" type="button"
+                                       class="btn btn-outline-primary">{{ __('home.activate_zalo_oa') }}</a>
+                                @endif
+                                <div class="row">
+                                    <div class="form-group col-md-4">
                                         <label for="time_work">{{ __('home.Time work') }}</label>
                                         <select class="form-select" id="time_work" name="time_work">
                                             <option value="{{ \App\Enums\TypeTimeWork::ALL }}">
@@ -683,9 +836,287 @@
                                                 {{ \App\Enums\TypeTimeWork::OTHER }}</option>
                                         </select>
                                     </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="open_date">{{ __('home.Thời gian bắt đầu') }}</label>
+                                        <input class="form-control" id="open_date" name="open_date" type="time"
+                                               placeholder="">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="close_date">{{ __('home.Thời gian kết thúc') }}</label>
+                                        <input class="form-control" id="close_date" name="close_date" type="time"
+                                               placeholder="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="experienceHospital">{{ __('home.EXPERIENCE') }}</label>
+                                        <input class="form-control" type="number" id="experienceHospital"
+                                            name="experienceHospital" placeholder="{{ __('home.EXPERIENCE') }}">
+                                    </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="representative">{{ __('home.REPRESENTATIVE DOCTOR') }}</label>
+                                    <label for="service_clinic">{{ __('home.Service Clinics') }}</label>
+                                    <input type="text" class="form-control" id="service_clinic" name="service_clinic" disabled>
+                                    <ul class="list-service">
+                                        @php
+                                            $arrayService = explode(',', $clinic->service_id);
+                                        @endphp
+                                        @foreach($services as $service)
+                                            <li class="new-select">
+                                                <input onchange="getInputService();" class="service_clinic_item" value="{{$service->id}}"
+                                                       id="service_{{$service->id}}"
+                                                       name="service_clinic"
+                                                       {{ in_array($service->id, $arrayService) ? 'checked' : '' }}
+                                                       type="checkbox">
+                                                <label for="service_{{$service->id}}">{{$service->name}}</label>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="department">{{ __('home.Department') }}</label>
+                                    <input type="text" class="form-control" id="department_list" name="department_text" disabled>
+                                    <ul class="list-department">
+                                        @php
+                                            $arrayDepartment = explode(',', $clinic->department);
+                                        @endphp
+                                        @foreach($listDepartments as $department)
+                                            <li class="new-select">
+                                                <input onchange="getInputDepartment();" class="department_item" value="{{$department->id}}"
+                                                       id="department_{{$department->id}}"
+                                                       name="department"
+                                                       {{ in_array($department->id, $arrayDepartment) ? 'checked' : '' }}
+                                                       type="checkbox">
+                                                <label for="department_{{$department->id}}">{{$department->name}}</label>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="symptom">{{ __('home.symptoms') }}</label>
+                                    <input type="text" class="form-control" id="symptom" name="symptom" disabled>
+                                    <ul class="list-symptoms">
+                                        @php
+                                            $arraySymptoms = explode(',', $clinic->symptom);
+                                        @endphp
+                                        @foreach($symptoms as $symptom)
+                                            <li class="new-select">
+                                                <input onchange="getInputSymptom();" class="symptom_item" value="{{$symptom->id}}"
+                                                       id="symptom_{{$symptom->id}}"
+                                                       name="symptom"
+                                                       {{ in_array($symptom->id, $arraySymptoms) ? 'checked' : '' }}
+                                                       type="checkbox">
+                                                <label for="symptom_{{$symptom->id}}">{{$symptom->name}}</label>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="open_date">{{ __('home.open_date') }}</label>
+                                        <input type="datetime-local" class="form-control" id="open_date" name="open_date" required
+                                               value="{{$clinic->open_date}}">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="close_date">{{ __('home.close_date') }}</label>
+                                        <input type="datetime-local" class="form-control" id="close_date" name="close_date"
+                                               value="{{$clinic->close_date}}">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="type">{{ __('home.type') }}</label>
+                                        <select class="form-select" id="type" name="time_work">
+                                            <option
+                                                value="{{\App\Enums\TypeBusiness::CLINICS}}" {{ $clinic->type === \App\Enums\TypeBusiness::CLINICS ? 'selected' : '' }}>{{\App\Enums\TypeBusiness::CLINICS}}</option>
+                                            <option
+                                                value="{{\App\Enums\TypeBusiness::PHARMACIES}}" {{ $clinic->type === \App\Enums\TypeBusiness::PHARMACIES ? 'selected' : '' }}>{{\App\Enums\TypeBusiness::PHARMACIES}}</option>
+                                            <option
+                                                value="{{\App\Enums\TypeBusiness::HOSPITALS}}" {{ $clinic->type === \App\Enums\TypeBusiness::HOSPITALS ? 'selected' : '' }}>{{\App\Enums\TypeBusiness::HOSPITALS}}</option>
+                                        </select>
+                                    </div>
+
+                                    <div hidden="">
+                                        <label for="combined_address"></label>
+                                        <input type="text" name="combined_address" id="combined_address" value="{{ $clinic->address }}"
+                                               class="form-control">
+                                        <label for="longitude"></label>
+                                        <input type="text" name="longitude" id="longitude" class="form-control"
+                                               value="{{ $clinic->longitude }}">
+                                        <label for="latitude"></label>
+                                        <input type="text" name="latitude" id="latitude" class="form-control"
+                                               value="{{ $clinic->latitude }}">
+                                        <label for="clinics_service"></label>
+                                        <input type="text" name="clinics_service" id="clinics_service" class="form-control">
+                                        <label for="departments"></label>
+                                        <input type="text" name="departments" id="departments" class="form-control">
+                                        <label for="symptoms"></label>
+                                        <input type="text" name="symptoms" id="symptoms" class="form-control">
+                                        <label for="representative_doctor"></label>
+                                        <input type="text" name="representative_doctor" id="representative_doctor" value="{{ $clinic->representative_doctor }}"
+                                               class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-element">
+                                            <input name="emergency" id="emergency" type="checkbox" value="1"
+                                                   @if($clinic->emergency == 1) checked @endif>
+                                            <label for="emergency">{{ __('home.Is there an emergency room') }}?</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-element">
+                                            <input name="insurance" id="insurance" type="checkbox" value="1"
+                                                   @if($clinic->insurance == 1) checked @endif>
+                                            <label for="insurance">{{ __('home.Is health insurance applicable') }}?</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-element">
+                                            <input name="parking" id="parking" type="checkbox" value="1"
+                                                   @if($clinic->parking == 1) checked @endif>
+                                            <label for="parking">{{ __('home.Is there parking') }}?</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-element d-flex">
+                                            <label class="col-6" for="costs">{{ __('home.Medical examination costs') }}?</label>
+                                            <input name="costs" class="form-control col-6" id="costs" type="number" value="{{$clinic->costs}}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="hospital_information">{{ __('home.Hospital information') }}</label>
+                                        <div class="dropdown" data-target="hospital_information">
+                                            <label class="dropdown-label">{{ __('home.Select Options') }}</label>
+                                            <input class="d-none" name="hospital_information" id="hospital_information"
+                                                   value="{{$clinic->information}}"/>
+                                            <div class="dropdown-list">
+                                                @php
+                                                    $arrayInformation = explode(',',$clinic->information);
+                                                    $options = [
+                                                        "Pediatric examination/treatment",
+                                                        " Emergency department",
+                                                        " Female doctor",
+                                                        " Specialized hospital",
+                                                        " Check health certificate",
+                                                        " Physical examination",
+                                                        " Rapid antigen test",
+                                                        " PCR test",
+                                                    ];
+                                                @endphp
+                                                @foreach($options as $key => $option)
+                                                    <div class="checkbox">
+                                                        <input type="checkbox" name="dropdown-group"
+                                                               class="check hospital_information_name checkbox-custom"
+                                                               id="checkbox-custom_{{ $key }}" value="{{ $option }}"
+                                                               @if(in_array($option, $arrayInformation, true) || in_array($option, explode(', ', old('hospital_information', '')))) checked @endif />
+                                                        <label for="checkbox-custom_{{ $key }}"
+                                                               class="checkbox-custom-label">{{ $option }}</label>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="hospital_facilities">{{ __('home.Hospital facilities') }}</label>
+                                        <div class="dropdown" data-target="hospital_facilities">
+                                            <label class="dropdown-label">{{ __('home.Select Options') }}</label>
+                                            <input class="d-none" name="hospital_facilities" id="hospital_facilities"
+                                                   value="{{$clinic->facilities}}"/>
+                                            <div class="dropdown-list">
+                                                @php
+                                                    $arrayFacilities = explode(',', $clinic->facilities);
+                                                    $facilityOptions = [
+                                                        "Intensive care unit",
+                                                        " General hospital room",
+                                                        " High-class hospital room",
+                                                        " Surgery room",
+                                                        " Emergency room",
+                                                        " Physiotherapy room",
+                                                    ];
+                                                @endphp
+                                                @foreach($facilityOptions as $key => $facilityOption)
+                                                    <div class="checkbox">
+                                                        <input type="checkbox" name="dropdown-group"
+                                                               class="check hospital_facilities_name checkbox-custom"
+                                                               id="checkbox-custom_{{ $key + 21 }}" value="{{ $facilityOption }}"
+                                                               @if(in_array($facilityOption, $arrayFacilities, true) || in_array($facilityOption, explode(', ', old('hospital_facilities', '')))) checked @endif />
+                                                        <label for="checkbox-custom_{{ $key + 21 }}"
+                                                               class="checkbox-custom-label">{{ $facilityOption }}</label>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="hospital_equipment">{{ __('home.Hospital equipment') }}</label>
+                                        <div class="dropdown" data-target="hospital_equipment">
+                                            <label class="dropdown-label">{{ __('home.Select Options') }}</label>
+                                            <input class="d-none" name="hospital_equipment" id="hospital_equipment"
+                                                   value="{{$clinic->equipment}}"/>
+                                            <div class="dropdown-list">
+                                                @php
+                                                    $arrayEquipment = explode(',', $clinic->equipment);
+                                                    $equipmentOptions = [
+                                                        "CT",
+                                                        " MRI",
+                                                        " Bone density meter",
+                                                        " Positron tomography (PET)",
+                                                        " Tumor treatment device (CYBER KNIFE)",
+                                                        " Ultrasound imaging equipment",
+                                                        " Tumor treatment devices (proton therapy devices)",
+                                                        " Artificial kidney equipment for hemodialysis",
+                                                    ];
+                                                @endphp
+                                                @foreach($equipmentOptions as $key => $equipmentOption)
+                                                    <div class="checkbox">
+                                                        <input type="checkbox" name="dropdown-group"
+                                                               class="check hospital_equipment_name checkbox-custom"
+                                                               id="checkbox-custom_{{ $key + 27 }}" value="{{ $equipmentOption }}"
+                                                               @if(in_array($equipmentOption, $arrayEquipment, true) || in_array($equipmentOption, explode(', ', old('hospital_equipment', '')))) checked @endif />
+                                                        <label for="checkbox-custom_{{ $key + 27 }}"
+                                                               class="checkbox-custom-label">{{ $equipmentOption }}</label>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @php
+                                    $list_doctor = $clinic->representative_doctor;
+                                    $array_doctor = explode(',', $list_doctor);
+                                @endphp
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="representative_doctor_text">{{ __('home.REPRESENTATIVE DOCTOR') }}:</label>
+                                        <input type="text" class="form-control" id="representative_doctor_text"
+                                               name="representative_doctor_text" disabled>
+                                        <ul class="list-department bg-white p-3" style="max-height: 300px; overflow: auto">
+                                            @foreach($doctorLists as $doctor)
+                                                <li class="new-select">
+                                                    <input onchange="getInputDoctor();" class="representative_doctor_item"
+                                                           value="{{$doctor->id}}"
+                                                           {{ in_array($doctor->id, $array_doctor) ? 'checked' : ''}}
+                                                           id="representative_doctor_{{$doctor->id}}"
+                                                           name="representative_doctor"
+                                                           type="checkbox">
+                                                    <label for="representative_doctor_{{$doctor->id}}">{{$doctor->username}}
+                                                        ({{$doctor->email}})</label>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
                                 </div>
                             @endif
                         </div>
@@ -1065,7 +1496,180 @@
                 }
             });
         });
+        function getInputService() {
+            let items = document.getElementsByClassName('service_clinic_item');
+
+            arrayItem = checkArray(arrayItem, items);
+            arrayNameCategory = getListName(arrayNameCategory, items)
+
+            let listName = arrayNameCategory.toString();
+
+            if (listName) {
+                $('#service_clinic').val(listName);
+            }
+
+            arrayItem.sort();
+            let value = arrayItem.toString();
+            $('#clinics_service').val(value);
+        }
+        let arrayDepartment = [];
+        let arrayNameDepartment = [];
+
+        function getInputDepartment() {
+            let items = document.getElementsByClassName('department_item');
+
+            arrayDepartment = checkArray(arrayDepartment, items);
+            arrayNameDepartment = getListName(arrayNameDepartment, items)
+
+            let listName = arrayNameDepartment.toString();
+            if (listName) {
+                $('#department_list').val(listName);
+            }
+
+            arrayDepartment.sort();
+            let value = arrayDepartment.toString();
+            $('#departments').val(value);
+        }
+
+        let arraySymptom = [];
+        let arrayNameSymptom = [];
+
+        function getInputSymptom() {
+            let items = document.getElementsByClassName('symptom_item');
+
+            arraySymptom = checkArray(arraySymptom, items);
+            arrayNameSymptom = getListName(arrayNameSymptom, items)
+
+            let listName = arrayNameSymptom.toString();
+
+            if (listName) {
+                $('#symptom').val(listName);
+            }
+
+            arraySymptom.sort();
+            let value = arraySymptom.toString();
+            $('#symptoms').val(value);
+        }
+
+        getInputService();
+        getInputDepartment();
+        getInputSymptom();
+
+        function checkboxDropdown(el, targetInputId) {
+            var $el = $(el);
+
+            function updateHiddenInputValues($dropdown, targetInputId) {
+                var result = [];
+                var $label = $dropdown.find('.dropdown-label');
+                $dropdown.find('.check:checked').each(function () {
+                    var labelText = $(this).next('.checkbox-custom-label').text().trim();
+                    result.push(labelText);
+                });
+                $('#' + targetInputId).val(result.join(', '));
+            }
+
+            function updateStatus($dropdown) {
+                var $label = $dropdown.find('.dropdown-label');
+                updateHiddenInputValues($dropdown, $dropdown.attr('data-target'));
+                if (!$label.text().trim()) {
+                    $label.html('Select Options');
+                }
+            }
+
+            $el.each(function () {
+                var $dropdown = $(this),
+                    $label = $dropdown.find('.dropdown-label'),
+                    $checkAll = $dropdown.find('.check-all'),
+                    $inputs = $dropdown.find('.check');
+
+                $label.on('click', () => {
+                    $dropdown.toggleClass('open');
+                });
+
+                $checkAll.on('change', function () {
+                    var checked = $(this).is(':checked');
+                    $inputs.prop('checked', checked);
+                    updateStatus($dropdown);
+                });
+
+                $inputs.on('change', function () {
+                    updateStatus($dropdown);
+                });
+
+                $(document).on('click touchstart', e => {
+                    if (!$(e.target).closest($dropdown).length) {
+                        $dropdown.removeClass('open');
+                    }
+                });
+            });
+        }
+
+        checkboxDropdown('.dropdown[data-target="hospital_information"]', 'hospital_information');
+        checkboxDropdown('.dropdown[data-target="hospital_facilities"]', 'hospital_facilities');
+        checkboxDropdown('.dropdown[data-target="hospital_equipment"]', 'hospital_equipment');
+
+        $(document).ready(function () {
+            loadDataHospitalEquipment();
+            loadDataHospitalFacilities();
+            loadDataHospitalInformation();
+
+            $('.hospital_equipment_name').on('click', function () {
+                loadDataHospitalEquipment();
+            });
+
+            $('.hospital_facilities_name').on('click', function () {
+                loadDataHospitalFacilities();
+            });
+
+            $('.hospital_information_name').on('click', function () {
+                loadDataHospitalInformation();
+            });
+        });
+
+
+        function loadDataHospitalEquipment() {
+            let arrayItem = $('.hospital_equipment_name:checked').map(function () {
+                return $(this).val();
+            }).get().join(', ');
+
+            $('#hospital_equipment').val(arrayItem);
+        }
+
+        function loadDataHospitalFacilities() {
+            let arrayItem = $('.hospital_facilities_name:checked').map(function () {
+                return $(this).val();
+            }).get().join(', ');
+
+            $('#hospital_facilities').val(arrayItem);
+        }
+
+        function loadDataHospitalInformation() {
+            let arrayItem = $('.hospital_information_name:checked').map(function () {
+                return $(this).val();
+            }).get().join(', ');
+            $('#hospital_information').val(arrayItem);
+        }
+
+        let arrayDoctor = [];
+        let arrayNameDoctor = [];
+
+        getInputDoctor();
+
+        function getInputDoctor() {
+            let items = document.getElementsByClassName('representative_doctor_item');
+
+            arrayDoctor = checkArray(arrayDoctor, items);
+            arrayNameDoctor = getListName(arrayNameDoctor, items)
+
+            let listName = arrayNameDoctor.toString();
+            if (listName) {
+                $('#representative_doctor_text').val(listName);
+            }
+
+            arrayDoctor.sort();
+            let value = arrayDoctor.toString();
+            $('#representative_doctor').val(value);
+        }
     </script>
 @endsection
 
-@endsection

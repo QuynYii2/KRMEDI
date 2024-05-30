@@ -163,9 +163,8 @@
     </style>
     <!-- Page Heading -->
     <h1 class="h3 mb-4 text-gray-800">{{ __('home.Edit') }}</h1>
-    <form>
+    <form action="{{ route('api.backend.clinics.edit', $clinic->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
-        @method('POST')
         <div>
             <div class="row">
                 <div class="col-md-12">
@@ -176,12 +175,12 @@
             <div class="row">
                 <div class="col-md-6">
                     <label for="phone">{{ __('home.PhoneNumber') }}</label>
-                    <input type="number" class="form-control" id="phone" name="phone" required
+                    <input type="number" class="form-control" id="phone" name="phone"
                            value="{{$clinic->phone}}">
                 </div>
                 <div class="col-md-6">
                     <label for="email">{{ __('home.Email') }}</label>
-                    <input type="email" class="form-control" id="email" name="email" required
+                    <input type="email" class="form-control" id="email" name="email"
                            value="{{$clinic->email}}">
                 </div>
             </div>
@@ -193,48 +192,36 @@
                 </div>
             </div>
             <div class="row">
-                @php
-                    $combinedAddress = $clinic->address;
-                    $addressParts = explode(',', $combinedAddress);
-                    $detailAddress = $addressParts[0];
-                    $codeProvince = $addressParts[1];
-                    $codeDistrict = $addressParts[2];
-                    $codeCommune = $addressParts[3];
-                @endphp
                 <div class="col-sm-4">
-                    <label for="province_id">{{ __('home.Tỉnh') }}</label>
-                    <select name="province_id" id="province_id" class="form-control">
+                    <div class="form-group focused">
+                        <label for="province_id">{{ __('home.Tỉnh') }}</label>
+                        <select name="province_id" id="province_id" class="form-control"
+                                onchange="callGetAllDistricts(this.value)">
 
-                    </select>
+                        </select>
+                    </div>
                 </div>
                 <div class="col-sm-4">
-                    <label for="district_id">{{ __('home.Quận') }}</label>
-                    @php
-                        $district = \App\Models\District::find($codeDistrict);
-                    @endphp
-                    <select name="district_id" id="district_id" class="form-control">
-                        @if($district)
-                            <option value="{{$district->id}}-{{$district->code}}"> {{$district->name}}</option>
-                        @endif
-
-                    </select>
+                    <div class="form-group focused">
+                        <label for="district_id">{{ __('home.Quận') }}</label>
+                        <select name="district_id" id="district_id" class="form-control"
+                                onchange="callGetAllCommunes(this.value)">
+                            <option value="">{{ __('home.Chọn quận') }}</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="col-sm-4">
-                    <label for="commune_id">{{ __('home.Xã') }}</label>
-                    @php
-                        $commune = \App\Models\Commune::find($codeCommune);
-                    @endphp
-                    <select name="commune_id" id="commune_id" class="form-control">
-                        @if($commune)
-                            <option value="{{$commune->id}}-{{$commune->code}}">{{$commune->name}}</option>
-                        @endif
-
-                    </select>
+                    <div class="form-group focused">
+                        <label for="commune_id">{{ __('home.Xã') }}</label>
+                        <select name="commune_id" id="commune_id" class="form-control">
+                            <option value="">{{ __('home.Chọn xã') }}</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div>
                 <label for="introduce">{{ __('home.introduce') }}</label>
-                <textarea type="text" class="form-control" id="introduce" name="introduce" required>
+                <textarea type="text" class="form-control" id="introduce" name="introduce" >
                     {{$clinic->introduce}}
                 </textarea>
             </div>
@@ -337,7 +324,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <label for="open_date">{{ __('home.open_date') }}</label>
-                    <input type="datetime-local" class="form-control" id="open_date" name="open_date" required
+                    <input type="datetime-local" class="form-control" id="open_date" name="open_date"
                            value="{{$clinic->open_date}}">
                 </div>
                 <div class="col-md-4">
@@ -537,260 +524,23 @@
                 </div>
             </div>
 
-            <button type="button" class="btn btn-primary up-date-button mt-4">{{ __('home.Save') }}</button>
+            <button type="submit" class="btn btn-primary up-date-button mt-4">{{ __('home.Save') }}</button>
         </div>
     </form>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 {{--    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDe6qi9czJ2Z6SLnV9sSUzce0nuzhRm3hg"></script>--}}
     <script>
-        $(document).ready(function () {
-            // Lắng nghe sự kiện onchange của các dropdown tỉnh, huyện, xã
-            $('#province_id, #district_id, #commune_id').on('change', function () {
-                // Gọi hàm để lưu địa chỉ khi có sự thay đổi
-                saveAddressOnChange();
-            });
-
-            function saveAddressOnChange() {
-                // Lấy giá trị từ các dropdown
-                var provinceId = $('#province_id').val();
-                var codeProvinceId = getCodeFromValue(provinceId);
-
-                var districtId = $('#district_id').val();
-                var codeDistrictId = getCodeFromValue(districtId);
-
-                var communeId = $('#commune_id').val();
-                var codeCommuneId = getCodeFromValue(communeId);
-
-                // Lấy địa chỉ chi tiết từ input
-                var detailAddress = $('#address_detail').val();
-
-                // Gộp các giá trị vào một chuỗi cách nhau bởi dấu phẩy
-                var combinedAddress = [detailAddress, codeCommuneId, codeDistrictId, codeProvinceId, 'Việt Nam'].join(',');
-                // Gán giá trị vào input ẩn
-                $('#combined_address').val(combinedAddress);
-                addNewAddress();
-                let latitude = $('#latitude');
-                let longitude = $('#longitude');
-                if (!latitude.val()) {
-                    latitude.val(localStorage.getItem('latitude'))
-                }
-
-                if (!longitude.val()) {
-                    longitude.val(localStorage.getItem('longitude'))
-                }
-            }
-
-            function getCodeFromValue(value) {
-                // Hàm này nhận một giá trị của dropdown và trả về mã code nếu có
-                if (value) {
-                    let myArray = value.split('-');
-                    return myArray.length > 2 ? myArray[2] : '';
-                }
-                return '';
-            }
-        });
-
-    </script>
-    <script>
-        $(document).ready(function () {
-            // Lắng nghe sự kiện onchange của các dropdown tỉnh, huyện, xã
-            $('#province_id, #district_id, #commune_id').on('change', function () {
-                // Gọi hàm để lưu địa chỉ khi có sự thay đổi
-                saveAddressOnChange();
-            });
-
-            function saveAddressOnChange() {
-                // Lấy giá trị từ các dropdown
-                var provinceId = $('#province_id').val();
-                var codeProvinceId = getCodeFromValue(provinceId);
-
-                var districtId = $('#district_id').val();
-                var codeDistrictId = getCodeFromValue(districtId);
-
-                var communeId = $('#commune_id').val();
-                var codeCommuneId = getCodeFromValue(communeId);
-
-                // Lấy địa chỉ chi tiết từ input
-                var detailAddress = $('#address_detail').val();
-
-                // Gộp các giá trị vào một chuỗi cách nhau bởi dấu phẩy
-                var combinedAddress = [detailAddress, codeCommuneId, codeDistrictId, codeProvinceId, 'Việt Nam'].join(',');
-                // Gán giá trị vào input ẩn
-                $('#combined_address').val(combinedAddress);
-                addNewAddress();
-                let latitude = $('#latitude');
-                let longitude = $('#longitude');
-                if (!latitude.val()) {
-                    latitude.val(localStorage.getItem('latitude'))
-                }
-
-                if (!longitude.val()) {
-                    longitude.val(localStorage.getItem('longitude'))
-                }
-            }
-
-            function getCodeFromValue(value) {
-                // Hàm này nhận một giá trị của dropdown và trả về mã code nếu có
-                if (value) {
-                    let myArray = value.split('-');
-                    return myArray.length > 2 ? myArray[2] : '';
-                }
-                return '';
-            }
-        });
-
-    </script>
-    <script>
-        $(document).ready(function () {
-            $('.up-date-button').on('click', function () {
-                const headers = {
-                    'Authorization': `Bearer ${token}`
-                };
-                let province = $('#province_id').val();
-                let myProvince = [];
-                if (province) {
-                    myProvince = province.split('-');
-                }
-
-                let district = $('#district_id').val();
-                let myDistrict = [];
-                if (district) {
-                    myDistrict = district.split('-');
-                }
-
-                let commune = $('#commune_id').val();
-                let myCommune = [];
-                if (commune) {
-                    myCommune = commune.split('-');
-                }
-
-
-                const formData = new FormData();
-
-                const arrFieldEmpty = [
-                    "hospital_facilities", "hospital_equipment", "hospital_information", "combined_address",
-                ];
-
-                const arrFieldEmptyChecked = [
-                    "emergency", "insurance", "parking",
-                ];
-
-                const arrField = [
-                    "name", "phone", "costs", "longitude", "latitude", "address_detail",
-                    "email", "province_id", "district_id", "commune_id",
-                    "open_date", "close_date", "user_id", "time_work", "type", "status",
-                    "clinics_service", "departments", "symptoms", "representative_doctor",
-                ];
-
-                arrFieldEmptyChecked.forEach(data => {
-                    let checked = document.getElementById(data).checked;
-                    if (checked) {
-                        formData.append(data, $(`#${data}`).val());
-                    }
-                });
-
-                arrFieldEmpty.forEach(data => {
-                    formData.append(data, $(`#${data}`).val());
-                });
-
-                let isValid = true
-                /* Tạo fn appendDataForm ở admin blade */
-                isValid = appendDataForm(arrField, formData, isValid);
-
-                const fieldTextareaTiny = [
-                    'introduce'
-                ];
-
-                fieldTextareaTiny.forEach(fieldTextarea => {
-                    const content = tinymce.get(fieldTextarea).getContent();
-                    if (!content) {
-                        isValid = false;
-                    }
-                    formData.append(fieldTextarea, content);
-                });
-
-                let filedata = document.getElementById("gallery");
-                let i = 0, len = filedata.files.length, img, reader, file;
-                for (i; i < len; i++) {
-                    file = filedata.files[i];
-                    formData.append('gallery[]', file);
-                }
-
-                if (!isValid) {
-                    alert('Please enter input require!')
-                    return;
-                }
-
-                try {
-                    $.ajax({
-                        url: `{{route('api.backend.clinics.edit',$clinic->id)}}`,
-                        method: 'POST',
-                        headers: headers,
-                        contentType: false,
-                        cache: false,
-                        processData: false,
-                        data: formData,
-                        success: function (response) {
-                            alert('Update success!');
-                            window.location.href = `{{route('homeAdmin.list.clinics')}}`;
-                        },
-                        error: function (xhr) {
-                            if (xhr.status === 400) {
-                                alert(xhr.responseJSON.message);
-                            } else {
-                                alert('Update error! Please try again!');
-                            }
-                            console.log(xhr);
-                        }
-                    });
-                } catch (error) {
-                    console.log(error);
-                    alert('Error! Please try again!');
-                }
-            })
-        })
-    </script>
-    <script>
-        let province_id;
-        let list_address = `{{ $clinic->address }}`;
-        console.log(list_address)
-        let arrayAddress = list_address.split(',');
-        var filtered = arrayAddress.filter(function (el) {
-            return el != null;
-        });
-        if (filtered.length > 3) {
-            province_id = filtered[1];
-        } else {
-            province_id = filtered[0];
-        }
-
-        $(document).ready(function () {
-            callGetAllProvince();
-
-            $('#province_id').on('change', function () {
-                let id_code = $(this).val();
-                let myArray = id_code.split('-');
-                let code = myArray[1];
-                callGetAllDistricts(code);
-            })
-
-            $('#district_id').on('change', function () {
-                let id_code = $(this).val();
-                let myArray = id_code.split('-');
-                let code = myArray[1];
-                callGetAllCommunes(code);
-            })
-        })
+        callGetAllProvince();
 
         async function callGetAllProvince() {
-            await $.ajax({
+            $.ajax({
                 url: `{{ route('restapi.get.provinces') }}`,
                 method: 'GET',
-                success: function (response) {
+                success: function(response) {
                     showAllProvince(response);
                 },
-                error: function (exception) {
+                error: function(exception) {
                     console.log(exception);
                 }
             });
@@ -799,13 +549,13 @@
         async function callGetAllDistricts(code) {
             let url = `{{ route('restapi.get.districts', ['code' => ':code']) }}`;
             url = url.replace(':code', code);
-            await $.ajax({
+            $.ajax({
                 url: url,
                 method: 'GET',
-                success: function (response) {
+                success: function(response) {
                     showAllDistricts(response);
                 },
-                error: function (exception) {
+                error: function(exception) {
                     console.log(exception);
                 }
             });
@@ -814,13 +564,13 @@
         async function callGetAllCommunes(code) {
             let url = `{{ route('restapi.get.communes', ['code' => ':code']) }}`;
             url = url.replace(':code', code);
-            await $.ajax({
+            $.ajax({
                 url: url,
                 method: 'GET',
-                success: function (response) {
+                success: function(response) {
                     showAllCommunes(response);
                 },
-                error: function (exception) {
+                error: function(exception) {
                     console.log(exception);
                 }
             });
@@ -828,56 +578,293 @@
 
         function showAllProvince(res) {
             let html = ``;
+            let select = ``;
+            let pro = `{{ $doctor->province_id }}`;
             for (let i = 0; i < res.length; i++) {
                 let data = res[i];
-                let isCheck = '';
-                if (province_id == data.id) {
-                    isCheck = 'selected';
+                if (data.code == pro) {
+                    select = `selected`;
+                } else {
+                    select = ``;
                 }
                 let code = data.code;
-                html = html + `<option class="province province-item"  ${isCheck}  data-code="${code}" value="${data.id}-${data.code}-${data.name}">${data.name}</option>`;
+                html = html +
+                    `<option ${select} class="province province-item" data-code="${code}" value="${data.code}">${data.name}</option>`;
             }
-
             $('#province_id').empty().append(html);
+            callGetAllDistricts($('#province_id').find(':selected').val());
         }
 
         function showAllDistricts(res) {
             let html = ``;
+            let select = ``;
+            let dis = `{{ $doctor->district_id }}`;
             for (let i = 0; i < res.length; i++) {
                 let data = res[i];
-                html = html + `<option class="district district-item" value="${data.id}-${data.code}-${data.name}">${data.name}</option>`;
+                if (data.code == dis) {
+                    select = `selected`;
+                } else {
+                    select = ``;
+                }
+                html = html + `<option ${select} class="district district-item" value="${data.code}">${data.name}</option>`;
             }
             $('#district_id').empty().append(html);
+            callGetAllCommunes($('#district_id').find(':selected').val());
         }
 
         function showAllCommunes(res) {
             let html = ``;
+            let select = ``;
+            let cm = `{{ $doctor->commune_id }}`;
             for (let i = 0; i < res.length; i++) {
                 let data = res[i];
-                html = html + `<option value="${data.id}-${data.code}-${data.name}">${data.name}</option>`;
+                if (data.code == cm) {
+                    select = `selected`;
+                } else {
+                    select = ``;
+                }
+                html = html + `<option ${select} value="${data.code}">${data.name}</option>`;
             }
             $('#commune_id').empty().append(html);
         }
-
-        function addNewAddress() {
-            var newAddress = document.getElementById('combined_address').value;
-
-            if (newAddress) {
-                var geocoder = new google.maps.Geocoder();
-                geocoder.geocode({'address': newAddress}, function (results, status) {
-                    if (status == google.maps.GeocoderStatus.OK) {
-                        var latitude = results[0].geometry.location.lat();
-                        var longitude = results[0].geometry.location.lng();
-
-                        if (!isNaN(latitude) && !isNaN(longitude)) {
-                            $('#latitude').val(latitude);
-                            $('#longitude').val(longitude);
-                        }
-                    }
-                });
-            }
-        }
     </script>
+    <script>
+        {{--$(document).ready(function () {--}}
+        {{--    $('.up-date-button').on('click', function () {--}}
+        {{--        const headers = {--}}
+        {{--            'Authorization': `Bearer ${token}`--}}
+        {{--        };--}}
+        {{--        let province = $('#province_id').val();--}}
+        {{--        let myProvince = [];--}}
+        {{--        if (province) {--}}
+        {{--            myProvince = province.split('-');--}}
+        {{--        }--}}
+
+        {{--        let district = $('#district_id').val();--}}
+        {{--        let myDistrict = [];--}}
+        {{--        if (district) {--}}
+        {{--            myDistrict = district.split('-');--}}
+        {{--        }--}}
+
+        {{--        let commune = $('#commune_id').val();--}}
+        {{--        let myCommune = [];--}}
+        {{--        if (commune) {--}}
+        {{--            myCommune = commune.split('-');--}}
+        {{--        }--}}
+
+
+        {{--        const formData = new FormData();--}}
+
+        {{--        const arrFieldEmpty = [--}}
+        {{--            "hospital_facilities", "hospital_equipment", "hospital_information", "combined_address",--}}
+        {{--        ];--}}
+
+        {{--        const arrFieldEmptyChecked = [--}}
+        {{--            "emergency", "insurance", "parking",--}}
+        {{--        ];--}}
+
+        {{--        const arrField = [--}}
+        {{--            "name", "phone", "costs", "longitude", "latitude", "address_detail",--}}
+        {{--            "email", "province_id", "district_id", "commune_id",--}}
+        {{--            "open_date", "close_date", "user_id", "time_work", "type", "status",--}}
+        {{--            "clinics_service", "departments", "symptoms", "representative_doctor",--}}
+        {{--        ];--}}
+
+        {{--        arrFieldEmptyChecked.forEach(data => {--}}
+        {{--            let checked = document.getElementById(data).checked;--}}
+        {{--            if (checked) {--}}
+        {{--                formData.append(data, $(`#${data}`).val());--}}
+        {{--            }--}}
+        {{--        });--}}
+
+        {{--        arrFieldEmpty.forEach(data => {--}}
+        {{--            formData.append(data, $(`#${data}`).val());--}}
+        {{--        });--}}
+
+        {{--        // let isValid = true--}}
+        {{--        // /* Tạo fn appendDataForm ở admin blade */--}}
+        {{--        // isValid = appendDataForm(arrField, formData, isValid);--}}
+
+        {{--        const fieldTextareaTiny = [--}}
+        {{--            'introduce'--}}
+        {{--        ];--}}
+
+        {{--        fieldTextareaTiny.forEach(fieldTextarea => {--}}
+        {{--            const content = tinymce.get(fieldTextarea).getContent();--}}
+        {{--            // if (!content) {--}}
+        {{--            //     isValid = false;--}}
+        {{--            // }--}}
+        {{--            formData.append(fieldTextarea, content);--}}
+        {{--        });--}}
+
+        {{--        let filedata = document.getElementById("gallery");--}}
+        {{--        let i = 0, len = filedata.files.length, img, reader, file;--}}
+        {{--        for (i; i < len; i++) {--}}
+        {{--            file = filedata.files[i];--}}
+        {{--            formData.append('gallery[]', file);--}}
+        {{--        }--}}
+
+        {{--        // if (!isValid) {--}}
+        {{--        //     alert('Please enter input require!')--}}
+        {{--        //     return;--}}
+        {{--        // }--}}
+
+        {{--        try {--}}
+        {{--            $.ajax({--}}
+        {{--                url: `{{ route('api.backend.clinics.edit', $clinic->id) }}`,--}}
+        {{--                method: 'POST',--}}
+        {{--                headers: headers,--}}
+        {{--                contentType: false,--}}
+        {{--                cache: false,--}}
+        {{--                processData: false,--}}
+        {{--                data: formData,--}}
+        {{--                success: function (response) {--}}
+        {{--                    alert('Update success!');--}}
+        {{--                    window.location.href = `{{ route('homeAdmin.list.clinics') }}`;--}}
+        {{--                },--}}
+        {{--                error: function (xhr) {--}}
+        {{--                    if (xhr.status === 400) {--}}
+        {{--                        alert(xhr.responseJSON.message);--}}
+        {{--                    } else {--}}
+        {{--                        alert('Update error! Please try again!');--}}
+        {{--                    }--}}
+        {{--                    console.log(xhr);--}}
+        {{--                }--}}
+        {{--            });--}}
+        {{--        } catch (error) {--}}
+        {{--            console.log(error);--}}
+        {{--            alert('Error! Please try again!');--}}
+        {{--        }--}}
+        {{--    })--}}
+        {{--})--}}
+    </script>
+{{--    <script>--}}
+{{--        let province_id;--}}
+{{--        let list_address = `{{ $clinic->address }}`;--}}
+{{--        console.log(list_address)--}}
+{{--        let arrayAddress = list_address.split(',');--}}
+{{--        var filtered = arrayAddress.filter(function (el) {--}}
+{{--            return el != null;--}}
+{{--        });--}}
+{{--        if (filtered.length > 3) {--}}
+{{--            province_id = filtered[1];--}}
+{{--        } else {--}}
+{{--            province_id = filtered[0];--}}
+{{--        }--}}
+
+{{--        $(document).ready(function () {--}}
+{{--            callGetAllProvince();--}}
+
+{{--            $('#province_id').on('change', function () {--}}
+{{--                let id_code = $(this).val();--}}
+{{--                let myArray = id_code.split('-');--}}
+{{--                let code = myArray[1];--}}
+{{--                callGetAllDistricts(code);--}}
+{{--            })--}}
+
+{{--            $('#district_id').on('change', function () {--}}
+{{--                let id_code = $(this).val();--}}
+{{--                let myArray = id_code.split('-');--}}
+{{--                let code = myArray[1];--}}
+{{--                callGetAllCommunes(code);--}}
+{{--            })--}}
+{{--        })--}}
+
+{{--        async function callGetAllProvince() {--}}
+{{--            await $.ajax({--}}
+{{--                url: `{{ route('restapi.get.provinces') }}`,--}}
+{{--                method: 'GET',--}}
+{{--                success: function (response) {--}}
+{{--                    showAllProvince(response);--}}
+{{--                },--}}
+{{--                error: function (exception) {--}}
+{{--                    console.log(exception);--}}
+{{--                }--}}
+{{--            });--}}
+{{--        }--}}
+
+{{--        async function callGetAllDistricts(code) {--}}
+{{--            let url = `{{ route('restapi.get.districts', ['code' => ':code']) }}`;--}}
+{{--            url = url.replace(':code', code);--}}
+{{--            await $.ajax({--}}
+{{--                url: url,--}}
+{{--                method: 'GET',--}}
+{{--                success: function (response) {--}}
+{{--                    showAllDistricts(response);--}}
+{{--                },--}}
+{{--                error: function (exception) {--}}
+{{--                    console.log(exception);--}}
+{{--                }--}}
+{{--            });--}}
+{{--        }--}}
+
+{{--        async function callGetAllCommunes(code) {--}}
+{{--            let url = `{{ route('restapi.get.communes', ['code' => ':code']) }}`;--}}
+{{--            url = url.replace(':code', code);--}}
+{{--            await $.ajax({--}}
+{{--                url: url,--}}
+{{--                method: 'GET',--}}
+{{--                success: function (response) {--}}
+{{--                    showAllCommunes(response);--}}
+{{--                },--}}
+{{--                error: function (exception) {--}}
+{{--                    console.log(exception);--}}
+{{--                }--}}
+{{--            });--}}
+{{--        }--}}
+
+{{--        function showAllProvince(res) {--}}
+{{--            let html = ``;--}}
+{{--            for (let i = 0; i < res.length; i++) {--}}
+{{--                let data = res[i];--}}
+{{--                let isCheck = '';--}}
+{{--                if (province_id == data.id) {--}}
+{{--                    isCheck = 'selected';--}}
+{{--                }--}}
+{{--                let code = data.code;--}}
+{{--                html = html + `<option class="province province-item"  ${isCheck}  data-code="${code}" value="${data.id}-${data.code}-${data.name}">${data.name}</option>`;--}}
+{{--            }--}}
+
+{{--            $('#province_id').empty().append(html);--}}
+{{--        }--}}
+
+{{--        function showAllDistricts(res) {--}}
+{{--            let html = ``;--}}
+{{--            for (let i = 0; i < res.length; i++) {--}}
+{{--                let data = res[i];--}}
+{{--                html = html + `<option class="district district-item" value="${data.id}-${data.code}-${data.name}">${data.name}</option>`;--}}
+{{--            }--}}
+{{--            $('#district_id').empty().append(html);--}}
+{{--        }--}}
+
+{{--        function showAllCommunes(res) {--}}
+{{--            let html = ``;--}}
+{{--            for (let i = 0; i < res.length; i++) {--}}
+{{--                let data = res[i];--}}
+{{--                html = html + `<option value="${data.id}-${data.code}-${data.name}">${data.name}</option>`;--}}
+{{--            }--}}
+{{--            $('#commune_id').empty().append(html);--}}
+{{--        }--}}
+
+{{--        function addNewAddress() {--}}
+{{--            var newAddress = document.getElementById('combined_address').value;--}}
+
+{{--            if (newAddress) {--}}
+{{--                var geocoder = new google.maps.Geocoder();--}}
+{{--                geocoder.geocode({'address': newAddress}, function (results, status) {--}}
+{{--                    if (status == google.maps.GeocoderStatus.OK) {--}}
+{{--                        var latitude = results[0].geometry.location.lat();--}}
+{{--                        var longitude = results[0].geometry.location.lng();--}}
+
+{{--                        if (!isNaN(latitude) && !isNaN(longitude)) {--}}
+{{--                            $('#latitude').val(latitude);--}}
+{{--                            $('#longitude').val(longitude);--}}
+{{--                        }--}}
+{{--                    }--}}
+{{--                });--}}
+{{--            }--}}
+{{--        }--}}
+{{--    </script>--}}
     <script>
         let arrayItem = [];
         let arrayNameCategory = [];
