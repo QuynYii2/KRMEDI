@@ -432,6 +432,147 @@ class BookingController extends Controller
         }
     }
 
+    public function create()
+    {
+        $reflector = new \ReflectionClass('App\Enums\ReasonCancel');
+        $reasons = $reflector->getConstants();
+        $role_id = RoleUser::where('role_id',39)->pluck('user_id')->toArray();
+        $list_doctor = User::whereIn('id',$role_id)->get();
+
+        return view('admin.booking.tab-create-booking', compact( 'reasons','list_doctor'));
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            $extend['isReminded'] = 0;
+            $booking = new Booking([
+                'user_id' => $request->user_id,
+                'clinic_id' => $request->clinic_id,
+                'department_id' => $request->department_id,
+                'check_in' => $request->check_in,
+                'check_out'=>$request->check_out,
+                'doctor_id'=>$request->doctor_id,
+                'status'=>$request->status,
+                'service'=>3,
+                'extend'=>$extend,
+            ]);
+            $booking->save();
+
+            $is_result = $request->input('is_result');
+            if (!$is_result) {
+                $is_result = 0;
+            }
+
+            $bookingResults = $booking->extend['booking_results'] ?? [];
+
+            $bookingResultList = $request->booking_result_list;
+
+            //Check booking files changes
+            $isChange = false;
+
+            foreach ($bookingResults as $oldItem) {
+                $valueChange = true;
+
+                foreach ($bookingResultList as $newItem) {
+                    if (
+                        $oldItem['type'] === $newItem['select']
+                        && $oldItem['doctor_id'] === $newItem['doctors_id']
+                        && $oldItem['url'] === $newItem['file_urls']
+                    ) {
+                        $valueChange = false;
+                        break;
+                    }
+                }
+
+                if ($valueChange) {
+                    $isChange = true;
+                    break;
+                }
+            }
+
+            if (!$isChange && count($bookingResults) !== count($bookingResultList)) {
+                $isChange = true;
+            }
+
+            if ($request->status == BookingStatus::COMPLETE && $is_result == 1) {
+                foreach ($bookingResultList as $index => $result) {
+                    if (isset($result['select']) && isset($result['doctors_id']) && (isset($result['file_urls']) || isset($result['file']))) {
+                        $validator = Validator::make($result, [
+                            'file.*' => 'mimes:pdf',
+                        ]);
+
+                        if ($validator->fails()) {
+                            alert('Error', 'Tài liệu phải là định dạng PDF', 'error');
+                            return redirect()->back()->withErrors($validator)->withInput();
+                        }
+
+                        // Remove the old file if it exists new file
+                        if (isset($bookingResults[$index]['url']) && Storage::exists(str_replace('/storage', 'public', $bookingResults[$index]['url'])) && isset($result['file'])) {
+                            Storage::delete(str_replace('/storage', 'public', $bookingResults[$index]['url']));
+                        }
+
+                        // Handle the new file input
+                        if (isset($result['file']) && $result['file']) {
+                            $qrCode = null;
+                            if (isset($result['doctors_id']) && $result['doctors_id']) {
+                                $url = route('qr.code.show.doctor.info', $result['doctors_id']);
+                                $qrCode = QrCode::format('png')->size(150)->generate($url);
+                            }
+                            $itemPath = $result['file']->store('bookings_result', 'public');
+                            $fileUrl = asset('storage/' . $itemPath);
+
+                            if ($fileUrl) {
+                                $doctorName        = User::find($result['doctors_id'])->name ?? "";
+                                $doctorSignature   = User::find($result['doctors_id'])->signature ?? "";
+                                $this->insertQRCodeIntoPDF($fileUrl, $qrCode, $booking, $doctorName, $doctorSignature);
+                            }
+                        } else if ($result['file_urls']) {
+                            // If file input is not set, use the existing value with file_urls
+                            $fileUrl = $booking->extend['booking_results'][$index]['url'] ?? $result['file_urls'] ?? '';
+                        }
+
+                        $bookingResult = [
+                            'type' => $result['select'],
+                            'url' => $fileUrl,
+                            'doctor_id' => $result['doctors_id'],
+                        ];
+
+                        $bookingResults[$index] = $bookingResult;
+                    }
+                }
+
+                $extendData = $booking->extend ?? [];
+
+                $extendData['booking_results'] = array_values($bookingResults);
+                $booking->extend = $extendData;
+            }
+
+            $booking->is_result = $is_result;
+
+            $reason = $request->input('reason_text');
+
+            if ($request->status == BookingStatus::CANCEL) {
+                $booking->reason_cancel = $reason;
+            }
+
+            $success = $booking->save();
+            if ($success) {
+                alert('Create success');
+                $user_id = Auth::id();
+                $role = RoleUser::where('user_id',$user_id)->first();
+                if ($role->role_id == 39){
+                    return Redirect::route('homeAdmin.list.booking.doctor')->with('success', 'Booking success');
+                }else{
+                    return Redirect::route('homeAdmin.list.booking')->with('success', 'Booking success');
+                }
+            }
+            return response()->json(['error' => 0, 'data' => $booking]);
+        } catch (\Exception $e) {
+            return response(['error' => -1, 'message' => $e->getMessage()], 400);
+        }
+    }
+
     public function sendMessageToUserOnBookingCreated($booking)
     {
         try {
