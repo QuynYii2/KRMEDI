@@ -427,7 +427,7 @@
             let html = `<div class="form-row">
                         <div class="form-group col-md-4">
                             <label for="file_upload">{{ __('home.Upload your license') }}</label>
-                            <input required type="file" name="file_upload" class="form-control" accept="image/*" id="file_upload">
+                            <input type="file" name="file_upload" class="form-control" accept="image/*" id="file_upload">
                                <img loading="lazy" src="{{ asset($user->business_license_img ?? $user->medical_license_img) }}" alt="Image" style="max-width: 100px">
                         </div>
                     </div>`;
