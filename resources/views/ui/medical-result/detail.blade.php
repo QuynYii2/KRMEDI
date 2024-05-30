@@ -185,7 +185,7 @@
             });
         })
 
-        let accessToken = `Bearer ${token}`;
+        // let accessToken = `Bearer ${token}`;
 
         async function addProductToCart() {
             let urlResult = `{{ route('restapi.get.products.medicines.result', $result->id) }}`;
