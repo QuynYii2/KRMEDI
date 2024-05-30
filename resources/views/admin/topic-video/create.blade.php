@@ -38,7 +38,7 @@
         </form>
     </div>
     <script>
-        let accessToken = `Bearer ` + token;
+        // let accessToken = `Bearer ` + token;
 
         $(document).ready(function () {
             let formDataCreate = new FormData();

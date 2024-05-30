@@ -7,7 +7,8 @@
         <!-- Page Heading -->
         <h1 class="h3 mb-4 text-gray-800"> Detail User </h1>
         <div class="container-fluid">
-            <form method="POST" autocomplete="off" enctype="multipart/form-data">
+            <form action="{{ route('api.admin.users.update', $user->id) }}" method="POST" autocomplete="off" enctype="multipart/form-data">
+                @csrf
                 <div class="row">
                     <div class="col-md-4 form-group">
                         <label class="form-control-label" for="username">{{ __('home.Username') }}
@@ -99,7 +100,7 @@
                     <div class="form-group col-md-6">
                         <label for="detail_address">{{ __('home.địa chỉ chi tiết việt') }}</label>
                         <input class="form-control" name="detail_address" id="detail_address"
-                               value="{{ $user->detail_address }}">
+                               value="{{ $user->detail_address }}" required>
                     </div>
                 </div>
                 <div class="row">
@@ -165,7 +166,7 @@
                 <div class="pl-md-4 mt-4">
                     <div class="row">
                         <div class="col text-center">
-                            <button type="button" id="btnCreateUser"
+                            <button type="submit" id="btnCreateUser"
                                     class="btn btn-primary">{{ __('home.create') }}</button>
                         </div>
                     </div>
@@ -174,10 +175,10 @@
         </div>
     </div>
     <script>
-        let accessToken = `Bearer ` + token;
-        let headers = {
-            "Authorization": accessToken
-        };
+        // let accessToken = `Bearer ` + token;
+        // let headers = {
+        //     "Authorization": accessToken
+        // };
 
         $(document).ready(function () {
             $('#type').on('change', function () {
@@ -185,10 +186,6 @@
             })
 
             renderMember();
-
-            $('#btnCreateUser').on('click', function () {
-                createUser();
-            })
         })
 
         function renderMember() {
@@ -224,79 +221,6 @@
                     break;
             }
             $('#member').empty().append(html);
-        }
-    </script>
-    {{-- Create new user --}}
-    <script>
-        async function createUser() {
-            const formData = new FormData();
-
-            const array_default = ['username', 'name', 'last_name',
-                'email', 'phone',
-                'detail_address', 'detail_address_en', 'detail_address_laos',
-                'province_id', 'district_id', 'commune_id', 'address_code',
-                'type', 'member', 'status',]
-
-            const array_empty_normal = ['medical_history', 'password', 'passwordConfirm',]
-
-            const array_medical = ['specialty', 'specialty_en', 'specialty_laos','identifier',
-                'service', 'service_en', 'service_laos', "workspace",
-                'service_price', 'service_price_en', 'service_price_laos',
-                'time_working_1', 'time_working_2', 'apply_for',
-                'department_id', 'year_of_experience',]
-
-            const array_empty_medical = ['prescription', 'free',]
-
-            let avt = $('#avt')[0].files[0];
-            formData.append('avt', avt);
-
-            let isValid = true
-            /* Tạo fn appendDataForm ở admin blade*/
-            isValid = appendDataForm(array_default, formData, isValid);
-
-            if ($('#type').val() === 'MEDICAL') {
-                isValid = appendDataForm(array_medical, formData, isValid);
-
-                let file_upload = $('#file_upload')[0].files[0];
-                formData.append('file_upload', file_upload);
-
-                array_empty_medical.forEach(field => {
-                    let checked = document.getElementById(field).checked;
-                    if (checked) {
-                        formData.append(field, $(`#${field}`).val());
-                    }
-                });
-            }
-
-            array_empty_normal.forEach(field => {
-                formData.append(field, $(`#${field}`).val());
-            });
-
-            let updateUserUrl = `{{ route('api.admin.users.update', $user->id) }}`;
-            if (!isValid) {
-                return;
-            }
-
-            try {
-                await $.ajax({
-                    url: updateUserUrl,
-                    method: 'POST',
-                    headers: headers,
-                    contentType: false,
-                    cache: false,
-                    processData: false,
-                    data: formData,
-                    success: function (response) {
-                        alert('Update success!');
-                        window.location.href = `{{ route('view.admin.user.list') }}`;
-                    },
-                    error: function (error) {
-                        alert(error.responseJSON.message);
-                    }
-                });
-            } catch (e) {
-                alert('Update error!');
-            }
         }
     </script>
     {{-- Append form element follow type account --}}
@@ -503,7 +427,7 @@
             let html = `<div class="form-row">
                         <div class="form-group col-md-4">
                             <label for="file_upload">{{ __('home.Upload your license') }}</label>
-                            <input required type="file" name="file_upload" class="form-control" accept="image/*" id="file_upload">
+                            <input type="file" name="file_upload" class="form-control" accept="image/*" id="file_upload">
                                <img loading="lazy" src="{{ asset($user->business_license_img ?? $user->medical_license_img) }}" alt="Image" style="max-width: 100px">
                         </div>
                     </div>`;

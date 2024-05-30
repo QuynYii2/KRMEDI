@@ -115,49 +115,52 @@
                 </div>
             </div>
             <div class="row" id="row-answer">
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-12">
                     <label for="answer">{{ __('home.Answer') }}</label>
                     <a href="javascript:void(0)" onclick="appendAnswer('answer_vi')">{{ __('home.Add answer') }}</a>
 
                     <div id="answer_vi">
-                        <div class="item">
-                            <label>
-                                <span>{{ __('home.Answer') }} 1</span>
-                                <input type="text">
-                            </label>
-                            <a href="javascript:void(0)" class="del">{{ __('home.Delete') }}</a>
+                        <div class="row">
+                            <div class="item d-flex">
+                                <label class="d-flex">
+                                    <span>{{ __('home.Answer') }} 1</span>
+                                    <input type="text">
+                                </label>
+                                <a href="javascript:void(0)" class="del">{{ __('home.Delete') }}</a>
+                            </div>
                         </div>
+
                     </div>
 
                 </div>
-                <div class="form-group col-md-4">
-                    <label for="answer_en">{{ __('home.Answer En') }} 1</label>
-                    <a href="javascript:void(0)" onclick="appendAnswer('answer_en')">{{ __('home.Add answer') }}</a>
+{{--                <div class="form-group col-md-4">--}}
+{{--                    <label for="answer_en">{{ __('home.Answer En') }} 1</label>--}}
+{{--                    <a href="javascript:void(0)" onclick="appendAnswer('answer_en')">{{ __('home.Add answer') }}</a>--}}
 
-                    <div id="answer_en">
-                        <div class="item">
-                            <label>
-                                <span>{{ __('home.Answer') }} 1</span>
-                                <input type="text">
-                            </label>
-                            <a href="javascript:void(0)" class="del">{{ __('home.Delete') }}</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="answer_laos">{{ __('home.Answer Laos') }} </label>
-                    <a href="javascript:void(0)" onclick="appendAnswer('answer_laos')">{{ __('home.Add answer') }}</a>
+{{--                    <div id="answer_en">--}}
+{{--                        <div class="item">--}}
+{{--                            <label>--}}
+{{--                                <span>{{ __('home.Answer') }} 1</span>--}}
+{{--                                <input type="text">--}}
+{{--                            </label>--}}
+{{--                            <a href="javascript:void(0)" class="del">{{ __('home.Delete') }}</a>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--                <div class="form-group col-md-4">--}}
+{{--                    <label for="answer_laos">{{ __('home.Answer Laos') }} </label>--}}
+{{--                    <a href="javascript:void(0)" onclick="appendAnswer('answer_laos')">{{ __('home.Add answer') }}</a>--}}
 
-                    <div id="answer_laos">
-                        <div class="item">
-                            <label>
-                                <span>{{ __('home.Answer') }} 1</span>
-                                <input type="text">
-                            </label>
-                            <a href="javascript:void(0)" class="del">{{ __('home.Delete') }}</a>
-                        </div>
-                    </div>
-                </div>
+{{--                    <div id="answer_laos">--}}
+{{--                        <div class="item">--}}
+{{--                            <label>--}}
+{{--                                <span>{{ __('home.Answer') }} 1</span>--}}
+{{--                                <input type="text">--}}
+{{--                            </label>--}}
+{{--                            <a href="javascript:void(0)" class="del">{{ __('home.Delete') }}</a>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
             </div>
             <div class="text-center mt-3">
                 <button type="button" class="btn btn-primary" id="btnCreate"
@@ -166,10 +169,10 @@
         </form>
     </div>
     <script>
-        let accessToken = `Bearer ` + token;
-        let headers = {
-            "Authorization": accessToken
-        };
+        // let accessToken = `Bearer ` + token;
+        // let headers = {
+        //     "Authorization": accessToken
+        // };
 
         const maxAnswer = 10;
 
@@ -284,9 +287,9 @@
                 alert("Number of answers isn't greater than 10");
             } else {
                 n++;
-                $('#answer_vi').append("<div class='item'><label><span>Ans " + n + "</span> <input type='text'></label> <a href='javascript:void(0)' class='del'>{{ __('home.Delete') }}</a></div>");
-                $('#answer_en').append("<div class='item'><label><span>Ans " + n + "</span> <input type='text'></label> <a href='javascript:void(0)' class='del'>{{ __('home.Delete') }}</a></div>");
-                $('#answer_laos').append("<div class='item'><label><span>Ans " + n + "</span> <input type='text'></label> <a href='javascript:void(0)' class='del'>{{ __('home.Delete') }}</a></div>");
+                $('#answer_vi').append("<div class='item'><label><span>Trả lời " + n + "</span> <input type='text'></label> <a href='javascript:void(0)' class='del'>{{ __('home.Delete') }}</a></div>");
+                {{--$('#answer_en').append("<div class='item'><label><span>Trả lời " + n + "</span> <input type='text'></label> <a href='javascript:void(0)' class='del'>{{ __('home.Delete') }}</a></div>");--}}
+                {{--$('#answer_laos').append("<div class='item'><label><span>Trả lời " + n + "</span> <input type='text'></label> <a href='javascript:void(0)' class='del'>{{ __('home.Delete') }}</a></div>");--}}
             }
         }
 

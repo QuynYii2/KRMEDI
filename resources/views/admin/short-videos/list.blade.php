@@ -31,7 +31,7 @@
         </table>
     </div>
     <script>
-        let accessToken = `Bearer ` + token;
+        // let accessToken = `Bearer ` + token;
 
         callListVideo();
 

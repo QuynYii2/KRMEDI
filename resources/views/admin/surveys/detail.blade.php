@@ -116,13 +116,13 @@
                 </div>
 
                 <div class="row" id="row-answer">
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-12">
                         <label for="answer">{{ __('home.Answer') }}</label>
                         <a href="javascript:void(0)" onclick="appendAnswer('answer_vi')">{{ __('home.Add answer') }}</a>
 
                         <div id="answer_vi">
                             @foreach($survey_answers as $index => $answer)
-                                <div class="item">
+                                <div class="item d-flex">
                                     <label>
                                         <span>{{ __('home.Answer') }} {{ ++$index }}</span>
                                         <input type="text" value="{{ $answer->answer }}">
@@ -134,36 +134,36 @@
                             @endforeach
                         </div>
                     </div>
-                    <div class="form-group col-md-4">
-                        <label for="answer_en">{{ __('home.Answer En') }}</label>
-                        <a href="javascript:void(0)" onclick="appendAnswer('answer_en')">{{ __('home.Add answer') }}</a>
+{{--                    <div class="form-group col-md-4">--}}
+{{--                        <label for="answer_en">{{ __('home.Answer En') }}</label>--}}
+{{--                        <a href="javascript:void(0)" onclick="appendAnswer('answer_en')">{{ __('home.Add answer') }}</a>--}}
 
-                        <div id="answer_en">
-                            @foreach($survey_answers as $index => $answer)
-                                <div class="item">
-                                    <label>
-                                        <span>{{ __('home.Answer') }} {{ ++$index }}</span>
-                                        <input type="text" value="{{ $answer->answer_en }}">
-                                    </label>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="answer_laos">{{ __('home.Answer Laos') }}</label>
-                        <a href="javascript:void(0)" onclick="appendAnswer('answer_laos')">{{ __('home.Add answer') }}</a>
+{{--                        <div id="answer_en">--}}
+{{--                            @foreach($survey_answers as $index => $answer)--}}
+{{--                                <div class="item">--}}
+{{--                                    <label>--}}
+{{--                                        <span>{{ __('home.Answer') }} {{ ++$index }}</span>--}}
+{{--                                        <input type="text" value="{{ $answer->answer_en }}">--}}
+{{--                                    </label>--}}
+{{--                                </div>--}}
+{{--                            @endforeach--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <div class="form-group col-md-4">--}}
+{{--                        <label for="answer_laos">{{ __('home.Answer Laos') }}</label>--}}
+{{--                        <a href="javascript:void(0)" onclick="appendAnswer('answer_laos')">{{ __('home.Add answer') }}</a>--}}
 
-                        <div id="answer_laos">
-                            @foreach($survey_answers as $index => $answer)
-                                <div class="item">
-                                    <label>
-                                        <span>{{ __('home.Answer') }} {{ ++$index }}</span>
-                                        <input type="text" value="{{ $answer->answer_laos }}">
-                                    </label>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
+{{--                        <div id="answer_laos">--}}
+{{--                            @foreach($survey_answers as $index => $answer)--}}
+{{--                                <div class="item">--}}
+{{--                                    <label>--}}
+{{--                                        <span>{{ __('home.Answer') }} {{ ++$index }}</span>--}}
+{{--                                        <input type="text" value="{{ $answer->answer_laos }}">--}}
+{{--                                    </label>--}}
+{{--                                </div>--}}
+{{--                            @endforeach--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
                 </div>
 
                 <div class="text-center mt-3">
@@ -175,10 +175,10 @@
     </div>
 
     <script>
-        let accessToken = `Bearer ` + token;
-        let headers = {
-            "Authorization": accessToken
-        };
+        // let accessToken = `Bearer ` + token;
+        // let headers = {
+        //     "Authorization": accessToken
+        // };
         const maxAnswer = 10;
 
         let arrayAnswerId = @json($answerIds)
@@ -302,9 +302,9 @@
                 alert("Number of answers isn't greater than 10");
             } else {
                 n++;
-                $('#answer_vi').append("<div class='item'><label><span>{{ __('home.Answer') }} " + n + "</span> <input type='text'></label> <a href='javascript:void(0)' class='del'>{{ __('home.Delete') }}</a></div>");
-                $('#answer_en').append("<div class='item'><label><span>{{ __('home.Answer') }} " + n + "</span> <input type='text'></label> <a href='javascript:void(0)' class='del'>{{ __('home.Delete') }}</a></div>");
-                $('#answer_laos').append("<div class='item'><label><span>{{ __('home.Answer') }} " + n + "</span> <input type='text'></label> <a href='javascript:void(0)' class='del'>{{ __('home.Delete') }}</a></div>");
+                $('#answer_vi').append("<div class='item d-flex'><label><span>{{ __('home.Answer') }} " + n + "</span> <input type='text'></label> <a href='javascript:void(0)' class='del'>{{ __('home.Delete') }}</a></div>");
+                {{--$('#answer_en').append("<div class='item'><label><span>{{ __('home.Answer') }} " + n + "</span> <input type='text'></label> <a href='javascript:void(0)' class='del'>{{ __('home.Delete') }}</a></div>");--}}
+                {{--$('#answer_laos').append("<div class='item'><label><span>{{ __('home.Answer') }} " + n + "</span> <input type='text'></label> <a href='javascript:void(0)' class='del'>{{ __('home.Delete') }}</a></div>");--}}
             }
         }
 

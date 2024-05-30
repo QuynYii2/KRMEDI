@@ -44,10 +44,10 @@
     </table>
 
     <script>
-        let accessToken = `Bearer ` + token;
-        let headers = {
-            "Authorization": accessToken
-        };
+        // let accessToken = `Bearer ` + token;
+        // let headers = {
+        //     "Authorization": accessToken
+        // };
 
         function confirmDeleteSurvey(id) {
             if (confirm('Are you sure you want to delete!')) {

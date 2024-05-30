@@ -7,7 +7,8 @@
         <!-- Page Heading -->
         <h1 class="h3 mb-4 text-gray-800"> Create User </h1>
         <div class="container-fluid">
-            <form method="POST" autocomplete="off" enctype="multipart/form-data">
+            <form action="{{ route('api.admin.users.create') }}" method="POST" autocomplete="off" enctype="multipart/form-data">
+                @csrf
                 <div class="row">
                     <div class="col-md-4 form-group">
                         <label class="form-control-label" for="username">{{ __('home.Username') }}
@@ -152,7 +153,7 @@
                 <div class="pl-md-4 mt-4">
                     <div class="row">
                         <div class="col text-center">
-                            <button type="button" id="btnCreateUser"
+                            <button type="submit" id="btnCreateUser"
                                     class="btn btn-primary">{{ __('home.create') }}</button>
                         </div>
                     </div>
@@ -161,10 +162,10 @@
         </div>
     </div>
     <script>
-        let accessToken = `Bearer ` + token;
-        let headers = {
-            "Authorization": accessToken
-        };
+        // let accessToken = `Bearer ` + token;
+        // let headers = {
+        //     "Authorization": accessToken
+        // };
 
         $(document).ready(function () {
             $('#type').on('change', function () {
@@ -201,93 +202,7 @@
                 }
                 $('#member').empty().append(html);
             })
-
-            $('#btnCreateUser').on('click', function () {
-                createUser();
-            })
         })
-    </script>
-    {{-- Create new user --}}
-    <script>
-        async function createUser() {
-            const formData = new FormData();
-
-            let checking = true;
-
-            const array_default = ['username', 'name', 'last_name',
-                'email', 'phone', 'password', 'passwordConfirm',
-                'detail_address', 'detail_address_en', 'detail_address_laos',
-                'province_id', 'district_id', 'commune_id', 'address_code',
-                'type', 'member', 'status',]
-
-            const array_empty_normal = ['medical_history',]
-
-            const array_medical = ['specialty', 'specialty_en', 'specialty_laos','identifier',
-                'service', 'service_en', 'service_laos', "workspace",
-                'service_price', 'service_price_en', 'service_price_laos',
-                'time_working_1', 'time_working_2', 'apply_for',
-                'department_id', 'year_of_experience',]
-
-            const array_empty_medical = ['prescription', 'free',]
-
-            let avt = $('#avt')[0].files[0];
-            formData.append('avt', avt);
-
-            let isValid = true
-            /* Tạo fn appendDataForm ở admin blade*/
-            isValid = appendDataForm(array_default, formData, isValid);
-
-            if ($('#type').val() === 'MEDICAL') {
-                isValid = appendDataForm(array_medical, formData, isValid);
-
-                let file_upload = $('#file_upload')[0].files[0];
-                if (!file_upload) {
-                    isValid = false;
-                    checking = false;
-                }
-                formData.append('file_upload', file_upload);
-
-                array_empty_medical.forEach(field => {
-                    let checked = document.getElementById(field).checked;
-                    if (checked) {
-                        formData.append(field, $(`#${field}`).val());
-                    }
-                });
-            }
-
-            array_empty_normal.forEach(field => {
-                formData.append(field, $(`#${field}`).val());
-            });
-
-            let createUserUrl = `{{ route('api.admin.users.create') }}`;
-            if (!isValid) {
-                if (!checking) {
-                    alert('Please upload your license!')
-                }
-                return;
-            }
-
-            try {
-                await $.ajax({
-                    url: createUserUrl,
-                    method: 'POST',
-                    headers: headers,
-                    contentType: false,
-                    cache: false,
-                    processData: false,
-                    data: formData,
-                    success: function (response) {
-                        alert('Create success!');
-                        window.location.href = `{{ route('view.admin.user.list') }}`;
-                    },
-                    error: function (error) {
-                        alert(error.responseJSON.message);
-                    }
-                });
-            } catch (e) {
-                alert('Create error!');
-            }
-        }
     </script>
     {{-- Append form element follow type account --}}
     <script>
