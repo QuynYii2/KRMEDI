@@ -11,7 +11,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="zalo-platform-site-verification" content="RjwYAelHAo9i-9uSliWqHdtPltwHhsmbCZaq" />
     <title>@yield('title')</title>
 
