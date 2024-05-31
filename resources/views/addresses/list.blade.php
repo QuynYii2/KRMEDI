@@ -5,46 +5,48 @@
 @section('main-content')
     <h3 class="text-center">   {{ __('home.List Address') }}</h3>
     <a href="{{ route('view.user.address.create') }}" class="btn btn-primary mb-3">{{ __('home.create') }}</a>
-    <table class="table table-striped table-responsive text-nowrap" id="tableAddressManagement">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">{{ __('home.Username') }}</th>
-            <th scope="col">{{ __('home.PhoneNumber') }}</th>
-            <th scope="col">{{ __('home.Province') }}</th>
-            <th scope="col">{{ __('home.District') }}</th>
-            <th scope="col">{{ __('home.Commune') }}</th>
-            <th scope="col">{{ __('home.Addresses') }}</th>
-            <th scope="col">{{ __('home.Default') }}</th>
-            <th scope="col">{{ __('home.Action') }}</th>
-        </tr>
-        </thead>
-        <tbody id="tbodyTableAddressManagement">
-        @foreach($addresses as $address)
+    <div class="table-responsive">
+        <table class="table table-striped text-nowrap" id="tableAddressManagement">
+            <thead>
             <tr>
-                <th scope="row">{{ $loop->index + 1 }}</th>
-                <td>{{ $address->username }}</td>
-                <td>{{ $address->phone }}</td>
-                <td>{{ $address->provinces_name }}</td>
-                <td>{{ $address->districts_name }}</td>
-                <td>{{ $address->communes_name }}</td>
-                <td>{{ $address->address_detail }}</td>
-                <td>{{ $address->is_default }}</td>
-
-                <td>
-                    <div class="d-flex align-items-center">
-                        <a href="{{ route('view.user.address.detail', $address->id) }}" class="btn btn-primary">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                        </a>
-                        <button onclick="confirmDeleteAddress('{{ $address->id }}')" class="btn btn-danger">
-                            <i class="fa-regular fa-trash-can"></i>
-                        </button>
-                    </div>
-                </td>
+                <th scope="col">#</th>
+                <th scope="col">{{ __('home.Username') }}</th>
+                <th scope="col">{{ __('home.PhoneNumber') }}</th>
+                <th scope="col">{{ __('home.Province') }}</th>
+                <th scope="col">{{ __('home.District') }}</th>
+                <th scope="col">{{ __('home.Commune') }}</th>
+                <th scope="col">{{ __('home.Addresses') }}</th>
+                <th scope="col">{{ __('home.Default') }}</th>
+                <th scope="col">{{ __('home.Action') }}</th>
             </tr>
-        @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody id="tbodyTableAddressManagement">
+            @foreach($addresses as $address)
+                <tr>
+                    <th scope="row">{{ $loop->index + 1 }}</th>
+                    <td>{{ $address->username }}</td>
+                    <td>{{ $address->phone }}</td>
+                    <td>{{ $address->provinces_name }}</td>
+                    <td>{{ $address->districts_name }}</td>
+                    <td>{{ $address->communes_name }}</td>
+                    <td>{{ $address->address_detail }}</td>
+                    <td>{{ $address->is_default }}</td>
+
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <a href="{{ route('view.user.address.detail', $address->id) }}" class="btn btn-primary">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+                            <button onclick="confirmDeleteAddress('{{ $address->id }}')" class="btn btn-danger">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+    </div>
 
     <script>
         // let accessToken = `Bearer ` + token;
