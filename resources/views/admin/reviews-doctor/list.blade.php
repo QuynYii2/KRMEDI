@@ -4,20 +4,22 @@
 @endsection
 @section('main-content')
     <h3 class="text-center">{{ __('home.Review Doctor Management') }}</h3>
-    <table class="table" id="tableReviewsDoctorManagement">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">{{ __('home.Title') }}</th>
-            <th scope="col">{{ __('home.Star') }}</th>
-            <th scope="col">{{ __('home.Parent') }}</th>
-            <th scope="col">{{ __('home.Status') }}</th>
-            <th scope="col">{{ __('home.Action') }}</th>
-        </tr>
-        </thead>
-        <tbody id="tbodyTableReviewsDoctorManagement">
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table class="table text-nowrap" id="tableReviewsDoctorManagement">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">{{ __('home.Title') }}</th>
+                <th scope="col">{{ __('home.Star') }}</th>
+                <th scope="col">{{ __('home.Parent') }}</th>
+                <th scope="col">{{ __('home.Status') }}</th>
+                <th scope="col">{{ __('home.Action') }}</th>
+            </tr>
+            </thead>
+            <tbody id="tbodyTableReviewsDoctorManagement">
+            </tbody>
+        </table>
+    </div>
 
     <script>
         // let accessToken = `Bearer ` + token;

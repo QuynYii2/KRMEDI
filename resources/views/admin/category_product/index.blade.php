@@ -18,42 +18,45 @@
         </div>
     @endif
 
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th scope="col">STT</th>
-            <th scope="col">{{ __('home.Tên category') }}</th>
-            <th scope="col">{{ __('home.Trạng thái') }}</th>
-            <th scope="col">{{ __('home.Thao tác') }}</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach($categoryProducts as $index => $categoryProduct)
+    <div class="table-responsive">
+        <table class="table table-striped text-nowrap">
+            <thead>
             <tr>
-                <th scope="row">{{ ++$index }}</th>
-                <td>
-                    @if(locationHelper() == 'vi')
-                        {{ $categoryProduct->name }}
-                    @else
-                        {{ $categoryProduct->name_en }}
-                    @endif
-                </td>
-                <td>{{ $categoryProduct->status == 1 ? 'Active' : ($categoryProduct->status == 0 ? 'Inactive' : '') }}</td>
-                <td>
-                    <a href="{{ route('api.backend.category-product.edit', ['id' => $categoryProduct->id]) }}"
-                       class="btn btn-primary">{{ __('home.Edit') }}</a>
-                    <button type="button" onclick="deleteCategoryProduct({{ $categoryProduct->id }})"
-                            class="btn btn-danger">{{ __('home.Delete') }}
-                    </button>
-                </td>
+                <th scope="col">STT</th>
+                <th scope="col">{{ __('home.Tên category') }}</th>
+                <th scope="col">{{ __('home.Trạng thái') }}</th>
+                <th scope="col">{{ __('home.Thao tác') }}</th>
             </tr>
-        @endforeach
+            </thead>
+            <tbody>
+            @foreach($categoryProducts as $index => $categoryProduct)
+                <tr>
+                    <th scope="row">{{ ++$index }}</th>
+                    <td>
+                        @if(locationHelper() == 'vi')
+                            {{ $categoryProduct->name }}
+                        @else
+                            {{ $categoryProduct->name_en }}
+                        @endif
+                    </td>
+                    <td>{{ $categoryProduct->status == 1 ? 'Active' : ($categoryProduct->status == 0 ? 'Inactive' : '') }}</td>
+                    <td>
+                        <a href="{{ route('api.backend.category-product.edit', ['id' => $categoryProduct->id]) }}"
+                           class="btn btn-primary">{{ __('home.Edit') }}</a>
+                        <button type="button" onclick="deleteCategoryProduct({{ $categoryProduct->id }})"
+                                class="btn btn-danger">{{ __('home.Delete') }}
+                        </button>
+                    </td>
+                </tr>
+            @endforeach
 
-        </tbody>
-    </table>
-    <div class="d-flex justify-content-center align-items-center">
-        {{$categoryProducts->links()}}
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-center align-items-center">
+            {{$categoryProducts->links()}}
+        </div>
     </div>
+
     <script>
 
         function deleteCategoryProduct(id) {

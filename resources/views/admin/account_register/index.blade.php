@@ -18,49 +18,51 @@
             </button>
         </div>
     @endif
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th scope="col">STT</th>
-            <th scope="col">{{ __('home.Username') }}</th>
-            <th scope="col">{{ __('home.Email') }}</th>
-            <th scope="col">{{ __('home.type') }}</th>
-            <th scope="col">{{ __('home.Member') }}</th>
-            <th scope="col">{{ __('home.Status') }}</th>
-            <th scope="col">{{ __('home.Thao tác') }}</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach($users as $user)
+    <div class="table-responsive">
+        <table class="table table-striped text-nowrap">
+            <thead>
             <tr>
-                <th scope="row">{{ $loop->index + 1 }}</th>
-                <td>{{ $user->username }}</td>
-                <td>{{ $user->email }}</td>
-                <td>{{ $user->type }}</td>
-                <td>{{ User::getMemberNameByID($user->id) }}</td>
-                <td>{{ $user->status }}</td>
-                <td>
-                    @if($user->business_license_img || $user->medical_license_img)
-                        <a href="{{ asset($user->business_license_img ?? $user->medical_license_img) }}"
-                           class="btn btn-info" target="_blank">{{ __('home.View License') }}
-                        </a>
-                    @else
-                        <button type="button" onclick="alertMessage()"
-                                class="btn btn-info">{{ __('home.View License') }}</button>
-                    @endif
-                    <button onclick="updateUser('{{ $user->id }}', '{{ UserStatus::BLOCKED }}')"
-                            class="btn btn-danger">{{ __('home.Reject') }}
-                    </button>
-                    <button onclick="updateUser('{{ $user->id }}', '{{ UserStatus::ACTIVE }}')"
-                            class="btn btn-primary">{{ __('home.Approve') }}
-                    </button>
-                </td>
+                <th scope="col">STT</th>
+                <th scope="col">{{ __('home.Username') }}</th>
+                <th scope="col">{{ __('home.Email') }}</th>
+                <th scope="col">{{ __('home.type') }}</th>
+                <th scope="col">{{ __('home.Member') }}</th>
+                <th scope="col">{{ __('home.Status') }}</th>
+                <th scope="col">{{ __('home.Thao tác') }}</th>
             </tr>
-        @endforeach
-        </tbody>
-    </table>
-    <div class="d-flex justify-content-center align-items-center">
-        {{$users->links()}}
+            </thead>
+            <tbody>
+            @foreach($users as $user)
+                <tr>
+                    <th scope="row">{{ $loop->index + 1 }}</th>
+                    <td>{{ $user->username }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td>{{ $user->type }}</td>
+                    <td>{{ User::getMemberNameByID($user->id) }}</td>
+                    <td>{{ $user->status }}</td>
+                    <td>
+                        @if($user->business_license_img || $user->medical_license_img)
+                            <a href="{{ asset($user->business_license_img ?? $user->medical_license_img) }}"
+                               class="btn btn-info" target="_blank">{{ __('home.View License') }}
+                            </a>
+                        @else
+                            <button type="button" onclick="alertMessage()"
+                                    class="btn btn-info">{{ __('home.View License') }}</button>
+                        @endif
+                        <button onclick="updateUser('{{ $user->id }}', '{{ UserStatus::BLOCKED }}')"
+                                class="btn btn-danger">{{ __('home.Reject') }}
+                        </button>
+                        <button onclick="updateUser('{{ $user->id }}', '{{ UserStatus::ACTIVE }}')"
+                                class="btn btn-primary">{{ __('home.Approve') }}
+                        </button>
+                    </td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-center align-items-center">
+            {{$users->links()}}
+        </div>
     </div>
     <script>
         async function updateUser(id, value) {

@@ -16,35 +16,38 @@
         </div>
     @endif
 
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th scope="col">STT</th>
-            <th scope="col">{{ __('home.Name') }} </th>
-            <th scope="col">{{ __('home.name_en') }}</th>
-            <th scope="col">{{ __('home.name_laos') }}</th>
-            <th scope="col">{{ __('home.Thao tác') }} </th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach($serviceClinics as $index => $serviceClinic)
+    <div class="table-responsive">
+        <table class="table table-striped text-nowrap">
+            <thead>
             <tr>
-                <th scope="row">{{ $index + 1 }}</th>
-                <td>{{ $serviceClinic->name }}</td>
-                <td>{{ $serviceClinic->name_en }}</td>
-                <td>{{ $serviceClinic->name_laos }}</td>
-                <td>
-                    <a href="{{ route('api.backend.service-clinic-pharmacy.edit', ['id' => $serviceClinic->id]) }}" class="btn btn-primary">{{ __('home.Sửa') }} </a>
-                    <button onclick="deleteRecord({{ $serviceClinic->id }})" class="btn btn-danger">{{ __('home.Delete') }} </button>
-                </td>
+                <th scope="col">STT</th>
+                <th scope="col">{{ __('home.Name') }} </th>
+                <th scope="col">{{ __('home.name_en') }}</th>
+                <th scope="col">{{ __('home.name_laos') }}</th>
+                <th scope="col">{{ __('home.Thao tác') }} </th>
             </tr>
-        @endforeach
+            </thead>
+            <tbody>
+            @foreach($serviceClinics as $index => $serviceClinic)
+                <tr>
+                    <th scope="row">{{ $index + 1 }}</th>
+                    <td>{{ $serviceClinic->name }}</td>
+                    <td>{{ $serviceClinic->name_en }}</td>
+                    <td>{{ $serviceClinic->name_laos }}</td>
+                    <td>
+                        <a href="{{ route('api.backend.service-clinic-pharmacy.edit', ['id' => $serviceClinic->id]) }}" class="btn btn-primary">{{ __('home.Sửa') }} </a>
+                        <button onclick="deleteRecord({{ $serviceClinic->id }})" class="btn btn-danger">{{ __('home.Delete') }} </button>
+                    </td>
+                </tr>
+            @endforeach
 
-        </tbody>
-    </table>
-    <div class="align-items-center justify-content-center d-flex">
-        {{$serviceClinics->links()}}
+            </tbody>
+        </table>
+        <div class="align-items-center justify-content-center d-flex">
+            {{$serviceClinics->links()}}
+        </div>
     </div>
+
     <script>
 
         function deleteRecord(id) {

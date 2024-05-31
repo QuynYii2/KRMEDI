@@ -5,8 +5,8 @@
 @section('main-content')
     <!-- Page Heading -->
     <h1 class="h3 mb-4 text-gray-800">{{ __('home.List products') }}</h1>
-    <div class="container-fluid">
-        <table class="table">
+    <div class="container-fluid table-responsive">
+        <table class="table text-nowrap">
             <thead>
             <tr>
                 <th scope="col">#</th>

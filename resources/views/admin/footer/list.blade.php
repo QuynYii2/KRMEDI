@@ -10,15 +10,16 @@
             <a href="{{route('view.admin.footer.create')}}" class="btn btn-primary mb-3">Thêm mới</a>
         </div>
         <br>
-        <table class="table" id="tableListUser">
-            <thead>
-            <tr>
-                <th scope="col">STT</th>
-                <th scope="col">Tiêu đề</th>
-                <th scope="col">Hoạt động</th>
-            </tr>
-            </thead>
-            <tbody id="tbodyListUser">
+        <div class="table-responsive">
+            <table class="table text-nowrap" id="tableListUser">
+                <thead>
+                <tr>
+                    <th scope="col">STT</th>
+                    <th scope="col">Tiêu đề</th>
+                    <th scope="col">Hoạt động</th>
+                </tr>
+                </thead>
+                <tbody id="tbodyListUser">
                 @foreach($listData as $index => $val)
                     <tr>
                         <td>{{$index+1}}</td>
@@ -34,9 +35,11 @@
                             </div>
                         </td>
                     </tr>
-                    @endforeach
-            </tbody>
-        </table>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+
     </div>
     <script>
         let accessToken = `Bearer ` + token;

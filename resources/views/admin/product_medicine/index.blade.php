@@ -19,58 +19,61 @@
             </button>
         </div>
     @endif
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th scope="col">STT</th>
-            <th scope="col">{{ __('home.Tên sản phẩm') }}</th>
-            <th scope="col">{{ __('home.Ảnh thumb') }}</th>
-            <th scope="col">{{ __('home.Object') }}</th>
-            <th scope="col">{{ __('home.Filter') }}</th>
-            <th scope="col">{{ __('home.Category') }}</th>
-            <th scope="col">{{ __('home.Trạng thái') }}</th>
-            <th scope="col">{{ __('home.Thao tác') }}</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach($productMedicines as $index => $productMedicine)
+    <div class="table-responsive">
+        <table class="table table-striped text-nowrap">
+            <thead>
             <tr>
-                <th scope="row">{{ $index + 1 }}</th>
-                <td>
-                    @if(locationHelper() == 'vi')
-                        {{ $productMedicine->name }}
-                    @else
-                        {{ $productMedicine->name_en }}
-                    @endif
-                </td>
-                <td><img loading="lazy" src="{{ $productMedicine->thumb }}" alt="" width="100px"></td>
-                <td>
-                    @if($productMedicine->object_)
-                        {{ ObjectOnlineMedicine::NAME_EN[$productMedicine->object_] }}
-                    @endif
-                </td>
-                <td>
-                    @if($productMedicine->object_)
-                        {{ FilterOnlineMedicine::NAME_EN[$productMedicine->filter_] }}
-                    @endif
-                </td>
-                <td>{{ $productMedicine->category_id }}</td>
-                <td>{{ $productMedicine->status }}</td>
-                <td>
-                    <a href="{{ route('api.backend.product-medicine.edit', ['id' => $productMedicine->id]) }}"
-                       class="btn btn-primary">{{ __('home.Edit') }}</a>
-                    <button onclick="deleteCategoryProduct({{ $productMedicine->id }})"
-                            class="btn btn-danger">{{ __('home.Delete') }}
-                    </button>
-                </td>
+                <th scope="col">STT</th>
+                <th scope="col">{{ __('home.Tên sản phẩm') }}</th>
+                <th scope="col">{{ __('home.Ảnh thumb') }}</th>
+                <th scope="col">{{ __('home.Object') }}</th>
+                <th scope="col">{{ __('home.Filter') }}</th>
+                <th scope="col">{{ __('home.Category') }}</th>
+                <th scope="col">{{ __('home.Trạng thái') }}</th>
+                <th scope="col">{{ __('home.Thao tác') }}</th>
             </tr>
-        @endforeach
+            </thead>
+            <tbody>
+            @foreach($productMedicines as $index => $productMedicine)
+                <tr>
+                    <th scope="row">{{ $index + 1 }}</th>
+                    <td>
+                        @if(locationHelper() == 'vi')
+                            {{ $productMedicine->name }}
+                        @else
+                            {{ $productMedicine->name_en }}
+                        @endif
+                    </td>
+                    <td><img loading="lazy" src="{{ $productMedicine->thumb }}" alt="" width="100px"></td>
+                    <td>
+                        @if($productMedicine->object_)
+                            {{ ObjectOnlineMedicine::NAME_EN[$productMedicine->object_] }}
+                        @endif
+                    </td>
+                    <td>
+                        @if($productMedicine->object_)
+                            {{ FilterOnlineMedicine::NAME_EN[$productMedicine->filter_] }}
+                        @endif
+                    </td>
+                    <td>{{ $productMedicine->category_id }}</td>
+                    <td>{{ $productMedicine->status }}</td>
+                    <td>
+                        <a href="{{ route('api.backend.product-medicine.edit', ['id' => $productMedicine->id]) }}"
+                           class="btn btn-primary">{{ __('home.Edit') }}</a>
+                        <button onclick="deleteCategoryProduct({{ $productMedicine->id }})"
+                                class="btn btn-danger">{{ __('home.Delete') }}
+                        </button>
+                    </td>
+                </tr>
+            @endforeach
 
-        </tbody>
-    </table>
-    <div class="d-flex justify-content-center align-items-center">
-        {{$productMedicines->links()}}
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-center align-items-center">
+            {{$productMedicines->links()}}
+        </div>
     </div>
+
     <script>
 
         function deleteCategoryProduct(id) {

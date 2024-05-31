@@ -5,21 +5,24 @@
 @section('main-content')
     <h3 class="text-center">{{ __('home.Category Management') }}</h3>
     <a href="{{ route('view.admin.category.create') }}" class="btn btn-primary mb-3">{{ __('home.create') }}</a>
-    <table class="table table-striped" id="tableCategoryManagement">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">{{ __('home.Title') }}</th>
-            <th scope="col">{{ __('home.Description') }}</th>
-            <th scope="col">{{ __('home.Parent') }}</th>
-            <th scope="col">{{ __('home.Status') }}</th>
-            <th scope="col">{{ __('home.Action') }}</th>
-        </tr>
-        </thead>
-        <tbody id="tbodyTableCategoryManagement">
+    <div class="table-responsive">
+        <table class="table table-striped text-nowrap" id="tableCategoryManagement">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">{{ __('home.Title') }}</th>
+                <th scope="col">{{ __('home.Description') }}</th>
+                <th scope="col">{{ __('home.Parent') }}</th>
+                <th scope="col">{{ __('home.Status') }}</th>
+                <th scope="col">{{ __('home.Action') }}</th>
+            </tr>
+            </thead>
+            <tbody id="tbodyTableCategoryManagement">
 
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
+
 
     <script>
         let accessToken = `Bearer ` + token;

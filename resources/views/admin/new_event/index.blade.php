@@ -16,42 +16,45 @@
         </div>
     @endif
 
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th scope="col">STT</th>
-            <th scope="col">{{ __('home.Tiêu đề') }}</th>
-            <th scope="col">{{ __('home.người tạo') }}</th>
-            <th scope="col">{{ __('home.Trạng thái') }}</th>
-            <th scope="col">{{ __('home.Thao tác') }}</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach($listNewEvent as $index => $newEvent)
+    <div class="table-responsive">
+        <table class="table table-striped text-nowrap">
+            <thead>
             <tr>
-                <th scope="row">{{ ++$index }}</th>
-                <td>
-                    @if(locationHelper() == 'vi')
-                        {{ $newEvent->title }}
-                    @else
-                        {{ $newEvent->title_en }}
-                    @endif
-                </td>
-                <td>{{ $newEvent->user_id }}</td>
-                <td>{{ $newEvent->status }}</td>
-                <td class="d-flex">
-                    <a href="{{ route('api.new-event.edit', ['id' => $newEvent->id]) }}"
-                       class="btn btn-primary mr-2">{{ __('home.Edit') }}</a>
-                    <button type="button" class="btn btn-danger" onclick="deleteNewEvent({{ $newEvent->id }})">{{ __('home.Delete') }}
-                    </button>
-                </td>
+                <th scope="col">STT</th>
+                <th scope="col">{{ __('home.Tiêu đề') }}</th>
+                <th scope="col">{{ __('home.người tạo') }}</th>
+                <th scope="col">{{ __('home.Trạng thái') }}</th>
+                <th scope="col">{{ __('home.Thao tác') }}</th>
             </tr>
-        @endforeach
-        </tbody>
-    </table>
-    <div class="d-flex justify-content-center align-items-center">
-        {{$listNewEvent->links()}}
+            </thead>
+            <tbody>
+            @foreach($listNewEvent as $index => $newEvent)
+                <tr>
+                    <th scope="row">{{ ++$index }}</th>
+                    <td>
+                        @if(locationHelper() == 'vi')
+                            {{ $newEvent->title }}
+                        @else
+                            {{ $newEvent->title_en }}
+                        @endif
+                    </td>
+                    <td>{{ $newEvent->user_id }}</td>
+                    <td>{{ $newEvent->status }}</td>
+                    <td class="d-flex">
+                        <a href="{{ route('api.new-event.edit', ['id' => $newEvent->id]) }}"
+                           class="btn btn-primary mr-2">{{ __('home.Edit') }}</a>
+                        <button type="button" class="btn btn-danger" onclick="deleteNewEvent({{ $newEvent->id }})">{{ __('home.Delete') }}
+                        </button>
+                    </td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-center align-items-center">
+            {{$listNewEvent->links()}}
+        </div>
     </div>
+
     <script>
 
         function deleteNewEvent(id) {

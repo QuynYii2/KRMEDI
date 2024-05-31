@@ -15,18 +15,21 @@
                 </button>
             </div>
         @endif
-        <table class="table" id="tableListService">
-            <thead>
-            <tr>
-                <th scope="col">{{ __('home.Name') }}</th>
-                <th scope="col">{{ __('home.Status') }}</th>
-                <th scope="col">{{ __('home.Active') }}</th>
-            </tr>
-            </thead>
-            <tbody id="tbodyListService">
+        <div class="table-responsive">
+            <table class="table text-nowrap" id="tableListService">
+                <thead>
+                <tr>
+                    <th scope="col">{{ __('home.Name') }}</th>
+                    <th scope="col">{{ __('home.Status') }}</th>
+                    <th scope="col">{{ __('home.Active') }}</th>
+                </tr>
+                </thead>
+                <tbody id="tbodyListService">
 
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
+
     </div>
     <script>
         let accessToken = `Bearer ` + token;

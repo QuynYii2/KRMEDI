@@ -28,6 +28,12 @@
         font-size: 20px;
         font-weight: 600;
     }
+    @media (max-width: 767px) {
+        .product-name,.product-price{
+            font-size: 16px!important;
+        }
+
+    }
 </style>
 @section('main-content')
     <h3 class="text-center">My Product Favourite</h3>
