@@ -315,6 +315,7 @@ class AdminUserApi extends Controller
         $user->phone = $request->input('phone');
         $user->address_code = $request->input('address_code');
         $user->detail_address = $request->input('detail_address');
+        $user->status = $request->input('status');
 
         if ($request->filled('password')) {
             $user->password = Hash::make($request->input('password'));
