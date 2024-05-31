@@ -123,28 +123,20 @@ class BackendClinicController extends Controller
 
             $nation_id = $request->input('nation_id');
             $province_id = $request->input('province_id');
-            if ($province_id == null) {
-                return response("Province not null!", 400);
-            }
             $district_id = $request->input('district_id');
-            if ($district_id == null) {
-                return response("District not null!", 400);
-            }
             $longitude = $request->input('longitude');
             $latitude = $request->input('latitude');
             $commune_id = $request->input('commune_id');
-            if ($commune_id == null) {
-                return response("Commune not null!", 400);
-            }
             $introduce = $request->input('introduce');
+
             if ($request->hasFile('gallery')) {
                 $galleryPaths = array_map(function ($image) {
                     $itemPath = $image->store('gallery', 'public');
                     return asset('storage/' . $itemPath);
                 }, $request->file('gallery'));
                 $gallery = implode(',', $galleryPaths);
-            } else {
-                return response("Gallery not null!", 400);
+            }else{
+                $gallery = "";
             }
 
             $time_work = $request->input('time_work');
