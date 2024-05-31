@@ -4,14 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Enums\ClinicStatus;
 use App\Enums\CommonType;
+use App\Enums\DepartmentStatus;
 use App\Enums\DoctorDepartmentStatus;
+use App\Enums\ServiceClinicStatus;
+use App\Enums\SymptomStatus;
+use App\Enums\TypeUser;
 use App\Enums\UserStatus;
 use App\Http\Controllers\restapi\MainApi;
+use App\Models\Clinic;
+use App\Models\Department;
 use App\Models\DoctorDepartment;
 use App\Models\Nation;
 use App\Models\Role;
 use App\Models\RoleUser;
+use App\Models\ServiceClinic;
 use App\Models\SocialUser;
+use App\Models\Symptom;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -35,6 +43,11 @@ class ProfileController extends Controller
         $departments = DoctorDepartment::where('status', DoctorDepartmentStatus::ACTIVE)->get();
         $url = route('web.users.my.bookings.detail', Auth::user()->id);
         $qrCodes = QrCode::size(300)->generate($url);
+        $clinic = Clinic::where('user_id', Auth::user()->id)->first();
+        $services = ServiceClinic::where('status', ServiceClinicStatus::ACTIVE)->get();
+        $symptoms = Symptom::where('status', SymptomStatus::ACTIVE)->get();
+        $doctorLists = User::where('member', TypeUser::DOCTORS)->get();
+        $listDepartments = Department::where('status', DepartmentStatus::ACTIVE)->get();
         return view('profile', compact(
             'roles',
             'roleItem',
@@ -43,7 +56,12 @@ class ProfileController extends Controller
             'nations',
             'doctor',
             'departments',
-            'qrCodes'
+            'qrCodes',
+            'clinic',
+            'services',
+            'symptoms',
+            'doctorLists',
+            'listDepartments',
         ));
     }
 
@@ -254,6 +272,65 @@ class ProfileController extends Controller
         }
         $user->is_check_medical_history = $request->has('is_check_medical_history');
 
+        if ($user->type == 'BUSINESS') {
+            $clinic = Clinic::where('user_id', $user->id)->first();
+
+            $gallery = '';
+
+            if ($request->hasFile('gallery')) {
+                $galleryPaths = [];
+
+                // Loop through each uploaded file and store it
+                foreach ($request->file('gallery') as $image) {
+                    $itemPath = $image->store('gallery', 'public');
+                    $galleryPaths[] = asset('storage/' . $itemPath);
+                }
+
+                // Convert the array of paths to a comma-separated string
+                $gallery = implode(',', $galleryPaths);
+            } else if ($clinic) {
+                // If no new files are uploaded, use the existing gallery
+                $gallery = $clinic->gallery;
+            }
+            $nation_id = $request->input('nation_id');
+            $province_id = $request->input('province_id');
+            $district_id = $request->input('district_id');
+            $commune_id = $request->input('commune_id');
+            $address = [
+                'nation_id' => $nation_id,
+                'province_id' => $province_id,
+                'district_id' => $district_id,
+                'commune_id' => $commune_id
+            ];
+            Clinic::updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'name' => $request->input('name'),
+                    'address_detail' => $request->input('detail_address'),
+                    'experience' => $request->input('experienceHospital'),
+                    'introduce' => $request->input('introduce'),
+                    'gallery' => $gallery,
+                    'email' => $request->input('email'),
+                    'time_work' => $request->input('time_work'),
+                    'status' => $request->input('status', 'ACTIVE'),
+                    'type' =>$request->input('type'),
+                    'open_date' => $request->input('open_date'),
+                    'close_date' => $request->input('close_date'),
+                    'service_id' => $request->input('clinics_service'),
+                    'department' => $request->input('departments'),
+                    'symptom' => $request->input('symptoms'),
+                    'emergency' => $request->has('emergency'),
+                    'insurance' => $request->has('insurance'),
+                    'parking' => $request->has('parking'),
+                    'information' => $request->input('hospital_information'),
+                    'facilities' => $request->input('hospital_facilities'),
+                    'equipment' => $request->input('hospital_equipment'),
+                    'costs' => $request->input('costs'),
+                    'representative_doctor' => $request->input('representative_doctor', ''),
+                    'address' => $address,
+                ]
+            );
+        }
         $user->extend = $extendData;
         $user->status = ClinicStatus::ACTIVE;
         $user->save();

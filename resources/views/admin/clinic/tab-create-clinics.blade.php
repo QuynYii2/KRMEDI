@@ -171,69 +171,78 @@
             </button>
         </div>
     @endif
-    <form>
+    <form action="{{route('api.backend.clinics.create')}}" method="POST" enctype="multipart/form-data">
+        @csrf
         <div>
             <div class="row">
                 <div class="col-md-6">
                     <label for="name">{{ __('home.Name') }}</label>
-                    <input type="text" class="form-control" id="name" name="name" required value="">
+                    <input type="text" class="form-control" id="name" name="name"  value="" required>
                 </div>
                 <div class="col-md-6">
                     <label for="phone">{{ __('home.PhoneNumber') }}</label>
-                    <input type="number" class="form-control" id="phone" name="phone" required value="">
+                    <input type="number" class="form-control" id="phone" name="phone"  value="" required>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
                     <label for="email">{{ __('home.Email') }}</label>
-                    <input type="email" class="form-control" id="email" name="email" required value="">
+                    <input type="email" class="form-control" id="email" name="email"  value="" required>
                 </div>
                 <div class="col-sm-6">
                     <label for="address_detail">{{ __('home.địa chỉ chi tiết việt') }}</label>
-                    <input type="text" class="form-control" name="address_detail" id="address_detail" value="">
+                    <input type="text" class="form-control" name="address_detail" id="address_detail" value="" required>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4">
                     <label for="username">{{ __('home.Username') }}</label>
-                    <input type="text" class="form-control" id="username" name="username" required value="">
+                    <input type="text" class="form-control" id="username" name="username"  value="" required>
                 </div>
                 <div class="col-md-4">
                     <label for="password">{{ __('home.Password') }}</label>
-                    <input type="password" class="form-control" id="password" name="password" value="">
+                    <input type="password" class="form-control" id="password" name="password" value="" required>
                 </div>
                 <div class="col-md-4">
                     <label for="passwordConfirm">{{ __('home.Confirm Password') }}</label>
-                    <input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm" value="">
+                    <input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm" value="" required>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-4">
-                    <label for="province_id">{{ __('home.Tỉnh') }}</label>
-                    <select name="province_id" id="province_id" class="form-control">
+                    <div class="form-group focused">
+                        <label for="province_id">{{ __('home.Tỉnh') }}</label>
+                        <select name="province_id" id="province_id" class="form-control"
+                                onchange="callGetAllDistricts(this.value)">
 
-                    </select>
+                        </select>
+                    </div>
                 </div>
                 <div class="col-sm-4">
-                    <label for="district_id">{{ __('home.Quận') }}</label>
-                    <select name="district_id" id="district_id" class="form-control">
-
-                    </select>
+                    <div class="form-group focused">
+                        <label for="district_id">{{ __('home.Quận') }}</label>
+                        <select name="district_id" id="district_id" class="form-control"
+                                onchange="callGetAllCommunes(this.value)">
+                            <option value="">{{ __('home.Chọn quận') }}</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="col-sm-4">
-                    <label for="commune_id">{{ __('home.Xã') }}</label>
-                    <select name="commune_id" id="commune_id" class="form-control">
-
-                    </select>
+                    <div class="form-group focused">
+                        <label for="commune_id">{{ __('home.Xã') }}</label>
+                        <select name="commune_id" id="commune_id" class="form-control">
+                            <option value="">{{ __('home.Chọn xã') }}</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div>
                 <label for="introduce">{{ __('home.introduce') }}</label>
-                <textarea type="text" class="form-control" id="introduce" name="introduce" required></textarea>
+                <textarea type="text" class="form-control" id="introduce" name="introduce" ></textarea>
             </div>
             <div>
                 <label>{{ __('home.gallery') }}</label>
-                <input type="file" class="form-control" id="gallery" name="gallery[]" required multiple
+                <input type="file" class="form-control" id="gallery" name="gallery[]"  multiple
                        accept="image/*">
             </div>
             <div class="row">
@@ -317,7 +326,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <label for="open_date">{{ __('home.open_date') }}</label>
-                    <input type="datetime-local" class="form-control" id="open_date" name="open_date" required value="">
+                    <input type="datetime-local" class="form-control" id="open_date" name="open_date"  value="">
                 </div>
                 <div class="col-md-4">
                     <label for="close_date">{{ __('home.close_date') }}</label>
@@ -499,204 +508,22 @@
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-primary up-date-button mt-4">{{ __('home.Save') }}</button>
+            <button type="submit" class="btn btn-primary up-date-button mt-4">{{ __('home.Save') }}</button>
         </div>
     </form>
 {{--    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDe6qi9czJ2Z6SLnV9sSUzce0nuzhRm3hg"></script>--}}
     {{-- Call api create busniess --}}
     <script>
-        $(document).ready(function () {
-            // Lắng nghe sự kiện onchange của các dropdown tỉnh, huyện, xã
-            $('#province_id, #district_id, #commune_id').on('change', function () {
-                // Gọi hàm để lưu địa chỉ khi có sự thay đổi
-                saveAddressOnChange();
-            });
-
-            function saveAddressOnChange() {
-                // Lấy giá trị từ các dropdown
-                var provinceId = $('#province_id').val();
-                var codeProvinceId = getCodeFromValue(provinceId);
-
-                var districtId = $('#district_id').val();
-                var codeDistrictId = getCodeFromValue(districtId);
-
-                var communeId = $('#commune_id').val();
-                var codeCommuneId = getCodeFromValue(communeId);
-
-                // Lấy địa chỉ chi tiết từ input
-                var detailAddress = $('#address_detail').val();
-
-                // Gộp các giá trị vào một chuỗi cách nhau bởi dấu phẩy
-                var combinedAddress = [detailAddress, codeCommuneId, codeDistrictId, codeProvinceId, 'Việt Nam'].join(',');
-                // Gán giá trị vào input ẩn
-                $('#combined_address').val(combinedAddress);
-                addNewAddress();
-                let latitude = $('#latitude');
-                let longitude = $('#longitude');
-                if (!latitude.val()) {
-                    latitude.val(localStorage.getItem('latitude'))
-                }
-
-                if (!longitude.val()) {
-                    longitude.val(localStorage.getItem('longitude'))
-                }
-            }
-
-            function getCodeFromValue(value) {
-                // Hàm này nhận một giá trị của dropdown và trả về mã code nếu có
-                if (value) {
-                    let myArray = value.split('-');
-                    return myArray.length > 2 ? myArray[2] : '';
-                }
-                return '';
-            }
-        });
-
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('.up-date-button').on('click', function () {
-                const headers = {
-                    'Authorization': `Bearer ${token}`
-                };
-                let province = $('#province_id').val();
-                let myProvince = [];
-                if (province) {
-                    myProvince = province.split('-');
-                }
-
-                let district = $('#district_id').val();
-                let myDistrict = [];
-                if (district) {
-                    myDistrict = district.split('-');
-                }
-
-                let commune = $('#commune_id').val();
-                let myCommune = [];
-                if (commune) {
-                    myCommune = commune.split('-');
-                }
-
-                const formData = new FormData();
-
-                const arrFieldEmpty = [
-                    "hospital_facilities", "hospital_equipment", "hospital_information",
-                ];
-
-                const arrFieldEmptyChecked = [
-                    "emergency", "insurance", "parking",
-                ];
-
-                const arrField = [
-                    "name", "name_en", "name_laos", "phone", "combined_address", "costs",
-                    "username", "password", "passwordConfirm",
-                    "longitude", "latitude", "address_detail", "address_detail_en", "email",
-                    "address_detail_laos", "province_id", "district_id", "commune_id",
-                    "open_date", "close_date", "user_id", "time_work", "type", "status",
-                    "clinics_service", "departments", "symptoms", "representative_doctor",
-                ];
-
-                arrFieldEmptyChecked.forEach(data => {
-                    let checked = document.getElementById(data).checked;
-                    if (checked) {
-                        formData.append(data, $(`#${data}`).val());
-                    }
-                });
-
-                arrFieldEmpty.forEach(data => {
-                    formData.append(data, $(`#${data}`).val());
-                });
-
-                let isValid = true
-                /* Tạo fn appendDataForm ở admin blade */
-                isValid = appendDataForm(arrField, formData, isValid);
-
-                const fieldTextareaTiny = [
-                    'introduce'
-                ];
-
-                fieldTextareaTiny.forEach(fieldTextarea => {
-                    const content = tinymce.get(fieldTextarea).getContent();
-                    if (!content) {
-                        isValid = false;
-                    }
-                    formData.append(fieldTextarea, content);
-                });
-
-                var filedata = document.getElementById("gallery");
-                var i = 0, len = filedata.files.length, img, reader, file;
-                for (i; i < len; i++) {
-                    file = filedata.files[i];
-                    formData.append('gallery[]', file);
-                }
-
-                if (len < 1) {
-                    isValid = false;
-                }
-
-                if (!isValid) {
-                    alert('Please enter input require!')
-                    return;
-                }
-
-                try {
-                    $.ajax({
-                        url: `{{route('api.backend.clinics.create')}}`,
-                        method: 'POST',
-                        headers: headers,
-                        contentType: false,
-                        cache: false,
-                        processData: false,
-                        data: formData,
-                        success: function (response) {
-                            console.log(response);
-                            alert('Create success');
-                            window.location.href = `{{route('homeAdmin.list.clinics')}}`;
-                        },
-                        error: function (xhr) {
-                            if (xhr.status === 400) {
-                                alert(xhr.responseJSON.message);
-                            } else {
-                                alert('Create error, Please try again!');
-                            }
-                        }
-                    });
-                } catch (error) {
-                    console.log(error)
-                    alert('Error, Please try again!');
-                }
-            })
-        })
-    </script>
-    <script>
-        $(document).ready(function () {
-            callGetAllProvince();
-
-            $('#province_id').on('change', function () {
-                let id_code = $(this).val();
-                let myArray = id_code.split('-');
-                let code = myArray[1];
-                callGetAllDistricts(code);
-            })
-
-            $('#district_id').on('change', function () {
-                let id_code = $(this).val();
-                let myArray = id_code.split('-');
-                let code = myArray[1];
-                callGetAllCommunes(code);
-            })
-        })
+        callGetAllProvince();
 
         async function callGetAllProvince() {
-            await $.ajax({
+            $.ajax({
                 url: `{{ route('restapi.get.provinces') }}`,
                 method: 'GET',
-                success: function (response) {
+                success: function(response) {
                     showAllProvince(response);
                 },
-                error: function (exception) {
+                error: function(exception) {
                     console.log(exception);
                 }
             });
@@ -705,13 +532,13 @@
         async function callGetAllDistricts(code) {
             let url = `{{ route('restapi.get.districts', ['code' => ':code']) }}`;
             url = url.replace(':code', code);
-            await $.ajax({
+            $.ajax({
                 url: url,
                 method: 'GET',
-                success: function (response) {
+                success: function(response) {
                     showAllDistricts(response);
                 },
-                error: function (exception) {
+                error: function(exception) {
                     console.log(exception);
                 }
             });
@@ -720,13 +547,13 @@
         async function callGetAllCommunes(code) {
             let url = `{{ route('restapi.get.communes', ['code' => ':code']) }}`;
             url = url.replace(':code', code);
-            await $.ajax({
+            $.ajax({
                 url: url,
                 method: 'GET',
-                success: function (response) {
+                success: function(response) {
                     showAllCommunes(response);
                 },
-                error: function (exception) {
+                error: function(exception) {
                     console.log(exception);
                 }
             });
@@ -734,54 +561,285 @@
 
         function showAllProvince(res) {
             let html = ``;
+            let select = ``;
+            let pro = `{{ $doctor->province_id }}`;
             for (let i = 0; i < res.length; i++) {
                 let data = res[i];
+                if (data.code == pro) {
+                    select = `selected`;
+                } else {
+                    select = ``;
+                }
                 let code = data.code;
-                html = html + `<option class="province province-item" data-code="${code}" value="${data.id}-${data.code}-${data.name}">${data.name}</option>`;
+                html = html +
+                    `<option ${select} class="province province-item" data-code="${code}" value="${data.code}">${data.name}</option>`;
             }
-
             $('#province_id').empty().append(html);
+            callGetAllDistricts($('#province_id').find(':selected').val());
         }
 
         function showAllDistricts(res) {
             let html = ``;
+            let select = ``;
+            let dis = `{{ $doctor->district_id }}`;
             for (let i = 0; i < res.length; i++) {
                 let data = res[i];
-                html = html + `<option class="district district-item" value="${data.id}-${data.code}-${data.name}">${data.name}</option>`;
+                if (data.code == dis) {
+                    select = `selected`;
+                } else {
+                    select = ``;
+                }
+                html = html + `<option ${select} class="district district-item" value="${data.code}">${data.name}</option>`;
             }
             $('#district_id').empty().append(html);
+            callGetAllCommunes($('#district_id').find(':selected').val());
         }
 
         function showAllCommunes(res) {
             let html = ``;
+            let select = ``;
+            let cm = `{{ $doctor->commune_id }}`;
             for (let i = 0; i < res.length; i++) {
                 let data = res[i];
-                html = html + `<option value="${data.id}-${data.code}-${data.name}">${data.name}</option>`;
+                if (data.code == cm) {
+                    select = `selected`;
+                } else {
+                    select = ``;
+                }
+                html = html + `<option ${select} value="${data.code}">${data.name}</option>`;
             }
             $('#commune_id').empty().append(html);
         }
-
-        function addNewAddress() {
-            var newAddress = document.getElementById('combined_address').value;
-
-            if (newAddress) {
-                var geocoder = new google.maps.Geocoder();
-                geocoder.geocode({'address': newAddress}, function (results, status) {
-                    if (status == google.maps.GeocoderStatus.OK) {
-                        var latitude = results[0].geometry.location.lat();
-                        var longitude = results[0].geometry.location.lng();
-
-                        if (!isNaN(latitude) && !isNaN(longitude)) {
-                            $('#latitude').val(latitude);
-                            $('#longitude').val(longitude);
-                        }
-                    } else {
-
-                    }
-                });
-            }
-        }
     </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+{{--    <script>--}}
+{{--        $(document).ready(function () {--}}
+{{--            $('.up-date-button').on('click', function () {--}}
+{{--                const headers = {--}}
+{{--                    'Authorization': `Bearer ${token}`--}}
+{{--                };--}}
+{{--                let province = $('#province_id').val();--}}
+{{--                let myProvince = [];--}}
+{{--                if (province) {--}}
+{{--                    myProvince = province.split('-');--}}
+{{--                }--}}
+
+{{--                let district = $('#district_id').val();--}}
+{{--                let myDistrict = [];--}}
+{{--                if (district) {--}}
+{{--                    myDistrict = district.split('-');--}}
+{{--                }--}}
+
+{{--                let commune = $('#commune_id').val();--}}
+{{--                let myCommune = [];--}}
+{{--                if (commune) {--}}
+{{--                    myCommune = commune.split('-');--}}
+{{--                }--}}
+
+{{--                const formData = new FormData();--}}
+
+{{--                const arrFieldEmpty = [--}}
+{{--                    "hospital_facilities", "hospital_equipment", "hospital_information",--}}
+{{--                ];--}}
+
+{{--                const arrFieldEmptyChecked = [--}}
+{{--                    "emergency", "insurance", "parking",--}}
+{{--                ];--}}
+
+{{--                const arrField = [--}}
+{{--                    "name", "name_en", "name_laos", "phone", "combined_address", "costs",--}}
+{{--                    "username", "password", "passwordConfirm",--}}
+{{--                    "longitude", "latitude", "address_detail", "address_detail_en", "email",--}}
+{{--                    "address_detail_laos", "province_id", "district_id", "commune_id",--}}
+{{--                    "open_date", "close_date", "user_id", "time_work", "type", "status",--}}
+{{--                    "clinics_service", "departments", "symptoms", "representative_doctor",--}}
+{{--                ];--}}
+
+{{--                arrFieldEmptyChecked.forEach(data => {--}}
+{{--                    let checked = document.getElementById(data).checked;--}}
+{{--                    if (checked) {--}}
+{{--                        formData.append(data, $(`#${data}`).val());--}}
+{{--                    }--}}
+{{--                });--}}
+
+{{--                arrFieldEmpty.forEach(data => {--}}
+{{--                    formData.append(data, $(`#${data}`).val());--}}
+{{--                });--}}
+
+{{--                let isValid = true--}}
+{{--                /* Tạo fn appendDataForm ở admin blade */--}}
+{{--                isValid = appendDataForm(arrField, formData, isValid);--}}
+
+{{--                const fieldTextareaTiny = [--}}
+{{--                    'introduce'--}}
+{{--                ];--}}
+
+{{--                fieldTextareaTiny.forEach(fieldTextarea => {--}}
+{{--                    const content = tinymce.get(fieldTextarea).getContent();--}}
+{{--                    if (!content) {--}}
+{{--                        isValid = false;--}}
+{{--                    }--}}
+{{--                    formData.append(fieldTextarea, content);--}}
+{{--                });--}}
+
+{{--                var filedata = document.getElementById("gallery");--}}
+{{--                var i = 0, len = filedata.files.length, img, reader, file;--}}
+{{--                for (i; i < len; i++) {--}}
+{{--                    file = filedata.files[i];--}}
+{{--                    formData.append('gallery[]', file);--}}
+{{--                }--}}
+
+{{--                if (len < 1) {--}}
+{{--                    isValid = false;--}}
+{{--                }--}}
+
+{{--                if (!isValid) {--}}
+{{--                    alert('Please enter input require!')--}}
+{{--                    return;--}}
+{{--                }--}}
+
+{{--                try {--}}
+{{--                    $.ajax({--}}
+{{--                        url: `{{route('api.backend.clinics.create')}}`,--}}
+{{--                        method: 'POST',--}}
+{{--                        headers: headers,--}}
+{{--                        contentType: false,--}}
+{{--                        cache: false,--}}
+{{--                        processData: false,--}}
+{{--                        data: formData,--}}
+{{--                        success: function (response) {--}}
+{{--                            console.log(response);--}}
+{{--                            alert('Create success');--}}
+{{--                            window.location.href = `{{route('homeAdmin.list.clinics')}}`;--}}
+{{--                        },--}}
+{{--                        error: function (xhr) {--}}
+{{--                            if (xhr.status === 400) {--}}
+{{--                                alert(xhr.responseJSON.message);--}}
+{{--                            } else {--}}
+{{--                                alert('Create error, Please try again!');--}}
+{{--                            }--}}
+{{--                        }--}}
+{{--                    });--}}
+{{--                } catch (error) {--}}
+{{--                    console.log(error)--}}
+{{--                    alert('Error, Please try again!');--}}
+{{--                }--}}
+{{--            })--}}
+{{--        })--}}
+{{--    </script>--}}
+{{--    <script>--}}
+{{--        $(document).ready(function () {--}}
+{{--            callGetAllProvince();--}}
+
+{{--            $('#province_id').on('change', function () {--}}
+{{--                let id_code = $(this).val();--}}
+{{--                let myArray = id_code.split('-');--}}
+{{--                let code = myArray[1];--}}
+{{--                callGetAllDistricts(code);--}}
+{{--            })--}}
+
+{{--            $('#district_id').on('change', function () {--}}
+{{--                let id_code = $(this).val();--}}
+{{--                let myArray = id_code.split('-');--}}
+{{--                let code = myArray[1];--}}
+{{--                callGetAllCommunes(code);--}}
+{{--            })--}}
+{{--        })--}}
+
+{{--        async function callGetAllProvince() {--}}
+{{--            await $.ajax({--}}
+{{--                url: `{{ route('restapi.get.provinces') }}`,--}}
+{{--                method: 'GET',--}}
+{{--                success: function (response) {--}}
+{{--                    showAllProvince(response);--}}
+{{--                },--}}
+{{--                error: function (exception) {--}}
+{{--                    console.log(exception);--}}
+{{--                }--}}
+{{--            });--}}
+{{--        }--}}
+
+{{--        async function callGetAllDistricts(code) {--}}
+{{--            let url = `{{ route('restapi.get.districts', ['code' => ':code']) }}`;--}}
+{{--            url = url.replace(':code', code);--}}
+{{--            await $.ajax({--}}
+{{--                url: url,--}}
+{{--                method: 'GET',--}}
+{{--                success: function (response) {--}}
+{{--                    showAllDistricts(response);--}}
+{{--                },--}}
+{{--                error: function (exception) {--}}
+{{--                    console.log(exception);--}}
+{{--                }--}}
+{{--            });--}}
+{{--        }--}}
+
+{{--        async function callGetAllCommunes(code) {--}}
+{{--            let url = `{{ route('restapi.get.communes', ['code' => ':code']) }}`;--}}
+{{--            url = url.replace(':code', code);--}}
+{{--            await $.ajax({--}}
+{{--                url: url,--}}
+{{--                method: 'GET',--}}
+{{--                success: function (response) {--}}
+{{--                    showAllCommunes(response);--}}
+{{--                },--}}
+{{--                error: function (exception) {--}}
+{{--                    console.log(exception);--}}
+{{--                }--}}
+{{--            });--}}
+{{--        }--}}
+
+{{--        function showAllProvince(res) {--}}
+{{--            let html = ``;--}}
+{{--            for (let i = 0; i < res.length; i++) {--}}
+{{--                let data = res[i];--}}
+{{--                let code = data.code;--}}
+{{--                html = html + `<option class="province province-item" data-code="${code}" value="${data.id}-${data.code}-${data.name}">${data.name}</option>`;--}}
+{{--            }--}}
+
+{{--            $('#province_id').empty().append(html);--}}
+{{--        }--}}
+
+{{--        function showAllDistricts(res) {--}}
+{{--            let html = ``;--}}
+{{--            for (let i = 0; i < res.length; i++) {--}}
+{{--                let data = res[i];--}}
+{{--                html = html + `<option class="district district-item" value="${data.id}-${data.code}-${data.name}">${data.name}</option>`;--}}
+{{--            }--}}
+{{--            $('#district_id').empty().append(html);--}}
+{{--        }--}}
+
+{{--        function showAllCommunes(res) {--}}
+{{--            let html = ``;--}}
+{{--            for (let i = 0; i < res.length; i++) {--}}
+{{--                let data = res[i];--}}
+{{--                html = html + `<option value="${data.id}-${data.code}-${data.name}">${data.name}</option>`;--}}
+{{--            }--}}
+{{--            $('#commune_id').empty().append(html);--}}
+{{--        }--}}
+
+{{--        function addNewAddress() {--}}
+{{--            var newAddress = document.getElementById('combined_address').value;--}}
+
+{{--            if (newAddress) {--}}
+{{--                var geocoder = new google.maps.Geocoder();--}}
+{{--                geocoder.geocode({'address': newAddress}, function (results, status) {--}}
+{{--                    if (status == google.maps.GeocoderStatus.OK) {--}}
+{{--                        var latitude = results[0].geometry.location.lat();--}}
+{{--                        var longitude = results[0].geometry.location.lng();--}}
+
+{{--                        if (!isNaN(latitude) && !isNaN(longitude)) {--}}
+{{--                            $('#latitude').val(latitude);--}}
+{{--                            $('#longitude').val(longitude);--}}
+{{--                        }--}}
+{{--                    } else {--}}
+
+{{--                    }--}}
+{{--                });--}}
+{{--            }--}}
+{{--        }--}}
+{{--    </script>--}}
     <script>
         let arrayItem = [];
         let arrayNameCategory = [];

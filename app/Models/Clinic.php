@@ -10,7 +10,31 @@ class Clinic extends Model
     use HasFactory;
 
     protected $table = 'clinics';
-
+    protected $fillable = [
+        'user_id',
+        'name',
+        'address_detail',
+        'experience',
+        'introduce',
+        'gallery',
+        'email',
+        'time_work',
+        'status',
+        'type',
+        'open_date',
+        'close_date',
+        'service_id',
+        'department',
+        'symptom',
+        'emergency',
+        'insurance',
+        'parking',
+        'information',
+        'facilities',
+        'equipment',
+        'costs',
+        'representative_doctor',
+    ];
     public function user()
     {
         return $this->hasMany(User::class);
