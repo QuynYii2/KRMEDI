@@ -177,35 +177,35 @@
             <div class="row">
                 <div class="col-md-6">
                     <label for="name">{{ __('home.Name') }}</label>
-                    <input type="text" class="form-control" id="name" name="name"  value="">
+                    <input type="text" class="form-control" id="name" name="name"  value="" required>
                 </div>
                 <div class="col-md-6">
                     <label for="phone">{{ __('home.PhoneNumber') }}</label>
-                    <input type="number" class="form-control" id="phone" name="phone"  value="">
+                    <input type="number" class="form-control" id="phone" name="phone"  value="" required>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
                     <label for="email">{{ __('home.Email') }}</label>
-                    <input type="email" class="form-control" id="email" name="email"  value="">
+                    <input type="email" class="form-control" id="email" name="email"  value="" required>
                 </div>
                 <div class="col-sm-6">
                     <label for="address_detail">{{ __('home.địa chỉ chi tiết việt') }}</label>
-                    <input type="text" class="form-control" name="address_detail" id="address_detail" value="">
+                    <input type="text" class="form-control" name="address_detail" id="address_detail" value="" required>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4">
                     <label for="username">{{ __('home.Username') }}</label>
-                    <input type="text" class="form-control" id="username" name="username"  value="">
+                    <input type="text" class="form-control" id="username" name="username"  value="" required>
                 </div>
                 <div class="col-md-4">
                     <label for="password">{{ __('home.Password') }}</label>
-                    <input type="password" class="form-control" id="password" name="password" value="">
+                    <input type="password" class="form-control" id="password" name="password" value="" required>
                 </div>
                 <div class="col-md-4">
                     <label for="passwordConfirm">{{ __('home.Confirm Password') }}</label>
-                    <input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm" value="">
+                    <input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm" value="" required>
                 </div>
             </div>
             <div class="row">

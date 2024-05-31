@@ -169,7 +169,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <label for="name">{{ __('home.Name') }}</label>
-                    <input type="text" class="form-control" id="name" name="name" value="{{$clinic->name}}">
+                    <input type="text" class="form-control" id="name" name="name" value="{{$clinic->name}}" required>
                 </div>
             </div>
             <div class="row">
@@ -181,14 +181,14 @@
                 <div class="col-md-6">
                     <label for="email">{{ __('home.Email') }}</label>
                     <input type="email" class="form-control" id="email" name="email"
-                           value="{{$clinic->email}}">
+                           value="{{$clinic->email}}" required>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-12">
                     <label for="address_detail">{{ __('home.địa chỉ chi tiết việt') }}</label>
                     <input type="text" class="form-control" name="address_detail" id="address_detail"
-                           value="{{$clinic->address_detail}}">
+                           value="{{$clinic->address_detail}}" required>
                 </div>
             </div>
             <div class="row">
@@ -579,7 +579,7 @@
         function showAllProvince(res) {
             let html = ``;
             let select = ``;
-            let pro = `{{ $doctor->province_id }}`;
+            let pro = `{{ $provinceId }}`;
             for (let i = 0; i < res.length; i++) {
                 let data = res[i];
                 if (data.code == pro) {
@@ -598,7 +598,7 @@
         function showAllDistricts(res) {
             let html = ``;
             let select = ``;
-            let dis = `{{ $doctor->district_id }}`;
+            let dis = `{{ $districtId }}`;
             for (let i = 0; i < res.length; i++) {
                 let data = res[i];
                 if (data.code == dis) {
@@ -615,7 +615,7 @@
         function showAllCommunes(res) {
             let html = ``;
             let select = ``;
-            let cm = `{{ $doctor->commune_id }}`;
+            let cm = `{{ $communeId }}`;
             for (let i = 0; i < res.length; i++) {
                 let data = res[i];
                 if (data.code == cm) {
