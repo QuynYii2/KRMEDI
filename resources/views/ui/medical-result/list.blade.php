@@ -6,21 +6,23 @@
     <div class="">
         <!-- Page Heading -->
         <h1 class="h3 mb-4 text-gray-800"> {{ __('home.Medical examination results') }} </h1>
-        <table class="table table-responsive text-nowrap" id="tableListMedical">
-            <thead>
-            <tr>
-                <th scope="col">{{ __('home.STT') }}</th>
-                <th scope="col">{{ __('home.Name') }}</th>
-                <th scope="col">{{ __('home.PhoneNumber') }}</th>
-                <th scope="col">{{ __('home.Addresses') }}</th>
-                <th scope="col">{{ __('home.Code') }}</th>
-                <th scope="col">{{ __('home.Service Name') }}</th>
-                <th scope="col">{{ __('home.Action') }}</th>
-            </tr>
-            </thead>
-            <tbody id="tbodyListMedical">
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table text-nowrap" id="tableListMedical">
+                <thead>
+                <tr>
+                    <th scope="col">{{ __('home.STT') }}</th>
+                    <th scope="col">{{ __('home.Name') }}</th>
+                    <th scope="col">{{ __('home.PhoneNumber') }}</th>
+                    <th scope="col">{{ __('home.Addresses') }}</th>
+                    <th scope="col">{{ __('home.Code') }}</th>
+                    <th scope="col">{{ __('home.Service Name') }}</th>
+                    <th scope="col">{{ __('home.Action') }}</th>
+                </tr>
+                </thead>
+                <tbody id="tbodyListMedical">
+                </tbody>
+            </table>
+        </div>
     </div>
     <script>
         // let accessToken = `Bearer ` + token;

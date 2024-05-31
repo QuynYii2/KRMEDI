@@ -12,20 +12,22 @@
             </div>
         </div>
         <br>
-        <table class="table table-responsive text-nowrap" id="tableListPrescription">
-            <thead>
-            <tr>
-                <th scope="col">{{ __('home.STT') }}</th>
-                <th scope="col">{{ __('home.Full Name') }}</th>
-                <th scope="col">{{ __('home.Email') }}</th>
-                <th scope="col">{{ __('home.Username') }}</th>
-                <th scope="col">{{ __('home.Status') }}</th>
-                <th scope="col">{{ __('home.Action') }}</th>
-            </tr>
-            </thead>
-            <tbody id="tbodyListPrescription">
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table text-nowrap" id="tableListPrescription">
+                <thead>
+                <tr>
+                    <th scope="col">{{ __('home.STT') }}</th>
+                    <th scope="col">{{ __('home.Full Name') }}</th>
+                    <th scope="col">{{ __('home.Email') }}</th>
+                    <th scope="col">{{ __('home.Username') }}</th>
+                    <th scope="col">{{ __('home.Status') }}</th>
+                    <th scope="col">{{ __('home.Action') }}</th>
+                </tr>
+                </thead>
+                <tbody id="tbodyListPrescription">
+                </tbody>
+            </table>
+        </div>
     </div>
     <script>
         // let accessToken = `Bearer ` + token;
