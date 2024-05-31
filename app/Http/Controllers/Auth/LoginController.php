@@ -71,6 +71,9 @@ class LoginController extends Controller
                 $response = $user->toArray();
                 $roleUser = RoleUser::where('user_id', $user->id)->first();
                 $role = Role::find($roleUser->role_id);
+                $response['rate'] = (int)$response['rate'];
+                $response['isVerify'] = (int)$response['is_verify'];
+                $response['points'] = (int)$response['points'];
                 $response['role'] = $role->name;
                 $response['accessToken'] = $token;
                 return response()->json($response);
