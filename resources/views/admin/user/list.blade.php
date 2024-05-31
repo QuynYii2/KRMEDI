@@ -13,24 +13,27 @@
             <a href="{{route('view.admin.user.create')}}" class="btn btn-primary mb-3">{{ __('home.Add') }}</a>
         </div>
         <br>
-        <table class="table" id="tableListUser">
-            <thead>
-            <tr>
-                <th scope="col">{{ __('home.STT') }}</th>
-                <th scope="col">{{ __('home.Name') }}</th>
-                <th scope="col">{{ __('home.Last Name') }}</th>
-                <th scope="col">{{ __('home.Username') }}</th>
-                <th scope="col">{{ __('home.Email') }}</th>
-                <th scope="col">{{ __('home.PhoneNumber') }}</th>
-                <th scope="col">{{ __('home.Member') }}</th>
-                <th scope="col">{{ __('home.Type Account') }}</th>
-                <th scope="col">{{ __('home.Status') }}</th>
-                <th scope="col">{{ __('home.Action') }}</th>
-            </tr>
-            </thead>
-            <tbody id="tbodyListUser">
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table text-nowrap" id="tableListUser">
+                <thead>
+                <tr>
+                    <th scope="col">{{ __('home.STT') }}</th>
+                    <th scope="col">{{ __('home.Name') }}</th>
+                    <th scope="col">{{ __('home.Last Name') }}</th>
+                    <th scope="col">{{ __('home.Username') }}</th>
+                    <th scope="col">{{ __('home.Email') }}</th>
+                    <th scope="col">{{ __('home.PhoneNumber') }}</th>
+                    <th scope="col">{{ __('home.Member') }}</th>
+                    <th scope="col">{{ __('home.Type Account') }}</th>
+                    <th scope="col">{{ __('home.Status') }}</th>
+                    <th scope="col">{{ __('home.Action') }}</th>
+                </tr>
+                </thead>
+                <tbody id="tbodyListUser">
+                </tbody>
+            </table>
+        </div>
+
     </div>
     <script>
         // let accessToken = `Bearer ` + token;

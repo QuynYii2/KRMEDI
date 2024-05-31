@@ -4,24 +4,27 @@
 @endsection
 @section('main-content')
     <h3 class="text-center">{{ __('home.Review Management') }}</h3>
-    <table class="table table-striped" id="tableReviewsManagement">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">{{ __('home.Full Name') }}</th>
-            <th scope="col">{{ __('home.Email') }}</th>
-            <th scope="col">{{ __('home.PhoneNumber') }}</th>
-            <th scope="col">{{ __('home.Addresses') }}</th>
-            <th scope="col">{{ __('home.Star') }}</th>
-            <th scope="col">{{ __('home.Content') }}</th>
-            <th scope="col">{{ __('home.Status') }}</th>
-            <th scope="col">{{ __('home.Action') }}</th>
-        </tr>
-        </thead>
-        <tbody id="tbodyTableReviewsManagement">
+    <div class="table-responsive">
+        <table class="table table-striped text-nowrap" id="tableReviewsManagement">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">{{ __('home.Full Name') }}</th>
+                <th scope="col">{{ __('home.Email') }}</th>
+                <th scope="col">{{ __('home.PhoneNumber') }}</th>
+                <th scope="col">{{ __('home.Addresses') }}</th>
+                <th scope="col">{{ __('home.Star') }}</th>
+                <th scope="col">{{ __('home.Content') }}</th>
+                <th scope="col">{{ __('home.Status') }}</th>
+                <th scope="col">{{ __('home.Action') }}</th>
+            </tr>
+            </thead>
+            <tbody id="tbodyTableReviewsManagement">
 
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
+
     <script>
         // let accessToken = `Bearer ` + token;
         // let headers = {

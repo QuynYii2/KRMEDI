@@ -8,8 +8,8 @@
     <h1 class="h3 mb-4 text-gray-800">{{ __('home.List Apply of Coupon') }}</h1>
 
 
-    <div class="">
-        <table class="table table-striped">
+    <div class="table-responsive">
+        <table class="table table-striped text-nowrap">
             <thead>
             <tr>
                 <th scope="col">#</th>

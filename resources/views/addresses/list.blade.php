@@ -5,7 +5,7 @@
 @section('main-content')
     <h3 class="text-center">   {{ __('home.List Address') }}</h3>
     <a href="{{ route('view.user.address.create') }}" class="btn btn-primary mb-3">{{ __('home.create') }}</a>
-    <table class="table table-striped" id="tableAddressManagement">
+    <table class="table table-striped table-responsive text-nowrap" id="tableAddressManagement">
         <thead>
         <tr>
             <th scope="col">#</th>

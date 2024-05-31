@@ -10,27 +10,30 @@
         </div>
     </div>
     <br>
-    <table class="table table-striped" id="tableOrderManagement">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">{{ __('home.Full Name') }}</th>
-            <th scope="col">{{ __('home.Email') }}</th>
-            <th scope="col">{{ __('home.PhoneNumber') }}</th>
-            <th scope="col">{{ __('home.Địa chỉ') }}</th>
-            <th scope="col">{{ __('home.Total Product Price') }}</th>
-            <th scope="col">{{ __('home.Total Shipping Price') }}</th>
-            <th scope="col">{{ __('home.Total Discount Price') }}</th>
-            <th scope="col">{{ __('home.Total Price') }}</th>
-            <th scope="col">{{ __('home.Order Method') }}</th>
-            <th scope="col">{{ __('home.Status') }}</th>
-            <th scope="col">{{ __('home.Action') }}</th>
-        </tr>
-        </thead>
-        <tbody id="tbodyTableOrderManagement">
+    <div class="table-responsive">
+        <table class="table table-striped text-nowrap" id="tableOrderManagement">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">{{ __('home.Full Name') }}</th>
+                <th scope="col">{{ __('home.Email') }}</th>
+                <th scope="col">{{ __('home.PhoneNumber') }}</th>
+                <th scope="col">{{ __('home.Địa chỉ') }}</th>
+                <th scope="col">{{ __('home.Total Product Price') }}</th>
+                <th scope="col">{{ __('home.Total Shipping Price') }}</th>
+                <th scope="col">{{ __('home.Total Discount Price') }}</th>
+                <th scope="col">{{ __('home.Total Price') }}</th>
+                <th scope="col">{{ __('home.Order Method') }}</th>
+                <th scope="col">{{ __('home.Status') }}</th>
+                <th scope="col">{{ __('home.Action') }}</th>
+            </tr>
+            </thead>
+            <tbody id="tbodyTableOrderManagement">
 
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
+
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.11.2/dist/echo.iife.js"></script>
     <script>

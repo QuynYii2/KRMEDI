@@ -6,7 +6,7 @@
     <div class="">
         <!-- Page Heading -->
         <h1 class="h3 mb-4 text-gray-800"> {{ __('home.Medical examination results') }} </h1>
-        <table class="table" id="tableListMedical">
+        <table class="table table-responsive text-nowrap" id="tableListMedical">
             <thead>
             <tr>
                 <th scope="col">{{ __('home.STT') }}</th>

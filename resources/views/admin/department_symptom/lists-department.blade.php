@@ -25,40 +25,43 @@
             </button>
         </div>
     @endif
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th scope="col">{{ __('home.Tên chuyên khoa') }}</th>
-            <th scope="col">{{ __('home.Ảnh đại diện') }}</th>
-            <th scope="col">{{ __('home.Action') }}</th>
-        </tr>
-        </thead>
-        <tbody id="ProductsAdmin">
-        @foreach($departments as $department)
+    <div class="table-responsive">
+        <table class="table table-striped text-nowrap">
+            <thead>
             <tr>
-                <td>
-                    <a href="{{ route('view.admin.department.edit', $department->id) }}">
-                        {{$department->name}}
-                    </a>
-                </td>
-                <td><img src="{{ asset($department->thumbnail) }}" alt="Image" width="50px"></td>
-                <td>
-                   <div class="d-flex align-items-center">
-                       <a href="{{ route('view.admin.department.edit', $department->id) }}" class="btn btn-success">
-                           <i class="fa-solid fa-pen-to-square"></i>
-                       </a>
-                       <button type="button" class="btn btn-danger" onclick="confirmDelete('{{ $department->id }}')">
-                           <i class="fa-regular fa-trash-can"></i>
-                       </button>
-                   </div>
-                </td>
+                <th scope="col">{{ __('home.Tên chuyên khoa') }}</th>
+                <th scope="col">{{ __('home.Ảnh đại diện') }}</th>
+                <th scope="col">{{ __('home.Action') }}</th>
             </tr>
-        @endforeach
-        </tbody>
-    </table>
-    <div class="d-flex justify-content-center align-items-center">
-        {{$departments->links()}}
+            </thead>
+            <tbody id="ProductsAdmin">
+            @foreach($departments as $department)
+                <tr>
+                    <td>
+                        <a href="{{ route('view.admin.department.edit', $department->id) }}">
+                            {{$department->name}}
+                        </a>
+                    </td>
+                    <td><img src="{{ asset($department->thumbnail) }}" alt="Image" width="50px"></td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <a href="{{ route('view.admin.department.edit', $department->id) }}" class="btn btn-success">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+                            <button type="button" class="btn btn-danger" onclick="confirmDelete('{{ $department->id }}')">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-center align-items-center">
+            {{$departments->links()}}
+        </div>
     </div>
+
     <script>
         function confirmDelete(id) {
             if (confirm('Are you sure you want to delete!')) {

@@ -12,7 +12,7 @@
             </div>
         </div>
         <br>
-        <table class="table" id="tableListPrescription">
+        <table class="table table-responsive text-nowrap" id="tableListPrescription">
             <thead>
             <tr>
                 <th scope="col">{{ __('home.STT') }}</th>

@@ -1,6 +1,6 @@
 <link href="{{ asset('css/tablistdoctor.css') }}" rel="stylesheet">
-<div class="">
-    <table class="table table-striped">
+<div class="table-responsive">
+    <table class="table table-striped text-nowrap">
         <thead>
         <tr>
             <th scope="col">#</th>

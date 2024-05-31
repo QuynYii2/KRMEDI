@@ -11,8 +11,8 @@
         </div>
     </div>
     <br>
-    <div class="container-fluid">
-        <table class="table" id="tableMyCoupons">
+    <div class="container-fluid table-responsive">
+        <table class="table text-nowrap" id="tableMyCoupons">
             <thead>
             <tr>
                 <th scope="col">#</th>

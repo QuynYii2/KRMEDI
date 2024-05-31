@@ -25,41 +25,44 @@
             </button>
         </div>
     @endif
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th scope="col">{{ __('home.Tên chuyên khoa') }}</th>
-            <th scope="col">{{ __('home.Ảnh đại diện') }}</th>
-            <th scope="col">{{ __('home.Action') }}</th>
-        </tr>
-        </thead>
-        <tbody id="ProductsAdmin">
-        @foreach($symptoms as $symptom)
+    <div class="table-responsive">
+        <table class="table table-striped text-nowrap">
+            <thead>
             <tr>
-                <td>
-                    <a href="{{ route('symptom.edit', $symptom->id) }}">
-                        {{$symptom->name}}
-                    </a>
-                </td>
-                <td><img loading="lazy" src="{{ asset($symptom->thumbnail) }}" alt="Image" width="50px"></td>
-                <td>
-                    <div class="d-flex align-items-center">
-                        <a href="{{ route('symptom.edit', $symptom->id) }}"
-                           class="btn btn-success">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                        </a>
-                        <button type="button" class="btn btn-danger" onclick="confirmDelete('{{ $symptom->id }}')">
-                            <i class="fa-regular fa-trash-can"></i>
-                        </button>
-                    </div>
-                </td>
+                <th scope="col">{{ __('home.Tên chuyên khoa') }}</th>
+                <th scope="col">{{ __('home.Ảnh đại diện') }}</th>
+                <th scope="col">{{ __('home.Action') }}</th>
             </tr>
-        @endforeach
-        </tbody>
-    </table>
-    <div class="d-flex justify-content-center align-items-center">
-        {{$symptoms->links()}}
+            </thead>
+            <tbody id="ProductsAdmin">
+            @foreach($symptoms as $symptom)
+                <tr>
+                    <td>
+                        <a href="{{ route('symptom.edit', $symptom->id) }}">
+                            {{$symptom->name}}
+                        </a>
+                    </td>
+                    <td><img loading="lazy" src="{{ asset($symptom->thumbnail) }}" alt="Image" width="50px"></td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <a href="{{ route('symptom.edit', $symptom->id) }}"
+                               class="btn btn-success">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+                            <button type="button" class="btn btn-danger" onclick="confirmDelete('{{ $symptom->id }}')">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-center align-items-center">
+            {{$symptoms->links()}}
+        </div>
     </div>
+
     <script>
         function confirmDelete(id) {
             if (confirm('Are you sure you want to delete!')) {

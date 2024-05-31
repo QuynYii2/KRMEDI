@@ -75,40 +75,41 @@
      $users = \App\Models\User::where('status', \App\Enums\UserStatus::ACTIVE)->get();
     @endphp
 
-
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">{{ __('home.First') }}</th>
-            <th scope="col">{{ __('home.Last') }}</th>
-            <th scope="col">{{ __('home.Handle') }}</th>
-        </tr>
-        </thead>
-        <tbody>
-
-        @foreach($users as $user)
+    <div class="table-responsive mt-3">
+        <table class="table table-striped text-nowrap">
+            <thead>
             <tr>
-                <th scope="row">1</th>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->email }}</td>
-
-                @if(\Illuminate\Support\Facades\Auth::user()->id != $user->id)
-                <td >
-                    <form method="post" action="{{ route('createMeeting') }}" target="_blank">
-                        {{ csrf_field() }}
-                        <input type="hidden" name="user_id_1" value="{{ \Illuminate\Support\Facades\Auth::user()->id }}">
-                        <input type="hidden" name="user_id_2" value="{{ $user->id }}">
-                        <button type="submit" class="mt-1 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">{{ __('home.Create New Meeting') }}</button>
-                    </form>
-                </td>
-                @endif
+                <th scope="col">#</th>
+                <th scope="col">{{ __('home.First') }}</th>
+                <th scope="col">{{ __('home.Last') }}</th>
+                <th scope="col">{{ __('home.Handle') }}</th>
             </tr>
-        @endforeach
+            </thead>
+            <tbody>
+
+            @foreach($users as $user)
+                <tr>
+                    <th scope="row">1</th>
+                    <td>{{ $user->name }}</td>
+                    <td>{{ $user->email }}</td>
+
+                    @if(\Illuminate\Support\Facades\Auth::user()->id != $user->id)
+                        <td >
+                            <form method="post" action="{{ route('createMeeting') }}" target="_blank">
+                                {{ csrf_field() }}
+                                <input type="hidden" name="user_id_1" value="{{ \Illuminate\Support\Facades\Auth::user()->id }}">
+                                <input type="hidden" name="user_id_2" value="{{ $user->id }}">
+                                <button type="submit" class="mt-1 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">{{ __('home.Create New Meeting') }}</button>
+                            </form>
+                        </td>
+                    @endif
+                </tr>
+            @endforeach
 
 
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 
 </div>
 </body>

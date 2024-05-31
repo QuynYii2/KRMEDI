@@ -69,11 +69,11 @@
         <h1 class="h3 mb-4 text-gray-800"> List Products </h1>
         <div class="mb-3">
             <div class="row w-100">
-                <div class="col">
+                <div class="col-md-3 col-6 mb-2">
                     <input class="form-control" id="keyword" type="text" onkeypress="processSearchProduct();"
                            placeholder="{{__('home.Enter name, prescription or ingredients of products')}}"/>
                 </div>
-                <div class="col">
+                <div class="col-md-3 col-6 mb-2">
                     <select id="inputCountry" class="form-select input_filter">
                         <option value="" selected>Manufacturing Country</option>
                         @if(is_array($array_country))
@@ -83,7 +83,7 @@
                         @endif
                     </select>
                 </div>
-                <div class="col">
+                <div class="col-md-3 col-6 mb-2">
                     <select id="inputCompany" class="form-select input_filter">
                         <option value="" selected>Manufacturing Company</option>
                         @if(is_array($array_company))
@@ -93,7 +93,7 @@
                         @endif
                     </select>
                 </div>
-                <div class="col">
+                <div class="col-md-3 col-6 mb-2">
                     <select id="inputObject" class="form-select input_filter">
                         <option value="" selected>Object</option>
                         <option value="1">KIDS</option>
@@ -102,7 +102,7 @@
                         <option value="4">FOR ADULT</option>
                     </select>
                 </div>
-                <div class="col">
+                <div class="col-md-3 col-6 mb-2">
                     <select id="inputFilter" class="form-select input_filter">
                         <option value="" selected>Filter</option>
                         <option value="1">ALL</option>
@@ -111,7 +111,7 @@
                         <option value="4">PET</option>
                     </select>
                 </div>
-                <div class="col">
+                <div class="col-md-3 col-6 mb-2">
                     <select id="inputCategory" class="form-select input_filter">
                         <option value="" selected>Category</option>
                         @foreach($categories as $category)
@@ -119,14 +119,14 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col">
+                <div class="col-md-3 col-6 mb-2">
                     <select id="inputCondition" class="form-select input_filter">
                         <option value="" selected>Condition of products</option>
                         <option value="in">In stock</option>
                         <option value="out">Out of stock</option>
                     </select>
                 </div>
-                <div class="col">
+                <div class="col-md-3 col-6 mb-2">
                     <select id="inputStatus" class="form-select input_filter">
                         <option value="" selected>Status of products</option>
                         <option value="APPROVED">APPROVED</option>
@@ -152,57 +152,59 @@
             </div>
         </div>
         <br>
-        <table class="table" id="tableListProduct">
-            <thead>
-            <tr>
-                <th scope="col">{{ __('home.STT') }}</th>
-                <th scope="col">{{ __('home.Product name') }}</th>
-                <th scope="col">{{ __('home.Price') }}</th>
-                <th scope="col">{{ __('home.Quantity') }}</th>
-                <th scope="col">{{ __('home.Status') }}</th>
-                <th scope="col">{{ __('home.Action') }}</th>
-            </tr>
-            </thead>
-            <tbody id="tbodyListProduct">
-            @foreach($products as $product)
+        <div class="table-responsive">
+            <table class="table text-nowrap " id="tableListProduct">
+                <thead>
                 <tr>
-                    <td> {{ $loop->index + 1 }} </td>
-                    <td>
-                        @if(locationHelper() == 'vi')
-                            {{ $product->name }}
-                        @else
-                            {{ $product->name_en }}
-                        @endif
-                    </td>
-                    <td> {{ $product->price }} </td>
-                    <td> {{ $product->quantity }} </td>
-                    <td>
+                    <th scope="col">{{ __('home.STT') }}</th>
+                    <th scope="col">{{ __('home.Product name') }}</th>
+                    <th scope="col">{{ __('home.Price') }}</th>
+                    <th scope="col">{{ __('home.Quantity') }}</th>
+                    <th scope="col">{{ __('home.Status') }}</th>
+                    <th scope="col">{{ __('home.Action') }}</th>
+                </tr>
+                </thead>
+                <tbody id="tbodyListProduct">
+                @foreach($products as $product)
+                    <tr>
+                        <td> {{ $loop->index + 1 }} </td>
+                        <td>
+                            @if(locationHelper() == 'vi')
+                                {{ $product->name }}
+                            @else
+                                {{ $product->name_en }}
+                            @endif
+                        </td>
+                        <td> {{ $product->price }} </td>
+                        <td> {{ $product->quantity }} </td>
+                        <td>
                         <span id="product_status_{{ $product->id }}">
                             {{ $product->status }}
                         </span>
-                    </td>
-                    <td>
-                        <div class="d-flex justify-content-start align-items-center">
-                            <div class="w-25 d-flex justify-content-center align-items-center">
-                                <a href="{{ route('api.backend.product-medicine.edit', $product->id) }}"
-                                   class="btn btn-success mr-3 ml-3">
-                                    <i class="fa-solid fa-eye"></i>
-                                </a>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-start align-items-center">
+                                <div class="w-25 d-flex justify-content-center align-items-center">
+                                    <a href="{{ route('api.backend.product-medicine.edit', $product->id) }}"
+                                       class="btn btn-success mr-3 ml-3">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                </div>
+                                <div class="w-50 d-flex justify-content-center align-items-center">
+                                    <label class="switch">
+                                        <input type="checkbox" class="product_action"
+                                               {{ $product->status == \App\Enums\online_medicine\OnlineMedicineStatus::PENDING ? '' : 'checked'}}
+                                               data-product="{{$product->id}}">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
                             </div>
-                            <div class="w-50 d-flex justify-content-center align-items-center">
-                                <label class="switch">
-                                    <input type="checkbox" class="product_action"
-                                           {{ $product->status == \App\Enums\online_medicine\OnlineMedicineStatus::PENDING ? '' : 'checked'}}
-                                           data-product="{{$product->id}}">
-                                    <span class="slider round"></span>
-                                </label>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            @endforeach
-            </tbody>
-        </table>
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
     <script>
         // let accessToken = `Bearer ` + token;

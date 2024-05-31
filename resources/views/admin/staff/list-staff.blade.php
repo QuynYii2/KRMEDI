@@ -18,38 +18,41 @@
         </div>
     @endif
 
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th scope="col">{{ __('home.Username') }}</th>
-            <th scope="col">{{ __('home.PhoneNumber') }}</th>
-            <th scope="col">{{ __('home.Email') }}</th>
-            <th scope="col">{{ __('home.type') }}</th>
-            <th scope="col">{{ __('home.Status') }}</th>
-            <th scope="col">{{ __('home.Action') }}</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach($users as $user)
+    <div class="table-responsive">
+        <table class="table table-striped text-nowrap">
+            <thead>
             <tr>
-                <th scope="row">{{ $user->username }}</th>
-                <td>{{ $user->phone }}</td>
-                <td>{{ $user->email }}</td>
-                <td>{{ $user->type }}</td>
-                <td>{{ $user->status }}</td>
-                <td>
-                    <a href="{{ route('staff.edit', $user->id) }}">
-                        <i class="fa-solid fa-pen-to-square"></i>
-                    </a> |
-                    <a href="#" onclick="confirmDelete('{{ $user->id }}')">
-                        <i class="fa-regular fa-trash-can"></i>
-                    </a>
-                </td>
+                <th scope="col">{{ __('home.Username') }}</th>
+                <th scope="col">{{ __('home.PhoneNumber') }}</th>
+                <th scope="col">{{ __('home.Email') }}</th>
+                <th scope="col">{{ __('home.type') }}</th>
+                <th scope="col">{{ __('home.Status') }}</th>
+                <th scope="col">{{ __('home.Action') }}</th>
             </tr>
-        @endforeach
+            </thead>
+            <tbody>
+            @foreach($users as $user)
+                <tr>
+                    <th scope="row">{{ $user->username }}</th>
+                    <td>{{ $user->phone }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td>{{ $user->type }}</td>
+                    <td>{{ $user->status }}</td>
+                    <td>
+                        <a href="{{ route('staff.edit', $user->id) }}">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </a> |
+                        <a href="#" onclick="confirmDelete('{{ $user->id }}')">
+                            <i class="fa-regular fa-trash-can"></i>
+                        </a>
+                    </td>
+                </tr>
+            @endforeach
 
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
+
     <script>
 
         function confirmDelete(id) {

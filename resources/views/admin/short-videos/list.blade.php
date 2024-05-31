@@ -14,8 +14,9 @@
                 </button>
             </div>
         @endif
-        <table class="table" id="tableListVideo">
-            <thead>
+        <div class="table-responsive">
+            <table class="table text-nowrap" id="tableListVideo">
+                <thead>
                 <tr>
                     <th scope="col">{{ __('home.Title') }}</th>
                     <th scope="col">{{ __('home.views') }}</th>
@@ -24,11 +25,12 @@
                     <th scope="col">{{ __('home.Status') }}</th>
                     <th scope="col">{{ __('home.Active') }}</th>
                 </tr>
-            </thead>
-            <tbody id="tbodyListVideo">
+                </thead>
+                <tbody id="tbodyListVideo">
 
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
     <script>
         // let accessToken = `Bearer ` + token;
