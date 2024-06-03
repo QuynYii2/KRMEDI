@@ -283,6 +283,27 @@
         background-color: #007bff;
         border-color: #007bff;
     }
+    .line_footer_desktop{
+        width: 100%;
+        max-width: 1320px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 0;
+        border-top: 1px solid #cccccc;
+        margin: 0 auto;
+        margin-top: 15px;
+    }
+    .text-line-footer{
+        font-size: 16px;
+        color: black;
+        font-weight: 700;
+    }
+    .text-line-footer-mobile{
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 14px;
+    }
 </style>
 
 <div class="d-none">

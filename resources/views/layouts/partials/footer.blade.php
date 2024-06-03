@@ -103,6 +103,10 @@
             </div>
         </div>
     </div>
+    <div class="line_footer_desktop">
+        <p class="text-line-footer">CUSTOMER SERVICES: +82. 10. 8874. 0164</p>
+        <p class="text-line-footer">ADDRESS: Incheon INCHEON 20, Solsaem-ro, Yeonsu-gu, Incheon, Republic of Korea samyong A, 101,1103</p>
+    </div>
 </footer>
 <div class="pc-hidden container mt-4 footer-mobile-box">
     <div class="container d-md-flex mb-md-5">
@@ -225,7 +229,11 @@
     </div>
     <div class="mt-3">
         <div class="border-top">
-            <div class="mt-4">
+            <div class="mt-3">
+                <p class="text-line-footer-mobile">CUSTOMER SERVICES: +82. 10. 8874. 0164</p>
+                <p class="text-line-footer-mobile">ADDRESS: Incheon INCHEON 20, Solsaem-ro, Yeonsu-gu, Incheon, Republic of Korea samyong A, 101,1103</p>
+            </div>
+            <div class="">
                 <div><p class="status_message">©{{ __('home.2022 Company Name. All rights reserved') }}</p></div>
                 <div class="text-bottom d-flex justify-content-between">
                     <p class="mr-5 status_message">{{ __('home.Privacy & Policy') }}</p>
