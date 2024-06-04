@@ -1159,7 +1159,7 @@
             </div>
         </div>
     </div>
-
+@endsection
 @section('page-script')
     <script src="{{ asset('signature_pad@4.2.0/dist/signature_pad.umd.min.js') }}"></script>
 
