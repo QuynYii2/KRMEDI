@@ -316,6 +316,9 @@ class AdminUserApi extends Controller
         $user->address_code = $request->input('address_code');
         $user->detail_address = $request->input('detail_address');
         $user->status = $request->input('status');
+        $user->province_id = $request->input('province_id');
+        $user->district_id = $request->input('district_id');
+        $user->commune_id = $request->input('commune_id');
 
         if ($request->filled('password')) {
             $user->password = Hash::make($request->input('password'));

@@ -94,7 +94,7 @@
                     <div class="form-group col-md-6">
                         <label class="form-control-label" for="address_code">{{ __('home.AddressCode') }}</label>
                         <input type="text" id="address_code" class="form-control" name="address_code"
-                               placeholder="ha_noi" value="" required>
+                               placeholder="ha_noi" value="">
                     </div>
                     <div class="form-group col-md-6">
                         <label for="detail_address">{{ __('home.địa chỉ chi tiết việt') }}</label>
