@@ -33,7 +33,13 @@ class BackendQuestionController extends Controller
     {
         $user_id = $request->input('user_id');
         $statusQuestion = Question::find($id);
-        $question = CalcViewQuestion::getViewQuestion($id) ?? 0;
+        $question = CalcViewQuestion::getViewQuestion($id);
+
+        if (is_null($question)) {
+            $question = (object)[
+                'views' => 0
+            ];
+        }
 
         $answersQuestion = DB::table('answers')
             ->where('status', '!=', AnswerStatus::DELETED)
