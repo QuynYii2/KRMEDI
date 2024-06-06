@@ -551,7 +551,9 @@
 
     const chatsCollection = collection(database, "chats");
 
-    login();
+    if (!current_user){
+        login();
+    }
 
     async function login() {
         await signInWithEmailAndPassword(auth, `{{ Auth::user()->email }}`, '123456')
@@ -580,19 +582,36 @@
             });
     }
 
-    async function logout() {
+     function logout() {
         let uid = current_user.uid;
-        await signOut(auth).then(() => {
-            setOnline(uid, false)
-            current_user = null;
-        }).catch((error) => {
-            // An error happened.
-        });
+        try {
+            signOut(auth);
+            setOnline(uid, false);
+
+            window.location.href = "{{ route('logoutProcess') }}";
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
     }
 
-    async function setOnline(uid, isOnline) {
+    window.addEventListener('beforeunload', (event) => {
+        let uid = current_user.uid;
         try {
-            await updateDoc(doc(database, 'users', uid), {
+            signOut(auth);
+            setOnline(uid, false);
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
+    });
+
+    document.getElementById('btn-logout-header').addEventListener('click', (event) => {
+        event.preventDefault();
+        logout();
+    });
+
+     function setOnline(uid, isOnline) {
+        try {
+             updateDoc(doc(database, 'users', uid), {
                 'is_online': isOnline,
                 'last_active': Date.now(),
             });
