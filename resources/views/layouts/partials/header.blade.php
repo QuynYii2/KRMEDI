@@ -514,8 +514,10 @@
 {{--                                                   required>--}}
 {{--                                        </div>--}}
                                         <div class="form-element">
+
                                             <label for="phone">Số điện thoại</label>
                                             <input id="phone" name="phone" type="text" placeholder="(+84) 123 456 789" required/>
+
                                         </div>
 {{--                                        <div class="form-element">--}}
 {{--                                            <label for="password">{{ __('home.Password') }}</label>--}}
