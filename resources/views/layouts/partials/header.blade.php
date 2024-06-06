@@ -508,11 +508,30 @@
                                 <div class="tab-pane fade show active" id="Pharmacist" role="tabpanel"
                                      aria-labelledby="Pharmacist-tab">
                                     <div>
+{{--                                        <div class="form-element">--}}
+{{--                                            <label for="email">Email</label>--}}
+{{--                                            <input id="email" name="email" type="email" placeholder="example@gmail.com"--}}
+{{--                                                   required>--}}
+{{--                                        </div>--}}
                                         <div class="form-element">
-                                            <label for="username">{{ __('home.Username') }}</label>
-                                            <input id="username" name="username" type="text" placeholder="Nhập tài khoản"
-                                                   required>
+                                            <label for="phone">Số điện thoại</label>
+                                            <input id="phone" name="phone" type="text" placeholder="(+84) 123 456 789" required/>
                                         </div>
+{{--                                        <div class="form-element">--}}
+{{--                                            <label for="password">{{ __('home.Password') }}</label>--}}
+{{--                                            <input id="password" type="password" name="password" minlength="8"--}}
+{{--                                                   placeholder="********" required>--}}
+{{--                                        </div>--}}
+{{--                                        <div class="form-element">--}}
+{{--                                            <label for="passwordConfirm">{{ __('home.Enter the Password') }}</label>--}}
+{{--                                            <input id="passwordConfirm" name="passwordConfirm" minlength="8"--}}
+{{--                                                   type="password" placeholder="********" required>--}}
+{{--                                        </div>--}}
+{{--                                        <div class="form-element">--}}
+{{--                                            <label for="username">{{ __('home.Username') }}</label>--}}
+{{--                                            <input id="username" name="username" type="text" placeholder="Nhập tài khoản"--}}
+{{--                                                   required>--}}
+{{--                                        </div>--}}
                                         <div class="form-element">
                                             <label for="type">{{ __('home.Type Account') }}</label>
                                             <select id="type" name="type" class="form-select"
@@ -649,15 +668,7 @@
 {{--                                                </select>--}}
 {{--                                            </div>--}}
                                         </div>
-                                        <div class="form-element">
-                                            <label for="email">Email</label>
-                                            <input id="email" name="email" type="email" placeholder="example@gmail.com"
-                                                   required>
-                                        </div>
-                                        <div class="form-element">
-                                            <label for="phone">Số điện thoại</label>
-                                            <input id="phone" name="phone" type="text" placeholder="(+84) 123 456 789" required/>
-                                        </div>
+
 {{--                                        <div id="action-doctor" style="display: none">--}}
 {{--                                            <div class="form-element">--}}
 {{--                                                <input id="prescription" name="prescription" type="checkbox" value="1">--}}
@@ -670,17 +681,6 @@
 {{--                                                    for="free">{{ __('home.free') }}</label>--}}
 {{--                                            </div>--}}
 {{--                                        </div>--}}
-
-                                        <div class="form-element">
-                                            <label for="password">{{ __('home.Password') }}</label>
-                                            <input id="password" type="password" name="password" minlength="8"
-                                                   placeholder="********" required>
-                                        </div>
-                                        <div class="form-element">
-                                            <label for="passwordConfirm">{{ __('home.Enter the Password') }}</label>
-                                            <input id="passwordConfirm" name="passwordConfirm" minlength="8"
-                                                   type="password" placeholder="********" required>
-                                        </div>
 
                                         <div class="form-element">
                                             <label for="inviteCode">Mã giới thiệu</label>
@@ -846,6 +846,57 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="otpModal" tabindex="-1" role="dialog" aria-labelledby="otpModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="otpModalLabel">Vui lòng Nhập Mã Xác Thực</h5>
+            </div>
+            <div class="modal-body">
+                @if (session('status'))
+                    <div class="alert alert-success" role="alert">
+                        {{ session('status') }}
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('verify.otp.submit') }}">
+                    @csrf
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <input id="otp" type="text" placeholder="Mã OTP" class="form-control @error('otp') is-invalid @enderror" name="otp" required autofocus>
+                            @error('otp')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
+                        </div>
+                    </div>
+                    <input type="hidden" name="user_id" value="{{ session('user_id') }}">
+                    <div class="form-group row mb-0">
+                        <div class="col-md-8 offset-md-4">
+                            <button type="submit" class="btn btn-primary">
+                                Xác nhận
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if(session('otp_verification') || $errors->has('otp'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            $('#otpModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+            $('#otpModal').modal('show');
+        });
+    </script>
+    {{ session()->forget('otp_verification') }} <!-- Clear session variable after displaying the modal -->
+@endif
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/vi.min.js"></script>

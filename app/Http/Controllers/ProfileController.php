@@ -132,8 +132,8 @@ class ProfileController extends Controller
 
             'address_code' => 'required|string|max:255',
 
-            'current_password' => 'nullable|required_with:new_password',
-            'new_password' => 'nullable|min:6|max:12|required_with:current_password',
+            'current_password' => 'nullable',
+            'new_password' => 'nullable|min:6|max:12',
             'password_confirmation' => 'nullable|min:6|max:12|required_with:new_password|same:new_password',
             'zalo_app_id' => 'nullable',
             'zalo_secret_id' => 'nullable'
@@ -146,6 +146,14 @@ class ProfileController extends Controller
 
         $user = User::findOrFail(Auth::user()->id);
 
+        if (is_null($user->password)) {
+            $request->validate([
+                'new_password' => 'required|min:6|max:12'
+            ], [
+                'new_password.required' => 'Hãy tạo mật khẩu mới cho lần đầu đăng nhập'
+            ]);
+        }
+
         $extendData = $user->extend ?? [];
 
         if ($username != Auth::user()->username) {
@@ -153,7 +161,7 @@ class ProfileController extends Controller
                 ->where('status', '!=', UserStatus::DELETED)
                 ->first();
             if ($oldUser) {
-                toast('Error, Username already exited!', 'error', 'top-left');
+                toast('Tên đăng nhập đã tồn tại!', 'error', 'top-left');
                 return back();
             }
         }
@@ -165,7 +173,7 @@ class ProfileController extends Controller
                 ->where('status', '!=', UserStatus::DELETED)
                 ->first();
             if ($oldUser) {
-                toast('Error, Email already exited!', 'error', 'top-left');
+                toast('Email đã tồn tại!', 'error', 'top-left');
                 return back();
             }
         }
@@ -175,7 +183,7 @@ class ProfileController extends Controller
                 ->where('status', '!=', UserStatus::DELETED)
                 ->first();
             if ($oldUser) {
-                toast('Error, Phone already exited!', 'error', 'top-left');
+                toast('Số điện thoại đã tồn tại!', 'error', 'top-left');
                 return back();
             }
         }
@@ -248,15 +256,13 @@ class ProfileController extends Controller
         $user->department_id = $request->input('department_id');
         $user->apply_for = $request->input('apply_for');
 
-
-        if (!is_null($request->input('current_password'))) {
-            if (Hash::check($request->input('current_password'), $user->password)) {
-                $password = $request->input('new_password');
-                $passwordHash = Hash::make($password);
-                $user->password = $passwordHash;
-            } else {
-                return redirect()->back()->withInput();
-            }
+        if (Hash::check($request->input('current_password'), $user->password) || $request->input('current_password') == $user->password) {
+            $password = $request->input('new_password');
+            $passwordHash = Hash::make($password);
+            $user->password = $passwordHash;
+        } elseif ($request->input('current_password') == null && $request->input('current_password') !== $user->password){}
+        else{
+            return redirect()->back()->withInput();
         }
 
         if ($zaloAppID) {
@@ -335,7 +341,7 @@ class ProfileController extends Controller
         $user->status = ClinicStatus::ACTIVE;
         $user->save();
         session()->forget('show_modal');
-        toast('Success, Update profile success!', 'success', 'top-left');
+        toast('Cập nhật thông tin thành công!', 'success', 'top-left');
         return redirect()->route('profile');
     }
 

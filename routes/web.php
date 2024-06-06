@@ -85,6 +85,7 @@ Route::middleware(['user.active'])->group(function () {
     Route::post('/register', [AuthController::class, 'register'])->name('registerProcess');
     Route::get('/logout', [AuthController::class, 'logout'])->name('logoutProcess');
     Route::post('/check-login', [AuthController::class, 'checkLogin'])->name('checkLogin');
+    Route::post('/verify-otp', [AuthController::class, 'verifyOTP'])->name('verify.otp.submit');
 
     /* Start login social */
     /* Google */
