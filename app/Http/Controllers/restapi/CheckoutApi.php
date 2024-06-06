@@ -31,7 +31,7 @@ class CheckoutApi extends Controller
     public function checkoutByImm(Request $request)
     {
         try {
-            $success = $this->checkout($request);
+            $success = $this->checkoutMobile($request);
             if ($success) {
                 return response()->json($success);
             }
@@ -159,7 +159,7 @@ class CheckoutApi extends Controller
         $itemsJson = json_encode($items);
 
         $params = [
-            'token' => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhaGEiLCJ0eXAiOiJ1c2VyIiwiY2lkIjoiODQ5NzM1NjY3OTIiLCJzdGF0dXMiOiJPTkxJTkUiLCJlb2MiOiJuZ3V5ZW5raGFjcXV5MDkwOTE5OTNAZ21haWwuY29tIiwibm9jIjoiS1JNRURJIiwiY3R5IjoiU0dOIiwiYWNjb3VudF9zdGF0dXMiOiJBQ1RJVkFURUQiLCJleHAiOjE3NDgwNzg4MTcsInBhcnRuZXIiOiJpbGdsb2JhbCIsInR5cGUiOiJhcGkifQ.d-cPgLIt3mpa2QprJ9VuBWgHniykTNY4ZTf2MsvNa-U',
+            'token' => $this->getTokenAhamove(),
             'order_time' => '0',
             'path' => $pathJson,
             'service_id' => 'SGN-BIKE',
@@ -190,6 +190,98 @@ class CheckoutApi extends Controller
         return $order;
     }
 
+    public function checkoutMobile($request)
+    {
+        $userID = intval($request->input('user_id'));
+
+        $full_name = $request->input('full_name');
+        $email = $request->input('email');
+        $phone = $request->input('phone');
+        $address = $request->input('address_checkout');
+
+
+        $total = intval($request->input('total_fee'));
+
+        $ship = intval($request->input('shipping_fee'));
+        $discount = intval($request->input('discount_fee'));
+        $totalOrder = intval($request->input('total_order'));
+
+        $orderMethod = $request->input('order_method');
+
+        $prescription_id = $request->input('prescription_id');
+
+        $order = new Order();
+
+        $order->user_id = $userID;
+
+        $order->full_name = $full_name;
+        $order->email = $email;
+        $order->phone = $phone;
+        $order->address = $address;
+
+        $order->total_price = $total;
+        $order->shipping_price = $ship;
+        $order->discount_price = $discount;
+        $order->total = $totalOrder;
+        $order->aha_order_id = $request->input('aha_order_id') ?? null;
+
+        $order->order_method = $orderMethod;
+        $order->status = OrderStatus::PROCESSING;
+
+        $order->prescription_id = $prescription_id;
+
+        $order->save();
+
+        if ($prescription_id) {
+            $carts = Cart::where('user_id', $userID)->where('prescription_id', $prescription_id)->get();
+        } else {
+            $carts = Cart::where('user_id', $userID)->whereNull('prescription_id')->get();
+        }
+
+        foreach ($carts as $cart) {
+            if ($cart->type_product == TypeProductCart::MEDICINE) {
+                $product = ProductMedicine::find($cart->product_id);
+            } else {
+                $product = ProductInfo::find($cart->product_id);
+            }
+
+            $orderItem = new OrderItem();
+            $orderItem->order_id = $order->id;
+
+            $orderItem->product_id = $cart->product_id;
+            $orderItem->quantity = $cart->quantity;
+            $orderItem->price = $total;
+
+            $orderItem->type_product = $cart->type_product;
+
+            $orderItem->status = OrderItemStatus::ACTIVE;
+            $orderItem->save();
+
+            $product->quantity -= $cart->quantity;
+            $product->save();
+
+            if ($prescription_id) {
+                $cart->price = $product->price;
+                $cart->total_price = $product->price * $cart->quantity;
+                $cart->save();
+            }else {
+                $cart->delete();
+            }
+        }
+
+        $roleAdmin = Role::where('name', \App\Enums\Role::ADMIN)->first();
+        $role_user = DB::table('role_users')->where('role_id', $roleAdmin->id)->first();
+        $admin = User::where('id', $role_user->user_id)->first();
+        (new MailController())->sendEmail($email, 'support_krmedi@gmail.com', 'Order success', 'Notification of successful order placement!');
+        (new MailController())->sendEmail($admin->email, 'support_krmedi@gmail.com', 'Order created', 'A new order has just been created!');
+        if ($prescription_id) {
+            $order->getPrescriptionOrderDetails();
+        }else{
+            $order->getOrderDetails();
+        }
+        return $order;
+    }
+
     public function returnCheckoutVNPay(Request $request)
     {
         try {
@@ -200,6 +292,21 @@ class CheckoutApi extends Controller
         } catch (\Exception $exception) {
             return response((new MainApi())->returnMessage('Error, Please try again!'), 400);
         }
+    }
+
+    public function getTokenAhamove()
+    {
+        $response = Http::withHeaders([
+            'cache-control' => 'no-cache',
+        ])->get('https://apistg.ahamove.com/v1/partner/register_account', [
+            'mobile' => '0968228229',
+            'name' => 'dev',
+            'api_key' => '3c58f1b2c5c5cc693a69f1bf1af25675c100123e',
+            'address' => '102 P. Nguyễn Thanh Bình, La Khê, Hà Đông, Hà Nội, Việt Nam',
+        ]);
+
+        $token = $response->json()['token'];
+        return $token;
     }
 
     public function showPoint(Request $request)
