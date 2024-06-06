@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\ClinicStatus;
 use App\Enums\UserStatus;
+use App\Http\Controllers\restapi\MainApi;
 use App\Models\Clinic;
 use App\Models\Role;
 use App\Models\User;
@@ -28,10 +29,10 @@ class AuthController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'email' => ['required', 'email', 'unique:users,email'],
-                'username' => ['required', 'string', 'unique:users,username', new NoSpacesRule],
-                'password' => ['required', 'string', new NoSpacesRule],
-                'passwordConfirm' => ['required', 'string', 'same:password', new NoSpacesRule],
+                'email' => ['email', 'unique:users,email'],
+                'username' => ['string', 'unique:users,username', new NoSpacesRule],
+                'password' => ['string', new NoSpacesRule],
+                'passwordConfirm' => ['string', 'same:password', new NoSpacesRule],
                 'member' => ['nullable', 'string'],
                 'medical_history' => ['nullable'],
                 'type' => ['required', 'string'],
@@ -113,33 +114,27 @@ class AuthController extends Controller
 
             $checkPending = false;
 
-            $isEmail = filter_var($email, FILTER_VALIDATE_EMAIL);
-            if (!$isEmail) {
-                toast('Email invalid!', 'error', 'top-left');
+            $oldPhone = User::where('phone', $phone)->first();
+            if ($oldPhone) {
+                toast('Số điện thoại đã tồn lại!', 'error', 'top-left');
                 return back();
             }
 
-            $oldUser = User::where('email', $email)->first();
-            if ($oldUser) {
-                toast('Email already exited!', 'error', 'top-left');
-                return back();
-            }
-
-            $oldUser = User::where('username', $username)->first();
-            if ($oldUser) {
-                toast('Username already exited!', 'error', 'top-left');
-                return back();
-            }
-
-            if ($password != $passwordConfirm) {
-                toast('Password or Password Confirm incorrect!', 'error', 'top-left');
-                return back();
-            }
-
-            if (strlen($password) < 5) {
-                toast('Password invalid!', 'error', 'top-left');
-                return back();
-            }
+//            $oldUser = User::where('username', $username)->first();
+//            if ($oldUser) {
+//                toast('Username already exited!', 'error', 'top-left');
+//                return back();
+//            }
+//
+//            if ($password != $passwordConfirm) {
+//                toast('Password or Password Confirm incorrect!', 'error', 'top-left');
+//                return back();
+//            }
+//
+//            if (strlen($password) < 5) {
+//                toast('Password invalid!', 'error', 'top-left');
+//                return back();
+//            }
 
             if ($type == \App\Enums\Role::BUSINESS) {
                 /* kiểm tra xem fileupload có tồn tại không, nếu không thì thông báo lỗi */
@@ -196,7 +191,7 @@ class AuthController extends Controller
 
             $user->name = '';
             $user->last_name = '';
-            $user->password = $passwordHash;
+            $user->password = null;
             $user->username = $username;
             $user->address_code = '';
             $user->type = $type;
@@ -225,8 +220,11 @@ class AuthController extends Controller
                 (new MainController())->createRoleUser($member, $username);
 
                 if ($user->type == \App\Enums\Role::MEDICAL) {
-                    auth()->login($user, true);
-                    session()->put('show_modal', true);
+                    // Send OTP
+                    $this->sendOTPSMS($request->input('phone'), $user);
+                    session()->put('otp_verification', true);
+                    session()->put('user_id', $user->id);
+
                     toast('Register success!', 'success', 'top-left');
                     return redirect()->route('home');
                 }
@@ -267,8 +265,12 @@ class AuthController extends Controller
                         $newUser->name = $request->input('representative', '1');
                         $newUser->save();
 
-                        auth()->login($user, true);
-                        session()->put('show_modal', true);
+                        // Send OTP
+                        $this->sendOTPSMS($request->input('phone'), $user);
+                        // Redirect to OTP verification page
+                        session()->put('otp_verification', true);
+                        session()->put('user_id', $user->id);
+
                         toast('Register success!', 'success', 'top-left');
                         return redirect()->route('home');
                     } catch (\Exception $e) {
@@ -276,8 +278,12 @@ class AuthController extends Controller
                         return redirect()->back()->withErrors(['error' => 'An error occurred during registration. Please ensure all fields are filled out correctly.']);
                     }
                 }
-                auth()->login($user, true);
-                session()->put('show_modal', true);
+                // Send OTP
+                $this->sendOTPSMS($request->input('phone'), $user);
+                // Redirect to OTP verification page
+                session()->put('otp_verification', true);
+                session()->put('user_id', $user->id);
+
                 toast('Register success!', 'success', 'top-left');
                 return redirect(route('home'));
             }
@@ -337,7 +343,7 @@ class AuthController extends Controller
             if ($existToken) {
                 try {
                     $user = JWTAuth::setToken($existToken)->toUser();
-                    toast('The account is already logged in elsewhere!', 'error', 'top-left');
+                    toast('Tài khoản đang được đăng nhập ở một thiết bị khác!', 'error', 'top-left');
                     return back()->withInput();
                 } catch (Exception $e) {
                 }
@@ -403,4 +409,54 @@ class AuthController extends Controller
         $response->withCookie(cookie($name, $value, $minutes));
         return $response;
     }
+
+    private function sendOTPSMS($value, $user)
+    {
+        $sms = new SendSMSController();
+        $otp = random_int(100000, 999999);
+        $content = "Mã OTP của bạn là: " . $otp;
+
+        // lưu cache otp 5 phút
+        $key = 'otp_' . $user->id;
+        $expiresAt = now()->addMinutes(5);
+        Cache::put($key, $otp, $expiresAt);
+
+        return $sms->sendSMS($user->id, $value, $content);
+    }
+
+    public function verifyOTP(Request $request)
+    {
+        $request->validate([
+            'otp' => 'required|numeric',
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        $user = User::find($request->input('user_id'));
+
+        // Check OTP
+        $key = 'otp_' . $user->id;
+        $otpCache = Cache::get($key);
+
+        if (!$otpCache) {
+            session()->put('otp_verification', true);
+            return redirect()->back()->withErrors(['otp' => 'OTP expired. Please request a new one.']);
+        }
+
+        if ($otpCache != $request->input('otp')) {
+            session()->put('otp_verification', true);
+            return redirect()->back()->withErrors(['otp' => 'Invalid OTP.']);
+        }
+
+        // OTP is valid
+        Cache::forget($key);
+
+        // Log the user in
+        auth()->login($user, true);
+        session()->put('show_modal', true);
+
+        // Redirect to home or any other page
+        toast('Register success!', 'success', 'top-left');
+        return redirect()->route('home');
+    }
+
 }

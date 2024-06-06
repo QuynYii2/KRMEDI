@@ -63,11 +63,11 @@ class RegisterController extends Controller
                 'free' => ['nullable'],
                 'signature' => ['nullable', 'required_if:member,DOCTORS']
             ]);
-        
+
             if ($validator->fails()) {
                 return response((new MainApi())->returnMessage($validator->errors()->first()), 400);
             }
-            
+
             /* All user */
             $email = $request->input('email');
             $username = $request->input('username');
