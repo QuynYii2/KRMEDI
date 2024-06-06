@@ -510,14 +510,14 @@
                                     <div>
                                         <div class="form-element">
                                             <label for="username">{{ __('home.Username') }}</label>
-                                            <input id="username" name="username" type="text" placeholder="exmaple"
+                                            <input id="username" name="username" type="text" placeholder="Nhập tài khoản"
                                                    required>
                                         </div>
                                         <div class="form-element">
                                             <label for="type">{{ __('home.Type Account') }}</label>
                                             <select id="type" name="type" class="form-select"
                                                     onchange="showInputFileUpload(this.value)">
-                                                <option>Choose...</option>
+                                                <option>Lựa chọn...</option>
                                                 <option value="{{Role::BUSINESS }}">{{ __('home.BUSINESS') }}</option>
                                                 <option value="{{Role::MEDICAL }}">{{ __('home.MEDICAL') }}</option>
                                                 <option value="{{Role::NORMAL }}"
@@ -1070,12 +1070,12 @@
 
     function showInputFileUpload(value) {
         if (value === '{{Role::BUSINESS}}') {
-            $('#labelFileUploadSignup').text('Upload your business license');
+            $('#labelFileUploadSignup').text('Tải lên giấy phép kinh doanh của bạn');
             //show elemet-upload-file-sign-up
             $('#fileupload').attr('required', true);
             $('#elemet-upload-file-sign-up').show();
         } else if (value === '{{Role::MEDICAL}}') {
-            $('#labelFileUploadSignup').text('Upload your medical license');
+            $('#labelFileUploadSignup').text('Tải lên giấy phép y tế của bạn');
             $('#fileupload').attr('required', true);
             $('#elemet-upload-file-sign-up').show();
         } else {
@@ -1090,23 +1090,23 @@
             let html = ``;
             switch (value) {
                 case 'BUSINESS':
-                    html = `<option value="{{Role::PHARMACEUTICAL_COMPANIES}}">PHARMACEUTICAL COMPANIES</option>
-                                                <option value="{{Role::HOSPITALS}}">HOSPITALS</option>
-                                                <option value="{{Role::CLINICS}}">CLINICS</option>
-                                                <option value="{{Role::PHARMACIES}}">PHARMACIES</option>
-                                                <option value="{{Role::SPAS}}">SPAS</option>
-                                                <option value="{{Role::OTHERS}}">OTHERS</option>`;
+                    html = `<option value="{{Role::PHARMACEUTICAL_COMPANIES}}">Công ty Dược phẩm</option>
+                                                <option value="{{Role::HOSPITALS}}">Bệnh viện</option>
+                                                <option value="{{Role::CLINICS}}">Phòng khám</option>
+                                                <option value="{{Role::PHARMACIES}}">Hiệu thuốc</option>
+                                                <option value="{{Role::SPAS}}">Spa</option>
+                                                <option value="{{Role::OTHERS}}">Khác</option>`;
                     break;
                 case 'MEDICAL':
-                    html = `<option value="{{Role::DOCTORS}}">DOCTOR</option>
-                                                <option value="{{Role::PHAMACISTS}}">PHAMACISTS</option>
-                                                <option value="{{Role::THERAPISTS}}">THERAPISTS</option>
-                                                <option value="{{Role::ESTHETICIANS}}">ESTHETICIANS</option>
-                                                <option value="{{Role::NURSES}}">NURSES</option>`;
+                    html = `<option value="{{Role::DOCTORS}}">Bác sĩ</option>
+                                                <option value="{{Role::PHAMACISTS}}">Dược sĩ</option>
+                                                <option value="{{Role::THERAPISTS}}">Bác sĩ trị liệu</option>
+                                                <option value="{{Role::ESTHETICIANS}}">Chuyên viên thẩm mỹ</option>
+                                                <option value="{{Role::NURSES}}">Y tá</option>`;
                     break;
                 case 'NORMAL':
-                    html = `<option value="{{Role::PAITENTS}}">PAITENTS</option>
-                                                <option value="{{Role::NORMAL_PEOPLE}}">NORMAL PEOPLE</option>`;
+                    html = `<option value="{{Role::PAITENTS}}">Bệnh nhân</option>
+                                                <option value="{{Role::NORMAL_PEOPLE}}">Người bình thường</option>`;
                     break;
                 default:
                     html = ``;

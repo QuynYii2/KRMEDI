@@ -66,7 +66,7 @@
 @section('main-content')
     <div class="">
         <!-- Page Heading -->
-        <h1 class="h3 mb-4 text-gray-800"> List Products </h1>
+        <h1 class="h3 mb-4 text-gray-800"> Danh sách sản phẩm </h1>
         <div class="mb-3">
             <div class="row w-100">
                 <div class="col-md-3 col-6 mb-2">
@@ -75,7 +75,7 @@
                 </div>
                 <div class="col-md-3 col-6 mb-2">
                     <select id="inputCountry" class="form-select input_filter">
-                        <option value="" selected>Manufacturing Country</option>
+                        <option value="" selected>Quốc gia sản xuất</option>
                         @if(is_array($array_country))
                             @foreach($array_country as $country)
                                 <option value="{{ $country }}">{{ $country }}</option>
@@ -85,7 +85,7 @@
                 </div>
                 <div class="col-md-3 col-6 mb-2">
                     <select id="inputCompany" class="form-select input_filter">
-                        <option value="" selected>Manufacturing Company</option>
+                        <option value="" selected>Công ty sản xuất</option>
                         @if(is_array($array_company))
                             @foreach($array_company as $company)
                                 <option value="{{ $company }}">{{ $company }}</option>
@@ -95,25 +95,25 @@
                 </div>
                 <div class="col-md-3 col-6 mb-2">
                     <select id="inputObject" class="form-select input_filter">
-                        <option value="" selected>Object</option>
-                        <option value="1">KIDS</option>
-                        <option value="2">FOR WOMEN</option>
-                        <option value="3">FOR MEN</option>
-                        <option value="4">FOR ADULT</option>
+                        <option value="" selected>Đối tượng</option>
+                        <option value="1">Cho trẻ em</option>
+                        <option value="2">Cho phụ nữ</option>
+                        <option value="3">Cho nam giới</option>
+                        <option value="4">Cho người lớn</option>
                     </select>
                 </div>
                 <div class="col-md-3 col-6 mb-2">
                     <select id="inputFilter" class="form-select input_filter">
-                        <option value="" selected>Filter</option>
-                        <option value="1">ALL</option>
-                        <option value="2">HEALTH</option>
-                        <option value="3">BEAUTY</option>
-                        <option value="4">PET</option>
+                        <option value="" selected>Lọc</option>
+                        <option value="1">Tất cả</option>
+                        <option value="2">Sức khoẻ</option>
+                        <option value="3">Sắc đẹp</option>
+                        <option value="4">Vật nuôi</option>
                     </select>
                 </div>
                 <div class="col-md-3 col-6 mb-2">
                     <select id="inputCategory" class="form-select input_filter">
-                        <option value="" selected>Category</option>
+                        <option value="" selected>Danh mục</option>
                         @foreach($categories as $category)
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                         @endforeach
@@ -121,14 +121,14 @@
                 </div>
                 <div class="col-md-3 col-6 mb-2">
                     <select id="inputCondition" class="form-select input_filter">
-                        <option value="" selected>Condition of products</option>
-                        <option value="in">In stock</option>
-                        <option value="out">Out of stock</option>
+                        <option value="" selected>Tình trạng sản phẩm</option>
+                        <option value="in">Còn hàng</option>
+                        <option value="out">Hết hàng</option>
                     </select>
                 </div>
                 <div class="col-md-3 col-6 mb-2">
                     <select id="inputStatus" class="form-select input_filter">
-                        <option value="" selected>Status of products</option>
+                        <option value="" selected>Trạng thái</option>
                         <option value="APPROVED">APPROVED</option>
                         <option value="PENDING">PENDING</option>
                     </select>
@@ -138,16 +138,16 @@
         <br>
         <div class="row d-flex align-items-center justify-content-end">
             <div class="mb-3 col-md-3">
-                <label for="inputSearchProduct">Search</label>
-                <input class="form-control" id="inputSearchProduct" type="text" placeholder="Search.."/>
+                <label for="inputSearchProduct">Tìm kiếm</label>
+                <input class="form-control" id="inputSearchProduct" type="text" placeholder="Tìm kiếm.."/>
             </div>
-            <div class="mb-3 col-md-1">
-                <label for="inputPaginate">Page: <span class="item_quantity">20</span>/page </label>
+            <div class="mb-3 col-md-2">
+                <label for="inputPaginate">Trang: <span class="item_quantity">20</span>/mục </label>
                 <select class="form-select" id="inputPaginate">
-                    <option value="10">10 items</option>
-                    <option selected value="20">20 items</option>
-                    <option value="50">50 items</option>
-                    <option value="100">100 items</option>
+                    <option value="10">10 mục</option>
+                    <option selected value="20">20 mục</option>
+                    <option value="50">50 mục</option>
+                    <option value="100">100 mục</option>
                 </select>
             </div>
         </div>

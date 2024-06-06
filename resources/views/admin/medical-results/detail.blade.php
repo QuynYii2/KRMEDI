@@ -37,17 +37,17 @@
                                     <input type="text" class="form-control result" value="{{ $item['result'] }}"
                                            id="result" placeholder="{{ __('home.Result') }}">
                                 </div>
-                                <div class="form-group">
-                                    <label for="result_en">{{ __('home.Result En') }}</label>
-                                    <input type="text" class="form-control result_en" value="{{ $item['result_en'] }}"
-                                           id="result_en" placeholder="{{ __('home.Result En') }}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="result_laos">{{ __('home.Result Laos') }}</label>
-                                    <input type="text" class="form-control result_laos"
-                                           value="{{ $item['result_laos'] }}" id="result_laos"
-                                           placeholder="{{ __('home.Result Laos') }}">
-                                </div>
+{{--                                <div class="form-group">--}}
+{{--                                    <label for="result_en">{{ __('home.Result En') }}</label>--}}
+{{--                                    <input type="text" class="form-control result_en" value="{{ $item['result_en'] }}"--}}
+{{--                                           id="result_en" placeholder="{{ __('home.Result En') }}">--}}
+{{--                                </div>--}}
+{{--                                <div class="form-group">--}}
+{{--                                    <label for="result_laos">{{ __('home.Result Laos') }}</label>--}}
+{{--                                    <input type="text" class="form-control result_laos"--}}
+{{--                                           value="{{ $item['result_laos'] }}" id="result_laos"--}}
+{{--                                           placeholder="{{ __('home.Result Laos') }}">--}}
+{{--                                </div>--}}
                             </div>
                             <div class="action">
                                 <i class="fa-regular fa-trash-can btnTrash"
@@ -122,14 +122,14 @@
                 <label for="detail">{{ __('home.Detail') }}</label>
                 <textarea class="form-control" id="detail" rows="5">{{ $result->detail }}</textarea>
             </div>
-            <div class="form-group">
-                <label for="detail_en">{{ __('home.Detail En') }}</label>
-                <textarea class="form-control" id="detail_en" rows="5">{{ $result->detail_en }}</textarea>
-            </div>
-            <div class="form-group">
-                <label for="detail_laos">{{ __('home.Detail Lao') }}</label>
-                <textarea class="form-control" id="detail_laos" rows="5">{{ $result->detail_laos }}</textarea>
-            </div>
+{{--            <div class="form-group">--}}
+{{--                <label for="detail_en">{{ __('home.Detail En') }}</label>--}}
+{{--                <textarea class="form-control" id="detail_en" rows="5">{{ $result->detail_en }}</textarea>--}}
+{{--            </div>--}}
+{{--            <div class="form-group">--}}
+{{--                <label for="detail_laos">{{ __('home.Detail Lao') }}</label>--}}
+{{--                <textarea class="form-control" id="detail_laos" rows="5">{{ $result->detail_laos }}</textarea>--}}
+{{--            </div>--}}
             <div class="d-none">
                 <label for="created_by">{{ __('home.CreatedBy') }}</label>
                 <input type="text" class="form-control" id="created_by" name="created_by "
