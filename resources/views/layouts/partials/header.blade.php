@@ -97,7 +97,7 @@
                                 <a class="dropdown-item" href="{{ route('view.prescription.result.my.list') }}">{{__('home.My Prescription')}}</a>
                             @endif
                             <a class="dropdown-item" href="{{route('booking.list.by.user')}}">{{ __('home.My booking') }}</a>
-                            <a class="dropdown-item" href="{{route('logoutProcess')}}">{{ __('home.Logout') }}</a>
+                            <a class="dropdown-item" id="btn-logout-header" href="#">{{ __('home.Logout') }}</a>
                         </div>
                     </div>
                 @else
