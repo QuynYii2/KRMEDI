@@ -159,7 +159,7 @@ class CheckoutApi extends Controller
         $itemsJson = json_encode($items);
 
         $params = [
-            'token' => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhaGEiLCJ0eXAiOiJ1c2VyIiwiY2lkIjoiODQ5NjgyMjgyMjkiLCJzdGF0dXMiOiJPTkxJTkUiLCJlb2MiOm51bGwsIm5vYyI6IkRBRkMiLCJjdHkiOiJTR04iLCJhY2NvdW50X3N0YXR1cyI6IkFDVElWQVRFRCIsImV4cCI6MTc0OTEzMDc2OSwicGFydG5lciI6ImRhZmMiLCJ0eXBlIjoiYXBpIn0.ym5fZPway-nIMq4PkrsTW9Q5a6E-zgTJi2VcQh7Ic6k',
+            'token' => $this->getTokenAhamove(),
             'order_time' => '0',
             'path' => $pathJson,
             'service_id' => 'SGN-BIKE',
@@ -292,6 +292,21 @@ class CheckoutApi extends Controller
         } catch (\Exception $exception) {
             return response((new MainApi())->returnMessage('Error, Please try again!'), 400);
         }
+    }
+
+    public function getTokenAhamove()
+    {
+        $response = Http::withHeaders([
+            'cache-control' => 'no-cache',
+        ])->get('https://apistg.ahamove.com/v1/partner/register_account', [
+            'mobile' => '0968228229',
+            'name' => 'dev',
+            'api_key' => '3c58f1b2c5c5cc693a69f1bf1af25675c100123e',
+            'address' => '102 P. Nguyễn Thanh Bình, La Khê, Hà Đông, Hà Nội, Việt Nam',
+        ]);
+
+        $token = $response->json()['token'];
+        return $token;
     }
 
     public function showPoint(Request $request)
