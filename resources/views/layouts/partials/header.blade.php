@@ -848,6 +848,7 @@
         </div>
     </div>
 </div>
+@if(session('otp_verification') || (isset($errors) && $errors instanceof Illuminate\Support\MessageBag && $errors->has('otp')))
 <div class="modal fade" id="otpModal" tabindex="-1" role="dialog" aria-labelledby="otpModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -887,7 +888,7 @@
     </div>
 </div>
 
-@if(session('otp_verification') || $errors->has('otp'))
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             $('#otpModal').modal({

@@ -49,7 +49,7 @@
                                             @php
                                                 $province = \App\Models\Province::find(Auth::user()->province_id);
                                             @endphp
-                                            <input required type="text" class="form-control address_code" id="province"
+                                            <input required type="text" class="form-control address_code" id="province" name="province"
                                                    value="{{ $province ? $province->full_name : '' }}"
                                                    placeholder="Tỉnh/Thành phố">
                                         </div>
@@ -59,7 +59,7 @@
                                             @php
                                                 $district = \App\Models\District::find(Auth::user()->district_id);
                                             @endphp
-                                            <input required type="text" class="form-control address_code" id="district"
+                                            <input required type="text" class="form-control address_code" id="district" name="district"
                                                    value="{{ $district ? $district->full_name : '' }}"
                                                    placeholder="Quận/Huyện">
                                         </div>
@@ -73,6 +73,12 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="d-none">
+                                <input name="first_name" value="{{\Illuminate\Support\Facades\Auth::user()->name}}" />
+                                <input name="last_name" value="{{\Illuminate\Support\Facades\Auth::user()->last_name}}" />
+                                <input name="gender" value="{{\Illuminate\Support\Facades\Auth::user()->gender}}" />
+                                <input name="birthday" value="{{\Illuminate\Support\Facades\Auth::user()->birthday}}" />
                             </div>
                             <div class="select-address mb-3">
                                 <button type="button" class="btn btn-outline-primary" data-toggle="modal"
@@ -188,6 +194,17 @@
                                         </label>
                                         <input type="radio" id="master_card" name="method" value="master_card">
                                     </div>
+                                    <div class="method-detail">
+                                        <div class="d-flex justify-content-between align-items-center method-cod">
+                                            <label for="fundiin">
+                                                <img src="{{ asset('/img/icon/fundiin.png') }}" alt=""
+                                                     style="width: 24px; height: 24px">
+                                                <span>Fundiin - Mua trả sau 0% lãi</span>
+                                            </label>
+                                            <input type="radio" id="fundiin" name="method" value="fundiin">
+                                        </div>
+                                        <div id='script-checkout-container' class="mt-2" style="display: none;"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -274,6 +291,15 @@
                                 <input id="value_total_order" name="total_order" value="">
                                 <input id="discount_price_exchange" name="discount_price_exchange" value="">
                                 <input id="prescription_id" name="prescription_id" value="{{ request()->query('prescription_id') }}">
+                                <input id="quantity_payment" name="quantity_payment" value="{{$cart->quantity}}"/>
+                                <input id="product_id" name="product_id" value="{{$cart->product_id}}"/>
+                                <input id="product_name" name="product_name" value="{{$cart->productMedicine->name}}"/>
+                                <input id="product_description" name="product_description" value="{{$cart->productMedicine->description}}"/>
+                                <input id="product_price" name="product_price" value="{{$cart->productMedicine->price}}"/>
+                                <input id="product_category" name="product_category" value="{{$cart->productMedicine->brand_name}}"/>
+                                <input id="product_image" name="product_image" value="{{$cart->productMedicine->gallery}}"/>
+                                <input id="product_unit_price" name="product_unit_price" value="{{$cart->productMedicine->unit_price}}"/>
+
                             </div>
                             <div class="mt-5">
                                 <button id="btnOrder" type="button" class="btn w-100 p-2"
@@ -386,6 +412,7 @@
                 method = selectedValue;
             }
             let valueMethod = `{{ \App\Enums\OrderMethod::IMMEDIATE }}`;
+            console.log(method);
             switch (method) {
                 case 'vn_pay':
                     url = `{{route('user.checkout.vnpay')}}`;
@@ -401,6 +428,10 @@
                     break;
                 case 'master_card':
                     url = `master_card`;
+                    valueMethod = `{{ \App\Enums\OrderMethod::CARD_CREDIT }}`;
+                    break;
+                case 'fundiin':
+                    url = `{{route('user.checkout.fundiin')}}`;
                     valueMethod = `{{ \App\Enums\OrderMethod::CARD_CREDIT }}`;
                     break;
                 default:
@@ -576,6 +607,35 @@
             }
             changeAddressFromApi(response, province, district);
         }
+    </script>
+
+
+    <script type="application/javascript"
+            crossorigin="anonymous"
+            src="https://gateway-sandbox.fundiin.vn/merchants/checkoutjs/FD200000165745.js">
+
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fundiinRadio = document.getElementById('fundiin');
+            const checkoutContainer = document.getElementById('script-checkout-container');
+
+            fundiinRadio.addEventListener('change', function() {
+                if (this.checked) {
+                    checkoutContainer.style.display = 'block';
+                }
+            });
+
+            // Optionally, handle other radio buttons to hide the container when they are checked
+            const otherRadios = document.querySelectorAll('input[name="method"]:not(#fundiin)');
+            otherRadios.forEach(function(radio) {
+                radio.addEventListener('change', function() {
+                    if (this.checked) {
+                        checkoutContainer.style.display = 'none';
+                    }
+                });
+            });
+        });
     </script>
 @endsection
 
