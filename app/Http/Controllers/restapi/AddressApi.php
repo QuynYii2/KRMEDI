@@ -10,7 +10,9 @@ use App\Models\District;
 use App\Models\Province;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class AddressApi extends Controller
 {
@@ -105,6 +107,48 @@ class AddressApi extends Controller
         if (!$address || $address->status == AddressStatus::DELETED) {
             return response((new MainApi())->returnMessage('Not found!'), 404);
         }
+        $province = Province::find($address->province_id);
+        $district = District::find($address->district_id);
+        $address = $address->toArray();
+        $address['province'] = $province ? $province->name : '';
+        $address['district'] = $district ? $district->name : '';
+        $address['total_fee'] = 0;
+        $url = 'https://apistg.ahamove.com/v1/order/estimated_fee';
+        $path = json_encode([
+            [
+                "address" => "La Khe, Ha Dong, Hà Nội",
+                "short_address" => "La Khe",
+                "name" => "KRMEDI",
+                "mobile" => "0973566792",
+                "remarks" => "call me"
+            ],
+            [
+                "address" => $address['address_detail'].', '.$address['district'].', '.$address['province'],
+                "name" => $address['username'],
+                "mobile" => $address['phone']
+            ]
+        ]);
+
+        $params = [
+            'token' => $this->getTokenAhamove(),
+            'order_time' => 0,
+            'path' => $path,
+            'service_id' => 'SGN-BIKE',
+            'requests' => json_encode([])
+        ];
+
+        $response = Http::asForm()->withHeaders([
+            'Cache-Control' => 'no-cache',
+            'Content-Type' => 'application/x-www-form-urlencoded',
+        ])->post($url, $params);
+
+        if ($response->successful()) {
+            $data = $response->json();
+            $address['total_fee'] = $data['total_fee'];
+        } else {
+            $errorCode = $response->status();
+            $errorMessage = $response->body();
+        }
         return response()->json($address);
     }
 
@@ -133,6 +177,43 @@ class AddressApi extends Controller
         $address = $address->toArray();
         $address['province'] = $province ? $province->name : '';
         $address['district'] = $district ? $district->name : '';
+        $address['total_fee'] = 0;
+        $url = 'https://apistg.ahamove.com/v1/order/estimated_fee';
+        $path = json_encode([
+            [
+                "address" => "La Khe, Ha Dong, Hà Nội",
+                "short_address" => "La Khe",
+                "name" => "KRMEDI",
+                "mobile" => "0973566792",
+                "remarks" => "call me"
+            ],
+            [
+                "address" => $address['address_detail'].', '.$address['district'].', '.$address['province'],
+                "name" => $address['username'],
+                "mobile" => $address['phone']
+            ]
+        ]);
+
+        $params = [
+            'token' => $this->getTokenAhamove(),
+            'order_time' => 0,
+            'path' => $path,
+            'service_id' => 'SGN-BIKE',
+            'requests' => json_encode([])
+        ];
+
+        $response = Http::asForm()->withHeaders([
+            'Cache-Control' => 'no-cache',
+            'Content-Type' => 'application/x-www-form-urlencoded',
+        ])->post($url, $params);
+
+        if ($response->successful()) {
+            $data = $response->json();
+            $address['total_fee'] = $data['total_fee'];
+        } else {
+            $errorCode = $response->status();
+            $errorMessage = $response->body();
+        }
         return response()->json($address);
     }
 

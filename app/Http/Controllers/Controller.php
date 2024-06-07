@@ -6,6 +6,7 @@ use App\Models\ZaloOaModel;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Http;
 
 class Controller extends BaseController
 {
@@ -17,6 +18,21 @@ class Controller extends BaseController
 
         $result = $agent->isPhone();
         return $result;
+    }
+
+    public function getTokenAhamove()
+    {
+        $response = Http::withHeaders([
+            'cache-control' => 'no-cache',
+        ])->get('https://apistg.ahamove.com/v1/partner/register_account', [
+            'mobile' => '0973566792',
+            'name' => 'KRMEDI',
+            'api_key' => 'c7a362387a0fe2e7ed2f3ee6e0df8ded726a9ea8',
+            'address' => 'La Khe, Ha Dong',
+        ]);
+
+        $token = $response->json()['token'];
+        return $token;
     }
 
     public function getTokenZaloZns()

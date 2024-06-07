@@ -8,11 +8,14 @@ use App\Enums\OrderMethod;
 use App\Http\Controllers\restapi\CheckoutApi;
 use App\Models\Address;
 use App\Models\Cart;
+use App\Models\District;
+use App\Models\Province;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
@@ -39,7 +42,49 @@ class CheckoutController extends Controller
                 'communes.full_name as communes_name'
             )
             ->get();
-        return view('checkout.checkout', compact('carts', 'addresses'));
+
+        $province_name = Province::find(Auth::user()->province_id)->name;
+        $district_name = District::find(Auth::user()->district_id)->name;
+        $total_fee = 0;
+        $url = 'https://apistg.ahamove.com/v1/order/estimated_fee';
+        $path = json_encode([
+            [
+                "address" => "La Khe, Ha Dong, Hà Nội",
+                "short_address" => "La Khe",
+                "name" => "KRMEDI",
+                "mobile" => "0973566792",
+                "remarks" => "call me"
+            ],
+            [
+                "address" => Auth::user()->detail_address.', '.$province_name.', '.$district_name,
+                "name" => Auth::user()->name,
+                "mobile" => Auth::user()->phone
+            ]
+        ]);
+
+        $params = [
+            'token' => $this->getTokenAhamove(),
+            'order_time' => 0,
+            'path' => $path,
+            'service_id' => 'SGN-BIKE',
+            'requests' => json_encode([])
+        ];
+
+        $response = Http::asForm()->withHeaders([
+            'Cache-Control' => 'no-cache',
+            'Content-Type' => 'application/x-www-form-urlencoded',
+        ])->post($url, $params);
+
+        if ($response->successful()) {
+            $data = $response->json();
+            $total_fee = $data['total_fee'];
+        } else {
+            $errorCode = $response->status();
+            $errorMessage = $response->body();
+            dd("Error {$errorCode}: {$errorMessage}");
+        }
+
+        return view('checkout.checkout', compact('carts', 'addresses','total_fee'));
     }
 
     public function checkoutByImm(Request $request)
