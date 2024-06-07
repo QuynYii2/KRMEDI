@@ -12,6 +12,7 @@ use App\Models\District;
 use App\Models\Province;
 use App\Models\Role;
 use App\Models\User;
+use App\Services\FundiinService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -20,6 +21,12 @@ use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
 {
+    public $fundiinService;
+
+    public function __construct(FundiinService $fundiinService)
+    {
+        $this->fundiinService = $fundiinService;
+    }
     public function index(Request $request)
     {
         if (isset($request->prescription_id) && $request->prescription_id) {
@@ -229,6 +236,118 @@ class CheckoutController extends Controller
             $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
         }
         return redirect($vnp_Url);
+    }
+
+    public function checkoutByFundiin(Request $request)
+    {
+        //Get Product Detail
+        $totalOrder = $request->input('total_order');
+        $quantity = $request->input('quantity_payment');
+        $productID = $request->input('product_id');
+        $productPrice = $request->input('product_price');
+        $productName = $request->input('product_name');
+        $productDescription = $request->input('product_description');
+        $productDescription = htmlspecialchars(strip_tags($productDescription), ENT_QUOTES, 'UTF-8');
+        $productCategory = $request->input('product_category');
+        $productImage = $request->input('product_image');
+        $productImageArray = explode(',', $productImage);
+        $productUnitPrice = $request->input('product_unit_price');
+
+        //Get customer detail
+        $firstName = $request->input('first_name');
+        $lastName = $request->input('last_name');
+        $email = $request->input("email");
+        $phone = $request->input('phone');
+        $gender = $request->input('gender');
+        $birthday = $request->input('birthday');
+        $province = $request->input('province');
+        $district = $request->input('district');
+        $address = $request->input('address_checkout');
+
+        //Send request to Fundiin
+        $endpoint = 'https://gateway-sandbox.fundiin.vn/v2/payments';
+
+        $clientId = config('fundiin.clientId');
+        $merchantId = config('fundiin.merchantId');
+        $secretKey = config('fundiin.secretKey');
+
+        function generateReferenceId($length = 30) {
+            $characters = '0123456789';
+            $charactersLength = strlen($characters);
+            $randomString = '';
+            for ($i = 0; $i < $length; $i++) {
+                $randomString .= $characters[rand(0, $charactersLength - 1)];
+            }
+            return $randomString;
+        }
+        $referenceId = generateReferenceId();
+
+        $data = [
+            "merchantId" => $merchantId,
+            "referenceId" => $referenceId,
+            "requestType" => "installment",
+            "paymentMethod" => "WEB",
+            "terminalType" => "DESKTOP_BROWSER",
+            "lang" => "vi",
+            "extraData" => "jsonstring",
+            "description" => "description",
+            "successRedirectUrl" => "https://google.com",
+            "unSuccessRedirectUrl" => route('return.checkout.payment'),
+            "installment" => [
+                "packageCode" => "045000"
+            ],
+            "amount" => [
+                "currency" => $productUnitPrice,
+                "value" => $totalOrder
+            ],
+            "items" => [
+                [
+                    "productId" => $productID,
+                    "productName" => $productName,
+                    "description" => $productDescription,
+                    "category" => $productCategory,
+                    "quantity" => $quantity,
+                    "price" => $productPrice,
+                    "currency" => $productUnitPrice,
+                    "totalAmount" => $totalOrder,
+                    "imageUrl" => "https://krmedi.vn" . $productImageArray[0]
+                ]
+            ],
+            "customer" => [
+                "phoneNumber" => $phone,
+                "email" => $email,
+                "firstName" => $firstName,
+                "lastName" => $lastName,
+                "gender" => $gender,
+                "dateOfBirth" => $birthday,
+            ],
+            "shipping" => [
+                "city" => $province,
+                "zipCode" => "00700",
+                "district" => $district,
+                "ward" => "",
+                "street" => $address,
+                "streetNumber" => $address,
+                "houseNumber" => $address,
+                "houseExtension" => null,
+                "country" => "VN"
+            ],
+            "sendEmail" => true
+        ];
+
+        $result = $this->fundiinService->execPostRequest($endpoint, $data, $clientId, $secretKey);
+        $jsonResult = json_decode($result, true);
+
+        if (isset($jsonResult['error'])) {
+            return response()->json(['error' => 'Request failed', 'details' => $jsonResult], 403);
+        }
+
+        if($jsonResult['resultStatus'] == "APPROVED"){
+            return redirect($jsonResult['paymentUrl']);
+        }else{
+            toast('Đã có lỗi xảy ra, vui lòng kiểm tra lại!', 'error', 'top-left');
+            return back();
+        }
     }
 
     public function rePurchasePrescription(Request $request)
