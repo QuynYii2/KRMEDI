@@ -74,40 +74,6 @@ class CheckoutApi extends Controller
 
         $prescription_id = $request->input('prescription_id');
 
-//        $token_aha = $this->getTokenAhamove();
-//        $url = 'https://apistg.ahamove.com/v1/order/estimated_fee';
-//        $token = $token_aha;
-//        $orderTime = 0;
-//        $serviceId = 'SGN-BIKE';
-//        $path = [
-//            [
-//                "address" => "122, Phường Phúc Xá, Quận Ba Đình, Hà Nội, Việt Nam",
-//                "short_address" => "Phường Phúc Xá",
-//                "name" => "Phường Phúc Xá",
-//                "mobile" => "09785626314",
-//                "remarks" => "call me"
-//            ],
-//            [
-//                "address" => "122, Phường Phúc Xá, Quận Ba Đình, Hà Nội, Việt Nam",
-//                "name" => "Phường Phúc Xá",
-//                "mobile" => "09785626314"
-//            ]
-//        ];
-//
-//        $response = Http::withHeaders([
-//            'Accept' => '*/*',
-//            'Cache-Control' => 'no-cache',
-//            'Content-Type' => 'application/json',
-//        ])->post($url, [
-//            'token' => $token,
-//            'order_time' => $orderTime,
-//            'path' => json_encode($path),
-//            'service_id' => $serviceId,
-//            'requests' => []
-//        ]);
-//
-//        dd($response->json());
-
         $order = new Order();
 
         $order->user_id = $userID;
@@ -175,11 +141,11 @@ class CheckoutApi extends Controller
         $orderData = [
             'path' => [
                 [
-                    'address' => '102 P. Nguyễn Thanh Bình, La Khê, Hà Đông, Hà Nội, Việt Nam',
-                    'short_address' => 'Xã La Khê',
-                    'name' => 'Hoàng Nguyễn',
-                    'mobile' => '0978125456',
-                    'remarks' => 'Call me'
+                    "address" => "La Khe, Ha Dong, Hà Nội",
+                    "short_address" => "La Khe",
+                    "name" => "KRMEDI",
+                    "mobile" => "0973566792",
+                    "remarks" => "call me"
                 ],
                 [
                     'address' => $address,
@@ -326,21 +292,6 @@ class CheckoutApi extends Controller
         } catch (\Exception $exception) {
             return response((new MainApi())->returnMessage('Error, Please try again!'), 400);
         }
-    }
-
-    public function getTokenAhamove()
-    {
-        $response = Http::withHeaders([
-            'cache-control' => 'no-cache',
-        ])->get('https://apistg.ahamove.com/v1/partner/register_account', [
-            'mobile' => '0973566792',
-            'name' => 'KRMEDI',
-            'api_key' => 'c7a362387a0fe2e7ed2f3ee6e0df8ded726a9ea8',
-            'address' => 'La Khe, Ha Dong',
-        ]);
-
-        $token = $response->json()['token'];
-        return $token;
     }
 
     public function showPoint(Request $request)
