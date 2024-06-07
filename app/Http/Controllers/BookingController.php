@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BookingStatus;
+use App\Enums\Constants;
 use App\Enums\ServiceClinicStatus;
 use App\Enums\SurveyType;
 use App\Enums\TypeProductCart;
@@ -20,6 +21,7 @@ use App\Models\SurveyAnswerUser;
 use App\Models\SurveyQuestion;
 use App\Models\WishList;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -395,6 +397,8 @@ class BookingController extends Controller
                     ];
 
                     $pusher->trigger('noti-events', 'noti-events', $requestData);
+                    $userToken = User::find($booking->user_id)->token_firebase ?? "";
+                    $this->sendBookingNotifications( $userToken, $notifi);
                     ChangeBookingStatus::dispatch($booking);
                 }
 
@@ -405,6 +409,47 @@ class BookingController extends Controller
         } catch (\Exception $e) {
             return response(['error' => -1, 'message' => $e->getMessage()], 400);
         }
+    }
+
+    private function sendBookingNotifications($userToken = null, $notification)
+    {
+        $client = new Client();
+        $YOUR_SERVER_KEY = Constants::GG_KEY;
+
+        if ($userToken) {
+            $notificationWithSender = Notification::with('senders')->find($notification->id);
+            $data = [
+                'title' => $notificationWithSender->title ?? "",
+                'sender' => $notificationWithSender->senders->avt ?? "",
+                'url' => $notificationWithSender->target_url ?? "#",
+                'description' => $notificationWithSender->description ?? "",
+                'id' => $notificationWithSender->id,
+            ];
+
+            $response = $client->post('https://fcm.googleapis.com/fcm/send', [
+                'headers' => [
+                    'Authorization' => 'key=' . $YOUR_SERVER_KEY,
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => [
+                    'to' => $userToken,
+                    'data' => $data,
+                    'notification' => [
+                        'title' => 'Bạn vừa nhận được 1 thông báo mới',
+                        'body' => 'Booking',
+                    ],
+                    'web' => [
+                        'notification' => [
+                            'title' => 'Bạn vừa nhận được 1 thông báo mới',
+                            'body' => 'Booking',
+                        ],
+                    ],
+                ],
+            ]);
+            return $response->getBody();
+        }
+
+        return true;
     }
 
     public function delete($id)

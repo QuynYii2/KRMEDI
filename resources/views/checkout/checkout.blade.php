@@ -49,6 +49,7 @@
                                             @php
                                                 $province = \App\Models\Province::find(Auth::user()->province_id);
                                             @endphp
+
                                             <input required type="text" class="form-control address_code" id="province" name="province"
                                                    value="{{ $province ? $province->full_name : '' }}"
                                                    placeholder="Tỉnh/Thành phố">
@@ -59,6 +60,7 @@
                                             @php
                                                 $district = \App\Models\District::find(Auth::user()->district_id);
                                             @endphp
+
                                             <input required type="text" class="form-control address_code" id="district" name="district"
                                                    value="{{ $district ? $district->full_name : '' }}"
                                                    placeholder="Quận/Huyện">
@@ -68,7 +70,7 @@
                                         <div class="form-group">
                                             <input required type="text" class="form-control address_code"
                                                    id="address_detail"
-                                                   value="{{ Auth::user()->detail_address }}"
+                                                   value="{{ Auth::user()->detail_address }}" readonly
                                                    placeholder="Địa chỉ chi tiết">
                                         </div>
                                     </div>
@@ -267,7 +269,7 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <p class="text-price">{{ __('home.Shipping fee') }}:</p>
                                     <p class="value-price">
-                                        <span id="shipping_fee">0</span>
+                                        <span id="shipping_fee">{{$total_fee}}</span>
                                         <span class="unit_price_product">VND</span>
                                     </p>
                                 </div>
@@ -534,7 +536,7 @@
                 headers: headeres,
                 method: 'GET',
                 success: function (response) {
-                    changeAddressFromApi(response, province, district)
+                    changeAddressFromApi(response, province, district,response.total_fee)
                 },
                 error: function (exception) {
                     console.log(exception);
@@ -542,13 +544,20 @@
             });
         }
 
-        function changeAddressFromApi(response, province, district) {
+        function changeAddressFromApi(response, province, district,total_fee) {
             $('#full_name').val(response.username)
             $('#phone_number').val(response.phone)
             $('#province').val(province)
             $('#district').val(district)
             $('#address_detail').val(response.address_detail)
             $('#value_address').val(response.address_detail + ', ' + district + ', ' + province);
+            $('#value_shipping_fee').val(total_fee);
+            $('#shipping_fee').text(total_fee)
+            let totals = $('#value_total_fee').val();
+            let discounts = $('#value_discount_fee').val();
+            let total_order = parseFloat(totals) + parseFloat(total_fee) - parseFloat(discounts);
+            $('#total_order').text(total_order);
+            $('#value_total_order').val(total_order);
         }
 
         function mergeAddress() {
@@ -583,6 +592,7 @@
             let province = res.province;
             let district = res.district;
             let address_detail = res.address_detail;
+            let total_fee = res.total_fee;
 
             let response = {
                 username: full_name,
@@ -590,7 +600,7 @@
                 phone: phone,
             }
 
-            changeAddressFromApi(response, province, district);
+            changeAddressFromApi(response, province, district,total_fee);
         }
 
         function showAddress() {
@@ -599,13 +609,14 @@
             let province = `{{ isset($province) ?  $province->full_name : ''}}`;
             let district = `{{ isset($district) ?  $district->full_name : ''}}`;
             let detail_address = `{{ \Illuminate\Support\Facades\Auth::user()->detail_address }}`;
+            let total_fee = `{{$total_fee??0}}`;
 
             let response = {
                 username: full_name,
                 address_detail: detail_address,
                 phone: phone,
             }
-            changeAddressFromApi(response, province, district);
+            changeAddressFromApi(response, province, district,total_fee);
         }
     </script>
 

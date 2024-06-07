@@ -141,11 +141,11 @@ class CheckoutApi extends Controller
         $orderData = [
             'path' => [
                 [
-                    'address' => '102 P. Nguyễn Thanh Bình, La Khê, Hà Đông, Hà Nội, Việt Nam',
-                    'short_address' => 'Xã La Khê',
-                    'name' => 'Hoàng Nguyễn',
-                    'mobile' => '0978125456',
-                    'remarks' => 'Call me'
+                    "address" => "La Khe, Ha Dong, Hà Nội",
+                    "short_address" => "La Khe",
+                    "name" => "KRMEDI",
+                    "mobile" => "0973566792",
+                    "remarks" => "call me"
                 ],
                 [
                     'address' => $address,
@@ -292,21 +292,6 @@ class CheckoutApi extends Controller
         } catch (\Exception $exception) {
             return response((new MainApi())->returnMessage('Error, Please try again!'), 400);
         }
-    }
-
-    public function getTokenAhamove()
-    {
-        $response = Http::withHeaders([
-            'cache-control' => 'no-cache',
-        ])->get('https://apistg.ahamove.com/v1/partner/register_account', [
-            'mobile' => '0968228229',
-            'name' => 'dev',
-            'api_key' => '3c58f1b2c5c5cc693a69f1bf1af25675c100123e',
-            'address' => '102 P. Nguyễn Thanh Bình, La Khê, Hà Đông, Hà Nội, Việt Nam',
-        ]);
-
-        $token = $response->json()['token'];
-        return $token;
     }
 
     public function showPoint(Request $request)
