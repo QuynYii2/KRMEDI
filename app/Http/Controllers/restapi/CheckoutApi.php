@@ -74,6 +74,40 @@ class CheckoutApi extends Controller
 
         $prescription_id = $request->input('prescription_id');
 
+//        $token_aha = $this->getTokenAhamove();
+//        $url = 'https://apistg.ahamove.com/v1/order/estimated_fee';
+//        $token = $token_aha;
+//        $orderTime = 0;
+//        $serviceId = 'SGN-BIKE';
+//        $path = [
+//            [
+//                "address" => "122, Phường Phúc Xá, Quận Ba Đình, Hà Nội, Việt Nam",
+//                "short_address" => "Phường Phúc Xá",
+//                "name" => "Phường Phúc Xá",
+//                "mobile" => "09785626314",
+//                "remarks" => "call me"
+//            ],
+//            [
+//                "address" => "122, Phường Phúc Xá, Quận Ba Đình, Hà Nội, Việt Nam",
+//                "name" => "Phường Phúc Xá",
+//                "mobile" => "09785626314"
+//            ]
+//        ];
+//
+//        $response = Http::withHeaders([
+//            'Accept' => '*/*',
+//            'Cache-Control' => 'no-cache',
+//            'Content-Type' => 'application/json',
+//        ])->post($url, [
+//            'token' => $token,
+//            'order_time' => $orderTime,
+//            'path' => json_encode($path),
+//            'service_id' => $serviceId,
+//            'requests' => []
+//        ]);
+//
+//        dd($response->json());
+
         $order = new Order();
 
         $order->user_id = $userID;
@@ -299,10 +333,10 @@ class CheckoutApi extends Controller
         $response = Http::withHeaders([
             'cache-control' => 'no-cache',
         ])->get('https://apistg.ahamove.com/v1/partner/register_account', [
-            'mobile' => '0968228229',
-            'name' => 'dev',
-            'api_key' => '3c58f1b2c5c5cc693a69f1bf1af25675c100123e',
-            'address' => '102 P. Nguyễn Thanh Bình, La Khê, Hà Đông, Hà Nội, Việt Nam',
+            'mobile' => '0973566792',
+            'name' => 'KRMEDI',
+            'api_key' => 'c7a362387a0fe2e7ed2f3ee6e0df8ded726a9ea8',
+            'address' => 'La Khe, Ha Dong',
         ]);
 
         $token = $response->json()['token'];
