@@ -165,6 +165,15 @@
         }
     </style>
     @include('layouts.partials.header')
+    @if(request()->has('status') && request()->get('status') == 'successful')
+        <script>
+            alert('Booking Success');
+        </script>
+    @elseif(request()->has('status') && request()->get('status') == 'unsuccessful')
+        <script>
+            alert('Booking Error!');
+        </script>
+    @endif
     <div class="container box-dat-kham">
         <div class="detail-clinic-theo-chuyen-khoa-title border-bottom">
             <a href="{{ route('home.specialist') }}">
