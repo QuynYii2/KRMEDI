@@ -16,6 +16,7 @@ use App\Enums\SettingStatus;
 use App\Enums\UserStatus;
 use App\ExportExcel\BookingDoctorExport;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\restapi\BookingApi;
 use App\Models\Booking;
 use App\Models\Chat;
 use App\Models\Clinic;
@@ -164,17 +165,6 @@ class HomeController extends Controller
     public function checkoutByFundiin(Request $request)
     {
         //Get Product Detail
-//        $totalOrder = $request->input('total_order');
-//        $quantity = $request->input('quantity_payment');
-//        $productID = $request->input('product_id');
-//        $productPrice = $request->input('product_price');
-//        $productName = $request->input('product_name');
-//        $productDescription = $request->input('product_description');
-//        $productDescription = htmlspecialchars(strip_tags($productDescription), ENT_QUOTES, 'UTF-8');
-//        $productCategory = $request->input('product_category');
-//        $productImage = $request->input('product_image');
-//        $productImageArray = explode(',', $productImage);
-//        $productUnitPrice = $request->input('product_unit_price');
         $clinicId = $request->input('clinic_id');
         $clinicName = $request->input('clinic_detail_name');
         $clinicDescription = $request->input('clinic_detail_description');
@@ -220,8 +210,8 @@ class HomeController extends Controller
             "lang" => "vi",
             "extraData" => "jsonstring",
             "description" => "description",
-            "successRedirectUrl" => route('clinic.booking.store'),
-            "unSuccessRedirectUrl" => route('home.specialist.booking.detail', ['id' => $clinicId]),
+            "successRedirectUrl" => route('home.specialist.booking.detail', ['id' => $clinicId, 'status' => 'successful']),
+            "unSuccessRedirectUrl" => route('home.specialist.booking.detail', ['id' => $clinicId, 'status' => 'unsuccessful']),
             "installment" => [
                 "packageCode" => "045000"
             ],
@@ -271,9 +261,32 @@ class HomeController extends Controller
             return response()->json(['error' => 'Request failed', 'details' => $jsonResult], 403);
         }
 
-        if($jsonResult['resultStatus'] == "APPROVED"){
+        if ($jsonResult['resultStatus'] == "APPROVED") {
+            if ($request->input('member_family_id')) {
+                if ($request->input('member_family_id') == 'family') {
+                    alert()->error('Error', 'Bạn chưa chọn thành viên trong gia đình!');
+                    return back();
+                } elseif ($request->input('member_family_id') == 'myself') {
+                    $request->merge(['member_family_id' => null]);
+                }
+            }
+            $bookingApi = new BookingApi();
+            $requestData = $request->except('_token');
+            $request->merge($requestData);
+            $user = User::find($request->user_id);
+            if (!$user || $user->type == 'MEDICAL' || $user->type == 'BUSINESS') {
+                alert()->error('Error', 'Not permission!');
+                return back();
+            }
+            $booking = $bookingApi->createBooking($request);
+            if ($booking->getStatusCode() == 200) {
+                $data_booking = $booking->getData()->data;
+                $user = User::find($data_booking->user_id);
+                $clinic = Clinic::find($data_booking->clinic_id);
+                $specialist = Department::find($data_booking->department_id);
+            }
             return redirect($jsonResult['paymentUrl']);
-        }else{
+        } else {
             toast('Đã có lỗi xảy ra, vui lòng kiểm tra lại!', 'error', 'top-left');
             return back();
         }
