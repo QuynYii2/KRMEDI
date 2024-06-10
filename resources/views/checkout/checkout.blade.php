@@ -196,17 +196,17 @@
                                         </label>
                                         <input type="radio" id="master_card" name="method" value="master_card">
                                     </div>
-                                    <div class="method-detail">
-                                        <div class="d-flex justify-content-between align-items-center method-cod">
-                                            <label for="fundiin">
-                                                <img src="{{ asset('/img/icon/fundiin.png') }}" alt=""
-                                                     style="width: 24px; height: 24px">
-                                                <span>Fundiin - Mua trả sau 0% lãi</span>
-                                            </label>
-                                            <input type="radio" id="fundiin" name="method" value="fundiin">
-                                        </div>
-                                        <div id='script-checkout-container' class="mt-2" style="display: none;"></div>
-                                    </div>
+{{--                                    <div class="method-detail">--}}
+{{--                                        <div class="d-flex justify-content-between align-items-center method-cod">--}}
+{{--                                            <label for="fundiin">--}}
+{{--                                                <img src="{{ asset('/img/icon/fundiin.png') }}" alt=""--}}
+{{--                                                     style="width: 24px; height: 24px">--}}
+{{--                                                <span>Fundiin - Mua trả sau 0% lãi</span>--}}
+{{--                                            </label>--}}
+{{--                                            <input type="radio" id="fundiin" name="method" value="fundiin">--}}
+{{--                                        </div>--}}
+{{--                                        <div id='script-checkout-container' class="mt-2" style="display: none;"></div>--}}
+{{--                                    </div>--}}
                                 </div>
                             </div>
                         </div>
@@ -432,10 +432,10 @@
                     url = `master_card`;
                     valueMethod = `{{ \App\Enums\OrderMethod::CARD_CREDIT }}`;
                     break;
-                case 'fundiin':
-                    url = `{{route('user.checkout.fundiin')}}`;
-                    valueMethod = `{{ \App\Enums\OrderMethod::CARD_CREDIT }}`;
-                    break;
+                {{--case 'fundiin':--}}
+                {{--    url = `{{route('user.checkout.fundiin')}}`;--}}
+                {{--    valueMethod = `{{ \App\Enums\OrderMethod::CARD_CREDIT }}`;--}}
+                {{--    break;--}}
                 default:
                     url = `{{ route('user.checkout.imm') }}`;
                     break;
@@ -621,32 +621,32 @@
     </script>
 
 
-    <script type="application/javascript"
-            crossorigin="anonymous"
-            src="https://gateway-sandbox.fundiin.vn/merchants/checkoutjs/FD200000165745.js">
+{{--    <script type="application/javascript"--}}
+{{--            crossorigin="anonymous"--}}
+{{--            src="https://gateway-sandbox.fundiin.vn/merchants/checkoutjs/FD200000165745.js">--}}
 
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const fundiinRadio = document.getElementById('fundiin');
-            const checkoutContainer = document.getElementById('script-checkout-container');
+{{--    </script>--}}
+{{--    <script>--}}
+{{--        document.addEventListener('DOMContentLoaded', function() {--}}
+{{--            const fundiinRadio = document.getElementById('fundiin');--}}
+{{--            const checkoutContainer = document.getElementById('script-checkout-container');--}}
 
-            fundiinRadio.addEventListener('change', function() {
-                if (this.checked) {
-                    checkoutContainer.style.display = 'block';
-                }
-            });
+{{--            fundiinRadio.addEventListener('change', function() {--}}
+{{--                if (this.checked) {--}}
+{{--                    checkoutContainer.style.display = 'block';--}}
+{{--                }--}}
+{{--            });--}}
 
-            // Optionally, handle other radio buttons to hide the container when they are checked
-            const otherRadios = document.querySelectorAll('input[name="method"]:not(#fundiin)');
-            otherRadios.forEach(function(radio) {
-                radio.addEventListener('change', function() {
-                    if (this.checked) {
-                        checkoutContainer.style.display = 'none';
-                    }
-                });
-            });
-        });
-    </script>
+{{--            // Optionally, handle other radio buttons to hide the container when they are checked--}}
+{{--            const otherRadios = document.querySelectorAll('input[name="method"]:not(#fundiin)');--}}
+{{--            otherRadios.forEach(function(radio) {--}}
+{{--                radio.addEventListener('change', function() {--}}
+{{--                    if (this.checked) {--}}
+{{--                        checkoutContainer.style.display = 'none';--}}
+{{--                    }--}}
+{{--                });--}}
+{{--            });--}}
+{{--        });--}}
+{{--    </script>--}}
 @endsection
 
