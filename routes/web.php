@@ -79,6 +79,7 @@ Route::middleware(['user.active'])->group(function () {
         Route::get('/specialist-detail/{id}', [HomeController::class, 'specialistDetail'])->name('home.specialist.detail');
         Route::get('/booking-detail/{id}', [HomeController::class, 'bookingDetailSpecialist'])->name('home.specialist.booking.detail');
         Route::post('/specialist-review/{id}', [HomeController::class, 'specialistReview'])->name('home.specialist.review');
+        Route::post('/fundiin', [HomeController::class, 'checkoutByFundiin'])->name('home.fundiin');
     });
 
     Route::post('/login', [AuthController::class, 'login'])->name('loginProcess');

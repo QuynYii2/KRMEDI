@@ -15,6 +15,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -452,6 +453,9 @@ class AuthController extends Controller
 
         // Log the user in
         auth()->login($user, true);
+        $accessToken = Str::random(60);
+        Cookie::queue('accessToken', $accessToken, 60);
+
         session()->put('show_modal', true);
 
         // Redirect to home or any other page

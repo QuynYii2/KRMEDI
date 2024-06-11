@@ -16,6 +16,7 @@ use App\Enums\SettingStatus;
 use App\Enums\UserStatus;
 use App\ExportExcel\BookingDoctorExport;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\restapi\BookingApi;
 use App\Models\Booking;
 use App\Models\Chat;
 use App\Models\Clinic;
@@ -33,6 +34,7 @@ use App\Models\Setting;
 use App\Models\User;
 
 //use GuzzleHttp\Psr7\Request;
+use App\Services\FundiinService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
@@ -42,6 +44,12 @@ use ReflectionClass;
 
 class HomeController extends Controller
 {
+    public $fundiinService;
+
+    public function __construct(FundiinService $fundiinService)
+    {
+        $this->fundiinService = $fundiinService;
+    }
 
     public function index()
     {
@@ -154,6 +162,135 @@ class HomeController extends Controller
         return redirect(route('home'));
     }
 
+    public function checkoutByFundiin(Request $request)
+    {
+        //Get Product Detail
+        $clinicId = $request->input('clinic_id');
+        $clinicName = $request->input('clinic_detail_name');
+        $clinicDescription = $request->input('clinic_detail_description');
+        $clinicDescription =  htmlspecialchars(strip_tags($clinicDescription), ENT_QUOTES, 'UTF-8');
+        $clinicImage = $request->input('clinic_detail_image');
+        $clinicImageArray = explode(',', $clinicImage);
+
+        //Get customer detail
+        $firstName = Auth::user()->name;
+        $lastName = Auth::user()->last_name;
+        $email = Auth::user()->email;
+        $phone = Auth::user()->phone;
+        $gender = Auth::user()->gender ?? 'Unknown';
+        $birthday = Auth::user()->birthday;
+        $province = \App\Models\Province::find(Auth::user()->province_id)->full_name;
+        $district = \App\Models\District::find(Auth::user()->district_id)->full_name;
+        $address = Auth::user()->detail_address;
+
+        //Send request to Fundiin
+        $endpoint = 'https://gateway-sandbox.fundiin.vn/v2/payments';
+
+        $clientId = config('fundiin.clientId');
+        $merchantId = config('fundiin.merchantId');
+        $secretKey = config('fundiin.secretKey');
+
+        function generateReferenceId($length = 30) {
+            $characters = '0123456789';
+            $charactersLength = strlen($characters);
+            $randomString = '';
+            for ($i = 0; $i < $length; $i++) {
+                $randomString .= $characters[rand(0, $charactersLength - 1)];
+            }
+            return $randomString;
+        }
+        $referenceId = generateReferenceId();
+
+        $data = [
+            "merchantId" => $merchantId,
+            "referenceId" => $referenceId,
+            "requestType" => "installment",
+            "paymentMethod" => "WEB",
+            "terminalType" => "DESKTOP_BROWSER",
+            "lang" => "vi",
+            "extraData" => "jsonstring",
+            "description" => "description",
+            "successRedirectUrl" => route('home.specialist.booking.detail', ['id' => $clinicId, 'status' => 'successful']),
+            "unSuccessRedirectUrl" => route('home.specialist.booking.detail', ['id' => $clinicId, 'status' => 'unsuccessful']),
+            "installment" => [
+                "packageCode" => "045000"
+            ],
+            "amount" => [
+                "currency" => 'VND',
+                "value" => '1000000'
+            ],
+            "items" => [
+                [
+                    "productId" => $clinicId,
+                    "productName" => $clinicName,
+                    "description" => $clinicDescription,
+                    "category" => 'clinics',
+                    "quantity" => '1',
+                    "price" => '1000000',
+                    "currency" => 'VND',
+                    "totalAmount" => '1000000',
+                    "imageUrl" => "https://krmedi.vn" . $clinicImageArray[0]
+                ]
+            ],
+            "customer" => [
+                "phoneNumber" => $phone,
+                "email" => $email,
+                "firstName" => $firstName,
+                "lastName" => $lastName,
+                "gender" => $gender,
+                "dateOfBirth" => $birthday,
+            ],
+            "shipping" => [
+                "city" => $province,
+                "zipCode" => "00700",
+                "district" => $district,
+                "ward" => "",
+                "street" => $address,
+                "streetNumber" => $address,
+                "houseNumber" => $address,
+                "houseExtension" => null,
+                "country" => "VN"
+            ],
+            "sendEmail" => true
+        ];
+
+        $result = $this->fundiinService->execPostRequest($endpoint, $data, $clientId, $secretKey);
+        $jsonResult = json_decode($result, true);
+
+        if (isset($jsonResult['error'])) {
+            return response()->json(['error' => 'Request failed', 'details' => $jsonResult], 403);
+        }
+
+        if ($jsonResult['resultStatus'] == "APPROVED") {
+            if ($request->input('member_family_id')) {
+                if ($request->input('member_family_id') == 'family') {
+                    alert()->error('Error', 'Bạn chưa chọn thành viên trong gia đình!');
+                    return back();
+                } elseif ($request->input('member_family_id') == 'myself') {
+                    $request->merge(['member_family_id' => null]);
+                }
+            }
+            $bookingApi = new BookingApi();
+            $requestData = $request->except('_token');
+            $request->merge($requestData);
+            $user = User::find($request->user_id);
+            if (!$user || $user->type == 'MEDICAL' || $user->type == 'BUSINESS') {
+                alert()->error('Error', 'Not permission!');
+                return back();
+            }
+            $booking = $bookingApi->createBooking($request);
+            if ($booking->getStatusCode() == 200) {
+                $data_booking = $booking->getData()->data;
+                $user = User::find($data_booking->user_id);
+                $clinic = Clinic::find($data_booking->clinic_id);
+                $specialist = Department::find($data_booking->department_id);
+            }
+            return redirect($jsonResult['paymentUrl']);
+        } else {
+            toast('Đã có lỗi xảy ra, vui lòng kiểm tra lại!', 'error', 'top-left');
+            return back();
+        }
+    }
     public function specialistReview(Request $request, $id)
     {
         $clinic = Clinic::find($id);

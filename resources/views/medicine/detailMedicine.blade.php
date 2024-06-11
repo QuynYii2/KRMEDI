@@ -184,7 +184,7 @@
         </div>
     </div>
     @if(Auth::check())
-        <input type="text" id="accessToken" class="d-none" value="{{ $_COOKIE['accessToken'] }}">
+        <input type="text" id="accessToken" class="d-none" value="{{ $_COOKIE['accessToken'] ?? null }}">
         <input type="text" id="userID" class="d-none" value="{{ Auth::user()->id }}">
     @endif
 

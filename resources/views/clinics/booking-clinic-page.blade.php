@@ -151,13 +151,40 @@
             z-index: 1!important;
         }
         @media (max-width: 767px) {
-            .zalo-chat{
-                right: 22px!important;
-                bottom: 122px!important;
+            .zalo-chat {
+                right: 22px !important;
+                bottom: 122px !important;
             }
+        }
+        .border-booking-payment .font-weight-600 label {
+            color: #000;
+            font-size: 18px;
+            font-style: normal;
+            font-weight: 800;
+            line-height: normal;
+        }
+        .fundiin-payment{
+            padding: 16px;
+            background-color: #f3f3f3;
+        }
+        .fundiin-payment-checkbox{
+            width: 24px;
+            height: 24px;
+            border-radius: 30px;
+            margin-right: 1rem;
+            margin-bottom: 0;
         }
     </style>
     @include('layouts.partials.header')
+    @if(request()->has('status') && request()->get('status') == 'successful')
+        <script>
+            alert('Booking Success');
+        </script>
+    @elseif(request()->has('status') && request()->get('status') == 'unsuccessful')
+        <script>
+            alert('Booking Error!');
+        </script>
+    @endif
     <div class="container box-dat-kham">
         <div class="detail-clinic-theo-chuyen-khoa-title border-bottom">
             <a href="{{ route('home.specialist') }}">
@@ -220,6 +247,9 @@
             <input type="hidden" name="clinic_id" id="clinic_id" value='{{ $clinicDetail->id }}'>
             <input type="hidden" name="user_id" id="user_id" value="{{ Auth::user()->id }}">
             <input type="hidden" name="department_id" id="department_id" value="">
+            <input type="hidden" name="clinic_detail_name" value="{{$clinicDetail->name}}"/>
+            <input type="hidden" name="clinic_detail_description" value="{{$clinicDetail->introduce}}"/>
+            <input type="hidden" name="clinic_detail_image" value="{{$clinicDetail->gallery}}"/>
             <div>
                 <div></div>
                 <section>
@@ -299,6 +329,24 @@
                             </div>
                         </div>
                     @endforeach
+                </div>
+            </div>
+            <div>
+                <div class="select-service">Chọn hình thức thanh toán (không bắt buộc)</div>
+                <div class="fundiin-payment">
+                    <div class="d-flex justify-content-between mt-md-2 align-items-center border-booking-payment">
+                        <div class="fs-14 font-weight-600">
+                            <label for="fundiin">
+                                <img src="{{ asset('/img/icon/fundiin.png') }}" alt=""
+                                     style="width: 24px; height: 24px; margin-right: 10px">
+                                <span>Fundiin - Mua trả sau 0% lãi</span>
+                            </label>
+                        </div>
+                        <div>
+                            <input type="radio" id="fundiin" name="method" value="fundiin" class="fundiin-payment-checkbox">
+                        </div>
+                    </div>
+                    <div id='script-checkout-container' class="mt-2" style="display: none;"></div>
                 </div>
             </div>
             <div class="d-flex justify-content-center">
@@ -521,6 +569,47 @@
             if (departmentId) {
                 document.getElementById('department_id').value = departmentId;
             }
+        });
+    </script>
+
+    <script type="application/javascript"
+            crossorigin="anonymous"
+            src="https://gateway-sandbox.fundiin.vn/merchants/checkoutjs/FD200000165745.js">
+
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fundiinRadio = document.getElementById('fundiin');
+            const checkoutContainer = document.getElementById('script-checkout-container');
+
+            fundiinRadio.addEventListener('change', function() {
+                if (this.checked) {
+                    checkoutContainer.style.display = 'block';
+                }
+            });
+
+            // Optionally, handle other radio buttons to hide the container when they are checked
+            const otherRadios = document.querySelectorAll('input[name="method"]:not(#fundiin)');
+            otherRadios.forEach(function(radio) {
+                radio.addEventListener('change', function() {
+                    if (this.checked) {
+                        checkoutContainer.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        document.getElementById('bookingHospitalForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            var fundiinChecked = document.getElementById('fundiin').checked;
+            if (fundiinChecked) {
+                this.action = "{{ route('home.fundiin') }}"; // Change form action if Fundiin is selected
+            } else {
+                this.action = "{{ route('clinic.booking.store') }}"; // Default action
+            }
+
+            this.submit(); // Submit the form with the updated action
         });
     </script>
 @endsection
