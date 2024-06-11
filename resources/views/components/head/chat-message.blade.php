@@ -606,7 +606,6 @@
             isOnline: true,
             lastActive: time,
             role: `{{ Auth::user()->member }}`,
-            pushToken: ''
         };
 
         try {
