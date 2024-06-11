@@ -926,6 +926,9 @@
         height: auto!important;
         text-align: center;
     }
+    .container .detail-clinic-theo-chuyen-khoa-title .border-specialList .specialList-clinics--main .group-button .btn-detail-clinic{
+        padding: 10px!important;
+    }
     .other-clinics .title{
         margin-bottom: 5px;
         margin-top: 16px;

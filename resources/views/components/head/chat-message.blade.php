@@ -538,10 +538,15 @@
         createUserWithEmailAndPassword,
         signOut
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import {
+        getMessaging,
+        getToken,
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging.js";
 
     const app = initializeApp(firebaseConfig);
     const database = getFirestore(app);
     const auth = getAuth();
+    const messaging = getMessaging(app);
 
     let current_user, list_user = [], doctorChatList = [], list_user_not_seen = [],
         current_role = `{{ (new \App\Http\Controllers\MainController())->getRoleUser(Auth::user()->id)}}`,
@@ -556,30 +561,73 @@
     }
 
     async function login() {
-        await signInWithEmailAndPassword(auth, `{{ Auth::user()->email }}`, '123456')
-            .then((userCredential) => {
-                current_user = userCredential.user;
-                let uid = current_user.uid;
-                setOnline(uid, true);
-                setCookie("is_login", true, 1);
-                getAllChatRoomWithDoctor();
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                registerUser();
-            });
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, `{{ Auth::user()->email }}`, '123456');
+            current_user = userCredential.user;
+
+            const userDocRef = doc(database, "users", current_user.uid);
+            const userDoc = await getDoc(userDocRef);
+
+            if (!userDoc.exists()) {
+                await createUserInFirestore(current_user);
+                await updateFirebaseToken();
+            }
+
+            let uid = current_user.uid;
+            setOnline(uid, true);
+            setCookie("is_login", true, 1);
+            getAllChatRoomWithDoctor();
+        } catch (error) {
+            console.error('Login error:', error);
+            registerUser();
+        }
     }
 
     async function registerUser() {
-        await createUserWithEmailAndPassword(auth, `{{ Auth::user()->email }}`, '123456')
-            .then((userCredential) => {
-                current_user = userCredential.user;
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-            });
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, `{{ Auth::user()->email }}`, '123456');
+            current_user = userCredential.user;
+            await createUserInFirestore(current_user);
+            await updateFirebaseToken();
+        } catch (error) {
+            console.error('Register error:', error);
+        }
+    }
+
+    async function createUserInFirestore(user) {
+        const time = Date.now().toString();
+        const chatUser = {
+            id: user.uid,
+            name: `{{ Auth::user()->username }}`,
+            email: user.email,
+            about: "Hey, I'm using We Chat!",
+            image: user.photoURL || '',
+            createdAt: time,
+            isOnline: true,
+            lastActive: time,
+            role: `{{ Auth::user()->member }}`,
+            pushToken: ''
+        };
+
+        try {
+            await setDoc(doc(usersCollection, user.uid), chatUser);
+            console.log('User created in Firestore:', chatUser);
+        } catch (error) {
+            console.error('Error creating user in Firestore:', error);
+        }
+    }
+
+    async function updateFirebaseToken() {
+        if (auth.currentUser) {
+            try {
+                const token = await getToken(messaging, {vapidKey: 'BIKdl-B84phF636aS0ucw5k-KoGPnivJW4L_a9GNf7gyrWBZt--O9KcEzvsLl3h-3_Ld0rT8YFTsuupknvguW9s'});
+                if (token) {
+                    await setDoc(doc(database, 'users', auth.currentUser.uid), { push_token: token }, { merge: true });
+                }
+            } catch (error) {
+                console.error('Error getting token or updating Firestore:', error);
+            }
+        }
     }
 
      function logout() {
@@ -755,7 +803,7 @@
             let hospital = '';
             let avt = '';
 
-            if (is_online === true && (res.role == 'DOCTORS' || res.role == 'PHAMACISTS' || res.role == 'HOSPITALS') && res.id != current_user.uid) {
+            if ((res.role == 'DOCTORS' || res.role == 'PHAMACISTS' || res.role == 'HOSPITALS') && res.id != current_user.uid) {
                 count++;
                 promises.push(getUserInfo(email).then((response) => {
                     name_doctor = response.infoUser.name;
