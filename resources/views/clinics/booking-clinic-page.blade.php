@@ -145,6 +145,17 @@
             box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
             padding: 16px;
         }
+        .zalo-chat{
+            right: 60px!important;
+            bottom: 135px!important;
+            z-index: 1!important;
+        }
+        @media (max-width: 767px) {
+            .zalo-chat {
+                right: 22px !important;
+                bottom: 122px !important;
+            }
+        }
         .border-booking-payment .font-weight-600 label {
             color: #000;
             font-size: 18px;
@@ -345,6 +356,7 @@
             </div>
 
         </form>
+        <div class="zalo-chat-widget zalo-chat" data-oaid="3111836148004341171" data-welcome-message="Rất vui khi được hỗ trợ bạn!" data-autopopup="0" data-width="300" data-height="300"></div>
     </div>
     <script>
         $(document).ready(function() {
