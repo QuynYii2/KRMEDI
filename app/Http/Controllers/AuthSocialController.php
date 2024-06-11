@@ -470,7 +470,7 @@ class AuthSocialController extends Controller
                 ]);
 
                 //SET ROLE
-                (new MainController())->createRoleUser('NORMAL', $randomUsername);
+                (new MainController())->createRoleUser('NORMAL', $zaloUser['name']);
 
                 auth()->login($newUser, true);
                 $token = JWTAuth::fromUser($newUser);
