@@ -76,9 +76,18 @@
                             </div>
                             <div class="group-button d-flex mt-3 align-items-center">
                                 <a href="" class="mr-2">
-                                    <div class="button-follow-specialList">
-                                        {{ __('home.Theo dõi') }}
+{{--                                    <div class="button-follow-specialList">--}}
+{{--                                        {{ __('home.Theo dõi') }}--}}
 
+{{--                                    </div>--}}
+                                    <div class="button-follow-specialList button-follow-specialList-zalo" style="padding-top: 7px!important;padding-left: 12px!important;">
+                                        <div style="margin-left: 8px; margin-top: 18px" class="zalo-follow-only-button"
+                                             data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
+                                    </div>
+                                </a>
+                                <a href="{{ route('home.specialist.booking.detail', $clinicDetail->id) }}" style="margin: 0 5px 0 0px">
+                                    <div class="button-booking-specialList line-dk-btn button-direct-specialList btn-detail-clinic" style="margin: 0;background-color: #00bc59">
+                                        {{ __('home.Đặt khám') }}
                                     </div>
                                 </a>
 {{--                                <a href="https://www.google.com/maps?q={{$clinicDetail->latitude}},{{$clinicDetail->longitude}}" target="_blank">--}}

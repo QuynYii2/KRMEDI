@@ -6,6 +6,14 @@
         .tox.tox-tinymce {
             width: 100%;
         }
+        @media (max-width: 676px) {
+            .box-text-comment{
+                width: 100%;
+                margin-bottom: 10px;
+                flex: unset!important;
+            }
+
+        }
     </style>
     <link href="{{ asset('css/detail.css') }}" rel="stylesheet">
     @include('layouts.partials.header_3')
@@ -50,17 +58,6 @@
 
         <div class="frame row justify-content-md-around mentoring-img" id="mentoring-img">
 
-            @foreach(explode(',', $question->gallery_public) as $picture)
-
-                <div class="div col-sm-4">
-                    <div class="catalog">
-                        <div class="div">
-                            <img alt="" class="rectangle" src="{{ asset($picture) }}"/>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-
             @if(Auth::check())
                 @php
                     $doctor = \App\Models\DoctorInfo::where('created_by', Auth::user()->id)->first();
@@ -76,6 +73,17 @@
                         </div>
                     @endforeach
                 @endif
+                @else
+                @foreach(explode(',', $question->gallery) as $picture)
+
+                    <div class="div col-sm-4">
+                        <div class="catalog">
+                            <div class="div">
+                                <img alt="" class="rectangle" src="{{ asset($picture) }}"/>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             @endif
         </div>
         <style>
@@ -85,16 +93,16 @@
         </style>
         <div class="mt-5">
             <div class="frame comment-item mb-3 d-none" id="comment-main">
-                <div class="div-5 ">
-                    <div class="frame-wrapper">
-                        <div class="div-6 w-100">
-                            <img class="img"
-                                 src="https://media.licdn.com/dms/image/D560BAQE96KctT7x-iw/company-logo_200_200/0/1666170056007?e=2147483647&v=beta&t=U-5DmL_mYQaduEYyl0aVlabEvxP6-F5nZE9daao6Wuk" alt=""/>
+                <div class="div-5 flex-wrap">
+                    <div class="frame-wrapper box-text-comment">
+                        <div class="div-6 w-100 ">
+{{--                            <img class="img"--}}
+{{--                                 src="https://media.licdn.com/dms/image/D560BAQE96KctT7x-iw/company-logo_200_200/0/1666170056007?e=2147483647&v=beta&t=U-5DmL_mYQaduEYyl0aVlabEvxP6-F5nZE9daao6Wuk" alt=""/>--}}
                             <textarea type="text" class="form-control text-wrapper-4 w-100 h-100 border-0"
                                       placeholder="{{ __('home.Enter question here') }}" id="input-comment-main"></textarea>
                         </div>
                     </div>
-                    <div class="text-wrapper-5">
+                    <div class="text-wrapper-5 box-text-comment">
                         <button type="button" class="btn mx-2 w-100 h-100"
                                 onclick="submitCommentMain()">{{ __('home.comment') }}
                         </button>
@@ -124,7 +132,7 @@
             </div>
         </div>
 
-        <div class="border-bottom mb-4">
+        <div class="border-bottom mb-4 mt-3">
             <div class="div d-flex justify-content-between mb-3">
                 <div class="text-wrapper d-inline-flex header_comment">{{ __('home.Answer') }}</div>
             </div>
