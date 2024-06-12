@@ -76,21 +76,11 @@
                             </div>
                             <div class="group-button d-flex mt-3 align-items-center">
                                 <a href="" class="mr-2">
-{{--                                    <div class="button-follow-specialList">--}}
-{{--                                        {{ __('home.Theo dõi') }}--}}
+                                    <div class="button-follow-specialList">
+                                        {{ __('home.Theo dõi') }}
 
-{{--                                    </div>--}}
-                                    <div class="button-follow-specialList button-follow-specialList-zalo" style="padding-top: 7px!important;padding-left: 12px!important;">
-                                        <div style="margin-left: 8px; margin-top: 18px" class="zalo-follow-only-button"
-                                             data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
                                     </div>
                                 </a>
-                                <a href="{{ route('home.specialist.booking.detail', $clinicDetail->id) }}" style="margin: 0 5px 0 0px">
-                                    <div class="button-booking-specialList line-dk-btn button-direct-specialList btn-detail-clinic" style="margin: 0;background-color: #00bc59">
-                                        {{ __('home.Đặt khám') }}
-                                    </div>
-                                </a>
-
 {{--                                <a href="https://www.google.com/maps?q={{$clinicDetail->latitude}},{{$clinicDetail->longitude}}" target="_blank">--}}
 {{--                                    <div class="button-direct-specialList">--}}
 {{--                                        {{ __('home.Chỉ đường') }}--}}
@@ -101,7 +91,9 @@
                                         {{ __('home.Chỉ đường') }}
                                     </div>
                                 </button>
-{{--                                <a href="{{route('clinic.detail',$clinicDetail->id)}}" class="">--}}
+                                <input type="hidden" name="latitude" id="latitude" value="{{$clinicDetail->latitude}}" />
+                                <input type="hidden" name="longitude" id="longitude" value="{{$clinicDetail->longitude}}" />
+                                {{--                                <a href="{{route('clinic.detail',$clinicDetail->id)}}" class="">--}}
 {{--                                    <div class="button-direct-specialList">--}}
 {{--                                        {{ __('home.Chỉ đường') }}--}}
 {{--                                    </div>--}}
@@ -169,35 +161,46 @@
 
                     </div>
                     <div class="offcanvas-body p-0 mt-5">
-                        <div id="allAddressesMap" class="show active fade map_clinic_desktop" style="height: 800px; width: 100%">
+                        <div id="allAddressesMap" class="show active fade map_clinic_mobile" style="height: 500px; width: 100%">
                         </div>
                     </div>
-                    <div class="table-responsive mt-3">
+                    <div class="table-responsive mt-5">
                         <table class="table table-vcenter text-nowrap table-bordered border-bottom">
                             <thead>
-                                <tr>
-                                    <th>Ngày trong tuần</th>
-                                    <td>Thứ Hai</td>
-                                    <td>Thứ Ba</td>
-                                    <td>Thứ Tư</td>
-                                    <td>Thứ Năm</td>
-                                    <td>Thứ Sáu</td>
-                                    <td>Thứ Bảy</td>
-                                    <td>Chủ Nhật</td>
-
-                                </tr>
+                            <tr>
+                                <th>Ngày trong tuần</th>
+                                <th>Thời gian</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th>Thời gian</th>
-                                    <td>8am - 20pm</td>
-                                    <td>8am - 20pm</td>
-                                    <td>8am - 20pm</td>
-                                    <td>8am - 20pm</td>
-                                    <td>8am - 20pm</td>
-                                    <td>8am - 20pm</td>
-                                    <td class="text-danger">Ngày nghỉ</td>
-                                </tr>
+                            <tr>
+                                <td>Thứ Hai</td>
+                                <td>8am - 20pm</td>
+                            </tr>
+                            <tr>
+                                <td>Thứ Ba</td>
+                                <td>8am - 20pm</td>
+                            </tr>
+                            <tr>
+                                <td>Thứ Tư</td>
+                                <td>8am - 20pm</td>
+                            </tr>
+                            <tr>
+                                <td>Thứ Năm</td>
+                                <td>8am - 20pm</td>
+                            </tr>
+                            <tr>
+                                <td>Thứ Sáu</td>
+                                <td>8am - 20pm</td>
+                            </tr>
+                            <tr>
+                                <td>Thứ Bảy</td>
+                                <td>8am - 20pm</td>
+                            </tr>
+                            <tr>
+                                <td>Chủ Nhật</td>
+                                <td class="text-danger">Ngày nghỉ</td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -502,6 +505,7 @@
                                 });
                                 closeAllInfoWindows();
                             });
+
                         }
                     });
 

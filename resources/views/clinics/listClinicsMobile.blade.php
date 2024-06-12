@@ -334,6 +334,7 @@
                                 $(document).on('click', '#showMapBtnTab', function() {
                                     getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
                                     location = [];
+                                    closeAllInfoWindows();
                                 });
                             });
                             markers.push(marker);
@@ -350,6 +351,7 @@
                                 // clinicElement.find('#showMapBtn').on('click', function() {
                                 //     getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
                                 // });
+                                closeAllInfoWindows();
                             });
                         }
                     });

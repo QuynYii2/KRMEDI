@@ -36,7 +36,7 @@
     }
 </style>
 @section('main-content')
-    <h3 class="text-center">My Product Favourite</h3>
+    <h3 class="text-center">Sản phẩm yêu thích</h3>
     <br>
     <div class="container-fluid">
         <ul class="nav nav-tabs" id="myTabOrder" role="tablist">
@@ -44,13 +44,13 @@
                 <button class="nav-link active" id="flea_market_tab" data-bs-toggle="tab"
                         data-bs-target="#product_flea_market"
                         type="button" role="tab" aria-controls="product_flea_market" aria-selected="true">
-                    Product Flea Market
+                    Chợ sản phẩm cũ
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="medicine_tab" data-bs-toggle="tab" data-bs-target="#product_medicine"
                         type="button" role="tab" aria-controls="product_medicine" aria-selected="false">
-                    Product Medicine
+                    Sản phẩm thuốc
                 </button>
             </li>
         </ul>

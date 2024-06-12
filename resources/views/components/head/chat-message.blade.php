@@ -305,33 +305,42 @@
 
     <div class="chat-box" id="chat-box-mess">
         <div class="chat-box-header">
-            <span class="chat-box-toggle"><i class="fa-solid fa-x"></i></span>
+            <p class="h6 mb-0"><strong>Tin nhắn</strong></p>
+            <span class="chat-box-toggle"><i class="fa-solid fa-x" style="font-size: 14px;"></i></span>
         </div>
         <div class="chat-box-body">
 
-            <ul class="nav nav-tabs" role="tablist" id="chat-widget-navbar">
+            <ul class="nav nav-tabs" role="tablist" id="chat-widget-navbar" style="margin-top: 15px">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="chat-widget-all-online" data-toggle="tab"
                             data-target="#chat-widget-all-online-tabs" type="button" role="tab" aria-controls="home"
-                            aria-selected="true">{{ __('home.Đang trực tuyến') }}
+                            aria-selected="true">Bác sĩ trực tuyến
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="chat-widget-connected" data-toggle="tab"
                             data-target="#chat-widget-connected-tabs" type="button" role="tab" aria-controls="profile"
-                            aria-selected="false">{{ __('home.Connected') }} <span class="number_not_screen" style="color: red;margin-left: 5px"></span>
+                            aria-selected="false">Tin nhắn đã gửi <span class="number_not_screen" style="color: red;margin-left: 5px"></span>
                     </button>
                 </li>
             </ul>
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="chat-widget-all-online-tabs" role="tabpanel"
                      aria-labelledby="chat-widget-all-online">
+                    <div class="search-container">
+                        <i class="fa fa-search search-icon"></i>
+                        <input type="text" placeholder="Tìm kiếm" class="chat-search w-100" />
+                    </div>
                     <div id="friendslist-all-online">
                         <div id="friends-all-online"></div>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="chat-widget-connected-tabs" role="tabpanel"
                      aria-labelledby="chat-widget-connected">
+                     <div class="search-container">
+                        <i class="fa fa-search search-icon"></i>
+                        <input type="text" placeholder="Tìm kiếm" class="chat-search w-100" />
+                    </div>
                     <div id="friendslist-connected">
                         <div id="friends-connected"></div>
                     </div>
@@ -342,10 +351,16 @@
             <div id="chatview" class="p1">
                 <div id="profile">
                     <div id="close">
-                        <i class="fa-solid fa-x"></i>
+                        <i class="fa-solid fa-arrow-left" style="color: black"></i>
                     </div>
 
-                    <p></p>
+                    <div class="d-flex">
+                        <img class="chatview-image" id="chatview-image" src=""/>
+                        <div>
+                            <p class="mt-0"></p>
+                            <label style="color: black;font-size: 11px;text-align: left;display: flex;align-items: center; column-gap: 3px">Online <div class="online-dot"></div></label>
+                        </div>
+                    </div>
 {{--                    <span></span>--}}
                 </div>
                 <div id="chat-messages"></div>
@@ -809,7 +824,7 @@
                     hospital = response.infoUser.hospital ? response.infoUser.hospital : '';
                     avt = response.infoUser.avt ? window.location.origin + response.infoUser.avt : '../../../../img/avt_default.jpg';
 
-                    html_online += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}">
+                    html_online += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}" data-image="${avt}">
                     <img src="${avt}"/>
                     <p>
                         <strong class="max-1-line-title-widget-chat">${name_doctor}</strong>
@@ -827,13 +842,15 @@
                     hospital = response.infoUser.hospital ? response.infoUser.hospital : '';
                     avt = response.infoUser.avt ? window.location.origin + response.infoUser.avt : '../../../../img/avt_default.jpg';
 
-                    html += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}">
+                    html += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}" data-image="${avt}">
                     <img src="${avt}"/>
-                    <p>
-                        <strong class="max-1-line-title-widget-chat">${name_doctor}</strong>
-                        <span>${hospital}</span>
-                    </p>
-                    ${redDotHtml}
+                    <div class="d-flex justify-content-between">
+                        <p>
+                            <strong class="max-1-line-title-widget-chat">${name_doctor}</strong>
+                            <span>${hospital}</span>
+                        </p>
+                        ${redDotHtml}
+                    </div>
                 </div>`;
                 }).catch((error) => {
                     console.error(error);
@@ -1035,6 +1052,7 @@
             id = $(this).data('id');
             let email = $(this).data('email');
             let role = $(this).data('role');
+            let img = $(this).data('image')
 
             isShowOpenWidget = true;
 
@@ -1061,11 +1079,13 @@
             var name = $(this).find("p strong").html();
             $("#profile p").html(name);
             $("#profile span").html(email);
+            $("#chatview-image").attr('src', img);
 
             $(".message").not(".right").find("img").attr("src", $(clone).attr("src"));
             let parent = $(this).parent();
             parent.hide();
             $('#chat-widget-navbar').hide();
+            $('#myTabContent').hide();
             $('#chatview').show();
 
             $('#close').unbind("click").click(function () {
@@ -1076,6 +1096,7 @@
                 setTimeout(function () {
                     $('#chatview').hide();
                     parent.show();
+                    $('#myTabContent').show();
                     $('#chat-widget-navbar').show();
                 }, 10);
             });

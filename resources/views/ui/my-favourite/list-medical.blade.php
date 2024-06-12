@@ -30,7 +30,7 @@
     }
 </style>
 @section('main-content')
-    <h3 class="text-center">My Medical Favourite</h3>
+    <h3 class="text-center">Bác sĩ yêu thích</h3>
     <br>
     <div class="container-fluid">
         <div class="row mt-3 list_medical">

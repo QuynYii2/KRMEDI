@@ -136,7 +136,38 @@ class HomeController extends Controller
     public function specialistDetail($id)
     {
         $clinicDetail = \App\Models\Clinic::where('id', $id)->first();
-        return view('chuyen-khoa.detail-clinic-pharmacies', compact('clinicDetail', 'id'));
+        $doctorIds = explode(',' , $clinicDetail->representative_doctor);
+        $doctors = [];
+        foreach ($doctorIds as $doctorId){
+            $doctor = User::where('id', $doctorId)->first();
+            if($doctor){
+                $doctors[] = $doctor;
+            }
+        }
+
+        $serviceIds = explode(',', $clinicDetail->service_id);
+        $services = [];
+        foreach($serviceIds as $serviceId){
+            $service = ServiceClinic::where('id', $serviceId)->first();
+            if ($service){
+                $services[] = $service;
+            }
+        }
+
+        $departmentIds = explode(',', $clinicDetail->department);
+        $departments = [];
+        foreach($departmentIds as $departmentId){
+            $department = ServiceClinic::where('id', $departmentId)->first();
+            if ($department){
+                $departments[] = $department;
+            }
+        }
+
+        if ($this->check_mobile()){
+            return view('chuyen-khoa.detail-clinic-pharmacies-mobile', compact('clinicDetail', 'id', 'doctors', 'services', 'departments'));
+        }else{
+            return view('chuyen-khoa.detail-clinic-pharmacies', compact('clinicDetail', 'id', 'doctors', 'services', 'departments'));
+        }
     }
 
     public function bookingDetailSpecialist($id)

@@ -377,8 +377,9 @@
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group focused">
-                                        <label class="form-control-label"
-                                            for="last_name">{{ __('home.Last name') }}</label>
+                                        <label class="form-control-label" for="last_name">{{ __('home.Last name') }}
+                                            <span class="small text-danger">*</span>
+                                        </label>
                                         <input type="text" id="last_name" class="form-control" name="last_name"
                                             placeholder="Last name" required
                                             value="{{ old('last_name', Auth::user()->last_name) }}">
@@ -469,17 +470,20 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group focused">
-                                        <label class="form-control-label"
-                                            for="address_code">{{ __('home.AddressCode') }}</label>
+                                        <label class="form-control-label" for="address_code">{{ __('home.AddressCode') }}
+                                            <span class="small text-danger">*</span>
+                                        </label>
                                         <input type="text" id="address_code" class="form-control" name="address_code"
                                             placeholder="ha_noi"
                                             value="{{ old('address_code', Auth::user()->address_code) }}" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label for="detail_address">{{ __('home.địa chỉ chi tiết việt') }}</label>
+                                    <label for="detail_address">{{ __('home.địa chỉ chi tiết việt') }}
+                                        <span class="small text-danger">*</span>
+                                    </label>
                                     <input class="form-control" name="detail_address" id="detail_address"
-                                           value="{{ $doctor->detail_address }}">
+                                           value="{{ $doctor->detail_address }}" required>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group focused">
