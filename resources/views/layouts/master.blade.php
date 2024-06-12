@@ -493,6 +493,8 @@
             return;
         } else if (currentUser == thisUser) {
             return;
+        }else if(data.user_id_1 != currentUser && data.user_id_2 != currentUser){
+            return;
         }
 
         // Define an async wrapper function to handle the asynchronous call

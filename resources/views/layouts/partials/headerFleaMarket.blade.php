@@ -37,9 +37,15 @@
                         <div class="dropdown-menu">
                             <a class="dropdown-item"
                                href="{{ route('profile') }}">{{ __('home.Trang cá nhân') }}</a>
+                            @if(Auth::user()->type != Role::NORMAL)
+                                <a class="dropdown-item" href="{{ route('view.prescription.result.create') }}">Tạo đơn thuốc</a>
+                            @else
+                                <a class="dropdown-item" href="{{url('my-bookings/list')}}">{{ __('home.Examination history') }}</a>
+                                <a class="dropdown-item" href="{{ route('view.prescription.result.my.list') }}">{{__('home.My Prescription')}}</a>
+                            @endif
                             <a class="dropdown-item"
                                href="{{route('booking.list.by.user')}}">{{ __('home.My booking') }}</a>
-                            <a class="dropdown-item" href="{{route('logoutProcess')}}">{{ __('home.Logout') }}</a>
+                            <a class="dropdown-item" id="btn-logout-header" href="#">{{ __('home.Logout') }}</a>
                         </div>
                     </div>
                 @else
@@ -81,10 +87,16 @@
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item"
                                        href="{{ route('profile') }}">{{ __('home.Trang cá nhân') }}</a>
+                                    @if(Auth::user()->type != Role::NORMAL)
+                                        <a class="dropdown-item" href="{{ route('view.prescription.result.create') }}">Tạo đơn thuốc</a>
+                                    @else
+                                        <a class="dropdown-item" href="{{url('my-bookings/list')}}">{{ __('home.Examination history') }}</a>
+                                        <a class="dropdown-item" href="{{ route('view.prescription.result.my.list') }}">{{__('home.My Prescription')}}</a>
+                                    @endif
                                     <a class="dropdown-item"
                                        href="{{route('booking.list.by.user')}}">{{ __('home.My booking') }}</a>
-                                    <a class="dropdown-item"
-                                       href="{{route('logoutProcess')}}">{{ __('home.Logout') }}</a>
+                                    <a class="dropdown-item" id="btn-logout-header"
+                                       href="#">{{ __('home.Logout') }}</a>
                                 </div>
                             </div>
                         @else
@@ -131,7 +143,7 @@
             </li>
             @if(Auth::check())
                 <li class="nav-item button-nav-header mb-3">
-                    <a class="nav-link" href="#">{{ __('home.Logout') }}</a>
+                    <a class="nav-link" id="btn-logout-header" href="#">{{ __('home.Logout') }}</a>
                 </li>
             @else
                 <li class="nav-item button-nav-header mb-3">

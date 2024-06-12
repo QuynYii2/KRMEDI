@@ -195,6 +195,7 @@ class RegisterController extends Controller
             $user->phone = $contact_phone ?? '';
             $user->address_code = '';
             $user->type = $type;
+            $user->member = $member;
             $user->abouts = 'default';
             $user->abouts_en = 'default';
             $user->abouts_lao = 'default';
