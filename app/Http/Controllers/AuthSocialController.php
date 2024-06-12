@@ -455,9 +455,9 @@ class AuthSocialController extends Controller
                     'provider_name' => 'zalo',
                     'provider_id' => $zaloUser['id'],
                     'name' => $zaloUser['name'],
-                    'email' => $randomUsername . '@gmail.com',
+                    'email' => $zaloUser['name'] . '@gmail.com',
                     'phone' => '',
-                    'username' => $randomUsername,
+                    'username' => $zaloUser['name'],
                     'address_code' => '',
                     'password' => $passwordHash,
                     'type' => 'OTHERS',
@@ -470,7 +470,7 @@ class AuthSocialController extends Controller
                 ]);
 
                 //SET ROLE
-                (new MainController())->createRoleUser('NORMAL', $randomUsername);
+                (new MainController())->createRoleUser('NORMAL', $zaloUser['name']);
 
                 auth()->login($newUser, true);
                 $token = JWTAuth::fromUser($newUser);
