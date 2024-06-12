@@ -244,11 +244,15 @@
                 <section>
                     <div class="d-md-flex">
                         <div class="small-12 col-lg-5 col-md-6 pl-0 pr-0">
-                            <div class="text-time">{{ __('home.Chọn Ngày') }}</div>
+                            <div class="text-time">{{ __('home.Chọn Ngày') }}
+                                <span class="small text-danger">*</span>
+                            </div>
                             <div id="datepicker"></div>
                         </div>
                         <div class="small-12 col-lg-7 col-md-6">
-                            <div class="time-kham text-time">{{ __('home.Chọn thời gian') }}</div>
+                            <div class="time-kham text-time">{{ __('home.Chọn thời gian') }}
+                                <span class="small text-danger">*</span>
+                            </div>
                             <div class="spin-me"></div>
                             <div class="container p-0">
                                 <div class="row">
@@ -521,7 +525,7 @@
                 //Check user followed
             } else {
                 // At least one value is null or undefined
-                submitButton.text('Bạn phải điền đầy đủ thông tin');
+                submitButton.text('Vui lòng chọn Ngày và Giờ khám');
                 submitButton.attr("disabled", true);
             }
         }

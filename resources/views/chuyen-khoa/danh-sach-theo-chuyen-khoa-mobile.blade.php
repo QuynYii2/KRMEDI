@@ -650,6 +650,7 @@
                             infoWindow.open(map, marker);
                             $(document).on('click', '#showMapBtnTab', function() {
                                 getDirections(currentLocation, {lat: parseFloat(location.latitude), lng: parseFloat(location.longitude)});
+                                closeAllInfoWindows();
                             });
                         });
 
@@ -659,6 +660,7 @@
 
                         $('body').on('click', '.specialList-clinics[data-clinic-id="' + location.id + '"] #showMapBtn', function() {
                             getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                            closeAllInfoWindows();
                         });
                     }
                 });
@@ -782,6 +784,7 @@
                             infoWindow2.open(map2, markerPharmacies);
                             $(document).on('click', '#showMapBtnPharmacyTab', function() {
                                 getDirectionsPharmacies(currentLocation, { lat: parseFloat(locationsPharmacies.latitude), lng: parseFloat(locationsPharmacies.longitude) });
+                                closeAllInfoWindowsPharmacy();
                             });
                         });
                         markersPharmacy.push(markerPharmacies);
@@ -790,6 +793,7 @@
 
                         $('body').on('click', '.specialList-pharmacy-address[data-pharmacy-id="' + locationsPharmacies.id + '"] #showMapBtnPharmacy', function() {
                             getDirectionsPharmacies(currentLocation, { lat: parseFloat(locationsPharmacies.latitude), lng: parseFloat(locationsPharmacies.longitude) });
+                            closeAllInfoWindowsPharmacy();
                         });
                     }
                 });

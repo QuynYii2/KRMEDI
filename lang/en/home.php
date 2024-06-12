@@ -357,7 +357,7 @@ return [
     'Clinic/Pharmacies' => 'Clinic/Pharmacies',
     'Dashboard' => 'Dashboard',
     'Trang cá nhân' => 'Personal page',
-    'Tìm kiếm cơ sở y tế, nhà thuốc, bác sĩ, thuốc' => 'Search for medical facilities, pharmacies, doctors, drugs',
+    'Tìm kiếm cơ sở y tế, nhà thuốc, bác sĩ, thuốc' => 'Tìm kiếm cơ sở y tế, nhà thuốc, bác sĩ, thuốc',
     'My booking' => 'My booking',
     'Logout' => 'Log out',
     'Log In' => 'Log In',

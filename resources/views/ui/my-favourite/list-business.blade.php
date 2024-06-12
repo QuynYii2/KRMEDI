@@ -30,7 +30,7 @@
     }
 </style>
 @section('main-content')
-    <h3 class="text-center">My Business Favourite</h3>
+    <h3 class="text-center">Bệnh viện yêu thích</h3>
     <br>
     <div class="container-fluid">
         <div class="row mt-3 list_business">
