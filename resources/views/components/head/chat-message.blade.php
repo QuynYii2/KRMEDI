@@ -603,7 +603,7 @@
             about: "Hey, I'm using We Chat!",
             image: user.photoURL || '',
             createdAt: time,
-            isOnline: true,
+            is_online: true,
             lastActive: time,
             role: `{{ Auth::user()->member }}`,
         };
