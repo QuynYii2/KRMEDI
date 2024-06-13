@@ -79,24 +79,79 @@ class HomeController extends Controller
 
     public function specialist()
     {
-        $departments = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->where('isFilter', 1)->get();
+        if (Auth::user()->type == 'NORMAL'){
+            $departments = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->where('isFilter', 1)->get();
+        }else{
+            $departments = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->get();
+        }
+
         return view('chuyen-khoa.tab-chuyen-khoa-newHome', compact('departments'));
     }
 
     public function specialistDepartment($id)
     {
-        $q = request()->query('q');
+        $search_doctor = request()->query('search_doctor');
+        $search_hospital = request()->query('search_hospital');
+        $search_clinic = request()->query('search_clinic');
+        $experience = request()->query('experience');
+        $reviews = request()->query('reviews');
+        $is_active = 1;
 
         $doctorsSpecial = \App\Models\User::where('department_id', $id)
             ->where('status', \App\Enums\UserStatus::ACTIVE);
 
-        if ($q) {
-            $doctorsSpecial->where(function ($query) use ($q) {
-                $query->where('name', 'LIKE', "%$q%")
-                    ->orWhere('last_name', 'LIKE', "%$q%")
-                    ->orWhere('email', 'LIKE', "%$q%")
-                    ->orWhere('username', 'LIKE', "%$q%");
+        if ($search_doctor) {
+            $doctorsSpecial->where(function ($query) use ($search_doctor) {
+                $query->where('name', 'LIKE', "%$search_doctor%")
+                    ->orWhere('last_name', 'LIKE', "%$search_doctor%")
+                    ->orWhere('email', 'LIKE', "%$search_doctor%")
+                    ->orWhere('username', 'LIKE', "%$search_doctor%");
             });
+            $is_active = 3;
+        }
+        if ($experience) {
+            switch ($experience) {
+                case '1':
+                    $doctorsSpecial->whereBetween('year_of_experience', [1, 3]);
+                    break;
+                case '2':
+                    $doctorsSpecial->whereBetween('year_of_experience', [3, 5]);
+                    break;
+                case '3':
+                    $doctorsSpecial->whereBetween('year_of_experience', [5, 8]);
+                    break;
+                case '4':
+                    $doctorsSpecial->whereBetween('year_of_experience', [8, 10]);
+                    break;
+                case '5':
+                    $doctorsSpecial->where('year_of_experience', '>', 10);
+                    break;
+            }
+            $is_active = 3;
+        }
+
+        if ($reviews) {
+            switch ($reviews) {
+                case '4.5':
+                    $doctorsSpecial->whereBetween('average_star', [4.5, 5]);
+                    break;
+                case '4':
+                    $doctorsSpecial->whereBetween('average_star', [4, 4.5]);
+                    break;
+                case '3.5':
+                    $doctorsSpecial->whereBetween('average_star', [3.5, 4]);
+                    break;
+                case '3':
+                    $doctorsSpecial->whereBetween('average_star', [3, 3.5]);
+                    break;
+                case '2.5':
+                    $doctorsSpecial->whereBetween('average_star', [2.5, 3]);
+                    break;
+                case '0':
+                    $doctorsSpecial->whereBetween('average_star', [0, 2.5]);
+                    break;
+            }
+            $is_active = 3;
         }
 
         $doctorsSpecial = $doctorsSpecial->paginate(12);
@@ -105,11 +160,12 @@ class HomeController extends Controller
             ->where('type', \App\Enums\TypeBusiness::HOSPITALS)
             ->where('status', \App\Enums\ClinicStatus::ACTIVE);
 
-        if ($q) {
-            $clinics->where(function ($query) use ($q) {
-                $query->where('name', 'LIKE', "%$q%")
-                    ->orWhere('name_en', 'LIKE', "%$q%");
+        if ($search_hospital) {
+            $clinics->where(function ($query) use ($search_hospital) {
+                $query->where('name', 'LIKE', "%$search_hospital%")
+                    ->orWhere('name_en', 'LIKE', "%$search_hospital%");
             });
+            $is_active = 1;
         }
 
         $clinics = $clinics->get();
@@ -118,18 +174,19 @@ class HomeController extends Controller
             ->where('type', \App\Enums\TypeBusiness::CLINICS)
             ->where('status', \App\Enums\ClinicStatus::ACTIVE);
 
-        if ($q) {
-            $pharmacies->where(function ($query) use ($q) {
-                $query->where('name', 'LIKE', "%$q%")
-                    ->orWhere('name_en', 'LIKE', "%$q%");
+        if ($search_clinic) {
+            $pharmacies->where(function ($query) use ($search_clinic) {
+                $query->where('name', 'LIKE', "%$search_clinic%")
+                    ->orWhere('name_en', 'LIKE', "%$search_clinic%");
             });
+            $is_active=2;
         }
 
         $pharmacies = $pharmacies->get();
         if ($this->check_mobile()){
-            return view('chuyen-khoa.danh-sach-theo-chuyen-khoa-mobile', compact('id', 'doctorsSpecial', 'clinics', 'pharmacies'));
+            return view('chuyen-khoa.danh-sach-theo-chuyen-khoa-mobile', compact('id', 'doctorsSpecial', 'clinics', 'pharmacies','is_active'));
         }else{
-            return view('chuyen-khoa.danh-sach-theo-chuyen-khoa', compact('id', 'doctorsSpecial', 'clinics', 'pharmacies'));
+            return view('chuyen-khoa.danh-sach-theo-chuyen-khoa', compact('id', 'doctorsSpecial', 'clinics', 'pharmacies','is_active'));
         }
     }
 

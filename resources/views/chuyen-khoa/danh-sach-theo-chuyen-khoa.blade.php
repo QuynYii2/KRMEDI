@@ -11,6 +11,63 @@
         .gm-style .gm-style-iw-d{
             max-width: 465px !important;
         }
+        .btn-filter-bs{
+            border: none;
+            outline: unset;
+            border-radius: 10px;
+            padding: 10px;
+        }
+        .btn-filter-bs img{
+            width: 24px;
+            height: 24px;
+        }
+        .filter-section {
+            margin-bottom: 20px;
+        }
+        .filter-section h5 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .filter-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+        .filter-option:last-child {
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .filter-option label {
+            flex-grow: 1;
+        }
+        .filter-option input[type="radio"] {
+            margin-left: 20px;
+            width: 18px;
+            height: 18px;
+        }
+        .filter-buttons {
+            display: flex;
+            justify-content: space-around;
+            padding-top: 10px;
+        }
+        .filter-buttons button {
+            padding: 10px 30px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .reset-button {
+            background-color: #f8f9fa;
+            border: 1px solid #e0e0e0;
+        }
+        .apply-button {
+            background-color: #17a2b8;
+            color: white;
+            border: none;
+        }
+        .filter-option img{
+            width: 110px;
+        }
     </style>
     @include('layouts.partials.header')
     <div class="container mt-200 mt-70 box-ck-new-home">
@@ -18,45 +75,34 @@
             <a href="{{ route('home.specialist') }}">
                 <div class="title-Danh-sach"><i class="fa-solid fa-arrow-left"></i> {{ __('home.Danh sách') }}</div>
             </a>
-            <form>
-                <div class="search-specialist col-lg-8 col-md-10">
-                    <label for="search-specialist" class="search-specialist__label w-50">
-                        <i class="fas fa-search"></i>
-                        <input id="search-specialist" name="q" placeholder="{{ __('home.Tìm kiếm cơ sở y tế') }}"
-                               value="{{ request()->query('q') }}">
-                    </label>
-                    <div class="position-absolute">|</div>
-                    <label class="select-specialist__label w-50">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <select name="location">
-                            <option value="">{{ __('home.Tất cả địa điểm') }}</option>
-                            <option value="Hà Nội" {{ request()->query('location') == 'Hà Nội' ? 'selected' : '' }}>Hà
-                                Nội
-                            </option>
-                        </select>
-                    </label>
-                </div>
-            </form>
-
 
             <div class="d-flex nav-header--homeNew justify-content-center mt-3">
                 <ul class="nav nav-pills nav-fill d-flex justify-content-between">
                     <li class="nav-item">
-                        <a class="nav-link active font-14-mobi" id="clinicList-tab" data-toggle="tab" href="#clinicList"
+                        <a class="nav-link font-14-mobi @if($is_active == 1) active show @endif" id="clinicList-tab" data-toggle="tab" href="#clinicList"
                            role="tab" aria-controls="clinicList" aria-selected="true">{{ __('home.HOSPITALS') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link font-14-mobi" id="pharmacies-tab" data-toggle="tab" href="#pharmacies"
+                        <a class="nav-link font-14-mobi @if($is_active == 2) active show @endif" id="pharmacies-tab" data-toggle="tab" href="#pharmacies"
                            role="tab" aria-controls="pharmacies" aria-selected="false">{{ __('home.CLINICS') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link font-14-mobi" id="doctorList-tab" data-toggle="tab" href="#doctorList"
+                        <a class="nav-link font-14-mobi @if($is_active == 3) active show @endif" id="doctorList-tab" data-toggle="tab" href="#doctorList"
                            role="tab" aria-controls="doctorList" aria-selected="true">{{ __('home.DOCTOR') }}</a>
                     </li>
                 </ul>
             </div>
             <div class="tab-content mt-4" id="myTabContent">
-                <div class="tab-pane fade show active" id="clinicList" role="tabpanel" aria-labelledby="clinicList-tab">
+                <div class="tab-pane fade @if($is_active == 1) active show @endif" id="clinicList" role="tabpanel" aria-labelledby="clinicList-tab">
+                    <form class="mb-5">
+                        <div class="search-specialist col-lg-8 col-md-10">
+                            <label for="search-specialist" class="search-specialist__label w-75">
+                                <i class="fas fa-search"></i>
+                                <input id="search-specialist" name="search_hospital" placeholder="{{ __('home.Tìm kiếm cơ sở y tế') }}"
+                                       value="{{ request()->query('search_hospital') }}" style="border-top-right-radius:10px!important;border-bottom-right-radius:10px!important;">
+                            </label>
+                        </div>
+                    </form>
                     <div class="box-list-clinic-address">
                         <div class="body row" id="productInformation">
                             @foreach ($clinics as $key => $clinic)
@@ -155,7 +201,16 @@
                     </div>
                 </div>
 
-                <div class="tab-pane fade" id="pharmacies" role="tabpanel" aria-labelledby="pharmacies-tab">
+                <div class="tab-pane fade @if($is_active == 2) active show @endif" id="pharmacies" role="tabpanel" aria-labelledby="pharmacies-tab">
+                    <form class="mb-5">
+                        <div class="search-specialist col-lg-8 col-md-10">
+                            <label for="search-specialist" class="search-specialist__label w-75">
+                                <i class="fas fa-search"></i>
+                                <input id="search-specialist" name="search_clinic" placeholder="Tìm kiếm phòng khám"
+                                       value="{{ request()->query('search_clinic') }}" style="border-top-right-radius:10px!important;border-bottom-right-radius:10px!important;">
+                            </label>
+                        </div>
+                    </form>
                     <div class="box-list-clinic-address">
                         <div class="body row" id="productInformation">
                             @foreach ($pharmacies as $index => $pharmacy)
@@ -253,7 +308,22 @@
                     </div>
                 </div>
 
-                <div class="tab-pane fade" id="doctorList" role="tabpanel" aria-labelledby="doctorList-tab">
+                <div class="tab-pane fade @if($is_active == 3) active show @endif" id="doctorList" role="tabpanel" aria-labelledby="doctorList-tab">
+                    <div class="d-flex align-items-center mb-5 w-100 justify-content-center">
+                        <form style="width: 50%;margin-right: 15px">
+                            <div class="search-specialist">
+                                <label for="search-specialist" class="search-specialist__label w-100">
+                                    <i class="fas fa-search"></i>
+                                    <input id="search-specialist" name="search_doctor" placeholder="Tìm kiếm phòng khám"
+                                           value="{{ request()->query('search_doctor') }}" style="border-top-right-radius:10px!important;border-bottom-right-radius:10px!important;">
+                                </label>
+                            </div>
+                        </form>
+                        <button class="btn-filter-bs" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDoctorRight" aria-controls="offcanvasDoctorRight">
+                            <img src="{{asset('img/icon-filter.png')}}" alt="">
+                        </button>
+                    </div>
+
                     <div class="row">
                         @foreach ($doctorsSpecial as $doctor)
                             @if ($doctor == '')
@@ -347,6 +417,106 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasDoctorRight" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasRightLabel" style="font-weight: bold">Bộ lọc</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body pt-0">
+            <form method="get" action="{{route('home.specialist.department',$id)}}">
+            <div class="filter-section">
+                <h5>Kinh nghiệm</h5>
+                <div class="filter-option">
+                    <label for="experience">1 - 3 Năm kinh nghiệm</label>
+                    <input type="radio" name="experience" id="experience" value="1">
+                </div>
+                <div class="filter-option">
+                    <label for="experience2">3 - 5 Năm kinh nghiệm</label>
+                    <input type="radio" name="experience" id="experience2" value="2">
+                </div>
+                <div class="filter-option">
+                    <label for="experience3">5 - 8 Năm kinh nghiệm</label>
+                    <input type="radio" name="experience" id="experience3" value="3">
+                </div>
+                <div class="filter-option">
+                    <label for="experience4">8 - 10 Năm kinh nghiệm</label>
+                    <input type="radio" name="experience" id="experience4" value="4">
+                </div>
+                <div class="filter-option">
+                    <label for="experience5">+10 Năm kinh nghiệm</label>
+                    <input type="radio" name="experience" id="experience5" value="5">
+                </div>
+            </div>
+            <div class="filter-section">
+                <h5>Tôi có thể kê đơn thuốc được không?</h5>
+                <div class="filter-option">
+                    <label>Đơn thuốc?</label>
+                    <input type="radio" name="prescribe" value="prescribe">
+                </div>
+            </div>
+            <div class="filter-section">
+                <h5>Miễn phí hoặc không miễn phí</h5>
+                <div class="filter-option">
+                    <label for="free">Miễn phí</label>
+                    <input type="radio" name="free" id="free" value="1">
+                </div>
+                <div class="filter-option">
+                    <label for="free2">Mất phí</label>
+                    <input type="radio" name="free" id="free2" value="2">
+                </div>
+            </div>
+            <div class="filter-section">
+                <h5>Đánh giá</h5>
+                <div class="filter-option">
+                    <label for="reviews">
+                        <span><img src="{{asset('img/icon-star.png')}}" alt=""></span>
+                        4.5-5
+                    </label>
+                    <input type="radio" name="reviews" id="reviews" value="4.5">
+                </div>
+                <div class="filter-option">
+                    <label for="reviews2">
+                        <span><img src="{{asset('img/icon-star.png')}}" alt=""></span>
+                        4-4.5
+                    </label>
+                    <input type="radio" name="reviews" id="reviews2" value="4">
+                </div>
+                <div class="filter-option">
+                    <label for="reviews3">
+                        <span><img src="{{asset('img/icon-star.png')}}" alt=""></span>
+                        3.5-4
+                    </label>
+                    <input type="radio" name="reviews" id="reviews3" value="3.5">
+                </div>
+                <div class="filter-option">
+                    <label for="reviews4">
+                        <span><img src="{{asset('img/icon-star.png')}}" alt=""></span>
+                        3-3.5
+                    </label>
+                    <input type="radio" name="reviews" id="reviews4" value="3">
+                </div>
+                <div class="filter-option">
+                    <label for="reviews5">
+                        <span><img src="{{asset('img/icon-star.png')}}" alt=""></span>
+                        2.5-3
+                    </label>
+                    <input type="radio" name="reviews" id="reviews5" value="2.5">
+                </div>
+                <div class="filter-option">
+                    <label for="reviews">
+                        <span><img src="{{asset('img/icon-star.png')}}" alt=""></span>
+                        0-2.5
+                    </label>
+                    <input type="radio" name="reviews" id="reviews" value="0">
+                </div>
+            </div>
+            <div class="filter-buttons">
+                <button type="button" class="reset-button"><a href="{{url('home/specialist/'.$id)}}">Làm mới</a></button>
+                <button type="submit" class="apply-button">Áp dụng</button>
+            </div>
+            </form>
         </div>
     </div>
     <script>

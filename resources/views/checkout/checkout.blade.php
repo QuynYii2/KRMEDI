@@ -50,7 +50,7 @@
                                                 $province = \App\Models\Province::find(Auth::user()->province_id);
                                             @endphp
 
-                                            <input required type="text" class="form-control address_code" id="province" name="province"
+                                            <input readonly type="text" class="form-control address_code" id="province" name="province"
                                                    value="{{ $province ? $province->full_name : '' }}"
                                                    placeholder="Tỉnh/Thành phố">
                                         </div>
@@ -61,7 +61,7 @@
                                                 $district = \App\Models\District::find(Auth::user()->district_id);
                                             @endphp
 
-                                            <input required type="text" class="form-control address_code" id="district" name="district"
+                                            <input readonly type="text" class="form-control address_code" id="district" name="district"
                                                    value="{{ $district ? $district->full_name : '' }}"
                                                    placeholder="Quận/Huyện">
                                         </div>
