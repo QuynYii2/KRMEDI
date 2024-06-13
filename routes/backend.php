@@ -22,6 +22,7 @@ use App\Http\Controllers\restapi\ServiceClinicApi;
 use App\Http\Controllers\restapi\SocialUserApi;
 use App\Http\Controllers\restapi\ui\MyBusinessApi;
 use App\Http\Controllers\restapi\UserApi;
+use App\Http\Controllers\ui\MyBookingController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'users'], function () {
@@ -209,3 +210,5 @@ Route::get("connect/video/agora/get-token-app", [AgoraChatController::class, 'ge
 Route::get("connect/video/agora/get-push-token-user", [AgoraChatController::class, 'getPushTokenByUser'])->name("agora.get-token-app-user");
 
 Route::resource('notifications', 'Api\NotificationController');
+
+Route::get('my-bookings/list/{user_id}', [MyBookingController::class, 'listBookingApi'])->name('api.backend.my-bookings.list');
