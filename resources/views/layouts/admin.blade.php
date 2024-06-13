@@ -449,7 +449,7 @@
                         </li>
 
                         <li>
-                            <a class="dropdown-item d-flex align-items-center" href="{{ route('logoutProcess') }}">
+                            <a class="dropdown-item d-flex align-items-center" id="btn-logout-header" href="#">
                                 <i class="bi bi-box-arrow-right"></i>
                                 <span>{{ __('home.Sign Out') }}</span>
                             </a>
@@ -1601,8 +1601,19 @@
             return;
         } else if (currentUser == thisUser) {
             return;
+        }else if(data.user_id_1 != currentUser && data.user_id_2 != currentUser){
+            return;
         }
-
+        var audio = new Audio('agora-video/notification.mp3');
+        audio.addEventListener('ended', function() {
+            this.currentTime = 0;
+            this.play().catch(function(error) {
+                console.error('Lỗi phát âm thanh:', error);
+            });
+        });
+        audio.play().catch(function(error) {
+            console.error('Lỗi phát âm thanh:', error);
+        });
         // Define an async wrapper function to handle the asynchronous call
         async function getDoctorName() {
             try {
@@ -1623,8 +1634,17 @@
             document.getElementById('ReceiveCall').addEventListener('click', function() {
                 window.open(data.content, '_blank');
                 $('#modal-call-alert').modal('hide');
+                audio.pause();
+                audio.currentTime = 0;
+                audio = null;
             });
         });
+
+        $('.btn_close_m').click(function() {
+            audio.pause();
+            audio.currentTime = 0;
+            audio = null;
+        })
     }
 
     async function getUserById(id) {

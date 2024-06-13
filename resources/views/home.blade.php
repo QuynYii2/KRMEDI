@@ -1451,8 +1451,13 @@
                 </div>
                 <div class="mainServiceHomeNew row container">
                     @php
-                        $departments = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->where('isFilter', 1)->take(18)->get();
+                        if (\Illuminate\Support\Facades\Auth::check()&&\Illuminate\Support\Facades\Auth::user()->type == 'NORMAL'){
+                         $departments = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->where('isFilter', 1)->take(18)->get();
                         $departmentsMobile = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->where('isFilter', 1)->take(6)->get();
+                        }else{
+                         $departments = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->take(18)->get();
+                        $departmentsMobile = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->take(6)->get();
+                        }
                     @endphp
                     @foreach($departments as $index => $departmentItem)
                         @php

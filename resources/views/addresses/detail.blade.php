@@ -101,34 +101,29 @@
                 commune_id: $('#commune_id').val(),
                 status: `{{ \App\Enums\AddressStatus::ACTIVE }}`,
                 is_default: is_default,
-            }
+            };
 
             if (!isValid) {
                 return;
             }
 
-            try {
-                await fetch(`{{ route('api.backend.address.order.update', $address->id) }}`, {
-                    method: 'PUT',
-                    headers: headers,
-                    body: JSON.stringify(data),
-
-                })
-                    .then(response => {
-                        if (response.status == 200) {
-                            alert('Update success!')
-                            window.location.href = `{{ route('view.user.address.list') }}`;
-                        } else {
-                            alert('Update error!')
-                        }
-                    })
-                    .catch(error =>
-                        console.log(error)
-                    );
-            } catch (e) {
-                console.log(e)
-                alert('Error, Please try again!');
-            }
+            $.ajax({
+                url: `{{ route('api.backend.address.order.update', $address->id) }}`,
+                type: 'PUT',
+                headers: headers,
+                data: data,
+                success: function(response) {
+                    alert('Update successed!');
+                    window.location.href = `{{ route('view.user.address.list') }}`;
+                },
+                error: function(xhr) {
+                    if (xhr.status == 400 || xhr.status == 404) {
+                        alert('Update error!');
+                    } else {
+                        alert('Error, Please try again!');
+                    }
+                }
+            });
         }
     </script>
     <script>

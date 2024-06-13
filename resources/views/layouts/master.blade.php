@@ -496,7 +496,16 @@
         }else if(data.user_id_1 != currentUser && data.user_id_2 != currentUser){
             return;
         }
-
+        var audio = new Audio('agora-video/notification.mp3');
+        audio.addEventListener('ended', function() {
+            this.currentTime = 0;
+            this.play().catch(function(error) {
+                console.error('Lỗi phát âm thanh:', error);
+            });
+        });
+        audio.play().catch(function(error) {
+            console.error('Lỗi phát âm thanh:', error);
+        });
         // Define an async wrapper function to handle the asynchronous call
         async function getDoctorName() {
             try {
@@ -517,10 +526,21 @@
             document.getElementById('ReceiveCall').addEventListener('click', function() {
                 window.open(data.content, '_blank');
                 $('#modal-call-alert').modal('hide');
+                audio.pause();
+                audio.currentTime = 0;
+                audio = null;
             });
         });
+        $('.btn_close_m').click(function() {
+            audio.pause();
+            audio.currentTime = 0;
+            audio = null;
+        })
     }
 
+    function handleUserInteraction() {}
+
+    $(document).on('click keydown', handleUserInteraction);
     async function getUserById(id) {
         try {
             let url_getUser = `{{ route('api.backend.user.get.user.id') }}?id=${id}`;
