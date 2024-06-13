@@ -95,6 +95,8 @@ class HomeController extends Controller
         $search_clinic = request()->query('search_clinic');
         $experience = request()->query('experience');
         $reviews = request()->query('reviews');
+        $free = request()->query('free');
+        $prescribe = request()->query('prescribe');
         $is_active = 1;
 
         $doctorsSpecial = \App\Models\User::where('department_id', $id)
@@ -108,6 +110,12 @@ class HomeController extends Controller
                     ->orWhere('username', 'LIKE', "%$search_doctor%");
             });
             $is_active = 3;
+        }
+        if ($free) {
+            $doctorsSpecial->where('free', $free);
+        }
+        if ($prescribe) {
+            $doctorsSpecial->where('prescription', $prescribe);
         }
         if ($experience) {
             switch ($experience) {

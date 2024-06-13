@@ -104,6 +104,7 @@
                         </div>
                     </form>
                     <div class="box-list-clinic-address">
+                        @if(count($clinics)>0)
                         <div class="body row" id="productInformation">
                             @foreach ($clinics as $key => $clinic)
                                 <div class="specialList-clinics specialList-clinics-address col-lg-12 col-md-6 mb-3" data-marker-index=""
@@ -198,6 +199,9 @@
                         <div id="allAddressesMap" class="show active fade" style="height: 800px;">
 
                         </div>
+                        @else
+                            <p style="color: red;text-align: center;font-size: 20px;width: 100%;">Không có dữ liệu bạn muốn tìm</p>
+                        @endif
                     </div>
                 </div>
 
@@ -212,6 +216,7 @@
                         </div>
                     </form>
                     <div class="box-list-clinic-address">
+                        @if(count($pharmacies)>0)
                         <div class="body row" id="productInformation">
                             @foreach ($pharmacies as $index => $pharmacy)
                                 <div class="specialList-clinics specialList-pharmacy-address col-lg-12 col-md-6 mb-3" data-marker-index="{{$index}}"
@@ -305,6 +310,9 @@
                         <div id="allAddressesMapPharmacies" class="show active fade" style="height: 800px;">
 
                         </div>
+                            @else
+                            <p style="color: red;text-align: center;font-size: 20px;width: 100%;">Không có dữ liệu bạn muốn tìm</p>
+                            @endif
                     </div>
                 </div>
 
@@ -325,6 +333,7 @@
                     </div>
 
                     <div class="row">
+                        @if(count($doctorsSpecial)>0)
                         @foreach ($doctorsSpecial as $doctor)
                             @if ($doctor == '')
                                 <h1 class="d-flex align-items-center justify-content-center mt-4">{{ __('home.null') }}
@@ -411,6 +420,9 @@
                                 </div>
                             @endif
                         @endforeach
+                        @else
+                            <p style="color: red;text-align: center;font-size: 20px">Không có dữ liệu bạn muốn tìm</p>
+                        @endif
                     </div>
                     <div class="pagination mt-4 d-flex align-items-center justify-content-center">
                         {{ $doctorsSpecial->links() }}
@@ -430,41 +442,41 @@
                 <h5>Kinh nghiệm</h5>
                 <div class="filter-option">
                     <label for="experience">1 - 3 Năm kinh nghiệm</label>
-                    <input type="radio" name="experience" id="experience" value="1">
+                    <input type="radio" name="experience" id="experience" @if(request()->query('search_doctor') == 1) checked @endif value="1">
                 </div>
                 <div class="filter-option">
                     <label for="experience2">3 - 5 Năm kinh nghiệm</label>
-                    <input type="radio" name="experience" id="experience2" value="2">
+                    <input type="radio" name="experience" id="experience2" @if(request()->query('search_doctor') == 2) checked @endif value="2">
                 </div>
                 <div class="filter-option">
                     <label for="experience3">5 - 8 Năm kinh nghiệm</label>
-                    <input type="radio" name="experience" id="experience3" value="3">
+                    <input type="radio" name="experience" id="experience3" @if(request()->query('search_doctor') == 3) checked @endif value="3">
                 </div>
                 <div class="filter-option">
                     <label for="experience4">8 - 10 Năm kinh nghiệm</label>
-                    <input type="radio" name="experience" id="experience4" value="4">
+                    <input type="radio" name="experience" id="experience4" @if(request()->query('search_doctor') == 4) checked @endif value="4">
                 </div>
                 <div class="filter-option">
                     <label for="experience5">+10 Năm kinh nghiệm</label>
-                    <input type="radio" name="experience" id="experience5" value="5">
+                    <input type="radio" name="experience" id="experience5" @if(request()->query('search_doctor') == 5) checked @endif value="5">
                 </div>
             </div>
             <div class="filter-section">
                 <h5>Tôi có thể kê đơn thuốc được không?</h5>
                 <div class="filter-option">
                     <label>Đơn thuốc?</label>
-                    <input type="radio" name="prescribe" value="prescribe">
+                    <input type="radio" name="prescribe" @if(request()->query('prescribe') == 1) checked @endif value="1">
                 </div>
             </div>
             <div class="filter-section">
                 <h5>Miễn phí hoặc không miễn phí</h5>
                 <div class="filter-option">
                     <label for="free">Miễn phí</label>
-                    <input type="radio" name="free" id="free" value="1">
+                    <input type="radio" name="free" id="free" @if(request()->query('free') == 1) checked @endif value="1">
                 </div>
                 <div class="filter-option">
                     <label for="free2">Mất phí</label>
-                    <input type="radio" name="free" id="free2" value="2">
+                    <input type="radio" name="free" id="free2" @if(request()->query('free') === '0') checked @endif value="0">
                 </div>
             </div>
             <div class="filter-section">
@@ -474,42 +486,42 @@
                         <span><img src="{{asset('img/icon-star.png')}}" alt=""></span>
                         4.5-5
                     </label>
-                    <input type="radio" name="reviews" id="reviews" value="4.5">
+                    <input type="radio" name="reviews" id="reviews" @if(request()->query('reviews') == 4.5) checked @endif value="4.5">
                 </div>
                 <div class="filter-option">
                     <label for="reviews2">
                         <span><img src="{{asset('img/icon-star.png')}}" alt=""></span>
                         4-4.5
                     </label>
-                    <input type="radio" name="reviews" id="reviews2" value="4">
+                    <input type="radio" name="reviews" id="reviews2" @if(request()->query('reviews') == 4) checked @endif value="4">
                 </div>
                 <div class="filter-option">
                     <label for="reviews3">
                         <span><img src="{{asset('img/icon-star.png')}}" alt=""></span>
                         3.5-4
                     </label>
-                    <input type="radio" name="reviews" id="reviews3" value="3.5">
+                    <input type="radio" name="reviews" id="reviews3" @if(request()->query('reviews') == 3.5) checked @endif value="3.5">
                 </div>
                 <div class="filter-option">
                     <label for="reviews4">
                         <span><img src="{{asset('img/icon-star.png')}}" alt=""></span>
                         3-3.5
                     </label>
-                    <input type="radio" name="reviews" id="reviews4" value="3">
+                    <input type="radio" name="reviews" id="reviews4" @if(request()->query('reviews') == 3) checked @endif value="3">
                 </div>
                 <div class="filter-option">
                     <label for="reviews5">
                         <span><img src="{{asset('img/icon-star.png')}}" alt=""></span>
                         2.5-3
                     </label>
-                    <input type="radio" name="reviews" id="reviews5" value="2.5">
+                    <input type="radio" name="reviews" id="reviews5" @if(request()->query('reviews') == 2.5) checked @endif value="2.5">
                 </div>
                 <div class="filter-option">
                     <label for="reviews">
                         <span><img src="{{asset('img/icon-star.png')}}" alt=""></span>
                         0-2.5
                     </label>
-                    <input type="radio" name="reviews" id="reviews" value="0">
+                    <input type="radio" name="reviews" id="reviews" @if(request()->query('reviews') === '0') checked @endif value="0">
                 </div>
             </div>
             <div class="filter-buttons">
