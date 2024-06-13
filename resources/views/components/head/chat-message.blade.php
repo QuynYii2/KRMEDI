@@ -299,8 +299,8 @@
 
     <div id="chat-circle" class="btn btn-raised">
         <div id="chat-overlay"></div>
-        <i class="fa-solid fa-message"></i>
-        <span class="noti_number"></span>
+        <i class="fa-solid fa-comment-dots mr-2"></i>
+        Tin nhắn
     </div>
 
     <div class="chat-box" id="chat-box-mess">
@@ -320,7 +320,7 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="chat-widget-connected" data-toggle="tab"
                             data-target="#chat-widget-connected-tabs" type="button" role="tab" aria-controls="profile"
-                            aria-selected="false">Tin nhắn đã gửi <span class="number_not_screen" style="color: red;margin-left: 5px"></span>
+                            aria-selected="false">Tin nhắn đã gửi
                     </button>
                 </li>
             </ul>
@@ -329,7 +329,7 @@
                      aria-labelledby="chat-widget-all-online">
                     <div class="search-container">
                         <i class="fa fa-search search-icon"></i>
-                        <input type="text" placeholder="Tìm kiếm" class="chat-search w-100" />
+                        <input type="text" placeholder="Tìm kiếm" class="chat-search w-100" id="searchDoctor" />
                     </div>
                     <div id="friendslist-all-online">
                         <div id="friends-all-online"></div>
@@ -339,7 +339,7 @@
                      aria-labelledby="chat-widget-connected">
                      <div class="search-container">
                         <i class="fa fa-search search-icon"></i>
-                        <input type="text" placeholder="Tìm kiếm" class="chat-search w-100" />
+                        <input type="text" placeholder="Tìm kiếm" class="chat-search w-100" id="searchDoctor" />
                     </div>
                     <div id="friendslist-connected">
                         <div id="friends-connected"></div>
@@ -807,51 +807,32 @@
         let html_online = ``;
         $('#friendslist-all-online #friends-all-online').html(html_online);
         $('#friendslist-connected #friends-connected').html(html);
-        let count = 0;
+        let doctorCount = 0;
         let promises = [];
+        const searchTerm = $('#searchDoctor').val().toLowerCase(); // Get the current value of the search field
+
         for (let i = 0; i < list_user.length; i++) {
             let res = list_user[i];
             let email = res.email;
-            let is_online = res.is_online;
-            let name_doctor = '';
-            let hospital = '';
-            let avt = '';
 
             if ((res.role == 'DOCTORS' || res.role == 'PHAMACISTS' || res.role == 'HOSPITALS') && res.id != current_user.uid) {
-                count++;
                 promises.push(getUserInfo(email).then((response) => {
-                    name_doctor = response.infoUser.name;
-                    hospital = response.infoUser.hospital ? response.infoUser.hospital : '';
-                    avt = response.infoUser.avt ? window.location.origin + response.infoUser.avt : '../../../../img/avt_default.jpg';
+                    const name_doctor = response.infoUser.name;
+                    const hospital = response.infoUser.hospital ? response.infoUser.hospital : '';
+                    const avt = response.infoUser.avt ? window.location.origin + response.infoUser.avt : '../../../../img/avt_default.jpg';
 
-                    html_online += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}" data-image="${avt}">
-                    <img src="${avt}"/>
-                    <p>
-                        <strong class="max-1-line-title-widget-chat">${name_doctor}</strong>
-                        <span>${hospital}</span>
-                    </p>
-                </div>`;
-                }).catch((error) => {
-                    console.error(error);
-                }));
-            }
-            let redDotHtml = list_user_not_seen.includes(res.id) ? `<div class="${res.id}" style="position: absolute;right: 15px;top: 50%;transform: translateY(-50%);background-color: red;border-radius: 50%;width: 10px;height:10px"></div>` : '';
-            if (doctorChatList.includes(res.id) && res.id != current_user.uid) {
-                promises.push(getUserInfo(email).then((response) => {
-                    name_doctor = response.infoUser.name;
-                    hospital = response.infoUser.hospital ? response.infoUser.hospital : '';
-                    avt = response.infoUser.avt ? window.location.origin + response.infoUser.avt : '../../../../img/avt_default.jpg';
-
-                    html += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}" data-image="${avt}">
-                    <img src="${avt}"/>
-                    <div class="d-flex justify-content-between">
+                    if (name_doctor.toLowerCase().includes(searchTerm)) { // Filter by search term
+                        if (doctorCount < 10) {
+                            html_online += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}" data-image="${avt}">
+                        <img src="${avt}"/>
                         <p>
                             <strong class="max-1-line-title-widget-chat">${name_doctor}</strong>
                             <span>${hospital}</span>
                         </p>
-                        ${redDotHtml}
-                    </div>
-                </div>`;
+                    </div>`;
+                            doctorCount++;
+                        }
+                    }
                 }).catch((error) => {
                     console.error(error);
                 }));
@@ -860,15 +841,17 @@
         await Promise.all(promises);
         $('#friendslist-all-online #friends-all-online').html(html_online);
         $('#friendslist-connected #friends-connected').html(html);
-        if (count == 0) {
-            let html_not_user = `<p>
-                            <strong>Không có ai đang online</strong>
-                        </p>`;
-
+        if (doctorCount == 0) {
+            let html_not_user = `<p><strong>Không có ai đang online</strong></p>`;
             $('#friendslist-all-online #friends-all-online').html(html_not_user);
         }
-        getMessageFirebase()
+        getMessageFirebase();
     }
+
+    // Event listener for the search input
+    $('#searchDoctor').on('input', function() {
+        renderUser(); // Re-render the user list whenever the search input changes
+    });
 
     function getUserInfo(email) {
         let url = "{{ route('info.user.email', ['email' => 'EMAIL']) }}";

@@ -90,7 +90,6 @@
                                         {{ __('home.Đặt khám') }}
                                     </div>
                                 </a>
-
 {{--                                <a href="https://www.google.com/maps?q={{$clinicDetail->latitude}},{{$clinicDetail->longitude}}" target="_blank">--}}
 {{--                                    <div class="button-direct-specialList">--}}
 {{--                                        {{ __('home.Chỉ đường') }}--}}
