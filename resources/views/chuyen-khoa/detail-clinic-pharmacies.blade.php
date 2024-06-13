@@ -16,8 +16,11 @@
 
     .doctor-image img {
         max-width: 100%;
-        height: auto;
-        border-radius: 10px;
+        width: 220px;
+        height: 240px;
+        padding: 40px 20px;
+        object-fit: cover;
+        border-radius: 50%;
     }
 
     .doctor-info {

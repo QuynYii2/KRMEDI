@@ -76,6 +76,21 @@ class MyBookingController extends Controller
         return view('ui.my-bookings.list-booking', compact('bookings','department','service'));
     }
 
+    public function listBookingApi(Request $request){
+        $bookings = Booking::where('bookings.status', '!=', BookingStatus::DELETE)
+            ->where('bookings.user_id', ($request->user_id))
+            ->orderBy('bookings.id', 'desc')->get();
+
+        foreach ($bookings as $item){
+            $item->name_clinic = Clinic::where('id',$item->clinic_id)->pluck('name')->first();
+            $service_name = explode(',', $item->service);
+            $services = ServiceClinic::whereIn('id', $service_name)->get();
+            $service_names = $services->pluck('name')->implode(', ');
+            $item->service_names = $service_names;
+        }
+        return response()->json($bookings);
+    }
+
     public function detailBooking(Request $request, $id)
     {
         $booking = Booking::find($id);
