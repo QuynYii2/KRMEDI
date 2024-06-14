@@ -236,13 +236,13 @@ class BookingController extends Controller
             }
             $booking->save();
             if ($booking) {
-                alert('Booking success');
-                return back()->with('success', 'Booking success');
+                alert('Đặt lịch thành công');
+                return back()->with('success', 'Đặt lịch thành công');
             }
-            alert('Booking error');
+            alert('Đặt lịch thất bại');
             return back('Create error',);
         } catch (\Exception $exception) {
-            alert('Booking error');
+            alert('Đặt lịch thất bại');
             return back();
         }
     }
@@ -403,7 +403,7 @@ class BookingController extends Controller
                 }
 
                 alert('Update success');
-                return Redirect::route('api.backend.booking.edit', ['id' => $id])->with('success', 'Booking success');
+                return Redirect::route('api.backend.booking.edit', ['id' => $id])->with('success', 'Đặt lịch thành công');
             }
             return response()->json(['error' => 0, 'data' => $booking]);
         } catch (\Exception $e) {
@@ -606,9 +606,9 @@ class BookingController extends Controller
                 $user_id = Auth::id();
                 $role = RoleUser::where('user_id',$user_id)->first();
                 if ($role->role_id == 39){
-                    return Redirect::route('homeAdmin.list.booking.doctor')->with('success', 'Booking success');
+                    return Redirect::route('homeAdmin.list.booking.doctor')->with('success', 'Đặt lịch thành công');
                 }else{
-                    return Redirect::route('homeAdmin.list.booking')->with('success', 'Booking success');
+                    return Redirect::route('homeAdmin.list.booking')->with('success', 'Đặt lịch thành công');
                 }
             }
             return response()->json(['error' => 0, 'data' => $booking]);

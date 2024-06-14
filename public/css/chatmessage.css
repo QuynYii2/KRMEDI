@@ -5,7 +5,7 @@
     padding: 0;
     align-items: center;
     position: fixed;
-    bottom: 0;
+    bottom: 20px;
     right: 0 !important;
     background: #088180;
     width: 120px !important;

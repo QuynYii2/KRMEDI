@@ -242,6 +242,11 @@ class HomeController extends Controller
         $services = ServiceClinic::whereIn('id', $arrayService)->get();
         if (Auth::check()) {
             $userId = Auth::user()->id;
+            $bookingsCheck = DB::table('bookings')
+                ->select(DB::raw('check_in as check_in_date'), DB::raw('COUNT(*) as num_bookings'))
+                ->groupBy('check_in_date')
+                ->having('num_bookings', '>=', 5)
+                ->get();
             if (!$clinicDetail || $clinicDetail->status != ClinicStatus::ACTIVE) {
                 return response("Product not found", 404);
             }
@@ -252,7 +257,7 @@ class HomeController extends Controller
             } else {
                 $memberFamilys = null;
             }
-            return view('clinics.booking-clinic-page', compact('clinicDetail', 'id', 'services', 'memberFamilys'));
+            return view('clinics.booking-clinic-page', compact('clinicDetail', 'id', 'services', 'memberFamilys', 'bookingsCheck'));
         }
         alert('Bạn cần đăng nhập để đặt lịch khám');
         return redirect(route('home'));
