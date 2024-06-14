@@ -178,11 +178,11 @@
     @include('layouts.partials.header')
     @if(request()->has('status') && request()->get('status') == 'successful')
         <script>
-            alert('Booking Success');
+            alert('Đặt lịch thành công');
         </script>
     @elseif(request()->has('status') && request()->get('status') == 'unsuccessful')
         <script>
-            alert('Booking Error!');
+            alert('Đặt lịch thất bại!');
         </script>
     @endif
     <div class="container box-dat-kham">
@@ -380,6 +380,7 @@
                 document.getElementById('my-family').classList.remove('d-none');
             }
         }
+        var bookingsCount = @json($bookingsCheck);
 
         function loadData() {
 
@@ -413,6 +414,18 @@
                     $(".timeContainer").empty(); // Clear existing working hours
                 }
                 var container = $(".timeContainer");
+
+                var selectedDateFormatted = new Date(selectedDate).toISOString().split('T')[0];
+                var bookingCountsForDate = bookingsCount.reduce((acc, booking) => {
+                    var checkInDate = new Date(booking.check_in_date).toISOString().split('T')[0];
+                    var time = booking.check_in_date.split(' ')[1].substring(0, 5);
+                    if (!acc[checkInDate]) {
+                        acc[checkInDate] = {};
+                    }
+                    acc[checkInDate][time] = booking.num_bookings;
+                    return acc;
+                }, {});
+
                 for (var i = 0; i < workingHours.length; i++) {
                     (function() {
                         var workingHour = workingHours[i];
@@ -442,6 +455,9 @@
                         selectedDateTime.setHours(parseInt(startTime.split(":")[0]));
                         selectedDateTime.setMinutes(parseInt(startTime.split(":")[1]));
 
+                        if (bookingCountsForDate[selectedDateFormatted] && bookingCountsForDate[selectedDateFormatted][startTime] >= 5) {
+                            button.prop("disabled", true);
+                        }
                         // Kiểm tra nếu ngày được chọn là hôm nay và giờ hiện tại nằm trong khoảng từ 08:00 đến currentHour
                         if (
                             selectedDateTime.toDateString() === currentTime.toDateString() &&

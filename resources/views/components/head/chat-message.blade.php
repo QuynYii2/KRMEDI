@@ -802,7 +802,7 @@
         }
     });
 
-     function setOnline(uid, isOnline) {
+    function setOnline(uid, isOnline) {
         try {
             updateDoc(doc(database, 'users', uid), {
                 'is_online': isOnline,
