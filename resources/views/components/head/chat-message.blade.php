@@ -789,7 +789,7 @@
             console.error('Logout error:', error);
         }
     });
-    
+
     const logoutButtons = ['btn-logout-header', 'btn-logout-header-mobile', 'btn-logout-header-3'];
 
     logoutButtons.forEach(buttonId => {
