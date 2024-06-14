@@ -146,14 +146,14 @@
             padding: 16px;
         }
         .zalo-chat{
-            right: 60px!important;
-            bottom: 135px!important;
+            right: 29px!important;
+            bottom: 155px!important;
             z-index: 1!important;
         }
         @media (max-width: 767px) {
             .zalo-chat {
-                right: 22px !important;
-                bottom: 122px !important;
+                right: 26px !important;
+                bottom: 150px !important;
             }
         }
         .border-booking-payment .font-weight-600 label {

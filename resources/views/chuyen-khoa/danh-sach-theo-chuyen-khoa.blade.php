@@ -79,21 +79,21 @@
             <div class="d-flex nav-header--homeNew justify-content-center mt-3">
                 <ul class="nav nav-pills nav-fill d-flex justify-content-between">
                     <li class="nav-item">
-                        <a class="nav-link font-14-mobi @if($is_active == 1) active show @endif" id="clinicList-tab" data-toggle="tab" href="#clinicList"
+                        <a class="nav-link font-14-mobi list-tab-menu-doctor @if($is_active == 1) active show @endif" id="clinicList-tab" data-toggle="tab" href="#clinicList"
                            role="tab" aria-controls="clinicList" aria-selected="true">{{ __('home.HOSPITALS') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link font-14-mobi @if($is_active == 2) active show @endif" id="pharmacies-tab" data-toggle="tab" href="#pharmacies"
+                        <a class="nav-link font-14-mobi list-tab-menu-doctor @if($is_active == 2) active show @endif" id="pharmacies-tab" data-toggle="tab" href="#pharmacies"
                            role="tab" aria-controls="pharmacies" aria-selected="false">{{ __('home.CLINICS') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link font-14-mobi @if($is_active == 3) active show @endif" id="doctorList-tab" data-toggle="tab" href="#doctorList"
+                        <a class="nav-link font-14-mobi list-tab-menu-doctor @if($is_active == 3) active show @endif" id="doctorList-tab" data-toggle="tab" href="#doctorList"
                            role="tab" aria-controls="doctorList" aria-selected="true">{{ __('home.DOCTOR') }}</a>
                     </li>
                 </ul>
             </div>
             <div class="tab-content mt-4" id="myTabContent">
-                <div class="tab-pane fade @if($is_active == 1) active show @endif" id="clinicList" role="tabpanel" aria-labelledby="clinicList-tab">
+                <div class="tab-pane list-tab-content-doctor fade @if($is_active == 1) active show @endif" id="clinicList" role="tabpanel" aria-labelledby="clinicList-tab">
                     <form class="mb-5">
                         <div class="search-specialist col-lg-8 col-md-10">
                             <label for="search-specialist" class="search-specialist__label w-75">
@@ -205,7 +205,7 @@
                     </div>
                 </div>
 
-                <div class="tab-pane fade @if($is_active == 2) active show @endif" id="pharmacies" role="tabpanel" aria-labelledby="pharmacies-tab">
+                <div class="tab-pane fade list-tab-content-doctor @if($is_active == 2) active show @endif" id="pharmacies" role="tabpanel" aria-labelledby="pharmacies-tab">
                     <form class="mb-5">
                         <div class="search-specialist col-lg-8 col-md-10">
                             <label for="search-specialist" class="search-specialist__label w-75">
@@ -316,7 +316,7 @@
                     </div>
                 </div>
 
-                <div class="tab-pane fade @if($is_active == 3) active show @endif" id="doctorList" role="tabpanel" aria-labelledby="doctorList-tab">
+                <div class="tab-pane fade list-tab-content-doctor @if($is_active == 3) active show @endif" id="doctorList" role="tabpanel" aria-labelledby="doctorList-tab">
                     <div class="d-flex align-items-center mb-5 w-100 justify-content-center">
                         <form style="width: 50%;margin-right: 15px">
                             <div class="search-specialist">
@@ -1016,5 +1016,40 @@
             });
 
         });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            let params = new URLSearchParams(window.location.search);
+            let isActive = `{{ $is_active }}`;
+
+            if (params.has('search_hospital')) {
+                isActive = 1;
+            } else if (params.has('search_clinic')) {
+                isActive = 2;
+            } else if (params.has('search_doctor')) {
+                isActive = 3;
+            } else {
+                isActive = 1;
+            }
+
+            let tabs = document.querySelectorAll('.list-tab-content-doctor');
+            tabs.forEach((tab, index) => {
+                if (index + 1 === isActive) {
+                    tab.classList.add('active','show');
+                } else {
+                    tab.classList.remove('active', 'show');
+                }
+            });
+
+            let tabsMenu = document.querySelectorAll('.list-tab-menu-doctor');
+            tabsMenu.forEach((menu, index) => {
+                if (index + 1 === isActive) {
+                    menu.classList.add('active','show');
+                } else {
+                    menu.classList.remove('active', 'show');
+                }
+            });
+
+        });
+
     </script>
 @endsection
