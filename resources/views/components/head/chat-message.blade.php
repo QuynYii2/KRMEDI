@@ -314,7 +314,7 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="chat-widget-all-online" data-toggle="tab"
                             data-target="#chat-widget-all-online-tabs" type="button" role="tab" aria-controls="home"
-                            aria-selected="true">Bác sĩ trực tuyến
+                            aria-selected="true">Bác sĩ
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
@@ -339,7 +339,7 @@
                      aria-labelledby="chat-widget-connected">
                      <div class="search-container">
                         <i class="fa fa-search search-icon"></i>
-                        <input type="text" placeholder="Tìm kiếm" class="chat-search w-100" id="searchDoctor" />
+                        <input type="text" placeholder="Tìm kiếm" class="chat-search w-100" id="searchDoctorChat" />
                     </div>
                     <div id="friendslist-connected">
                         <div id="friends-connected"></div>
@@ -358,7 +358,12 @@
                         <img class="chatview-image" id="chatview-image" src=""/>
                         <div>
                             <p class="mt-0"></p>
-                            <label style="color: black;font-size: 11px;text-align: left;display: flex;align-items: center; column-gap: 3px">Online <div class="online-dot"></div></label>
+                            <label style="color: black; font-size: 11px; text-align: left; display: flex; align-items: center; column-gap: 3px">
+                                Online
+                                <div class="online-dot" style="display: none;"></div>
+                                <div class="offline-dot" style="display: none;"></div>
+                            </label>
+
                         </div>
                     </div>
 {{--                    <span></span>--}}
@@ -367,14 +372,17 @@
 
                 <div id="sendmessage">
                     <input type="text" value="Send message..." id="msger-input" onkeypress="supSendMessage()"/>
+                    <div id="image-preview" style="display: none"></div>
                     @if (!\App\Models\User::isNormal())
                         <span class="mr-1" style="padding: 15px 9px" data-toggle="modal"
                               data-target="#modal-create-don-thuoc-widget-chat"><i
                                 class="fa-solid fa-plus"></i></span>
                     @endif
-                    <span id="send-chatMessage"><i
-                            class="fa-regular fa-paper-plane msger-send-btn"></i></span>
-
+                    <span id="send-chatMessage">
+                        <i class="fa-solid fa-paperclip mr-3 file-send-btn"></i>
+                        <input type="file" id="file-input" style="display: none;">
+                        <i class="fa-regular fa-paper-plane msger-send-btn"></i>
+                    </span>
                 </div>
             </div>
 
@@ -557,11 +565,18 @@
         getMessaging,
         getToken,
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging.js";
+    import {
+        getStorage,
+        ref,
+        uploadBytes,
+        getDownloadURL
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
     const app = initializeApp(firebaseConfig);
     const database = getFirestore(app);
     const auth = getAuth();
     const messaging = getMessaging(app);
+    const storage = getStorage(app);
 
     let current_user, list_user = [], doctorChatList = [], list_user_not_seen = [],
         current_role = `{{ (new \App\Http\Controllers\MainController())->getRoleUser(Auth::user()->id)}}`,
@@ -671,13 +686,25 @@
         logout();
     });
 
-     function setOnline(uid, isOnline) {
+    function setOnline(uid, isOnline) {
         try {
-             updateDoc(doc(database, 'users', uid), {
+            updateDoc(doc(database, 'users', uid), {
                 'is_online': isOnline,
                 'last_active': Date.now(),
+            }).then(() => {
+                console.log('Status updated successfully', isOnline);
+                // Assuming each user has a label identified by a unique ID like `status-${uid}`
+                const onlineDot = document.querySelector(`.online-dot`);
+                const offlineDot = document.querySelector(`.offline-dot`);
+
+                if (isOnline) {
+                    onlineDot.style.display = 'block';   // Show online dot
+                    offlineDot.style.display = 'none';  // Hide offline dot
+                } else {
+                    onlineDot.style.display = 'none';    // Hide online dot
+                    offlineDot.style.display = 'block';  // Show offline dot
+                }
             });
-            console.log('Status updated successfully', isOnline);
         } catch (error) {
             console.error('Error updating active status:', error);
         }
@@ -837,6 +864,25 @@
                     console.error(error);
                 }));
             }
+            let redDotHtml = list_user_not_seen.includes(res.id) ? `<div class="${res.id}" style="position: absolute;right: 15px;top: 50%;transform: translateY(-50%);background-color: red;border-radius: 50%;width: 10px;height:10px"></div>` : '';
+            if (doctorChatList.includes(res.id) && res.id !== current_user.uid) {
+                promises.push(getUserInfo(email).then((response) => {
+                    const name_doctor = response.infoUser.name;
+                    const hospital = response.infoUser.hospital ? response.infoUser.hospital : '';
+                    const avt = response.infoUser.avt ? window.location.origin + response.infoUser.avt : '../../../../img/avt_default.jpg';
+
+                    html += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}">
+                    <img src="${avt}"/>
+                    <p>
+                        <strong class="max-1-line-title-widget-chat">${name_doctor}</strong>
+                        <span>${hospital}</span>
+                    </p>
+                    ${redDotHtml}
+                </div>`;
+                }).catch((error) => {
+                    console.error(error);
+                }));
+            }
         }
         await Promise.all(promises);
         $('#friendslist-all-online #friends-all-online').html(html_online);
@@ -849,8 +895,13 @@
     }
 
     // Event listener for the search input
+    let debounceTimeout = null;
+
     $('#searchDoctor').on('input', function() {
-        renderUser(); // Re-render the user list whenever the search input changes
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(function() {
+            renderUser();
+        }, 500);
     });
 
     function getUserInfo(email) {
@@ -984,42 +1035,117 @@
         }
     }
 
-    let msger_input = $('#msger-input');
-    $('.msger-send-btn').click(function () {
-        let msg = msger_input.val();
-        let toUser = $(this).data('to_user');
-        let to_email = $(this).data('to_email');
-        sendMessage(toUser, to_email, msg, 'text');
-        msger_input.val('');
+    // Assuming Firebase has been initialized and all necessary SDKs have been included
+    $(document).ready(function() {
+        $('.file-send-btn').click(function() {
+            $('#file-input').click();
+        });
+        // File input change handler
+        $('#file-input').change(function(e) {
+            var file = e.target.files[0];
+
+            if (!file) {
+                return;
+            }
+
+            var fileName = file.name;
+            var fileType = file.type;
+
+            // Display file name in input box
+            $('#msger-input').val(fileName);
+
+            if (fileType.startsWith('image/')) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#image-preview').attr('src', e.target.result).show();
+                };
+                reader.readAsDataURL(file);
+            } else {
+                $('#image-preview').hide();
+            }
+        });
+
+        // Send button click handler
+        $('.msger-send-btn').click(function () {
+            let file = $('#file-input')[0].files[0];
+            let toUser = $(this).data('to_user');
+            let to_email = $(this).data('to_email');
+
+            if (file) {
+                // Determine file extension
+                let ext = file.name.split('.').pop();
+                sendMessage(toUser, to_email, file, file.type.startsWith('image/') ? 'image' : 'file', ext);
+            } else {
+                let msg = $('#msger-input').val();
+                sendMessage(toUser, to_email, msg, 'text');
+            }
+
+            $('#msger-input').val('');
+            $('#file-input').val('');
+            $('#image-preview').hide();
+        });
+
+        async function sendMessage(chatUserID, to_email, content, type, ext = null) {
+            const time = Date.now().toString();
+            const receiverId = chatUserID;
+            const message = {
+                toId: receiverId,
+                read: '',
+                type: type,
+                fromId: current_user.uid,
+                readUsers: {[current_user.uid]: true, [receiverId]: false},
+                sent: time
+            };
+
+            if (type === 'text') {
+                message.msg = content;
+            } else {
+                message.fileUrl = await uploadFile(content, ext, chatUserID);
+                message.fileName = content.name;
+            }
+
+            let conversationID = getConversationID(chatUserID);
+            const ref = collection(database, `chats/${conversationID}/messages/`);
+
+            try {
+                await setDoc(doc(ref, time), message);
+                await pushNotification(to_email, type === 'text' ? content : content.name);
+                await updateLastMessage(chatUserID, message);
+                await saveMessage(`{{ Auth::user()->email }}`, to_email, message);
+                console.log('Message sent successfully');
+            } catch (error) {
+                console.error('Error sending message:', error);
+            }
+        }
+
+        async function uploadFile(file, ext, chatUserID) {
+            // Create a reference for the new file at Firebase Storage
+            const storageRef = ref(storage, `images/${getConversationID(chatUserID)}/${Date.now()}.${ext}`);
+
+            try {
+                // Upload the file to the specified reference
+                const snapshot = await uploadBytes(storageRef, file);
+
+                // After upload, retrieve the download URL
+                return await getDownloadURL(snapshot.ref);
+            } catch (error) {
+                console.error('Failed to upload file:', error);
+                return null; // Handle the error appropriately
+            }
+        }
+//         async function uploadFile(file, ext, chatUserID) {
+//             const storageRef = ref(storage, `images/${getConversationID(chatUserID)}/${Date.now()}.${ext}`);
+// console.log(storageRef);
+//             try {
+//                 const snapshot = await storageRef.put(file);
+//                 return await snapshot.ref.getDownloadURL();
+//             } catch (error) {
+//                 console.error('Failed to upload file:', error);
+//                 return null; // Handle null in sending logic
+//             }
+//         }
     });
 
-    async function sendMessage(chatUserID, to_email, msg, type) {
-        const time = Date.now().toString();
-        const receiverId = chatUserID;
-        const message = {
-            toId: receiverId,
-            msg: msg,
-            read: '',
-            type: type,
-            fromId: current_user.uid,
-            readUsers: {[current_user.uid]: true, [receiverId]: false},
-            sent: time
-        };
-
-        let conversationID = getConversationID(chatUserID);
-
-        const ref = collection(database, `chats/${conversationID}/messages/`);
-
-        try {
-            await setDoc(doc(ref, time), message);
-            await pushNotification(to_email, msg);
-            await updateLastMessage(chatUserID, message);
-            await saveMessage(`{{ Auth::user()->email }}`, to_email, message);
-            console.log('Message sent successfully');
-        } catch (error) {
-            console.error('Error sending message:', error);
-        }
-    }
 
     function renderLayOutChat(email, id) {
         let btn_message = $('.msger-send-btn');

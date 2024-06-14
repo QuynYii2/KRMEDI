@@ -16,8 +16,15 @@
 
     .doctor-image img {
         max-width: 100%;
-        height: auto;
-        border-radius: 10px;
+        width: 190px;
+        height: 240px;
+        padding: 40px 20px;
+        object-fit: contain;
+        border-radius: 50%;
+    }
+
+    .doctor-info {
+        padding: 10px;
     }
 
     .doctor-info {
@@ -79,6 +86,11 @@
                                     <div class="button-follow-specialList">
                                         {{ __('home.Theo dõi') }}
 
+                                    </div>
+                                </a>
+                                <a href="{{ route('home.specialist.booking.detail', $clinicDetail->id) }}" style="margin: 0 5px 0 0px">
+                                    <div class="button-booking-specialList line-dk-btn button-direct-specialList btn-detail-clinic" style="margin: 0;background-color: #00bc59">
+                                        {{ __('home.Đặt khám') }}
                                     </div>
                                 </a>
 {{--                                <a href="https://www.google.com/maps?q={{$clinicDetail->latitude}},{{$clinicDetail->longitude}}" target="_blank">--}}
