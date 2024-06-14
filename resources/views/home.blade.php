@@ -2681,7 +2681,8 @@
         function initMap(currentLocation, locations) {
             var map = new google.maps.Map(document.getElementById('allAddressesMap'), {
                 center: currentLocation,
-                zoom: 10
+                zoom: 10,
+                gestureHandling: 'greedy'
             });
 
             directionsService = new google.maps.DirectionsService();

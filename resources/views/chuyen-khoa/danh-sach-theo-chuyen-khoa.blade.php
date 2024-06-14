@@ -666,7 +666,8 @@
             function initMap(currentLocation, clinicLocation, locations) {
                 var map = new google.maps.Map(document.getElementById('allAddressesMap'), {
                     center: currentLocation,
-                    zoom: 12.3
+                    zoom: 12.3,
+                    gestureHandling: 'greedy'
                 });
 
                 directionsService = new google.maps.DirectionsService();
@@ -810,7 +811,8 @@
             function initMapPharmacies(currentLocation, clinicLocationPharmacy,  locationsPharmacies) {
                 var map2 = new google.maps.Map(document.getElementById('allAddressesMapPharmacies'), {
                     center: currentLocation,
-                    zoom: 12.3
+                    zoom: 12.3,
+                    gestureHandling: 'greedy'
                 });
                  directionsService2 = new google.maps.DirectionsService();
                  directionsRenderer2 = new google.maps.DirectionsRenderer();
