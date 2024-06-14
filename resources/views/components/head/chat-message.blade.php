@@ -789,20 +789,17 @@
             console.error('Logout error:', error);
         }
     });
+    
+    const logoutButtons = ['btn-logout-header', 'btn-logout-header-mobile', 'btn-logout-header-3'];
 
-    document.getElementById('btn-logout-header').addEventListener('click', (event) => {
-        event.preventDefault();
-        logout();
-    });
-
-    document.getElementById('btn-logout-header-mobile').addEventListener('click', (event) => {
-        event.preventDefault();
-        logout();
-    });
-
-    document.getElementById('btn-logout-header-3').addEventListener('click', (event) => {
-        event.preventDefault();
-        logout();
+    logoutButtons.forEach(buttonId => {
+        const button = document.getElementById(buttonId);
+        if (button) {
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
+                logout();
+            });
+        }
     });
 
      function setOnline(uid, isOnline) {
