@@ -395,7 +395,8 @@
                 function initMap(currentLocation, locations) {
                     var map = new google.maps.Map(document.getElementById('allAddressesMap'), {
                         center: currentLocation,
-                        zoom: 12.3
+                        zoom: 12.3,
+                        gestureHandling: 'greedy'
                     });
 
                     directionsService = new google.maps.DirectionsService();
