@@ -1209,11 +1209,12 @@ span.material-symbols-outlined {
     }
     #mentoring .nav .tab {
         color: #929292;
-        width: 174px;
+        width: auto;
         /*height: 41px;*/
         text-align: center;
         font-size: 12px;
         font-weight: 400;
+        margin: 5px 10px;
     }
     .contact_doctor{
         font-size: 12px;
@@ -1291,19 +1292,20 @@ span.material-symbols-outlined {
     #mentoring .nav .tab.active {
         border-bottom: 4px solid #45C3D2;
         color: #45C3D2;
-        width: 174px;
-        height: 41px;
+        width: auto;
+        /*height: 41px;*/
         text-align: center;
-        font-size: 18px;
+        font-size: 16px;
         font-weight: 800;
     }
     #mentoring .nav .tab {
         color: #929292;
-        width: 174px;
-        height: 41px;
+        width: auto;
+        /*height: 41px;*/
         text-align: center;
         font-size: 16px;
         font-weight: 400;
+        margin: 10px;
     }
 }
 

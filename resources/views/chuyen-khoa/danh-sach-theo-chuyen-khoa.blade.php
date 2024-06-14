@@ -322,7 +322,7 @@
                             <div class="search-specialist">
                                 <label for="search-specialist" class="search-specialist__label w-100">
                                     <i class="fas fa-search"></i>
-                                    <input id="search-specialist" name="search_doctor" placeholder="Tìm kiếm phòng khám"
+                                    <input id="search-specialist" name="search_doctor" placeholder="Tìm kiếm bác sĩ"
                                            value="{{ request()->query('search_doctor') }}" style="border-top-right-radius:10px!important;border-bottom-right-radius:10px!important;">
                                 </label>
                             </div>

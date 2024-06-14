@@ -13,6 +13,23 @@
         <!-- Styles -->
         <link rel="stylesheet" type="text/css"
               href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+        <style>
+            .create-mobile-qus{
+                display: none;
+            }
+            @media (max-width: 992px) {
+                .dropdown-menu{
+                    left: -75px;
+                }
+                .create-mobile-qus{
+                    display: flex;
+                    padding: 0 10px;
+                    background-color: #45c3d2;
+                    border-radius: 16px;
+                    font-size: 14px;
+                }
+            }
+        </style>
 
         <!-- Libraries -->
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
@@ -51,6 +68,9 @@
         <div class="border-bottom">
             <div class="div d-flex justify-content-between mb-md-3 m-1">
                 <div class="text-wrapper d-inline-flex header_comment">{{ __('home.Best question') }}</div>
+                <div class="option create-mobile-qus">
+                    <a href="http://127.0.0.1:8000/mentoring/ask-a-question" class="text-white">Đặt một câu hỏi</a>
+                </div>
             </div>
         </div>
 
@@ -100,14 +120,17 @@
                 </div>
             </div>
         </div>
-        <div class="nav d-flex flex-nowrap mt-md-3 mt-1">
+        <div class="nav d-flex mt-md-3 mt-1" style="flex-wrap: wrap">
             <a class="tab" onclick="choiceType(this, 0)">{{ __('home.All') }}</a>
-            <a class="tab" onclick="choiceType(this, 1)">{{ __('home.Heath') }}</a>
-            <a class="tab" onclick="choiceType(this, 2)">{{ __('home.Beauty') }}</a>
-            <a class="tab" onclick="choiceType(this, 3)">{{ __('home.Losing weight') }}</a>
-            <a class="tab" onclick="choiceType(this, 4)">{{ __('home.Kids') }}</a>
-            <a class="tab" onclick="choiceType(this, 5)">{{ __('home.Pets') }}</a>
-            <a class="tab" onclick="choiceType(this, 6)">{{ __('home.Other') }}</a>
+                @foreach($departments as $val)
+                    <a class="tab" onclick="choiceType(this, {{$val->id}})">{{ $val->name }}</a>
+                @endforeach
+{{--            <a class="tab" onclick="choiceType(this, 1)">{{ __('home.Heath') }}</a>--}}
+{{--            <a class="tab" onclick="choiceType(this, 2)">{{ __('home.Beauty') }}</a>--}}
+{{--            <a class="tab" onclick="choiceType(this, 3)">{{ __('home.Losing weight') }}</a>--}}
+{{--            <a class="tab" onclick="choiceType(this, 4)">{{ __('home.Kids') }}</a>--}}
+{{--            <a class="tab" onclick="choiceType(this, 5)">{{ __('home.Pets') }}</a>--}}
+{{--            <a class="tab" onclick="choiceType(this, 6)">{{ __('home.Other') }}</a>--}}
         </div>
         <div id="all_comment"></div>
     </div>
@@ -211,10 +234,10 @@
                 str += `<div class="frame border-bottom comment_list mb-md-3">
                 <div class="frame-wrapper">
                     <div class="div">
-                        <div class="div-wrapper">
-                            <div class="text-wrapper textCate">${textCate}</div>
-                        </div>
                         <div class="div-2">
+                         <div class="div-wrapper" style="width:fit-content!important;padding-left:0px!important;border-radius: 16px!important">
+                            <div class="text-wrapper textCate" style="border-radius: 16px;font-size:14px">${comment.category_name}</div>
+                        </div>
                             <a href="${url}"><div class="lin-tip-tht-bi-cc"><p class="p">
                             @if(locationHelper() == 'vi')
                 ${comment.title}

@@ -37,7 +37,7 @@
                         <div class="dropdown-menu">
                             <a class="dropdown-item"
                                href="{{ route('profile') }}">{{ __('home.Trang cá nhân') }}</a>
-                            @if(Auth::user()->type != Role::NORMAL)
+                            @if(Auth::user()->type != Role::NORMAL && Auth::user()->member != Role::NORMAL)
                                 <a class="dropdown-item" href="{{ route('view.prescription.result.create') }}">Tạo đơn thuốc</a>
                             @else
                                 <a class="dropdown-item" href="{{url('my-bookings/list')}}">{{ __('home.Examination history') }}</a>
@@ -87,7 +87,7 @@
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item"
                                        href="{{ route('profile') }}">{{ __('home.Trang cá nhân') }}</a>
-                                    @if(Auth::user()->type != Role::NORMAL)
+                                    @if(Auth::user()->type != Role::NORMAL && Auth::user()->member != Role::NORMAL)
                                         <a class="dropdown-item" href="{{ route('view.prescription.result.create') }}">Tạo đơn thuốc</a>
                                     @else
                                         <a class="dropdown-item" href="{{url('my-bookings/list')}}">{{ __('home.Examination history') }}</a>

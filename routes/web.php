@@ -669,3 +669,5 @@ Route::get('booking-result/{id}', [MyBookingController::class, 'fileBookingResul
 
 Route::post('/update-signature', [UserController::class, 'updateSignature'])->name('user.update.user.signature');
 Route::get('support/{slug}', [UserController::class, 'support'])->name('user.support');
+//Chăm sóc khách hàng
+Route::post('mail-cskh', [UserController::class, 'mailCSKH'])->name('mail-cskh');

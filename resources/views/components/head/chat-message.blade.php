@@ -293,8 +293,31 @@
     .bubble {
         overflow-wrap: anywhere;
     }
+    .box-cskh{
+        width: 60px;
+        position: fixed;
+        right: 30px;
+        bottom: 80px;
+        z-index: 1;
+    }
+    @media (max-width: 992px) {
+        .modal.show .modal-dialog-cskh{
+            width: 70%!important;
+        }
+    }
+    @media (max-width: 767px) {
+        .modal.show .modal-dialog-cskh{
+            width: 95%!important;
+            margin: 10px auto!important;
+        }
+        .box-cskh{
+            right: 25px;
+        }
+    }
 </style>
-
+<div class="box-cskh" data-bs-toggle="modal" data-bs-target="#exampleModalCSKH">
+    <img src="{{asset('img/icon-cskh.png')}}" class="w-100" style="border-radius: 50%">
+</div>
 <div id="widget-chat">
 
     <div id="chat-circle" class="btn btn-raised">
@@ -460,10 +483,96 @@
     </div>
 </div>
 
+<!-- Modal CSKH-->
+<div class="modal fade" id="exampleModalCSKH" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-cskh">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #0f5132;padding: 10px">
+                <h1 class="modal-title fs-5" id="exampleModalLabel" style="font-size: 15px!important;color: white">Tư vấn, hỏi đáp, chăm sóc khách hàng</h1>
+                <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark" style="color: #ffffff;font-size: 20px"></i></button>
+            </div>
+            <div class="modal-body">
+                    <lable>Email</lable>
+                    <input type="text" name="email" id="emails" class="form-control mb-3" placeholder="Email" required>
+                <lable>Họ và tên</lable>
+                <input type="text" name="user_name" id="user_names" class="form-control mb-3" placeholder="Họ và tên" required>
+                <lable>Số điện thoại</lable>
+                <input type="number" name="phone" id="phones" class="form-control mb-3" required>
+                <lable>Nội dung</lable>
+                <textarea name="content" id="contentes" required class="w-100 form-textarea" rows="6"></textarea>
+                <div class="mt-3 d-flex justify-content-center">
+                    <button class="btn btn-send-mail" style="background-color: #159d68;color: white;padding: 7px 25px">Gửi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 <script src="{{ asset('laravel-echo@1.11.2/dist/echo.iife.js') }}"></script>
 
 <script>
+    function isValidEmail(email) {
+        const re = /\S+@\S+\.\S+/;
+        return re.test(email);
+    }
+
+    function isValidPhone(phone) {
+        const re = /^[0-9]{10,11}$/;
+        return re.test(phone);
+    }
+    $('.btn-send-mail').on('click', function () {
+        const email = $('#emails').val();
+        const userName = $('#user_names').val();
+        const phone = $('#phones').val();
+
+        if (!email || !userName || !phone) {
+            alert('Vui lòng điền đầy đủ thông tin.');
+            return;
+        }
+
+        if (!isValidEmail(email)) {
+            alert('Vui lòng nhập địa chỉ email hợp lệ.');
+            return;
+        }
+
+        if (!isValidPhone(phone)) {
+            alert('Vui lòng nhập số điện thoại hợp lệ.');
+            return;
+        }
+        const formData = new FormData();
+        formData.append("email",email);
+        formData.append("user_name", userName);
+        formData.append("phone", phone);
+        const fieldTextareaTiny = ["contentes"];
+        fieldTextareaTiny.forEach(fieldTextarea => {
+            const content = tinymce.get(fieldTextarea).getContent();
+            formData.append(fieldTextarea, content);
+        });
+        const csrfTokens = $('meta[name="csrf-token"]').attr('content');
+        $.ajax({
+            url: `{{ route('mail-cskh') }}`,
+            type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfTokens
+            },
+            contentType: false,
+            cache: false,
+            processData: false,
+            data: formData,
+            success: function(response) {
+                $('#exampleModalCSKH').modal('hide');
+                alert(response.data);
+            },
+            error: function(xhr) {
+                if (xhr.status == 400 || xhr.status == 404) {
+                    alert('Update error!');
+                } else {
+                    alert('Error, Please try again!');
+                }
+            }
+        });
+    })
     function supSendMessage() {
         if (event.keyCode === 13 && !event.shiftKey) {
             $('.msger-send-btn').trigger('click');
