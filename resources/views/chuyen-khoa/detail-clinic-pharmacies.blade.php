@@ -16,10 +16,10 @@
 
     .doctor-image img {
         max-width: 100%;
-        width: 220px;
+        width: 190px;
         height: 240px;
         padding: 40px 20px;
-        object-fit: cover;
+        object-fit: contain;
         border-radius: 50%;
     }
 
