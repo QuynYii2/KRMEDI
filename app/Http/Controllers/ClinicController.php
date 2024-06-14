@@ -166,15 +166,15 @@ class ClinicController extends Controller
                     $clinic = Clinic::find($data_booking->clinic_id);
                     $specialist = Department::find($data_booking->department_id);
 //                    $this->sendZaloMessageBooking($booking,$user,$clinic,$specialist->name);
-                    alert()->success('Success', 'Booking success.');
-                    return back()->with('success', 'Booking success');
+                    alert()->success('Success', 'Đặt lịch thành công.');
+                    return back()->with('success', 'Đặt lịch thành công');
                 }
-                alert()->error('Error', json_decode($booking->getContent())->message ?? "Booking error");
-                return back()->with('error', 'Booking error');
+                alert()->error('Error', json_decode($booking->getContent())->message ?? "Đặt lịch thất bại");
+                return back()->with('error', 'Đặt lịch thất bại');
             }
         } catch (\Exception $e) {
             alert()->error('Error', $e->getMessage());
-            return back()->with('error', 'Booking error');
+            return back()->with('error', 'Đặt lịch thất bại');
         }
     }
 
