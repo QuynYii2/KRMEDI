@@ -79,10 +79,10 @@ class HomeController extends Controller
 
     public function specialist()
     {
-        if (Auth::user()->type == 'NORMAL'){
-            $departments = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->where('isFilter', 1)->get();
-        }else{
+        if (Auth::check() && Auth::user()->type != 'NORMAL'){
             $departments = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->get();
+        }else{
+            $departments = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->where('isFilter', 1)->get();
         }
 
         return view('chuyen-khoa.tab-chuyen-khoa-newHome', compact('departments'));

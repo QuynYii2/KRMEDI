@@ -21,13 +21,15 @@
             <div class="form-group">
                 <label for="category">{{ __('home.Select Category') }}</label>
                 <select class="form-select" id="category">
-                    <option selected value="0">{{ __('home.Choose...') }}</option>
-                    <option value="{{ \App\Enums\MentoringCategory::HEALTH }}">{{ __('home.Heath') }}</option>
-                    <option value="{{ \App\Enums\MentoringCategory::BEAUTY }}">{{ __('home.Beauty') }}</option>
-                    <option value="{{ \App\Enums\MentoringCategory::LOSING_WEIGHT }}">{{ __('home.Losing weight') }}</option>
-                    <option value="{{ \App\Enums\MentoringCategory::KIDS }}">{{ __('home.Kids') }}</option>
-                    <option value="{{ \App\Enums\MentoringCategory::PETS }}">{{ __('home.Pets') }}</option>
-                    <option value="{{ \App\Enums\MentoringCategory::OTHER }}">{{ __('home.Other') }}</option>
+                    @foreach($departments as $val)
+                    <option selected value="{{$val->id}}">{{$val->name}}</option>
+                    @endforeach
+{{--                    <option value="{{ \App\Enums\MentoringCategory::HEALTH }}">{{ __('home.Heath') }}</option>--}}
+{{--                    <option value="{{ \App\Enums\MentoringCategory::BEAUTY }}">{{ __('home.Beauty') }}</option>--}}
+{{--                    <option value="{{ \App\Enums\MentoringCategory::LOSING_WEIGHT }}">{{ __('home.Losing weight') }}</option>--}}
+{{--                    <option value="{{ \App\Enums\MentoringCategory::KIDS }}">{{ __('home.Kids') }}</option>--}}
+{{--                    <option value="{{ \App\Enums\MentoringCategory::PETS }}">{{ __('home.Pets') }}</option>--}}
+{{--                    <option value="{{ \App\Enums\MentoringCategory::OTHER }}">{{ __('home.Other') }}</option>--}}
                 </select>
             </div>
             @include('component.upload_gallery')

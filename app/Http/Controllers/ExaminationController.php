@@ -13,6 +13,7 @@ use App\Enums\UserStatus;
 use App\Models\Answer;
 use App\Models\CalcViewQuestion;
 use App\Models\Clinic;
+use App\Models\Department;
 use App\Models\DoctorDepartment;
 use App\Models\online_medicine\CategoryProduct;
 use App\Models\online_medicine\ProductMedicine;
@@ -249,7 +250,8 @@ class ExaminationController extends Controller
         $questions = Question::withCount('answers')->where('status', QuestionStatus::APPROVED)->orderBy('answers_count',
             'desc') // Order by answer_count in descending order
         ->take(10)->get();
-        return view('examination.mentoring.mentoring', compact('questions'));
+        $departments = Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->get();
+        return view('examination.mentoring.mentoring', compact('questions','departments'));
     }
 
     public function searchMentoring(Request $request)
@@ -257,18 +259,19 @@ class ExaminationController extends Controller
 
         $list = [];
 
-        $listQuestion = Question::where('status', QuestionStatus::APPROVED)->get();
+        $listQuestion = Question::where('status', QuestionStatus::APPROVED)->orderBy('id','desc')->get();
         $category_id = $request->input('category_id');
 
         if ($category_id && $category_id != 0) {
             $listQuestion = Question::where('status', QuestionStatus::APPROVED)->where('category_id',
-                $category_id)->get();
+                $category_id)->orderBy('id','desc')->get();
         }
 
         foreach ($listQuestion as $question) {
 
             $countAnswer = Answer::where('question_id', $question->id)->count();
             $question_id = $question->id;
+            $departments = Department::find($question->category_id);
             $item = [
                 'id' => $question_id,
                 'title' => $question->title,
@@ -278,6 +281,7 @@ class ExaminationController extends Controller
                 'modified' => $question->updated_at,
                 'comment_count' => $countAnswer,
                 'category_id' => $question->category_id,
+                'category_name' => $departments->name,
                 'view_count' => CalcViewQuestion::getViewQuestion($question_id)->views ?? 0,
             ];
             array_push($list, $item);
@@ -314,7 +318,8 @@ class ExaminationController extends Controller
 
     public function createMentoring()
     {
-        return view('examination.mentoring.create');
+        $departments = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->get();
+        return view('examination.mentoring.create',compact('departments'));
     }
 
     public function showMentoring($id)
