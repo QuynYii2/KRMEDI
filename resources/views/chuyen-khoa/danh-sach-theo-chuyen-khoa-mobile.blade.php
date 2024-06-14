@@ -34,6 +34,63 @@
         .content__item__image{
             width: 80px!important;
         }
+        .btn-filter-bs{
+            border: none;
+            outline: unset;
+            border-radius: 10px;
+            padding: 10px;
+        }
+        .btn-filter-bs img{
+            width: 24px;
+            height: 24px;
+        }
+        .filter-section {
+            margin-bottom: 20px;
+        }
+        .filter-section h5 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .filter-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+        .filter-option:last-child {
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .filter-option label {
+            flex-grow: 1;
+        }
+        .filter-option input[type="radio"] {
+            margin-left: 20px;
+            width: 18px;
+            height: 18px;
+        }
+        .filter-buttons {
+            display: flex;
+            justify-content: space-around;
+            padding-top: 10px;
+        }
+        .filter-buttons button {
+            padding: 10px 30px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .reset-button {
+            background-color: #f8f9fa;
+            border: 1px solid #e0e0e0;
+        }
+        .apply-button {
+            background-color: #17a2b8;
+            color: white;
+            border: none;
+        }
+        .filter-option img{
+            width: 110px;
+        }
     </style>
     <div class=" align-items-center header-mobile-clinics" style="padding: 10px 16px;box-shadow: 0 0 #0000, 0 0 #0000, 0px 1px 4px 0px #dedede">
         <a href="{{route('home')}}"> <svg viewBox="0 0 24 24" style="width: 24px" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.29231 12.7138L15.2863 21.7048C15.6809 22.0984 16.3203 22.0984 16.7159 21.7048C17.1106 21.3111 17.1106 20.6717 16.7159 20.2781L8.43539 12.0005L16.7149 3.72293C17.1096 3.32928 17.1096 2.68989 16.7149 2.29524C16.3203 1.90159 15.6799 1.90159 15.2853 2.29524L6.29131 11.2861C5.90273 11.6757 5.90273 12.3251 6.29231 12.7138Z" fill="currentColor"></path></svg>
@@ -44,45 +101,34 @@
     </div>
     <div class="container mt-200 mt-70 box-ck-new-home" style="margin-top: 16px!important;">
         <div class="danh-sach-theo-chuyen-khoa">
-            <form>
-                <div class="search-specialist col-lg-8 col-md-10 p-0">
-                    <label for="search-specialist" class="search-specialist__label w-50">
-                        <i class="fas fa-search"></i>
-                        <input id="search-specialist" name="q" placeholder="{{ __('home.Tìm kiếm cơ sở y tế') }}" style="height: 36px!important;font-size: 14px"
-                               value="{{ request()->query('q') }}">
-                    </label>
-                    <div class="position-absolute">|</div>
-                    <label class="select-specialist__label w-50">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <select name="location" style="height: 36px!important;font-size: 14px">
-                            <option value="">{{ __('home.Tất cả địa điểm') }}</option>
-                            <option value="Hà Nội" {{ request()->query('location') == 'Hà Nội' ? 'selected' : '' }}>Hà
-                                Nội
-                            </option>
-                        </select>
-                    </label>
-                </div>
-            </form>
-
 
             <div class="d-flex nav-header--homeNew justify-content-center mt-3">
                 <ul class="nav nav-pills nav-fill d-flex justify-content-between">
                     <li class="nav-item">
-                        <a class="nav-link active font-14-mobi" id="clinicList-tab" data-toggle="tab" href="#clinicList"
+                        <a class="nav-link font-14-mobi @if($is_active == 1) active show @endif" id="clinicList-tab" data-toggle="tab" href="#clinicList"
                            role="tab" aria-controls="clinicList" aria-selected="true">{{ __('home.HOSPITALS') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link font-14-mobi" id="pharmacies-tab" data-toggle="tab" href="#pharmacies"
+                        <a class="nav-link font-14-mobi @if($is_active == 2) active show @endif" id="pharmacies-tab" data-toggle="tab" href="#pharmacies"
                            role="tab" aria-controls="pharmacies" aria-selected="false">{{ __('home.CLINICS') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link font-14-mobi" id="doctorList-tab" data-toggle="tab" href="#doctorList"
+                        <a class="nav-link font-14-mobi @if($is_active == 3) active show @endif" id="doctorList-tab" data-toggle="tab" href="#doctorList"
                            role="tab" aria-controls="doctorList" aria-selected="true">{{ __('home.DOCTOR') }}</a>
                     </li>
                 </ul>
             </div>
             <div class="tab-content mt-2" id="myTabContent">
-                <div class="tab-pane fade show active" id="clinicList" role="tabpanel" aria-labelledby="clinicList-tab">
+                <div class="tab-pane fade @if($is_active == 1) active show @endif" id="clinicList" role="tabpanel" aria-labelledby="clinicList-tab">
+                    <form class="mb-3">
+                        <div class="search-specialist col-lg-8 col-md-10">
+                            <label for="search-specialist" class="search-specialist__label w-100">
+                                <i class="fas fa-search" style="top: 17px!important;"></i>
+                                <input id="search-specialist" name="search_hospital" placeholder="{{ __('home.Tìm kiếm cơ sở y tế') }}"
+                                       value="{{ request()->query('search_hospital') }}" style="border-top-right-radius:10px!important;border-bottom-right-radius:10px!important;">
+                            </label>
+                        </div>
+                    </form>
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <span style="font-weight: 800">Danh sách bênh viện</span>
                         <div data-bs-toggle="offcanvas" data-bs-target="#offcanvasDoctortMap" aria-controls="offcanvasDoctortMap">
@@ -91,6 +137,7 @@
                     </div>
                     <div class="box-list-clinic-address">
                         <div class="body row" id="productInformation">
+                            @if(count($clinics)>0)
                             @foreach ($clinics as $key => $clinic)
                                 <div class="specialList-clinics specialList-clinics-address col-lg-12 col-md-6 mb-3" data-marker-index=""
                                      data-clinic-id="{{ $clinic->id }}">
@@ -180,11 +227,23 @@
                                     </div>
                                 </div>
                             @endforeach
+                            @else
+                                <p style="color: red;text-align: center;font-size: 18px;width: 100%;">Không có dữ liệu bạn muốn tìm</p>
+                            @endif
                         </div>
                     </div>
                 </div>
 
-                <div class="tab-pane fade" id="pharmacies" role="tabpanel" aria-labelledby="pharmacies-tab">
+                <div class="tab-pane fade @if($is_active == 2) active show @endif" id="pharmacies" role="tabpanel" aria-labelledby="pharmacies-tab">
+                    <form class="mb-3">
+                        <div class="search-specialist col-lg-8 col-md-10">
+                            <label for="search-specialist" class="search-specialist__label w-100">
+                                <i class="fas fa-search" style="top: 17px!important;"></i>
+                                <input id="search-specialist" name="search_clinic" placeholder="Tìm kiếm phòng khám"
+                                       value="{{ request()->query('search_clinic') }}" style="border-top-right-radius:10px!important;border-bottom-right-radius:10px!important;">
+                            </label>
+                        </div>
+                    </form>
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <span style="font-weight: 800">Danh sách phòng khám</span>
                         <div data-bs-toggle="offcanvas" data-bs-target="#offcanvasClinicMobile" aria-controls="offcanvasClinicMobile">
@@ -193,6 +252,7 @@
                     </div>
                     <div class="box-list-clinic-address">
                         <div class="body row" id="productInformation">
+                            @if(count($pharmacies)>0)
                             @foreach ($pharmacies as $index => $pharmacy)
                                 <div class="specialList-clinics specialList-pharmacy-address col-lg-12 col-md-6 mb-3" data-marker-index="{{$index}}"
                                      data-pharmacy-id="{{ $pharmacy->id }}">
@@ -281,12 +341,30 @@
                                     </div>
                                 </div>
                             @endforeach
+                            @else
+                                <p style="color: red;text-align: center;font-size: 18px;width: 100%;">Không có dữ liệu bạn muốn tìm</p>
+                            @endif
                         </div>
                     </div>
                 </div>
 
-                <div class="tab-pane fade" id="doctorList" role="tabpanel" aria-labelledby="doctorList-tab">
+                <div class="tab-pane fade @if($is_active == 3) active show @endif" id="doctorList" role="tabpanel" aria-labelledby="doctorList-tab">
+                    <div class="d-flex align-items-center mb-3 w-100 justify-content-center">
+                        <form style="width: 85%;margin-right: 15px">
+                            <div class="search-specialist">
+                                <label for="search-specialist" class="search-specialist__label w-100">
+                                    <i class="fas fa-search" style="top: 17px!important;"></i>
+                                    <input id="search-specialist" name="search_doctor" placeholder="Tìm kiếm bác sĩ"
+                                           value="{{ request()->query('search_doctor') }}" style="border-top-right-radius:10px!important;border-bottom-right-radius:10px!important;">
+                                </label>
+                            </div>
+                        </form>
+                        <button class="btn-filter-bs" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDoctorRight" aria-controls="offcanvasDoctorRight">
+                            <img src="{{asset('img/icon-filter.png')}}" alt="">
+                        </button>
+                    </div>
                     <div class="row">
+                        @if(count($doctorsSpecial)>0)
                         @foreach ($doctorsSpecial as $doctor)
                             @if ($doctor == '')
                                 <h1 class="d-flex align-items-center justify-content-center mt-4">{{ __('home.null') }}
@@ -373,6 +451,9 @@
                                 </div>
                             @endif
                         @endforeach
+                            @else
+                            <p style="color: red;text-align: center;font-size: 18px">Không có dữ liệu bạn muốn tìm</p>
+                        @endif
                     </div>
                     <div class="pagination mt-4 d-flex align-items-center justify-content-center">
                         {{ $doctorsSpecial->links() }}
@@ -408,6 +489,106 @@
             </div>
         </div>
 
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasDoctorRight" aria-labelledby="offcanvasRightLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasRightLabel" style="font-weight: bold">Bộ lọc</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body pt-0">
+                <form method="get" action="{{route('home.specialist.department',$id)}}">
+                    <div class="filter-section">
+                        <h5>Kinh nghiệm</h5>
+                        <div class="filter-option">
+                            <label for="experience">1 - 3 Năm kinh nghiệm</label>
+                            <input type="radio" name="experience" id="experience" @if(request()->query('experience') == 1) checked @endif value="1">
+                        </div>
+                        <div class="filter-option">
+                            <label for="experience2">3 - 5 Năm kinh nghiệm</label>
+                            <input type="radio" name="experience" id="experience2" @if(request()->query('experience') == 2) checked @endif value="2">
+                        </div>
+                        <div class="filter-option">
+                            <label for="experience3">5 - 8 Năm kinh nghiệm</label>
+                            <input type="radio" name="experience" id="experience3" @if(request()->query('experience') == 3) checked @endif value="3">
+                        </div>
+                        <div class="filter-option">
+                            <label for="experience4">8 - 10 Năm kinh nghiệm</label>
+                            <input type="radio" name="experience" id="experience4" @if(request()->query('experience') == 4) checked @endif value="4">
+                        </div>
+                        <div class="filter-option">
+                            <label for="experience5">+10 Năm kinh nghiệm</label>
+                            <input type="radio" name="experience" id="experience5" @if(request()->query('experience') == 5) checked @endif value="5">
+                        </div>
+                    </div>
+                    <div class="filter-section">
+                        <h5>Tôi có thể kê đơn thuốc được không?</h5>
+                        <div class="filter-option">
+                            <label>Đơn thuốc?</label>
+                            <input type="radio" name="prescribe" @if(request()->query('prescribe') == 1) checked @endif value="1">
+                        </div>
+                    </div>
+                    <div class="filter-section">
+                        <h5>Miễn phí hoặc không miễn phí</h5>
+                        <div class="filter-option">
+                            <label for="free">Miễn phí</label>
+                            <input type="radio" name="free" id="free" @if(request()->query('free') == 1) checked @endif value="1">
+                        </div>
+                        <div class="filter-option">
+                            <label for="free2">Mất phí</label>
+                            <input type="radio" name="free" id="free2" @if(request()->query('free') === '0') checked @endif value="0">
+                        </div>
+                    </div>
+                    <div class="filter-section">
+                        <h5>Đánh giá</h5>
+                        <div class="filter-option">
+                            <label for="reviews">
+                                <span><img src="{{asset('img/icon-star.png')}}" alt=""></span>
+                                4.5-5
+                            </label>
+                            <input type="radio" name="reviews" id="reviews" @if(request()->query('reviews') == 4.5) checked @endif value="4.5">
+                        </div>
+                        <div class="filter-option">
+                            <label for="reviews2">
+                                <span><img src="{{asset('img/icon-star.png')}}" alt=""></span>
+                                4-4.5
+                            </label>
+                            <input type="radio" name="reviews" id="reviews2" @if(request()->query('reviews') == 4) checked @endif value="4">
+                        </div>
+                        <div class="filter-option">
+                            <label for="reviews3">
+                                <span><img src="{{asset('img/icon-star.png')}}" alt=""></span>
+                                3.5-4
+                            </label>
+                            <input type="radio" name="reviews" id="reviews3" @if(request()->query('reviews') == 3.5) checked @endif value="3.5">
+                        </div>
+                        <div class="filter-option">
+                            <label for="reviews4">
+                                <span><img src="{{asset('img/icon-star.png')}}" alt=""></span>
+                                3-3.5
+                            </label>
+                            <input type="radio" name="reviews" id="reviews4" @if(request()->query('reviews') == 3) checked @endif value="3">
+                        </div>
+                        <div class="filter-option">
+                            <label for="reviews5">
+                                <span><img src="{{asset('img/icon-star.png')}}" alt=""></span>
+                                2.5-3
+                            </label>
+                            <input type="radio" name="reviews" id="reviews5" @if(request()->query('reviews') == 2.5) checked @endif value="2.5">
+                        </div>
+                        <div class="filter-option">
+                            <label for="reviews">
+                                <span><img src="{{asset('img/icon-star.png')}}" alt=""></span>
+                                0-2.5
+                            </label>
+                            <input type="radio" name="reviews" id="reviews" @if(request()->query('reviews') === '0') checked @endif value="0">
+                        </div>
+                    </div>
+                    <div class="filter-buttons">
+                        <button type="button" class="reset-button"><a href="{{url('home/specialist/'.$id)}}">Làm mới</a></button>
+                        <button type="submit" class="apply-button">Áp dụng</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
     <script>
         $(document).ready(function () {
