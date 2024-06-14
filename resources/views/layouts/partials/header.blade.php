@@ -327,7 +327,7 @@
                                 @endif
                                 <a class="dropdown-item"
                                    href="{{route('booking.list.by.user')}}">{{ __('home.My booking') }}</a>
-                                <a class="dropdown-item" id="btn-logout-header" href="#">{{ __('home.Logout') }}</a>
+                                <a class="dropdown-item" id="btn-logout-header-mobile" href="#">{{ __('home.Logout') }}</a>
                             </div>
                         </div>
                     @else

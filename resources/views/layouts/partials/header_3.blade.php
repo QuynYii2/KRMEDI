@@ -103,7 +103,7 @@
                                     @endif
                                     <a class="dropdown-item"
                                         href="{{ route('booking.list.by.user') }}">{{ __('home.My booking') }}</a>
-                                    <a class="dropdown-item" id="btn-logout-header"
+                                    <a class="dropdown-item" id="btn-logout-header-mobile"
                                         href="#">{{ __('home.Logout') }}</a>
                                 </div>
                             </div>
@@ -153,7 +153,7 @@
             </li>
             @if (Auth::check())
                 <li class="nav-item button-nav-header mb-3">
-                    <a class="nav-link" id="btn-logout-header" href="#">{{ __('home.Logout') }}</a>
+                    <a class="nav-link" id="btn-logout-header-3" href="#">{{ __('home.Logout') }}</a>
                 </li>
             @else
                 <li class="nav-item button-nav-header mb-3">

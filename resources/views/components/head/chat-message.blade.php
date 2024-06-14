@@ -780,6 +780,16 @@
         logout();
     });
 
+    document.getElementById('btn-logout-header-mobile').addEventListener('click', (event) => {
+        event.preventDefault();
+        logout();
+    });
+
+    document.getElementById('btn-logout-header-3').addEventListener('click', (event) => {
+        event.preventDefault();
+        logout();
+    });
+
      function setOnline(uid, isOnline) {
         try {
              updateDoc(doc(database, 'users', uid), {

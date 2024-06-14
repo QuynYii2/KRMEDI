@@ -6,6 +6,11 @@
         .tox.tox-tinymce {
             width: 100%;
         }
+        @media (max-width: 992px) {
+            .dropdown-menu{
+                left: -75px;
+            }
+        }
         @media (max-width: 676px) {
             .box-text-comment{
                 width: 100%;
@@ -125,7 +130,7 @@
                             onclick="changeEmotion()">{{ $isLike ? ( $isLike->is_like ? 'Dislike' : 'Like' ) : 'Like'}}</button>
                 @endif
                 @if($isMedical)
-                    <button type="button" class="btn btn-primary mx-2 button-main"
+                    <button type="button" class="btn btn-primary mx-2 button-main reply-comment-main"
                             onclick="replyCommentMain()">{{ __('home.Reply') }}
                     </button>
                 @endif
@@ -455,6 +460,7 @@
             hiddenReplyComment();
             var commentMain = document.getElementById('comment-main');
             commentMain.classList.toggle('d-none');
+            $('.reply-comment-main').css('display','none')
         }
 
         function alertLogin() {
