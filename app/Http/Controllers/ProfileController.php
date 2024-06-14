@@ -130,7 +130,7 @@ class ProfileController extends Controller
             'email' => 'required|string|email|max:255',
             'phone' => 'required|string|max:255',
 
-            'address_code' => 'required|string|max:255',
+//            'address_code' => 'required|string|max:255',
 
             'current_password' => 'nullable',
             'new_password' => 'nullable|min:6|max:12',
@@ -195,7 +195,7 @@ class ProfileController extends Controller
 
         $user->email = $request->input('email');
         $user->phone = $request->input('phone');
-        $user->address_code = $request->input('address_code');
+//        $user->address_code = $request->input('address_code');
 
         //        $user->nation_id = $request->input('nation_id');
         $province = $request->input('province_id');
