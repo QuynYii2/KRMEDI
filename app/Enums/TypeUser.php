@@ -7,20 +7,20 @@ use BenSampo\Enum\Enum;
 final class TypeUser extends Enum
 {
     //
-    const PHARMACEUTICAL_COMPANIES = 'PHARMACEUTICAL COMPANIES';
-    const HOSPITALS = 'HOSPITALS';
-    const CLINICS = 'CLINICS';
-    const PHARMACIES = 'PHARMACIES';
-    const SPAS = 'SPAS';
-    const OTHERS = 'OTHERS';
+    const PHARMACEUTICAL_COMPANIES = 'Công ty dược phẩm';
+    const HOSPITALS = 'Bệnh viện';
+    const CLINICS = 'Phòng khám';
+    const PHARMACIES = 'Hiệu thuốc';
+    const SPAS = 'Spa';
+    const OTHERS = 'Khác';
     //
-    const DOCTORS = 'DOCTORS';
-    const PHAMACISTS = 'PHAMACISTS';
-    const THERAPISTS = 'THERAPISTS';
-    const ESTHETICIANS = 'ESTHETICIANS';
-    const NURSES = 'NURSES';
+    const DOCTORS = 'Bác sĩ';
+    const PHAMACISTS = 'Dược sĩ';
+    const THERAPISTS = 'Nhà trị liệu';
+    const ESTHETICIANS = 'Nhân viên thẩm mỹ';
+    const NURSES = 'Y tá';
     //
-    const PAITENTS = 'PAITENTS';
-    const NORMAL_PEOPLE = 'NORMAL PEOPLE';
-
+    const PAITENTS = 'Bệnh nhân';
+    const NORMAL_PEOPLE = 'Người bình thường';
 }
+

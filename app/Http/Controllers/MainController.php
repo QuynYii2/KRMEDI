@@ -107,18 +107,18 @@ class MainController extends Controller
     public function checkMedical()
     {
         $medicalRoles = [
-            'DOCTORS',
-            'PHAMACISTS',
-            'THERAPISTS',
-            'ESTHETICIANS',
-            'NURSES',
-            'PHARMACEUTICAL COMPANIES',
-            'HOSPITALS',
-            'CLINICS',
-            'PHARMACIES',
-            'SPAS',
-            'OTHERS',
-            'ADMIN'
+            'Bác sĩ',
+            'Dược sĩ',
+            'Nhà trị liệu',
+            'Nhân viên thẩm mỹ',
+            'Y tá',
+            'Công ty dược phẩm',
+            'Bệnh viện',
+            'Phòng khám',
+            'Hiệu thuốc',
+            'Spa',
+            'Khác',
+            'Quản trị viên'
         ];
 
         return $this->checkRoles($medicalRoles);
@@ -127,23 +127,23 @@ class MainController extends Controller
     public function switchMember($member)
     {
         switch ($member) {
-            case 'PHARMACEUTICAL_COMPANIES':
+            case 'Công ty dược phẩm':
                 $role = Role::where('name', \App\Enums\Role::PHARMACEUTICAL_COMPANIES)->first();
                 $type = TypeUser::PHARMACEUTICAL_COMPANIES;
                 break;
-            case 'HOSPITALS':
+            case 'Bệnh viện':
                 $role = Role::where('name', \App\Enums\Role::HOSPITALS)->first();
                 $type = TypeUser::HOSPITALS;
                 break;
-            case 'CLINICS':
+            case 'Phòng khám':
                 $role = Role::where('name', \App\Enums\Role::CLINICS)->first();
                 $type = TypeUser::CLINICS;
                 break;
-            case 'PHARMACIES':
+            case 'Hiệu thuốc':
                 $role = Role::where('name', \App\Enums\Role::PHARMACIES)->first();
                 $type = TypeUser::PHARMACIES;
                 break;
-            case 'SPAS':
+            case 'Spa':
                 $role = Role::where('name', \App\Enums\Role::SPAS)->first();
                 $type = TypeUser::SPAS;
                 break;

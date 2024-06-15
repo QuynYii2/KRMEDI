@@ -65,6 +65,9 @@
             border: 1px solid var(--Grey-medium, #BFBFBF);
             background: var(--White-Light, #F3F3F3);
         }
+        .select-form-register{
+            padding: 10px 16px !important;
+        }
     }
 
 </style>
@@ -542,7 +545,7 @@
 {{--                                        </div>--}}
                                         <div class="form-element">
                                             <label for="type">{{ __('home.Type Account') }}</label>
-                                            <select id="type" name="type" class="form-select"
+                                            <select id="type" name="type" class="form-select select-form-register"
                                                     onchange="showInputFileUpload(this.value)">
                                                 <option>Lựa chọn...</option>
                                                 <option value="{{Role::BUSINESS }}">{{ __('home.BUSINESS') }}</option>
@@ -553,7 +556,7 @@
                                         </div>
                                         <div class="form-element">
                                             <label for="member">{{ __('home.Member') }}</label>
-                                            <select id="member" name="member" class="form-select">
+                                            <select id="member" name="member" class="form-select select-form-register">
 {{--                                                <option value="{{Role::PAITENTS }}">{{ __('home.PAITENTS') }}</option>--}}
 {{--                                                <option value="{{Role::NORMAL_PEOPLE }}">{{ __('home.NORMAL PEOPLE') }}--}}
 {{--                                                </option>--}}
