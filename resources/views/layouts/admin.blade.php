@@ -1644,7 +1644,13 @@
             audio.pause();
             audio.currentTime = 0;
             audio = null;
-        })
+        });
+        $(document).ready(function(){
+            $('#modal-call-alert').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+        });
     }
 
     async function getUserById(id) {

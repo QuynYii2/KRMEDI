@@ -113,7 +113,7 @@
                            role="tab" aria-controls="pharmacies" aria-selected="false">{{ __('home.CLINICS') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link font-14-mobi list-tab-menu-doctor @if($is_active == 3) active show @endif" id="doctorList-tab" data-toggle="tab" href="#doctorList"
+                        <a class="nav-link font-14-mobi list-tab-menu-doctor is-doctor-tab @if($is_active == 3) active show @endif" id="doctorList-tab" data-toggle="tab" href="#doctorList"
                            role="tab" aria-controls="doctorList" aria-selected="true">{{ __('home.DOCTOR') }}</a>
                     </li>
                 </ul>
@@ -348,7 +348,7 @@
                     </div>
                 </div>
 
-                <div class="tab-pane fade list-tab-content-doctor @if($is_active == 3) active show @endif" id="doctorList" role="tabpanel" aria-labelledby="doctorList-tab">
+                <div class="tab-pane fade list-tab-content-doctor is-doctor-tab @if($is_active == 3) active show @endif" id="doctorList" role="tabpanel" aria-labelledby="doctorList-tab">
                     <div class="d-flex align-items-center mb-3 w-100 justify-content-center">
                         <form style="width: 85%;margin-right: 15px">
                             <div class="search-specialist">
@@ -605,7 +605,8 @@
 
                         getCurrentLocation(function(currentLocation) {
                             var newDistance = calculateDistance(currentLocation.lat, currentLocation.lng, parseFloat(latitude), parseFloat(longitude));
-                            distanceSpan.text(newDistance.toFixed(2) + 'Km');
+                            var formattedDistance = newDistance.toFixed(2).replace('.', ',');
+                            distanceSpan.text(formattedDistance + 'Km');
                             resolve(newDistance);
                         });
 
@@ -636,7 +637,8 @@
 
                         getCurrentLocation(function(currentLocation) {
                             var newDistance = calculateDistance(currentLocation.lat, currentLocation.lng, parseFloat(latitude), parseFloat(longitude));
-                            distanceSpan.text(newDistance.toFixed(2) + 'Km');
+                            var formattedDistances = newDistance.toFixed(2).replace('.', ',');
+                            distanceSpan.text(formattedDistances + 'Km');
                             resolve({distance: newDistance, pharmacyElement: pharmacyElement});
                         });
 
@@ -725,7 +727,8 @@
             function initMap(currentLocation, clinicLocation, locations) {
                 var map = new google.maps.Map(document.getElementById('allAddressesMap'), {
                     center: currentLocation,
-                    zoom: 12.3
+                    zoom: 12.3,
+                    gestureHandling: 'greedy'
                 });
 
                 directionsService = new google.maps.DirectionsService();
@@ -859,7 +862,8 @@
             function initMapPharmacies(currentLocation, clinicLocationPharmacy,  locationsPharmacies) {
                 var map2 = new google.maps.Map(document.getElementById('allAddressesMapPharmacies'), {
                     center: currentLocation,
-                    zoom: 12.3
+                    zoom: 12.3,
+                    gestureHandling: 'greedy'
                 });
                 directionsService2 = new google.maps.DirectionsService();
                 directionsRenderer2 = new google.maps.DirectionsRenderer();
@@ -1063,7 +1067,7 @@
                 isActive = 1;
             } else if (params.has('search_clinic')) {
                 isActive = 2;
-            } else if (params.has('search_doctor')) {
+            } else if (params.has('search_doctor') || params.has('experience') || params.has('prescribe') || params.has('free') || params.has('reviews') ) {
                 isActive = 3;
             } else {
                 isActive = 1;
@@ -1085,6 +1089,21 @@
                 } else {
                     menu.classList.remove('active', 'show');
                 }
+            });
+
+            let is_doctor_tab = localStorage.getItem('doctor');
+            if(is_doctor_tab == 'true'){
+                tabs.forEach((tab, index) => {
+                    tab.classList.remove('active', 'show');
+                });
+                tabsMenu.forEach((menu, index) => {
+                    menu.classList.remove('active', 'show');
+                });
+                $(".is-doctor-tab").addClass('active');
+                $(".is-doctor-tab").addClass('show');
+            }
+            $(".list-tab-menu-doctor").click(function () {
+                localStorage.setItem('doctor',false);
             });
 
         });
