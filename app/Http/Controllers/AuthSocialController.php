@@ -423,8 +423,12 @@ class AuthSocialController extends Controller
             $code = $request->input('code');
             $state = $request->input('state');
             $codeChallenge = $request->input('code_challenge');
-
-            $accessToken = $this->zaloService->getUserAccessToken($state);
+            $data = $this->getTokenZaloZns();
+            if ($data['status'] == false) {
+            return back()->with(['error' => 'Refresh Token đã hết hạn']);
+            }
+            $accessToken = $data['access_token'];
+//            $accessToken = $this->zaloService->getUserAccessToken($state);
             $zaloUser = $this->zaloService->getUserInformation($accessToken);
 
             if ($zaloUser['id'] == null || $zaloUser['name'] == null) {
