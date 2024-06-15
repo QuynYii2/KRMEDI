@@ -409,7 +409,7 @@
 
             var isRendered = false; // Flag to track if working hours are rendered
 
-            function renderWorkingHours(selectedDate) {
+            function renderWorkingHours(selectedDate, clinicId) {
                 if (isRendered) {
                     $(".timeContainer").empty(); // Clear existing working hours
                 }
@@ -419,10 +419,13 @@
                 var bookingCountsForDate = bookingsCount.reduce((acc, booking) => {
                     var checkInDate = new Date(booking.check_in_date).toISOString().split('T')[0];
                     var time = booking.check_in_date.split(' ')[1].substring(0, 5);
-                    if (!acc[checkInDate]) {
-                        acc[checkInDate] = {};
+                    if (!acc[booking.clinic_id]) {
+                        acc[booking.clinic_id] = {};
                     }
-                    acc[checkInDate][time] = booking.num_bookings;
+                    if (!acc[booking.clinic_id][checkInDate]) {
+                        acc[booking.clinic_id][checkInDate] = {};
+                    }
+                    acc[booking.clinic_id][checkInDate][time] = booking.num_bookings;
                     return acc;
                 }, {});
 
@@ -455,7 +458,9 @@
                         selectedDateTime.setHours(parseInt(startTime.split(":")[0]));
                         selectedDateTime.setMinutes(parseInt(startTime.split(":")[1]));
 
-                        if (bookingCountsForDate[selectedDateFormatted] && bookingCountsForDate[selectedDateFormatted][startTime] >= 5) {
+                        if (bookingCountsForDate[clinicId] &&
+                            bookingCountsForDate[clinicId][selectedDateFormatted] &&
+                            bookingCountsForDate[clinicId][selectedDateFormatted][startTime] >= 5) {
                             button.prop("disabled", true);
                         }
                         // Kiểm tra nếu ngày được chọn là hôm nay và giờ hiện tại nằm trong khoảng từ 08:00 đến currentHour
@@ -508,12 +513,13 @@
                 $('#checkInTime').val('');
                 $('#checkOutTime').val('');
                 var selectedDate = $(this).val();
+                var clinicId = {{$clinicDetail->id}};
                 if (isRendered) {
                     $(".timeContainer").empty(); // Clear existing working hours
                 }
                 spinner('start');
                 setTimeout(() => {
-                    renderWorkingHours(selectedDate);
+                    renderWorkingHours(selectedDate, clinicId);
                     spinner('stop');
                 }, 500);
                 isRendered = true;

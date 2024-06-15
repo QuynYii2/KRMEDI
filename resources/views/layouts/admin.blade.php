@@ -282,20 +282,20 @@
     $isDoctor = false;
     foreach ($roles as $role) {
         $roleNames = Role::where('id', $role)->pluck('name');
-        if ($roleNames->contains('PAITENTS') || $roleNames->contains('NORMAL PEOPLE')) {
+        if ($roleNames->contains('Bệnh nhân') || $roleNames->contains('Người bình thường')) {
             $isNormal = true;
             break;
         }
-        if ($roleNames->contains('DOCTORS')) {
+        if ($roleNames->contains('Bác sĩ')) {
             $isDoctor = true;
         }
         if (
-            $roleNames->contains('DOCTORS') ||
-            $roleNames->contains('PHAMACISTS') ||
-            $roleNames->contains('THERAPISTS') ||
-            $roleNames->contains('ESTHETICIANS') ||
-            $roleNames->contains('NURSES') ||
-            $roleNames->contains('NURSES')
+            $roleNames->contains('Bác sĩ') ||
+            $roleNames->contains('Dược sĩ') ||
+            $roleNames->contains('Nhà trị liệu') ||
+            $roleNames->contains('Nhân viên thẩm mỹ') ||
+            $roleNames->contains('Y tá') ||
+            $roleNames->contains('Y tá')
         ) {
             $isStaff = true;
             break;

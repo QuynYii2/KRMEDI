@@ -369,7 +369,7 @@ class AuthController extends Controller
                     return redirect($callback_url);
                 }
 
-                if ($roleNames->contains('DOCTORS') || $roleNames->contains('PHAMACISTS') || $roleNames->contains('THERAPISTS') || $roleNames->contains('ESTHETICIANS') || $roleNames->contains('NURSES') || $roleNames->contains('PHARMACEUTICAL COMPANIES') || $roleNames->contains('HOSPITALS') || $roleNames->contains('CLINICS') || $roleNames->contains('PHARMACIES') || $roleNames->contains('SPAS') || $roleNames->contains('OTHERS') || $roleNames->contains('ADMIN')) {
+                if ($roleNames->contains('Bác sĩ') || $roleNames->contains('Dược sĩ') || $roleNames->contains('Nhà trị liệu') || $roleNames->contains('Nhân viên thẩm mỹ') || $roleNames->contains('Y tá') || $roleNames->contains('Công ty dược phẩm') || $roleNames->contains('Bệnh viện') || $roleNames->contains('Phòng khám') || $roleNames->contains('Hiệu thuốc') || $roleNames->contains('Spa') || $roleNames->contains('Khác') || $roleNames->contains('Quản trị viên')) {
                     return redirect(route('home'));
                 }
 

@@ -35,20 +35,20 @@ class NormalPermission
             }
             $roleNames = Role::where('id', $role_user->role_id)->pluck('name');
 
-            if ($roleNames->contains('PAITENTS')
-                || $roleNames->contains('NORMAL PEOPLE')
-                || $roleNames->contains('DOCTORS')
-                || $roleNames->contains('PHAMACISTS')
-                || $roleNames->contains('THERAPISTS')
-                || $roleNames->contains('ESTHETICIANS')
-                || $roleNames->contains('NURSES')
-                || $roleNames->contains('PHARMACEUTICAL COMPANIES')
-                || $roleNames->contains('HOSPITALS')
-                || $roleNames->contains('CLINICS')
-                || $roleNames->contains('PHARMACIES')
-                || $roleNames->contains('SPAS')
-                || $roleNames->contains('OTHERS')
-                || $roleNames->contains('ADMIN')) {
+            if ($roleNames->contains('Bệnh nhân')
+                || $roleNames->contains('Người bình thường')
+                || $roleNames->contains('Bác sĩ')
+                || $roleNames->contains('Dược sĩ')
+                || $roleNames->contains('Nhà trị liệu')
+                || $roleNames->contains('Nhân viên thẩm mỹ')
+                || $roleNames->contains('Y tá')
+                || $roleNames->contains('Công ty dược phẩm')
+                || $roleNames->contains('Bệnh viện')
+                || $roleNames->contains('Phòng khám')
+                || $roleNames->contains('Hiệu thuốc')
+                || $roleNames->contains('Spa')
+                || $roleNames->contains('Khác')
+                || $roleNames->contains('Quản trị viên')) {
                 return $next($request);
             }
         } catch (Exception $e) {
