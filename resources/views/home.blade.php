@@ -1051,7 +1051,7 @@
                     </a>
                 </div>
                 <div class="mb-md-3 col-6 col-md-4">
-                    <a href="{{ route('home.specialist') }}">
+                    <a href="{{ route('home.specialist') }}" class="find_doctor">
                         <div class="border-HomeNew align-items-center justify-content-center">
                             <div class="">
                                 <div class="d-flex justify-content-center krm-select-bt">
@@ -2455,6 +2455,10 @@
     @endphp
 
     <script>
+        localStorage.setItem('doctor',false)
+        $(".find_doctor").click(function () {
+            localStorage.setItem('doctor',true)
+        })
         @if(session('show_modal'))
         $(document).ready(function() {
             $('#activationModal').modal('show');

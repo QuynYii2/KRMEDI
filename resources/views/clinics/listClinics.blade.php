@@ -190,7 +190,8 @@
                 function initMap(currentLocation, locations) {
                     var map = new google.maps.Map(document.getElementById('allAddressesMap'), {
                         center: currentLocation,
-                        zoom: 12.3
+                        zoom: 12.3,
+                        gestureHandling: 'greedy'
                     });
 
                     directionsService = new google.maps.DirectionsService();
@@ -460,7 +461,7 @@
                                                 <span class="color-timeWorking">
                                                     <span class="fs-14 font-weight-600"><i class="fa-regular fa-clock"></i> ${formattedOpenDate} - ${formattedCloseDate}</span>
                                                 </span>
-                                                <span class="distance"><i class="fas fa-map-marker-alt mr-2"></i>${distance.toFixed(2)} Km</span>
+                                                <span class="distance"><i class="fas fa-map-marker-alt mr-2"></i>${distance.toFixed(2).replace('.', ',')} Km</span>
                                             </div>
                                         </div>
                                     </div>
