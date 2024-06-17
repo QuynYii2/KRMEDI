@@ -113,9 +113,11 @@ class HomeController extends Controller
         }
         if ($free) {
             $doctorsSpecial->where('free', $free);
+            $is_active = 3;
         }
         if ($prescribe) {
             $doctorsSpecial->where('prescription', $prescribe);
+            $is_active = 3;
         }
         if ($experience) {
             switch ($experience) {

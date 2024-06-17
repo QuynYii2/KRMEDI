@@ -87,7 +87,7 @@
                            role="tab" aria-controls="pharmacies" aria-selected="false">{{ __('home.CLINICS') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link font-14-mobi list-tab-menu-doctor @if($is_active == 3) active show @endif" id="doctorList-tab" data-toggle="tab" href="#doctorList"
+                        <a class="nav-link font-14-mobi list-tab-menu-doctor is-doctor-tab @if($is_active == 3) active show @endif" id="doctorList-tab" data-toggle="tab" href="#doctorList"
                            role="tab" aria-controls="doctorList" aria-selected="true">{{ __('home.DOCTOR') }}</a>
                     </li>
                 </ul>
@@ -316,7 +316,7 @@
                     </div>
                 </div>
 
-                <div class="tab-pane fade list-tab-content-doctor @if($is_active == 3) active show @endif" id="doctorList" role="tabpanel" aria-labelledby="doctorList-tab">
+                <div class="tab-pane fade list-tab-content-doctor is-doctor-tab @if($is_active == 3) active show @endif" id="doctorList" role="tabpanel" aria-labelledby="doctorList-tab">
                     <div class="d-flex align-items-center mb-5 w-100 justify-content-center">
                         <form style="width: 50%;margin-right: 15px">
                             <div class="search-specialist">
@@ -442,23 +442,23 @@
                 <h5>Kinh nghiệm</h5>
                 <div class="filter-option">
                     <label for="experience">1 - 3 Năm kinh nghiệm</label>
-                    <input type="radio" name="experience" id="experience" @if(request()->query('search_doctor') == 1) checked @endif value="1">
+                    <input type="radio" name="experience" id="experience" @if(request()->query('experience') == 1) checked @endif value="1">
                 </div>
                 <div class="filter-option">
                     <label for="experience2">3 - 5 Năm kinh nghiệm</label>
-                    <input type="radio" name="experience" id="experience2" @if(request()->query('search_doctor') == 2) checked @endif value="2">
+                    <input type="radio" name="experience" id="experience2" @if(request()->query('experience') == 2) checked @endif value="2">
                 </div>
                 <div class="filter-option">
                     <label for="experience3">5 - 8 Năm kinh nghiệm</label>
-                    <input type="radio" name="experience" id="experience3" @if(request()->query('search_doctor') == 3) checked @endif value="3">
+                    <input type="radio" name="experience" id="experience3" @if(request()->query('experience') == 3) checked @endif value="3">
                 </div>
                 <div class="filter-option">
                     <label for="experience4">8 - 10 Năm kinh nghiệm</label>
-                    <input type="radio" name="experience" id="experience4" @if(request()->query('search_doctor') == 4) checked @endif value="4">
+                    <input type="radio" name="experience" id="experience4" @if(request()->query('experience') == 4) checked @endif value="4">
                 </div>
                 <div class="filter-option">
                     <label for="experience5">+10 Năm kinh nghiệm</label>
-                    <input type="radio" name="experience" id="experience5" @if(request()->query('search_doctor') == 5) checked @endif value="5">
+                    <input type="radio" name="experience" id="experience5" @if(request()->query('experience') == 5) checked @endif value="5">
                 </div>
             </div>
             <div class="filter-section">
@@ -546,7 +546,8 @@
 
                         getCurrentLocation(function(currentLocation) {
                             var newDistance = calculateDistance(currentLocation.lat, currentLocation.lng, parseFloat(latitude), parseFloat(longitude));
-                            distanceSpan.text(newDistance.toFixed(2) + 'Km');
+                            var formattedDistance = newDistance.toFixed(2).replace('.', ',');
+                            distanceSpan.text(formattedDistance + 'Km');
                             resolve(newDistance);
                         });
 
@@ -577,7 +578,8 @@
 
                         getCurrentLocation(function(currentLocation) {
                             var newDistance = calculateDistance(currentLocation.lat, currentLocation.lng, parseFloat(latitude), parseFloat(longitude));
-                            distanceSpan.text(newDistance.toFixed(2) + 'Km');
+                            var formattedDistances = newDistance.toFixed(2).replace('.', ',');
+                            distanceSpan.text(formattedDistances + 'Km');
                             resolve({distance: newDistance, pharmacyElement: pharmacyElement});
                         });
 
@@ -1027,7 +1029,7 @@
                 isActive = 1;
             } else if (params.has('search_clinic')) {
                 isActive = 2;
-            } else if (params.has('search_doctor')) {
+            } else if (params.has('search_doctor') || params.has('experience') || params.has('prescribe') || params.has('free') || params.has('reviews') ) {
                 isActive = 3;
             } else {
                 isActive = 1;
@@ -1049,6 +1051,21 @@
                 } else {
                     menu.classList.remove('active', 'show');
                 }
+            });
+
+            let is_doctor_tab = localStorage.getItem('doctor');
+            if(is_doctor_tab == 'true'){
+                tabs.forEach((tab, index) => {
+                    tab.classList.remove('active', 'show');
+                });
+                tabsMenu.forEach((menu, index) => {
+                    menu.classList.remove('active', 'show');
+                });
+                $(".is-doctor-tab").addClass('active');
+                $(".is-doctor-tab").addClass('show');
+            }
+            $(".list-tab-menu-doctor").click(function () {
+                localStorage.setItem('doctor',false);
             });
 
         });
