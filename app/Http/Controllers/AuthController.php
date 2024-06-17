@@ -7,6 +7,7 @@ use App\Enums\UserStatus;
 use App\Http\Controllers\restapi\MainApi;
 use App\Models\Clinic;
 use App\Models\Role;
+use App\Models\RoleUser;
 use App\Models\User;
 use App\Rules\NoSpacesRule;
 use Exception;
@@ -218,7 +219,21 @@ class AuthController extends Controller
                     $getUserInvite->save();
                 }
 
-                (new MainController())->createRoleUser($member, $username);
+                $role = Role::where('name', $member)->first();
+                $newUser = User::where('phone', $phone)->first();
+                if ($role) {
+                    RoleUser::create([
+                        'role_id' => $role->id,
+                        'user_id' => $newUser->id
+                    ]);
+                } else {
+                    $roleNormal = Role::where('name', \App\Enums\Role::PAITENTS)->first();
+                    RoleUser::create([
+                        'role_id' => $roleNormal->id,
+                        'user_id' => $newUser->id
+                    ]);
+                }
+//                (new MainController())->createRoleUser($member, $username);
 
                 if ($user->type == \App\Enums\Role::MEDICAL) {
                     // Send OTP
