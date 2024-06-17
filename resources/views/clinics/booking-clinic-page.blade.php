@@ -145,11 +145,6 @@
             box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
             padding: 16px;
         }
-        .zalo-chat{
-            right: 29px!important;
-            bottom: 155px!important;
-            z-index: 1!important;
-        }
         @media (max-width: 767px) {
             .zalo-chat {
                 right: 26px !important;
@@ -360,15 +355,52 @@
             </div>
 
         </form>
-        <div class="zalo-chat-widget zalo-chat" data-oaid="3111836148004341171" data-welcome-message="Rất vui khi được hỗ trợ bạn!" data-autopopup="0" data-width="300" data-height="300"></div>
     </div>
+    <div class="modal fade" id="model-check-kham" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5 text-center" id="staticBackdropLabel">Bạn có muốn bác sĩ xem lịch sử khám bệnh của bạn không</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="button" class="btn btn-secondary btn-yes-history" data-value="0" style="background-color: red;border: none">Không</button>
+                    <button type="button" class="btn btn-success btn-yes-history" data-value="1" style="border: none">Có</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         $(document).ready(function() {
+            $('#model-check-kham').modal('show');
+
+            $('.btn-yes-history').click(function () {
+                let medical_history = $(this).attr('data-value');
+                const csrfTokens = $('meta[name="csrf-token"]').attr('content');
+                $.ajax({
+                    url: `{{route('examination-history-user')}}`,
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfTokens
+                    },
+                    dataType: 'json',
+                    data: {'medical_history':medical_history},
+                    success: function (data) {
+                        $('#model-check-kham').modal('hide');
+                    },
+                    error: function (data) {
+                        console.log(data)
+                    }
+                });
+            });
+
             loadData();
 
             $('.inputBookingFor').on('change', function() {
                 checkMyFamily();
             });
+
         });
 
         function checkMyFamily() {

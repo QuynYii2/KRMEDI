@@ -304,6 +304,11 @@
         font-weight: bold;
         margin-bottom: 14px;
     }
+    .zalo-chat{
+        right: 29px!important;
+        bottom: 100px!important;
+        z-index: 1!important;
+    }
 </style>
 
 <div class="d-none">
@@ -326,6 +331,7 @@
     </div>
     @include('layouts.partials.footer')
 
+    <div class="zalo-chat-widget zalo-chat" data-oaid="3111836148004341171" data-welcome-message="Rất vui khi được hỗ trợ bạn!" data-autopopup="0" data-width="300" data-height="300"></div>
     <!-- Back to top -->
     <div class="btn-back-to-top" id="myBtn">
         <span class="symbol-btn-back-to-top">

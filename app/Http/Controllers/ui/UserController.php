@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\FooterModel;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -76,10 +77,20 @@ class UserController extends Controller
         $name = $request->get('user_name');
         $phone = $request->get('phone');
         $content = $request->get('contentes');
-        Mail::send('email.index', compact('name','phone','content'),function ($email) use($name,$name_mail){
+        Mail::send('email.index', compact('name','phone','content'),function ($email) use($name){
             $email->subject('Yêu cầu hỗ trợ ');
-            $email->to($name_mail, $name);
+            $email->to('support_krmedi@gmail.com', $name);
         });
         return response()->json(['error' => 0, 'data' => "Gửi yêu cầu thành công"]);
+    }
+
+    public function examinationHistoryUser(Request $request)
+    {
+        $uesr = Auth::user();
+        $data = User::find($uesr->id);
+        $data->is_check_medical_history = $request->get('medical_history');
+        $data->save();
+
+        return response()->json(['error' => 0, 'data' => "Đồng ý cho xem lịch sử khám thành công"]);
     }
 }

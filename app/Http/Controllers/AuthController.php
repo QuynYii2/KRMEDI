@@ -395,9 +395,9 @@ class AuthController extends Controller
             $user->token_firebase = null;
             $user->save();
             Cache::forget('user-is-online|' . $user->id);
+            Auth::logout();
         }
         (new MainController())->removeCouponExpiredAndAddCouponActive();
-        Auth::logout();
         session()->forget('show_modal');
         setCookie('accessToken', null);
         return redirect('/');
