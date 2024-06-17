@@ -237,12 +237,9 @@ class AuthController extends Controller
 
                 if ($user->type == \App\Enums\Role::MEDICAL) {
                     // Send OTP
-//                    $this->sendOTPSMS($request->input('phone'), $user);
-//                    session()->put('otp_verification', true);
+                    $this->sendOTPSMS($request->input('phone'), $user);
+                    session()->put('otp_verification', true);
                     session()->put('user_id', $user->id);
-                    //For téesting
-                    auth()->login($user, true);
-                    session()->put('show_modal', true);
                     toast('Đăng ký thành công!', 'success', 'top-left');
                     return redirect()->route('home');
                 }
@@ -284,13 +281,10 @@ class AuthController extends Controller
                         $newUser->save();
 
                         // Send OTP
-//                        $this->sendOTPSMS($request->input('phone'), $user);
-//                        // Redirect to OTP verification page
-//                        session()->put('otp_verification', true);
+                        $this->sendOTPSMS($request->input('phone'), $user);
+                        // Redirect to OTP verification page
+                        session()->put('otp_verification', true);
                         session()->put('user_id', $user->id);
-                        //For téesting
-                        auth()->login($user, true);
-                        session()->put('show_modal', true);
                         toast('Đăng ký thành công!', 'success', 'top-left');
                         return redirect()->route('home');
                     } catch (\Exception $e) {
@@ -299,13 +293,10 @@ class AuthController extends Controller
                     }
                 }
                 // Send OTP
-//                $this->sendOTPSMS($request->input('phone'), $user);
-//                // Redirect to OTP verification page
-//                session()->put('otp_verification', true);
+                $this->sendOTPSMS($request->input('phone'), $user);
+                // Redirect to OTP verification page
+                session()->put('otp_verification', true);
                 session()->put('user_id', $user->id);
-                //For téesting
-                auth()->login($user, true);
-                session()->put('show_modal', true);
                 toast('Đăng ký thành công!', 'success', 'top-left');
                 return redirect(route('home'));
             }
@@ -436,8 +427,7 @@ class AuthController extends Controller
     {
         $sms = new SendSMSController();
         $otp = random_int(100000, 999999);
-        $content = "Mã OTP của bạn là: " . $otp;
-
+        $content = "Ma OTP dang ky tai khoan IL VIETNAM cua ban la: " . $otp;
         // lưu cache otp 5 phút
         $key = 'otp_' . $user->id;
         $expiresAt = now()->addMinutes(5);

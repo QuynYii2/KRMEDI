@@ -1278,7 +1278,7 @@
                 sent: time
             };
 
-            if (type === 'text') {
+            if (type === 'text' || type === 'prescription') {
                 message.msg = content;
             } else {
                 message.fileUrl = await uploadFile(content, ext, chatUserID);
@@ -2256,6 +2256,39 @@
             let headers = {
                 'Authorization': accessToken,
             };
+
+            async function sendMessage(chatUserID, to_email, content, type, ext = null) {
+                const time = Date.now().toString();
+                const receiverId = chatUserID;
+                const message = {
+                    toId: receiverId,
+                    read: '',
+                    type: type,
+                    fromId: current_user.uid,
+                    readUsers: {[current_user.uid]: true, [receiverId]: false},
+                    sent: time
+                };
+
+                if (type === 'text' || type === 'prescription') {
+                    message.msg = content;
+                } else {
+                    message.fileUrl = await uploadFile(content, ext, chatUserID);
+                    message.fileName = content.name;
+                }
+
+                let conversationID = getConversationID(chatUserID);
+                const ref = collection(database, `chats/${conversationID}/messages/`);
+
+                try {
+                    await setDoc(doc(ref, time), message);
+                    await pushNotification(to_email, type === 'text' ? content : content.name);
+                    await updateLastMessage(chatUserID, message);
+                    await saveMessage(`{{ Auth::user()->email }}`, to_email, message);
+                    console.log('Message sent successfully');
+                } catch (error) {
+                    console.error('Error sending message:', error);
+                }
+            }
 
             try {
                 $.ajax({
