@@ -222,11 +222,11 @@ class AuthController extends Controller
 
                 if ($user->type == \App\Enums\Role::MEDICAL) {
                     // Send OTP
-                    $this->sendOTPSMS($request->input('phone'), $user);
-                    session()->put('otp_verification', true);
+//                    $this->sendOTPSMS($request->input('phone'), $user);
+//                    session()->put('otp_verification', true);
                     session()->put('user_id', $user->id);
 
-                    toast('Register success!', 'success', 'top-left');
+                    toast('Đăng ký thành công!', 'success', 'top-left');
                     return redirect()->route('home');
                 }
                 if ($user->type == \App\Enums\Role::BUSINESS) {
@@ -267,32 +267,32 @@ class AuthController extends Controller
                         $newUser->save();
 
                         // Send OTP
-                        $this->sendOTPSMS($request->input('phone'), $user);
-                        // Redirect to OTP verification page
-                        session()->put('otp_verification', true);
+//                        $this->sendOTPSMS($request->input('phone'), $user);
+//                        // Redirect to OTP verification page
+//                        session()->put('otp_verification', true);
                         session()->put('user_id', $user->id);
 
-                        toast('Register success!', 'success', 'top-left');
+                        toast('Đăng ký thành công!', 'success', 'top-left');
                         return redirect()->route('home');
                     } catch (\Exception $e) {
                         Log::error('Date format error: ' . $e->getMessage());
-                        return redirect()->back()->withErrors(['error' => 'An error occurred during registration. Please ensure all fields are filled out correctly.']);
+                        return redirect()->back()->withErrors(['error' => 'Đã có lỗi xảy ra trong quá trình đăng ký, vui lòng đảm bảo các thông tin đã được điền đầy đủ.']);
                     }
                 }
                 // Send OTP
-                $this->sendOTPSMS($request->input('phone'), $user);
-                // Redirect to OTP verification page
-                session()->put('otp_verification', true);
+//                $this->sendOTPSMS($request->input('phone'), $user);
+//                // Redirect to OTP verification page
+//                session()->put('otp_verification', true);
                 session()->put('user_id', $user->id);
 
-                toast('Register success!', 'success', 'top-left');
+                toast('Đăng ký thành công!', 'success', 'top-left');
                 return redirect(route('home'));
             }
-            toast('Register fail!', 'error', 'top-left');
+            toast('Đăng ký thất bại!', 'error', 'top-left');
             return back();
         } catch (Exception $exception) {
 //            dd($exception->getMessage());
-            toast('Error, Please try again!', 'error', 'top-left');
+            toast('Đã có lỗi, vui lòng thử lại!', 'error', 'top-left');
             return back();
         }
     }
@@ -440,12 +440,12 @@ class AuthController extends Controller
 
         if (!$otpCache) {
             session()->put('otp_verification', true);
-            return redirect()->back()->withErrors(['otp' => 'OTP expired. Please request a new one.']);
+            return redirect()->back()->withErrors(['otp' => 'OTP hết hạn, vui lòng yêu cầu một mã OTP khác.']);
         }
 
         if ($otpCache != $request->input('otp')) {
             session()->put('otp_verification', true);
-            return redirect()->back()->withErrors(['otp' => 'Invalid OTP.']);
+            return redirect()->back()->withErrors(['otp' => 'Mã OTP không chính xác.']);
         }
 
         // OTP is valid
@@ -459,7 +459,7 @@ class AuthController extends Controller
         session()->put('show_modal', true);
 
         // Redirect to home or any other page
-        toast('Register success!', 'success', 'top-left');
+        toast('Đăng ký thành công!', 'success', 'top-left');
         return redirect()->route('home');
     }
 
