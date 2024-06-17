@@ -225,7 +225,9 @@ class AuthController extends Controller
 //                    $this->sendOTPSMS($request->input('phone'), $user);
 //                    session()->put('otp_verification', true);
                     session()->put('user_id', $user->id);
-
+                    //For téesting
+                    auth()->login($user, true);
+                    session()->put('show_modal', true);
                     toast('Đăng ký thành công!', 'success', 'top-left');
                     return redirect()->route('home');
                 }
@@ -271,7 +273,9 @@ class AuthController extends Controller
 //                        // Redirect to OTP verification page
 //                        session()->put('otp_verification', true);
                         session()->put('user_id', $user->id);
-
+                        //For téesting
+                        auth()->login($user, true);
+                        session()->put('show_modal', true);
                         toast('Đăng ký thành công!', 'success', 'top-left');
                         return redirect()->route('home');
                     } catch (\Exception $e) {
@@ -284,7 +288,9 @@ class AuthController extends Controller
 //                // Redirect to OTP verification page
 //                session()->put('otp_verification', true);
                 session()->put('user_id', $user->id);
-
+                //For téesting
+                auth()->login($user, true);
+                session()->put('show_modal', true);
                 toast('Đăng ký thành công!', 'success', 'top-left');
                 return redirect(route('home'));
             }
