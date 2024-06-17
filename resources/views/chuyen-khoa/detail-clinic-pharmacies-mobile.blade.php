@@ -401,7 +401,9 @@
                     var map = new google.maps.Map(document.getElementById('allAddressesMap'), {
                         center: currentLocation,
                         zoom: 12.3,
-                        gestureHandling: 'greedy'
+                        gestureHandling: 'greedy',
+                        streetViewControl: false,
+                        zoomControl: false
                     });
 
                     directionsService = new google.maps.DirectionsService();
@@ -434,41 +436,36 @@
                             let arrayGallery = gallery.split(',');
 
                             var infoWindowContent = `<div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
-                                <div>
-                                    <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img">
+                                <div class="box-img-item-map">
+                                    <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img" style="height: 100%;object-fit: cover;">
                                 </div>
-                                <div class="p-md-3 p-2">
-                                    <div class="form-group">
+                                <div class="p-2 box-info-item-map">
+                                    <div class="form-group mb-1">
                                         <div class="d-flex justify-content-between mt-md-2">
                                             <div class="fs-18px name-address-map">${location.name}</div>
-                                            <div class="button-follow fs-12p ">
-                                                <a class="text-follow-12" href="">{{ __('home.FOLLOW') }}</a>
-                                            </div>
+
                                         </div>
                                         <div class="d-flex mt-md-2">
+
                                             <div class="d-flex col-md-6 justify-content-center align-items-center">
-                                                <a class="row p-2" href="">
-                                                    <div class="justify-content-center d-flex">
-                                                        <i class="border-button-address fa-solid fa-bullseye"></i>
-                                                    </div>
-                                                    <div class="d-flex justify-content-center">{{ __('home.Start') }}</div>
-                                                </a>
-                                            </div>
-                                            <div class="d-flex col-md-6 justify-content-center align-items-center">
-                                                <button class="row p-2" id="showMapBtnTab" style="background-color: transparent; border:none">
+                                                <button class="row " id="showMapBtnTab" style="background-color: transparent; border:none">
                                                     <div class="justify-content-center d-flex">
                                                         <i class="border-button-address fa-regular fa-circle-right"></i>
                                                     </div>
                                                     <div class="d-flex justify-content-center">{{ __('home.Direction') }}</div>
                                                 </button>
                                             </div>
+                                            <div class="d-flex col-md-6 justify-content-center align-items-center">
+                                                <a class="row" href="${urlDetail}">
+                                                    <div class="justify-content-center d-flex">
+                                                        <i class="border-button-address fa-solid fa-bullseye"></i>
+                                                    </div>
+                                                    <div class="d-flex justify-content-center">{{ __('home.Booking') }}</div>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="mt-md-3 mb-md-3">
-                                        <a class="w-100 btn btn-secondary border-button-address font-weight-800 fs-14 justify-content-center" href="${urlDetail}">
-                                            {{ __('home.Booking') }}
-                            </a>
-                        </div>
+
                         <div class="border-top">
                             <div class="mt-md-2 mt-1"><i class="text-gray mr-md-2 fa-solid fa-location-dot"></i>
                                 <span class="fs-14 font-weight-600">${location.address_detail}</span>
@@ -479,18 +476,12 @@
                                                 Open: ${formatTime(location.open_date)} - ${formatTime(location.close_date)}
                                             </span>
                                         </div>
-                                        <div class="mt-md-2 mt-1">
-                                            <i class="text-gray mr-md-2 fa-solid fa-globe"></i>
-                                            <span class="fs-14 font-weight-600">${location.email}</span>
-                                        </div>
+
                                         <div class="mt-md-2 mt-1">
                                             <i class="text-gray mr-md-2 fa-solid fa-phone-volume"></i>
                                             <span class="fs-14 font-weight-600">${location.phone}</span>
                                         </div>
-                                        <div class="mt-md-2 mt-1 mb-md-2">
-                                            <i class="text-gray mr-md-2 fa-solid fa-bookmark"></i>
-                                            <span class="fs-14 font-weight-600">${location.type}</span>
-                                        </div>
+
                                     </div>
                                 </div>
                             </div>`;
@@ -589,7 +580,6 @@
                 },
                 success: function(response) {
                     mapClinic(response);
-                    renderClinics(response);
                 },
                 error: function(exception) {
                     console.log(exception);
@@ -603,84 +593,5 @@
 
         loadProductInformation();
 
-        function renderClinics(response) {
-            var productInformationDiv = document.getElementById('productInformation');
-            productInformationDiv.innerHTML = '';
-            getCurrentLocation(function(currentLocation) {
-                let index_map = 0;
-                for (let i = 0; i < response.length; i++) {
-                    let item = response[i];
-                    var distance = calculateDistance(
-                        currentLocation.lat, currentLocation.lng,
-                        parseFloat(item.latitude), parseFloat(item.longitude)
-                    );
-
-                    var searchRadius = 10; // Example search radius: 10 km
-                    if (distance >= searchRadius || isNaN(distance)) {
-                        continue;
-                    }
-                    var urlDetail = "{{ route('clinic.detail', ['id' => ':id']) }}".replace(':id', item.id);
-
-                    let img = '';
-                    let gallery = item.gallery;
-                    let arrayGallery = gallery.split(',');
-                    img += `<img class="mr-2 img-item1" src="${arrayGallery[0]}" alt="">`;
-
-                    let openDate = new Date(item.open_date);
-                    let closeDate = new Date(item.close_date);
-
-                    let formattedOpenDate = openDate.toLocaleTimeString(undefined, {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-                    let formattedCloseDate = closeDate.toLocaleTimeString(undefined, {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-
-                    let html = `
-                        <div class="specialList-clinics col-lg-12 col-md-6 mb-3">
-                            <div class="border-specialList" data-marker-index="${index_map}" style="gap:unset;padding:5px">
-                                <div class="content__item d-flex">
-                                    <div class="specialList-clinics--img d-flex flex-column">
-                                        ${img}
-                                        <button id="showMapBtn" class="search-way" style="border:none; background-color: transparent"><i class="fa-solid fa-location-arrow"></i>Chỉ đường</button>
-                                        @if (Auth::check())
-                    <div class="zalo-follow-only-button" style="height:20px" data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
-@endif
-                    </div>
-                    <div class="specialList-clinics--main w-100">
-                        <div class="title-specialList-clinics">
-@if (locationHelper() == 'vi')
-                    ${item.name}
-                                            @else
-                    ${item.name_en}
-                                            @endif
-                    </div>
-                    <div class="address-specialList-clinics">
-                        <div class="d-flex align-items-center address-clinics">
-                            <i class="fas fa-map-marker-alt mr-2"></i>
-                            <div style="-webkit-line-clamp: 3!important;">${item.address_detail} ${item.addressInfo}</div>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center flex-wrap">
-                                            <div class="time-working w-100 d-flex justify-content-between">
-                                                <span class="color-timeWorking">
-                                                    <span class="fs-14 font-weight-600"><i class="fa-regular fa-clock"></i> ${formattedOpenDate} - ${formattedCloseDate}</span>
-                                                </span>
-                                                <span class="distance"><i class="fas fa-map-marker-alt mr-2"></i>${distance.toFixed(2)} Km</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-
-                    productInformationDiv.innerHTML += html;
-                    index_map += 1;
-                }
-            });
-        }
     </script>
 @endsection

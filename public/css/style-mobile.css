@@ -1070,8 +1070,11 @@
         margin-right: 10px;
     }
     .gm-style .gm-style-iw-c{
-        max-width: 340px!important;
+        max-width: 345px!important;
         top: 305px!important;
+    }
+    .gm-style .gm-style-iw-tc::after{
+        display: none!important;
     }
     .box-info-item-map span{
         font-size: 12px;
