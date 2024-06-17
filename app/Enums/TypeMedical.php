@@ -6,9 +6,9 @@ use BenSampo\Enum\Enum;
 
 final class TypeMedical extends Enum
 {
-    const DOCTORS = 'Bác sĩ';
-    const PHAMACISTS = 'Dược sĩ';
-    const THERAPISTS = 'Nhà trị liệu';
-    const ESTHETICIANS = 'Nhân viên thẩm mỹ';
-    const NURSES = 'Y tá';
+    const DOCTORS = 'DOCTORS';
+    const PHAMACISTS = 'PHAMACISTS';
+    const THERAPISTS = 'THERAPISTS';
+    const ESTHETICIANS = 'ESTHETICIANS';
+    const NURSES = 'NURSES';
 }

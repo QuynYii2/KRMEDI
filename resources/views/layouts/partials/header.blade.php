@@ -548,10 +548,10 @@
                                             <select id="type" name="type" class="form-select select-form-register"
                                                     onchange="showInputFileUpload(this.value)">
                                                 <option>Lựa chọn...</option>
-                                                <option value="{{Role::BUSINESS }}">Doanh nghiệp</option>
-                                                <option value="{{Role::MEDICAL }}">Nhà cung cấp dịch vụ y tế</option>
+                                                <option value="{{Role::BUSINESS }}">TÀI KHOẢN DOANH NGHIỆP</option>
+                                                <option value="{{Role::MEDICAL }}">TÀI KHOẢN CHUYÊN GIA</option>
                                                 <option value="{{Role::NORMAL }}"
-                                                        >Thành viên bình thường</option>
+                                                        >TÀI KHOẢN CÁ NHÂN BÌNH THƯỜNG</option>
                                             </select>
                                         </div>
                                         <div class="form-element">
