@@ -33,6 +33,9 @@
             #doc {
                 height: 360px;
             }
+            .dropdown-menu{
+                margin-left: -72px;
+            }
         }
     }
 

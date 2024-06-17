@@ -671,3 +671,4 @@ Route::post('/update-signature', [UserController::class, 'updateSignature'])->na
 Route::get('support/{slug}', [UserController::class, 'support'])->name('user.support');
 //Chăm sóc khách hàng
 Route::post('mail-cskh', [UserController::class, 'mailCSKH'])->name('mail-cskh');
+Route::post('examination-history-user', [UserController::class, 'examinationHistoryUser'])->name('examination-history-user');

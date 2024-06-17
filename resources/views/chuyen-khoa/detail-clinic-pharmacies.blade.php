@@ -98,16 +98,16 @@
 {{--                                        {{ __('home.Chỉ đường') }}--}}
 {{--                                    </div>--}}
 {{--                                </a>--}}
-                                <button class="row p-2" id="showMapBtn" style="background-color: transparent; border:none">
+                                <button class="row p-2" id="showMapBtn" style="background-color: transparent; border:none;margin: 0 10px">
                                     <div class="button-direct-specialList">
                                         {{ __('home.Chỉ đường') }}
                                     </div>
                                 </button>
-{{--                                <a href="{{route('clinic.detail',$clinicDetail->id)}}" class="">--}}
-{{--                                    <div class="button-direct-specialList">--}}
-{{--                                        {{ __('home.Chỉ đường') }}--}}
-{{--                                    </div>--}}
-{{--                                </a>--}}
+                                <a href="https://zalo.me/{{$clinicDetail->phone}}" class="">
+                                    <div class="button-direct-specialList" style="background-color: #369fef">
+                                        Tư vấn
+                                    </div>
+                                </a>
                             </div>
                         </div>
                     </div>

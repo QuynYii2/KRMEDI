@@ -81,7 +81,7 @@
                                 <i class="fa-solid fa-clock"></i>
                                 {{$clinicDetail->time_work}} | {{ \Carbon\Carbon::parse($clinicDetail->open_date)->format('H:i') }} - {{ \Carbon\Carbon::parse($clinicDetail->close_date)->format('H:i') }}
                             </div>
-                            <div class="group-button d-flex mt-3 align-items-center">
+                            <div class="group-button d-flex mt-3 align-items-center flex-wrap">
                                 <a href="" class="mr-2">
                                     <div class="button-follow-specialList button-follow-specialList-zalo" style="padding-top: 7px!important;padding-left: 12px!important;">
                                         <div style="margin-left: 8px; margin-top: 18px" class="zalo-follow-only-button"
@@ -103,6 +103,11 @@
                                         {{ __('home.Chỉ đường') }}
                                     </div>
                                 </button>
+                                <a href="https://zalo.me/{{$clinicDetail->phone}}" style="margin: 0 5px 0 0px">
+                                    <div class="button-booking-specialList line-dk-btn button-direct-specialList btn-detail-clinic" style="margin: 0;background-color: #369fef">
+                                       Tư vấn
+                                    </div>
+                                </a>
                                 <input type="hidden" name="latitude" id="latitude" value="{{$clinicDetail->latitude}}" />
                                 <input type="hidden" name="longitude" id="longitude" value="{{$clinicDetail->longitude}}" />
                                 {{--                                <a href="{{route('clinic.detail',$clinicDetail->id)}}" class="">--}}

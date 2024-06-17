@@ -323,9 +323,9 @@
         }
     }
 </style>
-<div class="box-cskh" data-bs-toggle="modal" data-bs-target="#exampleModalCSKH">
-    <img src="{{asset('img/icon-cskh.png')}}" class="w-100" style="border-radius: 50%">
-</div>
+{{--<div class="box-cskh" data-bs-toggle="modal" data-bs-target="#exampleModalCSKH">--}}
+{{--    <img src="{{asset('img/icon-cskh.png')}}" class="w-100" style="border-radius: 50%">--}}
+{{--</div>--}}
 <div id="widget-chat">
 
     <div id="chat-circle" class="btn btn-raised">
@@ -565,6 +565,7 @@
             const content = tinymce.get(fieldTextarea).getContent();
             formData.append(fieldTextarea, content);
         });
+
         const csrfTokens = $('meta[name="csrf-token"]').attr('content');
         $.ajax({
             url: `{{ route('mail-cskh') }}`,
