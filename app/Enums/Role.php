@@ -6,29 +6,29 @@ use BenSampo\Enum\Enum;
 
 final class Role extends Enum
 {
-    const BUSINESS = 'Doanh nghiệp';
-    const MEDICAL = 'Y tế';
-    const NORMAL = 'Bình thường';
+    const BUSINESS = 'BUSINESS';
+    const MEDICAL = 'MEDICAL';
+    const NORMAL = 'NORMAL';
 
     /*  BUSINESS MEMBER    */
-    const PHARMACEUTICAL_COMPANIES = 'Công ty dược phẩm';
-    const HOSPITALS = 'Bệnh viện';
-    const CLINICS = 'Phòng khám';
-    const PHARMACIES = 'Hiệu thuốc';
-    const SPAS = 'Spa';
-    const OTHERS = 'Khác';
+    const PHARMACEUTICAL_COMPANIES = 'PHARMACEUTICAL COMPANIES';
+    const HOSPITALS = 'HOSPITALS';
+    const CLINICS = 'CLINICS';
+    const PHARMACIES = 'PHARMACIES';
+    const SPAS = 'SPAS';
+    const OTHERS = 'OTHERS';
 
     /*  MEDICAL SERVICES    */
-    const DOCTORS = 'Bác sĩ';
-    const PHAMACISTS = 'Dược sĩ';
-    const THERAPISTS = 'Nhà trị liệu';
-    const ESTHETICIANS = 'Nhân viên thẩm mỹ';
-    const NURSES = 'Y tá';
+    const DOCTORS = 'DOCTORS';
+    const PHAMACISTS = 'PHAMACISTS';
+    const THERAPISTS = 'THERAPISTS';
+    const ESTHETICIANS = 'ESTHETICIANS';
+    const NURSES = 'NURSES';
 
     /*  NORMAL MEMBER   */
-    const PAITENTS = 'Bệnh nhân';
-    const NORMAL_PEOPLE = 'Người bình thường';
+    const PAITENTS = 'PAITENTS';
+    const NORMAL_PEOPLE = 'NORMAL PEOPLE';
 
     /*  ADMIN   */
-    const ADMIN = 'Quản trị viên';
+    const ADMIN = 'ADMIN';
 }

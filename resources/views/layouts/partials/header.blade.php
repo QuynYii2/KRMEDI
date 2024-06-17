@@ -548,10 +548,10 @@
                                             <select id="type" name="type" class="form-select select-form-register"
                                                     onchange="showInputFileUpload(this.value)">
                                                 <option>Lựa chọn...</option>
-                                                <option value="{{Role::BUSINESS }}">Doanh nghiệp</option>
-                                                <option value="{{Role::MEDICAL }}">Nhà cung cấp dịch vụ y tế</option>
+                                                <option value="{{Role::BUSINESS }}">TÀI KHOẢN DOANH NGHIỆP</option>
+                                                <option value="{{Role::MEDICAL }}">TÀI KHOẢN CHUYÊN GIA</option>
                                                 <option value="{{Role::NORMAL }}"
-                                                        >Thành viên bình thường</option>
+                                                        >TÀI KHOẢN CÁ NHÂN BÌNH THƯỜNG</option>
                                             </select>
                                         </div>
                                         <div class="form-element">
@@ -1152,7 +1152,7 @@
             let value = $(this).val();
             let html = ``;
             switch (value) {
-                case 'Doanh nghiệp':
+                case 'BUSINESS':
                     html = `<option value="{{Role::PHARMACEUTICAL_COMPANIES}}">Công ty Dược phẩm</option>
                                                 <option value="{{Role::HOSPITALS}}">Bệnh viện</option>
                                                 <option value="{{Role::CLINICS}}">Phòng khám</option>
@@ -1160,14 +1160,14 @@
                                                 <option value="{{Role::SPAS}}">Spa</option>
                                                 <option value="{{Role::OTHERS}}">Khác</option>`;
                     break;
-                case 'Y tế':
+                case 'MEDICAL':
                     html = `<option value="{{Role::DOCTORS}}">Bác sĩ</option>
                                                 <option value="{{Role::PHAMACISTS}}">Dược sĩ</option>
                                                 <option value="{{Role::THERAPISTS}}">Bác sĩ trị liệu</option>
                                                 <option value="{{Role::ESTHETICIANS}}">Chuyên viên thẩm mỹ</option>
                                                 <option value="{{Role::NURSES}}">Y tá</option>`;
                     break;
-                case 'Bình thường':
+                case 'NORMAL':
                     html = `<option value="{{Role::PAITENTS}}">Bệnh nhân</option>
                                                 <option value="{{Role::NORMAL_PEOPLE}}">Người bình thường</option>`;
                     break;

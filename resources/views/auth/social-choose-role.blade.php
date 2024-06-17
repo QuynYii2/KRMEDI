@@ -94,7 +94,7 @@
                 let value = $(this).val();
                 let html = ``;
                 switch (value) {
-                    case 'Doanh nghiệp':
+                    case 'BUSINESS':
                         html = `<option value="{{\App\Enums\Role::PHARMACEUTICAL_COMPANIES}}">PHARMACEUTICAL COMPANIES</option>
                                                 <option value="{{\App\Enums\Role::HOSPITALS}}">HOSPITALS</option>
                                                 <option value="{{\App\Enums\Role::CLINICS}}">CLINICS</option>
@@ -105,7 +105,7 @@
                         showOnlyBusiness();
                         showRoleOther();
                         break;
-                    case 'Y tế':
+                    case 'MEDICAL':
                         html = `<option value="{{\App\Enums\Role::DOCTORS}}">DOCTOR</option>
                                                 <option value="{{\App\Enums\Role::PHAMACISTS}}">PHAMACISTS</option>
                                                 <option value="{{\App\Enums\Role::THERAPISTS}}">THERAPISTS</option>

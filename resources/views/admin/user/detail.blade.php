@@ -192,7 +192,7 @@
             let value = $('#type').val();
             let html = ``;
             switch (value) {
-                case 'Doanh nghiệp':
+                case 'BUSINESS':
                     html = `<option {{ $user->member == 'PHARMACEUTICAL COMPANIES' ? 'selected' : '' }} value="{{\App\Enums\Role::PHARMACEUTICAL_COMPANIES}}">PHARMACEUTICAL COMPANIES</option>
                                                 <option {{ $user->member == 'HOSPITALS' ? 'selected' : '' }} value="{{\App\Enums\Role::HOSPITALS}}">HOSPITALS</option>
                                                 <option {{ $user->member == 'CLINICS' ? 'selected' : '' }} value="{{\App\Enums\Role::CLINICS}}">CLINICS</option>
@@ -203,7 +203,7 @@
                     showRoleOther();
                     showOnlyBusiness();
                     break;
-                case 'Y tế':
+                case 'MEDICAL':
                     html = `<option {{ $user->member == 'DOCTOR' ? 'selected' : '' }} value="{{\App\Enums\Role::DOCTORS}}">DOCTOR</option>
                                                 <option {{ $user->member == 'PHAMACISTS' ? 'selected' : '' }} value="{{\App\Enums\Role::PHAMACISTS}}">PHAMACISTS</option>
                                                 <option {{ $user->member == 'THERAPISTS' ? 'selected' : '' }} value="{{\App\Enums\Role::THERAPISTS}}">THERAPISTS</option>

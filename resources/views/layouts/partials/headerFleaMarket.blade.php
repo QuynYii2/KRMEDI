@@ -553,7 +553,7 @@
             let value = $(this).val();
             let html = ``;
             switch (value) {
-                case 'Doanh nghiệp':
+                case 'BUSINESS':
                     html = `<option value="{{Role::PHARMACEUTICAL_COMPANIES}}">{{ __('home.PHARMACEUTICAL COMPANIES') }}</option>
                                                 <option value="{{Role::HOSPITALS}}">{{ __('home.HOSPITALS') }}</option>
                                                 <option value="{{Role::CLINICS}}">{{ __('home.CLINICS') }}</option>
@@ -561,7 +561,7 @@
                                                 <option value="{{Role::SPAS}}">SPAS</option>
                                                 <option value="{{Role::OTHERS}}">{{ __('home.Others') }}</option>`;
                     break;
-                case 'Y tế':
+                case 'MEDICAL':
                     html = `<option value="{{Role::DOCTORS}}">DOCTOR</option>
                                                 <option value="{{Role::PHAMACISTS}}">{{ __('home.PHAMACISTS') }}</option>
                                                 <option value="{{Role::THERAPISTS}}">{{ __('home.THERAPISTS') }}</option>
