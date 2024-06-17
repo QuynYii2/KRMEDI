@@ -100,6 +100,8 @@
                         <button type="submit" class="krm-button-submit">{{ __('home.Submit') }}</button>
                     </form>
                 </div>
+                <p class="krm-describe-footer">CÔNG TY TNHH IL VIỆT NAM</p>
+                <p class="krm-describe-footer pt-0">Địa chỉ: V7-B07, Lô đất TTDV 01, Khu đô thị mới An Hưng, Phường La Khê, Quận Hà Đông, Thành phố Hà Nội, Việt Nam</p>
             </div>
         </div>
     </div>
@@ -229,6 +231,10 @@
     </div>
     <div class="mt-3">
         <div class="border-top">
+            <div class="mt-3">
+                <p class="text-line-footer-mobile">CÔNG TY TNHH IL VIỆT NAM</p>
+                <p class="text-line-footer-mobile">Địa chỉ: V7-B07, Lô đất TTDV 01, Khu đô thị mới An Hưng, Phường La Khê, Quận Hà Đông, Thành phố Hà Nội, Việt Nam</p>
+            </div>
             <div class="mt-3">
                 <p class="text-line-footer-mobile">CUSTOMER SERVICES: +82. 10. 8874. 0164</p>
                 <p class="text-line-footer-mobile">ADDRESS: Incheon INCHEON 20, Solsaem-ro, Yeonsu-gu, Incheon, Republic of Korea samyong A, 101,1103</p>
