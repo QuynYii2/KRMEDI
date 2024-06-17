@@ -693,8 +693,14 @@
     const app = initializeApp(firebaseConfig);
     const database = getFirestore(app);
     const auth = getAuth();
-    const messaging = getMessaging(app);
+    // const messaging = getMessaging(app);
     const storage = getStorage(app);
+    let messaging;
+    try {
+        messaging = getMessaging(app);
+    } catch (err) {
+        console.error('Failed to initialize Firebase Messaging', err);
+    }
 
     let current_user, list_user = [], doctorChatList = [], list_user_not_seen = [],
         current_role = `{{ (new \App\Http\Controllers\MainController())->getRoleUser(Auth::user()->id)}}`,
