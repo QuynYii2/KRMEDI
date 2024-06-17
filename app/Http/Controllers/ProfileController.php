@@ -426,7 +426,7 @@ class ProfileController extends Controller
     {
         $sms = new SendSMSController();
         $otp = random_int(100000, 999999);
-        $content = "Mã OTP của bạn là: " . $otp;
+        $content = "Ma OTP dang ky tai khoan IL VIETNAM cua ban la: " . $otp;
 
         // lưu cache otp 5 phút
         $key = 'otp_' . $user->id;
