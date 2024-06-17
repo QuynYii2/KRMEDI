@@ -969,40 +969,43 @@
         let promises = [];
         const searchTerm = $('#searchDoctor').val().toLowerCase(); // Get the current value of the search field
 
-        for (let i = 0; i < list_user.length; i++) {
-            let res = list_user[i];
-            let email = res.email;
+        // Helper function to render users
+        async function renderUsersBatch(startIndex, endIndex) {
+            let batchPromises = [];
+            for (let i = startIndex; i < endIndex && i < list_user.length; i++) {
+                let res = list_user[i];
+                let email = res.email;
 
-            if ((res.role == 'DOCTORS' || res.role == 'PHAMACISTS' || res.role == 'HOSPITALS') && res.id != current_user.uid) {
-                promises.push(getUserInfo(email).then((response) => {
-                    const name_doctor = response.infoUser.name;
-                    const hospital = response.infoUser.hospital ? response.infoUser.hospital : '';
-                    const avt = response.infoUser.avt ? window.location.origin + response.infoUser.avt : '../../../../img/avt_default.jpg';
+                if ((res.role == 'DOCTORS' || res.role == 'PHAMACISTS' || res.role == 'HOSPITALS') && res.id != current_user.uid) {
+                    batchPromises.push(getUserInfo(email).then((response) => {
+                        const name_doctor = response.infoUser.name;
+                        const hospital = response.infoUser.hospital ? response.infoUser.hospital : '';
+                        const avt = response.infoUser.avt ? window.location.origin + response.infoUser.avt : '../../../../img/avt_default.jpg';
 
-                    if (name_doctor.toLowerCase().includes(searchTerm)) { // Filter by search term
-                        if (doctorCount < 10) {
-                            html_online += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}" data-image="${avt}">
+                        if (name_doctor.toLowerCase().includes(searchTerm)) { // Filter by search term
+                            if (doctorCount < 10) {
+                                html_online += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}" data-image="${avt}">
                         <img src="${avt}"/>
                         <p>
                             <strong class="max-1-line-title-widget-chat">${name_doctor}</strong>
                             <span>${hospital}</span>
                         </p>
                     </div>`;
-                            doctorCount++;
+                                doctorCount++;
+                            }
                         }
-                    }
-                }).catch((error) => {
-                    console.error(error);
-                }));
-            }
-            let redDotHtml = list_user_not_seen.includes(res.id) ? `<div class="${res.id}" style="position: absolute;right: 15px;top: 50%;transform: translateY(-50%);background-color: red;border-radius: 50%;width: 10px;height:10px"></div>` : '';
-            if (doctorChatList.includes(res.id) && res.id !== current_user.uid) {
-                promises.push(getUserInfo(email).then((response) => {
-                    const name_doctor = response.infoUser.name;
-                    const hospital = response.infoUser.hospital ? response.infoUser.hospital : '';
-                    const avt = response.infoUser.avt ? window.location.origin + response.infoUser.avt : '../../../../img/avt_default.jpg';
+                    }).catch((error) => {
+                        console.error(error);
+                    }));
+                }
+                let redDotHtml = list_user_not_seen.includes(res.id) ? `<div class="${res.id}" style="position: absolute;right: 15px;top: 50%;transform: translateY(-50%);background-color: red;border-radius: 50%;width: 10px;height:10px"></div>` : '';
+                if (doctorChatList.includes(res.id) && res.id !== current_user.uid) {
+                    batchPromises.push(getUserInfo(email).then((response) => {
+                        const name_doctor = response.infoUser.name;
+                        const hospital = response.infoUser.hospital ? response.infoUser.hospital : '';
+                        const avt = response.infoUser.avt ? window.location.origin + response.infoUser.avt : '../../../../img/avt_default.jpg';
 
-                    html += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}">
+                        html += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}">
                     <img src="${avt}"/>
                     <p>
                         <strong class="max-1-line-title-widget-chat">${name_doctor}</strong>
@@ -1010,14 +1013,24 @@
                     </p>
                     ${redDotHtml}
                 </div>`;
-                }).catch((error) => {
-                    console.error(error);
-                }));
+                    }).catch((error) => {
+                        console.error(error);
+                    }));
+                }
             }
+            await Promise.all(batchPromises);
+            $('#friendslist-all-online #friends-all-online').html(html_online);
+            $('#friendslist-connected #friends-connected').html(html);
         }
-        await Promise.all(promises);
-        $('#friendslist-all-online #friends-all-online').html(html_online);
-        $('#friendslist-connected #friends-connected').html(html);
+
+        // Render the first 10 users immediately
+        await renderUsersBatch(0, 10);
+
+        // Render the remaining users in batches of 10
+        for (let i = 10; i < list_user.length; i += 10) {
+            await renderUsersBatch(i, i + 10);
+        }
+
         if (doctorCount == 0) {
             let html_not_user = `<p><strong>Không có ai đang online</strong></p>`;
             $('#friendslist-all-online #friends-all-online').html(html_not_user);
