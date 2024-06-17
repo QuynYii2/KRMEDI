@@ -373,7 +373,10 @@
 
     <script>
         $(document).ready(function() {
-            $('#model-check-kham').modal('show');
+            let showsModel = localStorage.getItem('check-kham');
+            if (showsModel == 'active'){
+                $('#model-check-kham').modal('show');
+            }
 
             $('.btn-yes-history').click(function () {
                 let medical_history = $(this).attr('data-value');
@@ -388,6 +391,7 @@
                     data: {'medical_history':medical_history},
                     success: function (data) {
                         $('#model-check-kham').modal('hide');
+                        localStorage.setItem('check-kham','none')
                     },
                     error: function (data) {
                         console.log(data)

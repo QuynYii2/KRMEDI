@@ -592,6 +592,7 @@
     </div>
     <script>
         $(document).ready(function () {
+            localStorage.setItem('check-kham','active')
             var clinics = {!! json_encode($clinics) !!};
             var pharmacies = {!! json_encode($pharmacies) !!};
 
@@ -728,7 +729,9 @@
                 var map = new google.maps.Map(document.getElementById('allAddressesMap'), {
                     center: currentLocation,
                     zoom: 12.3,
-                    gestureHandling: 'greedy'
+                    gestureHandling: 'greedy',
+                    streetViewControl: false,
+                    zoomControl: false
                 });
 
                 directionsService = new google.maps.DirectionsService();
@@ -763,42 +766,36 @@
 
 
                         var infoWindowContent = `<div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
-                <div>
-
-                    <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img">
+                <div class="box-img-item-map">
+                    <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img" style="height: 100%;object-fit: cover;">
                 </div>
-                <div class="p-md-3 p-2">
-                    <div class="form-group">
+                <div class="p-2 box-info-item-map">
+                    <div class="form-group mb-1">
                         <div class="d-flex justify-content-between mt-md-2">
                             <div class="fs-18px name-address-map">${location.name}</div>
-                            <div class="button-follow fs-12p ">
-                                <a class="text-follow-12" href="">{{ __('home.FOLLOW') }}</a>
-                            </div>
+
                         </div>
                         <div class="d-flex mt-md-2">
+
                             <div class="d-flex col-md-6 justify-content-center align-items-center">
-                                <a class="row p-2" href="">
-                                    <div class="justify-content-center d-flex">
-                                        <i class="border-button-address fa-solid fa-bullseye"></i>
-                                    </div>
-                                    <div class="d-flex justify-content-center">{{ __('home.Start') }}</div>
-                                </a>
-                            </div>
-                            <div class="d-flex col-md-6 justify-content-center align-items-center">
-                                <button class="row p-2" id="showMapBtnTab" style="background-color: transparent; border:none">
+                                <button class="row" id="showMapBtnTab" style="background-color: transparent; border:none">
                                     <div class="justify-content-center d-flex">
                                         <i class="border-button-address fa-regular fa-circle-right"></i>
                                     </div>
                                     <div class="d-flex justify-content-center">{{ __('home.Direction') }}</div>
                                 </button>
                             </div>
+                            <div class="d-flex col-md-6 justify-content-center align-items-center">
+                                                <a class="row" href="${urlDetail}">
+                                                    <div class="justify-content-center d-flex">
+                                                        <i class="border-button-address fa-solid fa-bullseye"></i>
+                                                    </div>
+                                                    <div class="d-flex justify-content-center">{{ __('home.Booking') }}</div>
+                                                </a>
+                                            </div>
                         </div>
                     </div>
-                    <div class="mt-md-3 mb-md-3">
-                    <a class="w-100 btn btn-secondary border-button-address font-weight-800 fs-14 justify-content-center" href="${urlDetail}" >
-                    {{ __('home.Booking') }}
-                        </a>
-                        </div>
+
                         <div class="border-top">
                             <div class="mt-md-2 mt-1"><i class="text-gray mr-md-2 fa-solid fa-location-dot"></i>
                                 <span class="fs-14 font-weight-600">${location.address_detail}</span>
@@ -809,18 +806,12 @@
                                 Open: ${formatTime(location.open_date)} - ${formatTime(location.close_date)}
                             </span>
                         </div>
-                        <div class="mt-md-2 mt-1">
-                            <i class="text-gray mr-md-2 fa-solid fa-globe"></i>
-                            <span class="fs-14 font-weight-600"> ${location.email}</span>
-                        </div>
+
                         <div class="mt-md-2 mt-1">
                             <i class="text-gray mr-md-2 fa-solid fa-phone-volume"></i> <span
                                 class="fs-14 font-weight-600"> ${location.phone}</span>
                         </div>
-                        <div class="mt-md-2 mt-1 mb-md-2">
-                            <i class="text-gray mr-md-2 fa-solid fa-bookmark"></i> <span
-                                class="fs-14 font-weight-600"> ${location.type}</span>
-                        </div>
+
             </div>
         </div>
     </div>`;
@@ -863,7 +854,9 @@
                 var map2 = new google.maps.Map(document.getElementById('allAddressesMapPharmacies'), {
                     center: currentLocation,
                     zoom: 12.3,
-                    gestureHandling: 'greedy'
+                    gestureHandling: 'greedy',
+                    streetViewControl: false,
+                    zoomControl: false
                 });
                 directionsService2 = new google.maps.DirectionsService();
                 directionsRenderer2 = new google.maps.DirectionsRenderer();
@@ -899,42 +892,34 @@
                         let arrayGallery = gallery.split(',');
 
                         var infoWindowContent = `<div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
-                <div>
-
-                    <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img">
+                <div class="box-img-item-map">
+                    <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img" style="height: 100%;object-fit: cover;">
                 </div>
-                <div class="p-md-3 p-2">
-                    <div class="form-group">
+                <div class="p-2 box-info-item-map">
+                    <div class="form-group mb-1">
                         <div class="d-flex justify-content-between mt-md-2">
                             <div class="fs-18px name-address-map">${locationsPharmacies.name}</div>
-                            <div class="button-follow fs-12p ">
-                                <a class="text-follow-12" href="">{{ __('home.FOLLOW') }}</a>
-                            </div>
                         </div>
                         <div class="d-flex mt-md-2">
                             <div class="d-flex col-md-6 justify-content-center align-items-center">
-                                <a class="row p-2" href="">
-                                    <div class="justify-content-center d-flex">
-                                        <i class="border-button-address fa-solid fa-bullseye"></i>
-                                    </div>
-                                    <div class="d-flex justify-content-center">{{ __('home.Start') }}</div>
-                                </a>
-                            </div>
-                            <div class="d-flex col-md-6 justify-content-center align-items-center">
-                                <button class="row p-2" id="showMapBtnPharmacyTab" style="background-color: transparent; border:none">
+                                <button class="row" id="showMapBtnPharmacyTab" style="background-color: transparent; border:none">
                                     <div class="justify-content-center d-flex">
                                         <i class="border-button-address fa-regular fa-circle-right"></i>
                                     </div>
                                     <div class="d-flex justify-content-center">{{ __('home.Direction') }}</div>
                                 </button>
                             </div>
+                             <div class="d-flex col-md-6 justify-content-center align-items-center">
+                                                <a class="row" href="${urlDetail}">
+                                                    <div class="justify-content-center d-flex">
+                                                        <i class="border-button-address fa-solid fa-bullseye"></i>
+                                                    </div>
+                                                    <div class="d-flex justify-content-center">{{ __('home.Booking') }}</div>
+                                                </a>
+                                            </div>
                         </div>
                     </div>
-                    <div class="mt-md-3 mb-md-3">
-                    <a class="w-100 btn btn-secondary border-button-address font-weight-800 fs-14 justify-content-center" href="${urlDetail}" >
-                    {{ __('home.Booking') }}
-                        </a>
-                        </div>
+
                         <div class="border-top">
                             <div class="mt-md-2 mt-1"><i class="text-gray mr-md-2 fa-solid fa-location-dot"></i>
                                 <span class="fs-14 font-weight-600">${locationsPharmacies.address_detail}</span>
@@ -945,18 +930,12 @@
                                 Open: ${formatTime(locationsPharmacies.open_date)} - ${formatTime(locationsPharmacies.close_date)}
                             </span>
                         </div>
-                        <div class="mt-md-2 mt-1">
-                            <i class="text-gray mr-md-2 fa-solid fa-globe"></i>
-                            <span class="fs-14 font-weight-600"> ${locationsPharmacies.email}</span>
-                        </div>
+
                         <div class="mt-md-2 mt-1">
                             <i class="text-gray mr-md-2 fa-solid fa-phone-volume"></i> <span
                                 class="fs-14 font-weight-600"> ${locationsPharmacies.phone}</span>
                         </div>
-                        <div class="mt-md-2 mt-1 mb-md-2">
-                            <i class="text-gray mr-md-2 fa-solid fa-bookmark"></i> <span
-                                class="fs-14 font-weight-600"> ${locationsPharmacies.type}</span>
-                        </div>
+
         </div>
     </div>`;
 
