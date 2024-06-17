@@ -128,15 +128,15 @@ class AuthController extends Controller
 //                return back();
 //            }
 //
-//            if ($password != $passwordConfirm) {
-//                toast('Password or Password Confirm incorrect!', 'error', 'top-left');
-//                return back();
-//            }
-//
-//            if (strlen($password) < 5) {
-//                toast('Password invalid!', 'error', 'top-left');
-//                return back();
-//            }
+            if ($password != $passwordConfirm) {
+                toast('Mật khẩu khác nhau!', 'error', 'top-left');
+                return back();
+            }
+
+            if (strlen($password) < 5) {
+                toast('Password invalid!', 'error', 'top-left');
+                return back();
+            }
 
             if ($type == \App\Enums\Role::BUSINESS) {
                 /* kiểm tra xem fileupload có tồn tại không, nếu không thì thông báo lỗi */
@@ -193,7 +193,7 @@ class AuthController extends Controller
 
             $user->name = '';
             $user->last_name = '';
-            $user->password = null;
+            $user->password = $passwordHash;
             $user->username = $username;
             $user->address_code = '';
             $user->type = $type;

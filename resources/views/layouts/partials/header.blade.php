@@ -528,16 +528,16 @@
                                             <input id="phone" name="phone" type="text" placeholder="(+84) 123 456 789" required/>
 
                                         </div>
-{{--                                        <div class="form-element">--}}
-{{--                                            <label for="password">{{ __('home.Password') }}</label>--}}
-{{--                                            <input id="password" type="password" name="password" minlength="8"--}}
-{{--                                                   placeholder="********" required>--}}
-{{--                                        </div>--}}
-{{--                                        <div class="form-element">--}}
-{{--                                            <label for="passwordConfirm">{{ __('home.Enter the Password') }}</label>--}}
-{{--                                            <input id="passwordConfirm" name="passwordConfirm" minlength="8"--}}
-{{--                                                   type="password" placeholder="********" required>--}}
-{{--                                        </div>--}}
+                                        <div class="form-element">
+                                            <label for="password">{{ __('home.Password') }}</label>
+                                            <input id="password" type="password" name="password" minlength="8"
+                                                   placeholder="********" required>
+                                        </div>
+                                        <div class="form-element">
+                                            <label for="passwordConfirm">{{ __('home.Enter the Password') }}</label>
+                                            <input id="passwordConfirm" name="passwordConfirm" minlength="8"
+                                                   type="password" placeholder="********" required>
+                                        </div>
 {{--                                        <div class="form-element">--}}
 {{--                                            <label for="username">{{ __('home.Username') }}</label>--}}
 {{--                                            <input id="username" name="username" type="text" placeholder="Nhập tài khoản"--}}
