@@ -193,29 +193,29 @@
             let html = ``;
             switch (value) {
                 case 'BUSINESS':
-                    html = `<option {{ $user->member == 'PHARMACEUTICAL COMPANIES' ? 'selected' : '' }} value="{{\App\Enums\Role::PHARMACEUTICAL_COMPANIES}}">PHARMACEUTICAL COMPANIES</option>
-                                                <option {{ $user->member == 'HOSPITALS' ? 'selected' : '' }} value="{{\App\Enums\Role::HOSPITALS}}">HOSPITALS</option>
-                                                <option {{ $user->member == 'CLINICS' ? 'selected' : '' }} value="{{\App\Enums\Role::CLINICS}}">CLINICS</option>
-                                                <option {{ $user->member == 'PHARMACIES' ? 'selected' : '' }} value="{{\App\Enums\Role::PHARMACIES}}">PHARMACIES</option>
-                                                <option {{ $user->member == 'SPAS' ? 'selected' : '' }} value="{{\App\Enums\Role::SPAS}}">SPAS</option>
-                                                <option {{ $user->member == 'OTHERS' ? 'selected' : '' }} value="{{\App\Enums\Role::OTHERS}}">OTHERS</option>`;
+                    html = `<option {{ $user->member == 'PHARMACEUTICAL COMPANIES' ? 'selected' : '' }} value="{{\App\Enums\Role::PHARMACEUTICAL_COMPANIES}}">Công ty Dược phẩm</option>
+                                                <option {{ $user->member == 'HOSPITALS' ? 'selected' : '' }} value="{{\App\Enums\Role::HOSPITALS}}">Bệnh viện</option>
+                                                <option {{ $user->member == 'CLINICS' ? 'selected' : '' }} value="{{\App\Enums\Role::CLINICS}}">Phòng khám</option>
+                                                <option {{ $user->member == 'PHARMACIES' ? 'selected' : '' }} value="{{\App\Enums\Role::PHARMACIES}}">Hiệu thuốc</option>
+                                                <option {{ $user->member == 'SPAS' ? 'selected' : '' }} value="{{\App\Enums\Role::SPAS}}">Spa</option>
+                                                <option {{ $user->member == 'OTHERS' ? 'selected' : '' }} value="{{\App\Enums\Role::OTHERS}}">Khác</option>`;
                     clearAppend();
                     showRoleOther();
                     showOnlyBusiness();
                     break;
                 case 'MEDICAL':
                     html = `<option {{ $user->member == 'DOCTOR' ? 'selected' : '' }} value="{{\App\Enums\Role::DOCTORS}}">DOCTOR</option>
-                                                <option {{ $user->member == 'PHAMACISTS' ? 'selected' : '' }} value="{{\App\Enums\Role::PHAMACISTS}}">PHAMACISTS</option>
-                                                <option {{ $user->member == 'THERAPISTS' ? 'selected' : '' }} value="{{\App\Enums\Role::THERAPISTS}}">THERAPISTS</option>
-                                                <option {{ $user->member == 'ESTHETICIANS' ? 'selected' : '' }} value="{{\App\Enums\Role::ESTHETICIANS}}">ESTHETICIANS</option>
-                                                <option {{ $user->member == 'NURSES' ? 'selected' : '' }} value="{{\App\Enums\Role::NURSES}}">NURSES</option>`;
+                                                <option {{ $user->member == 'PHAMACISTS' ? 'selected' : '' }} value="{{\App\Enums\Role::PHAMACISTS}}">Dược sĩ</option>
+                                                <option {{ $user->member == 'THERAPISTS' ? 'selected' : '' }} value="{{\App\Enums\Role::THERAPISTS}}">Bác sĩ trị liệu</option>
+                                                <option {{ $user->member == 'ESTHETICIANS' ? 'selected' : '' }} value="{{\App\Enums\Role::ESTHETICIANS}}">Chuyên viên thẩm mỹ</option>
+                                                <option {{ $user->member == 'NURSES' ? 'selected' : '' }} value="{{\App\Enums\Role::NURSES}}">Y tá</option>`;
                     clearAppend();
                     showRoleOther();
                     showOnlyMedical();
                     break;
                 default:
-                    html = `<option {{ $user->member == 'PAITENTS' ? 'selected' : '' }} value="{{\App\Enums\Role::PAITENTS}}">PAITENTS</option>
-                                                <option {{ $user->member == 'NORMAL PEOPLE' ? 'selected' : '' }} value="{{\App\Enums\Role::NORMAL_PEOPLE}}">NORMAL PEOPLE</option>`;
+                    html = `<option {{ $user->member == 'PAITENTS' ? 'selected' : '' }} value="{{\App\Enums\Role::PAITENTS}}">Bệnh nhân</option>
+                                                <option {{ $user->member == 'NORMAL PEOPLE' ? 'selected' : '' }} value="{{\App\Enums\Role::NORMAL_PEOPLE}}">Người bình thường</option>`;
                     clearAppend();
                     showOnlyNormal();
                     break;

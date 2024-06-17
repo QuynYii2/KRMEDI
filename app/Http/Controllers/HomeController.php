@@ -245,8 +245,8 @@ class HomeController extends Controller
         if (Auth::check()) {
             $userId = Auth::user()->id;
             $bookingsCheck = DB::table('bookings')
-                ->select(DB::raw('check_in as check_in_date'), DB::raw('COUNT(*) as num_bookings'))
-                ->groupBy('check_in_date')
+                ->select(DB::raw('check_in as check_in_date'), 'clinic_id', DB::raw('COUNT(*) as num_bookings'))
+                ->groupBy('check_in_date', 'clinic_id')
                 ->having('num_bookings', '>=', 5)
                 ->get();
             if (!$clinicDetail || $clinicDetail->status != ClinicStatus::ACTIVE) {

@@ -173,29 +173,29 @@
                 let html = ``;
                 switch (value) {
                     case 'BUSINESS':
-                        html = `<option value="{{\App\Enums\Role::PHARMACEUTICAL_COMPANIES}}">PHARMACEUTICAL COMPANIES</option>
-                                                <option value="{{\App\Enums\Role::HOSPITALS}}">HOSPITALS</option>
-                                                <option value="{{\App\Enums\Role::CLINICS}}">CLINICS</option>
-                                                <option value="{{\App\Enums\Role::PHARMACIES}}">PHARMACIES</option>
-                                                <option value="{{\App\Enums\Role::SPAS}}">SPAS</option>
-                                                <option value="{{\App\Enums\Role::OTHERS}}">OTHERS</option>`;
+                        html = `<option value="{{Role::PHARMACEUTICAL_COMPANIES}}">Công ty Dược phẩm</option>
+                                                <option value="{{Role::HOSPITALS}}">Bệnh viện</option>
+                                                <option value="{{Role::CLINICS}}">Phòng khám</option>
+                                                <option value="{{Role::PHARMACIES}}">Hiệu thuốc</option>
+                                                <option value="{{Role::SPAS}}">Spa</option>
+                                                <option value="{{Role::OTHERS}}">Khác</option>`;
                         clearAppend();
                         showRoleOther();
                         showOnlyBusiness();
                         break;
                     case 'MEDICAL':
-                        html = `<option value="{{\App\Enums\Role::DOCTORS}}">DOCTOR</option>
-                                                <option value="{{\App\Enums\Role::PHAMACISTS}}">PHAMACISTS</option>
-                                                <option value="{{\App\Enums\Role::THERAPISTS}}">THERAPISTS</option>
-                                                <option value="{{\App\Enums\Role::ESTHETICIANS}}">ESTHETICIANS</option>
-                                                <option value="{{\App\Enums\Role::NURSES}}">NURSES</option>`;
+                        html = `<option value="{{Role::DOCTORS}}">Bác sĩ</option>
+                                                <option value="{{Role::PHAMACISTS}}">Dược sĩ</option>
+                                                <option value="{{Role::THERAPISTS}}">Bác sĩ trị liệu</option>
+                                                <option value="{{Role::ESTHETICIANS}}">Chuyên viên thẩm mỹ</option>
+                                                <option value="{{Role::NURSES}}">Y tá</option>`;
                         clearAppend();
                         showRoleOther();
                         showOnlyMedical();
                         break;
                     default:
-                        html = `<option value="{{\App\Enums\Role::PAITENTS}}">PAITENTS</option>
-                                                <option value="{{\App\Enums\Role::NORMAL_PEOPLE}}">NORMAL PEOPLE</option>`;
+                        html = `<option value="{{Role::PAITENTS}}">Bệnh nhân</option>
+                                                <option value="{{Role::NORMAL_PEOPLE}}">Người bình thường</option>`;
                         clearAppend();
                         showOnlyNormal();
                         break;

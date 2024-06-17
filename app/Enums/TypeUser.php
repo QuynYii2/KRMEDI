@@ -22,5 +22,5 @@ final class TypeUser extends Enum
     //
     const PAITENTS = 'PAITENTS';
     const NORMAL_PEOPLE = 'NORMAL PEOPLE';
-
 }
+

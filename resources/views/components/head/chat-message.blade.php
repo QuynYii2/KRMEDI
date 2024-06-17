@@ -300,6 +300,14 @@
         bottom: 80px;
         z-index: 1;
     }
+    .image-sent{
+        object-fit: contain;
+        height: auto;
+        max-height: 200px;
+        width: 180px !important;
+        margin-right: 0 !important;
+        border-radius: 0 !important;
+    }
     @media (max-width: 992px) {
         .modal.show .modal-dialog-cskh{
             width: 70%!important;
@@ -1121,7 +1129,57 @@
                             renderNextMessage();
                         }
                     });
-                } else {
+                }else if (message.type == 'file'){
+                    if (message.fromId === current_user.uid) {
+                        html = `<div class="message right">
+                        <div class="msg-info">
+                        </div>
+                        <div class="bubble">
+                            <a href="${message.fileUrl}" style="color: white"><i class="fa-solid fa-paperclip mr-1"></i> ${message.fileName}</a>
+                            <div class="corner"></div>
+                        </div>
+                    </div>`;
+                    } else {
+                        html = `<div class="message">
+                        <div class="msg-info">
+                        </div>
+                        <div class="bubble">
+                            <a href="${message.fileUrl}"> <i class="fa-solid fa-paperclip mr-1"></i> ${message.fileName}</a>
+                            <div class="corner"></div>
+                        </div>
+                    </div>`;
+                    }
+                    $('#chat-messages').append(html);
+
+                    messageIndex++;
+                    renderNextMessage();
+                }
+                else if (message.type == 'image'){
+                    if (message.fromId === current_user.uid) {
+                        html = `<div class="message right">
+                        <div class="msg-info">
+                        </div>
+                        <div class="bubble" style="background-color: white">
+                            <img src="${message.fileUrl}" class="image-sent" alt="${message.fileName}"/>
+                            <div class="corner"></div>
+                        </div>
+                    </div>`;
+                    } else {
+                        html = `<div class="message">
+                        <div class="msg-info">
+                        </div>
+                        <div class="bubble" style="background-color: white">
+                            <img src="${message.fileUrl}" class="image-sent" alt="${message.fileName}"/>
+                            <div class="corner"></div>
+                        </div>
+                    </div>`;
+                    }
+                    $('#chat-messages').append(html);
+
+                    messageIndex++;
+                    renderNextMessage();
+                }
+                else {
                     if (message.fromId === current_user.uid) {
                         html = `<div class="message right">
                         <div class="msg-info">
