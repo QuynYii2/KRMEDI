@@ -47,7 +47,25 @@ document.addEventListener("readystatechange", function() {
 
         document.querySelector('.doctor_mess').addEventListener('click', function(event) {
             const email = $(this).data('mail');
-            getDoctorByEmailOnline(email);
+            showOrHiddenChat();
+
+            // Show and set attributes for chat-widget-connected
+            const chatWidgetConnected = document.getElementById('chat-widget-connected');
+            chatWidgetConnected.classList.add('active');
+            chatWidgetConnected.classList.add('show');
+            chatWidgetConnected.setAttribute('aria-selected', 'true');
+            const chatWidgetConnectedBody = document.getElementById('chat-widget-connected-tabs');
+            chatWidgetConnectedBody.classList.add('active');
+            chatWidgetConnectedBody.classList.add('show');
+
+            // Hide and set attributes for chat-widget-all-online
+            const chatWidgetAllOnline = document.getElementById('chat-widget-all-online');
+            chatWidgetAllOnline.classList.remove('active');
+            chatWidgetAllOnline.classList.remove('show');
+            chatWidgetAllOnline.setAttribute('aria-selected', 'false');
+            const chatWidgetAllOnlineBody = document.getElementById('chat-widget-all-online-tabs');
+            chatWidgetAllOnlineBody.classList.remove('active');
+            chatWidgetAllOnlineBody.classList.remove('show');
         });
     }
     function hideTabActive() {
