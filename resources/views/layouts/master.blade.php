@@ -534,13 +534,11 @@
                 $('#modal-call-alert').modal('hide');
                 audio.pause();
                 audio.currentTime = 0;
-                audio = null;
             });
         });
         $('.btn_close_m').click(function() {
             audio.pause();
             audio.currentTime = 0;
-            audio = null;
         });
         $(document).ready(function(){
             $('#modal-call-alert').modal({

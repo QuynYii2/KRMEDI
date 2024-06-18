@@ -16,6 +16,10 @@
 </style>
 @endsection
 @section('main-content')
+    @php
+        use Illuminate\Support\Facades\Auth;
+        use App\Enums\online_medicine\ObjectOnlineMedicine;
+    @endphp
     <div class="container-fluid">
         <h1 class="h3 mb-4 text-gray-800">Trả kết quả khám bệnh</h1>
         <form id="form" action="{{ route('api.backend.booking.store') }}" method="post"
@@ -142,8 +146,70 @@
                 </br>
             </div>
 
+            <div class="mt-3">
+                <h5>Danh sách đơn thuốc</h5>
+                <div class="modal-body">
+                    <div class="list-service-result-don-thuoc mt-2 mb-3">
+                        <div id="list-service-result-don-thuoc">
+
+                        </div>
+                        <button type="button" class="btn btn-outline-primary mt-3 btn-add-medicine">Tạo đơn
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <button type="submit" class="btn btn-primary up-date-button mt-4">{{ __('home.Save') }}</button>
         </form>
+    </div>
+
+    <div class="modal fade" id="modal-add-medicine-widget-chat" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+            <div class="modal-content">
+                <div class="modal-header ">
+                    <form class="row w-100">
+                        <div class="col-sm-4">
+                            <div class="form-group position-relative">
+                                <label for="inputSearchNameMedicine" class="form-control-feedback"></label>
+                                <input type="search" id="inputSearchNameMedicine" class="form-control handleSearchMedicine"
+                                       placeholder="Tìm kiếm theo tên thuốc">
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group position-relative">
+                                <label for="inputSearchDrugIngredient" class="form-control-feedback"></label>
+                                <input type="search" id="inputSearchDrugIngredient"
+                                       class="form-control handleSearchMedicine"
+                                       placeholder="Tìm kếm theo thành phần thuốc">
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group position-relative">
+                                <label for="inputSearchNameMedicine" class="form-control-feedback"></label>
+                                <select class="form-select position-relative handleSearchMedicineChange" id="object_search"
+                                >
+                                    <option value="{{ \App\Enums\online_medicine\ObjectOnlineMedicine::KIDS }}">
+                                        {{ __('home.For kids') }}</option>
+                                    <option value="{{ ObjectOnlineMedicine::FOR_WOMEN }}">{{ __('home.For women') }}
+                                    </option>
+                                    <option value="{{ ObjectOnlineMedicine::FOR_MEN }}">{{ __('home.For men') }}</option>
+                                    <option value="{{ ObjectOnlineMedicine::FOR_ADULT }}">{{ __('home.For adults') }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-body find-my-medicine-2">
+                    <div class="row" id="modal-list-medicine-widget-chat">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     {{-- Handle JS --}}
@@ -613,6 +679,210 @@
             $("#is_result, #booking_status").change(function() {
                 checkConditions();
             });
+        });
+    </script>
+
+    <script>
+        let html_widgetChat = `<div class="service-result-item-don-thuoc d-flex align-items-center justify-content-between border p-3">
+                    <div class="prescription-group d-flex align-items-center">
+                        <div class="row w-100">
+                            <div class="form-group">
+                                <label for="medicine_name">Medicine Name</label>
+                                <input type="text" class="form-control medicine_name input_medicine_name" value=""
+                                    name="medicines[@index][medicine_name]"  data-toggle="modal" data-target="#modal-add-medicine-widget-chat" readonly>
+                                <input type="text" hidden class="form-control medicine_id_hidden" name="medicines[@index][medicine_id_hidden]" value="">
+
+                            </div>
+                            <div class="form-group">
+                                <label for="medicine_ingredients">Medicine Ingredients</label>
+                                <textarea class="form-control medicine_ingredients" readonly name="medicines[@index][medicine_ingredients]" rows="4"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="quantity">{{ __('home.Quantity') }}</label>
+                                <input type="number" min="1" class="form-control quantity" name="medicines[@index][quantity]">
+                            </div>
+                            <div class="form-group">
+                                <label for="detail_value">Note</label>
+                                <input type="text" class="form-control detail_value" name="medicines[@index][detail_value]">
+                            </div>
+                            <div class="form-group">
+                                <label for="treatment_days">Số ngày điều trị</label>
+                                <input type="number" min="1" class="form-control treatment_days" name="medicines[@index][treatment_days]" value="1">
+                            </div>
+                        </div>
+                        <div class="action mt-3 mx-3">
+                            <i class="fa-regular fa-trash-can loadTrash_widgetChat" style="cursor: pointer; font-size: 24px"></i>
+                        </div>
+                    </div>
+                </div>`;
+
+
+        $('.btn-add-medicine').click(function () {
+            let newIndex = $('#list-service-result-don-thuoc .service-result-item-don-thuoc').length;
+            let newHtml = html_widgetChat.replace(/@index/g, newIndex);
+            $('#list-service-result-don-thuoc').append(newHtml);
+            loadData_widgetChat();
+            loadListMedicine();
+        });
+
+        function loadDisplayMessage(id) {
+            var friendDivs = document.querySelectorAll('.user_connect');
+
+            friendDivs.forEach(function (div) {
+                // Lấy giá trị data-id của từng div
+                var dataId = div.getAttribute('data-id');
+
+                // Kiểm tra xem data-id có bằng currentId hay không
+                if (dataId === id) {
+                    div.click();
+                }
+            });
+        }
+
+
+        function loadListMedicine() {
+            let inputNameMedicine_Search = $('#inputSearchNameMedicine').val().toLowerCase();
+            let inputDrugIngredient_Search = $('#inputSearchDrugIngredient').val().toLowerCase();
+            let object_search = $('#object_search').val().toLowerCase();
+
+            let url = '{{ route('view.prescription.result.get-medicine') }}'
+            url = url +
+                `?name_search=${inputNameMedicine_Search}&drug_ingredient_search=${inputDrugIngredient_Search}&object_search=${object_search}`;
+
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function (response) {
+                    renderMedicine(response);
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+            });
+        }
+
+        function renderMedicine(data) {
+            let html = '';
+            data.forEach((medicine) => {
+                let url = '{{ route('medicine.detail', ':id') }}';
+                url = url.replace(':id', medicine.id);
+
+                html += `<div class="col-sm-6 col-xl-4 mb-3 col-6 find-my-medicine-2">
+                                <div class="m-md-2 ">
+                                    <div class="frame component-medicine w-100">
+                                        <div class="img-pro justify-content-center d-flex img_product--homeNew w-100">
+                                            <img loading="lazy" class="rectangle border-img w-100"
+                                                 src="${medicine.thumbnail}"/>
+                                        </div>
+                                        <div class="div">
+                                            <div class="div-2">
+                                                <a target="_blank" class="w-100"
+                                                   href="${url}">
+                                                    <div
+                                                        class="text-wrapper text-nowrap overflow-hidden text-ellipsis w-100">${medicine.name}</div>
+                                                </a>
+                                                <div
+                                                    class="text-wrapper-3">${medicine.price} ${medicine.unit_price ?? 'VND'}</div>
+                                                <div
+                                                    class="text-wrapper-3">Còn lại: ${medicine.quantity}</div>
+                                            </div>
+                                            <div class="div-wrapper">
+                                                <a style="cursor: pointer" class="handleSelectInputMedicine_widgetChat" data-id="${medicine.id}" data-name="${medicine.name}" data-quantity="${medicine.quantity}"
+                                                   data-dismiss="modal">
+                                                    <div class="text-wrapper-4">{{ __('home.Choose...') }}</div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`
+            });
+
+            $('#modal-list-medicine-widget-chat').html(html);
+
+            $('.handleSelectInputMedicine_widgetChat').click(function () {
+                let id = $(this).data('id');
+                let name = $(this).data('name');
+                let quantity = $(this).data('quantity');
+                elementInputMedicine_widgetChat.val(name);
+                next_elementInputMedicine_widgetChat.val(id);
+                next_elementQuantity_widgetChat.off('change');
+
+                next_elementQuantity_widgetChat.attr('max', quantity);
+
+                // Thêm sự kiện onchange
+                next_elementQuantity_widgetChat.on('change', function () {
+                    // Lấy giá trị hiện tại của next_elementQuantity_widgetChat
+                    var currentValue = next_elementQuantity_widgetChat.val();
+
+                    // Chuyển đổi giá trị thành số để so sánh
+                    currentValue = parseInt(currentValue);
+
+                    // Kiểm tra nếu giá trị lớn hơn quantity
+                    if (currentValue > quantity) {
+                        // Hiển thị cảnh báo
+                        alert('Giá trị không thể lớn hơn ' + quantity);
+                        // Cài đặt lại giá trị về quantity
+                        next_elementQuantity_widgetChat.val(quantity);
+                    }
+                });
+
+                getIngredientsByMedicineId(id)
+                    .then(result => {
+                        console.log(result.component_name); // Log kết quả
+                        next_elementMedicineIngredients_widgetChat.val(result.component_name); // Sử dụng kết quả
+                    })
+                    .catch(error => {
+                        console.error('Đã xảy ra lỗi:', error);
+                    });
+            });
+
+            $('.input_medicine_name').click(function () {
+                elementInputMedicine_widgetChat = $(this);
+                next_elementInputMedicine_widgetChat = $(this).next('.medicine_id_hidden');
+                next_elementQuantity_widgetChat = $(this).parents().parents().find('input.quantity');
+                next_elementMedicineIngredients_widgetChat = $(this).parents().parents().find(
+                    'textarea.medicine_ingredients');
+            });
+
+            $('.loadTrash_widgetChat').click(function () {
+                $(this).closest('.service-result-item-don-thuoc').remove();
+            });
+
+        }
+
+        loadData_widgetChat();
+
+        function loadData_widgetChat() {
+            $('.service_name_item').on('click', function () {
+                let my_array = null;
+                let my_name = null;
+                $(this).parent().parent().find(':checkbox:checked').each(function (i) {
+                    let value = $(this).val();
+                    if (my_array) {
+                        my_array = my_array + ',' + value;
+                    } else {
+                        my_array = value;
+                    }
+
+                    let name = $(this).data('name');
+                    if (my_name) {
+                        my_name = my_name + ', ' + name;
+                    } else {
+                        my_name = name;
+                    }
+                });
+                $(this).parent().parent().prev().val(my_name);
+                $(this).parent().parent().next().find('input').val(my_array);
+            })
+        }
+
+
+        $(".handleSearchMedicine").on("input", function () {
+            loadListMedicine();
+        });
+        $(".handleSearchMedicineChange").on("change", function () {
+            loadListMedicine();
         });
     </script>
 @endsection
