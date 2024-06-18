@@ -26,6 +26,7 @@ use App\Models\Department;
 use App\Models\FamilyManagement;
 use App\Models\NewEvent;
 use App\Models\online_medicine\ProductMedicine;
+use App\Models\PrescriptionResults;
 use App\Models\ProductInfo;
 use App\Models\Question;
 use App\Models\Review;
@@ -573,9 +574,13 @@ class HomeController extends Controller
                 ->orderBy('bookings.created_at', 'desc');
         } else {
             $clinic = Clinic::where('user_id', Auth::user()->id)->first();
-            $query = Booking::where('bookings.status', '!=', BookingStatus::DELETE)
+            $latestBookings = Booking::select(DB::raw('MAX(id) as latest_id'))
+                ->where('status', '!=', BookingStatus::DELETE)
                 ->where('clinic_id', $clinic ? $clinic->id : '')
-                ->orderBy('bookings.created_at', 'desc');
+                ->groupBy('user_id')
+                ->pluck('latest_id');
+            $query = Booking::whereIn('id', $latestBookings)
+                ->orderBy('created_at', 'desc');
         }
         $id_user = $query->pluck('user_id')->unique()->toArray();
         if ($request->filled('key_search')) {
@@ -640,11 +645,13 @@ class HomeController extends Controller
             ->join('users as users_patient', 'bookings.user_id', '=', 'users_patient.id')
             ->select('bookings.*', 'clinics.name as clinic_name', 'users_patient.name as user_name')
             ->where('bookings.status', '!=', BookingStatus::DELETE);
-        $subQuery = Booking::select('user_id')
+        $latestBookings = Booking::select(DB::raw('MAX(id) as latest_id'))
+            ->where('status', '!=', BookingStatus::DELETE)
             ->where('doctor_id', Auth::user()->id)
-            ->where('is_check_medical_history', 1)
-            ->groupBy('user_id');
-        $query = $baseQuery->whereIn('bookings.user_id', $subQuery);
+            ->groupBy('user_id')
+            ->pluck('latest_id');
+        $query = $baseQuery->whereIn('bookings.id', $latestBookings)
+            ->orderBy('created_at', 'desc');
         $id_user = $query->pluck('user_id')->unique()->toArray();
 
         if ($request->filled('key_search')) {
@@ -699,4 +706,61 @@ class HomeController extends Controller
 
         return view('admin.booking.list-booking', compact('bookings', 'service', 'department','users'));
     }
+
+    public function listBookingHistory($id)
+    {
+        $isAdmin = (new MainController())->checkAdmin();
+        $user = User::find($id);
+        if ($isAdmin) {
+            $listData = Booking::where('user_id', $user->id)
+                ->where('status', '!=', BookingStatus::DELETE)
+                ->orderBy('created_at', 'desc')
+                ->paginate(15);
+            foreach ($listData as $val){
+                $data = PrescriptionResults::where('booking_id',$val->id)->first();
+                if (isset($data) && $data->prescriptions){
+                    $product = json_decode($data->prescriptions, true);
+                }else{
+                    $product=[];
+                }
+                $val->product = $product;
+            }
+        }else{
+            $clinic = Clinic::where('user_id', Auth::user()->id)->first();
+            if ($user->is_check_medical_history == 1){
+                $listData = Booking::where('user_id', $user->id)
+                    ->where('status', '!=', BookingStatus::DELETE)
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(15);
+                foreach ($listData as $val){
+                    $data = PrescriptionResults::where('booking_id',$val->id)->first();
+                    if (isset($data) && $data->prescriptions){
+                        $product = json_decode($data->prescriptions, true);
+                    }else{
+                        $product=[];
+                    }
+                    $val->product = $product;
+                }
+            }else{
+                $listData = Booking::where('user_id', $user->id)
+                    ->where('status', '!=', BookingStatus::DELETE)
+                    ->where('clinic_id', $clinic ? $clinic->id : '')
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(15);
+                foreach ($listData as $val){
+                    $data = PrescriptionResults::where('booking_id',$val->id)->first();
+                    if (isset($data) && $data->prescriptions){
+                        $product = json_decode($data->prescriptions, true);
+                    }else{
+                        $product=[];
+                    }
+                    $val->product = $product;
+                }
+            }
+
+        }
+
+        return view('admin.booking.list-booking-history', compact('listData','user'));
+    }
+
 }

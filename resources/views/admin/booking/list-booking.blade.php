@@ -118,6 +118,8 @@
                             $user_name = \App\Models\User::find($item->user_id);
                         @endphp
                         {{$user_name->name}}
+                        <br>
+                        <a href="{{route('homeAdmin.list.booking.history',$item->user_id)}}" target="_blank" class="d-inline-block mt-2">Chi tiết lịch sử</a>
                     </td>
                     <td>
                         @php
