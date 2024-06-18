@@ -6,6 +6,20 @@
 <link href="{{ asset('css/chatmessage.css') }}" rel="stylesheet">
 
 <style>
+    .spinner-icon {
+        display: none;
+        font-size: 14px;
+        animation: spin 2s linear infinite;
+        position: absolute;
+        right: 10px;
+        top: 30%;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
     .frame.component-medicine.w-100 {
         box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     }
@@ -358,9 +372,10 @@
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="chat-widget-all-online-tabs" role="tabpanel"
                      aria-labelledby="chat-widget-all-online">
-                    <div class="search-container">
+                    <div class="search-container d-flex justify-content-between">
                         <i class="fa fa-search search-icon"></i>
                         <input type="text" placeholder="Tìm kiếm" class="chat-search w-100" id="searchDoctor" />
+                        <i class="fa-solid fa-spinner spinner-icon"></i>
                     </div>
                     <div id="friendslist-all-online">
                         <div id="friends-all-online"></div>
@@ -967,7 +982,9 @@
         $('#friendslist-connected #friends-connected').html(html);
         let doctorCount = 0;
         let promises = [];
-        const searchTerm = $('#searchDoctor').val().toLowerCase(); // Get the current value of the search field
+        const searchTerm = $('#searchDoctor').val().toLowerCase(); // Normalize the search term
+
+        $('.spinner-icon').css('display', 'block');
 
         // Helper function to render users
         async function renderUsersBatch(startIndex, endIndex) {
@@ -1024,17 +1041,37 @@
         }
 
         // Render the first 10 users immediately
-        await renderUsersBatch(0, 10);
+        if (searchTerm) {
+            await renderUsersBatch(0, list_user.length);
+            if (doctorCount > 0) {
+                $('#friendslist-all-online #friends-all-online').html(html_online);
+            } else {
+                $('#friendslist-all-online #friends-all-online').html(`<p><strong>Không có ai đang online</strong></p>`);
+            }
+        } else {
+            // Render the first 10 users immediately
+            await renderUsersBatch(0, 10);
+            $('#friendslist-all-online #friends-all-online').html(html_online);
 
-        // Render the remaining users in batches of 10
-        for (let i = 10; i < list_user.length; i += 10) {
-            await renderUsersBatch(i, i + 10);
+            // Render the remaining users in batches of 10
+            for (let i = 10; i < list_user.length; i += 10) {
+                await renderUsersBatch(i, i + 10);
+                $('#friendslist-all-online #friends-all-online').html(html_online);
+            }
+
+            if (doctorCount == 0) {
+                let html_not_user = `<p><strong>Không có ai đang online</strong></p>`;
+                $('#friendslist-all-online #friends-all-online').html(html_not_user);
+            }
         }
 
         if (doctorCount == 0) {
             let html_not_user = `<p><strong>Không có ai đang online</strong></p>`;
             $('#friendslist-all-online #friends-all-online').html(html_not_user);
         }
+
+        $('.spinner-icon').css('display', 'none');
+
         getMessageFirebase();
     }
 
@@ -1502,7 +1539,7 @@
         } else {
             myChannelType = current_role;
         }
-
+        console.log(current_user);
         if (currentChatRoom === null) {
             const chatRoomInfo = {
                 userIds: [current_user.uid, user.id],

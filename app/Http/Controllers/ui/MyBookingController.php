@@ -13,6 +13,7 @@ use App\Models\BookingResult;
 use App\Models\Clinic;
 use App\Models\Department;
 use App\Models\ServiceClinic;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -178,6 +179,30 @@ class MyBookingController extends Controller
             return view('ui.my-bookings.file-booking-result', compact('bookingFiles'));
         } catch (Throwable $e) {
             return response()->json(['error' => -1, 'message' => $e->getMessage()]);
+        }
+    }
+
+    public function medicalHistoryApi($id)
+    {
+        $userMedicalHistory = User::where('id', $id)->first()->is_check_medical_history;
+        return response()->json($userMedicalHistory);
+    }
+
+    public function updateMedicalHistoryApi(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'is_check_medical_history' => 'required',
+        ]);
+
+        $user = User::find($id);
+
+        if ($user) {
+            $user->is_check_medical_history = $validated['is_check_medical_history'];
+            $user->save();
+
+            return response()->json(['message' => 'Medical history updated successfully.']);
+        } else {
+            return response()->json(['message' => 'User not found.'], 404);
         }
     }
 }
