@@ -982,7 +982,7 @@
         $('#friendslist-connected #friends-connected').html(html);
         let doctorCount = 0;
         let promises = [];
-        const searchTerm = $('#searchDoctor').val().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ""); // Normalize the search term
+        const searchTerm = $('#searchDoctor').val().toLowerCase(); // Normalize the search term
 
         $('.spinner-icon').css('display', 'block');
 
