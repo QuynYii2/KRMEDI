@@ -676,3 +676,4 @@ Route::post('examination-history-user', [UserController::class, 'examinationHist
 Route::get('api/my-bookings/list/{userId}', [MyBookingController::class, 'listBookingApi'])->name('api.backend.my-bookings.list');
 Route::get('api/my-bookings/history/{userId}', [MyBookingController::class, 'medicalHistoryApi'])->name('api.backend.my-bookings.history');
 Route::post('api/my-bookings/history/{userId}', [MyBookingController::class, 'updateMedicalHistoryApi'])->name('api.backend.my-bookings.update-history');
+Route::get('api/my-bookings/csrf-token', [MyBookingController::class, 'getToken'])->name('api.backend.my-bookings.getToken');
