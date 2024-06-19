@@ -710,6 +710,7 @@ class HomeController extends Controller
     public function listBookingHistory($id)
     {
         $isAdmin = (new MainController())->checkAdmin();
+        $isDoctor = (new MainController())->checkDoctor();
         $user = User::find($id);
         if ($isAdmin) {
             $listData = Booking::where('user_id', $user->id)
@@ -742,20 +743,38 @@ class HomeController extends Controller
                     $val->product = $product;
                 }
             }else{
-                $listData = Booking::where('user_id', $user->id)
-                    ->where('status', '!=', BookingStatus::DELETE)
-                    ->where('clinic_id', $clinic ? $clinic->id : '')
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(15);
-                foreach ($listData as $val){
-                    $data = PrescriptionResults::where('booking_id',$val->id)->first();
-                    if (isset($data) && $data->prescriptions){
-                        $product = json_decode($data->prescriptions, true);
-                    }else{
-                        $product=[];
+                if ($isDoctor){
+                    $listData = Booking::where('user_id', $user->id)
+                        ->where('status', '!=', BookingStatus::DELETE)
+                        ->where('doctor_id', Auth::user()->id)
+                        ->orderBy('created_at', 'desc')
+                        ->paginate(15);
+                    foreach ($listData as $val){
+                        $data = PrescriptionResults::where('booking_id',$val->id)->first();
+                        if (isset($data) && $data->prescriptions){
+                            $product = json_decode($data->prescriptions, true);
+                        }else{
+                            $product=[];
+                        }
+                        $val->product = $product;
                     }
-                    $val->product = $product;
+                }else{
+                    $listData = Booking::where('user_id', $user->id)
+                        ->where('status', '!=', BookingStatus::DELETE)
+                        ->where('clinic_id', $clinic ? $clinic->id : '')
+                        ->orderBy('created_at', 'desc')
+                        ->paginate(15);
+                    foreach ($listData as $val){
+                        $data = PrescriptionResults::where('booking_id',$val->id)->first();
+                        if (isset($data) && $data->prescriptions){
+                            $product = json_decode($data->prescriptions, true);
+                        }else{
+                            $product=[];
+                        }
+                        $val->product = $product;
+                    }
                 }
+
             }
 
         }
