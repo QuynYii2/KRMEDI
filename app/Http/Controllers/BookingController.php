@@ -378,27 +378,29 @@ class BookingController extends Controller
             $success = $booking->save();
 
             $medicines = $request->get('medicines');
-            $dataUser = User::find($booking->user_id);
-            $prescription_result = new PrescriptionResults();
-            $prescription_result->full_name = $dataUser->username;
-            $prescription_result->email = $dataUser->email??'';
-            $prescription_result->user_id = $dataUser->id;
-            $prescription_result->created_by = Auth::id();
-            $prescription_result->prescriptions = json_encode($medicines);
-            $prescription_result->booking_id = $booking->id;
-            $prescription_result->save();
-            foreach ($medicines as $val){
-                Cart::create([
-                    'product_id' => $val['medicine_id_hidden'],
-                    'quantity' => $val['quantity'],
-                    'user_id' => $dataUser->id,
-                    'type_product' => 'MEDICINE',
-                    'status' => CartStatus::PENDING,
-                    'note' => $val['detail_value'] ?? "",
-                    'treatment_days' => $val['treatment_days'] ?? 0,
-                    'remind_remain' => $val['treatment_days'] ?? 0,
-                    'doctor_id' =>  $booking->doctor_id??Auth::id()
-                ]);
+            if (isset($medicines) && count($medicines)>0){
+                $dataUser = User::find($booking->user_id);
+                $prescription_result = new PrescriptionResults();
+                $prescription_result->full_name = $dataUser->username;
+                $prescription_result->email = $dataUser->email??'';
+                $prescription_result->user_id = $dataUser->id;
+                $prescription_result->created_by = Auth::id();
+                $prescription_result->prescriptions = json_encode($medicines);
+                $prescription_result->booking_id = $booking->id;
+                $prescription_result->save();
+                foreach ($medicines as $val){
+                    Cart::create([
+                        'product_id' => $val['medicine_id_hidden'],
+                        'quantity' => $val['quantity'],
+                        'user_id' => $dataUser->id,
+                        'type_product' => 'MEDICINE',
+                        'status' => CartStatus::PENDING,
+                        'note' => $val['detail_value'] ?? "",
+                        'treatment_days' => $val['treatment_days'] ?? 0,
+                        'remind_remain' => $val['treatment_days'] ?? 0,
+                        'doctor_id' =>  $booking->doctor_id??Auth::id()
+                    ]);
+                }
             }
 
             if ($success) {
