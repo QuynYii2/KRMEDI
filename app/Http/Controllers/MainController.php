@@ -27,6 +27,12 @@ class MainController extends Controller
         return $this->checkRoles($adminRole);
     }
 
+    public function checkDoctor()
+    {
+        $adminRole = ['DOCTORS'];
+        return $this->checkRoles($adminRole);
+    }
+
     private function checkRoles($roleNames)
     {
         $hasRole = false;
