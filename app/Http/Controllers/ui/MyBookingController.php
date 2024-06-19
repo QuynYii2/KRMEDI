@@ -184,8 +184,13 @@ class MyBookingController extends Controller
 
     public function medicalHistoryApi($id)
     {
-        $userMedicalHistory = User::where('id', $id)->first()->is_check_medical_history;
-        return response()->json($userMedicalHistory);
+        $user = User::find($id);
+
+        if ($user) {
+            return response()->json($user->is_check_medical_history);
+        } else {
+            return response()->json(['message' => 'User not found.'], 404);
+        }
     }
 
     public function updateMedicalHistoryApi(Request $request, $id)
