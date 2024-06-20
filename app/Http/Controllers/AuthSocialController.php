@@ -55,7 +55,7 @@ class AuthSocialController extends Controller
                 $token = JWTAuth::fromUser($existingUser);
                 setcookie("accessToken", $token, time() + 3600 * 24);
                 if (!$existingUser->provider_name) {
-                    return redirect(route('profile'));
+                    return redirect(route('home'));
                 }
             } else {
                 $newUser = new User;
@@ -121,7 +121,7 @@ class AuthSocialController extends Controller
                 $token = JWTAuth::fromUser($existingUser);
                 setcookie("accessToken", $token, time() + 3600 * 24);
                 if (!$existingUser->provider_name) {
-                    return redirect(route('profile'));
+                    return redirect(route('home'));
                 }
             } else {
                 $newUser = new User;
@@ -189,7 +189,7 @@ class AuthSocialController extends Controller
                 $token = JWTAuth::fromUser($existingUser);
                 setcookie("accessToken", $token, time() + 3600 * 24);
                 if (!$existingUser->provider_name) {
-                    return redirect(route('profile'));
+                    return redirect(route('home'));
                 }
             } else {
                 $newUser = new User;

@@ -579,7 +579,7 @@ class HomeController extends Controller
                 ->where('clinic_id', $clinic ? $clinic->id : '')
                 ->groupBy('user_id')
                 ->pluck('latest_id');
-            $query = Booking::whereIn('id', $latestBookings)
+            $query = Booking::whereIn('bookings.id', $latestBookings)
                 ->orderBy('created_at', 'desc');
         }
         $id_user = $query->pluck('user_id')->unique()->toArray();
