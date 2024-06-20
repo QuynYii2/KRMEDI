@@ -672,8 +672,3 @@ Route::get('support/{slug}', [UserController::class, 'support'])->name('user.sup
 //Chăm sóc khách hàng
 Route::post('mail-cskh', [UserController::class, 'mailCSKH'])->name('mail-cskh');
 Route::post('examination-history-user', [UserController::class, 'examinationHistoryUser'])->name('examination-history-user');
-
-Route::get('api/my-bookings/list/{userId}', [MyBookingController::class, 'listBookingApi'])->name('api.backend.my-bookings.list');
-Route::get('api/my-bookings/history/{userId}', [MyBookingController::class, 'medicalHistoryApi'])->name('api.backend.my-bookings.history');
-Route::post('api/my-bookings/history/{userId}', [MyBookingController::class, 'updateMedicalHistoryApi'])->name('api.backend.my-bookings.update-history');
-Route::get('api/my-bookings/csrf-token', [MyBookingController::class, 'getToken'])->name('api.backend.my-bookings.getToken');
