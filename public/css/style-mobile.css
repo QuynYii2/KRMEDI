@@ -120,7 +120,7 @@
     background: #a5a5a5;
     border-radius: 10px;
 }
-#allAddressesMap,#allAddressesMapPharmacies{
+#allAddressesMap,#allAddressesMapPharmacies,.box-content-map{
     width: 68%;
 }
 .text-not-address{
@@ -195,6 +195,13 @@
 }
 .gm-ui-hover-effect span{
     margin: 0px!important;
+}
+.swiper-slide-height{
+    display: inline-grid;
+    height: auto;
+}
+.mySwiperMap,.mySwiperMapPharmacies{
+    margin-top: -240px;
 }
 @media (max-width: 1400px) {
     .header .header-detail--left .back h5 {
@@ -701,9 +708,9 @@
         height: auto;
         margin-top: 30px;
     }
-    #allAddressesMap,#allAddressesMapPharmacies{
+    #allAddressesMap,#allAddressesMapPharmacies,.box-content-map{
         width: 100%;
-        height: 600px!important;
+        height: 900px!important;
     }
     .title-specialList-clinics{
         font-size: 16px!important;
@@ -713,6 +720,9 @@
     }
     .address-specialList-clinics{
         margin: 10px 0;
+    }
+    .mySwiperMap,.mySwiperMapPharmacies{
+        margin-top: -277px;
     }
 }
 
@@ -1111,5 +1121,14 @@
     }
     .map_clinic_mobile{
         display: inline-block;
+    }
+    #allAddressesMap, #allAddressesMapPharmacies{
+        height: 600px!important;
+    }
+    .mySwiperMap,.mySwiperMapPharmacies{
+        margin-top: -230px;
+    }
+    .text-map-item-address{
+        font-size: 14px;
     }
 }
