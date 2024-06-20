@@ -4,19 +4,23 @@ namespace App\Http\Controllers\ui;
 
 use App\Enums\BookingResultStatus;
 use App\Enums\BookingStatus;
+use App\Enums\CartStatus;
 use App\Enums\ServiceClinicStatus;
 use App\ExportExcel\BookingExport;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\restapi\BookingResultApi;
 use App\Models\Booking;
 use App\Models\BookingResult;
+use App\Models\Cart;
 use App\Models\Clinic;
 use App\Models\Department;
+use App\Models\PrescriptionResults;
 use App\Models\ServiceClinic;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use Maatwebsite\Excel\Facades\Excel;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -99,7 +103,12 @@ class MyBookingController extends Controller
             alert()->warning('Not found booking!');
             return back();
         }
-        return view('ui.my-bookings.detail-booking', compact('booking'));
+        $data_product = [];
+        $prescription_result = PrescriptionResults::where('booking_id',$id)->first();
+        if (isset($prescription_result)){
+            $data_product = json_decode($prescription_result->prescriptions, true);
+        }
+        return view('ui.my-bookings.detail-booking', compact('booking','data_product'));
     }
 
     public function bookingResult(Request $request, $id)
@@ -132,6 +141,34 @@ class MyBookingController extends Controller
         }
         $products = (new BookingResultApi())->getListProductFromExcel($file_excel);
         return view('ui.my-bookings.list-products', compact('products'));
+    }
+
+    public function addCart(Request $request,$id){
+        try{
+            $booking = Booking::find($id);
+            $medicines = $request->get('medicines');
+            if (isset($medicines) && count($medicines)>0){
+                $dataUser = User::find($booking->user_id);
+                foreach ($medicines as $val){
+                    Cart::create([
+                        'product_id' => $val['medicine_id_hidden'],
+                        'quantity' => $val['quantity'],
+                        'user_id' => $dataUser->id,
+                        'type_product' => 'MEDICINE',
+                        'status' => CartStatus::PENDING,
+                        'note' => $val['detail_value'] ?? "",
+                        'treatment_days' => $val['treatment_days'] ?? 0,
+                        'remind_remain' => $val['treatment_days'] ?? 0,
+                        'doctor_id' =>  $booking->doctor_id??$booking->clinic_id,
+                    ]);
+                }
+            }
+
+            alert()->success('Thêm sản phẩm vào giỏ hàng thành công');
+            return back();
+        }catch (\Exception $e){
+            dd($e->getMessage());
+        }
     }
 
     public function showBookingQr($id)

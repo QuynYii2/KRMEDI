@@ -463,6 +463,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('detail/{id}', [MyBookingController::class, 'detailBooking'])->name('web.users.my.bookings.detail');
         Route::get('result/{id}', [MyBookingController::class, 'bookingResult'])->name('web.users.my.bookings.result');
         Route::get('list-products/{id}', [MyBookingController::class, 'listProductResult'])->name('web.users.my.bookings.products');
+        Route::post('/add-cart/{id}', [MyBookingController::class, 'addCart'])->name('web.users.my.bookings.add-cart');
     });
 
     /* My coupons */

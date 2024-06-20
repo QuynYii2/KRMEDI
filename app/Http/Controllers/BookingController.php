@@ -388,19 +388,6 @@ class BookingController extends Controller
                 $prescription_result->prescriptions = json_encode($medicines);
                 $prescription_result->booking_id = $booking->id;
                 $prescription_result->save();
-                foreach ($medicines as $val){
-                    Cart::create([
-                        'product_id' => $val['medicine_id_hidden'],
-                        'quantity' => $val['quantity'],
-                        'user_id' => $dataUser->id,
-                        'type_product' => 'MEDICINE',
-                        'status' => CartStatus::PENDING,
-                        'note' => $val['detail_value'] ?? "",
-                        'treatment_days' => $val['treatment_days'] ?? 0,
-                        'remind_remain' => $val['treatment_days'] ?? 0,
-                        'doctor_id' =>  $booking->doctor_id??Auth::id()
-                    ]);
-                }
             }
 
             if ($success) {
@@ -648,19 +635,6 @@ class BookingController extends Controller
             $prescription_result->prescriptions = json_encode($medicines);
             $prescription_result->booking_id = $booking->id;
             $prescription_result->save();
-            foreach ($medicines as $val){
-                Cart::create([
-                    'product_id' => $val['medicine_id_hidden'],
-                    'quantity' => $val['quantity'],
-                    'user_id' => $dataUser->id,
-                    'type_product' => 'MEDICINE',
-                    'status' => CartStatus::PENDING,
-                    'note' => $val['detail_value'] ?? "",
-                    'treatment_days' => $val['treatment_days'] ?? 0,
-                    'remind_remain' => $val['treatment_days'] ?? 0,
-                    'doctor_id' =>  $booking->doctor_id??Auth::id()
-                ]);
-            }
 
             if ($success) {
                 alert('Create success');
