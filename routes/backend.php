@@ -210,7 +210,3 @@ Route::get("connect/video/agora/get-token-app", [AgoraChatController::class, 'ge
 Route::get("connect/video/agora/get-push-token-user", [AgoraChatController::class, 'getPushTokenByUser'])->name("agora.get-token-app-user");
 
 Route::resource('notifications', 'Api\NotificationController');
-
-Route::get('my-bookings/list/{user_id}', [MyBookingController::class, 'listBookingApi'])->name('api.backend.my-bookings.list');
-Route::get('my-bookings/history/{user_id}', [MyBookingController::class, 'medicalHistoryApi'])->name('api.backend.my-bookings.history');
-Route::post('my-bookings/history/{user_id}', [MyBookingController::class, 'updateMedicalHistoryApi'])->name('api.backend.my-bookings.update-history');

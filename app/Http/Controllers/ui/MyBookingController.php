@@ -77,9 +77,9 @@ class MyBookingController extends Controller
         return view('ui.my-bookings.list-booking', compact('bookings','department','service'));
     }
 
-    public function listBookingApi(Request $request){
+    public function listBookingApi($userId){
         $bookings = Booking::where('bookings.status', '!=', BookingStatus::DELETE)
-            ->where('bookings.user_id', ($request->user_id))
+            ->where('bookings.user_id', ($userId))
             ->orderBy('bookings.id', 'desc')->get();
 
         foreach ($bookings as $item){
@@ -184,8 +184,13 @@ class MyBookingController extends Controller
 
     public function medicalHistoryApi($id)
     {
-        $userMedicalHistory = User::where('id', $id)->first()->is_check_medical_history;
-        return response()->json($userMedicalHistory);
+        $user = User::find($id);
+
+        if ($user) {
+            return response()->json($user->is_check_medical_history);
+        } else {
+            return response()->json(['message' => 'User not found.'], 404);
+        }
     }
 
     public function updateMedicalHistoryApi(Request $request, $id)
@@ -205,4 +210,8 @@ class MyBookingController extends Controller
             return response()->json(['message' => 'User not found.'], 404);
         }
     }
+//    public function getToken(Request $request)
+//    {
+//        return response()->json(['csrfToken' => csrf_token()]);
+//    }
 }
