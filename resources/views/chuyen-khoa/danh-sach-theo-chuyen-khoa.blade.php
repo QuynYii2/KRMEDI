@@ -196,9 +196,17 @@
                                 </div>
                             @endforeach
                         </div>
-                        <div id="allAddressesMap" class="show active fade" style="height: 800px;">
+                        <div class="box-content-map">
+                            <div id="allAddressesMap" class="show active fade w-100" style="height: 800px;">
 
+                            </div>
+                            <div class="swiper mySwiperMap">
+                                <div class="swiper-wrapper data-map">
+
+                                </div>
+                            </div>
                         </div>
+
                         @else
                             <p style="color: red;text-align: center;font-size: 20px;width: 100%;">Không có dữ liệu bạn muốn tìm</p>
                         @endif
@@ -307,9 +315,16 @@
                                 </div>
                             @endforeach
                         </div>
-                        <div id="allAddressesMapPharmacies" class="show active fade" style="height: 800px;">
+                            <div class="box-content-map">
+                        <div id="allAddressesMapPharmacies" class="show active fade w-100" style="height: 800px;">
 
                         </div>
+                            <div class="swiper mySwiperMapPharmacies">
+                                <div class="swiper-wrapper data-map-pharmacies">
+
+                                </div>
+                            </div>
+                            </div>
                             @else
                             <p style="color: red;text-align: center;font-size: 20px;width: 100%;">Không có dữ liệu bạn muốn tìm</p>
                             @endif
@@ -600,7 +615,30 @@
                     }
                 });
             });
-
+            var swiper = new Swiper(".mySwiperMap", {
+                slidesPerView: 1.5,
+                spaceBetween: 5,
+                breakpoints: {
+                    768: {
+                        slidesPerView: 1.7,
+                    },
+                    300: {
+                        slidesPerView: 1,
+                    },
+                },
+            });
+            var swiperPharmacies = new Swiper(".mySwiperMapPharmacies", {
+                slidesPerView: 1.5,
+                spaceBetween: 5,
+                breakpoints: {
+                    768: {
+                        slidesPerView: 1.7,
+                    },
+                    300: {
+                        slidesPerView: 1,
+                    },
+                },
+            });
             var locations = {!! json_encode($clinics) !!};
             var locationsPharmacies = {!! json_encode($pharmacies) !!};
             var markers = [];
@@ -684,7 +722,8 @@
                     map: map,
                     title: 'Your Location'
                 });
-
+                let list_map = '';
+                let count_address =0;
                 locations.forEach(function (location) {
                     var distance = calculateDistance(
                         currentLocation.lat, currentLocation.lng,
@@ -706,7 +745,7 @@
                         let arrayGallery = gallery.split(',');
 
 
-                        var infoWindowContent = `<div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
+                        list_map += `<div class="swiper-slide swiper-slide-height slide_${count_address} bg-white" data-index="${count_address}" ><div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
                 <div class="box-img-item-map">
                     <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img" style="height: 100%;object-fit: cover;">
                 </div>
@@ -717,7 +756,7 @@
                         </div>
                         <div class="d-flex mt-md-2">
                             <div class="d-flex col-md-6 justify-content-center align-items-center">
-                                <button class="row" id="showMapBtnTab" style="background-color: transparent; border:none">
+                                <button class="row" id="showMapBtnTab_${count_address}" style="background-color: transparent; border:none">
                                     <div class="justify-content-center d-flex">
                                         <i class="border-button-address fa-regular fa-circle-right"></i>
                                     </div>
@@ -752,31 +791,47 @@
 
             </div>
         </div>
-    </div>`;
+    </div> </div></div>`;
 
-                        var infoWindow = new google.maps.InfoWindow({
-                            content: infoWindowContent
-                        });
-
-                        marker.addListener('click', function () {
-                            closeAllInfoWindows();
-                            infoWindow.open(map, marker);
-                            $(document).on('click', '#showMapBtnTab', function() {
-                                getDirections(currentLocation, {lat: parseFloat(location.latitude), lng: parseFloat(location.longitude)});
-                                closeAllInfoWindows();
-                            });
-                        });
+                        // var infoWindow = new google.maps.InfoWindow({
+                        //     content: infoWindowContent
+                        // });
+                        //
+                        // marker.addListener('click', function () {
+                        //     closeAllInfoWindows();
+                        //     infoWindow.open(map, marker);
+                        //     $(document).on('click', '#showMapBtnTab', function() {
+                        //         getDirections(currentLocation, {lat: parseFloat(location.latitude), lng: parseFloat(location.longitude)});
+                        //         closeAllInfoWindows();
+                        //     });
+                        // });
 
                         markers.push(marker);
-                        infoWindows.push(infoWindow);
+                        // infoWindows.push(infoWindow);
                         location.markerIndex = markers.length - 1;
+
+                        let classBox = '.slide_'+count_address;
+                        marker.addListener('click', function () {
+                            var index2= $(classBox).attr('data-index');
+                            swiper.slideTo(index2);
+                        });
+                        $(document).on('click', '#showMapBtnTab_'+count_address, function() {
+                            if (location && !isNaN(location.latitude) && !isNaN(location.longitude)) {
+                                getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                                var index= $(classBox).attr('data-index');
+                                swiper.slideTo(index);
+                            } else {
+                                console.error('Invalid location data:', location);
+                            }
+                        });
+                        count_address ++;
 
                         $('body').on('click', '.specialList-clinics[data-clinic-id="' + location.id + '"] #showMapBtn', function() {
                             getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
                         });
                     }
                 });
-
+                $('.data-map').html(list_map);
                 document.querySelectorAll('.specialList-clinics-address').forEach(function (item, index) {
                     item.addEventListener('click', function () {
                         var markerIndex = parseInt(item.getAttribute('data-marker-index'));
@@ -815,7 +870,8 @@
                     map: map2,
                     title: 'Your Location'
                 });
-
+                let list_map_pharmacies = '';
+                let count_address_pharmacies =0;
                 locationsPharmacies.forEach(function (locationsPharmacies) {
                     var distance = calculateDistance(
                         currentLocation.lat, currentLocation.lng,
@@ -839,7 +895,7 @@
                         let gallery = locationsPharmacies.gallery;
                         let arrayGallery = gallery.split(',');
 
-                        var infoWindowContent = `<div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
+                        list_map_pharmacies += `<div class="swiper-slide swiper-slide-height slide_pharmacies_${count_address_pharmacies} bg-white" data-index="${count_address_pharmacies}" ><div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
                 <div class="box-img-item-map">
                     <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img" style="height: 100%;object-fit: cover;">
                 </div>
@@ -851,7 +907,7 @@
                         </div>
                         <div class="d-flex mt-md-2">
                             <div class="d-flex col-md-6 justify-content-center align-items-center">
-                                <button class="row " id="showMapBtnPharmacyTab" style="background-color: transparent; border:none">
+                                <button class="row " id="showMapBtnPharmacyTab_${count_address_pharmacies}" style="background-color: transparent; border:none">
                                     <div class="justify-content-center d-flex">
                                         <i class="border-button-address fa-regular fa-circle-right"></i>
                                     </div>
@@ -885,23 +941,39 @@
                         </div>
 
         </div>
-    </div>`;
+    </div></div></div>`;
 
-                        var infoWindow2 = new google.maps.InfoWindow({
-                            content: infoWindowContent
-                        });
-
-                        markerPharmacies.addListener('click', function () {
-                            closeAllInfoWindowsPharmacy();
-                            infoWindow2.open(map2, markerPharmacies);
-                            $(document).on('click', '#showMapBtnPharmacyTab', function() {
-                                getDirectionsPharmacies(currentLocation, { lat: parseFloat(locationsPharmacies.latitude), lng: parseFloat(locationsPharmacies.longitude) });
-                                closeAllInfoWindowsPharmacy();
-                            });
-                        });
+                        // var infoWindow2 = new google.maps.InfoWindow({
+                        //     content: infoWindowContent
+                        // });
+                        //
+                        // markerPharmacies.addListener('click', function () {
+                        //     closeAllInfoWindowsPharmacy();
+                        //     infoWindow2.open(map2, markerPharmacies);
+                        //     $(document).on('click', '#showMapBtnPharmacyTab', function() {
+                        //         getDirectionsPharmacies(currentLocation, { lat: parseFloat(locationsPharmacies.latitude), lng: parseFloat(locationsPharmacies.longitude) });
+                        //         closeAllInfoWindowsPharmacy();
+                        //     });
+                        // });
                         markersPharmacy.push(markerPharmacies);
-                        infoWindowsPharmacy.push(infoWindow2);
+                        // infoWindowsPharmacy.push(infoWindow2);
                         locationsPharmacies.markerIndex = markersPharmacy.length - 1;
+
+                        let classBox2 = '.slide_pharmacies_'+count_address_pharmacies;
+                        markerPharmacies.addListener('click', function () {
+                            var index4= $(classBox2).attr('data-index');
+                            swiperPharmacies.slideTo(index4);
+                        });
+                        $(document).on('click', '#showMapBtnPharmacyTab_'+count_address_pharmacies, function() {
+                            if (locationsPharmacies && !isNaN(locationsPharmacies.latitude) && !isNaN(locationsPharmacies.longitude)) {
+                                getDirectionsPharmacies(currentLocation, { lat: parseFloat(locationsPharmacies.latitude), lng: parseFloat(locationsPharmacies.longitude) });
+                                var index3= $(classBox2).attr('data-index');
+                                swiperPharmacies.slideTo(index3);
+                            } else {
+                                console.error('Invalid location data:', locationsPharmacies);
+                            }
+                        });
+                        count_address_pharmacies ++;
 
                         $('body').on('click', '.specialList-pharmacy-address[data-pharmacy-id="' + locationsPharmacies.id + '"] #showMapBtnPharmacy', function() {
                             getDirectionsPharmacies(currentLocation, { lat: parseFloat(locationsPharmacies.latitude), lng: parseFloat(locationsPharmacies.longitude) });
@@ -909,6 +981,7 @@
                         });
                     }
                 });
+                $('.data-map-pharmacies').html(list_map_pharmacies);
 
                 document.querySelectorAll('.specialList-pharmacy-address').forEach(function (item, index) {
                     item.addEventListener('click', function () {

@@ -766,9 +766,9 @@ img {
   /* END FLEA MARKET */
   /* NEW HOME */
   .background-image_HomeNew--departments .container #map-location .clip-path-container {
-    height: 700px;
+    height: 900px;
     background-color: #088180;
-    clip-path: polygon(0% 0%, 101% 0%, 100% 84%, 0% 101%);
+    /*clip-path: polygon(0% 0%, 101% 0%, 100% 84%, 0% 101%);*/
     border-radius: 50px;
     border-bottom: 20px solid #088180;
   }

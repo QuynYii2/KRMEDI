@@ -91,6 +91,11 @@
         .filter-option img{
             width: 110px;
         }
+        @media (max-width: 767px) {
+            .mySwiperMap,.mySwiperMapPharmacies {
+                margin-top: calc(-100% + 205px);
+            }
+        }
     </style>
     <div class=" align-items-center header-mobile-clinics" style="padding: 10px 16px;box-shadow: 0 0 #0000, 0 0 #0000, 0px 1px 4px 0px #dedede">
         <a href="{{route('home')}}"> <svg viewBox="0 0 24 24" style="width: 24px" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.29231 12.7138L15.2863 21.7048C15.6809 22.0984 16.3203 22.0984 16.7159 21.7048C17.1106 21.3111 17.1106 20.6717 16.7159 20.2781L8.43539 12.0005L16.7149 3.72293C17.1096 3.32928 17.1096 2.68989 16.7149 2.29524C16.3203 1.90159 15.6799 1.90159 15.2853 2.29524L6.29131 11.2861C5.90273 11.6757 5.90273 12.3251 6.29231 12.7138Z" fill="currentColor"></path></svg>
@@ -472,6 +477,11 @@
                 <div id="allAddressesMap" class="show active fade" style="height: 100%!important;">
 
                 </div>
+                <div class="swiper mySwiperMap">
+                    <div class="swiper-wrapper data-map">
+
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -485,6 +495,11 @@
             <div class="offcanvas-body p-0">
                 <div id="allAddressesMapPharmacies" class="show active fade" style="height: 100%!important;">
 
+                </div>
+                <div class="swiper mySwiperMapPharmacies">
+                    <div class="swiper-wrapper data-map-pharmacies">
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -660,6 +675,31 @@
                 });
             });
 
+            var swiper = new Swiper(".mySwiperMap", {
+                slidesPerView: 1.5,
+                spaceBetween: 5,
+                breakpoints: {
+                    768: {
+                        slidesPerView: 1.7,
+                    },
+                    300: {
+                        slidesPerView: 1,
+                    },
+                },
+            });
+            var swiperPharmacies = new Swiper(".mySwiperMapPharmacies", {
+                slidesPerView: 1.5,
+                spaceBetween: 5,
+                breakpoints: {
+                    768: {
+                        slidesPerView: 1.7,
+                    },
+                    300: {
+                        slidesPerView: 1,
+                    },
+                },
+            });
+
             var locations = {!! json_encode($clinics) !!};
             var locationsPharmacies = {!! json_encode($pharmacies) !!};
             var markers = [];
@@ -743,7 +783,8 @@
                     map: map,
                     title: 'Your Location'
                 });
-
+                let list_map = '';
+                let count_address =0;
                 locations.forEach(function (location) {
                     var distance = calculateDistance(
                         currentLocation.lat, currentLocation.lng,
@@ -765,7 +806,7 @@
                         let arrayGallery = gallery.split(',');
 
 
-                        var infoWindowContent = `<div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
+                        list_map += `<div class="swiper-slide swiper-slide-height slide_${count_address} bg-white" data-index="${count_address}" ><div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
                 <div class="box-img-item-map">
                     <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img" style="height: 100%;object-fit: cover;">
                 </div>
@@ -778,11 +819,11 @@
                         <div class="d-flex mt-md-2">
 
                             <div class="d-flex col-md-6 justify-content-center align-items-center">
-                                <button class="row" id="showMapBtnTab" style="background-color: transparent; border:none">
+                                <button class="row" id="showMapBtnTab_${count_address}" style="background-color: transparent; border:none">
                                     <div class="justify-content-center d-flex">
                                         <i class="border-button-address fa-regular fa-circle-right"></i>
                                     </div>
-                                    <div class="d-flex justify-content-center">{{ __('home.Direction') }}</div>
+                                    <div class="d-flex justify-content-center text-map-item-address">{{ __('home.Direction') }}</div>
                                 </button>
                             </div>
                             <div class="d-flex col-md-6 justify-content-center align-items-center">
@@ -790,7 +831,7 @@
                                                     <div class="justify-content-center d-flex">
                                                         <i class="border-button-address fa-solid fa-bullseye"></i>
                                                     </div>
-                                                    <div class="d-flex justify-content-center">{{ __('home.Booking') }}</div>
+                                                    <div class="d-flex justify-content-center text-map-item-address">{{ __('home.Booking') }}</div>
                                                 </a>
                                             </div>
                         </div>
@@ -814,24 +855,40 @@
 
             </div>
         </div>
-    </div>`;
+    </div></div></div>`;
 
-                        var infoWindow = new google.maps.InfoWindow({
-                            content: infoWindowContent
-                        });
-
-                        marker.addListener('click', function () {
-                            closeAllInfoWindows();
-                            infoWindow.open(map, marker);
-                            $(document).on('click', '#showMapBtnTab', function() {
-                                getDirections(currentLocation, {lat: parseFloat(location.latitude), lng: parseFloat(location.longitude)});
-                                closeAllInfoWindows();
-                            });
-                        });
+                        // var infoWindow = new google.maps.InfoWindow({
+                        //     content: infoWindowContent
+                        // });
+                        //
+                        // marker.addListener('click', function () {
+                        //     closeAllInfoWindows();
+                        //     infoWindow.open(map, marker);
+                        //     $(document).on('click', '#showMapBtnTab', function() {
+                        //         getDirections(currentLocation, {lat: parseFloat(location.latitude), lng: parseFloat(location.longitude)});
+                        //         closeAllInfoWindows();
+                        //     });
+                        // });
 
                         markers.push(marker);
-                        infoWindows.push(infoWindow);
+                        // infoWindows.push(infoWindow);
                         location.markerIndex = markers.length - 1;
+
+                        let classBox = '.slide_'+count_address;
+                        marker.addListener('click', function () {
+                            var index2= $(classBox).attr('data-index');
+                            swiper.slideTo(index2);
+                        });
+                        $(document).on('click', '#showMapBtnTab_'+count_address, function() {
+                            if (location && !isNaN(location.latitude) && !isNaN(location.longitude)) {
+                                getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                                var index= $(classBox).attr('data-index');
+                                swiper.slideTo(index);
+                            } else {
+                                console.error('Invalid location data:', location);
+                            }
+                        });
+                        count_address ++;
 
                         $('body').on('click', '.specialList-clinics[data-clinic-id="' + location.id + '"] #showMapBtn', function() {
                             getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
@@ -839,7 +896,7 @@
                         });
                     }
                 });
-
+                $('.data-map').html(list_map);
                 document.querySelectorAll('.specialList-clinics-address').forEach(function (item, index) {
                     item.addEventListener('click', function () {
                         var markerIndex = parseInt(item.getAttribute('data-marker-index'));
@@ -867,7 +924,8 @@
                     map: map2,
                     title: 'Your Location'
                 });
-
+                let list_map_pharmacies = '';
+                let count_address_pharmacies =0;
                 locationsPharmacies.forEach(function (locationsPharmacies) {
                     var distance = calculateDistance(
                         currentLocation.lat, currentLocation.lng,
@@ -891,7 +949,7 @@
                         let gallery = locationsPharmacies.gallery;
                         let arrayGallery = gallery.split(',');
 
-                        var infoWindowContent = `<div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
+                        list_map_pharmacies += `<div class="swiper-slide swiper-slide-height slide_pharmacies_${count_address_pharmacies} bg-white" data-index="${count_address_pharmacies}" ><div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
                 <div class="box-img-item-map">
                     <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img" style="height: 100%;object-fit: cover;">
                 </div>
@@ -902,11 +960,11 @@
                         </div>
                         <div class="d-flex mt-md-2">
                             <div class="d-flex col-md-6 justify-content-center align-items-center">
-                                <button class="row" id="showMapBtnPharmacyTab" style="background-color: transparent; border:none">
+                                <button class="row" id="showMapBtnPharmacyTab_${count_address_pharmacies}" style="background-color: transparent; border:none">
                                     <div class="justify-content-center d-flex">
                                         <i class="border-button-address fa-regular fa-circle-right"></i>
                                     </div>
-                                    <div class="d-flex justify-content-center">{{ __('home.Direction') }}</div>
+                                    <div class="d-flex justify-content-center text-map-item-address">{{ __('home.Direction') }}</div>
                                 </button>
                             </div>
                              <div class="d-flex col-md-6 justify-content-center align-items-center">
@@ -914,7 +972,7 @@
                                                     <div class="justify-content-center d-flex">
                                                         <i class="border-button-address fa-solid fa-bullseye"></i>
                                                     </div>
-                                                    <div class="d-flex justify-content-center">{{ __('home.Booking') }}</div>
+                                                    <div class="d-flex justify-content-center text-map-item-address">{{ __('home.Booking') }}</div>
                                                 </a>
                                             </div>
                         </div>
@@ -937,23 +995,39 @@
                         </div>
 
         </div>
-    </div>`;
+    </div></div></div>`;
 
-                        var infoWindow2 = new google.maps.InfoWindow({
-                            content: infoWindowContent
-                        });
-
-                        markerPharmacies.addListener('click', function () {
-                            closeAllInfoWindowsPharmacy();
-                            infoWindow2.open(map2, markerPharmacies);
-                            $(document).on('click', '#showMapBtnPharmacyTab', function() {
-                                getDirectionsPharmacies(currentLocation, { lat: parseFloat(locationsPharmacies.latitude), lng: parseFloat(locationsPharmacies.longitude) });
-                                closeAllInfoWindowsPharmacy();
-                            });
-                        });
+                        // var infoWindow2 = new google.maps.InfoWindow({
+                        //     content: infoWindowContent
+                        // });
+                        //
+                        // markerPharmacies.addListener('click', function () {
+                        //     closeAllInfoWindowsPharmacy();
+                        //     infoWindow2.open(map2, markerPharmacies);
+                        //     $(document).on('click', '#showMapBtnPharmacyTab', function() {
+                        //         getDirectionsPharmacies(currentLocation, { lat: parseFloat(locationsPharmacies.latitude), lng: parseFloat(locationsPharmacies.longitude) });
+                        //         closeAllInfoWindowsPharmacy();
+                        //     });
+                        // });
                         markersPharmacy.push(markerPharmacies);
-                        infoWindowsPharmacy.push(infoWindow2);
+                        // infoWindowsPharmacy.push(infoWindow2);
                         locationsPharmacies.markerIndex = markersPharmacy.length - 1;
+
+                        let classBox2 = '.slide_pharmacies_'+count_address_pharmacies;
+                        markerPharmacies.addListener('click', function () {
+                            var index4= $(classBox2).attr('data-index');
+                            swiperPharmacies.slideTo(index4);
+                        });
+                        $(document).on('click', '#showMapBtnPharmacyTab_'+count_address_pharmacies, function() {
+                            if (locationsPharmacies && !isNaN(locationsPharmacies.latitude) && !isNaN(locationsPharmacies.longitude)) {
+                                getDirectionsPharmacies(currentLocation, { lat: parseFloat(locationsPharmacies.latitude), lng: parseFloat(locationsPharmacies.longitude) });
+                                var index3= $(classBox2).attr('data-index');
+                                swiperPharmacies.slideTo(index3);
+                            } else {
+                                console.error('Invalid location data:', locationsPharmacies);
+                            }
+                        });
+                        count_address_pharmacies ++;
 
                         $('body').on('click', '.specialList-pharmacy-address[data-pharmacy-id="' + locationsPharmacies.id + '"] #showMapBtnPharmacy', function() {
                             getDirectionsPharmacies(currentLocation, { lat: parseFloat(locationsPharmacies.latitude), lng: parseFloat(locationsPharmacies.longitude) });
@@ -961,7 +1035,7 @@
                         });
                     }
                 });
-
+                $('.data-map-pharmacies').html(list_map_pharmacies);
                 document.querySelectorAll('.specialList-pharmacy-address').forEach(function (item, index) {
                     item.addEventListener('click', function () {
                         var markerIndex = parseInt(item.getAttribute('data-marker-index'));

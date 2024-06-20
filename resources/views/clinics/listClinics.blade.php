@@ -129,8 +129,15 @@
             <p style="color: red;text-align: center;margin:30px 0;display: none" class="text-not-address w-100">Không có phòng khám nào như bạn cần tìm quanh bạn</p>
             <div class="box-list-clinic-address">
                 <div class="body row box-productInformation-clinic" id="productInformation"></div>
-                <div id="allAddressesMap" class="show active fade map_clinic_desktop" style="height: 800px;">
+                <div class="box-content-map">
+                    <div id="allAddressesMap" class="show active fade map_clinic_desktop w-100" style="height: 800px;">
 
+                    </div>
+                    <div class="swiper mySwiperMap">
+                        <div class="swiper-wrapper data-map">
+
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -139,7 +146,19 @@
     </div>
 
     <script>
-        localStorage.setItem('check-kham','active')
+        localStorage.setItem('check-kham','active');
+        var swiper = new Swiper(".mySwiperMap", {
+            slidesPerView: 1.5,
+            spaceBetween: 5,
+            breakpoints: {
+                768: {
+                    slidesPerView: 1.7,
+                },
+                300: {
+                    slidesPerView: 1,
+                },
+            },
+        });
         var markers = [];
         var infoWindows = [];
         var directionsService;
@@ -206,7 +225,8 @@
                         map: map,
                         title: 'Your Location'
                     });
-
+                    let list_map = '';
+                    let count_address =0;
                     locations.forEach(function (location) {
                         var distance = calculateDistance(
                             currentLocation.lat, currentLocation.lng,
@@ -226,7 +246,7 @@
                             let gallery = location.gallery;
                             let arrayGallery = gallery.split(',');
 
-                            var infoWindowContent = `<div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
+                            list_map += `<div class="swiper-slide swiper-slide-height slide_${count_address} bg-white" data-index="${count_address}" ><div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
                                 <div class="box-img-item-map">
                                     <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img" style="height: 100%;object-fit: cover;">
                                 </div>
@@ -237,7 +257,7 @@
                                         </div>
                                         <div class="d-flex mt-md-2">
                                             <div class="d-flex col-md-6 justify-content-center align-items-center">
-                                                <button class="row" id="showMapBtnTab" style="background-color: transparent; border:none">
+                                                <button class="row" id="showMapBtnTab_${count_address}" style="background-color: transparent; border:none">
                                                     <div class="justify-content-center d-flex">
                                                         <i class="border-button-address fa-regular fa-circle-right"></i>
                                                     </div>
@@ -273,40 +293,57 @@
 
                                     </div>
                                 </div>
-                            </div>`;
+                            </div>
+                            </div></div>`;
 
-                            var infoWindow = new google.maps.InfoWindow({
-                                content: infoWindowContent
-                            });
-
-                            marker.addListener('click', function () {
-                                closeAllInfoWindows();
-                                infoWindow.open(map, marker);
-                                $(document).on('click', '#showMapBtnTab', function() {
-                                    if (location && !isNaN(location.latitude) && !isNaN(location.longitude)) {
-                                        getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
-                                        location = [];
-                                        closeAllInfoWindows();
-                                    } else {
-                                        console.error('Invalid location data:', location);
-                                    }
-                                });
-                            });
+                            // var infoWindow = new google.maps.InfoWindow({
+                            //     content: infoWindowContent
+                            // });
+                            //
+                            // marker.addListener('click', function () {
+                            //     closeAllInfoWindows();
+                            //     infoWindow.open(map, marker);
+                            //     $(document).on('click', '#showMapBtnTab', function() {
+                            //         if (location && !isNaN(location.latitude) && !isNaN(location.longitude)) {
+                            //             getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                            //             location = [];
+                            //             closeAllInfoWindows();
+                            //         } else {
+                            //             console.error('Invalid location data:', location);
+                            //         }
+                            //     });
+                            // });
                             markers.push(marker);
-                            infoWindows.push(infoWindow);
+                            // infoWindows.push(infoWindow);
                             location.markerIndex = markers.length - 1;
 
                             // Define clinicElement after DOM is ready
-                            $(document).ready(function() {
-                                var clinicElement = $('.border-specialList[data-marker-index="' + location.markerIndex + '"]');
-                                // Add click event for directions
-                                clinicElement.find('#showMapBtn').on('click', function() {
-                                    getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
-                                });
-                                closeAllInfoWindows();
+                            // $(document).ready(function() {
+                            //     var clinicElement = $('.border-specialList[data-marker-index="' + location.markerIndex + '"]');
+                            //     // Add click event for directions
+                            //     clinicElement.find('#showMapBtn').on('click', function() {
+                            //         getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                            //     });
+                            //     closeAllInfoWindows();
+                            // });
+                            let classBox = '.slide_'+count_address;
+                            marker.addListener('click', function () {
+                                var index2= $(classBox).attr('data-index');
+                                swiper.slideTo(index2);
                             });
+                            $(document).on('click', '#showMapBtnTab_'+count_address, function() {
+                                if (location && !isNaN(location.latitude) && !isNaN(location.longitude)) {
+                                    getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                                    var index= $(classBox).attr('data-index');
+                                    swiper.slideTo(index);
+                                } else {
+                                    console.error('Invalid location data:', location);
+                                }
+                            });
+                            count_address ++;
                         }
                     });
+                    $('.data-map').html(list_map);
 
                     document.querySelectorAll('.border-specialList').forEach(function (item) {
                         console.log(12)
