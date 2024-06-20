@@ -77,9 +77,9 @@ class MyBookingController extends Controller
         return view('ui.my-bookings.list-booking', compact('bookings','department','service'));
     }
 
-    public function listBookingApi(Request $request){
+    public function listBookingApi($userId){
         $bookings = Booking::where('bookings.status', '!=', BookingStatus::DELETE)
-            ->where('bookings.user_id', ($request->user_id))
+            ->where('bookings.user_id', ($userId))
             ->orderBy('bookings.id', 'desc')->get();
 
         foreach ($bookings as $item){
