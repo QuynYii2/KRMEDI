@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ContactController;
+use App\Http\Controllers\ui\MyBookingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,3 +30,5 @@ Route::post('/conversation/send', [ContactController::class, 'sendNewMessage'])-
 
 
 Route::post('renew-uuid', [ContactController::class, 'renewUuidMessage'])->name('chat.send-message.renew-uuid');
+
+Route::post('my-bookings/history/{userId}', [MyBookingController::class, 'updateMedicalHistoryApi'])->name('api.backend.my-bookings.update-history');
