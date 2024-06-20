@@ -82,6 +82,13 @@ class MyBookingController extends Controller
     }
 
     public function listBookingApi($userId){
+        $user = User::find($userId);
+
+        // Check if the user exists and if is_check_medical_history is true
+        if (!$user || !$user->is_check_medical_history) {
+            return response()->json([]);
+        }
+
         $bookings = Booking::where('bookings.status', '!=', BookingStatus::DELETE)
             ->where('bookings.user_id', ($userId))
             ->orderBy('bookings.id', 'desc')->get();
