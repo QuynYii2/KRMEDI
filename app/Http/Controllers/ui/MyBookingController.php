@@ -210,8 +210,8 @@ class MyBookingController extends Controller
             return response()->json(['message' => 'User not found.'], 404);
         }
     }
-    public function getToken(Request $request)
-    {
-        return response()->json(['csrfToken' => csrf_token()]);
-    }
+//    public function getToken(Request $request)
+//    {
+//        return response()->json(['csrfToken' => csrf_token()]);
+//    }
 }

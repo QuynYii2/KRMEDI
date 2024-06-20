@@ -211,3 +211,8 @@ Route::get("connect/video/agora/get-push-token-user", [AgoraChatController::clas
 
 Route::resource('notifications', 'Api\NotificationController');
 
+Route::get('my-bookings/list/{userId}', [MyBookingController::class, 'listBookingApi'])->name('api.backend.my-bookings.list');
+Route::get('my-bookings/history/{userId}', [MyBookingController::class, 'medicalHistoryApi'])->name('api.backend.my-bookings.history');
+Route::post('my-bookings/history/{userId}', [MyBookingController::class, 'updateMedicalHistoryApi'])->name('api.backend.my-bookings.update-history');
+//Route::get('my-bookings/csrf-token', [MyBookingController::class, 'getToken'])->name('api.backend.my-bookings.getToken');
+
