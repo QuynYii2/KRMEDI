@@ -136,7 +136,7 @@
 
                         <div id="opt_btn" class="d-flex justify-content-center">
                             <a class="doctor_mess" data-mail="{{$doctor->email}}" data-id="{{$doctor->id}}" data-role="DOCTORS" data-img="{{$doctor->avt}}" data-name="{{$doctor->name}}">
-                                <button class="button">{{ __('home.Chat') }}</button>
+                                <button class="button" id="chat_doctor" disabled>{{ __('home.Chat') }}</button>
                             </a>
                             @if ($is_online)
                                 <form method="post" action="{{ route('agora.call') }}" target="_blank"
@@ -531,21 +531,6 @@
 
                 input.value = star.checked ? value : value - 1;
             }
-        </script>
-        <script>
-            window.Laravel = {!! json_encode([
-            'user' => [
-                'email' => Auth::user()->email,
-                'id' => Auth::user()->id,
-                'username' => Auth::user()->username,
-            ],
-            'url_1' => route('api.backend.cart.search', ['prescription_id' => 'REPLACE_ID']),
-            'url_2' => route('user.checkout.reorder', ['prescription_id' => '']),
-            'url_3' => route('restapi.mobile.fcm.send'),
-            'url_4' => route('api.backend.messages.save'),
-            'url_5' => route('user.checkout.index', ['prescription_id' => '']),
-
-        ]) !!};
         </script>
         <script src="{{asset('js/send-mess.js')}}" type="module"></script>
     @endif
