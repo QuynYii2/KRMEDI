@@ -167,12 +167,12 @@ class MyBookingController extends Controller
                         'treatment_days' => $val['treatment_days'] ?? 0,
                         'remind_remain' => $val['treatment_days'] ?? 0,
                         'doctor_id' =>  $booking->doctor_id??$booking->clinic_id,
+                        'prescription_id'=>$id
                     ]);
                 }
             }
 
-            alert()->success('Thêm sản phẩm vào giỏ hàng thành công');
-            return back();
+            return redirect()->route('user.checkout.index', ['prescription_id' => $id]);
         }catch (\Exception $e){
             dd($e->getMessage());
         }
