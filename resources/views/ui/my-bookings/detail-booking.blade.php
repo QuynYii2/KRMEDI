@@ -95,7 +95,7 @@
                     </div>
                 </div>
             @endforeach
-                <button type="submit" class="btn btn-primary mt-4">Thêm vào giỏ hàng</button>
+                <button type="submit" class="btn btn-primary mt-4">Mua hàng</button>
                 </form>
         @endif
         <div class="form-group ms-4 mt-4">
