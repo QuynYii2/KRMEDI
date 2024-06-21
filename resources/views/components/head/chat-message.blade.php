@@ -978,14 +978,14 @@
         const searchTerm = $('#searchDoctor').val().toLowerCase(); // Normalize the search term
 
         $('.spinner-icon').css('display', 'block');
-
         // Helper function to render users
+        localStorage.setItem('data_doctor',JSON.stringify(list_user));
+
         async function renderUsersBatch(startIndex, endIndex) {
             let batchPromises = [];
             for (let i = startIndex; i < endIndex && i < list_user.length; i++) {
                 let res = list_user[i];
                 let email = res.email;
-
                 if ((res.role == 'DOCTORS' || res.role == 'PHAMACISTS' || res.role == 'HOSPITALS') && res.id != current_user.uid) {
                     batchPromises.push(getUserInfo(email).then((response) => {
                         const name_doctor = response.infoUser.name;
