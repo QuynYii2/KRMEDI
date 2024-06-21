@@ -91,6 +91,11 @@
         .filter-option img{
             width: 110px;
         }
+        @media (max-width: 767px) {
+            .mySwiperMap,.mySwiperMapPharmacies {
+                margin-top: calc(-100% + 205px);
+            }
+        }
     </style>
     <div class=" align-items-center header-mobile-clinics" style="padding: 10px 16px;box-shadow: 0 0 #0000, 0 0 #0000, 0px 1px 4px 0px #dedede">
         <a href="{{route('home')}}"> <svg viewBox="0 0 24 24" style="width: 24px" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.29231 12.7138L15.2863 21.7048C15.6809 22.0984 16.3203 22.0984 16.7159 21.7048C17.1106 21.3111 17.1106 20.6717 16.7159 20.2781L8.43539 12.0005L16.7149 3.72293C17.1096 3.32928 17.1096 2.68989 16.7149 2.29524C16.3203 1.90159 15.6799 1.90159 15.2853 2.29524L6.29131 11.2861C5.90273 11.6757 5.90273 12.3251 6.29231 12.7138Z" fill="currentColor"></path></svg>
@@ -132,6 +137,7 @@
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <span style="font-weight: 800">Danh sách bênh viện</span>
                         <div data-bs-toggle="offcanvas" data-bs-target="#offcanvasDoctortMap" aria-controls="offcanvasDoctortMap">
+                            <span style="font-weight: bold;font-size: 12px">Bản đồ</span>
                             <svg  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" style="width: 21px" color="currentColor"><path fill="currentColor" d="M17.899 11.414a4.107 4.107 0 00-4.102 4.102c0 .863.266 1.69.776 2.398l2.857 3.851a.586.586 0 00.938 0l2.972-4.02c.432-.664.66-1.435.66-2.23a4.107 4.107 0 00-4.101-4.101zm0 5.86a1.76 1.76 0 01-1.758-1.758c0-.97.788-1.758 1.758-1.758.969 0 1.757.788 1.757 1.758a1.76 1.76 0 01-1.757 1.757zM2.888 2.083A.587.587 0 002 2.586v11.758c0 .206.108.396.284.502L7.9 18.191V5.067L2.888 2.083zM20.544 5.599l-5.575-3.345v8.88a5.242 5.242 0 012.93-.892c1.083 0 2.09.33 2.93.893V6.1a.586.586 0 00-.285-.502zM13.797 2.254L9.07 5.066v13.125l3.597-2.135c-.018-.18-.042-.358-.042-.54 0-1.243.45-2.372 1.172-3.274V2.254z"></path></svg>
                         </div>
                     </div>
@@ -247,6 +253,7 @@
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <span style="font-weight: 800">Danh sách phòng khám</span>
                         <div data-bs-toggle="offcanvas" data-bs-target="#offcanvasClinicMobile" aria-controls="offcanvasClinicMobile">
+                            <span style="font-weight: bold;font-size: 12px">Bản đồ</span>
                             <svg  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" style="width: 21px" color="currentColor"><path fill="currentColor" d="M17.899 11.414a4.107 4.107 0 00-4.102 4.102c0 .863.266 1.69.776 2.398l2.857 3.851a.586.586 0 00.938 0l2.972-4.02c.432-.664.66-1.435.66-2.23a4.107 4.107 0 00-4.101-4.101zm0 5.86a1.76 1.76 0 01-1.758-1.758c0-.97.788-1.758 1.758-1.758.969 0 1.757.788 1.757 1.758a1.76 1.76 0 01-1.757 1.757zM2.888 2.083A.587.587 0 002 2.586v11.758c0 .206.108.396.284.502L7.9 18.191V5.067L2.888 2.083zM20.544 5.599l-5.575-3.345v8.88a5.242 5.242 0 012.93-.892c1.083 0 2.09.33 2.93.893V6.1a.586.586 0 00-.285-.502zM13.797 2.254L9.07 5.066v13.125l3.597-2.135c-.018-.18-.042-.358-.042-.54 0-1.243.45-2.372 1.172-3.274V2.254z"></path></svg>
                         </div>
                     </div>
@@ -472,6 +479,11 @@
                 <div id="allAddressesMap" class="show active fade" style="height: 100%!important;">
 
                 </div>
+                <div class="swiper mySwiperMap">
+                    <div class="swiper-wrapper data-map">
+
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -485,6 +497,11 @@
             <div class="offcanvas-body p-0">
                 <div id="allAddressesMapPharmacies" class="show active fade" style="height: 100%!important;">
 
+                </div>
+                <div class="swiper mySwiperMapPharmacies">
+                    <div class="swiper-wrapper data-map-pharmacies">
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -592,6 +609,7 @@
     </div>
     <script>
         $(document).ready(function () {
+            localStorage.setItem('check-kham','active')
             var clinics = {!! json_encode($clinics) !!};
             var pharmacies = {!! json_encode($pharmacies) !!};
 
@@ -657,6 +675,31 @@
                         pharmacyElement.hide();
                     }
                 });
+            });
+
+            var swiper = new Swiper(".mySwiperMap", {
+                slidesPerView: 1.5,
+                spaceBetween: 5,
+                breakpoints: {
+                    768: {
+                        slidesPerView: 1.7,
+                    },
+                    300: {
+                        slidesPerView: 1,
+                    },
+                },
+            });
+            var swiperPharmacies = new Swiper(".mySwiperMapPharmacies", {
+                slidesPerView: 1.5,
+                spaceBetween: 5,
+                breakpoints: {
+                    768: {
+                        slidesPerView: 1.7,
+                    },
+                    300: {
+                        slidesPerView: 1,
+                    },
+                },
             });
 
             var locations = {!! json_encode($clinics) !!};
@@ -728,7 +771,9 @@
                 var map = new google.maps.Map(document.getElementById('allAddressesMap'), {
                     center: currentLocation,
                     zoom: 12.3,
-                    gestureHandling: 'greedy'
+                    gestureHandling: 'greedy',
+                    streetViewControl: false,
+                    zoomControl: false
                 });
 
                 directionsService = new google.maps.DirectionsService();
@@ -740,7 +785,8 @@
                     map: map,
                     title: 'Your Location'
                 });
-
+                let list_map = '';
+                let count_address =0;
                 locations.forEach(function (location) {
                     var distance = calculateDistance(
                         currentLocation.lat, currentLocation.lng,
@@ -762,43 +808,37 @@
                         let arrayGallery = gallery.split(',');
 
 
-                        var infoWindowContent = `<div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
-                <div>
-
-                    <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img">
+                        list_map += `<div class="swiper-slide swiper-slide-height slide_${count_address} bg-white" data-index="${count_address}" ><div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
+                <div class="box-img-item-map">
+                    <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img" style="height: 100%;object-fit: cover;">
                 </div>
-                <div class="p-md-3 p-2">
-                    <div class="form-group">
+                <div class="p-2 box-info-item-map">
+                    <div class="form-group mb-1">
                         <div class="d-flex justify-content-between mt-md-2">
                             <div class="fs-18px name-address-map">${location.name}</div>
-                            <div class="button-follow fs-12p ">
-                                <a class="text-follow-12" href="">{{ __('home.FOLLOW') }}</a>
-                            </div>
+
                         </div>
                         <div class="d-flex mt-md-2">
+
                             <div class="d-flex col-md-6 justify-content-center align-items-center">
-                                <a class="row p-2" href="">
-                                    <div class="justify-content-center d-flex">
-                                        <i class="border-button-address fa-solid fa-bullseye"></i>
-                                    </div>
-                                    <div class="d-flex justify-content-center">{{ __('home.Start') }}</div>
-                                </a>
-                            </div>
-                            <div class="d-flex col-md-6 justify-content-center align-items-center">
-                                <button class="row p-2" id="showMapBtnTab" style="background-color: transparent; border:none">
+                                <button class="row" id="showMapBtnTab_${count_address}" style="background-color: transparent; border:none">
                                     <div class="justify-content-center d-flex">
                                         <i class="border-button-address fa-regular fa-circle-right"></i>
                                     </div>
-                                    <div class="d-flex justify-content-center">{{ __('home.Direction') }}</div>
+                                    <div class="d-flex justify-content-center text-map-item-address">{{ __('home.Direction') }}</div>
                                 </button>
                             </div>
+                            <div class="d-flex col-md-6 justify-content-center align-items-center">
+                                                <a class="row" href="${urlDetail}">
+                                                    <div class="justify-content-center d-flex">
+                                                        <i class="border-button-address fa-solid fa-bullseye"></i>
+                                                    </div>
+                                                    <div class="d-flex justify-content-center text-map-item-address">{{ __('home.Booking') }}</div>
+                                                </a>
+                                            </div>
                         </div>
                     </div>
-                    <div class="mt-md-3 mb-md-3">
-                    <a class="w-100 btn btn-secondary border-button-address font-weight-800 fs-14 justify-content-center" href="${urlDetail}" >
-                    {{ __('home.Booking') }}
-                        </a>
-                        </div>
+
                         <div class="border-top">
                             <div class="mt-md-2 mt-1"><i class="text-gray mr-md-2 fa-solid fa-location-dot"></i>
                                 <span class="fs-14 font-weight-600">${location.address_detail}</span>
@@ -809,38 +849,48 @@
                                 Open: ${formatTime(location.open_date)} - ${formatTime(location.close_date)}
                             </span>
                         </div>
-                        <div class="mt-md-2 mt-1">
-                            <i class="text-gray mr-md-2 fa-solid fa-globe"></i>
-                            <span class="fs-14 font-weight-600"> ${location.email}</span>
-                        </div>
+
                         <div class="mt-md-2 mt-1">
                             <i class="text-gray mr-md-2 fa-solid fa-phone-volume"></i> <span
                                 class="fs-14 font-weight-600"> ${location.phone}</span>
                         </div>
-                        <div class="mt-md-2 mt-1 mb-md-2">
-                            <i class="text-gray mr-md-2 fa-solid fa-bookmark"></i> <span
-                                class="fs-14 font-weight-600"> ${location.type}</span>
-                        </div>
+
             </div>
         </div>
-    </div>`;
+    </div></div></div>`;
 
-                        var infoWindow = new google.maps.InfoWindow({
-                            content: infoWindowContent
-                        });
-
-                        marker.addListener('click', function () {
-                            closeAllInfoWindows();
-                            infoWindow.open(map, marker);
-                            $(document).on('click', '#showMapBtnTab', function() {
-                                getDirections(currentLocation, {lat: parseFloat(location.latitude), lng: parseFloat(location.longitude)});
-                                closeAllInfoWindows();
-                            });
-                        });
+                        // var infoWindow = new google.maps.InfoWindow({
+                        //     content: infoWindowContent
+                        // });
+                        //
+                        // marker.addListener('click', function () {
+                        //     closeAllInfoWindows();
+                        //     infoWindow.open(map, marker);
+                        //     $(document).on('click', '#showMapBtnTab', function() {
+                        //         getDirections(currentLocation, {lat: parseFloat(location.latitude), lng: parseFloat(location.longitude)});
+                        //         closeAllInfoWindows();
+                        //     });
+                        // });
 
                         markers.push(marker);
-                        infoWindows.push(infoWindow);
+                        // infoWindows.push(infoWindow);
                         location.markerIndex = markers.length - 1;
+
+                        let classBox = '.slide_'+count_address;
+                        marker.addListener('click', function () {
+                            var index2= $(classBox).attr('data-index');
+                            swiper.slideTo(index2);
+                        });
+                        $(document).on('click', '#showMapBtnTab_'+count_address, function() {
+                            if (location && !isNaN(location.latitude) && !isNaN(location.longitude)) {
+                                getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                                var index= $(classBox).attr('data-index');
+                                swiper.slideTo(index);
+                            } else {
+                                console.error('Invalid location data:', location);
+                            }
+                        });
+                        count_address ++;
 
                         $('body').on('click', '.specialList-clinics[data-clinic-id="' + location.id + '"] #showMapBtn', function() {
                             getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
@@ -848,7 +898,7 @@
                         });
                     }
                 });
-
+                $('.data-map').html(list_map);
                 document.querySelectorAll('.specialList-clinics-address').forEach(function (item, index) {
                     item.addEventListener('click', function () {
                         var markerIndex = parseInt(item.getAttribute('data-marker-index'));
@@ -863,7 +913,9 @@
                 var map2 = new google.maps.Map(document.getElementById('allAddressesMapPharmacies'), {
                     center: currentLocation,
                     zoom: 12.3,
-                    gestureHandling: 'greedy'
+                    gestureHandling: 'greedy',
+                    streetViewControl: false,
+                    zoomControl: false
                 });
                 directionsService2 = new google.maps.DirectionsService();
                 directionsRenderer2 = new google.maps.DirectionsRenderer();
@@ -874,7 +926,8 @@
                     map: map2,
                     title: 'Your Location'
                 });
-
+                let list_map_pharmacies = '';
+                let count_address_pharmacies =0;
                 locationsPharmacies.forEach(function (locationsPharmacies) {
                     var distance = calculateDistance(
                         currentLocation.lat, currentLocation.lng,
@@ -898,43 +951,35 @@
                         let gallery = locationsPharmacies.gallery;
                         let arrayGallery = gallery.split(',');
 
-                        var infoWindowContent = `<div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
-                <div>
-
-                    <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img">
+                        list_map_pharmacies += `<div class="swiper-slide swiper-slide-height slide_pharmacies_${count_address_pharmacies} bg-white" data-index="${count_address_pharmacies}" ><div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
+                <div class="box-img-item-map">
+                    <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img" style="height: 100%;object-fit: cover;">
                 </div>
-                <div class="p-md-3 p-2">
-                    <div class="form-group">
+                <div class="p-2 box-info-item-map">
+                    <div class="form-group mb-1">
                         <div class="d-flex justify-content-between mt-md-2">
                             <div class="fs-18px name-address-map">${locationsPharmacies.name}</div>
-                            <div class="button-follow fs-12p ">
-                                <a class="text-follow-12" href="">{{ __('home.FOLLOW') }}</a>
-                            </div>
                         </div>
                         <div class="d-flex mt-md-2">
                             <div class="d-flex col-md-6 justify-content-center align-items-center">
-                                <a class="row p-2" href="">
-                                    <div class="justify-content-center d-flex">
-                                        <i class="border-button-address fa-solid fa-bullseye"></i>
-                                    </div>
-                                    <div class="d-flex justify-content-center">{{ __('home.Start') }}</div>
-                                </a>
-                            </div>
-                            <div class="d-flex col-md-6 justify-content-center align-items-center">
-                                <button class="row p-2" id="showMapBtnPharmacyTab" style="background-color: transparent; border:none">
+                                <button class="row" id="showMapBtnPharmacyTab_${count_address_pharmacies}" style="background-color: transparent; border:none">
                                     <div class="justify-content-center d-flex">
                                         <i class="border-button-address fa-regular fa-circle-right"></i>
                                     </div>
-                                    <div class="d-flex justify-content-center">{{ __('home.Direction') }}</div>
+                                    <div class="d-flex justify-content-center text-map-item-address">{{ __('home.Direction') }}</div>
                                 </button>
                             </div>
+                             <div class="d-flex col-md-6 justify-content-center align-items-center">
+                                                <a class="row" href="${urlDetail}">
+                                                    <div class="justify-content-center d-flex">
+                                                        <i class="border-button-address fa-solid fa-bullseye"></i>
+                                                    </div>
+                                                    <div class="d-flex justify-content-center text-map-item-address">{{ __('home.Booking') }}</div>
+                                                </a>
+                                            </div>
                         </div>
                     </div>
-                    <div class="mt-md-3 mb-md-3">
-                    <a class="w-100 btn btn-secondary border-button-address font-weight-800 fs-14 justify-content-center" href="${urlDetail}" >
-                    {{ __('home.Booking') }}
-                        </a>
-                        </div>
+
                         <div class="border-top">
                             <div class="mt-md-2 mt-1"><i class="text-gray mr-md-2 fa-solid fa-location-dot"></i>
                                 <span class="fs-14 font-weight-600">${locationsPharmacies.address_detail}</span>
@@ -945,36 +990,46 @@
                                 Open: ${formatTime(locationsPharmacies.open_date)} - ${formatTime(locationsPharmacies.close_date)}
                             </span>
                         </div>
-                        <div class="mt-md-2 mt-1">
-                            <i class="text-gray mr-md-2 fa-solid fa-globe"></i>
-                            <span class="fs-14 font-weight-600"> ${locationsPharmacies.email}</span>
-                        </div>
+
                         <div class="mt-md-2 mt-1">
                             <i class="text-gray mr-md-2 fa-solid fa-phone-volume"></i> <span
                                 class="fs-14 font-weight-600"> ${locationsPharmacies.phone}</span>
                         </div>
-                        <div class="mt-md-2 mt-1 mb-md-2">
-                            <i class="text-gray mr-md-2 fa-solid fa-bookmark"></i> <span
-                                class="fs-14 font-weight-600"> ${locationsPharmacies.type}</span>
-                        </div>
+
         </div>
-    </div>`;
+    </div></div></div>`;
 
-                        var infoWindow2 = new google.maps.InfoWindow({
-                            content: infoWindowContent
-                        });
-
-                        markerPharmacies.addListener('click', function () {
-                            closeAllInfoWindowsPharmacy();
-                            infoWindow2.open(map2, markerPharmacies);
-                            $(document).on('click', '#showMapBtnPharmacyTab', function() {
-                                getDirectionsPharmacies(currentLocation, { lat: parseFloat(locationsPharmacies.latitude), lng: parseFloat(locationsPharmacies.longitude) });
-                                closeAllInfoWindowsPharmacy();
-                            });
-                        });
+                        // var infoWindow2 = new google.maps.InfoWindow({
+                        //     content: infoWindowContent
+                        // });
+                        //
+                        // markerPharmacies.addListener('click', function () {
+                        //     closeAllInfoWindowsPharmacy();
+                        //     infoWindow2.open(map2, markerPharmacies);
+                        //     $(document).on('click', '#showMapBtnPharmacyTab', function() {
+                        //         getDirectionsPharmacies(currentLocation, { lat: parseFloat(locationsPharmacies.latitude), lng: parseFloat(locationsPharmacies.longitude) });
+                        //         closeAllInfoWindowsPharmacy();
+                        //     });
+                        // });
                         markersPharmacy.push(markerPharmacies);
-                        infoWindowsPharmacy.push(infoWindow2);
+                        // infoWindowsPharmacy.push(infoWindow2);
                         locationsPharmacies.markerIndex = markersPharmacy.length - 1;
+
+                        let classBox2 = '.slide_pharmacies_'+count_address_pharmacies;
+                        markerPharmacies.addListener('click', function () {
+                            var index4= $(classBox2).attr('data-index');
+                            swiperPharmacies.slideTo(index4);
+                        });
+                        $(document).on('click', '#showMapBtnPharmacyTab_'+count_address_pharmacies, function() {
+                            if (locationsPharmacies && !isNaN(locationsPharmacies.latitude) && !isNaN(locationsPharmacies.longitude)) {
+                                getDirectionsPharmacies(currentLocation, { lat: parseFloat(locationsPharmacies.latitude), lng: parseFloat(locationsPharmacies.longitude) });
+                                var index3= $(classBox2).attr('data-index');
+                                swiperPharmacies.slideTo(index3);
+                            } else {
+                                console.error('Invalid location data:', locationsPharmacies);
+                            }
+                        });
+                        count_address_pharmacies ++;
 
                         $('body').on('click', '.specialList-pharmacy-address[data-pharmacy-id="' + locationsPharmacies.id + '"] #showMapBtnPharmacy', function() {
                             getDirectionsPharmacies(currentLocation, { lat: parseFloat(locationsPharmacies.latitude), lng: parseFloat(locationsPharmacies.longitude) });
@@ -982,7 +1037,7 @@
                         });
                     }
                 });
-
+                $('.data-map-pharmacies').html(list_map_pharmacies);
                 document.querySelectorAll('.specialList-pharmacy-address').forEach(function (item, index) {
                     item.addEventListener('click', function () {
                         var markerIndex = parseInt(item.getAttribute('data-marker-index'));

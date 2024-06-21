@@ -129,7 +129,6 @@
             top: 45%;
         }
 
-
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css">
@@ -1680,9 +1679,14 @@
                         <p>{{ __('home.Find your suitable clinics/pharmacies and book now') }}!</p>
                     </div>
                     <div>
-                        <div class="d-flex clip-path-container">
-                            <div id="allAddressesMap" class="p-2 w-100">
+                        <div class=" clip-path-container">
+                            <div id="allAddressesMap" class="p-2 w-100 h-100">
 
+                            </div>
+                            <div class="swiper mySwiperMap">
+                                <div class="swiper-wrapper data-map">
+
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -2637,6 +2641,22 @@
         }
     </script>
     <script>
+        var swiper = new Swiper(".mySwiperMap", {
+            slidesPerView: 4,
+            spaceBetween: 5,
+            breakpoints: {
+                993: {
+                    slidesPerView: 3,
+                },
+                768: {
+                    slidesPerView: 2,
+                },
+                300: {
+                    slidesPerView: 1,
+                },
+            },
+        });
+
         var locations = {!! json_encode($coordinatesArray) !!};
         var infoWindows = [];
         var directionsService;
@@ -2685,7 +2705,7 @@
         function initMap(currentLocation, locations) {
             var map = new google.maps.Map(document.getElementById('allAddressesMap'), {
                 center: currentLocation,
-                zoom: 10,
+                zoom: 12.3,
                 gestureHandling: 'greedy',
                 streetViewControl: false,
                 zoomControl: false
@@ -2700,7 +2720,8 @@
                 map: map,
                 title: 'Your Location'
             });
-
+            let list_map = '';
+            let count_address =0;
             locations.forEach(function (location) {
                 var distance = calculateDistance(
                     currentLocation.lat, currentLocation.lng,
@@ -2722,7 +2743,7 @@
                     let arrayGallery = gallery.split(',');
 
 
-                    var infoWindowContent = `<div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
+                    list_map += `<div class="swiper-slide swiper-slide-height slide_${count_address}" data-index="${count_address}" ><div class=" p-0 m-0 tab-pane fade show active background-modal b-radius bg-white" id="modalBooking">
                 <div class="box-img-item-map">
 
                     <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img" style="height: 100%;object-fit: cover;">
@@ -2731,25 +2752,16 @@
                     <div class="form-group mb-1">
                         <div class="d-flex justify-content-between mt-md-2">
                             <div class="fs-18px name-address-map">${location.name}</div>
-                            {{--<div class="button-follow fs-12p ">--}}
-                            {{--    <a class="text-follow-12" href="">{{ __('home.FOLLOW') }}</a>--}}
-                            {{--</div>--}}
+
                         </div>
                         <div class="d-flex mt-md-2">
-                            {{--<div class="d-flex col-md-6 justify-content-center align-items-center">--}}
-                            {{--    <a class="row p-2" href="">--}}
-                            {{--        <div class="justify-content-center d-flex">--}}
-                            {{--            <i class="border-button-address fa-solid fa-bullseye"></i>--}}
-                            {{--        </div>--}}
-                            {{--        <div class="d-flex justify-content-center">{{ __('home.Start') }}</div>--}}
-                            {{--    </a>--}}
-                            {{--</div>--}}
+
                             <div class="d-flex col-md-6 justify-content-center align-items-center">
-                                <button class="row" id="showMapBtnTab" style="background-color: transparent; border:none">
+                                <button class="row" id="showMapBtnTab_${count_address}" style="background-color: transparent; border:none">
                                     <div class="justify-content-center d-flex">
                                         <i class="border-button-address fa-regular fa-circle-right"></i>
                                     </div>
-                                    <div class="d-flex justify-content-center">{{ __('home.Direction') }}</div>
+                                    <div class="d-flex justify-content-center text-map-item-address">{{ __('home.Direction') }}</div>
                                 </button>
                             </div>
                                 <div class="d-flex col-md-6 justify-content-center align-items-center">
@@ -2757,16 +2769,12 @@
                                 <div class="justify-content-center d-flex">
                                     <i class="border-button-address fa-solid fa-bullseye"></i>
                                 </div>
-                                <div class="d-flex justify-content-center">{{ __('home.Booking') }}</div>
+                                <div class="d-flex justify-content-center text-map-item-address">{{ __('home.Booking') }}</div>
                             </a>
                         </div>
                         </div>
                     </div>
-                    {{--<div class="mt-md-3 mb-md-3">--}}
-                    {{--<a class="w-100 btn btn-secondary border-button-address font-weight-800 fs-14 justify-content-center" href="${urlDetail}" >--}}
-                    {{--{{ __('home.Booking') }}--}}
-                    {{--</a>--}}
-                    {{--</div>--}}
+
                     <div class="border-top">
                         <div class="mt-md-2 mt-1"><i class="text-gray mr-md-2 fa-solid fa-location-dot"></i>
                             <span class="fs-14 font-weight-600">${location.address_detail}</span>
@@ -2782,28 +2790,43 @@
                                 class="fs-14 font-weight-600"> ${location.phone}</span>
                         </div>
     </div>
-</div>`;
+</div></div></div>`;
+                    // var infoWindow = new google.maps.InfoWindow({
+                    //     content: infoWindowContent
+                    // });
 
-                    var infoWindow = new google.maps.InfoWindow({
-                        content: infoWindowContent
-                    });
+                    // marker.addListener('click', function () {
+                    //     closeAllInfoWindows();
+                    //     infoWindow.open(map, marker);
+                    //     $(document).on('click', '#showMapBtnTab', function() {
+                    //         if (location && !isNaN(location.latitude) && !isNaN(location.longitude)) {
+                    //             getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                    //             closeAllInfoWindows();
+                    //         } else {
+                    //             console.error('Invalid location data:', location);
+                    //         }
+                    //     });
+                    // });
 
+                    // infoWindows.push(infoWindow);
+                    let classBox = '.slide_'+count_address;
                     marker.addListener('click', function () {
-                        closeAllInfoWindows();
-                        infoWindow.open(map, marker);
-                        $(document).on('click', '#showMapBtnTab', function() {
-                            if (location && !isNaN(location.latitude) && !isNaN(location.longitude)) {
-                                getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
-                                closeAllInfoWindows();
-                            } else {
-                                console.error('Invalid location data:', location);
-                            }
-                        });
+                        var index2= $(classBox).attr('data-index');
+                        swiper.slideTo(index2);
                     });
-
-                    infoWindows.push(infoWindow);
+                    $(document).on('click', '#showMapBtnTab_'+count_address, function() {
+                                if (location && !isNaN(location.latitude) && !isNaN(location.longitude)) {
+                                    getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                                    var index= $(classBox).attr('data-index');
+                                    swiper.slideTo(index);
+                                } else {
+                                    console.error('Invalid location data:', location);
+                                }
+                            });
+                    count_address ++;
                 }
             });
+            $('.data-map').html(list_map)
         }
 
         function closeAllInfoWindows() {

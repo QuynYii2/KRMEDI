@@ -222,6 +222,10 @@
             }
         });
     </script>
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
     @yield('pages-style')
     <link rel="stylesheet" href="{{ asset('css/style-mobile.css') }}">
 </head>
@@ -311,7 +315,7 @@
     }
 </style>
 
-<div class="d-none">
+<div class="d-none ">
     @if (Auth::check())
         <div class="">
             <input id="input-check" type="number" value="2">
@@ -363,6 +367,7 @@
 @include('components.head.tinymce-config')
 <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.11.2/dist/echo.iife.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
     $(document).ready(function() {
         $('.btn_close_m').click(function() {
@@ -534,13 +539,11 @@
                 $('#modal-call-alert').modal('hide');
                 audio.pause();
                 audio.currentTime = 0;
-                audio = null;
             });
         });
         $('.btn_close_m').click(function() {
             audio.pause();
             audio.currentTime = 0;
-            audio = null;
         });
         $(document).ready(function(){
             $('#modal-call-alert').modal({

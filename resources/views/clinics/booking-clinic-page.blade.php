@@ -218,12 +218,12 @@
                                 - {{ \Carbon\Carbon::parse($clinicDetail->close_date)->format('H:i') }}
                             </div>
                             <div class="group-button d-flex mt-3">
-                                <a href="" class="mr-2">
-                                    <div class="button-follow-specialList button-follow-specialList-zalo">
-                                        <div style="margin-left: 8px; margin-top: 18px" class="zalo-follow-only-button"
-                                            data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
-                                    </div>
-                                </a>
+{{--                                <a href="" class="mr-2">--}}
+{{--                                    <div class="button-follow-specialList button-follow-specialList-zalo">--}}
+{{--                                        <div style="margin-left: 8px; margin-top: 18px" class="zalo-follow-only-button"--}}
+{{--                                            data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>--}}
+{{--                                    </div>--}}
+{{--                                </a>--}}
                                 <a href="{{ route('clinic.detail', $clinicDetail->id) }}" class="">
                                     <div class="button-direct-specialList">
                                         {{ __('home.Chỉ đường') }}
@@ -373,7 +373,10 @@
 
     <script>
         $(document).ready(function() {
-            $('#model-check-kham').modal('show');
+            let showsModel = localStorage.getItem('check-kham');
+            if (showsModel == 'active'){
+                $('#model-check-kham').modal('show');
+            }
 
             $('.btn-yes-history').click(function () {
                 let medical_history = $(this).attr('data-value');
@@ -388,6 +391,7 @@
                     data: {'medical_history':medical_history},
                     success: function (data) {
                         $('#model-check-kham').modal('hide');
+                        localStorage.setItem('check-kham','none')
                     },
                     error: function (data) {
                         console.log(data)

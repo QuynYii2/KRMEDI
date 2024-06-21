@@ -271,6 +271,11 @@
         transform: translate(-50%, -50%);
         font-weight: bold;
     }
+    .zalo-chat{
+        right: 29px!important;
+        bottom: 100px!important;
+        z-index: 1!important;
+    }
 </style>
 @php
     //lấy ra toàn bộ role của user hiện tại
@@ -1019,7 +1024,7 @@
         </div>
     </footer>
     <!-- End Footer -->
-
+    <div class="zalo-chat-widget zalo-chat" data-oaid="3111836148004341171" data-welcome-message="Rất vui khi được hỗ trợ bạn!" data-autopopup="0" data-width="300" data-height="300"></div>
     <!-- ======= Calling modal ======= -->
     <div class="modal fade" id="modal-call-alert" data-backdrop="static" data-keyboard="false" tabindex="-1"
         aria-labelledby="modal-call-alert-label" aria-hidden="true">
@@ -1059,7 +1064,7 @@
     <script src="{{ asset('admin/vendor/php-email-form/validate.js') }}"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
-
+    <script src="https://sp.zalo.me/plugins/sdk.js"></script>
     <!-- Template Main JS File -->
     <script src="{{ asset('admin/js/main.js') }}"></script>
     <script>

@@ -139,6 +139,11 @@
         .gm-style .gm-style-iw-c {
             max-width: 400px !important;
         }
+        @media (max-width: 767px) {
+            .mySwiperMap {
+                margin-top: calc(-100% + 205px);
+            }
+        }
     </style>
     <div class="header_clinic_desktop">
         @include('layouts.partials.header')
@@ -170,11 +175,29 @@
                 <div id="allAddressesMap" class="show active fade map_clinic_mobile" style="height: 100%!important;">
 
                 </div>
+                <div class="swiper mySwiperMap">
+                    <div class="swiper-wrapper data-map">
+
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
+        localStorage.setItem('check-kham','active');
+        var swiper = new Swiper(".mySwiperMap", {
+            slidesPerView: 1.5,
+            spaceBetween: 5,
+            breakpoints: {
+                768: {
+                    slidesPerView: 1.5,
+                },
+                300: {
+                    slidesPerView: 1,
+                },
+            },
+        });
         var markers = [];
         var infoWindows = [];
         var directionsService;
@@ -227,7 +250,9 @@
                     var map = new google.maps.Map(document.getElementById('allAddressesMap'), {
                         center: currentLocation,
                         zoom: 12.3,
-                        gestureHandling: 'greedy'
+                        gestureHandling: 'greedy',
+                        streetViewControl: false,
+                        zoomControl: false
                     });
 
                     directionsService = new google.maps.DirectionsService();
@@ -239,7 +264,8 @@
                         map: map,
                         title: 'Your Location'
                     });
-
+                    let list_map = '';
+                    let count_address =0;
                     locations.forEach(function (location) {
                         var distance = calculateDistance(
                             currentLocation.lat, currentLocation.lng,
@@ -259,42 +285,34 @@
                             let gallery = location.gallery;
                             let arrayGallery = gallery.split(',');
 
-                            var infoWindowContent = `<div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
-                                <div>
-                                    <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img">
+                            list_map += `<div class="swiper-slide swiper-slide-height slide_${count_address} bg-white" data-index="${count_address}" ><div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
+                                <div class="box-img-item-map">
+                                    <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img" style="height: 100%;object-fit: cover;">
                                 </div>
-                                <div class="p-md-3 p-2">
-                                    <div class="form-group">
+                                <div class="p-2 box-info-item-map">
+                                    <div class="form-group mb-1">
                                         <div class="d-flex justify-content-between mt-md-2">
                                             <div class="fs-18px name-address-map">${location.name}</div>
-                                            <div class="button-follow fs-12p ">
-                                                <a class="text-follow-12" href="">{{ __('home.FOLLOW') }}</a>
-                                            </div>
                                         </div>
                                         <div class="d-flex mt-md-2">
                                             <div class="d-flex col-md-6 justify-content-center align-items-center">
-                                                <a class="row p-2" href="">
-                                                    <div class="justify-content-center d-flex">
-                                                        <i class="border-button-address fa-solid fa-bullseye"></i>
-                                                    </div>
-                                                    <div class="d-flex justify-content-center">{{ __('home.Start') }}</div>
-                                                </a>
-                                            </div>
-                                            <div class="d-flex col-md-6 justify-content-center align-items-center">
-                                                <button class="row p-2" id="showMapBtnTab" style="background-color: transparent; border:none">
+                                                <button class="row p-2" id="showMapBtnTab_${count_address}" style="background-color: transparent; border:none">
                                                     <div class="justify-content-center d-flex">
                                                         <i class="border-button-address fa-regular fa-circle-right"></i>
                                                     </div>
-                                                    <div class="d-flex justify-content-center">{{ __('home.Direction') }}</div>
+                                                    <div class="d-flex justify-content-center text-map-item-address">{{ __('home.Direction') }}</div>
                                                 </button>
+                                            </div>
+                                            <div class="d-flex col-md-6 justify-content-center align-items-center">
+                                                <a class="row" href="${urlDetail}">
+                                                    <div class="justify-content-center d-flex">
+                                                        <i class="border-button-address fa-solid fa-bullseye"></i>
+                                                    </div>
+                                                    <div class="d-flex justify-content-center text-map-item-address">{{ __('home.Booking') }}</div>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="mt-md-3 mb-md-3">
-                                        <a class="w-100 btn btn-secondary border-button-address font-weight-800 fs-14 justify-content-center" href="${urlDetail}">
-                                            {{ __('home.Booking') }}
-                            </a>
-                        </div>
                         <div class="border-top">
                             <div class="mt-md-2 mt-1"><i class="text-gray mr-md-2 fa-solid fa-location-dot"></i>
                                 <span class="fs-14 font-weight-600">${location.address_detail}</span>
@@ -305,57 +323,67 @@
                                                 Open: ${formatTime(location.open_date)} - ${formatTime(location.close_date)}
                                             </span>
                                         </div>
-                                        <div class="mt-md-2 mt-1">
-                                            <i class="text-gray mr-md-2 fa-solid fa-globe"></i>
-                                            <span class="fs-14 font-weight-600">${location.email}</span>
-                                        </div>
+
                                         <div class="mt-md-2 mt-1">
                                             <i class="text-gray mr-md-2 fa-solid fa-phone-volume"></i>
                                             <span class="fs-14 font-weight-600">${location.phone}</span>
                                         </div>
-                                        <div class="mt-md-2 mt-1 mb-md-2">
-                                            <i class="text-gray mr-md-2 fa-solid fa-bookmark"></i>
-                                            <span class="fs-14 font-weight-600">${location.type}</span>
-                                        </div>
+
                                     </div>
                                 </div>
-                            </div>`;
+                            </div></div></div>`;
 
                             // $(document).on('click', '#showMapBtnTab', function() {
                             //     getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
                             // });
 
-                            var infoWindow = new google.maps.InfoWindow({
-                                content: infoWindowContent
-                            });
-
-                            marker.addListener('click', function () {
-                                closeAllInfoWindows();
-                                infoWindow.open(map, marker);
-                                $(document).on('click', '#showMapBtnTab', function() {
-                                    getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
-                                    location = [];
-                                    closeAllInfoWindows();
-                                });
-                            });
+                            // var infoWindow = new google.maps.InfoWindow({
+                            //     content: infoWindowContent
+                            // });
+                            //
+                            // marker.addListener('click', function () {
+                            //     closeAllInfoWindows();
+                            //     infoWindow.open(map, marker);
+                            //     $(document).on('click', '#showMapBtnTab', function() {
+                            //         getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                            //         location = [];
+                            //         closeAllInfoWindows();
+                            //     });
+                            // });
                             markers.push(marker);
-                            infoWindows.push(infoWindow);
+                            // infoWindows.push(infoWindow);
                             location.markerIndex = markers.length - 1;
 
                             // Define clinicElement after DOM is ready
-                            $(document).ready(function() {
-                                var clinicElement = $('.border-specialList[data-marker-index="' + location.markerIndex + '"]');
-                                // Add click event for directions
-                                clinicElement.on('click', function() {
-                                    window.location.href = urlDetail;
-                                });
-                                // clinicElement.find('#showMapBtn').on('click', function() {
-                                //     getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
-                                // });
-                                closeAllInfoWindows();
+                            // $(document).ready(function() {
+                            //     var clinicElement = $('.border-specialList[data-marker-index="' + location.markerIndex + '"]');
+                            //     // Add click event for directions
+                            //     clinicElement.on('click', function() {
+                            //         window.location.href = urlDetail;
+                            //     });
+                            //     // clinicElement.find('#showMapBtn').on('click', function() {
+                            //     //     getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                            //     // });
+                            //     closeAllInfoWindows();
+                            // });
+                            let classBox = '.slide_'+count_address;
+                            marker.addListener('click', function () {
+                                var index2= $(classBox).attr('data-index');
+                                swiper.slideTo(index2);
                             });
+                            $(document).on('click', '#showMapBtnTab_'+count_address, function() {
+                                if (location && !isNaN(location.latitude) && !isNaN(location.longitude)) {
+                                    getDirections(currentLocation, { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) });
+                                    var index= $(classBox).attr('data-index');
+                                    swiper.slideTo(index);
+                                } else {
+                                    console.error('Invalid location data:', location);
+                                }
+                            });
+                            count_address ++;
                         }
                     });
+                    $('.data-map').html(list_map);
 
                     document.querySelectorAll('.border-specialList').forEach(function (item) {
                         console.log(12)

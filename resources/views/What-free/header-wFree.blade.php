@@ -70,7 +70,7 @@
     <a href="{{route('home')}}"> <svg viewBox="0 0 24 24" style="width: 24px" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.29231 12.7138L15.2863 21.7048C15.6809 22.0984 16.3203 22.0984 16.7159 21.7048C17.1106 21.3111 17.1106 20.6717 16.7159 20.2781L8.43539 12.0005L16.7149 3.72293C17.1096 3.32928 17.1096 2.68989 16.7149 2.29524C16.3203 1.90159 15.6799 1.90159 15.2853 2.29524L6.29131 11.2861C5.90273 11.6757 5.90273 12.3251 6.29231 12.7138Z" fill="currentColor"></path></svg>
     </a>
    <span style="font-weight: 700">Danh sách y tế gần bạn</span>
-    <div data-bs-toggle="offcanvas" data-bs-target="#offcanvasRightMap" aria-controls="offcanvasRightMap">
+    <div data-bs-toggle="offcanvas" data-bs-target="#offcanvasRightMap" aria-controls="offcanvasRightMap"> <span style="font-weight: bold;font-size: 12px">Bản đồ</span>
         <svg  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" style="width: 21px" color="currentColor"><path fill="currentColor" d="M17.899 11.414a4.107 4.107 0 00-4.102 4.102c0 .863.266 1.69.776 2.398l2.857 3.851a.586.586 0 00.938 0l2.972-4.02c.432-.664.66-1.435.66-2.23a4.107 4.107 0 00-4.101-4.101zm0 5.86a1.76 1.76 0 01-1.758-1.758c0-.97.788-1.758 1.758-1.758.969 0 1.757.788 1.757 1.758a1.76 1.76 0 01-1.757 1.757zM2.888 2.083A.587.587 0 002 2.586v11.758c0 .206.108.396.284.502L7.9 18.191V5.067L2.888 2.083zM20.544 5.599l-5.575-3.345v8.88a5.242 5.242 0 012.93-.892c1.083 0 2.09.33 2.93.893V6.1a.586.586 0 00-.285-.502zM13.797 2.254L9.07 5.066v13.125l3.597-2.135c-.018-.18-.042-.358-.042-.54 0-1.243.45-2.372 1.172-3.274V2.254z"></path></svg>
     </div>
 </div>

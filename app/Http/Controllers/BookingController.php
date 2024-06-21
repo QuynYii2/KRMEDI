@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BookingStatus;
+use App\Enums\CartStatus;
 use App\Enums\Constants;
 use App\Enums\ServiceClinicStatus;
 use App\Enums\SurveyType;
@@ -10,9 +11,11 @@ use App\Enums\TypeProductCart;
 use App\Http\Controllers\restapi\MainApi;
 use App\Models\Booking;
 use App\Models\BookingResult;
+use App\Models\Cart;
 use App\Models\Clinic;
 use App\Models\Department;
 use App\Models\Notification;
+use App\Models\PrescriptionResults;
 use App\Models\Role;
 use App\Models\RoleUser;
 use App\Models\ServiceClinic;
@@ -159,9 +162,15 @@ class BookingController extends Controller
             }
         }
         $list_doctor = User::where('department_id',$bookings_edit->department_id)->get();
+        $data_prescription = PrescriptionResults::where('booking_id',$id)->first();
+        if (isset($data_prescription)){
+            $prescription_product = json_decode($data_prescription->prescriptions, true);
+        }else{
+            $prescription_product = [];
+        }
 
         if ($owner == Auth::id() || $isAdmin || $isDoctor) {
-            return view('admin.booking.tab-edit-booking', compact('bookings_edit', 'isAdmin', 'services', 'reasons', 'repeaterItems', 'user_zalo_id', 'doctor_id', 'doctor_name','list_doctor','isDoctor'));
+            return view('admin.booking.tab-edit-booking', compact('bookings_edit', 'isAdmin', 'services', 'reasons', 'repeaterItems', 'user_zalo_id', 'doctor_id', 'doctor_name','list_doctor','isDoctor','prescription_product'));
         } else {
             session()->flash('error', 'You do not have permission.');
             return \redirect()->back();
@@ -367,6 +376,20 @@ class BookingController extends Controller
             }
 
             $success = $booking->save();
+
+            $medicines = $request->get('medicines');
+            if (isset($medicines) && count($medicines)>0){
+                $dataUser = User::find($booking->user_id);
+                $prescription_result = new PrescriptionResults();
+                $prescription_result->full_name = $dataUser->username;
+                $prescription_result->email = $dataUser->email??'';
+                $prescription_result->user_id = $dataUser->id;
+                $prescription_result->created_by = Auth::id();
+                $prescription_result->prescriptions = json_encode($medicines);
+                $prescription_result->booking_id = $booking->id;
+                $prescription_result->save();
+            }
+
             if ($success) {
                 if ($isSendOaToUser) {
                     //Queue on change booking status notifications
@@ -601,6 +624,18 @@ class BookingController extends Controller
             }
 
             $success = $booking->save();
+
+            $medicines = $request->get('medicines');
+            $dataUser = User::find($booking->user_id);
+            $prescription_result = new PrescriptionResults();
+            $prescription_result->full_name = $dataUser->username;
+            $prescription_result->email = $dataUser->email??'';
+            $prescription_result->user_id = $dataUser->id;
+            $prescription_result->created_by = Auth::id();
+            $prescription_result->prescriptions = json_encode($medicines);
+            $prescription_result->booking_id = $booking->id;
+            $prescription_result->save();
+
             if ($success) {
                 alert('Create success');
                 $user_id = Auth::id();
