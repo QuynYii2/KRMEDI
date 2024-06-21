@@ -1073,7 +1073,7 @@
         }
 
         $('.spinner-icon').css('display', 'none');
-
+        $('#chat_doctor').attr('disabled',false)
         getMessageFirebase();
     }
 
