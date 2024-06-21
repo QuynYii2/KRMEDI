@@ -13,6 +13,9 @@
         background-size: cover;
         background-position: center center;
     }
+    #chat_doctor:disabled{
+        cursor: not-allowed;
+    }
     @media (max-width: 992px) {
         #show_inf #inf-doctor #img_info #qr_code{
             padding: 10px!important;
