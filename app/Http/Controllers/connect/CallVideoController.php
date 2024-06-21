@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\connect;
 
+use App\Events\EndCall;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
 use App\Models\ConnectCallVideo;
@@ -209,5 +210,11 @@ class CallVideoController extends Controller
         $queueDownload->delete();
     }
 
+    public function endCall(Request $request)
+    {
+        $callId = $request->callId;
+        broadcast(new EndCall($callId));
+        return response()->json(['message' => 'Call ended'], 200);
+    }
 
 }
