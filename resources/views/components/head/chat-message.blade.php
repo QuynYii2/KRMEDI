@@ -405,9 +405,12 @@
                         <div>
                             <p class="mt-0"></p>
                             <label style="color: black; font-size: 11px; text-align: left; display: flex; align-items: center; column-gap: 3px">
-                                Online
-                                <div class="online-dot" style="display: none;"></div>
-                                <div class="offline-dot" style="display: none;"></div>
+                                <div id="online-div" style="display: none">
+                                    <div class="d-flex" style="align-items: center; gap: 5px;">Online <div class="online-dot" ></div></div>
+                                </div>
+                                <div id="offline-div" style="display: none">
+                                    <div class="d-flex" style="align-items: center; gap: 5px;">Offline <div class="offline-dot"></div></div>
+                                </div>
                             </label>
 
                         </div>
@@ -840,16 +843,6 @@
             }).then(() => {
                 console.log('Status updated successfully', isOnline);
                 // Assuming each user has a label identified by a unique ID like `status-${uid}`
-                const onlineDot = document.querySelector(`.online-dot`);
-                const offlineDot = document.querySelector(`.offline-dot`);
-
-                if (isOnline) {
-                    onlineDot.style.display = 'block';   // Show online dot
-                    offlineDot.style.display = 'none';  // Hide offline dot
-                } else {
-                    onlineDot.style.display = 'none';    // Hide online dot
-                    offlineDot.style.display = 'block';  // Show offline dot
-                }
             });
         } catch (error) {
             console.error('Error updating active status:', error);
@@ -998,16 +991,25 @@
                         const name_doctor = response.infoUser.name;
                         const hospital = response.infoUser.hospital ? response.infoUser.hospital : '';
                         const avt = response.infoUser.avt ? window.location.origin + response.infoUser.avt : '../../../../img/avt_default.jpg';
-
-                        if (name_doctor.toLowerCase().includes(searchTerm)) { // Filter by search term
+                        if ((searchTerm === " " || !searchTerm)) {
+                            if (res.is_online) {
+                                html_online += `<div class="friend user_connect" data-id="${res.id}" data-role="${res.role}" data-email="${email}" data-image="${avt}" data-online="${res.is_online}">
+                                                    <img src="${avt}"/>
+                                                    <p>
+                                                        <strong class="max-1-line-title-widget-chat">${name_doctor}</strong>
+                                                        <span>${hospital}</span>
+                                                    </p>
+                                                </div>`;
+                            }
+                        } else if (name_doctor.toLowerCase().includes(searchTerm.toLowerCase())) { // Filter by search term
                             if (doctorCount < 10) {
-                                html_online += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}" data-image="${avt}">
-                        <img src="${avt}"/>
-                        <p>
-                            <strong class="max-1-line-title-widget-chat">${name_doctor}</strong>
-                            <span>${hospital}</span>
-                        </p>
-                    </div>`;
+                                html_online += `<div class="friend user_connect" data-id="${res.id}" data-role="${res.role}" data-email="${email}" data-image="${avt}" data-online="${res.is_online}">
+                                                    <img src="${avt}"/>
+                                                    <p>
+                                                        <strong class="max-1-line-title-widget-chat">${name_doctor}</strong>
+                                                        <span>${hospital}</span>
+                                                    </p>
+                                                </div>`;
                                 doctorCount++;
                             }
                         }
@@ -1022,7 +1024,7 @@
                         const hospital = response.infoUser.hospital ? response.infoUser.hospital : '';
                         const avt = response.infoUser.avt ? window.location.origin + response.infoUser.avt : '../../../../img/avt_default.jpg';
 
-                        html += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}">
+                        html += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}" data-online="${res.is_online}">
                     <img src="${avt}"/>
                     <p>
                         <strong class="max-1-line-title-widget-chat">${name_doctor}</strong>
@@ -1059,13 +1061,13 @@
                 $('#friendslist-all-online #friends-all-online').html(html_online);
             }
 
-            if (doctorCount == 0) {
+            if (doctorCount && doctorCount == 0) {
                 let html_not_user = `<p><strong>Không có ai đang online</strong></p>`;
                 $('#friendslist-all-online #friends-all-online').html(html_not_user);
             }
         }
 
-        if (doctorCount == 0) {
+        if (doctorCount && doctorCount == 0) {
             let html_not_user = `<p><strong>Không có ai đang online</strong></p>`;
             $('#friendslist-all-online #friends-all-online').html(html_not_user);
         }
@@ -1393,6 +1395,7 @@
             let email = $(this).data('email');
             let role = $(this).data('role');
             let img = $(this).data('image')
+            let is_online = $(this).data('online')
 
             isShowOpenWidget = true;
 
@@ -1420,6 +1423,17 @@
             $("#profile p").html(name);
             $("#profile span").html(email);
             $("#chatview-image").attr('src', img);
+
+            const onlineDot = document.querySelector(`#online-div`);
+            const offlineDot = document.querySelector(`#offline-div`);
+
+            if (is_online) {
+                onlineDot.style.display = 'block';   // Show online dot
+                offlineDot.style.display = 'none';  // Hide offline dot
+            } else {
+                onlineDot.style.display = 'none';    // Hide online dot
+                offlineDot.style.display = 'block';  // Show offline dot
+            }
 
             $(".message").not(".right").find("img").attr("src", $(clone).attr("src"));
             let parent = $(this).parent();
