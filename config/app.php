@@ -207,6 +207,7 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
         Jenssegers\Agent\AgentServiceProvider::class,
+        App\Providers\PusherServiceProvider::class,
     ],
 
     /*
