@@ -18,11 +18,13 @@ class CallVideoController extends Controller
 {
     public $METERED_DOMAIN;
     public $METERED_SECRET_KEY;
+    protected $pusher;
 
-    public function __construct()
+    public function __construct(Pusher $pusher)
     {
         $this->METERED_DOMAIN = env('METERED_DOMAIN', 'krmedic.metered.live');
         $this->METERED_SECRET_KEY = env('METERED_SECRET_KEY', 'C5AjSOjZ-PaBArxWNQG8nSKp3eiWcsqltszk6Gvq6hnscIke');
+        $this->pusher = $pusher;
     }
 
     /**
@@ -213,7 +215,9 @@ class CallVideoController extends Controller
     public function endCall(Request $request)
     {
         $callId = $request->callId;
-        broadcast(new EndCall($callId));
+
+        $this->pusher->trigger('call.' . $callId, 'end-call', ['message' => 'Call ended']);
+
         return response()->json(['message' => 'Call ended'], 200);
     }
 
