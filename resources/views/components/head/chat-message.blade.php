@@ -1337,6 +1337,38 @@
                 message.fileName = content.name;
             }
 
+            var audio = new Audio('agora-video/message-ringtone.mp3');
+            audio.addEventListener('ended', function() {
+                this.currentTime = 0;
+                this.play().catch(function(error) {
+                    console.error('Lỗi phát âm thanh:', error);
+                });
+            });
+
+            // Function to play audio
+            function playNotificationSound() {
+                audio.play().catch(function(error) {
+                    console.error('Lỗi phát âm thanh:', error);
+                });
+            }
+
+            function listenForNewMessages(userId) {
+                const messagesRef = collection(database, "messages");
+                const q = query(messagesRef, where("receiver", "==", userId));
+                onSnapshot(q, (snapshot) => {
+                    snapshot.docChanges().forEach((change) => {
+                        if (change.type === "added") {
+                            const message = change.doc.data();
+                            playNotificationSound();
+                        }
+                    });
+                }, (error) => {
+                    console.error("Error getting messages: ", error);
+                });
+            }
+
+            listenForNewMessages(chatUserID);
+
             let conversationID = getConversationID(chatUserID);
             const ref = collection(database, `chats/${conversationID}/messages/`);
 
