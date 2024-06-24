@@ -1024,7 +1024,6 @@
         </div>
     </footer>
     <button class="playAudioButton" style="display: none" onclick="playAudio()">Phát âm thanh thông báo</button>
-    <button class="playAudioButtonCall" style="display: none" onclick="playAudioCall()">Phát âm thanh thông báo call</button>
     <!-- End Footer -->
     <div class="zalo-chat-widget zalo-chat" data-oaid="3111836148004341171" data-welcome-message="Rất vui khi được hỗ trợ bạn!" data-autopopup="0" data-width="300" data-height="300"></div>
     <!-- ======= Calling modal ======= -->
@@ -1619,27 +1618,15 @@
             return;
         }
         var audio = new Audio('agora-video/notification.mp3');
-        // audio.addEventListener('ended', function() {
-        //     this.currentTime = 0;
-        //     this.play().catch(function(error) {
-        //         console.error('Lỗi phát âm thanh:', error);
-        //     });
-        // });
-        // audio.play().catch(function(error) {
-        //     console.error('Lỗi phát âm thanh:', error);
-        // });
-        function playAudioCall() {
-            audio.addEventListener('ended', function() {
-                this.currentTime = 0;
-                this.play().catch(function(error) {
-                    console.error('Lỗi phát âm thanh:', error);
-                });
-            });
-            audio.play().catch(function(error) {
+        audio.addEventListener('ended', function() {
+            this.currentTime = 0;
+            this.play().catch(function(error) {
                 console.error('Lỗi phát âm thanh:', error);
             });
-        }
-        document.querySelector('.playAudioButtonCall').click();
+        });
+        audio.play().catch(function(error) {
+            console.error('Lỗi phát âm thanh:', error);
+        });
         // Define an async wrapper function to handle the asynchronous call
         async function getDoctorName() {
             try {
