@@ -342,7 +342,7 @@ class ProfileController extends Controller
         $user->save();
         session()->forget('show_modal');
         toast('Cập nhật thông tin thành công!', 'success', 'top-left');
-        return redirect()->route('profile');
+        return redirect()->route('home');
     }
 
     public function handleForgetPassword(Request $request)

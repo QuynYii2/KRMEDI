@@ -98,10 +98,16 @@ class HomeController extends Controller
         $reviews = request()->query('reviews');
         $free = request()->query('free');
         $prescribe = request()->query('prescribe');
+        $departments_id = request()->query('departments_id');
         $is_active = 1;
-
-        $doctorsSpecial = \App\Models\User::where('department_id', $id)
-            ->where('status', \App\Enums\UserStatus::ACTIVE);
+        if ($departments_id) {
+            $doctorsSpecial = \App\Models\User::where('department_id', $departments_id)
+                ->where('status', \App\Enums\UserStatus::ACTIVE);
+            $is_active = 3;
+        }else{
+            $doctorsSpecial = \App\Models\User::where('department_id', $id)
+                ->where('status', \App\Enums\UserStatus::ACTIVE);
+        }
 
         if ($search_doctor) {
             $doctorsSpecial->where(function ($query) use ($search_doctor) {
@@ -194,10 +200,11 @@ class HomeController extends Controller
         }
 
         $pharmacies = $pharmacies->get();
+        $departments = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->where('isFilter', 1)->get();
         if ($this->check_mobile()){
-            return view('chuyen-khoa.danh-sach-theo-chuyen-khoa-mobile', compact('id', 'doctorsSpecial', 'clinics', 'pharmacies','is_active'));
+            return view('chuyen-khoa.danh-sach-theo-chuyen-khoa-mobile', compact('id', 'doctorsSpecial', 'clinics', 'pharmacies','is_active','departments'));
         }else{
-            return view('chuyen-khoa.danh-sach-theo-chuyen-khoa', compact('id', 'doctorsSpecial', 'clinics', 'pharmacies','is_active'));
+            return view('chuyen-khoa.danh-sach-theo-chuyen-khoa', compact('id', 'doctorsSpecial', 'clinics', 'pharmacies','is_active','departments'));
         }
     }
 
