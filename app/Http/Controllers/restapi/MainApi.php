@@ -325,7 +325,12 @@ class MainApi extends Controller
                 'description' => 'Kiểm tra lịch khám ngay!!',
                 'booking_id' => $bookingId
             ]);
+            $requestData2 = [
+                'user_id' => $userId,
+                'title' => 'Đặt lịch khám thành công!!',
+            ];
 
+            $pusher->trigger('noti-events', 'noti-events', $requestData2);
             if ($userToken) {
                 $response = $this->sendBookingNotification(null, $userToken, $userNotification);
             }
