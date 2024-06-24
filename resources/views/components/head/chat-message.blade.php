@@ -1337,13 +1337,7 @@
                 message.fileName = content.name;
             }
 
-            var audio = new Audio('agora-video/message-ringtone.mp3');
-            audio.addEventListener('ended', function() {
-                this.currentTime = 0;
-                this.play().catch(function(error) {
-                    console.error('Lỗi phát âm thanh:', error);
-                });
-            });
+            var audio = new Audio('/agora-video/message-ringtone.mp3');
 
             // Function to play audio
             function playNotificationSound() {
@@ -1353,10 +1347,14 @@
             }
 
             function listenForNewMessages(userId) {
-                const messagesRef = collection(database, "messages");
-                const q = query(messagesRef, where("receiver", "==", userId));
+                const messagesRef = collection(database, "users");
+                const q = query(messagesRef, where(`id`, "==", userId));
+
                 onSnapshot(q, (snapshot) => {
-                    snapshot.docChanges().forEach((change) => {
+
+                    const changes = snapshot.docChanges();
+
+                    changes.forEach((change) => {
                         if (change.type === "added") {
                             const message = change.doc.data();
                             playNotificationSound();
