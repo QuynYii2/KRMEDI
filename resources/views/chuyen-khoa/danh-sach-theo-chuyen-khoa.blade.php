@@ -453,6 +453,17 @@
         </div>
         <div class="offcanvas-body pt-0">
             <form method="get" action="{{route('home.specialist.department',$id)}}">
+                <div class="filter-section">
+                    <h5>Chuyên khoa</h5>
+                    <div class="filter-option">
+                        <select name="departments_id" class="form-control">
+                            <option value="">-- Chuyên khoa --</option>
+                            @foreach($departments as $val)
+                                <option value="{{$val->id}}">{{$val->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
             <div class="filter-section">
                 <h5>Kinh nghiệm</h5>
                 <div class="filter-option">
@@ -1078,7 +1089,7 @@
                 isActive = 1;
             } else if (params.has('search_clinic')) {
                 isActive = 2;
-            } else if (params.has('search_doctor') || params.has('experience') || params.has('prescribe') || params.has('free') || params.has('reviews') ) {
+            } else if (params.has('search_doctor') || params.has('experience') || params.has('prescribe') || params.has('free') || params.has('reviews') || params.has('departments_id') ) {
                 isActive = 3;
             } else {
                 isActive = 1;
