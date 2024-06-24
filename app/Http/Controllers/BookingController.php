@@ -425,10 +425,11 @@ class BookingController extends Controller
                     ChangeBookingStatus::dispatch($booking);
                 }
 
-                alert('Update success');
-                return Redirect::route('api.backend.booking.edit', ['id' => $id])->with('success', 'Đặt lịch thành công');
+
             }
-            return response()->json(['error' => 0, 'data' => $booking]);
+            alert('Update success');
+            return Redirect::route('api.backend.booking.edit', ['id' => $id])->with('success', 'Đặt lịch thành công');
+//            return response()->json(['error' => 0, 'data' => $booking]);
         } catch (\Exception $e) {
             return response(['error' => -1, 'message' => $e->getMessage()], 400);
         }
