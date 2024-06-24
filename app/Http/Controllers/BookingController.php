@@ -421,15 +421,14 @@ class BookingController extends Controller
 
                     $pusher->trigger('noti-events', 'noti-events', $requestData);
                     $userToken = User::find($booking->user_id)->token_firebase ?? "";
-                    $this->sendBookingNotifications( $userToken, $notifi);
+                    $dataSend = $this->sendBookingNotifications( $userToken, $notifi);
                     ChangeBookingStatus::dispatch($booking);
                 }
-
-
+                alert('Update success');
+                return Redirect::route('api.backend.booking.edit', ['id' => $id])->with('success', 'Đặt lịch thành công');
             }
-            alert('Update success');
-            return Redirect::route('api.backend.booking.edit', ['id' => $id])->with('success', 'Đặt lịch thành công');
-//            return response()->json(['error' => 0, 'data' => $booking]);
+
+            return response()->json(['error' => 0, 'data' => $booking]);
         } catch (\Exception $e) {
             return response(['error' => -1, 'message' => $e->getMessage()], 400);
         }
