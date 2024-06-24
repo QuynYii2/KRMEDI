@@ -333,6 +333,8 @@
     <div id="content">
         @yield('content')
     </div>
+    <button class="playAudioButton" style="display: none" onclick="playAudio()">Phát âm thanh thông báo</button>
+    <button class="playAudioButtonCall" style="display: none" onclick="playAudioCall()">Phát âm thanh thông báo call</button>
     @include('layouts.partials.footer')
 
     <div class="zalo-chat-widget zalo-chat" data-oaid="3111836148004341171" data-welcome-message="Rất vui khi được hỗ trợ bạn!" data-autopopup="0" data-width="300" data-height="300"></div>
@@ -373,7 +375,13 @@
         $('.btn_close_m').click(function() {
             $('#modal-call-alert').modal('toggle')
         })
-    })
+    });
+    var audios = new Audio('agora-video/message-ringtone.mp3');
+    function playAudio() {
+        audios.play().catch(function(error) {
+            console.error('Lỗi phát âm thanh:', error);
+        });
+    }
     var pushers = new Pusher('3ac4f810445d089829e8', {
         cluster: 'ap1',
         encrypted: true
@@ -400,11 +408,8 @@
                 }
             }
             requestNotificationPermission();
-            fetchNotifications()
-            var audios = new Audio('agora-video/message-ringtone.mp3');
-            audios.play().catch(function(error) {
-                console.error('Lỗi phát âm thanh:', error);
-            });
+            fetchNotifications();
+            document.querySelector('.playAudioButton').click();
         }
     });
 
@@ -512,15 +517,27 @@
             return;
         }
         var audio = new Audio('agora-video/notification.mp3');
-        audio.addEventListener('ended', function() {
-            this.currentTime = 0;
-            this.play().catch(function(error) {
+        function playAudioCall() {
+            audio.addEventListener('ended', function() {
+                this.currentTime = 0;
+                this.play().catch(function(error) {
+                    console.error('Lỗi phát âm thanh:', error);
+                });
+            });
+            audio.play().catch(function(error) {
                 console.error('Lỗi phát âm thanh:', error);
             });
-        });
-        audio.play().catch(function(error) {
-            console.error('Lỗi phát âm thanh:', error);
-        });
+        }
+        document.querySelector('.playAudioButtonCall').click();
+        // audio.addEventListener('ended', function() {
+        //     this.currentTime = 0;
+        //     this.play().catch(function(error) {
+        //         console.error('Lỗi phát âm thanh:', error);
+        //     });
+        // });
+        // audio.play().catch(function(error) {
+        //     console.error('Lỗi phát âm thanh:', error);
+        // });
         // Define an async wrapper function to handle the asynchronous call
         async function getDoctorName() {
             try {
