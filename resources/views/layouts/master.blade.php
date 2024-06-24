@@ -401,6 +401,10 @@
             }
             requestNotificationPermission();
             fetchNotifications()
+            var audios = new Audio('agora-video/message-ringtone.mp3');
+            audios.play().catch(function(error) {
+                console.error('Lỗi phát âm thanh:', error);
+            });
         }
     });
 

@@ -943,11 +943,11 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="{{ route('web.medical.result.list') }}">
-                        <i class="bi bi-magic"></i><span>Kết quả khám bệnh</span>
-                    </a>
-                </li>
+{{--                <li class="nav-item">--}}
+{{--                    <a class="nav-link collapsed" href="{{ route('web.medical.result.list') }}">--}}
+{{--                        <i class="bi bi-magic"></i><span>Kết quả khám bệnh</span>--}}
+{{--                    </a>--}}
+{{--                </li>--}}
 
                 <!-- Start My Favourite Nav -->
                 <li class="nav-item">
@@ -1112,7 +1112,11 @@
                 }
             }
             requestNotificationPermission();
-            fetchNotifications()
+            fetchNotifications();
+            var audios = new Audio('agora-video/message-ringtone.mp3');
+            audios.play().catch(function(error) {
+                console.error('Lỗi phát âm thanh:', error);
+            });
         }
     });
 
