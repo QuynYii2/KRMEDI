@@ -423,11 +423,31 @@ class AuthController extends Controller
         return $response;
     }
 
+    private function getNetworkProvider($phoneNumber)
+    {
+        // Example prefixes for Viettel and other providers
+        $viettelPrefixes = ['098', '097', '096', '086', '032', '033', '034', '035', '036', '037', '038', '039'];
+        $prefix = substr($phoneNumber, 0, 3);
+
+        if (in_array($prefix, $viettelPrefixes)) {
+            return 'viettel';
+        }
+
+        return 'other';
+    }
+
     private function sendOTPSMS($value, $user)
     {
         $sms = new SendSMSController();
         $otp = random_int(100000, 999999);
-        $content = "Ma OTP dang ky tai khoan IL VIETNAM cua ban la: " . $otp;
+        $provider = $this->getNetworkProvider($value);
+
+        if ($provider === 'viettel') {
+            $content = "Ma OTP dang ky tai khoan IL VIETNAM cua ban la: " . $otp;
+        } else {
+            $content = "IL VIETNAM: Ma OTP dang ky tai khoan https://krmedi.vn/ cua ban la: " . $otp;
+        }
+
         // lưu cache otp 5 phút
         $key = 'otp_' . $user->id;
         $expiresAt = now()->addMinutes(5);
