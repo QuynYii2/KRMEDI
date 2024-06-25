@@ -285,6 +285,7 @@
     $isStaff = false;
     $isNormal = false;
     $isDoctor = false;
+    $isPhamacists = false;
     foreach ($roles as $role) {
         $roleNames = Role::where('id', $role)->pluck('name');
         if ($roleNames->contains('PAITENTS') || $roleNames->contains('NORMAL PEOPLE')) {
@@ -304,6 +305,9 @@
         ) {
             $isStaff = true;
             break;
+        }
+        if ($roleNames->contains('PHAMACISTS') || $roleNames->contains('THERAPISTS')) {
+            $isPhamacists = true;
         }
     }
 
@@ -613,12 +617,14 @@
                 <!-- End Call video Nav -->
 
                 <!-- Start Doctor Prescription Page Nav -->
+                    @if (!$isAdmin && !$isDoctor)
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="{{ route('view.prescription.result.doctor') }}">
                         <i class="bi bi-music-player"></i>
                         <span>{{ __('home.Doctor Prescription') }}</span>
                     </a>
                 </li>
+                    @endif
                 <!-- End Doctor Prescription Page Nav -->
 
                     @if ($isDoctor)
@@ -662,6 +668,7 @@
                     <!-- End List Coupon Nav -->
 
                     <!-- Booking Nav -->
+                    @if(!$isPhamacists)
                     <li class="nav-item">
                         <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse"
                             href="#">
@@ -681,6 +688,7 @@
                             </li>
                         </ul>
                     </li>
+                        @endif
                     <!-- End Booking Nav -->
 
                     <!-- Booking Nav -->
