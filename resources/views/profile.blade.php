@@ -568,9 +568,18 @@
                                         <input class="form-control" id="workplace" type="text" name="workplace"
                                             required value="{{ $doctor->workplace }}">
                                     </div>
-                                    <div class="col-sm-4"><label for="specialty">{{ __('home.chuyên môn việt') }}</label>
-                                        <input type="text" class="form-control" id="specialty" name="specialty"
-                                            value="{{ $doctor->specialty }}">
+                                    <div class="col-sm-4"><label for="specialty">Chuyên khoa</label>
+                                        <select class="form-select" id="department_id" name="department_id">
+                                            @php
+                                                $departments = \App\Models\DoctorDepartment::where(
+                                                    'status',
+                                                    \App\Enums\DoctorDepartmentStatus::ACTIVE,
+                                                )->get();
+                                            @endphp
+                                            @foreach ($departments as $department)
+                                                <option value="{{ $department->id }}" {{ $doctor->department_id == $department->id ? 'selected' : '' }}> {{ $department->name }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -709,25 +718,12 @@
                                     @endif
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-4"><label for="department_id">{{ __('home.Department') }}</label>
-                                        <select class="form-select" id="department_id" name="department_id">
-                                            @php
-                                                $departments = \App\Models\DoctorDepartment::where(
-                                                    'status',
-                                                    \App\Enums\DoctorDepartmentStatus::ACTIVE,
-                                                )->get();
-                                            @endphp
-                                            @foreach ($departments as $department)
-                                                <option value="{{ $department->id }}"> {{ $department->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-6">
                                         <label for="year_of_experience">{{ __('home.Năm kinh nghiệm') }}</label>
                                         <input type="number" class="form-control" id="year_of_experience"
                                             name="year_of_experience" value="{{ $doctor->year_of_experience }}">
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-6">
                                         <label for="service_price">{{ __('home.Giá dịch vụ việt') }}</label>
                                         <input class="form-control" type="number" name="service_price"
                                             id="service_price" value="{{ $doctor->service_price }}">
@@ -994,109 +990,109 @@
                                     </div>
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <label for="hospital_information">{{ __('home.Hospital information') }}</label>
-                                        <div class="dropdown" data-target="hospital_information">
-                                            <label class="dropdown-label">{{ __('home.Select Options') }}</label>
-                                            <input class="d-none" name="hospital_information" id="hospital_information"
-                                                   value="{{$clinic->information}}"/>
-                                            <div class="dropdown-list">
-                                                @php
-                                                    $arrayInformation = explode(',',$clinic->information);
-                                                    $options = [
-                                                        "Pediatric examination/treatment",
-                                                        " Emergency department",
-                                                        " Female doctor",
-                                                        " Specialized hospital",
-                                                        " Check health certificate",
-                                                        " Physical examination",
-                                                        " Rapid antigen test",
-                                                        " PCR test",
-                                                    ];
-                                                @endphp
-                                                @foreach($options as $key => $option)
-                                                    <div class="checkbox">
-                                                        <input type="checkbox" name="dropdown-group"
-                                                               class="check hospital_information_name checkbox-custom"
-                                                               id="checkbox-custom_{{ $key }}" value="{{ $option }}"
-                                                               @if(in_array($option, $arrayInformation, true) || in_array($option, explode(', ', old('hospital_information', '')))) checked @endif />
-                                                        <label for="checkbox-custom_{{ $key }}"
-                                                               class="checkbox-custom-label">{{ $option }}</label>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <label for="hospital_facilities">{{ __('home.Hospital facilities') }}</label>
-                                        <div class="dropdown" data-target="hospital_facilities">
-                                            <label class="dropdown-label">{{ __('home.Select Options') }}</label>
-                                            <input class="d-none" name="hospital_facilities" id="hospital_facilities"
-                                                   value="{{$clinic->facilities}}"/>
-                                            <div class="dropdown-list">
-                                                @php
-                                                    $arrayFacilities = explode(',', $clinic->facilities);
-                                                    $facilityOptions = [
-                                                        "Intensive care unit",
-                                                        " General hospital room",
-                                                        " High-class hospital room",
-                                                        " Surgery room",
-                                                        " Emergency room",
-                                                        " Physiotherapy room",
-                                                    ];
-                                                @endphp
-                                                @foreach($facilityOptions as $key => $facilityOption)
-                                                    <div class="checkbox">
-                                                        <input type="checkbox" name="dropdown-group"
-                                                               class="check hospital_facilities_name checkbox-custom"
-                                                               id="checkbox-custom_{{ $key + 21 }}" value="{{ $facilityOption }}"
-                                                               @if(in_array($facilityOption, $arrayFacilities, true) || in_array($facilityOption, explode(', ', old('hospital_facilities', '')))) checked @endif />
-                                                        <label for="checkbox-custom_{{ $key + 21 }}"
-                                                               class="checkbox-custom-label">{{ $facilityOption }}</label>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <label for="hospital_equipment">{{ __('home.Hospital equipment') }}</label>
-                                        <div class="dropdown" data-target="hospital_equipment">
-                                            <label class="dropdown-label">{{ __('home.Select Options') }}</label>
-                                            <input class="d-none" name="hospital_equipment" id="hospital_equipment"
-                                                   value="{{$clinic->equipment}}"/>
-                                            <div class="dropdown-list">
-                                                @php
-                                                    $arrayEquipment = explode(',', $clinic->equipment);
-                                                    $equipmentOptions = [
-                                                        "CT",
-                                                        " MRI",
-                                                        " Bone density meter",
-                                                        " Positron tomography (PET)",
-                                                        " Tumor treatment device (CYBER KNIFE)",
-                                                        " Ultrasound imaging equipment",
-                                                        " Tumor treatment devices (proton therapy devices)",
-                                                        " Artificial kidney equipment for hemodialysis",
-                                                    ];
-                                                @endphp
-                                                @foreach($equipmentOptions as $key => $equipmentOption)
-                                                    <div class="checkbox">
-                                                        <input type="checkbox" name="dropdown-group"
-                                                               class="check hospital_equipment_name checkbox-custom"
-                                                               id="checkbox-custom_{{ $key + 27 }}" value="{{ $equipmentOption }}"
-                                                               @if(in_array($equipmentOption, $arrayEquipment, true) || in_array($equipmentOption, explode(', ', old('hospital_equipment', '')))) checked @endif />
-                                                        <label for="checkbox-custom_{{ $key + 27 }}"
-                                                               class="checkbox-custom-label">{{ $equipmentOption }}</label>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+{{--                                <div class="row">--}}
+{{--                                    <div class="col-md-12">--}}
+{{--                                        <label for="hospital_information">{{ __('home.Hospital information') }}</label>--}}
+{{--                                        <div class="dropdown" data-target="hospital_information">--}}
+{{--                                            <label class="dropdown-label">{{ __('home.Select Options') }}</label>--}}
+{{--                                            <input class="d-none" name="hospital_information" id="hospital_information"--}}
+{{--                                                   value="{{$clinic->information}}"/>--}}
+{{--                                            <div class="dropdown-list">--}}
+{{--                                                @php--}}
+{{--                                                    $arrayInformation = explode(',',$clinic->information);--}}
+{{--                                                    $options = [--}}
+{{--                                                        "Pediatric examination/treatment",--}}
+{{--                                                        " Emergency department",--}}
+{{--                                                        " Female doctor",--}}
+{{--                                                        " Specialized hospital",--}}
+{{--                                                        " Check health certificate",--}}
+{{--                                                        " Physical examination",--}}
+{{--                                                        " Rapid antigen test",--}}
+{{--                                                        " PCR test",--}}
+{{--                                                    ];--}}
+{{--                                                @endphp--}}
+{{--                                                @foreach($options as $key => $option)--}}
+{{--                                                    <div class="checkbox">--}}
+{{--                                                        <input type="checkbox" name="dropdown-group"--}}
+{{--                                                               class="check hospital_information_name checkbox-custom"--}}
+{{--                                                               id="checkbox-custom_{{ $key }}" value="{{ $option }}"--}}
+{{--                                                               @if(in_array($option, $arrayInformation, true) || in_array($option, explode(', ', old('hospital_information', '')))) checked @endif />--}}
+{{--                                                        <label for="checkbox-custom_{{ $key }}"--}}
+{{--                                                               class="checkbox-custom-label">{{ $option }}</label>--}}
+{{--                                                    </div>--}}
+{{--                                                @endforeach--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                                <div class="row">--}}
+{{--                                    <div class="col-md-12">--}}
+{{--                                        <label for="hospital_facilities">{{ __('home.Hospital facilities') }}</label>--}}
+{{--                                        <div class="dropdown" data-target="hospital_facilities">--}}
+{{--                                            <label class="dropdown-label">{{ __('home.Select Options') }}</label>--}}
+{{--                                            <input class="d-none" name="hospital_facilities" id="hospital_facilities"--}}
+{{--                                                   value="{{$clinic->facilities}}"/>--}}
+{{--                                            <div class="dropdown-list">--}}
+{{--                                                @php--}}
+{{--                                                    $arrayFacilities = explode(',', $clinic->facilities);--}}
+{{--                                                    $facilityOptions = [--}}
+{{--                                                        "Intensive care unit",--}}
+{{--                                                        " General hospital room",--}}
+{{--                                                        " High-class hospital room",--}}
+{{--                                                        " Surgery room",--}}
+{{--                                                        " Emergency room",--}}
+{{--                                                        " Physiotherapy room",--}}
+{{--                                                    ];--}}
+{{--                                                @endphp--}}
+{{--                                                @foreach($facilityOptions as $key => $facilityOption)--}}
+{{--                                                    <div class="checkbox">--}}
+{{--                                                        <input type="checkbox" name="dropdown-group"--}}
+{{--                                                               class="check hospital_facilities_name checkbox-custom"--}}
+{{--                                                               id="checkbox-custom_{{ $key + 21 }}" value="{{ $facilityOption }}"--}}
+{{--                                                               @if(in_array($facilityOption, $arrayFacilities, true) || in_array($facilityOption, explode(', ', old('hospital_facilities', '')))) checked @endif />--}}
+{{--                                                        <label for="checkbox-custom_{{ $key + 21 }}"--}}
+{{--                                                               class="checkbox-custom-label">{{ $facilityOption }}</label>--}}
+{{--                                                    </div>--}}
+{{--                                                @endforeach--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                                <div class="row">--}}
+{{--                                    <div class="col-md-12">--}}
+{{--                                        <label for="hospital_equipment">{{ __('home.Hospital equipment') }}</label>--}}
+{{--                                        <div class="dropdown" data-target="hospital_equipment">--}}
+{{--                                            <label class="dropdown-label">{{ __('home.Select Options') }}</label>--}}
+{{--                                            <input class="d-none" name="hospital_equipment" id="hospital_equipment"--}}
+{{--                                                   value="{{$clinic->equipment}}"/>--}}
+{{--                                            <div class="dropdown-list">--}}
+{{--                                                @php--}}
+{{--                                                    $arrayEquipment = explode(',', $clinic->equipment);--}}
+{{--                                                    $equipmentOptions = [--}}
+{{--                                                        "CT",--}}
+{{--                                                        " MRI",--}}
+{{--                                                        " Bone density meter",--}}
+{{--                                                        " Positron tomography (PET)",--}}
+{{--                                                        " Tumor treatment device (CYBER KNIFE)",--}}
+{{--                                                        " Ultrasound imaging equipment",--}}
+{{--                                                        " Tumor treatment devices (proton therapy devices)",--}}
+{{--                                                        " Artificial kidney equipment for hemodialysis",--}}
+{{--                                                    ];--}}
+{{--                                                @endphp--}}
+{{--                                                @foreach($equipmentOptions as $key => $equipmentOption)--}}
+{{--                                                    <div class="checkbox">--}}
+{{--                                                        <input type="checkbox" name="dropdown-group"--}}
+{{--                                                               class="check hospital_equipment_name checkbox-custom"--}}
+{{--                                                               id="checkbox-custom_{{ $key + 27 }}" value="{{ $equipmentOption }}"--}}
+{{--                                                               @if(in_array($equipmentOption, $arrayEquipment, true) || in_array($equipmentOption, explode(', ', old('hospital_equipment', '')))) checked @endif />--}}
+{{--                                                        <label for="checkbox-custom_{{ $key + 27 }}"--}}
+{{--                                                               class="checkbox-custom-label">{{ $equipmentOption }}</label>--}}
+{{--                                                    </div>--}}
+{{--                                                @endforeach--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
                                 @php
                                     $list_doctor = $clinic->representative_doctor;
                                     $array_doctor = explode(',', $list_doctor);
