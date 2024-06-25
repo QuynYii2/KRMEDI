@@ -286,6 +286,7 @@
     $isNormal = false;
     $isDoctor = false;
     $isPhamacists = false;
+    $isPhamacies = false;
     foreach ($roles as $role) {
         $roleNames = Role::where('id', $role)->pluck('name');
         if ($roleNames->contains('PAITENTS') || $roleNames->contains('NORMAL PEOPLE')) {
@@ -306,8 +307,11 @@
             $isStaff = true;
             break;
         }
-        if ($roleNames->contains('PHAMACISTS') || $roleNames->contains('THERAPISTS') || $roleNames->contains('PHARMACIES')) {
-            $isPhamacists = true;
+        if ($roleNames->contains('THERAPISTS') || $roleNames->contains('PHARMACIES')) {
+            $isPhamacies = true;
+        }
+        if ($roleNames->contains('PHAMACISTS')) {
+         $isPhamacists = true;
         }
     }
 
@@ -574,6 +578,7 @@
                 <!-- End News/Events Nav -->
 
                 <!-- Order Nav -->
+                @if(!$isPhamacists)
                 <li class="nav-item">
                     <a class="nav-link collapsed" data-bs-target="#orders-nav" data-bs-toggle="collapse"
                         href="#">
@@ -581,7 +586,7 @@
                             class="bi bi-chevron-down ms-auto"></i>
                     </a>
                     <ul id="orders-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                        @if(!$isAdmin && !$isDoctor && !$isPhamacists)
+                        @if(!$isAdmin && !$isDoctor && !$isPhamacies)
                         <li>
                             <a href="{{ route('view.admin.orders.list') }}">
                                 <i class="bi bi-circle"></i><span>Thiết bị y tế</span>
@@ -591,12 +596,13 @@
 {{--                        @if (!$isStaff)--}}
                             <li>
                                 <a href="{{ route('view.admin.orders.index') }}">
-                                    <i class="bi bi-circle"></i><span>Đơn thuốc</span>
+                                    <i class="bi bi-circle"></i><span>Thuốc</span>
                                 </a>
                             </li>
 {{--                        @endif--}}
                     </ul>
                 </li>
+                    @endif
                 <!-- End Order Nav -->
 
                 <!-- Call video Nav -->
@@ -617,7 +623,7 @@
                 <!-- End Call video Nav -->
 
                 <!-- Start Doctor Prescription Page Nav -->
-                    @if (!$isPhamacists)
+                    @if (!$isPhamacists && !$isPhamacies)
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="{{ route('view.prescription.result.doctor') }}">
                         <i class="bi bi-music-player"></i>
