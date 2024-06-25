@@ -36,8 +36,6 @@
         </form>
     </div>
     <script>
-        let accessToken = `Bearer ` + token;
-
         async function createService() {
             let url = `{{ route('api.admin.service.clinic.create') }}`;
 

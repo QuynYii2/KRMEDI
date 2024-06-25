@@ -32,8 +32,6 @@
 
     </div>
     <script>
-        let accessToken = `Bearer ` + token;
-
         callListService();
 
         async function callListService() {
