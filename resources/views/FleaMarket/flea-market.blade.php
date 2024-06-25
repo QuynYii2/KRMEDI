@@ -39,196 +39,202 @@
     <body>
     @include('component.banner')
 
-    <div class="container mt-70 box-content-market">
-        <div class="container pc-hidden">
-            <div class="row clinic-search">
-                <div
-                    class="clinic-search--left col-md-12 d-flex justify-content-between clinic-search--center align-items-center">
-                    <div class="clinic-search--left col-md-6 justify-content-around mobile-hidden">
-                        <div class="title mobile-hidden">{{ __('home.All') }} <i class="bi bi-arrow-down-up"></i></div>
-                        <div class="title mobile-hidden">{{ __('home.Category') }} <i class="bi bi-arrow-down-up"></i>
-                        </div>
-                        <div class="title mobile-hidden">{{ __('home.Location') }}<i class="bi bi-arrow-down-up"></i>
-                        </div>
-                    </div>
-
-                    <div class="search-box col-md-5">
-                        <input class="m-0" type="Search" onkeyup="performSearch()" name="focus"
-                               placeholder="{{ __('home.Search for anything…') }}" id="inputSearchMobile" value="">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </div>
-                    <div class="flex-fill">
-                        <button class="navbar-toggler border-none css-button" type="button" data-bs-toggle="offcanvas"
-                                data-bs-target="#filterNavbar" aria-controls="filterNavbar">
-                            <i class="bi bi-filter"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex mt-70 mobile-hidden">
-            <div class="col-lg-3 col-md-2 flea-content ">{{ __('home.Flea market') }}</div>
-            <div class="col-lg-4 col-md-3 flea-search d-flex align-items-center">
-                <i class="fa fa-search form-control-search"></i>
-                <label for="inputSearch"></label><input onkeyup="performSearch()" id="inputSearch" type="Search"
-                                                        placeholder="{{ __('home.Search for anything…') }}" value="">
-            </div>
-
-            @if(Auth::check())
-                @if(auth()->user()->type!= Role::NORMAL)
-                    <div class="d-flex col-lg-5 col-md-7 justify-content-between align-items-center line-item-menu-header">
-                        <a href="#" onclick="checkLogin()" class="col-md-4 flea-button">
-                            {{ __('home.Sell my product') }}
-                        </a>
-                        <a href="#" onclick="checkLoginWishStore()" class="col-lg-5 col-md-7 flea-button flea-btn">
-                            {{ __('home.Go to my store') }}
-                        </a>
-                        <a href="#" onclick="checkLoginWish()" class="col-lg-5 col-md-7 flea-button flea-btn">
-                            {{ __('home.Wish list') }}
-                        </a>
-                    </div>
-                @else
-                    <div class="d-flex col-lg-5 col-md-7 justify-content-start align-items-center">
-                        <a href="#" onclick="checkLoginWishStore()" class="col-md-4 flea-button flea-btn mr-3">
-                            {{ __('home.Go to my store') }}
-                        </a>
-                        <a href="#" onclick="checkLoginWish()" class="col-lg-5 col-md-7 flea-button flea-btn">
-                            {{ __('home.Wish list') }}
-                        </a>
-                    </div>
-                @endif
-            @endif
-
-        </div>
-        <div class="d-flex mt-88">
-            <div class="col-lg-3 col-md-4  mobile-hidden">
-                <div class="border-radius ">
-                    <div class="flea-text">{{ __('home.Filter') }}</div>
-                    @foreach($departments as $department)
-                        <div class="ellipse-1-line d-flex mb-2">
-                            <input type="checkbox" onchange="performSearch()" name="category_{{$department->id}}"
-                                   id="category_{{$department->id}}">
-                            <label for="category_{{$department->id}}" style="margin-bottom: 0"
-                                   class="flea-text-gray text-nowrap ml-2">{{$department->name}}</label>
-                        </div>
-                    @endforeach
-                    <div class="flea-text-sp">{{ __('home.See all categories') }}</div>
-                </div>
-                <div class="border-radius mt-3 ">
-                    <div class="d-flex">
-                        <div class="wrapper">
-                            <header>
-                                <h2>{{ __('home.Price') }}</h2>
-                            </header>
-                            <div class="price-input">
-                                <div class="field">
-                                    <input type="number" onchange="performSearch()" id="inputProductMin"
-                                           class="rangePrice input-min" value="0">
-                                </div>
-                                <div class="separator">-</div>
-                                <div class="field">
-                                    <input type="number" onchange="performSearch()" id="inputProductMax"
-                                           class="rangePrice input-max" value="0">
-                                </div>
-                            </div>
-                            <div class="slider">
-                                <div class="progress"></div>
-                            </div>
-                            <div class="range-input">
-                                <input type="range" onchange="performSearch()" class="rangePrice range-min" min="0"
-                                       max="100000" value="25000" step="1000">
-                                <input type="range" onchange="performSearch()" class="rangePrice range-max" min="0"
-                                       max="100000" value="75000" step="1000">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-100">
-                    <div class=" row align-items-center justify-content-center">
-                        <div class="">
-                            <img loading="lazy" src="{{asset('img/image 16.png')}}" alt="">
-                        </div>
-                    </div>
-                    <div class=" row align-items-center justify-content-center">
-                        <div class="">
-                            <img loading="lazy" src="{{asset('img/image 16.png')}}" alt="">
-                        </div>
-                    </div>
-                    <div class=" row align-items-center justify-content-center">
-                        <div class="">
-                            <img loading="lazy" src="{{asset('img/image 16.png')}}" alt="">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-9 col-md-8">
-                <div class="img-union"><img loading="lazy" src="{{asset('img/flea-market/platinum.png')}}"></div>
-                <div class="page d-flex flex-wrap" id="productsAdsPlan1"></div>
-                <div class="img-union "><img loading="lazy" src="{{asset('img/flea-market/premium.png')}}"></div>
-                <div class="page d-flex flex-wrap" id="productsAdsPlan2"></div>
-                <div class="img-union"><img loading="lazy" src="{{asset('img/flea-market/silver.png')}}"></div>
-                <div class="page d-flex flex-wrap" id="productsAdsPlan3"></div>
-            </div>
-        </div>
-        {{-- modal filter --}}
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="filterNavbar" aria-labelledby="offcanvasNavbarLabel">
-            <div class="offcanvas-header">
-                <a href="{{route('home')}}" class="offcanvas-title" id="offcanvasNavbarLabel"><img loading="lazy" class="w-100"
-                                                                                                   src="{{asset('img/icons_logo/logo-new.png')}}"></a>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body">
-                <div class="border-radius ">
-                    <div class="flea-text">{{ __('home.Filter') }}</div>
-                    @foreach($departments as $department)
-                        <div>
-                            <input type="checkbox" onchange="performSearch()" name="category_{{$department->id}}"
-                                   id="category_{{$department->id}}">
-                            <label for="category_{{$department->id}}"
-                                   class="flea-text-gray">{{$department->name}}</label>
-                        </div>
-                    @endforeach
-                    <div class="flea-text-sp">{{ __('home.See all categories') }}</div>
-                </div>
-                <div class="border-radius mt-3 ">
-                    <div class="d-flex">
-                        <div class="wrapper">
-                            <header>
-                                <h2>{{ __('home.Price') }}</h2>
-                            </header>
-                            <div class="price-input">
-                                <div class="field">
-                                    <input type="number" onchange="performSearch()" id="inputProductMin"
-                                           class="rangePrice input-min" value="0">
-                                </div>
-                                <div class="separator">-</div>
-                                <div class="field">
-                                    <input type="number" onchange="performSearch()" id="inputProductMax"
-                                           class="rangePrice input-max" value="0">
-                                </div>
-                            </div>
-                            <div class="slider">
-                                <div class="progress"></div>
-                            </div>
-                            <div class="range-input">
-                                <input type="range" onchange="performSearch()" class="rangePrice range-min" min="0"
-                                       max="100000" value="25000" step="1000">
-                                <input type="range" onchange="performSearch()" class="rangePrice range-max" min="0"
-                                       max="100000" value="75000" step="1000">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="d-flex justify-content-center">
-                    <a href="" class="add-cv-bt w-100 apply-bt_delete col-6">{{ __('home.Refresh') }}</a>
-                    <form action="#" class="col-6 pr-0">
-                        <button type="button" data-bs-dismiss="offcanvas" aria-label="Close"
-                                class="add-cv-bt apply-bt_edit w-100">{{ __('home.Apply') }}</button>
-                    </form>
-                </div>
-            </div>
-        </div>
+    <div class="container">
+        <h2 class="text-center" >Chức năng đang phát triển</h2>
     </div>
+
+
+
+{{--    <div class="container mt-70 box-content-market">--}}
+{{--        <div class="container pc-hidden">--}}
+{{--            <div class="row clinic-search">--}}
+{{--                <div--}}
+{{--                    class="clinic-search--left col-md-12 d-flex justify-content-between clinic-search--center align-items-center">--}}
+{{--                    <div class="clinic-search--left col-md-6 justify-content-around mobile-hidden">--}}
+{{--                        <div class="title mobile-hidden">{{ __('home.All') }} <i class="bi bi-arrow-down-up"></i></div>--}}
+{{--                        <div class="title mobile-hidden">{{ __('home.Category') }} <i class="bi bi-arrow-down-up"></i>--}}
+{{--                        </div>--}}
+{{--                        <div class="title mobile-hidden">{{ __('home.Location') }}<i class="bi bi-arrow-down-up"></i>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+
+{{--                    <div class="search-box col-md-5">--}}
+{{--                        <input class="m-0" type="Search" onkeyup="performSearch()" name="focus"--}}
+{{--                               placeholder="{{ __('home.Search for anything…') }}" id="inputSearchMobile" value="">--}}
+{{--                        <i class="fa-solid fa-magnifying-glass"></i>--}}
+{{--                    </div>--}}
+{{--                    <div class="flex-fill">--}}
+{{--                        <button class="navbar-toggler border-none css-button" type="button" data-bs-toggle="offcanvas"--}}
+{{--                                data-bs-target="#filterNavbar" aria-controls="filterNavbar">--}}
+{{--                            <i class="bi bi-filter"></i>--}}
+{{--                        </button>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--        <div class="d-flex mt-70 mobile-hidden">--}}
+{{--            <div class="col-lg-3 col-md-2 flea-content ">{{ __('home.Flea market') }}</div>--}}
+{{--            <div class="col-lg-4 col-md-3 flea-search d-flex align-items-center">--}}
+{{--                <i class="fa fa-search form-control-search"></i>--}}
+{{--                <label for="inputSearch"></label><input onkeyup="performSearch()" id="inputSearch" type="Search"--}}
+{{--                                                        placeholder="{{ __('home.Search for anything…') }}" value="">--}}
+{{--            </div>--}}
+
+{{--            @if(Auth::check())--}}
+{{--                @if(auth()->user()->type!= Role::NORMAL)--}}
+{{--                    <div class="d-flex col-lg-5 col-md-7 justify-content-between align-items-center line-item-menu-header">--}}
+{{--                        <a href="#" onclick="checkLogin()" class="col-md-4 flea-button">--}}
+{{--                            {{ __('home.Sell my product') }}--}}
+{{--                        </a>--}}
+{{--                        <a href="#" onclick="checkLoginWishStore()" class="col-lg-5 col-md-7 flea-button flea-btn">--}}
+{{--                            {{ __('home.Go to my store') }}--}}
+{{--                        </a>--}}
+{{--                        <a href="#" onclick="checkLoginWish()" class="col-lg-5 col-md-7 flea-button flea-btn">--}}
+{{--                            {{ __('home.Wish list') }}--}}
+{{--                        </a>--}}
+{{--                    </div>--}}
+{{--                @else--}}
+{{--                    <div class="d-flex col-lg-5 col-md-7 justify-content-start align-items-center">--}}
+{{--                        <a href="#" onclick="checkLoginWishStore()" class="col-md-4 flea-button flea-btn mr-3">--}}
+{{--                            {{ __('home.Go to my store') }}--}}
+{{--                        </a>--}}
+{{--                        <a href="#" onclick="checkLoginWish()" class="col-lg-5 col-md-7 flea-button flea-btn">--}}
+{{--                            {{ __('home.Wish list') }}--}}
+{{--                        </a>--}}
+{{--                    </div>--}}
+{{--                @endif--}}
+{{--            @endif--}}
+
+{{--        </div>--}}
+{{--        <div class="d-flex mt-88">--}}
+{{--            <div class="col-lg-3 col-md-4  mobile-hidden">--}}
+{{--                <div class="border-radius ">--}}
+{{--                    <div class="flea-text">{{ __('home.Filter') }}</div>--}}
+{{--                    @foreach($departments as $department)--}}
+{{--                        <div class="ellipse-1-line d-flex mb-2">--}}
+{{--                            <input type="checkbox" onchange="performSearch()" name="category_{{$department->id}}"--}}
+{{--                                   id="category_{{$department->id}}">--}}
+{{--                            <label for="category_{{$department->id}}" style="margin-bottom: 0"--}}
+{{--                                   class="flea-text-gray text-nowrap ml-2">{{$department->name}}</label>--}}
+{{--                        </div>--}}
+{{--                    @endforeach--}}
+{{--                    <div class="flea-text-sp">{{ __('home.See all categories') }}</div>--}}
+{{--                </div>--}}
+{{--                <div class="border-radius mt-3 ">--}}
+{{--                    <div class="d-flex">--}}
+{{--                        <div class="wrapper">--}}
+{{--                            <header>--}}
+{{--                                <h2>{{ __('home.Price') }}</h2>--}}
+{{--                            </header>--}}
+{{--                            <div class="price-input">--}}
+{{--                                <div class="field">--}}
+{{--                                    <input type="number" onchange="performSearch()" id="inputProductMin"--}}
+{{--                                           class="rangePrice input-min" value="0">--}}
+{{--                                </div>--}}
+{{--                                <div class="separator">-</div>--}}
+{{--                                <div class="field">--}}
+{{--                                    <input type="number" onchange="performSearch()" id="inputProductMax"--}}
+{{--                                           class="rangePrice input-max" value="0">--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                            <div class="slider">--}}
+{{--                                <div class="progress"></div>--}}
+{{--                            </div>--}}
+{{--                            <div class="range-input">--}}
+{{--                                <input type="range" onchange="performSearch()" class="rangePrice range-min" min="0"--}}
+{{--                                       max="100000" value="25000" step="1000">--}}
+{{--                                <input type="range" onchange="performSearch()" class="rangePrice range-max" min="0"--}}
+{{--                                       max="100000" value="75000" step="1000">--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--                <div class="mt-100">--}}
+{{--                    <div class=" row align-items-center justify-content-center">--}}
+{{--                        <div class="">--}}
+{{--                            <img loading="lazy" src="{{asset('img/image 16.png')}}" alt="">--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <div class=" row align-items-center justify-content-center">--}}
+{{--                        <div class="">--}}
+{{--                            <img loading="lazy" src="{{asset('img/image 16.png')}}" alt="">--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <div class=" row align-items-center justify-content-center">--}}
+{{--                        <div class="">--}}
+{{--                            <img loading="lazy" src="{{asset('img/image 16.png')}}" alt="">--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--            <div class="col-lg-9 col-md-8">--}}
+{{--                <div class="img-union"><img loading="lazy" src="{{asset('img/flea-market/platinum.png')}}"></div>--}}
+{{--                <div class="page d-flex flex-wrap" id="productsAdsPlan1"></div>--}}
+{{--                <div class="img-union "><img loading="lazy" src="{{asset('img/flea-market/premium.png')}}"></div>--}}
+{{--                <div class="page d-flex flex-wrap" id="productsAdsPlan2"></div>--}}
+{{--                <div class="img-union"><img loading="lazy" src="{{asset('img/flea-market/silver.png')}}"></div>--}}
+{{--                <div class="page d-flex flex-wrap" id="productsAdsPlan3"></div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--        --}}{{-- modal filter --}}
+{{--        <div class="offcanvas offcanvas-end" tabindex="-1" id="filterNavbar" aria-labelledby="offcanvasNavbarLabel">--}}
+{{--            <div class="offcanvas-header">--}}
+{{--                <a href="{{route('home')}}" class="offcanvas-title" id="offcanvasNavbarLabel"><img loading="lazy" class="w-100"--}}
+{{--                                                                                                   src="{{asset('img/icons_logo/logo-new.png')}}"></a>--}}
+{{--                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>--}}
+{{--            </div>--}}
+{{--            <div class="offcanvas-body">--}}
+{{--                <div class="border-radius ">--}}
+{{--                    <div class="flea-text">{{ __('home.Filter') }}</div>--}}
+{{--                    @foreach($departments as $department)--}}
+{{--                        <div>--}}
+{{--                            <input type="checkbox" onchange="performSearch()" name="category_{{$department->id}}"--}}
+{{--                                   id="category_{{$department->id}}">--}}
+{{--                            <label for="category_{{$department->id}}"--}}
+{{--                                   class="flea-text-gray">{{$department->name}}</label>--}}
+{{--                        </div>--}}
+{{--                    @endforeach--}}
+{{--                    <div class="flea-text-sp">{{ __('home.See all categories') }}</div>--}}
+{{--                </div>--}}
+{{--                <div class="border-radius mt-3 ">--}}
+{{--                    <div class="d-flex">--}}
+{{--                        <div class="wrapper">--}}
+{{--                            <header>--}}
+{{--                                <h2>{{ __('home.Price') }}</h2>--}}
+{{--                            </header>--}}
+{{--                            <div class="price-input">--}}
+{{--                                <div class="field">--}}
+{{--                                    <input type="number" onchange="performSearch()" id="inputProductMin"--}}
+{{--                                           class="rangePrice input-min" value="0">--}}
+{{--                                </div>--}}
+{{--                                <div class="separator">-</div>--}}
+{{--                                <div class="field">--}}
+{{--                                    <input type="number" onchange="performSearch()" id="inputProductMax"--}}
+{{--                                           class="rangePrice input-max" value="0">--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                            <div class="slider">--}}
+{{--                                <div class="progress"></div>--}}
+{{--                            </div>--}}
+{{--                            <div class="range-input">--}}
+{{--                                <input type="range" onchange="performSearch()" class="rangePrice range-min" min="0"--}}
+{{--                                       max="100000" value="25000" step="1000">--}}
+{{--                                <input type="range" onchange="performSearch()" class="rangePrice range-max" min="0"--}}
+{{--                                       max="100000" value="75000" step="1000">--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--                <div class="d-flex justify-content-center">--}}
+{{--                    <a href="" class="add-cv-bt w-100 apply-bt_delete col-6">{{ __('home.Refresh') }}</a>--}}
+{{--                    <form action="#" class="col-6 pr-0">--}}
+{{--                        <button type="button" data-bs-dismiss="offcanvas" aria-label="Close"--}}
+{{--                                class="add-cv-bt apply-bt_edit w-100">{{ __('home.Apply') }}</button>--}}
+{{--                    </form>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
     </body>
     <script>
         let listWishList = `{{ $listWishList }}`;

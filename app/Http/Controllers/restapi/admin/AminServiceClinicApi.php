@@ -16,11 +16,9 @@ class AminServiceClinicApi extends Controller
         $status = $request->input('status');
         if ($status) {
             $services = ServiceClinic::where('status', $status)
-                ->orderBy('id', 'desc')
                 ->get();
         } else {
             $services = ServiceClinic::where('status', '!=', ServiceClinicStatus::DELETED)
-                ->orderBy('id', 'desc')
                 ->get();
         }
 

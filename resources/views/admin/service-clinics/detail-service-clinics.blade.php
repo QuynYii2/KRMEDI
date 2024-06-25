@@ -39,8 +39,6 @@
         </form>
     </div>
     <script>
-        let accessToken = `Bearer ` + token;
-
         async function updateService(id) {
             let url = `{{ route('api.admin.service.clinic.update', ['id'=>':id']) }}`;
             url = url.replace(':id', id);
