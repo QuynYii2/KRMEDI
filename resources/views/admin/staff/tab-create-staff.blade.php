@@ -64,6 +64,7 @@
                     @endforeach
                 </select>
             </div>
+            @if($role->name != 'PHARMACIES' || $role->name != 'PHARMACEUTICAL COMPANIES')
             <div>
                 <label for="service">{{ __('home.Service Name') }}</label>
 {{--                <input type="text" class="form-control" id="service" name="service">--}}
@@ -73,6 +74,7 @@
                     @endforeach
                 </select>
             </div>
+            @endif
             <div>
                 <label for="year_of_experience">Kinh nghiệm</label>
                 <input type="number" class="form-control" id="year_of_experience" name="year_of_experience">
@@ -116,7 +118,7 @@
             };
             const formData = new FormData();
 
-            const arrField = ['username', 'member', 'email', 'phone', 'specialty', 'service', 'year_of_experience',
+            const arrField = ['username', 'member', 'email', 'phone', 'specialty', 'year_of_experience',
                 'identifier', 'password', 'password_confirm', 'manager_id'];
 
             let isValid = true

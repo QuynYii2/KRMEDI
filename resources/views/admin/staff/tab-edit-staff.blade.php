@@ -78,6 +78,7 @@
                 @endforeach
             </select>
         </div>
+        @if($role->name != 'PHARMACIES' || $role->name != 'PHARMACEUTICAL COMPANIES')
         <div>
             <label for="service">{{ __('home.Service Name') }}</label>
 {{--            <input type="text" class="form-control" id="service" value="{{ $user->service ?? '' }}" name="service">--}}
@@ -87,6 +88,7 @@
                 @endforeach
             </select>
         </div>
+        @endif
         <div>
             <label for="year_of_experience">Kinh nghiệm</label>
             <input type="number" class="form-control" id="year_of_experience"
@@ -146,7 +148,7 @@
                 formDataEdit.append(fieldName, $(`#${fieldName}`).val());
             });
 
-            const arrField = ['username', 'member', 'email', 'specialty', 'service', 'year_of_experience',
+            const arrField = ['username', 'member', 'email', 'specialty', 'year_of_experience',
                 'identifier', 'phone', 'status'];
 
             let isValid = true

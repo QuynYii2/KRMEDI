@@ -306,7 +306,7 @@
             $isStaff = true;
             break;
         }
-        if ($roleNames->contains('PHAMACISTS') || $roleNames->contains('THERAPISTS')) {
+        if ($roleNames->contains('PHAMACISTS') || $roleNames->contains('THERAPISTS') || $roleNames->contains('PHARMACIES')) {
             $isPhamacists = true;
         }
     }
@@ -581,17 +581,17 @@
                             class="bi bi-chevron-down ms-auto"></i>
                     </a>
                     <ul id="orders-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                        @if(!$isDoctor)
+                        @if(!$isAdmin && !$isDoctor && !$isPhamacists)
                         <li>
                             <a href="{{ route('view.admin.orders.list') }}">
-                                <i class="bi bi-circle"></i><span>{{ __('home.Order Selling/Buying') }}</span>
+                                <i class="bi bi-circle"></i><span>Thiết bị y tế</span>
                             </a>
                         </li>
                         @endif
 {{--                        @if (!$isStaff)--}}
                             <li>
                                 <a href="{{ route('view.admin.orders.index') }}">
-                                    <i class="bi bi-circle"></i><span>{{ __('home.Order Online Shopping') }}</span>
+                                    <i class="bi bi-circle"></i><span>Đơn thuốc</span>
                                 </a>
                             </li>
 {{--                        @endif--}}
@@ -617,11 +617,11 @@
                 <!-- End Call video Nav -->
 
                 <!-- Start Doctor Prescription Page Nav -->
-                    @if (!$isAdmin && !$isDoctor)
+                    @if (!$isPhamacists)
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="{{ route('view.prescription.result.doctor') }}">
                         <i class="bi bi-music-player"></i>
-                        <span>{{ __('home.Doctor Prescription') }}</span>
+                        <span>Quản lý đơn thuốc</span>
                     </a>
                 </li>
                     @endif
@@ -651,20 +651,20 @@
 
                 @if (!$isStaff)
                     <!-- List Coupon Nav -->
-                    <li class="nav-item">
-                        <a class="nav-link collapsed" data-bs-target="#coupon-nav" data-bs-toggle="collapse"
-                            href="#">
-                            <i class="bi bi-medium"></i><span>{{ __('home.Free Coupon') }}</span><i
-                                class="bi bi-chevron-down ms-auto"></i>
-                        </a>
-                        <ul id="coupon-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                            <li>
-                                <a href="{{ route('homeAdmin.list.coupons') }}">
-                                    <i class="bi bi-circle"></i><span>{{ __('home.List Coupon') }}</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+{{--                    <li class="nav-item">--}}
+{{--                        <a class="nav-link collapsed" data-bs-target="#coupon-nav" data-bs-toggle="collapse"--}}
+{{--                            href="#">--}}
+{{--                            <i class="bi bi-medium"></i><span>{{ __('home.Free Coupon') }}</span><i--}}
+{{--                                class="bi bi-chevron-down ms-auto"></i>--}}
+{{--                        </a>--}}
+{{--                        <ul id="coupon-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">--}}
+{{--                            <li>--}}
+{{--                                <a href="{{ route('homeAdmin.list.coupons') }}">--}}
+{{--                                    <i class="bi bi-circle"></i><span>{{ __('home.List Coupon') }}</span>--}}
+{{--                                </a>--}}
+{{--                            </li>--}}
+{{--                        </ul>--}}
+{{--                    </li>--}}
                     <!-- End List Coupon Nav -->
 
                     <!-- Booking Nav -->
