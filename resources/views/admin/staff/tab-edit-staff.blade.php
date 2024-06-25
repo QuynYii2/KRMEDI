@@ -27,24 +27,24 @@
             <label for="member">{{ __('home.Member') }}</label>
             <select id="member" name="member" class="form-select form-control">
                 <option
-                        value="{{ Role::DOCTORS }}" {{ $role == Role::DOCTORS ? 'selected' : '' }}>{{ __('home.Doctors') }}</option>
+                        value="{{ Role::DOCTORS }}" {{ $role == Role::DOCTORS ? 'selected' : '' }}>Bác sĩ</option>
                 <option
-                        value="{{ Role::PHAMACISTS }}" {{ $role == Role::PHAMACISTS ? 'selected' : '' }}>{{ __('home.Pharmacists') }}</option>
+                        value="{{ Role::PHAMACISTS }}" {{ $role == Role::PHAMACISTS ? 'selected' : '' }}>Dược sĩ</option>
                 <option
-                        value="{{ Role::THERAPISTS }}" {{ $role == Role::THERAPISTS ? 'selected' : '' }}>{{ __('home.THERAPISTS') }}</option>
+                        value="{{ Role::THERAPISTS }}" {{ $role == Role::THERAPISTS ? 'selected' : '' }}>Bác sĩ trị liệu</option>
                 <option
-                        value="{{ Role::ESTHETICIANS }}" {{ $role == Role::ESTHETICIANS ? 'selected' : '' }}>{{ __('home.ESTHETICIANS') }}</option>
+                        value="{{ Role::ESTHETICIANS }}" {{ $role == Role::ESTHETICIANS ? 'selected' : '' }}>Chuyên viên thẩm mỹ</option>
                 <option
-                        value="{{ Role::NURSES }}" {{ $role == Role::NURSES ? 'selected' : '' }}>{{ __('home.NURSES') }}</option>
-                <option
-                        value="{{ Role::PAITENTS }}" {{ $role == Role::PAITENTS ? 'selected' : '' }}>{{ __('home.Patients') }}</option>
-                <option
-                        value="{{ Role::NORMAL_PEOPLE }}" {{ $role == Role::NORMAL_PEOPLE ? 'selected' : '' }}>{{ __('home.NORMAL PEOPLE') }}</option>
+                        value="{{ Role::NURSES }}" {{ $role == Role::NURSES ? 'selected' : '' }}>Y tá</option>
+{{--                <option--}}
+{{--                        value="{{ Role::PAITENTS }}" {{ $role == Role::PAITENTS ? 'selected' : '' }}>{{ __('home.Patients') }}</option>--}}
+{{--                <option--}}
+{{--                        value="{{ Role::NORMAL_PEOPLE }}" {{ $role == Role::NORMAL_PEOPLE ? 'selected' : '' }}>{{ __('home.NORMAL PEOPLE') }}</option>--}}
             </select>
 
         </div>
         <div>
-            <label for="email">{{ __('home.Email') }}</label>
+            <label for="email">Email</label>
             <input type="email" class="form-control" id="email" name="email" value="{{ $user->email ?? '' }}">
         </div>
         <div>
@@ -59,18 +59,28 @@
             <label for="password_confirm">{{ __('home.Enter the Password') }}</label>
             <input type="password" class="form-control" id="password_confirm" name="password_confirm">
         </div>
-        <div>
-            <label for="hospital">{{ __('home.Hospital') }}</label>
-            <input type="text" class="form-control" id="hospital" name="hospital" value="{{ $user->hospital ?? '' }}">
-        </div>
+{{--        <div>--}}
+{{--            <label for="hospital">{{ __('home.Hospital') }}</label>--}}
+{{--            <input type="text" class="form-control" id="hospital" name="hospital" value="{{ $user->hospital ?? '' }}">--}}
+{{--        </div>--}}
         <div>
             <label for="specialty">{{ __('home.Specialty') }}</label>
-            <input type="text" class="form-control" id="specialty" value="{{ $user->specialty ?? '' }}"
-                   name="specialty">
+{{--            <input type="text" class="form-control" id="specialty" value="{{ $user->specialty ?? '' }}"--}}
+{{--                   name="specialty">--}}
+            <select class="form-select" id="specialty" name="specialty">
+                @foreach($departmentClinic as $departmentClinic)
+                    <option value="{{$departmentClinic->name}}" @if($user->specialty == $departmentClinic->name) selected @endif> {{$departmentClinic->name}}</option>
+                @endforeach
+            </select>
         </div>
         <div>
             <label for="service">{{ __('home.Service Name') }}</label>
-            <input type="text" class="form-control" id="service" value="{{ $user->service ?? '' }}" name="service">
+{{--            <input type="text" class="form-control" id="service" value="{{ $user->service ?? '' }}" name="service">--}}
+            <select id="service" name="service" class="form-select form-control">
+                @foreach($serviceClinic as $service)
+                    <option value="{{ $service->name }}" @if($user->service == $service->name) selected @endif>{{ $service->name }}</option>
+                @endforeach
+            </select>
         </div>
         <div>
             <label for="year_of_experience">{{ __('home.Doctor Experience') }}</label>
@@ -94,11 +104,11 @@
                 @endforeach
             </select>
         </div>
-        <div>
-            <label for="workplace">{{ __('home.Workplace') }}</label>
-            <input type="text" class="form-control" id="workplace" value="{{ $user->workplace ?? '' }}"
-                   name="workplace">
-        </div>
+{{--        <div>--}}
+{{--            <label for="workplace">{{ __('home.Workplace') }}</label>--}}
+{{--            <input type="text" class="form-control" id="workplace" value="{{ $user->workplace ?? '' }}"--}}
+{{--                   name="workplace">--}}
+{{--        </div>--}}
         <div>
             <label for="status">{{ __('home.Status') }}</label>
             <select id="status" name="status" class="form-select form-control">
@@ -131,9 +141,8 @@
                 formDataEdit.append(fieldName, $(`#${fieldName}`).val());
             });
 
-            const arrField = ['username', 'member', 'email',
-                'hospital', 'specialty', 'service', 'year_of_experience',
-                'identifier', 'department_id', 'workplace',
+            const arrField = ['username', 'member', 'email', 'specialty', 'service', 'year_of_experience',
+                'identifier', 'department_id',
                 'phone', 'status'];
 
             let isValid = true

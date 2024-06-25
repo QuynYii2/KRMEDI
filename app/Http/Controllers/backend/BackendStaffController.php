@@ -4,11 +4,13 @@ namespace App\Http\Controllers\backend;
 
 use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
+use App\Models\Clinic;
 use App\Models\Role;
 use App\Models\RoleUser;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class BackendStaffController extends Controller
@@ -38,6 +40,8 @@ class BackendStaffController extends Controller
             $identifier = $request->input('identifier');
             $department_id = $request->input('department_id');
             $workspace = $request->input('workplace');
+
+            $clinic = Clinic::where('user_id',Auth::id())->first();
 
             /* check username không được trống */
             if (!$username) {
@@ -93,14 +97,14 @@ class BackendStaffController extends Controller
             $user->phone = $phone;
             $user->address_code = '';
 
-            $user->hospital = $hospital;
+            $user->hospital = $clinic->name;
             $user->specialty = $specialty;
             $user->service = $service;
             $user->year_of_experience = $year_of_experience;
 
             $user->identifier = $identifier;
             $user->department_id = $department_id;
-            $user->workplace = $workspace;
+            $user->workplace = $clinic->name;
 
             $user->abouts = 'default';
             $user->abouts_en = 'default';
@@ -158,6 +162,8 @@ class BackendStaffController extends Controller
             $identifier = $request->input('identifier');
             $department_id = $request->input('department_id');
             $workspace = $request->input('workplace');
+
+            $clinic = Clinic::where('user_id',Auth::id())->first();
 
             /* check username không được trống */
             if (!$username) {
@@ -223,14 +229,14 @@ class BackendStaffController extends Controller
             $user->phone = $phone;
             $user->status = $status;
 
-            $user->hospital = $hospital;
+            $user->hospital = $clinic->name;
             $user->specialty = $specialty;
             $user->service = $service;
             $user->year_of_experience = $year_of_experience;
 
             $user->identifier = $identifier;
             $user->department_id = $department_id;
-            $user->workplace = $workspace;
+            $user->workplace = $clinic->name;
 
             $success = $user->save();
 

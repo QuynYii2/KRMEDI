@@ -487,7 +487,9 @@
                     <li class="nav-item">
                         <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse"
                             href="#">
-                            <i class="bi bi-file-medical"></i><span>{{ __('home.Product Medicine') }}</span><i
+{{--                            <i class="bi bi-file-medical"></i><span>{{ __('home.Product Medicine') }}</span><i--}}
+{{--                                class="bi bi-chevron-down ms-auto"></i>--}}
+                            <i class="bi bi-file-medical"></i><span>Danh mục sp/Duyệt sp</span><i
                                 class="bi bi-chevron-down ms-auto"></i>
                         </a>
                         <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
@@ -508,29 +510,46 @@
                 <!-- End Product Medicine Nav -->
 
                 <!-- Selling/Buying Nav -->
-                <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#selling-nav" data-bs-toggle="collapse"
-                        href="#">
-                        <i class="bi bi-menu-button-wide"></i><span>{{ __('home.Selling/Buying') }}</span><i
-                            class="bi bi-chevron-down ms-auto"></i>
-                    </a>
-                    <ul id="selling-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                        <li>
-                            <a href="{{ route('homeAdmin.list.product') }}">
-                                <i class="bi bi-circle"></i><span>{{ __('home.Selling/Buying') }}</span>
-                            </a>
-                        </li>
-                        @if ($isAdmin)
+{{--                <li class="nav-item">--}}
+{{--                    <a class="nav-link collapsed" data-bs-target="#selling-nav" data-bs-toggle="collapse"--}}
+{{--                        href="#">--}}
+{{--                        <i class="bi bi-menu-button-wide"></i><span>{{ __('home.Selling/Buying') }}</span><i--}}
+{{--                            class="bi bi-chevron-down ms-auto"></i>--}}
+{{--                        <i class="bi bi-menu-button-wide"></i><span>Chợ đồ cũ</span><i--}}
+{{--                            class="bi bi-chevron-down ms-auto"></i>--}}
+{{--                    </a>--}}
+{{--                    <ul id="selling-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">--}}
+{{--                        <li>--}}
+{{--                            <a href="{{ route('homeAdmin.list.product') }}">--}}
+{{--                                <i class="bi bi-circle"></i><span>{{ __('home.Selling/Buying') }}</span>--}}
+{{--                                <i class="bi bi-circle"></i><span>Sản phẩm</span>--}}
+
+{{--                            </a>--}}
+{{--                        </li>--}}
+{{--                        @if ($isAdmin)--}}
+{{--                            <li>--}}
+{{--                                <a href="{{ route('view.admin.category.index') }}">--}}
+{{--                                    <i class="bi bi-circle"></i><span>{{ __('home.Category') }}</span>--}}
+{{--                                </a>--}}
+{{--                            </li>--}}
+{{--                        @endif--}}
+{{--                    </ul>--}}
+{{--                </li>--}}
+                <!-- End Selling/Buying Nav -->
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" data-bs-target="#medicine-nav" data-bs-toggle="collapse"
+                           href="#">
+                            <i class="bi bi-memory"></i><span>{{ __('home.Product Medicine') }}</span><i
+                                class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="medicine-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                             <li>
-                                <a href="{{ route('view.admin.category.index') }}">
-                                    <i class="bi bi-circle"></i><span>{{ __('home.Category') }}</span>
+                                <a href="{{ route('api.backend.product-medicine.index') }}">
+                                    <i class="bi bi-circle"></i><span>{{ __('home.List product medicine') }}</span>
                                 </a>
                             </li>
-                        @endif
-                    </ul>
-                </li>
-                <!-- End Selling/Buying Nav -->
-
+                        </ul>
+                    </li>
                 <!-- News/Events Nav -->
                 <li class="nav-item">
                     <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse"
@@ -556,37 +575,39 @@
                             class="bi bi-chevron-down ms-auto"></i>
                     </a>
                     <ul id="orders-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        @if(!$isDoctor)
                         <li>
                             <a href="{{ route('view.admin.orders.list') }}">
                                 <i class="bi bi-circle"></i><span>{{ __('home.Order Selling/Buying') }}</span>
                             </a>
                         </li>
-                        @if (!$isStaff)
+                        @endif
+{{--                        @if (!$isStaff)--}}
                             <li>
                                 <a href="{{ route('view.admin.orders.index') }}">
                                     <i class="bi bi-circle"></i><span>{{ __('home.Order Online Shopping') }}</span>
                                 </a>
                             </li>
-                        @endif
+{{--                        @endif--}}
                     </ul>
                 </li>
                 <!-- End Order Nav -->
 
                 <!-- Call video Nav -->
-                <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#call-video-nav" data-bs-toggle="collapse"
-                        href="#">
-                        <i class="bi bi-camera-video"></i><span>{{ __('home.Call video') }}</span><i
-                            class="bi bi-chevron-down ms-auto"></i>
-                    </a>
-                    <ul id="call-video-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                        <li>
-                            <a href="{{ route('api.backend.connect.video.index3') }}">
-                                <i class="bi bi-circle"></i><span>{{ __('home.Call video') }}</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+{{--                <li class="nav-item">--}}
+{{--                    <a class="nav-link collapsed" data-bs-target="#call-video-nav" data-bs-toggle="collapse"--}}
+{{--                        href="#">--}}
+{{--                        <i class="bi bi-camera-video"></i><span>{{ __('home.Call video') }}</span><i--}}
+{{--                            class="bi bi-chevron-down ms-auto"></i>--}}
+{{--                    </a>--}}
+{{--                    <ul id="call-video-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">--}}
+{{--                        <li>--}}
+{{--                            <a href="{{ route('api.backend.connect.video.index3') }}">--}}
+{{--                                <i class="bi bi-circle"></i><span>{{ __('home.Call video') }}</span>--}}
+{{--                            </a>--}}
+{{--                        </li>--}}
+{{--                    </ul>--}}
+{{--                </li>--}}
                 <!-- End Call video Nav -->
 
                 <!-- Start Doctor Prescription Page Nav -->
@@ -661,52 +682,53 @@
                     <!-- End Booking Nav -->
 
                     <!-- Booking Nav -->
-                    <li class="nav-item">
-                        <a class="nav-link collapsed" data-bs-target="#medicine-nav" data-bs-toggle="collapse"
-                            href="#">
-                            <i class="bi bi-memory"></i><span>{{ __('home.Product Medicine') }}</span><i
-                                class="bi bi-chevron-down ms-auto"></i>
-                        </a>
-                        <ul id="medicine-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                            <li>
-                                <a href="{{ route('api.backend.product-medicine.index') }}">
-                                    <i class="bi bi-circle"></i><span>{{ __('home.List product medicine') }}</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('view.admin.surveys.index') }}">
-                                    <i class="bi bi-circle"></i><span>{{ __('home.List Survey') }}</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+{{--                    <li class="nav-item">--}}
+{{--                        <a class="nav-link collapsed" data-bs-target="#medicine-nav" data-bs-toggle="collapse"--}}
+{{--                            href="#">--}}
+{{--                            <i class="bi bi-memory"></i><span>{{ __('home.Product Medicine') }}</span><i--}}
+{{--                                class="bi bi-chevron-down ms-auto"></i>--}}
+{{--                        </a>--}}
+{{--                        <ul id="medicine-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">--}}
+{{--                            <li>--}}
+{{--                                <a href="{{ route('api.backend.product-medicine.index') }}">--}}
+{{--                                    <i class="bi bi-circle"></i><span>{{ __('home.List product medicine') }}</span>--}}
+{{--                                </a>--}}
+{{--                            </li>--}}
+{{--                            <li>--}}
+{{--                                <a href="{{ route('view.admin.surveys.index') }}">--}}
+{{--                                    <i class="bi bi-circle"></i><span>{{ __('home.List Survey') }}</span>--}}
+{{--                                </a>--}}
+{{--                            </li>--}}
+{{--                        </ul>--}}
+{{--                    </li>--}}
                     <!-- End Booking Nav -->
 
                     <!-- Start Medical Result Business Nav -->
-                    <li class="nav-item">
-                        <a class="nav-link collapsed" data-bs-target="#medical-result-nav" data-bs-toggle="collapse"
-                            href="#">
-                            <i
-                                class="bi bi-segmented-nav"></i><span>{{ __('home.Medical examination results') }}</span><i
-                                class="bi bi-chevron-down ms-auto"></i>
-                        </a>
-                        <ul id="medical-result-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                            <li>
-                                <a href="{{ route('view.admin.medical.result.list') }}">
-                                    <i class="bi bi-circle"></i><span>{{ __('home.List examination results') }}</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('view.admin.medical.result.create') }}">
-                                    <i
-                                        class="bi bi-circle"></i><span>{{ __('home.Create examination results') }}</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+{{--                    <li class="nav-item">--}}
+{{--                        <a class="nav-link collapsed" data-bs-target="#medical-result-nav" data-bs-toggle="collapse"--}}
+{{--                            href="#">--}}
+{{--                            <i--}}
+{{--                                class="bi bi-segmented-nav"></i><span>{{ __('home.Medical examination results') }}</span><i--}}
+{{--                                class="bi bi-chevron-down ms-auto"></i>--}}
+{{--                        </a>--}}
+{{--                        <ul id="medical-result-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">--}}
+{{--                            <li>--}}
+{{--                                <a href="{{ route('view.admin.medical.result.list') }}">--}}
+{{--                                    <i class="bi bi-circle"></i><span>{{ __('home.List examination results') }}</span>--}}
+{{--                                </a>--}}
+{{--                            </li>--}}
+{{--                            <li>--}}
+{{--                                <a href="{{ route('view.admin.medical.result.create') }}">--}}
+{{--                                    <i--}}
+{{--                                        class="bi bi-circle"></i><span>{{ __('home.Create examination results') }}</span>--}}
+{{--                                </a>--}}
+{{--                            </li>--}}
+{{--                        </ul>--}}
+{{--                    </li>--}}
                     <!-- End Medical Result Business Nav -->
 
                     <!-- Examination Nav -->
+                        @if (!$isAdmin && !$isDoctor)
                     <li class="nav-item">
                         <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse"
                             href="#">
@@ -721,11 +743,12 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link collapsed" href="{{ route('view.admin.user.zalo') }}">
-                            <i class="bi bi-circle"></i><span>{{ __('admin.zalo-oa-follower') }}</span>
-                        </a>
-                    </li>
+                        @endif
+{{--                    <li class="nav-item">--}}
+{{--                        <a class="nav-link collapsed" href="{{ route('view.admin.user.zalo') }}">--}}
+{{--                            <i class="bi bi-circle"></i><span>{{ __('admin.zalo-oa-follower') }}</span>--}}
+{{--                        </a>--}}
+{{--                    </li>--}}
                     <!-- End Examination Nav -->
                 @endif
                 @if ($isAdmin)
@@ -733,13 +756,20 @@
                     <li class="nav-item">
                         <a class="nav-link collapsed" data-bs-target="#clinics-nav" data-bs-toggle="collapse"
                             href="#">
-                            <i class="bi bi-robot"></i><span>{{ __('home.Clinics/Pharmacies') }}</span><i
+{{--                            <i class="bi bi-robot"></i><span>{{ __('home.Clinics/Pharmacies') }}</span><i--}}
+{{--                                class="bi bi-chevron-down ms-auto"></i>--}}
+                            <i class="bi bi-robot"></i><span>Phòng khám/Bệnh vện</span><i
                                 class="bi bi-chevron-down ms-auto"></i>
                         </a>
                         <ul id="clinics-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                             <li>
                                 <a href="{{ route('homeAdmin.list.clinics') }}">
                                     <i class="bi bi-circle"></i><span>{{ __('home.List Clinics') }}</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('api.backend.account-register.index') }}">
+                                    <i class="bi bi-circle"></i><span>{{ __('home.Duyệt đăng ký phòng khám') }}</span>
                                 </a>
                             </li>
                             <li>
@@ -761,12 +791,8 @@
                         <ul id="doctor-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                             <li>
                                 <a href="{{ route('homeAdmin.list.doctors') }}">
-                                    <i class="bi bi-circle"></i><span>{{ __('home.Examination') }}</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('api.backend.account-register.index') }}">
-                                    <i class="bi bi-circle"></i><span>{{ __('home.Duyệt đăng ký phòng khám') }}</span>
+{{--                                    <i class="bi bi-circle"></i><span>{{ __('home.Examination') }}</span>--}}
+                                    <i class="bi bi-circle"></i><span>Danh sách</span>
                                 </a>
                             </li>
                         </ul>
@@ -811,7 +837,8 @@
                             </li>
                             <li>
                                 <a href="{{ route('user.topic.videos.list') }}">
-                                    <i class="bi bi-circle"></i><span>{{ __('home.Topic Videos') }}</span>
+{{--                                    <i class="bi bi-circle"></i><span>{{ __('home.Topic Videos') }}</span>--}}
+                                    <i class="bi bi-circle"></i><span>Danh mục</span>
                                 </a>
                             </li>
                         </ul>

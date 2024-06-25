@@ -24,15 +24,15 @@
             <div>
                 <label for="member">{{ __('home.Member') }}</label>
                 <select id="member" name="member" class="form-select form-control">
-                    <option value="{{ Role::DOCTORS }}">{{ Role::DOCTORS }}</option>
-                    <option value="{{ Role::PHAMACISTS }}">{{ Role::PHAMACISTS }}</option>
-                    <option value="{{ Role::THERAPISTS }}">{{ Role::THERAPISTS }}</option>
-                    <option value="{{ Role::ESTHETICIANS }}">{{ Role::ESTHETICIANS }}</option>
-                    <option value="{{ Role::NURSES }}">{{ Role::NURSES }}</option>
+                    <option value="{{ Role::DOCTORS }}">Bác sĩ</option>
+                    <option value="{{ Role::PHAMACISTS }}">Dược sĩ</option>
+                    <option value="{{ Role::THERAPISTS }}">Bác sĩ trị liệu</option>
+                    <option value="{{ Role::ESTHETICIANS }}">Chuyên viên thẩm mỹ</option>
+                    <option value="{{ Role::NURSES }}">Y tá</option>
                 </select>
             </div>
             <div>
-                <label for="email">{{ __('home.Email') }}</label>
+                <label for="email">Email</label>
                 <input type="email" class="form-control" id="email" name="email">
             </div>
             <div>
@@ -47,17 +47,27 @@
                 <label for="password_confirm">{{ __('home.Enter the Password') }}</label>
                 <input type="password" class="form-control" id="password_confirm" name="password_confirm">
             </div>
-            <div>
-                <label for="hospital">{{ __('home.Hospital') }}</label>
-                <input type="text" class="form-control" id="hospital" name="hospital">
-            </div>
+{{--            <div>--}}
+{{--                <label for="hospital">{{ __('home.Hospital') }}</label>--}}
+{{--                <input type="text" class="form-control" id="hospital" name="hospital">--}}
+{{--            </div>--}}
             <div>
                 <label for="specialty">{{ __('home.Specialty') }}</label>
-                <input type="text" class="form-control" id="specialty" name="specialty">
+{{--                <input type="text" class="form-control" id="specialty" name="specialty">--}}
+                <select class="form-select" id="specialty" name="specialty">
+                    @foreach($departmentClinic as $departmentClinic)
+                        <option value="{{$departmentClinic->name}}"> {{$departmentClinic->name}}</option>
+                    @endforeach
+                </select>
             </div>
             <div>
                 <label for="service">{{ __('home.Service Name') }}</label>
-                <input type="text" class="form-control" id="service" name="service">
+{{--                <input type="text" class="form-control" id="service" name="service">--}}
+                <select id="service" name="service" class="form-select form-control">
+                    @foreach($serviceClinic as $service)
+                    <option value="{{ $service->name }}">{{ $service->name }}</option>
+                    @endforeach
+                </select>
             </div>
             <div>
                 <label for="year_of_experience">{{ __('home.Doctor Experience') }}</label>
@@ -78,10 +88,10 @@
                     @endforeach
                 </select>
             </div>
-            <div>
-                <label for="workplace">{{ __('home.Workplace') }}</label>
-                <input type="text" class="form-control" id="workplace" name="workplace">
-            </div>
+{{--            <div>--}}
+{{--                <label for="workplace">{{ __('home.Workplace') }}</label>--}}
+{{--                <input type="text" class="form-control" id="workplace" name="workplace">--}}
+{{--            </div>--}}
         </form>
         <div hidden>
             <label for="manager_id"></label><input type="text" class="form-control" id="manager_id" name="manager_id"
@@ -102,10 +112,8 @@
             };
             const formData = new FormData();
 
-            const arrField = ['username', 'member', 'email', 'phone',
-                'hospital', 'specialty', 'service', 'year_of_experience',
-                'identifier', 'department_id', 'workplace',
-                'password', 'password_confirm', 'manager_id'];
+            const arrField = ['username', 'member', 'email', 'phone', 'specialty', 'service', 'year_of_experience',
+                'identifier', 'department_id', 'password', 'password_confirm', 'manager_id'];
 
             let isValid = true
             /* Tạo fn appendDataForm ở admin blade*/

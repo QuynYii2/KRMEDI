@@ -168,6 +168,7 @@ class BackendNewEventController extends Controller
             return response('Vui lòng thêm ảnh !!!', 400);
         }
         $newEvent->thumbnail = $thumbnail;
+        $newEvent->user_id = Auth::id();
 
         $success = $newEvent->save();
 

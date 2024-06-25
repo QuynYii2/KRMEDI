@@ -1487,42 +1487,42 @@
         </div>
     </div>
     <div class="bg-tuyen-dung">
-        <div class="container mt-4">
-            <div id="recruitment-homeNew">
-                <div class="title-recruitment--homeNew">
-                    <div class="krm-title-recruitment">{{ __('home.Recruitment') }}</div>
-                    <div class="space-gach">|</div>
-                    <a href="#">{{ __('home.See all') }} <i class="fa-solid fa-chevron-right pl-2"></i></a>
-                </div>
-                <div class="d-md-flex main-recruitment--homeNew justify-content-between">
-                    <div class="col-lg-3 col-md-4 col-6">
-                        <div class="border-radius-homeNew">
-                            <div>
-                                <img src="{{asset('img/homeNew-img/Container.png')}}" alt="">
-                            </div>
-                            <div class="krm-name-recruitment">
-                                Dental treatments
-                            </div>
-                            <div class="krm-describe-recruitment">
-                                Lorem ipsum dolor sit amet consecte tur adipiscing elit semper dalaracc lacus vel
-                                facilisis volutpat est velitolm.
-                            </div>
-                            <style>
+{{--        <div class="container mt-4">--}}
+{{--            <div id="recruitment-homeNew">--}}
+{{--                <div class="title-recruitment--homeNew">--}}
+{{--                    <div class="krm-title-recruitment">{{ __('home.Recruitment') }}</div>--}}
+{{--                    <div class="space-gach">|</div>--}}
+{{--                    <a href="#">{{ __('home.See all') }} <i class="fa-solid fa-chevron-right pl-2"></i></a>--}}
+{{--                </div>--}}
+{{--                <div class="d-md-flex main-recruitment--homeNew justify-content-between">--}}
+{{--                    <div class="col-lg-3 col-md-4 col-6">--}}
+{{--                        <div class="border-radius-homeNew">--}}
+{{--                            <div>--}}
+{{--                                <img src="{{asset('img/homeNew-img/Container.png')}}" alt="">--}}
+{{--                            </div>--}}
+{{--                            <div class="krm-name-recruitment">--}}
+{{--                                Dental treatments--}}
+{{--                            </div>--}}
+{{--                            <div class="krm-describe-recruitment">--}}
+{{--                                Lorem ipsum dolor sit amet consecte tur adipiscing elit semper dalaracc lacus vel--}}
+{{--                                facilisis volutpat est velitolm.--}}
+{{--                            </div>--}}
+{{--                            <style>--}}
 
-                            </style>
-                            <div class="d-flex align-content-center">
-                                <div class="show-learn-more">Learn more</div>
-                                <a id="arrow-container" class="ml-2">
-                                    <span class="line"></span>
-                                    <span class="arrow">⟶</span>
-                                </a>
-                            </div>
+{{--                            </style>--}}
+{{--                            <div class="d-flex align-content-center">--}}
+{{--                                <div class="show-learn-more">Learn more</div>--}}
+{{--                                <a id="arrow-container" class="ml-2">--}}
+{{--                                    <span class="line"></span>--}}
+{{--                                    <span class="arrow">⟶</span>--}}
+{{--                                </a>--}}
+{{--                            </div>--}}
 
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
         <div class="container  mt-4">
             <div id="recruitment-homeNew">
                 <div class="title-recruitment--homeNew">
