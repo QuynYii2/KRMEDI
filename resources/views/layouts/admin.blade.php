@@ -295,6 +295,7 @@
         }
         if ($roleNames->contains('DOCTORS')) {
             $isDoctor = true;
+            break;
         }
         if (
             $roleNames->contains('DOCTORS') ||
@@ -305,13 +306,14 @@
             $roleNames->contains('NURSES')
         ) {
             $isStaff = true;
-            break;
         }
         if ($roleNames->contains('THERAPISTS') || $roleNames->contains('PHARMACIES')) {
             $isPhamacies = true;
+            break;
         }
         if ($roleNames->contains('PHAMACISTS')) {
          $isPhamacists = true;
+         break;
         }
     }
 
@@ -578,7 +580,6 @@
                 <!-- End News/Events Nav -->
 
                 <!-- Order Nav -->
-                @if(!$isPhamacists)
                 <li class="nav-item">
                     <a class="nav-link collapsed" data-bs-target="#orders-nav" data-bs-toggle="collapse"
                         href="#">
@@ -586,7 +587,7 @@
                             class="bi bi-chevron-down ms-auto"></i>
                     </a>
                     <ul id="orders-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                        @if(!$isAdmin && !$isDoctor && !$isPhamacies)
+                        @if($isAdmin == false && $isDoctor == false && $isPhamacies == false && $isPhamacists == false)
                         <li>
                             <a href="{{ route('view.admin.orders.list') }}">
                                 <i class="bi bi-circle"></i><span>Thiết bị y tế</span>
@@ -602,7 +603,6 @@
 {{--                        @endif--}}
                     </ul>
                 </li>
-                    @endif
                 <!-- End Order Nav -->
 
                 <!-- Call video Nav -->
@@ -623,7 +623,7 @@
                 <!-- End Call video Nav -->
 
                 <!-- Start Doctor Prescription Page Nav -->
-                    @if (!$isPhamacists && !$isPhamacies)
+                    @if ($isPhamacists == false && $isPhamacies == false)
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="{{ route('view.prescription.result.doctor') }}">
                         <i class="bi bi-music-player"></i>
@@ -674,7 +674,7 @@
                     <!-- End List Coupon Nav -->
 
                     <!-- Booking Nav -->
-                    @if(!$isPhamacists)
+                    @if($isPhamacists == false && $isPhamacies == false)
                     <li class="nav-item">
                         <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse"
                             href="#">
