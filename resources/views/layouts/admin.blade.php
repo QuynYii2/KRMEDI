@@ -536,20 +536,6 @@
 {{--                    </ul>--}}
 {{--                </li>--}}
                 <!-- End Selling/Buying Nav -->
-                    <li class="nav-item">
-                        <a class="nav-link collapsed" data-bs-target="#medicine-nav" data-bs-toggle="collapse"
-                           href="#">
-                            <i class="bi bi-memory"></i><span>{{ __('home.Product Medicine') }}</span><i
-                                class="bi bi-chevron-down ms-auto"></i>
-                        </a>
-                        <ul id="medicine-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                            <li>
-                                <a href="{{ route('api.backend.product-medicine.index') }}">
-                                    <i class="bi bi-circle"></i><span>{{ __('home.List product medicine') }}</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
                 <!-- News/Events Nav -->
                 <li class="nav-item">
                     <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse"
@@ -780,7 +766,20 @@
                         </ul>
                     </li>
                     <!-- End Clinics Nav -->
-
+                        <li class="nav-item">
+                            <a class="nav-link collapsed" data-bs-target="#medicine-nav" data-bs-toggle="collapse"
+                               href="#">
+                                <i class="bi bi-memory"></i><span>{{ __('home.Product Medicine') }}</span><i
+                                    class="bi bi-chevron-down ms-auto"></i>
+                            </a>
+                            <ul id="medicine-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                                <li>
+                                    <a href="{{ route('api.backend.product-medicine.index') }}">
+                                        <i class="bi bi-circle"></i><span>{{ __('home.List product medicine') }}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     <!-- Doctor Nav -->
                     <li class="nav-item">
                         <a class="nav-link collapsed" data-bs-target="#doctor-nav" data-bs-toggle="collapse"

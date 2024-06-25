@@ -64,7 +64,7 @@
 {{--            <input type="text" class="form-control" id="hospital" name="hospital" value="{{ $user->hospital ?? '' }}">--}}
 {{--        </div>--}}
         <div>
-            <label for="specialty">{{ __('home.Specialty') }}</label>
+            <label for="specialty">Chuyên khoa</label>
 {{--            <input type="text" class="form-control" id="specialty" value="{{ $user->specialty ?? '' }}"--}}
 {{--                   name="specialty">--}}
             <select class="form-select" id="specialty" name="specialty">
@@ -92,18 +92,18 @@
             <input type="text" class="form-control" id="identifier" value="{{ $user->identifier ?? '' }}"
                    name="identifier">
         </div>
-        @php
-            $departments = \App\Models\DoctorDepartment::where('status', \App\Enums\DoctorDepartmentStatus::ACTIVE)->get();
-        @endphp
-        <div>
-            <label for="department_id">{{ __('home.Department') }}</label>
-            <select class="form-select" id="department_id" name="department_id">
-                @foreach($departments as $department)
-                    <option value="{{$department->id}}"
-                            {{ $user->department_id == $department->id ? 'selected' : '' }}> {{$department->name}}</option>
-                @endforeach
-            </select>
-        </div>
+{{--        @php--}}
+{{--            $departments = \App\Models\DoctorDepartment::where('status', \App\Enums\DoctorDepartmentStatus::ACTIVE)->get();--}}
+{{--        @endphp--}}
+{{--        <div>--}}
+{{--            <label for="department_id">{{ __('home.Department') }}</label>--}}
+{{--            <select class="form-select" id="department_id" name="department_id">--}}
+{{--                @foreach($departments as $department)--}}
+{{--                    <option value="{{$department->id}}"--}}
+{{--                            {{ $user->department_id == $department->id ? 'selected' : '' }}> {{$department->name}}</option>--}}
+{{--                @endforeach--}}
+{{--            </select>--}}
+{{--        </div>--}}
 {{--        <div>--}}
 {{--            <label for="workplace">{{ __('home.Workplace') }}</label>--}}
 {{--            <input type="text" class="form-control" id="workplace" value="{{ $user->workplace ?? '' }}"--}}
@@ -142,8 +142,7 @@
             });
 
             const arrField = ['username', 'member', 'email', 'specialty', 'service', 'year_of_experience',
-                'identifier', 'department_id',
-                'phone', 'status'];
+                'identifier', 'phone', 'status'];
 
             let isValid = true
             /* Tạo fn appendDataForm ở admin blade*/
