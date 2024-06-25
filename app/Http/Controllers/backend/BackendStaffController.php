@@ -5,6 +5,7 @@ namespace App\Http\Controllers\backend;
 use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Clinic;
+use App\Models\Department;
 use App\Models\Role;
 use App\Models\RoleUser;
 use App\Models\User;
@@ -42,6 +43,7 @@ class BackendStaffController extends Controller
             $workspace = $request->input('workplace');
 
             $clinic = Clinic::where('user_id',Auth::id())->first();
+            $departments = Department::where('name',$specialty)->first();
 
             /* check username không được trống */
             if (!$username) {
@@ -103,7 +105,7 @@ class BackendStaffController extends Controller
             $user->year_of_experience = $year_of_experience;
 
             $user->identifier = $identifier;
-            $user->department_id = $department_id;
+            $user->department_id = $departments->id;
             $user->workplace = $clinic->name;
 
             $user->abouts = 'default';
@@ -164,6 +166,7 @@ class BackendStaffController extends Controller
             $workspace = $request->input('workplace');
 
             $clinic = Clinic::where('user_id',Auth::id())->first();
+            $departments = Department::where('name',$specialty)->first();
 
             /* check username không được trống */
             if (!$username) {
@@ -235,7 +238,7 @@ class BackendStaffController extends Controller
             $user->year_of_experience = $year_of_experience;
 
             $user->identifier = $identifier;
-            $user->department_id = $department_id;
+            $user->department_id = $departments->id;
             $user->workplace = $clinic->name;
 
             $success = $user->save();
