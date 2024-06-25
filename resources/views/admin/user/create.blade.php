@@ -91,11 +91,11 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-6">
-                        <label class="form-control-label" for="address_code">{{ __('home.AddressCode') }}</label>
-                        <input type="text" id="address_code" class="form-control" name="address_code"
-                               placeholder="ha_noi" value="">
-                    </div>
+{{--                    <div class="form-group col-md-6">--}}
+{{--                        <label class="form-control-label" for="address_code">{{ __('home.AddressCode') }}</label>--}}
+{{--                        <input type="text" id="address_code" class="form-control" name="address_code"--}}
+{{--                               placeholder="ha_noi" value="">--}}
+{{--                    </div>--}}
                     <div class="form-group col-md-6">
                         <label for="detail_address">{{ __('home.địa chỉ chi tiết việt') }}</label>
                         <input class="form-control" name="detail_address" id="detail_address" value="">
@@ -205,7 +205,7 @@
         })
     </script>
     {{-- Append form element follow type account --}}
-    <script>
+    <script type="text/javascript">
         function showOnlyBusiness() {
             let html = ``;
             $('#only_business').empty().append(html);
@@ -215,8 +215,14 @@
             let html = `<h1>Info doctor</h1>
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label for="specialty">{{ __('home.chuyên môn việt') }}</label>
-                                <input type="text" class="form-control" id="specialty" name="specialty" value="">
+                                <label for="specialty">Chuyên khoa</label>
+                                <select class="form-select" id="department_id" name="department_id">
+                                    @foreach($departments as $department)
+                                        <option value="{{$department->id}}" data-limit="300" class="text-shortcut">
+                                            {{$department->name}}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="col-sm-6">
                                 <label for="identifier">{{ __('home.Mã định danh trên giấy hành nghề') }}</label>
@@ -280,26 +286,15 @@
                             <input type="text" class="form-control d-none" id="apply_for" name="apply_for">
                         </div>
                         <div class="row">
-                            <div class="form-group col-md-4">
-                                <label for="department_id">{{ __('home.Department') }}</label>
-                                <select class="form-select" id="department_id" name="department_id">
-                                    @foreach($departments as $department)
-            <option value="{{$department->id}}" data-limit="300"
-                                                      class="text-shortcut">
-                                                            {{$department->name}}
-            </option>
-@endforeach
-            </select>
-        </div>
-        <div class="form-group col-md-4">
-            <label for="year_of_experience">{{ __('home.Năm kinh nghiệm') }}</label>
-                                <input type="number" class="form-control" max="80" id="year_of_experience"
-                                       name="year_of_experience" value="">
+                            <div class="form-group col-md-6">
+                                <label for="year_of_experience">{{ __('home.Năm kinh nghiệm') }}</label>
+                                                    <input type="number" class="form-control" max="80" id="year_of_experience"
+                                                           name="year_of_experience" value="">
                             </div>
-                            <div class="form-element col-md-4">
-                <label for="workspace">{{ __('home.Workplace') }}</label>
-                <input class="form-control" id="workspace" type="text" name="workspace">
-            </div>
+                            <div class="form-element col-md-6">
+                                <label for="workspace">{{ __('home.Workplace') }}</label>
+                                <input class="form-control" id="workspace" type="text" name="workspace">
+                            </div>
                         </div>
                         <div class="row">
                             <div class="form-group">

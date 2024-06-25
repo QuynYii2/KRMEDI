@@ -92,11 +92,11 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-6">
-                        <label class="form-control-label" for="address_code">{{ __('home.AddressCode') }}</label>
-                        <input type="text" id="address_code" class="form-control" name="address_code"
-                               placeholder="ha_noi" value="{{ $user->address_code }}">
-                    </div>
+{{--                    <div class="form-group col-md-6">--}}
+{{--                        <label class="form-control-label" for="address_code">{{ __('home.AddressCode') }}</label>--}}
+{{--                        <input type="text" id="address_code" class="form-control" name="address_code"--}}
+{{--                               placeholder="ha_noi" value="{{ $user->address_code }}">--}}
+{{--                    </div>--}}
                     <div class="form-group col-md-6">
                         <label for="detail_address">{{ __('home.địa chỉ chi tiết việt') }}</label>
                         <input class="form-control" name="detail_address" id="detail_address"
@@ -204,7 +204,7 @@
                     showOnlyBusiness();
                     break;
                 case 'MEDICAL':
-                    html = `<option {{ $user->member == 'DOCTOR' ? 'selected' : '' }} value="{{\App\Enums\Role::DOCTORS}}">DOCTOR</option>
+                    html = `<option {{ $user->member == 'DOCTOR' ? 'selected' : '' }} value="{{\App\Enums\Role::DOCTORS}}">Bác sĩ</option>
                                                 <option {{ $user->member == 'PHAMACISTS' ? 'selected' : '' }} value="{{\App\Enums\Role::PHAMACISTS}}">Dược sĩ</option>
                                                 <option {{ $user->member == 'THERAPISTS' ? 'selected' : '' }} value="{{\App\Enums\Role::THERAPISTS}}">Bác sĩ trị liệu</option>
                                                 <option {{ $user->member == 'ESTHETICIANS' ? 'selected' : '' }} value="{{\App\Enums\Role::ESTHETICIANS}}">Chuyên viên thẩm mỹ</option>
@@ -234,12 +234,18 @@
             let html = `<h1>Info doctor</h1>
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label for="specialty">{{ __('home.chuyên môn việt') }}</label>
-                                <input type="text" class="form-control" id="specialty" name="specialty" value="{{ $user->specialty }}">
+                                <label for="specialty">Chuyên khoa</label>
+                                <select class="form-select" id="department_id" name="department_id">
+                                    @foreach($departments as $department)
+                                        <option value="{{ $department->id }}" {{ $user->department_id == $department->id ? 'selected' : '' }} class="text-shortcut">
+                                            {{$department->name}}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="col-sm-6">
                                 <label for="identifier">{{ __('home.Mã định danh trên giấy hành nghề') }}</label>
-                                <input type="text" class="form-control" id="identifier" name="identifier" value="{{ $user->identifier }}">
+                                                    <input type="text" class="form-control" id="identifier" name="identifier" value="{{ $user->identifier }}">
                             </div>
                         </div>
                         <div class="row">
@@ -292,7 +298,7 @@
                                             class="form-control">
                                         <option  {{ $arrayWorking2[1] == 'T2' ? 'selected' : '' }} value="T2">{{ __('home.Thứ 2') }}</option>
                                         <option  {{ $arrayWorking2[1] == 'T3' ? 'selected' : '' }} value="T3">{{ __('home.Thứ 3') }}</option>
-                                        <option  {{ $arrayWorking2[1] == 'T4' ? 'selected' : '' }} value="T4">{{ __('home.Thứ 4') }}></option>
+                                        <option  {{ $arrayWorking2[1] == 'T4' ? 'selected' : '' }} value="T4">{{ __('home.Thứ 4') }}</option>
                                         <option  {{ $arrayWorking2[1] == 'T5' ? 'selected' : '' }} value="T5">{{ __('home.Thứ 5') }}</option>
                                         <option  {{ $arrayWorking2[1] == 'T6' ? 'selected' : '' }} value="T6">{{ __('home.Thứ 6') }}</option>
                                         <option  {{ $arrayWorking2[1] == 'T7' ? 'selected' : '' }} value="T7">{{ __('home.Thứ 7') }}</option>
@@ -354,24 +360,12 @@
                             </div>
                         @endif
             <div class="row">
-                <div class="form-group col-md-4">
-                    <label for="department_id">{{ __('home.Department') }}</label>
-                                <select class="form-select" id="department_id" name="department_id">
-                                    @foreach($departments as $department)
-            <option value="{{$department->id}}" data-limit="300"
-                {{ $user->department_id == $department->id ? 'selected' : '' }}
-            class="text-shortcut">
-{{$department->name}}
-            </option>
-@endforeach
-            </select>
-        </div>
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-6">
             <label for="year_of_experience">{{ __('home.Năm kinh nghiệm') }}</label>
                                 <input type="number" class="form-control" max="80" id="year_of_experience"
                                        name="year_of_experience" value="{{ $user->year_of_experience }}">
                             </div>
-                            <div class="form-element col-md-4">
+                            <div class="form-element col-md-6">
                 <label for="workspace">{{ __('home.Workplace') }}</label>
                 <input class="form-control" id="workspace" type="text" name="workspace" value="{{$user->workplace}}">
             </div>

@@ -305,23 +305,62 @@ class AdminUserApi extends Controller
             'email' => 'required|string|email|max:255',
             'phone' => 'required|string|max:15',
             'password' => 'nullable|string|min:8|confirmed',
-            'address_code' => 'required|string|max:255',
             'detail_address' => 'required|string|max:255',
+            'avt' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $user->username = $request->input('username');
+        $user->last_name = $request->input('last_name');
         $user->name = $request->input('name');
         $user->email = $request->input('email');
         $user->phone = $request->input('phone');
-        $user->address_code = $request->input('address_code');
+//        $user->address_code = $request->input('address_code') ?? '1';
         $user->detail_address = $request->input('detail_address');
         $user->status = $request->input('status');
         $user->province_id = $request->input('province_id');
         $user->district_id = $request->input('district_id');
         $user->commune_id = $request->input('commune_id');
+        $user->member = $request->input('member');
+        $user->type = $request->input('type');
+
+        if($request->input('type') == "BUSINESS"){
+            if ($request->hasFile('file_upload')) {
+                $avatar = $request->file('file_upload');
+                $avatarName = time() . '.' . $avatar->getClientOriginalExtension();
+                $avatarPath = $avatar->storeAs('license', $avatarName, 'public');
+                $user->business_license_img = 'storage/' . $avatarPath;
+            }
+        }
+
+        if($request->input('type') == "MEDICAL"){
+            if ($request->hasFile('file_upload')) {
+                $avatar = $request->file('file_upload');
+                $avatarName = time() . '.' . $avatar->getClientOriginalExtension();
+                $avatarPath = $avatar->storeAs('license', $avatarName, 'public');
+                $user->business_license_img = 'storage/' . $avatarPath;
+            }
+            $user->identifier = $request->input('identifier');
+            $user->service = $request->input('service');
+            $user->service_price = $request->input('service_price');
+            $user->time_working_1 = $request->input('time_working_1');
+            $user->time_working_2 = $request->input('time_working_2');
+            $user->year_of_experience = $request->input('year_of_experience');
+            $user->workplace = $request->input('workspace');
+            $user->prescription = $request->input('prescription');
+            $user->free = $request->input('free');
+            $user->apply_for = $request->input('apply_for');
+            $user->department_id = $request->input('department_id');
+        }
 
         if ($request->filled('password')) {
             $user->password = Hash::make($request->input('password'));
+        }
+
+        if ($request->hasFile('avt')) {
+            $avatar = $request->file('avt');
+            $avatarName = time() . '.' . $avatar->getClientOriginalExtension();
+            $avatarPath = $avatar->storeAs('doctor', $avatarName, 'public');
+            $user->avt = 'storage/' . $avatarPath;
         }
 
         $success = $user->save();
