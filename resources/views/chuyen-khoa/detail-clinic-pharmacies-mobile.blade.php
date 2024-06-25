@@ -230,15 +230,19 @@
                         @endforeach
                     </div>
                     <div class="mt-3">
-                        <p class="h6"><strong>Triệu chứng điều trị</strong></p>
-                        <p class="h6"><strong>Giá dịch vụ</strong></p>
                         <div class="table-responsive mt-3">
                             <table class="table table-vcenter text-nowrap table-bordered border-bottom">
+                                <thead>
+                                <tr>
+                                    <th class="h6"><strong>Triệu chứng điều trị</strong></th>
+                                    <th class="h6"><strong>Giá dịch vụ</strong></th>
+                                </tr>
+                                </thead>
                                 <tbody>
                                 @foreach($services as $service)
                                     <tr>
-                                        <td><strong>{{$service->name ?? ''}}</strong></td>
-                                        <td>Đang cập nhật</td>
+                                        <td>{{$service->name ?? ''}}</td>
+                                        <td>{{ number_format($service->service_price, 0, ',', '.') ?? 'Đang cập nhật' }}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>
