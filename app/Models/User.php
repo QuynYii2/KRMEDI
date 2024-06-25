@@ -232,4 +232,9 @@ class User extends Authenticatable implements JWTSubject
             $query->where('name', $roleName);
         })->get();
     }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
 }
