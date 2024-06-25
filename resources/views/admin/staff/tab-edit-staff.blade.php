@@ -26,16 +26,21 @@
 
             <label for="member">{{ __('home.Member') }}</label>
             <select id="member" name="member" class="form-select form-control">
-                <option
-                        value="{{ Role::DOCTORS }}" {{ $role == Role::DOCTORS ? 'selected' : '' }}>Bác sĩ</option>
-                <option
+                @if($role->name == 'PHARMACIES' || $role->name == 'PHARMACEUTICAL COMPANIES')
+                    <option
                         value="{{ Role::PHAMACISTS }}" {{ $role == Role::PHAMACISTS ? 'selected' : '' }}>Dược sĩ</option>
-                <option
+                    @else
+                    <option
+                        value="{{ Role::DOCTORS }}" {{ $role == Role::DOCTORS ? 'selected' : '' }}>Bác sĩ</option>
+                    <option
+                        value="{{ Role::PHAMACISTS }}" {{ $role == Role::PHAMACISTS ? 'selected' : '' }}>Dược sĩ</option>
+                    <option
                         value="{{ Role::THERAPISTS }}" {{ $role == Role::THERAPISTS ? 'selected' : '' }}>Bác sĩ trị liệu</option>
-                <option
+                    <option
                         value="{{ Role::ESTHETICIANS }}" {{ $role == Role::ESTHETICIANS ? 'selected' : '' }}>Chuyên viên thẩm mỹ</option>
-                <option
+                    <option
                         value="{{ Role::NURSES }}" {{ $role == Role::NURSES ? 'selected' : '' }}>Y tá</option>
+                    @endif
 {{--                <option--}}
 {{--                        value="{{ Role::PAITENTS }}" {{ $role == Role::PAITENTS ? 'selected' : '' }}>{{ __('home.Patients') }}</option>--}}
 {{--                <option--}}
@@ -83,7 +88,7 @@
             </select>
         </div>
         <div>
-            <label for="year_of_experience">{{ __('home.Doctor Experience') }}</label>
+            <label for="year_of_experience">Kinh nghiệm</label>
             <input type="number" class="form-control" id="year_of_experience"
                    value="{{ $user->year_of_experience ?? '' }}" name="year_of_experience">
         </div>

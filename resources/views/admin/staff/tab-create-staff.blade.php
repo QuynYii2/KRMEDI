@@ -24,11 +24,15 @@
             <div>
                 <label for="member">{{ __('home.Member') }}</label>
                 <select id="member" name="member" class="form-select form-control">
-                    <option value="{{ Role::DOCTORS }}">Bác sĩ</option>
+                    @if($role->name == 'PHARMACIES' || $role->name == 'PHARMACEUTICAL COMPANIES')
                     <option value="{{ Role::PHAMACISTS }}">Dược sĩ</option>
-                    <option value="{{ Role::THERAPISTS }}">Bác sĩ trị liệu</option>
-                    <option value="{{ Role::ESTHETICIANS }}">Chuyên viên thẩm mỹ</option>
-                    <option value="{{ Role::NURSES }}">Y tá</option>
+                        @else
+                        <option value="{{ Role::DOCTORS }}">Bác sĩ</option>
+                        <option value="{{ Role::PHAMACISTS }}">Dược sĩ</option>
+                        <option value="{{ Role::THERAPISTS }}">Bác sĩ trị liệu</option>
+                        <option value="{{ Role::ESTHETICIANS }}">Chuyên viên thẩm mỹ</option>
+                        <option value="{{ Role::NURSES }}">Y tá</option>
+                    @endif
                 </select>
             </div>
             <div>
@@ -70,7 +74,7 @@
                 </select>
             </div>
             <div>
-                <label for="year_of_experience">{{ __('home.Doctor Experience') }}</label>
+                <label for="year_of_experience">Kinh nghiệm</label>
                 <input type="number" class="form-control" id="year_of_experience" name="year_of_experience">
             </div>
             <div>
