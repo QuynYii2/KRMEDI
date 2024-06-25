@@ -92,6 +92,7 @@ class BackendStaffController extends Controller
             $user->password = Hash::make($password);
             $user->manager_id = $manager_id;
             $user->type = $member;
+            $user->member = $member;
             $user->status = UserStatus::ACTIVE;
 
             $user->name = '';
@@ -229,6 +230,7 @@ class BackendStaffController extends Controller
             }
 
             $user->type = $member;
+            $user->member = $member;
             $user->phone = $phone;
             $user->status = $status;
 
