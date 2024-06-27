@@ -1114,7 +1114,7 @@
         $('#chat-messages').html('');
         if (list_message.length > 0) {
             let messageIndex = 0;
-
+            renderNextMessage();
             function renderNextMessage() {
                 if (messageIndex >= list_message.length) {
                     let chatMessages = document.getElementById('chat-messages');
@@ -1265,7 +1265,7 @@
                 }
             }
 
-            renderNextMessage();
+
         }
     }
 
