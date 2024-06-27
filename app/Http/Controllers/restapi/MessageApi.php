@@ -62,6 +62,11 @@ class MessageApi extends Controller
             $message->chat_message = $content;
             $message->message_status = MessageStatus::SEEN;
 
+            if (str_contains($content, 'https://firebasestorage.googleapis.com')) {
+                $message->files = $content;
+                $message->chat_message = '';
+            }
+
             $success = $message->save();
             if ($success) {
                 $array = [

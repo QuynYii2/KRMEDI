@@ -1336,6 +1336,7 @@
             } else {
                 message.fileUrl = await uploadFile(content, ext, chatUserID);
                 message.fileName = content.name;
+                message.msg = message.fileUrl;
             }
 
             var audio = new Audio('/agora-video/message-ringtone.mp3');
@@ -1373,9 +1374,9 @@
 
             try {
                 await setDoc(doc(ref, time), message);
+                await saveMessage(`{{ Auth::user()->email }}`, to_email, message);
                 await pushNotification(to_email, type === 'text' ? content : content.name);
                 await updateLastMessage(chatUserID, message);
-                await saveMessage(`{{ Auth::user()->email }}`, to_email, message);
                 console.log('Message sent successfully');
             } catch (error) {
                 console.error('Error sending message:', error);
