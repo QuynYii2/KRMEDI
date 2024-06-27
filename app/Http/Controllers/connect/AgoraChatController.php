@@ -69,7 +69,7 @@ class AgoraChatController extends Controller
             'accessToken'   => $accessTokenToUser
         ];
 
-        $data['content'] = 'call.krmedi.vn/' . '?' . http_build_query($callToParams);
+        $data['content'] = 'https://call.krmedi.vn/' . '?' . http_build_query($callToParams);
 
         $data['user_id_1'] = $user_id_2;
         $data['user_id_2'] = $user_id_1;
@@ -94,7 +94,7 @@ class AgoraChatController extends Controller
 
         $this->sendNotificationToAppByFireBase($userReceiveCall->email, $userCall);
 
-        return redirect()->to('call.krmedi.vn/' . '?' . http_build_query($callFromParams));
+        return redirect()->to('https://call.krmedi.vn/' . '?' . http_build_query($callFromParams));
 
         // return view('video-call.index', compact('agora_chat'));
     }
@@ -395,7 +395,7 @@ class AgoraChatController extends Controller
             'accessToken'   => $accessTokenToUser
         ];
 
-        return redirect('call.krmedi.vn/' . '?' . http_build_query($callToParams));
+        return redirect('https://call.krmedi.vn/' . '?' . http_build_query($callToParams));
 
         // return view('video-call.index', compact('agora_chat', 'patient'));
     }
