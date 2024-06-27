@@ -163,7 +163,8 @@ class PrescriptionResultApi extends Controller
                 $pdfFileName = $prescription_result->id . '.pdf';
                 $pdfPath = 'prescriptions';
                 $pdfUrl = 'storage/' . $pdfPath . '/' . $pdfFileName;
-                $pdf->save($pdfUrl);
+                $pdfFullPath = storage_path('app/public/prescriptions/' . $pdfFileName);
+                $pdf->save($pdfFullPath);
                 return response()->json([
                     'prescription_id' => $prescription_id ?? $prescription_result,
                     'pdf_path' => url($pdfUrl)
