@@ -674,7 +674,7 @@
                     <!-- End List Coupon Nav -->
 
                     <!-- Booking Nav -->
-                    @if($isPhamacists == false && $isPhamacies == false)
+                    @if($isPhamacists == false && $isPhamacies == false && $isDoctor == false)
                     <li class="nav-item">
                         <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse"
                             href="#">
