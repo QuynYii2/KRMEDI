@@ -69,7 +69,7 @@ class AgoraChatController extends Controller
             'accessToken'   => $accessTokenToUser
         ];
 
-        $data['content'] = env('CALL_APP_URL') . '?' . http_build_query($callToParams);
+        $data['content'] = 'call.krmedi.vn/' . '?' . http_build_query($callToParams);
 
         $data['user_id_1'] = $user_id_2;
         $data['user_id_2'] = $user_id_1;
@@ -94,7 +94,7 @@ class AgoraChatController extends Controller
 
         $this->sendNotificationToAppByFireBase($userReceiveCall->email, $userCall);
 
-        return redirect()->to(env('CALL_APP_URL') . '?' . http_build_query($callFromParams));
+        return redirect()->to('call.krmedi.vn/' . '?' . http_build_query($callFromParams));
 
         // return view('video-call.index', compact('agora_chat'));
     }
@@ -162,7 +162,7 @@ class AgoraChatController extends Controller
         //OLD
         $appIdAgora = '0b47427ee7334417a90ff22c4e537b08';
         $appCertificateAgora = 'd35960a9bfb146ceb33a3a40c0b9ab3b';
-        
+
         //NEW
 //        $appIdAgora = '76c76eecc0f44cff943b58ac64e2f372';
 //        $appCertificateAgora = '59488fd367554d9091dd0a3bab1da00b';
@@ -395,7 +395,7 @@ class AgoraChatController extends Controller
             'accessToken'   => $accessTokenToUser
         ];
 
-        return redirect(env('CALL_APP_URL') . '?' . http_build_query($callToParams));
+        return redirect('call.krmedi.vn/' . '?' . http_build_query($callToParams));
 
         // return view('video-call.index', compact('agora_chat', 'patient'));
     }
