@@ -208,6 +208,7 @@ return [
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
         Jenssegers\Agent\AgentServiceProvider::class,
         App\Providers\PusherServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
     ],
 
     /*
@@ -268,6 +269,7 @@ return [
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
         'Agent' => Jenssegers\Agent\Facades\Agent::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
     ],
 
 ];

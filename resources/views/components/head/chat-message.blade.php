@@ -1126,6 +1126,7 @@
                 let time = formatDate(message.sent);
 
                 if (message.type == 'prescription') {
+                    console.log(1127,message)
                     // Search cart
                     let url = "{{ route('api.backend.cart.search', ['prescription_id' => 'REPLACE_ID']) }}";
                     url = url.replace('REPLACE_ID', message.msg);
@@ -1193,7 +1194,7 @@
                         <div class="msg-info">
                         </div>
                         <div class="bubble">
-                            <a href="${message.fileUrl}" style="color: white"><i class="fa-solid fa-paperclip mr-1"></i> ${message.fileName}</a>
+                            <a href="${message.fileUrl}" style="color: white" target="_blank"><i class="fa-solid fa-paperclip mr-1"></i> ${message.fileName}</a>
                             <div class="corner"></div>
                         </div>
                     </div>`;
@@ -1202,7 +1203,7 @@
                         <div class="msg-info">
                         </div>
                         <div class="bubble">
-                            <a href="${message.fileUrl}"> <i class="fa-solid fa-paperclip mr-1"></i> ${message.fileName}</a>
+                            <a href="${message.fileUrl}" target="_blank"> <i class="fa-solid fa-paperclip mr-1"></i> ${message.fileName}</a>
                             <div class="corner"></div>
                         </div>
                     </div>`;
@@ -2384,6 +2385,50 @@
                 }
             }
 
+        async function sendMessageFile(chatUserID, to_email, content, type) {
+            const times = Date.now().toString();
+            const receiverIds = chatUserID;
+            const messages = {
+                toId: receiverIds,
+                read: '',
+                type: type,
+                fromId: current_user.uid,
+                readUsers: {[current_user.uid]: true, [receiverIds]: false},
+                sent: times
+            };
+
+            const currentDate = new Date();
+            const day = currentDate.getDate().toString().padStart(2, '0');
+            const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+            const year = currentDate.getFullYear().toString();
+
+            messages.fileUrl = content;
+            messages.fileName = `Đơn thuốc-${day}/${month}/${year}`;
+
+            let conversationIDs = getConversationID(chatUserID);
+            const refs = collection(database, `chats/${conversationIDs}/messages/`);
+
+            try {
+                await setDoc(doc(refs, times), messages);
+                await pushNotification(to_email, `Đơn thuốc-${day}/${month}/${year}`);
+                await updateLastMessage(chatUserID, messages);
+                await saveMessage(`{{ Auth::user()->email }}`, to_email, messages);
+            } catch (error) {
+                console.error('Error sending message:', error);
+            }
+        }
+
+        async function handleSuccess(response) {
+            try {
+                await sendMessage(chatUserId, emailUser, response.prescription_id, 'prescription');
+                await sendMessageFile(chatUserId, emailUser, response.pdf_path, 'file');
+                alert('Create success!');
+                window.location.href = `{{ route('view.prescription.result.doctor') }}`;
+            } catch (error) {
+                console.error('Error in handleSuccess:', error);
+            }
+        }
+
             try {
                 $.ajax({
                     url: `{{ route('api.backend.prescription.result.create') }}`,
@@ -2394,9 +2439,7 @@
                     processData: false,
                     data: formData,
                     success: function (response) {
-                        sendMessage(chatUserId, emailUser, response, 'prescription');
-                        alert('Create success!');
-                        window.location.href = `{{ route('view.prescription.result.doctor') }}`;
+                        handleSuccess(response);
                     },
                     error: function (error) {
                         alert(error.responseJSON.message);

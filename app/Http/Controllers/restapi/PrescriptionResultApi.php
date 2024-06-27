@@ -18,6 +18,7 @@ use App\Models\Message;
 use App\Models\online_medicine\ProductMedicine;
 use App\Models\PrescriptionResults;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Faker\Provider\Uuid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -149,7 +150,24 @@ class PrescriptionResultApi extends Controller
 
 
             if ($success) {
-                return response()->json($prescription_id ?? $prescription_result);
+                $data_prescriptions = '[' .$request->get('prescriptions'). ']';
+                $doctor_name = User::find($prescription_result->created_by);
+                $user_name = User::find($prescription_result->user_id);
+
+                $pdf = Pdf::loadView('components.head.pdf', [
+                    'doctor' => $doctor_name->name,
+                    'data' => json_decode($data_prescriptions, true),
+                    'user_name' => $user_name->name,
+                ]);
+
+                $pdfFileName = $prescription_result->id . '.pdf';
+                $pdfPath = 'prescriptions';
+                $pdfUrl = 'storage/' . $pdfPath . '/' . $pdfFileName;
+                $pdf->save($pdfUrl);
+                return response()->json([
+                    'prescription_id' => $prescription_id ?? $prescription_result,
+                    'pdf_path' => url($pdfUrl)
+                ]);
             }
             return response((new MainApi())->returnMessage('Error, Create error!'), 400);
         } catch (\Exception $exception) {
