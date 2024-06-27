@@ -113,9 +113,9 @@ class AgoraChatController extends Controller
         ])->first();
 
         //OLD
-        $appid = '0b47427ee7334417a90ff22c4e537b08';
+//        $appid = '0b47427ee7334417a90ff22c4e537b08';
         //NEW
-//        $appid = '76c76eecc0f44cff943b58ac64e2f372';
+        $appid = '76c76eecc0f44cff943b58ac64e2f372';
 
         $array_email = [User::getEmailByID($user_id_1), User::getEmailByID($user_id_2)];
 
@@ -160,12 +160,12 @@ class AgoraChatController extends Controller
     function genNewTokenByChanelName($chanelName, $user_id_1, $user_id_2)
     {
         //OLD
-        $appIdAgora = '0b47427ee7334417a90ff22c4e537b08';
-        $appCertificateAgora = 'd35960a9bfb146ceb33a3a40c0b9ab3b';
+//        $appIdAgora = '0b47427ee7334417a90ff22c4e537b08';
+//        $appCertificateAgora = 'd35960a9bfb146ceb33a3a40c0b9ab3b';
 
         //NEW
-//        $appIdAgora = '76c76eecc0f44cff943b58ac64e2f372';
-//        $appCertificateAgora = '59488fd367554d9091dd0a3bab1da00b';
+        $appIdAgora = '76c76eecc0f44cff943b58ac64e2f372';
+        $appCertificateAgora = 'dbe58cff64734d3ba642784249babfdd';
 
         $response = Http::withHeaders([
             'authority' => 'agora-token-generator-demo.vercel.app',
