@@ -69,7 +69,7 @@ class AgoraChatController extends Controller
             'accessToken'   => $accessTokenToUser
         ];
 
-        $data['content'] = env('CALL_APP_URL') . '?' . http_build_query($callToParams);
+        $data['content'] = 'https://call.krmedi.vn/' . '?' . http_build_query($callToParams);
 
         $data['user_id_1'] = $user_id_2;
         $data['user_id_2'] = $user_id_1;
@@ -94,7 +94,7 @@ class AgoraChatController extends Controller
 
         $this->sendNotificationToAppByFireBase($userReceiveCall->email, $userCall);
 
-        return redirect()->to(env('CALL_APP_URL') . '?' . http_build_query($callFromParams));
+        return redirect()->to('https://call.krmedi.vn/' . '?' . http_build_query($callFromParams));
 
         // return view('video-call.index', compact('agora_chat'));
     }
@@ -112,7 +112,9 @@ class AgoraChatController extends Controller
             ['user_id_2', $user_id_1],
         ])->first();
 
-
+        //OLD
+//        $appid = '0b47427ee7334417a90ff22c4e537b08';
+        //NEW
         $appid = '76c76eecc0f44cff943b58ac64e2f372';
 
         $array_email = [User::getEmailByID($user_id_1), User::getEmailByID($user_id_2)];
@@ -157,8 +159,13 @@ class AgoraChatController extends Controller
 
     function genNewTokenByChanelName($chanelName, $user_id_1, $user_id_2)
     {
+        //OLD
+//        $appIdAgora = '0b47427ee7334417a90ff22c4e537b08';
+//        $appCertificateAgora = 'd35960a9bfb146ceb33a3a40c0b9ab3b';
+
+        //NEW
         $appIdAgora = '76c76eecc0f44cff943b58ac64e2f372';
-        $appCertificateAgora = '59488fd367554d9091dd0a3bab1da00b';
+        $appCertificateAgora = 'dbe58cff64734d3ba642784249babfdd';
 
         $response = Http::withHeaders([
             'authority' => 'agora-token-generator-demo.vercel.app',
@@ -388,7 +395,7 @@ class AgoraChatController extends Controller
             'accessToken'   => $accessTokenToUser
         ];
 
-        return redirect(env('CALL_APP_URL') . '?' . http_build_query($callToParams));
+        return redirect('https://call.krmedi.vn/' . '?' . http_build_query($callToParams));
 
         // return view('video-call.index', compact('agora_chat', 'patient'));
     }
