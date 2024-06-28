@@ -1111,6 +1111,7 @@
     }
 
     function renderMessage(list_message, html) {
+        console.log(list_message);
         $('#chat-messages').html('');
         if (list_message.length > 0) {
             let messageIndex = 0;
@@ -1126,7 +1127,7 @@
                 let time = formatDate(message.sent);
 
                 if (message.type == 'prescription') {
-                    console.log(1127,message)
+
                     // Search cart
                     let url = "{{ route('api.backend.cart.search', ['prescription_id' => 'REPLACE_ID']) }}";
                     url = url.replace('REPLACE_ID', message.msg);
@@ -1492,7 +1493,8 @@
             const messagesCollectionRef = collection(database, `chats/${conversationID}/messages`);
 
             let html = ``;
-
+            let timeout;
+            let lastSnapshot = [];
             const unsubscribe = onSnapshot(messagesCollectionRef, (querySnapshot) => {
                 let list_message = [];
 
@@ -1500,12 +1502,20 @@
                     list_message.push(doc.data());
                 });
 
-                renderMessage(list_message, html);
+                function scheduleRender(list_message, html) {
+                    if (timeout) {
+                        clearTimeout(timeout);
+                    }
 
-                // $(document).on('click', '.addToCartButton', function () {
-                //     let prescriptionId = $(this).data('value');
-                //     addToCart_WidgetChat(prescriptionId);
-                // });
+                    timeout = setTimeout(() => {
+                        if (JSON.stringify(list_message) !== JSON.stringify(lastSnapshot)) {
+                            renderMessage(list_message, html);
+                            lastSnapshot = list_message;
+                        }
+                    }, 2000);
+                }
+
+                scheduleRender(list_message, html);
 
             }, (error) => {
                 console.error("Error getting: ", error);
