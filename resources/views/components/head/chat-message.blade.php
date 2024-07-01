@@ -936,7 +936,7 @@
                         }
                     });
                 }
-
+                listenForMessages(messagesRef)
             } else {
                 console.log("Không tìm thấy dữ liệu cho phòng chat.");
             }
@@ -1110,8 +1110,29 @@
         });
     }
 
+    function listenForMessages(messagesRef) {
+        const q = query(messagesRef, where('toId', '==', current_user.uid));
+        onSnapshot(q, snapshot => {
+            snapshot.docChanges().forEach(change => {
+                if (change.type === "added") {
+                    const message = change.doc.data();
+                    playNotificationSound();
+                }
+            });
+        }, error => {
+            console.error("Error listening for messages: ", error);
+        });
+    }
+
+    var notificationSound = new Audio('agora-video/message-ringtone.mp3');
+
+    function playNotificationSound() {
+        notificationSound.play().catch(error => {
+            console.error('Error playing notification sound:', error);
+        });
+    }
+
     function renderMessage(list_message, html) {
-        console.log(list_message);
         $('#chat-messages').html('');
         if (list_message.length > 0) {
             let messageIndex = 0;
@@ -1339,36 +1360,6 @@
                 message.fileName = content.name;
                 message.msg = message.fileUrl;
             }
-
-            var audio = new Audio('/agora-video/message-ringtone.mp3');
-
-            // Function to play audio
-            function playNotificationSound() {
-                audio.play().catch(function(error) {
-                    console.error('Lỗi phát âm thanh:', error);
-                });
-            }
-
-            function listenForNewMessages(userId) {
-                const messagesRef = collection(database, "users");
-                const q = query(messagesRef, where(`id`, "==", userId));
-
-                onSnapshot(q, (snapshot) => {
-
-                    const changes = snapshot.docChanges();
-
-                    changes.forEach((change) => {
-                        if (change.type === "added") {
-                            const message = change.doc.data();
-                            playNotificationSound();
-                        }
-                    });
-                }, (error) => {
-                    console.error("Error getting messages: ", error);
-                });
-            }
-
-            listenForNewMessages(chatUserID);
 
             let conversationID = getConversationID(chatUserID);
             const ref = collection(database, `chats/${conversationID}/messages/`);
