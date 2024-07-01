@@ -1116,7 +1116,12 @@
             snapshot.docChanges().forEach(change => {
                 if (change.type === "added") {
                     const message = change.doc.data();
-                    playNotificationSound();
+                    console.log(123,message)
+                    console.log(1234,current_user.uid)
+                    if (message.toId == current_user.uid){
+                        playNotificationSound();
+                    }
+
                 }
             });
         }, error => {
