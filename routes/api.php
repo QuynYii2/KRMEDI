@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ContactController;
+use App\Http\Controllers\connect\AgoraChatController;
 use App\Http\Controllers\connect\CallVideoController;
 use App\Http\Controllers\ui\MyBookingController;
 use Illuminate\Http\Request;
@@ -35,3 +36,5 @@ Route::post('renew-uuid', [ContactController::class, 'renewUuidMessage'])->name(
 Route::post('my-bookings/history/{userId}', [MyBookingController::class, 'updateMedicalHistoryApi'])->name('api.backend.my-bookings.update-history');
 
 Route::post('/end-call', [CallVideoController::class, 'endCall']);
+
+Route::post('/download-record', [AgoraChatController::class, 'downloadRecord']);
