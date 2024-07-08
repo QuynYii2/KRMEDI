@@ -2,13 +2,20 @@
 let client = AgoraRTC.createClient({mode: 'rtc', codec: "vp8"})
 
 //#2
+//New
 let config = {
     appid: '76c76eecc0f44cff943b58ac64e2f372',
     token: '007eJxTYMjkiuhtvJpS8ea/zSGfxd1/f5jx/GkPVwh6d6io8cahu1YKDOZmyeZmqanJyQZpJibJaWmWJsZJphaJyWYmqUZpxuZGlq9r0hoCGRlSza6zMjJAIIjPxpBdlJuaksnAAABTUSLc',
     uid: null,
     channel: 'krmedi',
 }
-
+//Old
+// let config = {
+//     appid: '0b47427ee7334417a90ff22c4e537b08',
+//     token: '007eJxTYGh9e66cdZ+M0xm1ky+/V/12YnNkL5Z0SrO0f1qY58RkFavAYJBkYm5iZJ6aam5sbGJiaJ5oaZCWZmSUbJJqamyeZGCxi+V8akMgI8OjzCBWRgZGBhYgBvGZwCQzmGQBkxwMBUX5WanJJY4MDABYviEy',
+//     uid: null,
+//     channel: 'projectA',
+// }
 //#3 - Setting tracks for when user joins
 let localTracks = {
     audioTrack: null,
