@@ -94,8 +94,8 @@ class AgoraChatController extends Controller
                     'vendor'=> 1,
                     'region'=> 9,
                     'bucket'=> "video-storage-krmedi",
-                    'key'    => env('AWS_ACCESS_KEY_ID'),
-                    'secret' => env('AWS_SECRET_ACCESS_KEY'),
+                    'accessKey'=> env('AWS_ACCESS_KEY_ID'),
+                    'secretKey'=> env('AWS_SECRET_ACCESS_KEY'),
                 ],
                 'fileNamePrefix' => [$fileNamePrefix]
             ]
