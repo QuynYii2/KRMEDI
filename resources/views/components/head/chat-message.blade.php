@@ -1116,7 +1116,7 @@
             snapshot.docChanges().forEach(change => {
                 if (change.type === "added") {
                     const message = change.doc.data();
-                    if (message.toId == current_user.uid){
+                    if (message.toId == current_user.uid && !message.readUsers[current_user.uid]){
                         playNotificationSound();
                     }
 
@@ -1491,6 +1491,7 @@
             let lastSnapshot = [];
             const unsubscribe = onSnapshot(messagesCollectionRef, (querySnapshot) => {
                 let list_message = [];
+                $('#chat-messages').html('');
 
                 querySnapshot.forEach((doc) => {
                     list_message.push(doc.data());
