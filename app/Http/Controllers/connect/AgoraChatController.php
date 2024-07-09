@@ -5,8 +5,12 @@ namespace App\Http\Controllers\connect;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\restapi\MainApi;
 use App\Models\AgoraChat;
+use App\Models\Chat;
 use App\Models\User;
+use App\Services\GoogleCloudStorageService;
+use Aws\S3\S3Client;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -19,7 +23,154 @@ class AgoraChatController extends Controller
         return redirect(env('CALL_APP_URL '));
         // return view('video-call.index');
     }
+    private function acquireResource($channelName, $uid)
+    {
+        $appId = '76c76eecc0f44cff943b58ac64e2f372';
+        $url = "https://api.agora.io/v1/apps/{$appId}/cloud_recording/acquire";
+        $body = [
+            'cname' => $channelName,
+            'uid' => (string) $uid,
+            'clientRequest' => [
+                'resourceExpiredHour' => 24,
+                "scene" => 0,
+            ],
+        ];
+        $response = Http::withHeaders([
+            'Authorization' => 'Basic ' . base64_encode("1d9f559f0e2346a8849ba2c2ef35a860:6568e86b523343dcb64797bb8469b58a"),
+            'Content-Type' => 'application/json'
+        ])->post($url, ($body));
 
+        if ($response->successful()) {
+            return $response->json()['resourceId'];
+        } else {
+            \Log::error("Agora API call failed", [
+                'status' => $response->status(),
+                'headers' => $response->headers(),
+                'body' => $response->body(),
+            ]);
+            throw new \Exception("Failed to acquire resource: " . $response->body());
+        }
+    }
+
+    /**
+     * Start recording with acquired resource ID
+     */
+    private function startRecording($channelName, $uid, $resourceId, $token)
+    {
+        $appId = '76c76eecc0f44cff943b58ac64e2f372';
+
+        $url = "https://api.agora.io/v1/apps/{$appId}/cloud_recording/resourceid/{$resourceId}/mode/mix/start";
+
+        $startTime = date('Ymd_His');
+        $fileNamePrefix = "{$channelName}_{$startTime}/";
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Basic ' . base64_encode("1d9f559f0e2346a8849ba2c2ef35a860:6568e86b523343dcb64797bb8469b58a"),
+            'Content-Type' => 'application/json'
+        ])->post($url, [
+            'cname' => $channelName,
+            'uid' => (string) $uid,
+            'clientRequest' => [
+                "token" => $token,
+                "recordingConfig" => [
+                    "channelType"=> 0,
+                    "streamTypes" => 2,
+                    "audioProfile" => 1,
+                    "videoStreamType" => 0,
+                    "maxIdleTime" => 15,
+                    "transcodingConfig" => [
+                        "width" => 1280,
+                        "height" => 720,
+                        "fps" => 30,
+                        "bitrate" => 900,
+                        "maxResolutionUid" => "1",
+                        "mixedVideoLayout" => 1,
+                    ]
+                ],
+                "recordingFileConfig" => [
+                    "avFileType" => ["hls"]
+                ],
+                'storageConfig' => [
+                    'vendor'=> 1,
+                    'region'=> 9,
+                    'bucket'=> "video-storage-krmedi",
+                    'accessKey'=> env('AWS_ACCESS_KEY_ID'),
+                    'secretKey'=> env('AWS_SECRET_ACCESS_KEY'),
+                ],
+                'fileNamePrefix' => [$fileNamePrefix]
+            ]
+        ]);
+
+        if ($response->successful()) {
+            $responseData = $response->json();
+            return [
+                'sid' => $responseData['sid'],
+                'uid' => $responseData['uid'],
+            ];
+        } else {
+            throw new \Exception("Failed to start recording: " . $response->body());
+        }
+    }
+
+//    private function updateLayout($channelName, $uid, $resourceId, $sid)
+//    {
+//        $appId = '76c76eecc0f44cff943b58ac64e2f372';
+//
+//        $url = "https://api.agora.io/v1/apps/{$appId}/cloud_recording/resourceid/{$resourceId}/sid/{$sid}/mode/mix/updateLayout";
+//
+//        $response = Http::withHeaders([
+//            'Authorization' => 'Basic ' . base64_encode("1d9f559f0e2346a8849ba2c2ef35a860:6568e86b523343dcb64797bb8469b58a"),
+//            'Content-Type' => 'application/json'
+//        ])->post($url, [
+//            'cname' => $channelName,
+//            'uid' => (string) $uid,
+//            'clientRequest' => [
+//                'mixedVideoLayout' => 3,
+//                'layoutConfig' => [
+//                    [
+//                        'uid' => '1',
+//                        'x_axis' => 0.1,
+//                        'y_axis' => 0.1,
+//                        'width' => 0.1,
+//                        'height' => 0.1,
+//                        'alpha' => 1.0,
+//                        'render_mode' => 1
+//                    ],
+//                    [
+//                        'uid' => '2',
+//                        'x_axis' => 0.2,
+//                        'y_axis' => 0.2,
+//                        'width' => 0.1,
+//                        'height' => 0.1,
+//                        'alpha' => 1.0,
+//                        'render_mode' => 1
+//                    ]
+//                ]
+//            ]
+//        ]);
+//        if ($response->successful()) {
+//            $responseData = $response->json();
+//        } else {
+//            throw new \Exception("Failed to update layout recording: " . $response->body());
+//        }
+//    }
+
+    private function queryRecord($resourceId, $sid)
+    {
+        $appId = '76c76eecc0f44cff943b58ac64e2f372';
+
+        $url = "https://api.agora.io/v1/apps/{$appId}/cloud_recording/resourceid/{$resourceId}/sid/{$sid}/mode/mix/query";
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Basic ' . base64_encode("1d9f559f0e2346a8849ba2c2ef35a860:6568e86b523343dcb64797bb8469b58a"),
+            'Content-Type' => 'application/json'
+        ])->get($url);
+        if ($response->successful()) {
+            $responseData = $response->json();
+        } else {
+            throw new \Exception("Failed to query: " . $response->body());
+        }
+    }
     function handleCallVideo(Request $request)
     {
         $user_id_1 = $request->input('user_id_1');
@@ -51,13 +202,22 @@ class AgoraChatController extends Controller
         $accessTokenFromUser = User::find($fromUser)->token ?? '';
         $accessTokenToUser   = User::find($toUser)->token ?? '';
 
+        //call acquire and start record video here:
+        $resourceId = $this->acquireResource($channel, $fromUser);
+        $startResponse = $this->startRecording($channel, $fromUser, $resourceId, $token);
+//        $updateLayout = $this->updateLayout($channel, $fromUser, $resourceId, $startResponse['sid']);
+        $queryRecord = $this->queryRecord($resourceId, $startResponse['sid']);
+
         //Params của user tạo cuộc gọi
         $callFromParams = [
             'token'         => $token,
             'channel'       => $channel,
             'user_id'       => $fromUser,
             'guest_id'      => $toUser,
-            'accessToken'   => $accessTokenFromUser
+            'accessToken'   => $accessTokenFromUser,
+            'resourceId'=> $resourceId,
+            'sid' => $startResponse['sid'],
+            'uid' => $startResponse['uid'],
         ];
 
         //Params của user nhận cuộc gọi
@@ -66,10 +226,13 @@ class AgoraChatController extends Controller
             'channel'       => $channel,
             'user_id'       => $toUser,
             'guest_id'      => $fromUser,
-            'accessToken'   => $accessTokenToUser
+            'accessToken'   => $accessTokenToUser,
+            'resourceId'=> $resourceId,
+            'sid' => $startResponse['sid'],
+            'uid' => $startResponse['uid'],
         ];
 
-        $data['content'] = 'https://call.krmedi.vn/' . '?' . http_build_query($callToParams);
+        $data['content'] = env('CALL_APP_URL') . '?' . http_build_query($callToParams);
 
         $data['user_id_1'] = $user_id_2;
         $data['user_id_2'] = $user_id_1;
@@ -94,9 +257,82 @@ class AgoraChatController extends Controller
 
         $this->sendNotificationToAppByFireBase($userReceiveCall->email, $userCall);
 
-        return redirect()->to('https://call.krmedi.vn/' . '?' . http_build_query($callFromParams));
+        return redirect()->to(env('CALL_APP_URL') . '?' . http_build_query($callFromParams));
 
         // return view('video-call.index', compact('agora_chat'));
+    }
+
+    public function downloadRecord(Request $request)
+    {
+        $channelName = $request->input('channelName');
+        $sID = $request->input('sID');
+        $bucketName = 'video-storage-krmedi';
+        $searchString = $sID;
+        $dateCall = $channelName . '_' . date('Ymd_His');
+        $saveDir = storage_path('app/public/video-record/' . $dateCall . '/');
+
+        // Ensure the save directory exists
+        if (!is_dir($saveDir)) {
+            mkdir($saveDir, 0777, true);
+        }
+
+        $s3Client = new S3Client([
+            'version' => 'latest',
+            'region'  => 'ap-southeast-2',
+            'credentials' => [
+                'key'    => env('AWS_ACCESS_KEY_ID'),
+                'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            ],
+        ]);
+
+        try {
+            // List objects in the bucket
+            $result = $s3Client->listObjectsV2([
+                'Bucket' => $bucketName,
+                'Prefix' => '',
+            ]);
+
+            $objects = $result['Contents'];
+            $filteredObjects = array_filter($objects, function ($object) use ($searchString) {
+                return strpos($object['Key'], $searchString) !== false;
+            });
+
+            if (empty($filteredObjects)) {
+                return response()->json(['message' => "No objects found with the search string: {$searchString}"], 404);
+            }
+
+            $m3u8Path = null;
+            foreach ($filteredObjects as $object) {
+                $objectKey = $object['Key'];
+                $saveAsPath = $saveDir . basename($objectKey);
+
+                $s3Client->getObject([
+                    'Bucket' => $bucketName,
+                    'Key'    => $objectKey,
+                    'SaveAs' => $saveAsPath,
+                ]);
+
+                if (str_ends_with($objectKey, '.m3u8')) {
+                    $m3u8Path = 'video-record/' . $dateCall . '/' . basename($objectKey);
+                }
+            }
+
+            $chat = new Chat;
+            $chat->from_user_id = $request->input('user_id');
+            $chat->to_user_id = $request->input('guest_id');
+            $chat->chat_message = "Cuộc gọi Video - " . now()->format('H:i d/m/Y');
+            $chat->files = $m3u8Path;
+            $chat->message_status = 'UNSEEN';
+            $chat->created_at = now();
+            $chat->updated_at = now();
+            $chat->type = null;
+            $chat->uuid_session = null;
+            $chat->save();
+
+            return response()->json(['message' => "Files downloaded successfully to: {$saveDir}"], 200);
+        } catch (\Aws\Exception\AwsException $e) {
+            return response()->json(['error' => "Error downloading files: " . $e->getMessage()], 500);
+        }
     }
 
     function createMeeting(Request $request)
@@ -395,7 +631,7 @@ class AgoraChatController extends Controller
             'accessToken'   => $accessTokenToUser
         ];
 
-        return redirect('https://call.krmedi.vn/' . '?' . http_build_query($callToParams));
+        return redirect(env('CALL_APP_URL') . '?' . http_build_query($callToParams));
 
         // return view('video-call.index', compact('agora_chat', 'patient'));
     }

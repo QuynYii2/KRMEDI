@@ -108,7 +108,7 @@
                                 @foreach($messageDoctor as $message)
                                     @php
                                         if (isset($message->files)){
-                                            if (str_contains($message->files, '.mp4') || str_contains($message->files, '.webm')){
+                                            if (str_contains($message->files, '.m3u8') || str_contains($message->files, '.webm')){
                                                  $arrayVideos[] = $message->files;
                                             } elseif (str_contains($message->files, '.mp3')){
                                                  $arrayAudios[] = $message->files;
@@ -137,13 +137,28 @@
                                          aria-labelledby="profile-tab">
                                         <div id="list-videos">
                                             @foreach($arrayVideos as $video)
-                                                @php
-                                                    $video = str_replace('public', 'public/storage', $video);
-                                                @endphp
-                                                <div class="row">
-                                                    <video controls>
-                                                        <source src="{{  asset($video) }}">
-                                                    </video>
+                                                <div class="row mb-2">
+                                                    <video id="video_{{ $loop->index }}" controls></video>
+                                                    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+                                                    <script>
+                                                        document.addEventListener('DOMContentLoaded', function () {
+                                                            var video = document.getElementById('video_{{ $loop->index }}');
+                                                            var videoSrc = '{{ asset("storage/" . $video) }}';
+                                                            if (Hls.isSupported()) {
+                                                                var hls = new Hls();
+                                                                hls.loadSource(videoSrc);
+                                                                hls.attachMedia(video);
+                                                                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                                                                    // video.play();
+                                                                });
+                                                            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                                                                video.src = videoSrc;
+                                                                video.addEventListener('loadedmetadata', function() {
+                                                                    // video.play();
+                                                                });
+                                                            }
+                                                        });
+                                                    </script>
                                                 </div>
                                             @endforeach
                                         </div>
@@ -192,7 +207,7 @@
                                                             <source src="{{  asset($message->files) }}"
                                                                     type="audio/mpeg">
                                                         </audio>
-                                                    @else
+                                                    @elseif(str_contains($message->files, 'firebasestorage.googleapis.com'))
                                                         <img src="{{  asset($message->files) }}" alt=""
                                                              style="max-width: 300px">
                                                     @endif
