@@ -69,7 +69,7 @@
             <div class="div d-flex justify-content-between mb-md-3 m-1">
                 <div class="text-wrapper d-inline-flex header_comment">{{ __('home.Best question') }}</div>
                 <div class="option create-mobile-qus">
-                    <a href="http://127.0.0.1:8000/mentoring/ask-a-question" class="text-white">Đặt một câu hỏi</a>
+                    <a href="{{url('mentoring/ask-a-question')}}" class="text-white">Đặt một câu hỏi</a>
                 </div>
             </div>
         </div>
