@@ -35,7 +35,7 @@
     <div class="form-group">
         <label for="medical_history">Medical History</label>
         <input disabled type="text" class="form-control" id="medical_history"
-               value="{{ $booking->medical_history }}">
+               value="{!! strip_tags(\Illuminate\Support\Facades\Auth::user()->medical_history)  !!}">
     </div>
     <div class="row">
         <div class="form-group col-md-4">
