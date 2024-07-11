@@ -1240,7 +1240,7 @@
                 }
                 else if (message.type == 'image'){
                     if (message.fromId === current_user.uid) {
-                        html = `<div class="message right">
+                        html = `<div class="message right" style="max-height: 200px; height: inherit">
                         <div class="msg-info">
                         </div>
                         <div class="bubble" style="background-color: white">
