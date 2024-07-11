@@ -1095,6 +1095,7 @@
 {{--                                    </div>--}}
 {{--                                </div>--}}
                                 @php
+                                    $representativeDoctors = [];
                                     $list_doctor = $clinic->representative_doctor;
                                     $array_doctor = explode(',', $list_doctor);
 
@@ -1217,7 +1218,7 @@
         function showAllProvince(res) {
             let html = ``;
             let select = ``;
-            let pro = `{{ $doctor->province_id }}`;
+            let pro = `{{ $doctor->province_id ?? 1}}`;
             for (let i = 0; i < res.length; i++) {
                 let data = res[i];
                 if (data.code == pro) {
@@ -1236,7 +1237,7 @@
         function showAllDistricts(res) {
             let html = ``;
             let select = ``;
-            let dis = `{{ $doctor->district_id }}`;
+            let dis = `{{ $doctor->district_id ?? 1}}`;
             for (let i = 0; i < res.length; i++) {
                 let data = res[i];
                 if (data.code == dis) {
@@ -1253,7 +1254,7 @@
         function showAllCommunes(res) {
             let html = ``;
             let select = ``;
-            let cm = `{{ $doctor->commune_id }}`;
+            let cm = `{{ $doctor->commune_id ?? 1 }}`;
             for (let i = 0; i < res.length; i++) {
                 let data = res[i];
                 if (data.code == cm) {
