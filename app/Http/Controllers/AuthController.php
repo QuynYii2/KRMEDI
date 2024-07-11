@@ -29,284 +29,89 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        try {
-            $validator = Validator::make($request->all(), [
-                'email' => ['email', 'unique:users,email'],
-                'username' => ['string', 'unique:users,username', new NoSpacesRule],
-                'password' => ['string', new NoSpacesRule],
-                'passwordConfirm' => ['string', 'same:password', new NoSpacesRule],
-                'member' => ['nullable', 'string'],
-                'medical_history' => ['nullable'],
-                'type' => ['required', 'string'],
-                'open_date' => ['nullable'],
-                'close_date' => ['nullable'],
-                'province_id' => ['nullable'],
-                'district_id' => ['nullable'],
-                'commune_id' => ['nullable'],
-                'address' => ['nullable', 'string'],
-                'time_work' => ['nullable'],
-                'provider_name' => ['nullable'],
-                'provider_id' => ['nullable'],
-                'invite_code' => ['nullable'],
-                'combined_address' => ['nullable'],
-                'representative' => ['nullable'],
-                'latitude' => ['nullable'],
-                'longitude' => ['nullable'],
-                'experienceHospital' => ['nullable'],
-                'fileupload' => ['nullable', 'file'],
-                'name_doctor' => ['nullable'],
-                'contact_phone' => ['nullable', 'unique:users,phone', 'regex:/^0[1-9][0-9]{8}$/'],
-                'experience' => ['nullable', 'integer'],
-                'hospital' => ['nullable', 'string'],
-                'specialized_services' => ['nullable', 'string'],
-                'services_info' => ['nullable', 'string'],
-                'identifier' => ['nullable'],
-                'prescription' => ['nullable'],
-                'free' => ['nullable'],
-                'signature' => ['nullable'],
-                'phone' => ['required', 'regex:/^0[3|5|7|8|9][0-9]{8}$/'],
-            ]);
+        $validator = Validator::make($request->all(), [
+            'email' => ['email', 'unique:users,email'],
+            'password' => ['string', new NoSpacesRule],
+            'passwordConfirm' => ['string', 'same:password', new NoSpacesRule],
+            'phone' => [
+                'required',
+                'regex:/^0[3|5|7|8|9][0-9]{8}$/',
+                'unique:users,phone'
+            ],
+        ],[
+            'phone.unique' => 'Số điện thoại đã tồn tại'  // Custom message for the phone field
+        ]);
 
-            if ($validator->fails()) {
-                toast($validator->errors()->first(), 'error', 'top-left');
-                return back();
-            }
-
-            $email = $request->input('email');
-            $username = $request->input('username');
-            $password = $request->input('password');
-            $passwordConfirm = $request->input('passwordConfirm');
-            $member = $request->input('member');
-            $medical_history = $request->input('medical_history');
-            $type = $request->input('type');
-            $openDate = $request->input('open_date', '00:00');
-            $closeDate = $request->input('close_date', '23:59');
-            $province_id = $request->input('province_id');
-            $district_id = $request->input('district_id');
-            $commune_id = $request->input('commune_id');
-            $address_detail = $request->input('address');
-            $time_work = $request->input('time_work');
-            $provider_name = $request->input('provider_name') ?? "";
-            $provider_id = $request->input('provider_id') ?? "";
-            $phone = $request->input('phone');
-            $invite_code = $request->input('inviteCode') ?? "";
-
-            $signature = $request->input('signature') ?? "";
-
-            $identify_number = Str::random(8);
-            while (User::where('identify_number', $identify_number)->exists()) {
-                $identify_number = Str::random(8);
-            }
-
-            $address = $request->input('combined_address');
-            $representative = $request->input('representative');
-            $latitude = $request->input('latitude', '0.0');
-            $longitude = $request->input('longitude', '0.0');
-            $experienceHospital = $request->input('experienceHospital');
-            if ($province_id && $district_id && $commune_id) {
-                $province = explode('-', $province_id);
-                $district = explode('-', $district_id);
-                $commune = explode('-', $commune_id);
-            }
-
-            $currentDate = Carbon::now();
-
-
-            $user = new User();
-
-            $checkPending = false;
-
-            $oldPhone = User::where('phone', $phone)->first();
-            if ($oldPhone) {
-                toast('Số điện thoại đã tồn lại!', 'error', 'top-left');
-                return back();
-            }
-
-//            $oldUser = User::where('username', $username)->first();
-//            if ($oldUser) {
-//                toast('Username already exited!', 'error', 'top-left');
-//                return back();
-//            }
-//
-            if ($password != $passwordConfirm) {
-                toast('Mật khẩu khác nhau!', 'error', 'top-left');
-                return back();
-            }
-
-            if (strlen($password) < 5) {
-                toast('Password invalid!', 'error', 'top-left');
-                return back();
-            }
-
-            if ($type == \App\Enums\Role::BUSINESS) {
-                /* kiểm tra xem fileupload có tồn tại không, nếu không thì thông báo lỗi */
-                if (!$request->hasFile('fileupload')) {
-                    toast('Cần up file giấy phép kinh doanh', 'error', 'top-left');
-                    return back();
-                }
-                $item = $request->file('fileupload');
-                $itemPath = $item->store('license', 'public');
-                $img = asset('storage/' . $itemPath);
-                $user->business_license_img = $img;
-                $checkPending = true;
-            }
-
-            if ($type == \App\Enums\Role::MEDICAL) {
-                /* kiểm tra xem fileupload có tồn tại không, nếu không thì thông báo lỗi */
-                if (!$request->hasFile('fileupload')) {
-                    toast('Cần up file giấy phép hành nghề', 'error', 'top-left');
-                    return back();
-                }
-                $item = $request->file('fileupload');
-                $itemPath = $item->store('license', 'public');
-                $img = asset('storage/' . $itemPath);
-                $user->medical_license_img = $img;
-                $checkPending = true;
-            }
-
-            $passwordHash = Hash::make($password);
-
-            $user->email = $email;
-            if ($type == \App\Enums\Role::MEDICAL) {
-                $name_doctor = $request->input('name_doctor');
-                $experience = $request->input('experience');
-                $hospital = $request->input('hospital');
-                $specialized_services = $request->input('specialized_services');
-                $services_info = $request->input('services_info');
-                $user->name = $name_doctor;
-                $user->identifier = $request->input('identifier');
-                $user->phone = $phone;
-                $user->year_of_experience = $experience ?? '0';
-                $user->hospital = $hospital ?? '';
-                $user->specialty = $specialized_services ?? '';
-                $user->service = $services_info ?? '';
-                $user->prescription = $request->has('prescription') ? (int)$request->input('prescription') : 0;
-                $user->free = $request->has('free') ? (int)$request->input('free') : 0;
-            } else {
-                $user->name = '';
-                $user->phone = $phone;
-            }
-
-            if ($member == \App\Enums\Role::NORMAL_PEOPLE || $member == \App\Enums\Role::PAITENTS) {
-                $user->medical_history = $medical_history;
-            }
-
-            $user->name = '';
-            $user->last_name = '';
-            $user->password = $passwordHash;
-            $user->username = $username;
-            $user->address_code = '';
-            $user->type = $type;
-            $user->member = $member ?? '';
-            $user->provider_id = $provider_id ?? null;
-            $user->provider_name = $provider_name ?? null;
-            $user->identify_number = $identify_number ?? null;
-            $user->abouts = 'default';
-            $user->abouts_en = 'default';
-            $user->abouts_lao = 'default';
-
-            if ($checkPending) {
-                $user->status = UserStatus::PENDING;
-            } else {
-                $user->status = UserStatus::ACTIVE;
-            }
-            $success = $user->save();
-            if ($success) {
-                //Cộng điểm giới thiệu
-                if ($invite_code) {
-                    $getUserInvite = User::where('identify_number', $identify_number)->first();
-                    $getUserInvite->points = $getUserInvite->points + 1;
-                    $getUserInvite->save();
-                }
-
-                $role = Role::where('name', $member)->first();
-                $newUser = User::where('phone', $phone)->first();
-                if ($role) {
-                    RoleUser::create([
-                        'role_id' => $role->id,
-                        'user_id' => $newUser->id
-                    ]);
-                } else {
-                    $roleNormal = Role::where('name', \App\Enums\Role::PAITENTS)->first();
-                    RoleUser::create([
-                        'role_id' => $roleNormal->id,
-                        'user_id' => $newUser->id
-                    ]);
-                }
-//                (new MainController())->createRoleUser($member, $username);
-
-                if ($user->type == \App\Enums\Role::MEDICAL) {
-                    // Send OTP
-                    $this->sendOTPSMS($request->input('phone'), $user);
-                    session()->put('otp_verification', true);
-                    session()->put('user_id', $user->id);
-                    toast('Đăng ký thành công!', 'success', 'top-left');
-                    return redirect()->route('home');
-                }
-                if ($user->type == \App\Enums\Role::BUSINESS) {
-                    try {
-                        $currentDate = Carbon::now();
-                        $openDateTime = Carbon::createFromFormat('Y-m-d H:i', $currentDate->format('Y-m-d') . ' ' . $openDate);
-                        $closeDateTime = Carbon::createFromFormat('Y-m-d H:i', $currentDate->format('Y-m-d') . ' ' . $closeDate);
-                        $formattedOpenDateTime = $openDateTime->format('Y-m-d\TH:i');
-                        $formattedCloseDateTime = $closeDateTime->format('Y-m-d\TH:i');
-
-                        $hospital = new Clinic();
-                        $hospital->address_detail = $request->input('address_detail', '');
-                        $hospital->address = ',' . ($province[0] ?? '') . ',' . ($district[0] ?? '') . ',' . ($commune[0] ?? '');
-                        $hospital->name = $request->input('representative', '');
-                        $hospital->latitude = $latitude;
-                        $hospital->longitude = $longitude;
-                        $hospital->open_date = $formattedOpenDateTime;
-                        $hospital->close_date = $formattedCloseDateTime;
-                        $hospital->experience = $request->input('experienceHospital', '1');
-                        $hospital->gallery = $request->input('img', '1');
-                        $hospital->user_id = $user->id;
-                        $hospital->time_work = $request->input('time_work', '');
-                        $hospital->status = ClinicStatus::ACTIVE;
-                        $hospital->type = $user->member;
-                        $hospital->phone = $request->input('phone', '');
-                        $hospital->representative_doctor = '';
-                        $hospital->save();
-
-                        $newUser = User::find($user->id);
-                        $newUser->province_id = $province[0] ?? null;
-                        $newUser->district_id = $district[0] ?? null;
-                        $newUser->commune_id = $commune[0] ?? null;
-                        $newUser->address_code = $province[2] ?? '1';
-                        $newUser->detail_address = $request->input('address_detail', '');
-                        $newUser->year_of_experience = $request->input('experienceHospital', '1');
-                        $newUser->bac_si_dai_dien = $request->input('representative', '1');
-                        $newUser->name = $request->input('representative', '1');
-                        $newUser->save();
-
-                        // Send OTP
-                        $this->sendOTPSMS($request->input('phone'), $user);
-                        // Redirect to OTP verification page
-                        session()->put('otp_verification', true);
-                        session()->put('user_id', $user->id);
-                        toast('Đăng ký thành công!', 'success', 'top-left');
-                        return redirect()->route('home');
-                    } catch (\Exception $e) {
-                        Log::error('Date format error: ' . $e->getMessage());
-                        return redirect()->back()->withErrors(['error' => 'Đã có lỗi xảy ra trong quá trình đăng ký, vui lòng đảm bảo các thông tin đã được điền đầy đủ.']);
-                    }
-                }
-                // Send OTP
-                $this->sendOTPSMS($request->input('phone'), $user);
-                // Redirect to OTP verification page
-                session()->put('otp_verification', true);
-                session()->put('user_id', $user->id);
-                toast('Đăng ký thành công!', 'success', 'top-left');
-                return redirect(route('home'));
-            }
-            toast('Đăng ký thất bại!', 'error', 'top-left');
-            return back();
-        } catch (Exception $exception) {
-//            dd($exception->getMessage());
-            toast('Đã có lỗi, vui lòng thử lại!', 'error', 'top-left');
+        $password = $request->input('password');
+        $passwordConfirm = $request->input('passwordConfirm');
+        if ($password != $passwordConfirm) {
+            toast('Mật khẩu khác nhau!', 'error', 'top-left');
             return back();
         }
+        if (strlen($password) < 5) {
+            toast('Password invalid!', 'error', 'top-left');
+            return back();
+        }
+        if ($validator->fails()) {
+            if ($validator->errors()->has('phone')) {
+                toast($validator->errors()->first('phone'), 'error', 'top-left');
+            } else {
+                toast($validator->errors()->first(), 'error', 'top-left');
+            }
+            return back();
+        }
+
+        $type = $request->input('type');
+        $userData = $request->except(['fileupload', 'passwordConfirm']);
+        $userData['password'] = $request->input('password');
+        $checkPending = false;
+
+        if ($type == \App\Enums\Role::BUSINESS) {
+            if (!$request->hasFile('fileupload')) {
+                toast('Cần up file giấy phép kinh doanh', 'error', 'top-left');
+                return back();
+            }
+            $item = $request->file('fileupload');
+            $itemPath = $item->store('license', 'public');
+            $img = asset('storage/' . $itemPath);
+            $userData['business_license_img'] = $img;  // Store the image path in user data
+            $checkPending = true;
+        }
+        if ($type == \App\Enums\Role::MEDICAL) {
+            if (!$request->hasFile('fileupload')) {
+                toast('Cần up file giấy phép hành nghề', 'error', 'top-left');
+                return back();
+            }
+            $item = $request->file('fileupload');
+            $itemPath = $item->store('license', 'public');
+            $img = asset('storage/' . $itemPath);
+            $userData['medical_license_img'] = $img;
+            $checkPending = true;
+        }
+
+        if ($checkPending) {
+            $userData['status'] = UserStatus::PENDING;
+        } else {
+            $userData['status'] = UserStatus::ACTIVE;
+        }
+
+        $invite_code = $request->input('inviteCode') ?? "";
+        $userData['invite_code'] = $invite_code;
+        $userData['member'] = $request->input('member');
+
+        // Store all user data, including the business license image, in session
+        session([
+            'user_data' => $userData,
+            'otp_verification' => false  // Initially false, will be set true upon successful OTP send
+        ]);
+
+        // Assume sendOTPSMS method handles sending the OTP and returns a boolean status
+        if ($this->sendOTPSMS($request->input('phone'))) {
+            session(['otp_verification' => true]);
+            return redirect()->route('home')->withToastSuccess('OTP sent successfully. Please verify.');
+        }
+
+        return back()->withToastError('Failed to send OTP. Please try again.');
     }
 
     public function login(Request $request)
@@ -436,7 +241,7 @@ class AuthController extends Controller
         return 'other';
     }
 
-    private function sendOTPSMS($value, $user)
+    private function sendOTPSMS($value)
     {
         $sms = new SendSMSController();
         $otp = random_int(100000, 999999);
@@ -449,49 +254,108 @@ class AuthController extends Controller
         }
 
         // lưu cache otp 5 phút
-        $key = 'otp_' . $user->id;
+        $key = 'otp_' . $value;
         $expiresAt = now()->addMinutes(5);
         Cache::put($key, $otp, $expiresAt);
 
-        return $sms->sendSMS($user->id, $value, $content);
+        return $sms->sendSMS(1, $value, $content);
     }
 
     public function verifyOTP(Request $request)
     {
         $request->validate([
-            'otp' => 'required|numeric',
-            'user_id' => 'required|exists:users,id',
+            'otp' => 'required|numeric'
         ]);
 
-        $user = User::find($request->input('user_id'));
+        $otpCache = Cache::get('otp_' . $request->session()->get('user_data')['phone']);
 
-        // Check OTP
-        $key = 'otp_' . $user->id;
-        $otpCache = Cache::get($key);
-
-        if (!$otpCache) {
-            session()->put('otp_verification', true);
-            return redirect()->back()->withErrors(['otp' => 'OTP hết hạn, vui lòng yêu cầu một mã OTP khác.']);
+        if (!$otpCache || $otpCache != $request->input('otp')) {
+            return back()->withErrors(['otp' => 'Invalid or expired OTP.']);
         }
 
-        if ($otpCache != $request->input('otp')) {
-            session()->put('otp_verification', true);
-            return redirect()->back()->withErrors(['otp' => 'Mã OTP không chính xác.']);
+        // OTP is valid, retrieve user data from session
+        $userData = session('user_data');
+        $user = new User($userData);
+        $user-> name = '';
+        $user-> abouts = '';
+        $user-> abouts_en = '';
+        $user-> abouts_lao = '';
+        $user-> password = Hash::make($userData['password']);  // Ensure password is hashed
+        $user-> token = $userData['_token'];
+        $member = $request->session()->get('user_data')['member'];
+        $invite_code = $userData['invite_code'];
+        $identify_number = Str::random(8);
+        while (User::where('identify_number', $identify_number)->exists()) {
+            $identify_number = Str::random(8);
         }
+        $user->identify_number = $identify_number;
 
-        // OTP is valid
-        Cache::forget($key);
+        if ($user->save()) {
+            $role = Role::where('name', $member)->first();
+            $newUser = User::where('phone', $request->session()->get('user_data')['phone'])->first();
+            if ($role) {
+                RoleUser::create([
+                    'role_id' => $role->id,
+                    'user_id' => $newUser->id
+                ]);
+            } else {
+                $roleNormal = Role::where('name', \App\Enums\Role::PAITENTS)->first();
+                RoleUser::create([
+                    'role_id' => $roleNormal->id,
+                    'user_id' => $newUser->id
+                ]);
+            }
 
-        // Log the user in
-        auth()->login($user, true);
-        $accessToken = Str::random(60);
-        Cookie::queue('accessToken', $accessToken, 60);
+            if ($invite_code) {
+                $getUserInvite = User::where('identify_number', $identify_number)->first();
 
-        session()->put('show_modal', true);
+                $getUserInvite->points = $getUserInvite->points + 1;
+                $getUserInvite->save();
+            }
 
-        // Redirect to home or any other page
-        toast('Đăng ký thành công!', 'success', 'top-left');
-        return redirect()->route('home');
+            if($userData['type'] == \App\Enums\Role::MEDICAL) {
+                $user->medical_license_img = $userData['medical_license_img'];
+            }elseif ($userData['type'] == \App\Enums\Role::BUSINESS){
+                $user->business_license_img = $userData['business_license_img'];
+
+                $openDate = $request->input('open_date', '00:00');
+                $closeDate = $request->input('close_date', '23:59');
+                $currentDate = Carbon::now();
+                $openDateTime = Carbon::createFromFormat('Y-m-d H:i', $currentDate->format('Y-m-d') . ' ' . $openDate);
+                $closeDateTime = Carbon::createFromFormat('Y-m-d H:i', $currentDate->format('Y-m-d') . ' ' . $closeDate);
+                $formattedOpenDateTime = $openDateTime->format('Y-m-d\TH:i');
+                $formattedCloseDateTime = $closeDateTime->format('Y-m-d\TH:i');
+                $latitude = $request->input('latitude', '0.0');
+                $longitude = $request->input('longitude', '0.0');
+
+                $hospital = new Clinic();
+                $hospital->address_detail = $request->input('address_detail', '');
+                $hospital->address = ',' . ($province[0] ?? '') . ',' . ($district[0] ?? '') . ',' . ($commune[0] ?? '');
+                $hospital->name = $request->input('representative', '');
+                $hospital->latitude = $latitude;
+                $hospital->longitude = $longitude;
+                $hospital->open_date = $formattedOpenDateTime;
+                $hospital->close_date = $formattedCloseDateTime;
+                $hospital->experience = $request->input('experienceHospital', '1');
+                $hospital->gallery = $request->input('img', '1');
+                $hospital->user_id = $user->id;
+                $hospital->time_work = $request->input('time_work', '');
+                $hospital->status = ClinicStatus::ACTIVE;
+                $hospital->type = $user->member;
+                $hospital->phone = $request->input('phone', '');
+                $hospital->representative_doctor = '';
+                $hospital->save();
+            }
+
+            session()->put('user_id', $user->id);
+            auth()->login($user, true);
+            session()->forget(['user_data', 'otp_verification']);
+
+            session()->put('show_modal', true);
+
+            return redirect()->route('home')->withToastSuccess('Registration successful and user logged in.');
+        }
+        return back()->withToastError('Failed to register user. Please try again.');
     }
 
 }
