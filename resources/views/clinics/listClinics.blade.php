@@ -464,7 +464,7 @@
                                 <div class="content__item d-flex">
                                     <div class="specialList-clinics--img d-flex flex-column">
                                         ${img}
-                                        <button id="showMapBtn" class="search-way" style="border:none; background-color: transparent"><i class="fa-solid fa-location-arrow"></i>Chỉ đường</button>
+                                        <button id="showMapBtnTab_${index_map}" class="search-way" style="border:none; background-color: transparent"><i class="fa-solid fa-location-arrow"></i>Chỉ đường</button>
                                         @if (Auth::check())
                     <div class="zalo-follow-only-button" style="height:20px" data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
 @endif
