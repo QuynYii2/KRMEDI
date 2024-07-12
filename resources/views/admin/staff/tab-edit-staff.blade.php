@@ -1,6 +1,6 @@
 @php use App\Enums\Role; @endphp
 @php use App\Enums\UserStatus;
- $role = $user->type;
+ $roles = $user->type;
 @endphp
 @extends('layouts.admin')
 @section('title')
@@ -28,18 +28,18 @@
             <select id="member" name="member" class="form-select form-control">
                 @if($role->name == 'PHARMACIES' || $role->name == 'PHARMACEUTICAL COMPANIES')
                     <option
-                        value="{{ Role::PHAMACISTS }}" {{ $role == Role::PHAMACISTS ? 'selected' : '' }}>Dược sĩ</option>
+                        value="{{ Role::PHAMACISTS }}" {{ $roles == Role::PHAMACISTS ? 'selected' : '' }}>Dược sĩ</option>
                     @else
                     <option
-                        value="{{ Role::DOCTORS }}" {{ $role == Role::DOCTORS ? 'selected' : '' }}>Bác sĩ</option>
+                        value="{{ Role::DOCTORS }}" {{ $roles == Role::DOCTORS ? 'selected' : '' }}>Bác sĩ</option>
                     <option
-                        value="{{ Role::PHAMACISTS }}" {{ $role == Role::PHAMACISTS ? 'selected' : '' }}>Dược sĩ</option>
+                        value="{{ Role::PHAMACISTS }}" {{ $roles == Role::PHAMACISTS ? 'selected' : '' }}>Dược sĩ</option>
                     <option
-                        value="{{ Role::THERAPISTS }}" {{ $role == Role::THERAPISTS ? 'selected' : '' }}>Bác sĩ trị liệu</option>
+                        value="{{ Role::THERAPISTS }}" {{ $roles == Role::THERAPISTS ? 'selected' : '' }}>Bác sĩ trị liệu</option>
                     <option
-                        value="{{ Role::ESTHETICIANS }}" {{ $role == Role::ESTHETICIANS ? 'selected' : '' }}>Chuyên viên thẩm mỹ</option>
+                        value="{{ Role::ESTHETICIANS }}" {{ $roles == Role::ESTHETICIANS ? 'selected' : '' }}>Chuyên viên thẩm mỹ</option>
                     <option
-                        value="{{ Role::NURSES }}" {{ $role == Role::NURSES ? 'selected' : '' }}>Y tá</option>
+                        value="{{ Role::NURSES }}" {{ $roles == Role::NURSES ? 'selected' : '' }}>Y tá</option>
                     @endif
 {{--                <option--}}
 {{--                        value="{{ Role::PAITENTS }}" {{ $role == Role::PAITENTS ? 'selected' : '' }}>{{ __('home.Patients') }}</option>--}}
