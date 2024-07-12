@@ -742,7 +742,7 @@
                     );
 
                     // Chọn bán kính tìm kiếm (ví dụ: 5 km)
-                    var searchRadius = 10;
+                    var searchRadius = 100;
 
                     if (distance <= searchRadius) {
                         var marker = new google.maps.Marker({
@@ -890,7 +890,7 @@
                     );
 
                     // Chọn bán kính tìm kiếm (ví dụ: 5 km)
-                    var searchRadius = 10;
+                    var searchRadius = 100;
 
                     if (distance <= searchRadius) {
                         var markerPharmacies = new google.maps.Marker({
