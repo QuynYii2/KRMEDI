@@ -234,7 +234,7 @@
                         );
 
                         // Chọn bán kính tìm kiếm (ví dụ: 5 km)
-                        var searchRadius = 10;
+                        var searchRadius = 100;
 
                         if (distance <= searchRadius && !isNaN(distance)) {
                             var marker = new google.maps.Marker({
@@ -435,7 +435,7 @@
                         parseFloat(item.latitude), parseFloat(item.longitude)
                     );
 
-                    var searchRadius = 10; // Example search radius: 10 km
+                    var searchRadius = 100; // Example search radius: 10 km
                     if (distance >= searchRadius || isNaN(distance)) {
                         continue;
                     }
