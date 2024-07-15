@@ -420,7 +420,7 @@
                 <div id="chat-messages"></div>
 
                 <div id="sendmessage">
-                    <input type="text" value="" id="msger-input" onkeypress="supSendMessage()"/>
+                    <input type="text" value="Send message..." id="msger-input" onkeypress="supSendMessage()"/>
                     <div id="image-preview" style="display: none"></div>
                     @if (!\App\Models\User::isNormal())
                         <span class="mr-1" style="padding: 15px 9px" data-toggle="modal"
@@ -610,7 +610,7 @@
     })
     function supSendMessage() {
         let inputSend = $('#msger-input').val('');
-        if (event.keyCode === 13 && !event.shiftKey && inputSend != '') {
+        if (event.keyCode === 13 && !event.shiftKey && inputSend != 'Send message...') {
             $('.msger-send-btn').trigger('click');
         }
     }
@@ -1336,7 +1336,7 @@
                 sendMessage(toUser, to_email, file, file.type.startsWith('image/') ? 'image' : 'file', ext);
             } else {
                 let msg = $('#msger-input').val();
-                if(msg != ''){
+                if(msg != 'Send message...'){
                     sendMessage(toUser, to_email, msg, 'text');
                 }
             }
