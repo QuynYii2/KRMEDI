@@ -609,8 +609,8 @@
         });
     })
     function supSendMessage() {
-        let inputSend = $('#msger-input').val('');
-        if (event.keyCode === 13 && !event.shiftKey && inputSend != 'Send message...' && inputSend != '') {
+        let msg_input = $('#msger-input').val();
+        if (event.keyCode === 13 && !event.shiftKey && msg_input !='' && msg_input != 'Send message...') {
             $('.msger-send-btn').trigger('click');
         }
     }
@@ -1336,7 +1336,7 @@
                 sendMessage(toUser, to_email, file, file.type.startsWith('image/') ? 'image' : 'file', ext);
             } else {
                 let msg = $('#msger-input').val();
-                if(msg != 'Send message...' && msg != ''){
+                if(msg != '' && msg != 'Send message...'){
                     sendMessage(toUser, to_email, msg, 'text');
                 }
             }
