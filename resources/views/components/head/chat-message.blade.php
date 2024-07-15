@@ -610,7 +610,7 @@
     })
     function supSendMessage() {
         let inputSend = $('#msger-input').val('');
-        if (event.keyCode === 13 && !event.shiftKey && inputSend != 'Send message...') {
+        if (event.keyCode === 13 && !event.shiftKey && inputSend != 'Send message...' && inputSend != '') {
             $('.msger-send-btn').trigger('click');
         }
     }
@@ -1336,7 +1336,7 @@
                 sendMessage(toUser, to_email, file, file.type.startsWith('image/') ? 'image' : 'file', ext);
             } else {
                 let msg = $('#msger-input').val();
-                if(msg != 'Send message...'){
+                if(msg != 'Send message...' && msg != ''){
                     sendMessage(toUser, to_email, msg, 'text');
                 }
             }
