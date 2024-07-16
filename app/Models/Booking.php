@@ -30,6 +30,10 @@ class Booking extends Model
         return $this->belongsTo(User::class, 'doctor_id', 'id');
     }
 
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'department_id', 'id');
+    }
     protected $dispatchesEvents = [
         'created' => BookingCreated::class,
     ];

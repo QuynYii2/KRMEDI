@@ -26,6 +26,8 @@ use App\Models\Department;
 use App\Models\FamilyManagement;
 use App\Models\NewEvent;
 use App\Models\online_medicine\ProductMedicine;
+use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\PrescriptionResults;
 use App\Models\ProductInfo;
 use App\Models\Question;
@@ -36,6 +38,7 @@ use App\Models\User;
 
 //use GuzzleHttp\Psr7\Request;
 use App\Services\FundiinService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
@@ -427,12 +430,197 @@ class HomeController extends Controller
         }
     }
 
-    public function admin()
+    public function admin(Request $request)
     {
-        $productMedicines = ProductMedicine::where('status', OnlineMedicineStatus::PENDING)->get();
-        $number = count($productMedicines);
         $isAdmin = (new MainController())->checkAdmin();
-        return view('admin.home-admin', compact('number', 'isAdmin'));
+
+        //Booking
+        $queryBooking = Booking::query();
+        $bookingLastPeriod = Booking::query();
+        if (!$isAdmin) {
+            $clinicId = Clinic::where('user_id', Auth::user()->id)->first()->id;
+            $queryBooking = $queryBooking->where('clinic_id', $clinicId);
+            $bookingLastPeriod = $bookingLastPeriod->where('clinic_id', $clinicId);
+        }
+        $bookingFilter = $request->query('booking-filter', 'today');
+        switch ($bookingFilter) {
+            case 'today':
+                $queryBooking = $queryBooking->whereDate('created_at', '=', now()->toDateString());
+                $bookingLastPeriod = $bookingLastPeriod->whereDate('created_at', '=', now()->subDay()->toDateString())->get();
+                $bookingFilterName = __('home.Today');
+                break;
+            case 'this_month':
+                $queryBooking = $queryBooking->whereMonth('created_at', '=', now()->month)
+                    ->whereYear('created_at', '=', now()->year);
+                $bookingLastPeriod = $bookingLastPeriod->whereMonth('created_at', '=', now()->subMonth()->month)
+                    ->whereYear('created_at', '=', now()->subMonth()->year)->get();
+                $bookingFilterName = __('home.This Month');
+                break;
+            case 'this_year':
+                $queryBooking = $queryBooking->whereYear('created_at', '=', now()->year);
+                $bookingLastPeriod = $bookingLastPeriod->whereYear('created_at', '=', now()->subYear()->year)->get();
+                $bookingFilterName = __('home.This Year');
+                break;
+            default:
+                $bookingFilterName = "Tất cả";
+                $bookingLastPeriod = collect();
+                break;
+        }
+        $bookings = $queryBooking->orderByDesc('created_at')->get();
+        $departmentCounts = $bookings->groupBy('department_id')
+            ->map(function ($group) {
+                return $group->count();
+            })
+            ->sortDesc()->take(5);
+        $userReBooking = $bookings->groupBy('user_id')
+            ->map(function ($group) {
+                return $group->count();
+            })
+            ->filter(function ($count) {
+                return $count > 1;
+            });
+        $userCount = User::count();
+
+        //Order
+        $queryOrder = Order::query();
+        $orderLastPeriod = Order::query();
+        $orderFilter = $request->query('order-filter', 'today');
+        switch ($orderFilter) {
+            case 'today':
+                $queryOrder = $queryOrder->whereDate('created_at', '=', now()->toDateString());
+                $orderLastPeriod = $orderLastPeriod->whereDate('created_at', '=', now()->subDay()->toDateString())->get();
+                $orderFilterName = __('home.Today');
+                break;
+            case 'this_month':
+                $queryOrder = $queryOrder->whereMonth('created_at', '=', now()->month)
+                    ->whereYear('created_at', '=', now()->year);
+                $orderLastPeriod = $orderLastPeriod->whereMonth('created_at', '=', now()->subMonth()->month)
+                    ->whereYear('created_at', '=', now()->subMonth()->year)->get();
+                $orderFilterName = __('home.This Month');
+                break;
+            case 'this_year':
+                $queryOrder = $queryOrder->whereYear('created_at', '=', now()->year);
+                $orderLastPeriod = $orderLastPeriod->whereYear('created_at', '=', now()->subYear()->year)->get();
+                $orderFilterName = __('home.This Year');
+                break;
+            default:
+                $orderFilterName = "Tất cả";
+                $orderLastPeriod = collect();
+                break;
+        }
+        $orders = $queryOrder->orderByDesc('created_at')->get();
+        $orderIds = $queryOrder->select('id')->pluck('id');
+        $topOrderCount = OrderItem::query()
+            ->whereIn('order_id', $orderIds)->join('orders', 'order_items.order_id', '=', 'orders.id')
+            ->select('product_id', DB::raw('COUNT(*) as total'))->groupBy('product_id')
+            ->whereNotIn('orders.status', ['CANCELLED', 'REFUND'])->orderBy('total', 'desc') ->limit(10)->get();
+
+        //New User
+        $queryNewUser = User::query();
+        $userLastPeriod = User::query();
+        $userFilter = $request->query('user-filter', 'today');
+        switch ($userFilter){
+            case 'today':
+                $queryNewUser = $queryNewUser->whereDate('created_at', '=', now()->toDateString());
+                $userLastPeriod = $userLastPeriod->whereDate('created_at', '=', now()->subDay()->toDateString())->get();
+                $userFilterName = __('home.Today');
+                break;
+            case 'this_month':
+                $queryNewUser = $queryNewUser->whereMonth('created_at', '=', now()->month)
+                    ->whereYear('created_at', '=', now()->year);
+                $userLastPeriod = $userLastPeriod->whereMonth('created_at', '=', now()->subMonth()->month)
+                    ->whereYear('created_at', '=', now()->subMonth()->year)->get();
+                $userFilterName = __('home.This Month');
+                break;
+            case 'this_year':
+                $queryNewUser = $queryNewUser->whereYear('created_at', '=', now()->year);
+                $userLastPeriod = $userLastPeriod->whereYear('created_at', '=', now()->subYear()->year)->get();
+                $userFilterName = __('home.This Year');
+                break;
+            default:
+                $userFilterName = "Tất cả";
+                $userLastPeriod = collect();
+                break;
+        }
+        $users = $queryNewUser->get();
+
+
+        return view('admin.home-admin', compact('isAdmin','bookings', 'bookingFilterName', 'departmentCounts', 'bookingLastPeriod', 'userReBooking', 'userCount',
+            'orders', 'orderFilterName', 'orderLastPeriod', 'topOrderCount', 'users', 'userFilterName', 'userLastPeriod'));
+    }
+
+    public function getDataForChart(Request $request)
+    {
+        $filter = $request->input('filter');
+        $data = [
+            'orders' => [],
+            'bookings' => [],
+            'users' => []
+        ];
+
+        switch ($filter) {
+            case 'today':
+                for ($i = 0; $i < 7; $i++) {
+                    $date = Carbon::today()->subDays($i);
+                    $data['bookings'][] = [
+                        'date' => $date->toDateString(),
+                        'count' => Booking::whereDate('created_at', $date)->count()
+                    ];
+                    $data['orders'][] = [
+                        'date' => $date->toDateString(),
+                        'count' => Order::whereDate('created_at', $date)->count()
+                    ];
+                    $data['users'][] = [
+                        'date' => $date->toDateString(),
+                        'count' => User::whereDate('created_at', $date)->count()
+                    ];
+                }
+                break;
+
+            case 'this_month':
+                for ($i = 0; $i < 7; $i++) {
+                    $date = Carbon::now()->subMonthsNoOverflow($i);
+                    $data['bookings'][] = [
+                        'date' => $date->format('Y-m'),
+                        'count' => Booking::whereYear('created_at', $date->year)
+                            ->whereMonth('created_at', $date->month)
+                            ->count()
+                    ];
+                    $data['orders'][] = [
+                        'date' => $date->format('Y-m'),
+                        'count' => Order::whereYear('created_at', $date->year)
+                            ->whereMonth('created_at', $date->month)
+                            ->count()
+                    ];
+                    $data['users'][] = [
+                        'date' => $date->format('Y-m'),
+                        'count' => User::whereYear('created_at', $date->year)
+                            ->whereMonth('created_at', $date->month)
+                            ->count()
+                    ];
+                }
+                break;
+
+            case 'this_year':
+                for ($i = 0; $i < 7; $i++) {
+                    $date = Carbon::now()->subYears($i);
+                    $data['bookings'][] = [
+                        'date' => $date->format('Y-m'),
+                        'count' => Booking::whereYear('created_at', $date->year)->count()
+                    ];
+                    $data['orders'][] = [
+                        'date' => $date->format('Y-m'),
+                        'count' => Order::whereYear('created_at', $date->year)->count()
+                    ];
+                    $data['users'][] = [
+                        'date' => $date->format('Y-m'),
+                        'count' => User::whereYear('created_at', $date->year)->count()
+                    ];
+                }
+                break;
+        }
+
+        return response()->json($data);
     }
 
     public function listMessageUnseen()
