@@ -151,7 +151,7 @@
                         parseFloat(res[i].latitude), parseFloat(res[i].longitude)
                     );
                     // Chọn bán kính tìm kiếm (ví dụ: 10 km)
-                    var searchRadius = 10;
+                    var searchRadius = 100;
                     if (distance <= searchRadius) {
                         continue;
                     }

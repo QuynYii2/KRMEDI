@@ -648,7 +648,7 @@
                 clinics.forEach(function(clinic, index) {
                     var distance = distances[index];
                     var clinicElement = $('.specialList-clinics[data-clinic-id="' + clinic.id + '"]');
-                    if (distance <= 10) {
+                    if (distance <= 100) {
                         clinicElement.attr('data-marker-index', clinicIndex++);
                     } else {
                         clinicElement.hide();
@@ -680,7 +680,7 @@
                 results.forEach(function(result) {
                     var distance = result.distance;
                     var pharmacyElement = result.pharmacyElement;
-                    if (distance <= 10) {
+                    if (distance <= 100) {
                         pharmacyElement.attr('data-marker-index', pharmacyIndex++);
                     } else {
                         pharmacyElement.hide();
@@ -805,7 +805,7 @@
                     );
 
                     // Chọn bán kính tìm kiếm (ví dụ: 5 km)
-                    var searchRadius = 10;
+                    var searchRadius = 100;
 
                     if (distance <= searchRadius) {
                         var marker = new google.maps.Marker({
@@ -946,7 +946,7 @@
                     );
 
                     // Chọn bán kính tìm kiếm (ví dụ: 5 km)
-                    var searchRadius = 10;
+                    var searchRadius = 100;
 
                     if (distance <= searchRadius) {
                         var markerPharmacies = new google.maps.Marker({

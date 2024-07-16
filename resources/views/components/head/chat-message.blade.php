@@ -609,7 +609,8 @@
         });
     })
     function supSendMessage() {
-        if (event.keyCode === 13 && !event.shiftKey) {
+        let msg_input = $('#msger-input').val();
+        if (event.keyCode === 13 && !event.shiftKey && msg_input !='' && msg_input != 'Send message...') {
             $('.msger-send-btn').trigger('click');
         }
     }
@@ -849,23 +850,22 @@
         }
     }
 
+    function getConsistentHashCode(s) {
+        let hash = 0;
+        for (let i = 0; i < s.length; i++) {
+            let chr = s.charCodeAt(i);
+            hash = ((hash << 5) - hash) + chr;
+            hash |= 0;
+        }
+        return hash >>> 0;
+    }
+
     function getConversationID(userUid) {
         let id = current_user.uid;
 
         let hash_value;
-        String.prototype.hashCode = function () {
-            let hash = 0,
-                i, chr;
-            if (this.length === 0) return hash;
-            for (i = 0; i < this.length; i++) {
-                chr = this.charCodeAt(i);
-                hash = ((hash << 5) - hash) + chr;
-                hash |= 0;
-            }
-            return hash;
-        }
 
-        if (id.hashCode() <= userUid.hashCode()) {
+        if (getConsistentHashCode(id) <= getConsistentHashCode(userUid)) {
             hash_value = `${id}_${userUid}`;
         } else {
             hash_value = `${userUid}_${id}`;
@@ -1336,7 +1336,9 @@
                 sendMessage(toUser, to_email, file, file.type.startsWith('image/') ? 'image' : 'file', ext);
             } else {
                 let msg = $('#msger-input').val();
-                sendMessage(toUser, to_email, msg, 'text');
+                if(msg != '' && msg != 'Send message...'){
+                    sendMessage(toUser, to_email, msg, 'text');
+                }
             }
 
             $('#msger-input').val('');

@@ -289,8 +289,12 @@ class MainController extends Controller
     public function getRoleUser($id)
     {
         $roleUser = RoleUser::where('user_id', $id)->first();
-        $role = Role::find($roleUser->role_id);
-        return $role->name;
+        if ($roleUser){
+            $role = Role::find($roleUser->role_id);
+            return $role->name;
+        }else{
+            return 'NORMAL PEOPLE';
+        }
     }
 
     public function convertVietnameseToAscii($string)
