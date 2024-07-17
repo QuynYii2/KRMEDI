@@ -230,7 +230,8 @@
                                         </p>
                                         <p class="product-price font-weight-600 " style="font-size: 18px">
                                     <span id="price_product_{{$cart->id}}">
-                                        {{ $product->price }}
+                                        <input type="hidden" value="{{$cart->id}}" class="price_product_value" />
+                                        {{ number_format($product->price, 0, ',' , '.') }}
                                     </span>
                                             <span class="unit_price">
                                        {{ $product->unit_price }}
@@ -241,7 +242,8 @@
                                     </span>
                                             <span class="float-right ">
                                         <span class="total_product" id="total_product_{{$cart->id}}">
-                                            {{ $product->price * $cart->quantity }}
+                                            <input type="hidden" value="{{$product->price * $cart->quantity}}" class="total_product_value" />
+                                            {{ number_format($product->price * $cart->quantity, 0, ',', '.') }}
                                         </span>
                                         <span class="unit_price">
                                            {{ $product->unit_price }}
@@ -269,7 +271,8 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <p class="text-price">{{ __('home.Shipping fee') }}:</p>
                                     <p class="value-price">
-                                        <span id="shipping_fee">{{$total_fee}}</span>
+                                        <span id="shipping_fee">{{number_format($total_fee, 0, ',', '.')}}</span>
+                                        <input type="hidden" value="{{$total_fee}}" class="shipping_fee_value">
                                         <span class="unit_price_product">VND</span>
                                     </p>
                                 </div>
@@ -448,20 +451,27 @@
         }
 
         async function calculateTotal() {
-            let listTotal = document.getElementsByClassName('total_product');
+            const formatter = new Intl.NumberFormat('vi-VN', {
+                style: 'decimal',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            });
+
+            let listTotal = document.getElementsByClassName('total_product_value');
             let total = 0;
             for (let i = 0; i < listTotal.length; i++) {
                 let itemTotal = listTotal[i];
-                total = parseFloat(total) + parseFloat(itemTotal.innerText);
+                total += parseFloat(itemTotal.value);
             }
 
             let unitPrices = document.getElementsByClassName('unit_price')
             let unitPrice = unitPrices[0].innerText;
 
             $('.unit_price_product').text(unitPrice);
-            $('#total_fee').text(total);
+            let formattedTotalFee = formatter.format(total);
+            $('#total_fee').text(formattedTotalFee);
 
-            let shipping = $('#shipping_fee').text();
+            let shipping = $('.shipping_fee_value').val();
             let discount_array = await getNumberOfPoints();
 
             let discount_max = discount_array.price_discount_max;
@@ -473,8 +483,8 @@
             $('#discount_fee').text(discount);
 
             let total_order = parseFloat(total) + parseFloat(shipping) - parseFloat(discount);
-            let html = total_order;
-            $('#total_order').text(html);
+            let formattedTotalOrder = formatter.format(total_order);
+            $('#total_order').text(formattedTotalOrder);
 
             $('#value_total_fee').val(total);
             $('#value_shipping_fee').val(shipping);
@@ -545,6 +555,12 @@
         }
 
         function changeAddressFromApi(response, province, district,total_fee) {
+            const formatter = new Intl.NumberFormat('vi-VN', {
+                style: 'decimal',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            });
+
             $('#full_name').val(response.username)
             $('#phone_number').val(response.phone)
             $('#province').val(province)
@@ -552,11 +568,13 @@
             $('#address_detail').val(response.address_detail)
             $('#value_address').val(response.address_detail + ', ' + district + ', ' + province);
             $('#value_shipping_fee').val(total_fee);
-            $('#shipping_fee').text(total_fee)
+            let formattedShippingFee = formatter.format(total_fee);
+            $('#shipping_fee').text(formattedShippingFee);
             let totals = $('#value_total_fee').val();
             let discounts = $('#value_discount_fee').val();
             let total_order = parseFloat(totals) + parseFloat(total_fee) - parseFloat(discounts);
-            $('#total_order').text(total_order);
+            let formattedTotalOrderFee = formatter.format(total_order);
+            $('#total_order').text(formattedTotalOrderFee);
             $('#value_total_order').val(total_order);
         }
 

@@ -14,7 +14,13 @@
         right: 10px;
         top: 30%;
     }
-
+    .call-icon{
+        border: none;
+        background-color: transparent;
+    }
+    .none-btn .call-icon{
+        color: grey;
+    }
     @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
@@ -398,27 +404,42 @@
             </div>
 
             <div id="chatview" class="p1">
-                <div id="profile">
-                    <div id="close">
-                        <i class="fa-solid fa-arrow-left" style="color: black"></i>
-                    </div>
-
-                    <div class="d-flex">
-                        <img class="chatview-image" id="chatview-image" src=""/>
-                        <div>
-                            <p class="mt-0"></p>
-                            <label style="color: black; font-size: 11px; text-align: left; display: flex; align-items: center; column-gap: 3px">
-                                <div id="online-div" style="display: none">
-                                    <div class="d-flex" style="align-items: center; gap: 5px;">Online <div class="online-dot" ></div></div>
-                                </div>
-                                <div id="offline-div" style="display: none">
-                                    <div class="d-flex" style="align-items: center; gap: 5px;">Offline <div class="offline-dot"></div></div>
-                                </div>
-                            </label>
-
+                <div id="profile" class="justify-content-between" style="padding-right: 20px">
+                    <div class="d-flex align-items-center">
+                        <div id="close">
+                            <i class="fa-solid fa-arrow-left" style="color: black"></i>
+                        </div>
+                        <div class="d-flex">
+                            <img class="chatview-image" id="chatview-image" src=""/>
+                            <div>
+                                <p class="mt-0"></p>
+                                <label style="color: black; font-size: 11px; text-align: left; display: flex; align-items: center; column-gap: 3px">
+                                    <div id="online-div" style="display: none">
+                                        <div class="d-flex" style="align-items: center; gap: 5px;">Online <div class="online-dot" ></div></div>
+                                    </div>
+                                    <div id="offline-div" style="display: none">
+                                        <div class="d-flex" style="align-items: center; gap: 5px;">Offline <div class="offline-dot"></div></div>
+                                    </div>
+                                </label>
+                            </div>
                         </div>
                     </div>
-                    {{--                    <span></span>--}}
+                    <div class="d-flex">
+{{--                        @if ()--}}
+                            <form method="post" action="{{ route('agora.call') }}" target="_blank">
+                                {{ csrf_field() }}
+                                <input type="hidden" name="user_id_1"
+                                       value="@if (Auth::check()) {{ Auth::user()->id }} @endif">
+                                <input type="hidden" name="user_id_2" id="user_id_2" value="">
+                                <button type="submit" class="button call-icon"> <i class="fa-solid fa-video" style="font-size: 23px"></i></button>
+                            </form>
+{{--                        @else--}}
+{{--                            <form>--}}
+{{--                                <button type="button" class="none-btn call-icon" disabled> <i class="fa-solid fa-video" style="font-size: 23px"></i></button>--}}
+{{--                            </form>--}}
+{{--                        @endif--}}
+                    </div>
+
                 </div>
                 <div id="chat-messages"></div>
 
@@ -971,7 +992,7 @@
                         const avt = response.infoUser.avt ? window.location.origin + response.infoUser.avt : '../../../../img/avt_default.jpg';
                         if ((searchTerm === " " || !searchTerm)) {
                             if (res.is_online) {
-                                html_online += `<div class="friend user_connect" data-id="${res.id}" data-role="${res.role}" data-email="${email}" data-image="${avt}" data-online="${res.is_online}">
+                                html_online += `<div class="friend user_connect" data-mainid="${response.infoUser.id}" data-id="${res.id}" data-role="${res.role}" data-email="${email}" data-image="${avt}" data-online="${res.is_online}">
                                                     <img src="${avt}"/>
                                                     <p>
                                                         <strong class="max-1-line-title-widget-chat">${name_doctor}</strong>
@@ -981,7 +1002,7 @@
                             }
                         } else if (name_doctor.toLowerCase().includes(searchTerm.toLowerCase())) { // Filter by search term
                             if (doctorCount < 10) {
-                                html_online += `<div class="friend user_connect" data-id="${res.id}" data-role="${res.role}" data-email="${email}" data-image="${avt}" data-online="${res.is_online}">
+                                html_online += `<div class="friend user_connect" data-mainid="${response.infoUser.id}" data-id="${res.id}" data-role="${res.role}" data-email="${email}" data-image="${avt}" data-online="${res.is_online}">
                                                     <img src="${avt}"/>
                                                     <p>
                                                         <strong class="max-1-line-title-widget-chat">${name_doctor}</strong>
@@ -1003,7 +1024,7 @@
                         const avt = response.infoUser.avt ? window.location.origin + response.infoUser.avt : '../../../../img/avt_default.jpg';
                         let redDotHtml = list_user_not_seen.includes(res.id) ? `<div class="${res.id}" style="position: absolute;right: 15px;top: 50%;transform: translateY(-50%);background-color: red;border-radius: 50%;width: 10px;height:10px"></div>` : '';
 
-                        html += `<div class="friend user_connect" data-id=${res.id} data-role="${res.role}" data-email="${email}" data-online="${res.is_online}">
+                        html += `<div class="friend user_connect" data-mainid="${response.infoUser.id}" data-id=${res.id} data-role="${res.role}" data-email="${email}" data-online="${res.is_online}">
                     <img src="${avt}"/>
                     <p>
                         <strong class="max-1-line-title-widget-chat">${name_doctor}</strong>
@@ -1387,17 +1408,6 @@
                 return null; // Handle the error appropriately
             }
         }
-//         async function uploadFile(file, ext, chatUserID) {
-//             const storageRef = ref(storage, `images/${getConversationID(chatUserID)}/${Date.now()}.${ext}`);
-// console.log(storageRef);
-//             try {
-//                 const snapshot = await storageRef.put(file);
-//                 return await snapshot.ref.getDownloadURL();
-//             } catch (error) {
-//                 console.error('Failed to upload file:', error);
-//                 return null; // Handle null in sending logic
-//             }
-//         }
     });
 
 
@@ -1417,7 +1427,7 @@
             let role = $(this).data('role');
             let img = $(this).data('image');
             let is_online = $(this).data('online');
-
+            $('#user_id_2').val($(this).data('mainid'));
             isShowOpenWidget = true;
 
             chatUserId = $(this).data('id');
@@ -1449,7 +1459,7 @@
             const offlineDot = document.querySelector(`#offline-div`);
 
             const userOnline = list_user_doctor_online.find(user => user.id === id && user.is_online);
-           
+
             if (userOnline) {
                 onlineDot.style.display = 'block';   // Show online dot
                 offlineDot.style.display = 'none';  // Hide offline dot

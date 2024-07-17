@@ -319,7 +319,7 @@ Route::group(['prefix' => 'what-free'], function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('web/home', [HomeController::class, 'admin'])->name('admin.home');
-
+    Route::get('web/home/getDataForChart', [HomeController::class, 'getDataForChart'])->name('admin.home.getDataForChart');
     Route::get('web/chat-unseen', [HomeController::class, 'listMessageUnseen'])->name('admin.list.chat.unseen');
     Route::get('web/list-chat-unseen', [HomeController::class, 'listChatUnseen'])->name('admin.list.chat.mess.unseen');
 
