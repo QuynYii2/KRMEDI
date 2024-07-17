@@ -173,93 +173,106 @@ class AgoraChatController extends Controller
     }
     function handleCallVideo(Request $request)
     {
-        $user_id_1 = $request->input('user_id_1');
-        $user_id_2 = $request->input('user_id_2');
+        try {
+            $user_id_1 = $request->input('user_id_1');
+            $user_id_2 = $request->input('user_id_2');
 
-        // find agorachat by user_id_1 =  user_id_1 or user_id_2 and user_id_2 = user_id_2 or user_id_1
-        $agora_chat = AgoraChat::where([
-            ['user_id_1', $user_id_1],
-            ['user_id_2', $user_id_2],
-        ])->first();
+            // find agorachat by user_id_1 =  user_id_1 or user_id_2 and user_id_2 = user_id_2 or user_id_1
+            $agora_chat = AgoraChat::where([
+                ['user_id_1', $user_id_1],
+                ['user_id_2', $user_id_2],
+            ])->first();
 
-        if (!$agora_chat) {
-            $agora_chat = $this->createMeeting($request);
+            if (!$agora_chat) {
+                $agora_chat = $this->createMeeting($request);
+            }
+
+            // Check token have last updated more than 10mins then refresh token
+            $currentDateTime = Carbon::now();
+
+            if (Carbon::parse($agora_chat->updated_at)->diffInMinutes($currentDateTime) > 10) {
+                //Refresh token
+                $this->handleRefreshToken($request);
+            }
+
+            $token      = $agora_chat->token ?? null;
+            $channel    = $agora_chat->channel ?? null;
+            $fromUser     = $agora_chat->user_id_1 ?? 0;
+            $toUser     = $agora_chat->user_id_2 ?? 0;
+
+            $accessTokenFromUser = User::find($fromUser)->token ?? '';
+            $accessTokenToUser   = User::find($toUser)->token ?? '';
+
+            //call acquire and start record video here:
+            $resourceId = $this->acquireResource($channel, $fromUser);
+                try {
+                    $startResponse = $this->startRecording($channel, $fromUser, $resourceId, $token);
+                } catch (\Exception $e) {
+                    toast('Cuộc gọi đang gián đoạn, vui lòng thử lại sau 15 giây!', 'error', 'top-left');
+                    return back();
+                }
+    //        $updateLayout = $this->updateLayout($channel, $fromUser, $resourceId, $startResponse['sid']);
+
+                try {
+                    $queryRecord = $this->queryRecord($resourceId, $startResponse['sid']);
+                } catch (\Exception $e) {
+                    toast('Cuộc gọi đang gián đoạn, vui lòng thử lại sau 15 giây!', 'error', 'top-left');
+                    return back();
+                }
+            //Params của user tạo cuộc gọi
+            $callFromParams = [
+                'token'         => $token,
+                'channel'       => $channel,
+                'user_id'       => $fromUser,
+                'guest_id'      => $toUser,
+                'accessToken'   => $accessTokenFromUser,
+                'resourceId'=> $resourceId,
+                'sid' => $startResponse['sid'],
+                'uid' => $startResponse['uid'],
+            ];
+
+            //Params của user nhận cuộc gọi
+            $callToParams = [
+                'token'         => $token,
+                'channel'       => $channel,
+                'user_id'       => $toUser,
+                'guest_id'      => $fromUser,
+                'accessToken'   => $accessTokenToUser,
+                'resourceId'=> $resourceId,
+                'sid' => $startResponse['sid'],
+                'uid' => $startResponse['uid'],
+            ];
+
+            $data['content'] = env('CALL_APP_URL') . '?' . http_build_query($callToParams);
+
+            $data['user_id_1'] = $user_id_2;
+            $data['user_id_2'] = $user_id_1;
+
+            $options = array(
+                'cluster' => 'ap1',
+                'encrypted' => true
+            );
+
+            $PUSHER_APP_KEY = '3ac4f810445d089829e8';
+            $PUSHER_APP_SECRET = 'c6cafb046a45494f80b2';
+            $PUSHER_APP_ID = '1714303';
+
+            $pusher = new Pusher($PUSHER_APP_KEY, $PUSHER_APP_SECRET, $PUSHER_APP_ID, $options);
+
+            //DATA WEB CALL WEB
+            $pusher->trigger('send-message', 'send-message', $data);
+
+            // gui notification den user_id_1
+            $userReceiveCall = User::find($user_id_2);
+            $userCall = User::find($user_id_1);
+
+            $this->sendNotificationToAppByFireBase($userReceiveCall->email, $userCall);
+
+            return redirect()->to(env('CALL_APP_URL') . '?' . http_build_query($callFromParams));
+        } catch (\Exception $e) {
+            toast('Cuộc gọi đang gián đoạn, vui lòng thử lại sau 15 giây!', 'error', 'top-left');
+            return back();
         }
-
-        // Check token have last updated more than 10mins then refresh token
-        $currentDateTime = Carbon::now();
-
-        if (Carbon::parse($agora_chat->updated_at)->diffInMinutes($currentDateTime) > 10) {
-            //Refresh token
-            $this->handleRefreshToken($request);
-        }
-
-        $token      = $agora_chat->token ?? null;
-        $channel    = $agora_chat->channel ?? null;
-        $fromUser     = $agora_chat->user_id_1 ?? 0;
-        $toUser     = $agora_chat->user_id_2 ?? 0;
-
-        $accessTokenFromUser = User::find($fromUser)->token ?? '';
-        $accessTokenToUser   = User::find($toUser)->token ?? '';
-
-        //call acquire and start record video here:
-        $resourceId = $this->acquireResource($channel, $fromUser);
-        $startResponse = $this->startRecording($channel, $fromUser, $resourceId, $token);
-//        $updateLayout = $this->updateLayout($channel, $fromUser, $resourceId, $startResponse['sid']);
-        $queryRecord = $this->queryRecord($resourceId, $startResponse['sid']);
-
-        //Params của user tạo cuộc gọi
-        $callFromParams = [
-            'token'         => $token,
-            'channel'       => $channel,
-            'user_id'       => $fromUser,
-            'guest_id'      => $toUser,
-            'accessToken'   => $accessTokenFromUser,
-            'resourceId'=> $resourceId,
-            'sid' => $startResponse['sid'],
-            'uid' => $startResponse['uid'],
-        ];
-
-        //Params của user nhận cuộc gọi
-        $callToParams = [
-            'token'         => $token,
-            'channel'       => $channel,
-            'user_id'       => $toUser,
-            'guest_id'      => $fromUser,
-            'accessToken'   => $accessTokenToUser,
-            'resourceId'=> $resourceId,
-            'sid' => $startResponse['sid'],
-            'uid' => $startResponse['uid'],
-        ];
-
-        $data['content'] = env('CALL_APP_URL') . '?' . http_build_query($callToParams);
-
-        $data['user_id_1'] = $user_id_2;
-        $data['user_id_2'] = $user_id_1;
-
-        $options = array(
-            'cluster' => 'ap1',
-            'encrypted' => true
-        );
-
-        $PUSHER_APP_KEY = '3ac4f810445d089829e8';
-        $PUSHER_APP_SECRET = 'c6cafb046a45494f80b2';
-        $PUSHER_APP_ID = '1714303';
-
-        $pusher = new Pusher($PUSHER_APP_KEY, $PUSHER_APP_SECRET, $PUSHER_APP_ID, $options);
-
-        //DATA WEB CALL WEB
-        $pusher->trigger('send-message', 'send-message', $data);
-
-        // gui notification den user_id_1
-        $userReceiveCall = User::find($user_id_2);
-        $userCall = User::find($user_id_1);
-
-        $this->sendNotificationToAppByFireBase($userReceiveCall->email, $userCall);
-
-        return redirect()->to(env('CALL_APP_URL') . '?' . http_build_query($callFromParams));
-
-        // return view('video-call.index', compact('agora_chat'));
     }
 
     public function downloadRecord(Request $request)
