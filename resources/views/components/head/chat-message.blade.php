@@ -350,7 +350,10 @@
 
     <div id="chat-circle" class="btn btn-raised">
         <div id="chat-overlay"></div>
-        <i class="fa-solid fa-comment-dots mr-2"></i>
+        <div class="position-relative">
+            <i class="fa-solid fa-comment-dots mr-2"></i>
+            <div class="noti_number" style="position: absolute;color: red;font-size: 15px;left: 12px;top: 11px"></div>
+        </div>
         Tin nhắn
     </div>
 
@@ -371,7 +374,7 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="chat-widget-connected" data-toggle="tab"
                             data-target="#chat-widget-connected-tabs" type="button" role="tab" aria-controls="profile"
-                            aria-selected="false">Tin nhắn đã gửi
+                            aria-selected="false">Tin nhắn đã gửi <span class="number_not_screen" style="color: red"></span>
                     </button>
                 </li>
             </ul>
@@ -389,7 +392,7 @@
                 </div>
                 <div class="tab-pane fade" id="chat-widget-connected-tabs" role="tabpanel"
                      aria-labelledby="chat-widget-connected">
-                     <div class="search-container">
+                    <div class="search-container">
                         <i class="fa fa-search search-icon"></i>
                         <input type="text" placeholder="Tìm kiếm" class="chat-search w-100" id="searchDoctorChat" />
                     </div>
@@ -436,6 +439,7 @@
 {{--                            </form>--}}
 {{--                        @endif--}}
                     </div>
+
                 </div>
                 <div id="chat-messages"></div>
 
@@ -546,8 +550,8 @@
                 <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark" style="color: #ffffff;font-size: 20px"></i></button>
             </div>
             <div class="modal-body">
-                    <lable>Email</lable>
-                    <input type="text" name="email" id="emails" class="form-control mb-3" placeholder="Email" required>
+                <lable>Email</lable>
+                <input type="text" name="email" id="emails" class="form-control mb-3" placeholder="Email" required>
                 <lable>Họ và tên</lable>
                 <input type="text" name="user_name" id="user_names" class="form-control mb-3" placeholder="Họ và tên" required>
                 <lable>Số điện thoại</lable>
@@ -684,20 +688,6 @@
 
     let totalMessageUnseen = 0;
 
-    // window.Echo = new Echo({
-    //     broadcaster: 'pusher',
-    //     key: 'e700f994f98dbb41ea9f',
-    //     cluster: 'eu',
-    //     forceTLS: true,
-    //     encrypted: true,
-    // });
-
-    // window.Echo.channel("messages." + currentUserIdChat).listen('NewMessage', function (e) {
-    //     renderMessageReceive(e);
-    //     // handleSeenMessage();
-    //     calculateTotalMessageUnseen(e);
-    // });
-
     import {firebaseConfig} from '{{ asset('constants.js') }}';
     import {initializeApp} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import {
@@ -741,7 +731,7 @@
         console.error('Failed to initialize Firebase Messaging', err);
     }
 
-    let current_user, list_user = [], doctorChatList = [], list_user_not_seen = [],
+    let current_user, list_user = [], doctorChatList = [], list_user_not_seen = [], list_user_doctor_online = [],
         current_role = `{{ (new \App\Http\Controllers\MainController())->getRoleUser(Auth::user()->id)}}`,
         user_chat;
 
@@ -797,7 +787,7 @@
             image: user.photoURL || '',
             createdAt: time,
             is_online: true,
-            lastActive: time,
+            last_active: time,
             role: `{{ Auth::user()->member }}`,
         };
 
@@ -822,11 +812,11 @@
         }
     }
 
-     function logout() {
+    function logout() {
         let uid = current_user.uid;
         try {
-            signOut(auth);
             setOnline(uid, false);
+            signOut(auth);
 
             window.location.href = "{{ route('logoutProcess') }}";
         } catch (error) {
@@ -863,7 +853,6 @@
                 'last_active': Date.now(),
             }).then(() => {
                 console.log('Status updated successfully', isOnline);
-                // Assuming each user has a label identified by a unique ID like `status-${uid}`
             });
         } catch (error) {
             console.error('Error updating active status:', error);
@@ -913,25 +902,25 @@
                         }
                     });
                 });
+
+                if (doctorChatList.length > 0) {
+                    const usersCollection = collection(database, "users");
+                    const onlineDoctorsQuery = query(
+                        usersCollection,
+                        where('is_online', '==', true),
+                    );
+
+                    onSnapshot(onlineDoctorsQuery, (onlineDoctorsSnapshot) => {
+                        list_user_doctor_online = [];
+                        onlineDoctorsSnapshot.forEach((doc) => {
+                            list_user_doctor_online.push(doc.data());
+                        });
+                    });
+                }
                 countUnreadMessages();
             } catch (error) {
                 console.error("Error getting: ", error);
             }
-            // const unsubscribe = onSnapshot(doctorChatListQuery, (querySnapshot) => {
-            //     doctorChatList = [];
-            //     querySnapshot.forEach((doc) => {
-            //         const res = doc.data();
-            //         const userIds = res.userIds;
-            //         userIds.forEach(userId => {
-            //             if (userId !== user.uid) {
-            //                 doctorChatList.push(userId);
-            //             }
-            //         });
-            //         countUnreadMessages();
-            //     });
-            // }, (error) => {
-            //     console.error("Error getting: ", error);
-            // });
         }
     }
 
@@ -963,17 +952,7 @@
         }
         $('.noti_number').html(list_user_not_seen.length>0?list_user_not_seen.length:'');
         $('.number_not_screen').html(list_user_not_seen.length>0?'('+list_user_not_seen.length+')':'');
-        // const unsubscribeUser = onSnapshot(usersCollection, (querySnapshot) => {
-        //     list_user = [];
-        //     querySnapshot.forEach((doc) => {
-        //         let res = doc.data();
-        //         list_user.push(res);
-        //     });
-        //     renderUser();
-        //     // getMessageFirebase();
-        // }, (error) => {
-        //     console.error("Error getting: ", error);
-        // });
+
         try {
             const querySnapshot = await getDocs(usersCollection);
             list_user = [];
@@ -1037,12 +1016,13 @@
                         console.error(error);
                     }));
                 }
-                let redDotHtml = list_user_not_seen.includes(res.id) ? `<div class="${res.id}" style="position: absolute;right: 15px;top: 50%;transform: translateY(-50%);background-color: red;border-radius: 50%;width: 10px;height:10px"></div>` : '';
+
                 if (doctorChatList.includes(res.id) && res.id !== current_user.uid) {
                     batchPromises.push(getUserInfo(email).then((response) => {
                         const name_doctor = response.infoUser.name;
                         const hospital = response.infoUser.hospital ? response.infoUser.hospital : '';
                         const avt = response.infoUser.avt ? window.location.origin + response.infoUser.avt : '../../../../img/avt_default.jpg';
+                        let redDotHtml = list_user_not_seen.includes(res.id) ? `<div class="${res.id}" style="position: absolute;right: 15px;top: 50%;transform: translateY(-50%);background-color: red;border-radius: 50%;width: 10px;height:10px"></div>` : '';
 
                         html += `<div class="friend user_connect" data-mainid="${response.infoUser.id}" data-id=${res.id} data-role="${res.role}" data-email="${email}" data-online="${res.is_online}">
                     <img src="${avt}"/>
@@ -1050,7 +1030,7 @@
                         <strong class="max-1-line-title-widget-chat">${name_doctor}</strong>
                         <span>${hospital}</span>
                     </p>
-                    ${redDotHtml}
+                    <div id="${res.id}">${redDotHtml}</div>
                 </div>`;
                     }).catch((error) => {
                         console.error(error);
@@ -1136,6 +1116,19 @@
             snapshot.docChanges().forEach(change => {
                 if (change.type === "added") {
                     const message = change.doc.data();
+                    if(message.toId == current_user.uid && !message.readUsers[current_user.uid] && message.readUsers[message.fromId]){
+                        let notificationDiv = $(`#${message.fromId} .${message.fromId}`);
+                        if (notificationDiv.length === 0) {
+                            notificationDiv = $(`<div class="${message.fromId}" style="position: absolute;right: 15px;top: 50%;transform: translateY(-50%);background-color: red;border-radius: 50%;width: 10px;height:10px"></div>`);
+                            $(`#${message.fromId}`).append(notificationDiv);
+                        }
+                        $(`.${message.fromId}`).css('display','block');
+                        if (!list_user_not_seen.includes(message.fromId)) {
+                            list_user_not_seen.push(message.fromId);
+                        }
+                        $('.noti_number').html(list_user_not_seen.length>0?list_user_not_seen.length:'');
+                        $('.number_not_screen').html(list_user_not_seen.length>0?'('+list_user_not_seen.length+')':'');
+                    }
                     if (message.toId == current_user.uid && !message.readUsers[current_user.uid]){
                         playNotificationSound();
                     }
@@ -1415,17 +1408,6 @@
                 return null; // Handle the error appropriately
             }
         }
-//         async function uploadFile(file, ext, chatUserID) {
-//             const storageRef = ref(storage, `images/${getConversationID(chatUserID)}/${Date.now()}.${ext}`);
-// console.log(storageRef);
-//             try {
-//                 const snapshot = await storageRef.put(file);
-//                 return await snapshot.ref.getDownloadURL();
-//             } catch (error) {
-//                 console.error('Failed to upload file:', error);
-//                 return null; // Handle null in sending logic
-//             }
-//         }
     });
 
 
@@ -1443,8 +1425,8 @@
             id = $(this).data('id');
             let email = $(this).data('email');
             let role = $(this).data('role');
-            let img = $(this).data('image')
-            let is_online = $(this).data('online')
+            let img = $(this).data('image');
+            let is_online = $(this).data('online');
             $('#user_id_2').val($(this).data('mainid'));
             isShowOpenWidget = true;
 
@@ -1476,7 +1458,9 @@
             const onlineDot = document.querySelector(`#online-div`);
             const offlineDot = document.querySelector(`#offline-div`);
 
-            if (is_online) {
+            const userOnline = list_user_doctor_online.find(user => user.id === id && user.is_online);
+
+            if (userOnline) {
                 onlineDot.style.display = 'block';   // Show online dot
                 offlineDot.style.display = 'none';  // Hide offline dot
             } else {
@@ -2413,49 +2397,49 @@
                 }
             }
 
-        async function sendMessageFile(chatUserID, to_email, content, type) {
-            const times = Date.now().toString();
-            const receiverIds = chatUserID;
-            const messages = {
-                toId: receiverIds,
-                read: '',
-                type: type,
-                fromId: current_user.uid,
-                readUsers: {[current_user.uid]: true, [receiverIds]: false},
-                sent: times
-            };
+            async function sendMessageFile(chatUserID, to_email, content, type) {
+                const times = Date.now().toString();
+                const receiverIds = chatUserID;
+                const messages = {
+                    toId: receiverIds,
+                    read: '',
+                    type: type,
+                    fromId: current_user.uid,
+                    readUsers: {[current_user.uid]: true, [receiverIds]: false},
+                    sent: times
+                };
 
-            const currentDate = new Date();
-            const day = currentDate.getDate().toString().padStart(2, '0');
-            const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-            const year = currentDate.getFullYear().toString();
+                const currentDate = new Date();
+                const day = currentDate.getDate().toString().padStart(2, '0');
+                const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+                const year = currentDate.getFullYear().toString();
 
-            messages.fileUrl = content;
-            messages.fileName = `Đơn thuốc-${day}/${month}/${year}`;
+                messages.fileUrl = content;
+                messages.fileName = `Đơn thuốc-${day}/${month}/${year}`;
 
-            let conversationIDs = getConversationID(chatUserID);
-            const refs = collection(database, `chats/${conversationIDs}/messages/`);
+                let conversationIDs = getConversationID(chatUserID);
+                const refs = collection(database, `chats/${conversationIDs}/messages/`);
 
-            try {
-                await setDoc(doc(refs, times), messages);
-                await pushNotification(to_email, `Đơn thuốc-${day}/${month}/${year}`);
-                await updateLastMessage(chatUserID, messages);
-                await saveMessage(`{{ Auth::user()->email }}`, to_email, messages);
-            } catch (error) {
-                console.error('Error sending message:', error);
+                try {
+                    await setDoc(doc(refs, times), messages);
+                    await pushNotification(to_email, `Đơn thuốc-${day}/${month}/${year}`);
+                    await updateLastMessage(chatUserID, messages);
+                    await saveMessage(`{{ Auth::user()->email }}`, to_email, messages);
+                } catch (error) {
+                    console.error('Error sending message:', error);
+                }
             }
-        }
 
-        async function handleSuccess(response) {
-            try {
-                await sendMessage(chatUserId, emailUser, response.prescription_id, 'prescription');
-                await sendMessageFile(chatUserId, emailUser, response.pdf_path, 'file');
-                alert('Create success!');
-                window.location.href = `{{ route('view.prescription.result.doctor') }}`;
-            } catch (error) {
-                console.error('Error in handleSuccess:', error);
+            async function handleSuccess(response) {
+                try {
+                    await sendMessage(chatUserId, emailUser, response.prescription_id, 'prescription');
+                    await sendMessageFile(chatUserId, emailUser, response.pdf_path, 'file');
+                    alert('Create success!');
+                    window.location.href = `{{ route('view.prescription.result.doctor') }}`;
+                } catch (error) {
+                    console.error('Error in handleSuccess:', error);
+                }
             }
-        }
 
             try {
                 $.ajax({
