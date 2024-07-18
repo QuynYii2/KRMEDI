@@ -27,7 +27,7 @@
             <div class="col-lg-12">
                 <div class="row">
 
-                    @if($isAdmin)
+                    @if($isAdmin || Auth::user()->type === "BUSINESS")
                         <!-- Products Card -->
                         <div class="col-xxl-3 col-xl-12">
                             <div class="card info-card product-medicine-card">
