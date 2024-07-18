@@ -14,6 +14,7 @@
             </tr>
             </thead>
             <tbody >
+            @if(count($listData)>0)
             @foreach($listData as $key => $val)
             <tr>
                 <th scope="row">{{$key+1}}</th>
@@ -21,6 +22,9 @@
                 <td>{!! $val->content !!}</td>
             </tr>
                 @endforeach
+                @else
+                <tr><th colspan="3" style="text-align: center;color: red">Không có report nào</th></tr>
+                @endif
             </tbody>
         </table>
         <div class="d-flex justify-content-center align-items-center">

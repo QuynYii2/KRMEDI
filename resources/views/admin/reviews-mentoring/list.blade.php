@@ -4,6 +4,34 @@
 @endsection
 @section('main-content')
     <h3 class="text-center">Danh sách câu hỏi tư vấn sức khỏe</h3>
+    <br>
+    <form action="{{route('view.reviews.mentoring.index')}}" method="get">
+        <div class="card-body d-flex align-items-end flex-wrap p-0 pb-3">
+            <div class="col-lg-4 col-md-4 col-6 px-1">
+                <lable>Danh mục</lable>
+                <select class="form-select w-100" name="category_id" >
+                    <option class="bg-white" value="">--Danh mục--</option>
+                   @foreach($departments as $item)
+                    <option class="bg-white" @if(request()->get('category_id') == $item->id) selected @endif value="{{$item->id}}">{{$item->name}}</option>
+                       @endforeach
+                </select>
+            </div>
+            <div class="col-lg-4 col-md-4 col-6 px-1">
+                <lable>Trạng thái</lable>
+                <select class="form-select w-100" name="status" >
+                    <option class="bg-white" value="">--Trạng thái--</option>
+                    <option class="bg-white" @if(request()->get('status') == 'APPROVED') selected @endif value="APPROVED">APPROVED</option>
+                    <option class="bg-white" @if(request()->get('status') == 'PENDING') selected @endif value="PENDING">PENDING</option>
+                    <option class="bg-white" @if(request()->get('status') == 'REFUSE') selected @endif value="REFUND">REFUSE</option>
+                </select>
+            </div>
+            <div class="col-md-4 col-12 px-0 mt-2">
+                <button type="submit" class="btn btn-warning mx-2">Tìm kiếm</button>
+                <a href="{{route('view.reviews.mentoring.index')}}" class="btn btn-dark">Làm mới</a>
+            </div>
+        </div>
+    </form>
+    <br>
     <div class="table-responsive">
         <table class="table text-nowrap" id="tableReviewsDoctorManagement">
             <thead>
