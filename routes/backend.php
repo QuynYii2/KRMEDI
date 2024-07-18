@@ -55,6 +55,7 @@ Route::group(['prefix' => 'questions'], function () {
     )->name('api.backend.questions.change.status');
     Route::put('/update/{id}', [BackendQuestionController::class, 'update'])->name('api.backend.questions.update');
     Route::delete('/delete/{id}', [BackendQuestionController::class, 'delete'])->name('api.backend.questions.delete');
+    Route::post('/report', [BackendQuestionController::class, 'report'])->name('api.backend.questions.report');
 });
 
 Route::group(['prefix' => 'coupons-apply'], function () {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\FooterModel;
+use App\Models\PolicyModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -70,6 +71,28 @@ class FooterController extends Controller
         }catch (\Exception $exception){
             return back()->with(['error' => $exception->getMessage()]);
         }
+    }
+
+    public function policy()
+    {
+        $data = PolicyModel::first();
+
+        return view('admin.footer.policy', compact('data'));
+    }
+
+    public function storePolicy(Request $request)
+    {
+        $data = PolicyModel::first();
+        if ($data){
+            $data->content = $request->get('content');
+            $data->save();
+        }else{
+            $new = new PolicyModel();
+            $new->content = $request->get('content');
+            $new->save();
+        }
+
+        return back()->with(['success'=>'Cập nhật dữ liệu thành công']);
     }
 
 }

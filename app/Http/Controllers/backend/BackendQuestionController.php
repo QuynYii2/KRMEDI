@@ -9,7 +9,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Answer;
 use App\Models\AnswerLike;
 use App\Models\CalcViewQuestion;
+use App\Models\PolicyModel;
 use App\Models\Question;
+use App\Models\ReportmentoringModel;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -108,7 +110,7 @@ class BackendQuestionController extends Controller
             $question->content_laos = $content_laos;
             $question->category_id = $category_id;
             $question->user_id = $user_id;
-            $question->status = $status;
+            $question->status = QuestionStatus::PENDING;
 
             if ($request->hasFile('gallery')) {
                 $galleryPaths = array_map(function ($image) {
@@ -459,5 +461,33 @@ class BackendQuestionController extends Controller
         }
 
         return response()->json($list);
+    }
+
+    public function report(Request $request)
+    {
+        try {
+            $question = new ReportmentoringModel();
+            $question->question_id = $request->input('question_id');
+            $question->user_id = $request->input('user_id');
+            $question->content = $request->input('content');
+
+            $success = $question->save();
+            if ($success) {
+                return response()->json([
+                    'message' => 'Question report created successfully!',
+                    'data' => $question
+                ]);
+            }
+            return response('Create question error!', 400);
+        } catch (Exception $exception) {
+            return response($exception, 400);
+        }
+    }
+
+    public function getPolicy()
+    {
+        $policy = PolicyModel::first();
+
+        return response()->json($policy);
     }
 }
