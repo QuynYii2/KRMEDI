@@ -15,7 +15,7 @@ class ReviewMentoringController extends Controller
     {
         $questions = Question::withCount('answers')->orderBy('created_at', 'desc')->paginate(20);
         foreach ($questions as $item){
-            $item->name_category = Department::find($item->category_id)->name;
+            $item->name_category = Department::find($item->category_id)->name??'Chưa có tên';
         }
         $departments = Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->get();
         return view('admin.reviews-mentoring.list',compact('questions','departments'));
