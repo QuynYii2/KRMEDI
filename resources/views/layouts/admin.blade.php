@@ -838,6 +838,13 @@
                     </li>
                     <!-- End Review Nav -->
 
+                        <li class="nav-item">
+                            <a class="nav-link collapsed" href="{{ route('view.reviews.mentoring.index') }}">
+                                <i class="bi bi-image-alt"></i>
+                                <span>Câu hỏi tư vấn sức khỏe</span>
+                            </a>
+                        </li>
+
                     <!-- Videos Nav -->
                     <li class="nav-item">
                         <a class="nav-link collapsed" data-bs-target="#videos-nav" data-bs-toggle="collapse"
@@ -1028,6 +1035,12 @@
                         <a class="nav-link collapsed" href="{{ route('view.admin.footer.index') }}">
                             <i class="bi bi-person"></i>
                             <span>Cài đặt footer</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="{{ route('view.admin.policy.index') }}">
+                            <i class="bi bi-person"></i>
+                            <span>Chính sách</span>
                         </a>
                     </li>
                 @endif

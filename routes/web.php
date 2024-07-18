@@ -56,6 +56,7 @@ use App\Http\Controllers\ui\UserController;
 use App\Http\Controllers\WhatFreeToDay;
 use App\Http\Controllers\ZaloController;
 use Illuminate\Support\Facades\Route;
+use \App\Http\Controllers\ReviewMentoringController;
 
 /*
 |--------------------------------------------------------------------------
@@ -373,6 +374,14 @@ Route::middleware(['auth'])->group(function () {
         )->name('view.reviews.doctor.detail');
     });
 
+    Route::group(['prefix' => 'reviews-mentoring'], function () {
+        Route::get('list', [ReviewMentoringController::class, 'index'])->name('view.reviews.mentoring.index');
+        Route::get('detail/{id}', [ReviewMentoringController::class, 'detail'])->name('view.reviews.mentoring.detail');
+        Route::post('/change/{id}', [ReviewMentoringController::class, 'updateStatus'])->name('view.reviews.mentoring.change.status');
+        Route::delete('delete/{id}', [ReviewMentoringController::class, 'delete'])->name('view.reviews.mentoring.delete');
+        Route::get('list-report/{id}', [ReviewMentoringController::class, 'listReport'])->name('view.reviews.mentoring.report');
+    });
+
     Route::group(['prefix' => 'service-clinics'], function () {
         Route::get('list', [ServiceClinicController::class, 'getListService'])->name('user.service.clinics.list');
         Route::get(
@@ -676,3 +685,5 @@ Route::post('examination-history-user', [UserController::class, 'examinationHist
 
 Route::get('api/my-bookings/list/{userId}', [MyBookingController::class, 'listBookingApi'])->name('api.backend.my-bookings.list');
 Route::get('api/my-bookings/history/{userId}', [MyBookingController::class, 'medicalHistoryApi'])->name('api.backend.my-bookings.history');
+//api chinh sách
+Route::get('/data-policy', [BackendQuestionController::class, 'getPolicy'])->name('api.backend.data.policy');

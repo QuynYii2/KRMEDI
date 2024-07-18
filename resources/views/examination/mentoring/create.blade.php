@@ -61,7 +61,7 @@
             formData.append("content_en", message);
             formData.append("content_laos", message);
             formData.append("category_id", $('#category').val());
-            formData.append("status", '{{ \App\Enums\QuestionStatus::APPROVED }}');
+            formData.append("status", '{{ \App\Enums\QuestionStatus::PENDING }}');
             formData.append("user_id", '{{ Auth::user()->id ?? '' }}');
 
             let len = galleryUploadInput.files.length;

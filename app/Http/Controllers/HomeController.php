@@ -414,7 +414,7 @@ class HomeController extends Controller
         $cmt_store->star = $star_number;
         $cmt_store->content = $cmt_review;
         $cmt_store->clinic_id = $id;
-        $cmt_store->status = ReviewStatus::APPROVED;
+        $cmt_store->status = ReviewStatus::PENDING;
         if (!Auth::user() == null) {
             $cmt_store->user_id = auth()->user()->id;
             $cmt_store->name = $clinic->name;
