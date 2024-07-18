@@ -11,9 +11,18 @@ use Illuminate\Http\Request;
 
 class ReviewMentoringController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $questions = Question::withCount('answers')->orderBy('created_at', 'desc')->paginate(20);
+        $category_id = $request->get('category_id');
+        $status = $request->get('status');
+        $query = Question::withCount('answers')->orderBy('created_at', 'desc');
+        if ($category_id) {
+            $query->where('category_id', $category_id);
+        }
+        if ($status) {
+            $query->where('status', $status);
+        }
+        $questions = $query->paginate(20);
         foreach ($questions as $item){
             $item->name_category = Department::find($item->category_id)->name??'Chưa có tên';
         }
