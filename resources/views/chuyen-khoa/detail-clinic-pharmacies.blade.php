@@ -256,7 +256,7 @@
                     </div>
                     <div id="reviewItemClinic">
                         @php
-                            $reviewStore = \App\Models\Review::where('status', '!=', \App\Enums\ReviewStatus::DELETED)->where('clinic_id', $clinicDetail->id)->get();
+                            $reviewStore = \App\Models\Review::where('status', '!=', \App\Enums\ReviewStatus::DELETED)->where('clinic_id', $clinicDetail->id)->orderBy('created_at','desc')->get();
                         @endphp
                         @include('chuyen-khoa.tab-show-review')
                     </div>

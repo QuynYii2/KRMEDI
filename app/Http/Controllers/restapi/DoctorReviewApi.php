@@ -167,7 +167,7 @@ class DoctorReviewApi extends Controller
             $review->doctor_id = $doctor_id;
         }
 
-        $review->status = DoctorReviewStatus::APPROVED;
+        $review->status = DoctorReviewStatus::PENDING;
 
         return $review;
     }

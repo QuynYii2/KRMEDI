@@ -15,9 +15,9 @@ class BackendReviewController extends Controller
     {
         $status = $request->input('status');
         if (!$status) {
-            $reviews = Review::where('status', '!=', ReviewStatus::DELETED)->get();
+            $reviews = Review::where('status', '!=', ReviewStatus::DELETED)->orderBy('created_at','desc')->get();
         } else {
-            $reviews = Review::where('status', $status)->get();
+            $reviews = Review::where('status', $status)->orderBy('created_at','desc')->get();
         }
         return response()->json($reviews);
     }

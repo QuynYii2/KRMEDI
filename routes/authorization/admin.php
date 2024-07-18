@@ -70,3 +70,7 @@ Route::group(['prefix' => 'footer'], function () {
     Route::post('update/{id}', [FooterController::class, 'update'])->name('view.admin.footer.update');
     Route::get('delete/{id}', [FooterController::class, 'delete'])->name('view.admin.footer.delete');
 });
+
+//chính sách
+Route::get('data-policy', [FooterController::class, 'policy'])->name('view.admin.policy.index');
+Route::post('policy-store', [FooterController::class, 'storePolicy'])->name('view.admin.policy.store');
