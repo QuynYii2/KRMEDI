@@ -25,7 +25,7 @@
             <div class="form-group">
                 <label for="content">Nội dung</label>
                 <textarea class="form-control" name="content"
-                          id="content">{!! $data->content !!}</textarea>
+                          id="content">{!! @$data->content !!}</textarea>
             </div>
 
             <button type="submit" class="btn btn-primary up-date-button mt-md-4">{{ __('home.Save') }}</button>
