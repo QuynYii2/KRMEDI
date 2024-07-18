@@ -438,7 +438,7 @@ class HomeController extends Controller
         $queryBooking = Booking::query();
         $bookingLastPeriod = Booking::query();
         if (!$isAdmin) {
-            $clinicId = Clinic::where('user_id', Auth::user()->id)->first()->id;
+            $clinicId = Clinic::where('user_id', Auth::user()->id)->first();
             $queryBooking = $queryBooking->where('clinic_id', $clinicId);
             $bookingLastPeriod = $bookingLastPeriod->where('clinic_id', $clinicId);
         }

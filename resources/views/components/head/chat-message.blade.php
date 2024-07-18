@@ -425,19 +425,18 @@
                         </div>
                     </div>
                     <div class="d-flex">
-{{--                        @if ()--}}
-                            <form method="post" action="{{ route('agora.call') }}" target="_blank">
-                                {{ csrf_field() }}
-                                <input type="hidden" name="user_id_1"
-                                       value="@if (Auth::check()) {{ Auth::user()->id }} @endif">
-                                <input type="hidden" name="user_id_2" id="user_id_2" value="">
-                                <button type="submit" class="button call-icon"> <i class="fa-solid fa-video" style="font-size: 23px"></i></button>
-                            </form>
-{{--                        @else--}}
-{{--                            <form>--}}
-{{--                                <button type="button" class="none-btn call-icon" disabled> <i class="fa-solid fa-video" style="font-size: 23px"></i></button>--}}
-{{--                            </form>--}}
-{{--                        @endif--}}
+                        <input type="hidden" name="check_online" id="check_online" value=""/>
+                        <form method="post" action="{{ route('agora.call') }}" target="_blank" id="onlineForm">
+                            {{ csrf_field() }}
+                            <input type="hidden" name="user_id_1"
+                                   value="@if (Auth::check()) {{ Auth::user()->id }} @endif">
+                            <input type="hidden" name="user_id_2" id="user_id_2" value="">
+                            <button type="submit" class="button call-icon"> <i class="fa-solid fa-video" style="font-size: 23px"></i></button>
+                        </form>
+
+                        <form id="offlineForm">
+                            <button type="button" class="none-btn call-icon" disabled> <i class="fa-solid fa-video" style="font-size: 23px"></i></button>
+                        </form>
                     </div>
 
                 </div>
@@ -1428,6 +1427,14 @@
             let img = $(this).data('image');
             let is_online = $(this).data('online');
             $('#user_id_2').val($(this).data('mainid'));
+            $('#check_online').val(is_online);
+            if($('#check_online').val() === 'true') {
+                $('#offlineForm').hide();
+                $('#onlineForm').show();
+            }else{
+                $('#offlineForm').show();
+                $('#onlineForm').hide();
+            }
             isShowOpenWidget = true;
 
             chatUserId = $(this).data('id');

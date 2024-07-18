@@ -27,7 +27,7 @@
             <div class="col-lg-12">
                 <div class="row">
 
-                    @if($isAdmin)
+{{--                    @if($isAdmin)--}}
                         <!-- Products Card -->
                         <div class="col-xxl-3 col-xl-12">
                             <div class="card info-card product-medicine-card">
@@ -74,7 +74,7 @@
                             </div>
                         </div>
                         <!-- End Products Card -->
-                    @endif
+{{--                    @endif--}}
 
                     <!-- Sales Card -->
                     <div class="col-xxl-3 col-md-6">
