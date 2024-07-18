@@ -425,18 +425,19 @@
                         </div>
                     </div>
                     <div class="d-flex">
-                        <input type="hidden" name="check_online" id="check_online" value=""/>
-                        <form method="post" action="{{ route('agora.call') }}" target="_blank" id="onlineForm">
+                        {{--                        @if ()--}}
+                        <form method="post" action="{{ route('agora.call') }}" target="_blank">
                             {{ csrf_field() }}
                             <input type="hidden" name="user_id_1"
                                    value="@if (Auth::check()) {{ Auth::user()->id }} @endif">
                             <input type="hidden" name="user_id_2" id="user_id_2" value="">
                             <button type="submit" class="button call-icon"> <i class="fa-solid fa-video" style="font-size: 23px"></i></button>
                         </form>
-
-                        <form id="offlineForm">
-                            <button type="button" class="none-btn call-icon" disabled> <i class="fa-solid fa-video" style="font-size: 23px"></i></button>
-                        </form>
+                        {{--                        @else--}}
+                        {{--                            <form>--}}
+                        {{--                                <button type="button" class="none-btn call-icon" disabled> <i class="fa-solid fa-video" style="font-size: 23px"></i></button>--}}
+                        {{--                            </form>--}}
+                        {{--                        @endif--}}
                     </div>
 
                 </div>
@@ -953,11 +954,33 @@
         $('.number_not_screen').html(list_user_not_seen.length>0?'('+list_user_not_seen.length+')':'');
 
         try {
-            const querySnapshot = await getDocs(usersCollection);
+            let querySnapshot = await getDocs(query(
+                usersCollection,
+                where('role', 'in', ['DOCTORS', 'PHAMACISTS', 'HOSPITALS']),
+                where('is_online', '==', true),
+            ));
             list_user = [];
+            let userIdSet = new Set();
             querySnapshot.forEach((doc) => {
-                list_user.push(doc.data());
+                const userData = doc.data();
+                if (!userIdSet.has(userData.id)) {
+                    userIdSet.add(userData.id);
+                    list_user.push(userData);
+                }
             });
+            if(doctorChatList.length>0){
+                let querySnapshotChat = await getDocs(query(
+                    usersCollection,
+                    where('id', 'in', doctorChatList)
+                ));
+                querySnapshotChat.forEach((doc) => {
+                    const userData = doc.data();
+                    if (!userIdSet.has(userData.id)) {
+                        userIdSet.add(userData.id);
+                        list_user.push(userData);
+                    }
+                });
+            }
             renderUser();
         } catch (error) {
             console.error("Error getting data: ", error);
@@ -1427,14 +1450,6 @@
             let img = $(this).data('image');
             let is_online = $(this).data('online');
             $('#user_id_2').val($(this).data('mainid'));
-            $('#check_online').val(is_online);
-            if($('#check_online').val() === 'true') {
-                $('#offlineForm').hide();
-                $('#onlineForm').show();
-            }else{
-                $('#offlineForm').show();
-                $('#onlineForm').hide();
-            }
             isShowOpenWidget = true;
 
             chatUserId = $(this).data('id');
