@@ -435,8 +435,8 @@ class HomeController extends Controller
         $isAdmin = (new MainController())->checkAdmin();
 
         //Booking
-        $queryBooking = Booking::query();
-        $bookingLastPeriod = Booking::query();
+        $queryBooking = Booking::query()->where('status', '!=', 'CANCEL');
+        $bookingLastPeriod = Booking::query()->where('status', '!=', 'CANCEL');
         if (Auth::user()->type === "BUSINESS") {
             $clinicId = Clinic::where('user_id', Auth::user()->id)->first()->id;
             $queryBooking = $queryBooking->where('clinic_id', $clinicId);
@@ -482,8 +482,8 @@ class HomeController extends Controller
         $userCount = User::count();
 
         //Order
-        $queryOrder = Order::query();
-        $orderLastPeriod = Order::query();
+        $queryOrder = Order::query()->whereNotIn('status', ['CANCELLED', 'REFUND']);
+        $orderLastPeriod = Order::query()->whereNotIn('status', ['CANCELLED', 'REFUND']);
         $orderFilter = $request->query('order-filter', 'today');
         switch ($orderFilter) {
             case 'today':
@@ -516,8 +516,8 @@ class HomeController extends Controller
             ->whereNotIn('orders.status', ['CANCELLED', 'REFUND'])->orderBy('total', 'desc') ->limit(10)->get();
 
         //New User
-        $queryNewUser = User::query();
-        $userLastPeriod = User::query();
+        $queryNewUser = User::query()->where('status', '!=', 'DELETED');
+        $userLastPeriod = User::query()->where('status', '!=', 'DELETED');
         $userFilter = $request->query('user-filter', 'today');
         switch ($userFilter){
             case 'today':
@@ -564,15 +564,15 @@ class HomeController extends Controller
                     $date = Carbon::today()->subDays($i);
                     $data['bookings'][] = [
                         'date' => $date->toDateString(),
-                        'count' => Booking::whereDate('created_at', $date)->count()
+                        'count' => Booking::whereDate('created_at', $date)->where('status', '!=', 'CANCEL')->count()
                     ];
                     $data['orders'][] = [
                         'date' => $date->toDateString(),
-                        'count' => Order::whereDate('created_at', $date)->count()
+                        'count' => Order::whereDate('created_at', $date)->whereNotIn('status', ['CANCELLED', 'REFUND'])->count()
                     ];
                     $data['users'][] = [
                         'date' => $date->toDateString(),
-                        'count' => User::whereDate('created_at', $date)->count()
+                        'count' => User::whereDate('created_at', $date)->where('status', '!=', 'DELETED')->count()
                     ];
                 }
                 break;
@@ -584,18 +584,21 @@ class HomeController extends Controller
                         'date' => $date->format('Y-m'),
                         'count' => Booking::whereYear('created_at', $date->year)
                             ->whereMonth('created_at', $date->month)
+                            ->where('status', '!=', 'CANCEL')
                             ->count()
                     ];
                     $data['orders'][] = [
                         'date' => $date->format('Y-m'),
                         'count' => Order::whereYear('created_at', $date->year)
                             ->whereMonth('created_at', $date->month)
+                            ->whereNotIn('status', ['CANCELLED', 'REFUND'])
                             ->count()
                     ];
                     $data['users'][] = [
                         'date' => $date->format('Y-m'),
                         'count' => User::whereYear('created_at', $date->year)
                             ->whereMonth('created_at', $date->month)
+                            ->where('status', '!=', 'DELETED')
                             ->count()
                     ];
                 }
@@ -606,15 +609,15 @@ class HomeController extends Controller
                     $date = Carbon::now()->subYears($i);
                     $data['bookings'][] = [
                         'date' => $date->format('Y-m'),
-                        'count' => Booking::whereYear('created_at', $date->year)->count()
+                        'count' => Booking::whereYear('created_at', $date->year)->where('status', '!=', 'CANCEL')->count()
                     ];
                     $data['orders'][] = [
                         'date' => $date->format('Y-m'),
-                        'count' => Order::whereYear('created_at', $date->year)->count()
+                        'count' => Order::whereYear('created_at', $date->year)->whereNotIn('status', ['CANCELLED', 'REFUND'])->count()
                     ];
                     $data['users'][] = [
                         'date' => $date->format('Y-m'),
-                        'count' => User::whereYear('created_at', $date->year)->count()
+                        'count' => User::whereYear('created_at', $date->year)->where('status', '!=', 'DELETED')->count()
                     ];
                 }
                 break;
