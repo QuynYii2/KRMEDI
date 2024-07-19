@@ -68,6 +68,12 @@ class BackendQuestionController extends Controller
             return response('Not found', 404);
         }
 
+        $report = ReportmentoringModel::where('question_id',$statusQuestion->id)->where('user_id',$user_id)->first();
+        $isReport = false;
+        if (isset($report)){
+            $isReport = true;
+        }
+
         // if ($question === null) {
         //     $question = new CalcViewQuestion();
         //     $question->views = 1;
@@ -81,6 +87,7 @@ class BackendQuestionController extends Controller
             'statusQuestion' => $statusQuestion,
             'question' => $question,
             'answers' => $answersQuestion,
+            'isReport '=> $isReport,
         ];
         return response()->json($responseData);
     }

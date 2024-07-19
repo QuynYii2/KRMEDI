@@ -781,7 +781,7 @@
         const time = Date.now().toString();
         const chatUser = {
             id: user.uid,
-            name: `{{ Auth::user()->username }}`,
+            name: `{{ Auth::user()->name }}`,
             email: user.email,
             about: "Hey, I'm using We Chat!",
             image: user.photoURL || '',
