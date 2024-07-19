@@ -35,6 +35,7 @@ class BackendQuestionController extends Controller
     {
         $user_id = $request->input('user_id');
         $statusQuestion = Question::find($id);
+        $dataUser = User::select('name', 'avt')->find($statusQuestion->user_id);
         $question = CalcViewQuestion::getViewQuestion($id);
 
         if (is_null($question)) {
@@ -87,6 +88,7 @@ class BackendQuestionController extends Controller
             'statusQuestion' => $statusQuestion,
             'question' => $question,
             'answers' => $answersQuestion,
+            'user '=> $dataUser,
             'isReport '=> $isReport,
         ];
         return response()->json($responseData);
