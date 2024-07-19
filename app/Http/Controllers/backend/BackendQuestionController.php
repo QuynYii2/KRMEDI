@@ -35,6 +35,7 @@ class BackendQuestionController extends Controller
     {
         $user_id = $request->input('user_id');
         $statusQuestion = Question::find($id);
+        $dataUser = User::select('name', 'avt')->find($statusQuestion->user_id);
         $question = CalcViewQuestion::getViewQuestion($id);
 
         if (is_null($question)) {
@@ -68,6 +69,12 @@ class BackendQuestionController extends Controller
             return response('Not found', 404);
         }
 
+        $report = ReportmentoringModel::where('question_id',$statusQuestion->id)->where('user_id',$user_id)->first();
+        $isReport = false;
+        if (isset($report)){
+            $isReport = true;
+        }
+
         // if ($question === null) {
         //     $question = new CalcViewQuestion();
         //     $question->views = 1;
@@ -81,6 +88,8 @@ class BackendQuestionController extends Controller
             'statusQuestion' => $statusQuestion,
             'question' => $question,
             'answers' => $answersQuestion,
+            'user '=> $dataUser,
+            'isReport '=> $isReport,
         ];
         return response()->json($responseData);
     }
