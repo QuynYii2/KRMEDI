@@ -701,6 +701,7 @@
         getDoc,
         where,
         query,
+        limit,
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import {
         getAuth,
@@ -958,6 +959,7 @@
                 usersCollection,
                 where('role', 'in', ['DOCTORS', 'PHAMACISTS', 'HOSPITALS']),
                 where('is_online', '==', true),
+                limit(10)
             ));
             list_user = [];
             let userIdSet = new Set();
@@ -990,13 +992,13 @@
     let un_message = `<p class="unread">Not connected!</p>`;
 
     async function renderUser() {
-        let html = ``;
+        let html =``;
         let html_online = ``;
-        $('#friendslist-all-online #friends-all-online').html(html_online);
-        $('#friendslist-connected #friends-connected').html(html);
         let doctorCount = 0;
+        let doctorCountConnect = 0;
         let promises = [];
-        const searchTerm = $('#searchDoctor').val().toLowerCase(); // Normalize the search term
+        const searchTerm = $('#searchDoctor').val().toLowerCase();
+        const searchTermConnect = $('#searchDoctorChat').val().toLowerCase();// Normalize the search term
 
         $('.spinner-icon').css('display', 'block');
         // Helper function to render users
@@ -1064,15 +1066,114 @@
             $('#friendslist-connected #friends-connected').html(html);
         }
 
+        async function renderUsersBatchSearch(startIndex, endIndex,data) {
+            let batchPromises = [];
+            for (let i = startIndex; i < endIndex && i < data.length; i++) {
+                let res = data[i];
+                let email = res.email;
+                if ((res.role == 'DOCTORS' || res.role == 'PHAMACISTS' || res.role == 'HOSPITALS') && res.id != current_user.uid) {
+                    batchPromises.push(getUserInfo(email).then((response) => {
+                        const name_doctor = response.infoUser.name;
+                        const hospital = response.infoUser.hospital ? response.infoUser.hospital : '';
+                        const avt = response.infoUser.avt ? window.location.origin + response.infoUser.avt : '../../../../img/avt_default.jpg';
+                        if ((searchTerm === " " || !searchTerm)) {
+                            if (res.is_online) {
+                                html_online += `<div class="friend user_connect" data-mainid="${response.infoUser.id}" data-id="${res.id}" data-role="${res.role}" data-email="${email}" data-image="${avt}" data-online="${res.is_online}">
+                                                    <img src="${avt}"/>
+                                                    <p>
+                                                        <strong class="max-1-line-title-widget-chat">${name_doctor}</strong>
+                                                        <span>${hospital}</span>
+                                                    </p>
+                                                </div>`;
+                            }
+                        } else if (name_doctor.toLowerCase().includes(searchTerm.toLowerCase())) { // Filter by search term
+                            if (doctorCount < 10) {
+                                html_online += `<div class="friend user_connect" data-mainid="${response.infoUser.id}" data-id="${res.id}" data-role="${res.role}" data-email="${email}" data-image="${avt}" data-online="${res.is_online}">
+                                                    <img src="${avt}"/>
+                                                    <p>
+                                                        <strong class="max-1-line-title-widget-chat">${name_doctor}</strong>
+                                                        <span>${hospital}</span>
+                                                    </p>
+                                                </div>`;
+                                doctorCount++;
+                            }
+                        }
+                    }).catch((error) => {
+                        console.error(error);
+                    }));
+                }
+            }
+            await Promise.all(batchPromises);
+            $('#friendslist-all-online #friends-all-online').html(html_online);
+        }
+
+        async function renderUsersBatchConnect(startIndex, endIndex,data) {
+            let batchPromises = [];
+            for (let i = startIndex; i < endIndex && i < data.length; i++) {
+                let res = data[i];
+                let email = res.email;
+
+                if (doctorChatList.includes(res.id) && res.id !== current_user.uid) {
+                    batchPromises.push(getUserInfo(email).then((response) => {
+                        const name_doctor = response.infoUser.name;
+                        const hospital = response.infoUser.hospital ? response.infoUser.hospital : '';
+                        const avt = response.infoUser.avt ? window.location.origin + response.infoUser.avt : '../../../../img/avt_default.jpg';
+                        let redDotHtml = list_user_not_seen.includes(res.id) ? `<div class="${res.id}" style="position: absolute;right: 15px;top: 50%;transform: translateY(-50%);background-color: red;border-radius: 50%;width: 10px;height:10px"></div>` : '';
+
+                        html += `<div class="friend user_connect" data-mainid="${response.infoUser.id}" data-id=${res.id} data-role="${res.role}" data-email="${email}" data-online="${res.is_online}">
+                    <img src="${avt}"/>
+                    <p>
+                        <strong class="max-1-line-title-widget-chat">${name_doctor}</strong>
+                        <span>${hospital}</span>
+                    </p>
+                    <div id="${res.id}">${redDotHtml}</div>
+                </div>`;
+                    }).catch((error) => {
+                        console.error(error);
+                    }));
+                    doctorCountConnect++;
+                }
+            }
+            await Promise.all(batchPromises);
+            $('#friendslist-connected #friends-connected').html(html);
+        }
+
         // Render the first 10 users immediately
         if (searchTerm) {
-            await renderUsersBatch(0, list_user.length);
-            if (doctorCount > 0) {
-                $('#friendslist-all-online #friends-all-online').html(html_online);
-            } else {
+            $('#friendslist-all-online #friends-all-online').html('');
+            let querySnapshotSearch = await getDocs(query(
+                usersCollection,
+                where('name', '>=', searchTerm),
+                where('name', '<=', searchTerm + '\uf8ff')
+            ));
+            let list_user_search = [];
+            querySnapshotSearch.forEach((doc) => {
+                list_user_search.push(doc.data());
+            });
+
+            await renderUsersBatchSearch(0, list_user_search.length,list_user_search);
+            if (doctorCount <= 0) {
                 $('#friendslist-all-online #friends-all-online').html(`<p><strong>Không có ai đang online</strong></p>`);
             }
+        }else if(searchTermConnect){
+            $('#friendslist-connected #friends-connected').html('');
+            let querySnapshotConnect = await getDocs(query(
+                usersCollection,
+                where('name', '>=', searchTermConnect),
+                where('name', '<=', searchTermConnect + '\uf8ff')
+            ));
+            let list_user_connect = [];
+            querySnapshotConnect.forEach((doc) => {
+                list_user_connect.push(doc.data());
+            });
+            
+            await renderUsersBatchConnect(0, list_user_connect.length,list_user_connect);
+            if (doctorCountConnect <= 0) {
+                $('#friendslist-connected #friends-connected').html(`<p><strong>Không có ai như bạn tìm kiếm</strong></p>`);
+            }
         } else {
+            $('#friendslist-all-online #friends-all-online').html('');
+            $('#friendslist-connected #friends-connected').html('');
             // Render the first 10 users immediately
             await renderUsersBatch(0, 10);
             $('#friendslist-all-online #friends-all-online').html(html_online);
@@ -1095,7 +1196,7 @@
         }
 
         $('.spinner-icon').css('display', 'none');
-        $('#chat_doctor').attr('disabled',false)
+        $('#chat_doctor').attr('disabled',false);
         getMessageFirebase();
     }
 
@@ -1106,7 +1207,14 @@
         clearTimeout(debounceTimeout);
         debounceTimeout = setTimeout(function() {
             renderUser();
-        }, 500);
+        }, 1000);
+    });
+
+    $('#searchDoctorChat').on('input', function() {
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(function() {
+            renderUser();
+        }, 1000);
     });
 
     function getUserInfo(email) {
