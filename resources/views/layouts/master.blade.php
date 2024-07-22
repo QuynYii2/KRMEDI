@@ -312,6 +312,9 @@
         bottom: 100px!important;
         z-index: 1!important;
     }
+    .contact_doctor:disabled{
+        cursor: not-allowed;
+    }
 </style>
 
 <div class="d-none ">

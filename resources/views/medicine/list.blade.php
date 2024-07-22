@@ -545,7 +545,7 @@
         </div>
         ${item.type_product == 0? `<div class="prices-pro">
                     ${formatCurrency(item.price)} ${item.price_unit?item.price_unit:''}
-                </div>`:`<div class="contact_doctor" data-mail="${item.email}">
+                </div>`:`<div class="contact_doctor" data-mail="${item.email}" data-id="${item.created_by}">
                                     Tư vấn
                                 </div>`}
                 </div>

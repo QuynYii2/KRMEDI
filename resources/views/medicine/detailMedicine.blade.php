@@ -162,7 +162,7 @@
                                     class=" button-buyNow btn btn-primary w-100">{{ __('home.Add cart') }}</button>
                                         @else
                                         <button {{ $prMedicine->quantity == 0 ? 'disabled' : '' }}
-                                        class=" button-buyNow btn btn-primary w-100 contact_doctor" style="padding: 11px 50px" data-mail="{{$user_email}}">Liên hệ</button>
+                                        class=" button-buyNow btn btn-primary w-100 contact_doctor" style="padding: 11px 50px" data-mail="{{$user_email}}" data-id="{{$medicine->user_id}}">Liên hệ</button>
                                         @endif
                                 @else
                                     <button onclick="alertLogin();"

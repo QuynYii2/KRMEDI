@@ -735,12 +735,13 @@
     let current_user, list_user = [], doctorChatList = [], list_user_not_seen = [], list_user_doctor_online = [],
         current_role = `{{ (new \App\Http\Controllers\MainController())->getRoleUser(Auth::user()->id)}}`,
         user_chat;
-
+    localStorage.setItem('current_role',current_role);
     const usersCollection = collection(database, "users");
 
     const chatsCollection = collection(database, "chats");
 
     if (!current_user){
+        localStorage.setItem('current_users',null);
         login();
     }
 
@@ -748,6 +749,7 @@
         try {
             const userCredential = await signInWithEmailAndPassword(auth, `{{ Auth::user()->email }}`, '123456');
             current_user = userCredential.user;
+            localStorage.setItem('current_users',JSON.stringify(current_user));
 
             const userDocRef = doc(database, "users", current_user.uid);
             const userDoc = await getDoc(userDocRef);
@@ -818,7 +820,7 @@
         try {
             setOnline(uid, false);
             signOut(auth);
-
+            localStorage.setItem('current_users',null);
             window.location.href = "{{ route('logoutProcess') }}";
         } catch (error) {
             console.error('Logout error:', error);
@@ -934,7 +936,7 @@
             if (roomSnapshot.exists()) {
                 const roomData = roomSnapshot.data();
                 const roomJson = roomData;
-                const unreadUserId = roomJson.lastMessage?.fromId == doctorChatList[i] ? current_user.uid : doctorChatList[i];
+                const unreadUserId = roomJson.lastMessage?.fromId == doctorChatList[i] ? doctorChatList[i] : current_user.uid;
                 const unreadCount = await getDocs(query(messagesRef, where("readUsers." + unreadUserId, "==", false)))
                     .then((querySnapshot) => querySnapshot.docs);
                 if(unreadCount.length>0){
@@ -1002,7 +1004,6 @@
 
         $('.spinner-icon').css('display', 'block');
         // Helper function to render users
-        localStorage.setItem('data_doctor',JSON.stringify(list_user));
 
         async function renderUsersBatch(startIndex, endIndex) {
             let batchPromises = [];
@@ -1086,7 +1087,7 @@
                                                     </p>
                                                 </div>`;
                             }
-                        } else if (name_doctor.toLowerCase().includes(searchTerm.toLowerCase())) { // Filter by search term
+                        } else {
                             if (doctorCount < 10) {
                                 html_online += `<div class="friend user_connect" data-mainid="${response.infoUser.id}" data-id="${res.id}" data-role="${res.role}" data-email="${email}" data-image="${avt}" data-online="${res.is_online}">
                                                     <img src="${avt}"/>
@@ -1166,7 +1167,7 @@
             querySnapshotConnect.forEach((doc) => {
                 list_user_connect.push(doc.data());
             });
-            
+
             await renderUsersBatchConnect(0, list_user_connect.length,list_user_connect);
             if (doctorCountConnect <= 0) {
                 $('#friendslist-connected #friends-connected').html(`<p><strong>Không có ai như bạn tìm kiếm</strong></p>`);
@@ -1726,7 +1727,7 @@
         } else {
             myChannelType = current_role;
         }
-        console.log(current_user);
+
         if (currentChatRoom === null) {
             const chatRoomInfo = {
                 userIds: [current_user.uid, user.id],

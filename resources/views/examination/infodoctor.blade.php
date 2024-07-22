@@ -139,7 +139,7 @@
 
                         <div id="opt_btn" class="d-flex justify-content-center">
                             <a class="doctor_mess" data-mail="{{$doctor->email}}" data-id="{{$doctor->id}}" data-role="DOCTORS" data-img="{{$doctor->avt}}" data-name="{{$doctor->name}}">
-                                <button class="button" id="chat_doctor" disabled>{{ __('home.Chat') }}</button>
+                                <button class="button" id="chat_doctor" >{{ __('home.Chat') }}</button>
                             </a>
                             @if ($is_online)
                                 <form method="post" action="{{ route('agora.call') }}" target="_blank"

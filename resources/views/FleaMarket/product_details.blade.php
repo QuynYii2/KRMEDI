@@ -108,7 +108,7 @@
                                 </a>
                             @endif
                             @if(Auth::check())
-                                <button id="button-apply" class="text-wrapper-5 contact_doctor" data-mail="{{$userId->email}}">{{ __('home.Send message') }}</button>
+                                <button id="button-apply" class="text-wrapper-5 contact_doctor" data-mail="{{$userId->email}}" data-id="{{$userId->id}}">{{ __('home.Send message') }}</button>
                             @else
                                 <button id="button-apply" class="text-wrapper-5"
                                         onclick="alert('Bạn cần đăng nhập')">{{ __('home.Send message') }}</button>
