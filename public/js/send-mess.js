@@ -11,6 +11,9 @@ import {
     getDoc,
     where,
     query,
+    orderBy,
+    startAfter,
+    limit,
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import {
     getMessaging,
@@ -69,6 +72,8 @@ document.addEventListener("readystatechange", function() {
     }
 
     function loadDisplayMessage(data,user_id) {
+        let lastVisibles = null;
+        let isLoadings = false;
         let id = data.id;
 
         let email = data.email;
@@ -134,34 +139,52 @@ document.addEventListener("readystatechange", function() {
 
         const messagesCollectionRef = collection(database, `chats/${conversationID}/messages`);
 
-        let htmls = ``;
-        let timeout;
-        let lastSnapshot = [];
-        const unsubscribe = onSnapshot(messagesCollectionRef, (querySnapshot) => {
-            let list_message = [];
-            $('#chat-messages').html('');
-
+        const q = query(messagesCollectionRef, orderBy("sent", "desc"), limit(10));
+        onSnapshot(q, (querySnapshot) => {
+            let list_messages = [];
             querySnapshot.forEach((doc) => {
-                list_message.push(doc.data());
+                list_messages.push(doc.data());
             });
 
-            function scheduleRender(list_message, htmls) {
-                if (timeout) {
-                    clearTimeout(timeout);
-                }
-
-                timeout = setTimeout(() => {
-                    if (JSON.stringify(list_message) !== JSON.stringify(lastSnapshot)) {
-                        renderMessage(list_message, htmls);
-                        lastSnapshot = list_message;
-                    }
-                }, 2000);
+            if (querySnapshot.docs.length > 0) {
+                lastVisibles = querySnapshot.docs[querySnapshot.docs.length - 1];
             }
 
-            scheduleRender(list_message, htmls);
-
+            renderMessage(list_messages.reverse());
         }, (error) => {
-            console.error("Error getting: ", error);
+            console.error("Error getting documents: ", error);
+        });
+
+        function loadMoreMessages() {
+            if (isLoadings) return;
+            isLoadings = true;
+
+            const messagesCollectionRef = collection(database, `chats/${conversationID}/messages`);
+
+            const q = query(messagesCollectionRef, orderBy("sent", "desc"), startAfter(lastVisibles), limit(10));
+            getDocs(q).then((querySnapshot) => {
+                let list_messages = [];
+                querySnapshot.forEach((doc) => {
+                    list_messages.push(doc.data());
+                });
+
+                if (querySnapshot.docs.length > 0) {
+                    lastVisibles = querySnapshot.docs[querySnapshot.docs.length - 1];
+                }
+
+                renderMessage(list_messages, true);
+                isLoadings = false;
+            }).catch((error) => {
+                console.error("Error getting documents: ", error);
+                isLoadings = false;
+            });
+        }
+
+        document.getElementById('chat-messages').addEventListener('scroll', function() {
+            const chatMessages = document.getElementById('chat-messages');
+            if (chatMessages.scrollTop === 0) {
+                loadMoreMessages();
+            }
         });
 
         renderLayOutChat(email, id);
@@ -336,163 +359,49 @@ document.addEventListener("readystatechange", function() {
         }
     }
 
-    function renderMessage(list_message, html) {
+    function renderMessage(list_message, append = false) {
         let current_users = JSON.parse(localStorage.getItem('current_users'));
-        $('#chat-messages').html('');
-        if (list_message.length > 0) {
-            let messageIndex = 0;
-            renderNextMessage();
-            function renderNextMessage() {
-                if (messageIndex >= list_message.length) {
-                    let chatMessages = document.getElementById('chat-messages');
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                    return;
-                }
+        const chatMessages = document.getElementById('chat-messages');
+        const isAtBottom = chatMessages.scrollTop + chatMessages.clientHeight >= chatMessages.scrollHeight;
 
-                let message = list_message[messageIndex];
-                let time = formatDate(message.sent);
+        if (!append) {
+            chatMessages.innerHTML = '';
+        }
 
-                if (message.type == 'prescription') {
-
-                    // Search cart
-                    let url = "{{ route('api.backend.cart.search', ['prescription_id' => 'REPLACE_ID']) }}";
-                    url = url.replace('REPLACE_ID', message.msg);
-                    let accessToken = `Bearer ` + token;
-                    let headers = {
-                        "Authorization": accessToken
-                    };
-                    $.ajax({
-                        url: url,
-                        type: 'GET',
-                        dataType: 'json',
-                        headers: headers,
-                        success: function (response) {
-                            if (response.error == 0 && response.data) {
-                                html = `<a><div class="mb-3 box-order-chat">`;
-                                response.data.forEach(item => {
-                                    html += `<div class="content-order-item mb-2">
-                                    <div class="d-flex ">
-                                        <p class="title-name">Tên thuốc: </p>
-                                        <p class="content-order-chat">${item.product_medicine.name}</p>
-                                    </div>
-                                    <div class="d-flex ">
-                                        <p class="title-name">Số lượng: </p>
-                                        <p class="content-order-chat">${item.quantity}</p>
-                                    </div>
-                                    <div class="d-flex ">
-                                        <p class="title-name">Sử dụng: </p>
-                                        <p class="content-order-chat">${item.note}</p>
-                                    </div>
-                                    <div class="d-flex ">
-                                        <p class="title-name">Số ngày sử dụng: </p>
-                                        <p class="content-order-chat">${item.treatment_days}</p>
-                                    </div>
-                                </div>`;
-                                });
-
-                                if (response.data[0].status == 'COMPLETE') {
-                                    html += `<div class="d-flex justify-content-end">
-                                    <a class="ml-2" type="button" href="{{ route('user.checkout.reorder', ['prescription_id' => '']) }}${response.data[0].prescription_id}">
-                                        <button class="btn btn-2 btn-sep icon-cart">Mua lại</button>
-                                    </a>
-                                </div>`;
-                                } else {
-                                    html += `<div class="d-flex justify-content-end">
-                                    <a href="{{route('user.checkout.index', ['prescription_id' => '']) }}${response.data[0].prescription_id}" class="btn btn-2 btn-sep icon-cart addToCartButton">Mua thuốc</a>
-                                </div>`;
-                                }
-
-                                html += `</div></a>`;
-
-                                $('#chat-messages').append(html);
-                            }
-                            messageIndex++;
-                            renderNextMessage();
-                        },
-                        error: function (xhr, status, error) {
-                            console.error(error);
-                            messageIndex++;
-                            renderNextMessage();
-                        }
-                    });
-                }else if (message.type == 'file'){
-                    if (message.fromId === current_users.uid) {
-                        html = `<div class="message right">
-                        <div class="msg-info">
-                        </div>
-                        <div class="bubble">
-                            <a href="${message.fileUrl}" style="color: white" target="_blank"><i class="fa-solid fa-paperclip mr-1"></i> ${message.fileName}</a>
-                            <div class="corner"></div>
-                        </div>
-                    </div>`;
-                    } else {
-                        html = `<div class="message">
-                        <div class="msg-info">
-                        </div>
-                        <div class="bubble">
-                            <a href="${message.fileUrl}" target="_blank"> <i class="fa-solid fa-paperclip mr-1"></i> ${message.fileName}</a>
-                            <div class="corner"></div>
-                        </div>
-                    </div>`;
-                    }
-                    $('#chat-messages').append(html);
-
-                    messageIndex++;
-                    renderNextMessage();
-                }
-                else if (message.type == 'image'){
-                    if (message.fromId === current_users.uid) {
-                        html = `<div class="message right" style="max-height: 200px; height: inherit">
-                        <div class="msg-info">
-                        </div>
-                        <div class="bubble" style="background-color: white">
-                            <img src="${message.fileUrl}" class="image-sent" alt="${message.fileName}"/>
-                            <div class="corner"></div>
-                        </div>
-                    </div>`;
-                    } else {
-                        html = `<div class="message">
-                        <div class="msg-info">
-                        </div>
-                        <div class="bubble" style="background-color: white">
-                            <img src="${message.fileUrl}" class="image-sent" alt="${message.fileName}"/>
-                            <div class="corner"></div>
-                        </div>
-                    </div>`;
-                    }
-                    $('#chat-messages').append(html);
-
-                    messageIndex++;
-                    renderNextMessage();
-                }
-                else {
-                    if (message.fromId === current_users.uid) {
-                        html = `<div class="message right">
-                        <div class="msg-info">
-                        </div>
-                        <div class="bubble">
-                            ${message.msg}
-                            <div class="corner"></div>
-                        </div>
-                    </div>`;
-                    } else {
-                        html = `<div class="message">
-                        <div class="msg-info">
-                        </div>
-                        <div class="bubble">
-                            ${message.msg}
-                            <div class="corner"></div>
-                        </div>
-                    </div>`;
-                    }
-                    $('#chat-messages').append(html);
-
-                    messageIndex++;
-                    renderNextMessage();
-                }
+        list_message.forEach((message) => {
+            let html = '';
+            if (message.type === 'text') {
+                html = `<div class="message ${message.fromId === current_users.uid ? 'right' : ''}">
+                   <div class="msg-info"></div>
+                   <div class="bubble">${message.msg}<div class="corner"></div></div>
+               </div>`;
+            } else if (message.type === 'image') {
+                html = `<div class="message ${message.fromId === current_users.uid ? 'right' : ''}" style="max-height: 200px; height: inherit">
+                   <div class="msg-info"></div>
+                   <div class="bubble" style="background-color: white">
+                       <img src="${message.fileUrl}" class="image-sent" alt="${message.fileName}"/>
+                       <div class="corner"></div>
+                   </div>
+               </div>`;
+            } else if (message.type === 'file') {
+                html = `<div class="message ${message.fromId === current_users.uid ? 'right' : ''}">
+                   <div class="msg-info"></div>
+                   <div class="bubble">
+                       <a href="${message.fileUrl}" target="_blank"><i class="fa-solid fa-paperclip mr-1"></i> ${message.fileName}</a>
+                       <div class="corner"></div>
+                   </div>
+               </div>`;
             }
 
+            if (append) {
+                chatMessages.insertAdjacentHTML('afterbegin', html); // Chèn vào đầu danh sách
+            } else {
+                chatMessages.insertAdjacentHTML('beforeend', html); // Thay thế nội dung hiện tại nếu không phải append
+            }
+        });
 
+        if (isAtBottom && !append) {
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Cuộn xuống để thấy các tin nhắn mới
         }
     }
 
