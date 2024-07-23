@@ -703,7 +703,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="detail_value">Note</label>
-                                <input type="text" class="form-control detail_value" name="medicines[@index][detail_value]">
+                                <input type="text" class="form-control detail_value" name="medicines[@index][note]">
                             </div>
                             <div class="form-group">
                                 <label for="treatment_days">Số ngày điều trị</label>

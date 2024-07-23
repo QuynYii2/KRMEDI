@@ -473,6 +473,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('result/{id}', [MyBookingController::class, 'bookingResult'])->name('web.users.my.bookings.result');
         Route::get('list-products/{id}', [MyBookingController::class, 'listProductResult'])->name('web.users.my.bookings.products');
         Route::post('/add-cart/{id}', [MyBookingController::class, 'addCart'])->name('web.users.my.bookings.add-cart');
+        Route::get('/prescription-download/{id}', [MyBookingController::class, 'downloadPDF'])->name('web.users.my.bookings.prescription-download');
     });
 
     /* My coupons */

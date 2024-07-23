@@ -824,6 +824,8 @@ class HomeController extends Controller
                 $item->name_clinic = Clinic::where('id', $item->clinic_id)->pluck('name')->first();
                 $item->department = Department::find($item->department_id)->name;
                 $item->doctor_name = User::find($item->doctor_id)->username ?? '';
+                $item->address = User::find($item->user_id)->detail_address??'';
+                $item->phone = User::find($item->user_id)->phone??'';
             }
             return Excel::download(new BookingDoctorExport($bookings), 'lichsukham.xlsx');
         } else {
@@ -892,6 +894,8 @@ class HomeController extends Controller
                 $item->name_clinic = Clinic::where('id', $item->clinic_id)->pluck('name')->first();
                 $item->department = Department::find($item->department_id)->name;
                 $item->doctor_name = User::find($item->doctor_id)->username ?? '';
+                $item->address = User::find($item->user_id)->detail_address??'';
+                $item->phone = User::find($item->user_id)->phone??'';
             }
             return Excel::download(new BookingDoctorExport($bookings), 'lichsukham.xlsx');
         } else {
