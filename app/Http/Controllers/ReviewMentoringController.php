@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Enums\QuestionStatus;
+use App\Http\Controllers\restapi\MainApi;
 use App\Models\Department;
+use App\Models\Notification;
 use App\Models\Question;
 use App\Models\ReportmentoringModel;
 use App\Models\User;
@@ -56,6 +58,27 @@ class ReviewMentoringController extends Controller
             $review->status = $status;
             $success = $review->save();
             if ($success) {
+                $user = User::find($review->user_id);
+                if ($status == 'APPROVED'){
+                    $userNotification = Notification::create([
+                        'title' => 'Đặt câu hỏi',
+                        'sender_id' => $user->id,
+                        'follower' => $user->id,
+                        'description' => 'Câu hỏi của bạn đã được duyệt. Vui lòng đến kiểm tra!',
+                    ]);
+                    $mainApi = new MainApi();
+                    $mainApi->sendQuestionNotification($user->token_firebase,$userNotification->id);
+                }
+                if ($status == 'REFUSE'){
+                    $userNotification = Notification::create([
+                        'title' => 'Đặt câu hỏi',
+                        'sender_id' => $user->id,
+                        'follower' => $user->id,
+                        'description' => 'Câu hỏi của bạn đã bị từ chối',
+                    ]);
+                    $mainApi = new MainApi();
+                    $mainApi->sendQuestionNotification($user->token_firebase,$userNotification->id);
+                }
                 return response()->json($review);
             }
             return response('Update error!', 400);

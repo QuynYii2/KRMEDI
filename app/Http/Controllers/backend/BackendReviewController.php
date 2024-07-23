@@ -4,8 +4,11 @@ namespace App\Http\Controllers\backend;
 
 use App\Enums\ReviewStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\restapi\MainApi;
 use App\Models\Clinic;
+use App\Models\Notification;
 use App\Models\Review;
+use App\Models\User;
 use DB;
 use Illuminate\Http\Request;
 
@@ -91,6 +94,15 @@ class BackendReviewController extends Controller
 
             $success = $review->save();
             if ($success) {
+                $user = User::find($user_id);
+                $userNotification = Notification::create([
+                    'title' => 'Đánh giá bệnh viện, phòng khám',
+                    'sender_id' => $user->id,
+                    'follower' => $user->id,
+                    'description' => 'Đánh giá bệnh viện, phòng khám thành công. Vui lòng đợi kiểm duyệt đánh giá!',
+                ]);
+                $mainApi = new MainApi();
+                $mainApi->sendQuestionNotification($user->token_firebase,$userNotification->id);
                 return response()->json($review);
             }
             return response('Create review error!', 400);
@@ -124,6 +136,27 @@ class BackendReviewController extends Controller
             $success = $review->save();
             $this->updateAverage($review->clinic_id);
             if ($success) {
+                $user = User::find($review->user_id);
+                if ($status == 'APPROVED'){
+                    $userNotification = Notification::create([
+                        'title' => 'Đánh giá bệnh viện, phòng khám',
+                        'sender_id' => $user->id,
+                        'follower' => $user->id,
+                        'description' => 'Đánh giá bệnh viện, phòng khám của bạn đã được duyệt. Vui lòng đến kiểm tra!',
+                    ]);
+                    $mainApi = new MainApi();
+                    $mainApi->sendQuestionNotification($user->token_firebase,$userNotification->id);
+                }
+                if ($status == 'REFUSE'){
+                    $userNotification = Notification::create([
+                        'title' => 'Đánh giá bệnh viện, phòng khám',
+                        'sender_id' => $user->id,
+                        'follower' => $user->id,
+                        'description' => 'Đánh giá bệnh viện, phòng khám của bạn đã bị từ chối',
+                    ]);
+                    $mainApi = new MainApi();
+                    $mainApi->sendQuestionNotification($user->token_firebase,$userNotification->id);
+                }
                 return response()->json($review);
             }
             return response('Create question error!', 400);

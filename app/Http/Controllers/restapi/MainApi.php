@@ -510,4 +510,44 @@ class MainApi extends Controller
 
         return $response->getBody();
     }
+
+    public function sendQuestionNotification($userToken = null, $notificationID)
+    {
+        $client = new Client();
+        $YOUR_SERVER_KEY = Constants::GG_KEY;
+
+        if ($userToken) {
+            $notificationWithSender = Notification::with('senders')->find($notificationID);
+
+            $data = [
+                'title' => $notificationWithSender->title ?? "",
+                'sender' => $notificationWithSender->senders->avt ?? "",
+                'description' => $notificationWithSender->description ?? "",
+                'id' => $notificationWithSender->id,
+            ];
+
+            $response = $client->post('https://fcm.googleapis.com/fcm/send', [
+                'headers' => [
+                    'Authorization' => 'key=' . $YOUR_SERVER_KEY,
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => [
+                    'to' => $userToken,
+                    'data' => $data,
+                    'notification' => [
+                        'title' => $data['description'],
+                        'body' => 'Cart',
+                    ],
+                    'web' => [
+                        'notification' => [
+                            'title' => $data['description'],
+                            'body' => 'Cart',
+                        ],
+                    ],
+                ],
+            ]);
+        }
+
+        return $response->getBody();
+    }
 }
