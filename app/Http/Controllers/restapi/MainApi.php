@@ -535,13 +535,13 @@ class MainApi extends Controller
                     'to' => $userToken,
                     'data' => $data,
                     'notification' => [
-                        'title' => $data['description'],
-                        'body' => 'Cart',
+                        'title' => $data['title'],
+                        'body' => $data['description'],
                     ],
                     'web' => [
                         'notification' => [
-                            'title' => $data['description'],
-                            'body' => 'Cart',
+                            'title' => $data['title'],
+                            'body' => $data['description'],
                         ],
                     ],
                 ],
