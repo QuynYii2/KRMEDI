@@ -85,7 +85,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="detail_value">Note</label>
-                                <input type="text" class="form-control detail_value" value="{{$pro['detail_value']}}" name="medicines[{{$index}}][detail_value]" readonly>
+                                <input type="text" class="form-control note" value="{{$pro['note']}}" name="medicines[{{$index}}][note]" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="treatment_days">Số ngày điều trị</label>
@@ -97,6 +97,7 @@
             @endforeach
                 <button type="submit" class="btn btn-primary mt-4">Mua hàng</button>
                 </form>
+            <a href="{{route('web.users.my.bookings.prescription-download',$booking->id)}}" class="btn btn-success mt-3">Tải đơn thuốc</a>
         @endif
         <div class="form-group ms-4 mt-4">
             <input disabled class="form-check-input" {{ $booking->is_result == 1 ? 'checked' : '' }} type="checkbox"
