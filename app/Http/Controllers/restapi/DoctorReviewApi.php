@@ -5,6 +5,7 @@ namespace App\Http\Controllers\restapi;
 use App\Enums\DoctorReviewStatus;
 use App\Http\Controllers\Controller;
 use App\Models\DoctorReview;
+use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -118,6 +119,14 @@ class DoctorReviewApi extends Controller
                     $user->points = $user->points + 1;
                     $user->save();
                 }
+                $userNotification = Notification::create([
+                    'title' => 'Đánh giá bác sĩ',
+                    'sender_id' => $userID,
+                    'follower' => $userID,
+                    'description' => 'Đánh giá bác sĩ thành công. Vui lòng đợi kiểm duyệt đánh giá!',
+                ]);
+                $mainApi = new MainApi();
+                $mainApi->sendQuestionNotification($user->token_firebase,$userNotification->id);
                 return response()->json($review);
             }
             return response('Create error!', 400);

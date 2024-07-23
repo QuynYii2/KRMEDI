@@ -6,9 +6,11 @@ use App\Enums\AnswerStatus;
 use App\Enums\MentoringCategory;
 use App\Enums\QuestionStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\restapi\MainApi;
 use App\Models\Answer;
 use App\Models\AnswerLike;
 use App\Models\CalcViewQuestion;
+use App\Models\Notification;
 use App\Models\PolicyModel;
 use App\Models\Question;
 use App\Models\ReportmentoringModel;
@@ -163,6 +165,14 @@ class BackendQuestionController extends Controller
 
             $success = $question->save();
             if ($success) {
+                $userNotification = Notification::create([
+                    'title' => 'Đặt câu hỏi',
+                    'sender_id' => $user->id,
+                    'follower' => $user->id,
+                    'description' => 'Đặt câu hỏi thành công. Vui lòng đợi kiểm duyệt câu hỏi!',
+                ]);
+                $mainApi = new MainApi();
+                $mainApi->sendQuestionNotification($user->token_firebase,$userNotification->id);
                 return response()->json($question);
             }
             return response('Create question error!', 400);
@@ -344,7 +354,7 @@ class BackendQuestionController extends Controller
             }
         }
 
-        $questions = Question::where($query)->get();
+        $questions = Question::where($query)->orderby('created_at','desc')->get();
         $list = [];
         foreach ($questions as $question) {
 
