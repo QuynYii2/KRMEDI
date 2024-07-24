@@ -231,7 +231,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="detail_value">Note</label>
-                                    <input type="text" class="form-control detail_value" value="{{$pro['detail_value']}}" readonly>
+                                    <input type="text" class="form-control note" value="{{$pro['note']}}" readonly>
                                 </div>
                                 <div class="form-group">
                                     <label for="treatment_days">Số ngày điều trị</label>
@@ -241,6 +241,7 @@
                         </div>
                     </div>
                     @endforeach
+                    <a href="{{route('web.users.my.bookings.prescription-download',$bookings_edit->id)}}" class="btn btn-success mt-3">Tải đơn thuốc</a>
                 @endif
                 <div class="modal-body">
                     <div class="list-service-result-don-thuoc mt-2 mb-3">
@@ -803,7 +804,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="detail_value">Note</label>
-                                <input type="text" class="form-control detail_value" name="medicines[@index][detail_value]">
+                                <input type="text" class="form-control detail_value" name="medicines[@index][note]">
                             </div>
                             <div class="form-group">
                                 <label for="treatment_days">Số ngày điều trị</label>

@@ -421,7 +421,7 @@
                 </div>
                  ${product.type_product == 0? `<div class="prices-pro">
                     ${formatCurrency(product.price)} ${product.price_unit}
-                </div>`:`<div class="contact_doctor" data-mail="${product.email}">
+                </div>`:`<div class="contact_doctor" data-mail="${product.email}" data-id="${product.id}">
                                     Tư vấn
                                 </div>`}
 
@@ -615,7 +615,7 @@
                                 </div>
                                 ${item.type_product == 0? `<div class="prices-pro">
                                     ${formatCurrency(item.price)} ${item.price_unit}
-                                </div>`:`<div class="contact_doctor" data-mail="${item.email}">
+                                </div>`:`<div class="contact_doctor" data-mail="${item.email}" data-id="${item.created_by}">
                                     Tư vấn
                                 </div>`}
 

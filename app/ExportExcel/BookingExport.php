@@ -25,6 +25,8 @@ class BookingExport implements FromCollection, WithHeadings
         foreach ($listData as $key => $item) {
             $myArr = [
                 $key + 1,
+                $item->phone,
+                $item->address,
                 $item->name_clinic,
                 $item->check_in,
                 $item->service_names,
@@ -37,6 +39,6 @@ class BookingExport implements FromCollection, WithHeadings
 
     public function headings(): array
     {
-        return ["STT", "Phòng khám", "Giờ vào khám", "Dịch vụ", "Trạng thái"];
+        return ["STT", "SĐT người đăng ký", "Địa chỉ người đăng ký", "Phòng khám", "Giờ vào khám", "Dịch vụ", "Trạng thái"];
     }
 }

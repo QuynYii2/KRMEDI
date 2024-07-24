@@ -82,7 +82,7 @@
             {{ number_format($medicine->price, 0, ',', '.') }} {{ $medicine->unit_price ?? 'VND' }}
         </div>
             @else
-            <div class="contact_doctor" data-mail="{{$medicine->email}}">
+            <div class="contact_doctor" data-mail="{{$medicine->email}}" data-id="{{$medicine->user_id}}">
                 Tư vấn
             </div>
         @endif

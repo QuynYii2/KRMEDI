@@ -17,6 +17,7 @@ use App\Models\Department;
 use App\Models\PrescriptionResults;
 use App\Models\ServiceClinic;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -63,11 +64,14 @@ class MyBookingController extends Controller
         if ($request->excel == 2) {
             $bookings = $query->get();
             foreach ($bookings as $item){
+                $user = User::find($item->user_id);
                 $item->name_clinic = Clinic::where('id',$item->clinic_id)->pluck('name')->first();
                 $service_name = explode(',', $item->service);
                 $services = ServiceClinic::whereIn('id', $service_name)->get();
                 $service_names = $services->pluck('name')->implode(', ');
                 $item->service_names = $service_names;
+                $item->phone = $user->phone;
+                $item->address = $user->detail_address??'';
             }
             return Excel::download(new BookingExport($bookings), 'lichsukham.xlsx');
         } else {
@@ -254,8 +258,20 @@ class MyBookingController extends Controller
             return response()->json(['message' => 'User not found.'], 404);
         }
     }
-//    public function getToken(Request $request)
-//    {
-//        return response()->json(['csrfToken' => csrf_token()]);
-//    }
+    public function downloadPDF($id)
+    {
+        $data_prescription = PrescriptionResults::where('booking_id',$id)->first();
+
+        if (!$data_prescription) {
+            return redirect()->back()->withErrors('Đơn thuốc không tồn tại.');
+        }
+
+        $doctor_name = User::find($data_prescription->created_by);
+        $user_name = User::find($data_prescription->user_id);
+        $pdf = Pdf::loadView('components.head.pdf',['doctor' => $doctor_name->name,
+                    'data' => json_decode($data_prescription->prescriptions, true),
+                    'user_name' => $user_name->name,]);
+
+        return $pdf->download('donthuoc.pdf');
+    }
 }
