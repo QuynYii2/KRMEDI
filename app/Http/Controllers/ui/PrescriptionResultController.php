@@ -113,8 +113,9 @@ class PrescriptionResultController extends Controller
             return back();
         }
 
-        $value_result = '[' . $prescription->prescriptions . ']';
+        $value_result = $prescription->prescriptions;
         $array_result = json_decode($value_result, true);
+        
         return view('ui.prescription-results.detail', compact('array_result', 'prescription'));
     }
 

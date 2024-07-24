@@ -13,8 +13,11 @@ use App\Models\Booking;
 use App\Models\BookingResult;
 use App\Models\Cart;
 use App\Models\Clinic;
+use App\Models\Commune;
 use App\Models\Department;
+use App\Models\District;
 use App\Models\PrescriptionResults;
+use App\Models\Province;
 use App\Models\ServiceClinic;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -65,13 +68,16 @@ class MyBookingController extends Controller
             $bookings = $query->get();
             foreach ($bookings as $item){
                 $user = User::find($item->user_id);
+                $district = District::find($user->district_id)->full_name??'';
+                $province = Province::find($user->province_id)->full_name??'';
+                $communes = Commune::find($user->commune_id)->full_name??'';
                 $item->name_clinic = Clinic::where('id',$item->clinic_id)->pluck('name')->first();
                 $service_name = explode(',', $item->service);
                 $services = ServiceClinic::whereIn('id', $service_name)->get();
                 $service_names = $services->pluck('name')->implode(', ');
                 $item->service_names = $service_names;
                 $item->phone = $user->phone;
-                $item->address = $user->detail_address??'';
+                $item->address = $user->detail_address??''.', '.$communes.', '.$district.', '.$province;
             }
             return Excel::download(new BookingExport($bookings), 'lichsukham.xlsx');
         } else {

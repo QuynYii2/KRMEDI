@@ -491,6 +491,9 @@ class BackendQuestionController extends Controller
             $question->content = $request->input('content');
 
             $success = $question->save();
+            $data = Question::find($request->input('question_id'));
+            $data->status = 'REFUSE';
+            $data->save();
             if ($success) {
                 return response()->json([
                     'message' => 'Question report created successfully!',
