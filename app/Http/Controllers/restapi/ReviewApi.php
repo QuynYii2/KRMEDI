@@ -6,6 +6,7 @@ use App\Enums\ClinicStatus;
 use App\Enums\ReviewStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Clinic;
+use App\Models\Notification;
 use App\Models\Review;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -106,6 +107,14 @@ class ReviewApi extends Controller
                     $user->points = $user->points + 1;
                     $user->save();
                 }
+                $userNotification = Notification::create([
+                    'title' => 'Đánh giá bệnh viện, phòng khám',
+                    'sender_id' => $userID,
+                    'follower' => $userID,
+                    'description' => 'Đánh giá bệnh viện, phòng khám thành công. Vui lòng đợi kiểm duyệt đánh giá!',
+                ]);
+                $mainApi = new MainApi();
+                $mainApi->sendQuestionNotification($user->token_firebase,$userNotification->id);
                 return response()->json($review);
             }
             return response('Create review error!', 400);
