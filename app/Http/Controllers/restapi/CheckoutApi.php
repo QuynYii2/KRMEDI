@@ -102,11 +102,17 @@ class CheckoutApi extends Controller
             $carts = Cart::where('user_id', $userID)->whereNull('prescription_id')->get();
         }
         $items = [];
+        $user_send = [];
         foreach ($carts as $cart) {
             if ($cart->type_product == TypeProductCart::MEDICINE) {
                 $product = ProductMedicine::find($cart->product_id);
+                $user_id = $product->user_id;
             } else {
                 $product = ProductInfo::find($cart->product_id);
+                $user_id = $product->created_by;
+            }
+            if (!in_array($user_id, $user_send)) {
+                $user_send[] = $user_id;
             }
 
             $orderItem = new OrderItem();
@@ -176,6 +182,18 @@ class CheckoutApi extends Controller
             $errorCode = $response->status();
             $errorMessage = $response->body();
             dd("Error {$errorCode}: {$errorMessage}");
+        }
+        if (count($user_send)>0){
+            foreach ($user_send as $val){
+                $notification = Notification::create([
+                    'title' => 'Có đơn hàng mới',
+                    'sender_id' => $val,
+                    'follower' => $val,
+                    'target_url' => null,
+                    'description' => 'Có đơn hàng mới, Vui lòng vào kiểm tra!',
+                ]);
+                $notification->save();
+            }
         }
         $roleAdmin = Role::where('name', \App\Enums\Role::ADMIN)->first();
         $role_user = DB::table('role_users')->where('role_id', $roleAdmin->id)->first();
