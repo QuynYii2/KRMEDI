@@ -422,7 +422,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="logoutModalLabel">Checkout success</h5>
+                        <h5 class="modal-title" id="logoutModalLabel">Đơn hàng được đặt thành công <br> Vui lòng đợi xác nhận</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>

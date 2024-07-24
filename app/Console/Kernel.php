@@ -22,12 +22,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('download:recording')->everyMinute()->withoutOverlapping();
+//        $schedule->command('download:recording')->everyMinute()->withoutOverlapping();
         $schedule->command('voucher:check-expired')->everyMinute();
         //Remind booking schedule
         $schedule->command('booking:check-scheduled')->hourly();
 
         $schedule->command('cart:prescription-reminder')->dailyAt('12:00')->dailyAt('19:00');
+        $schedule->job(new \App\Jobs\UpdateOrderStatus)->everyMinute();
     }
 
     /**
