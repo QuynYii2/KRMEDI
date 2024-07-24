@@ -16,15 +16,29 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Province;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MedicineController extends Controller
 {
     public function index()
     {
+        $clinicQuery = DB::table('clinics as c1')
+            ->select('c1.user_id', DB::raw('MIN(c1.id) as min_id'))
+            ->groupBy('c1.user_id');
         $medicines = ProductMedicine::where('product_medicines.status', OnlineMedicineStatus::APPROVED)
             ->leftJoin('users', 'product_medicines.user_id', '=', 'users.id')
             ->leftJoin('provinces', 'provinces.id', '=', 'users.province_id')
-            ->select('product_medicines.*', 'provinces.name as location_name','users.email');
+            ->leftJoinSub($clinicQuery, 'first_clinic', function ($join) {
+                $join->on('product_medicines.user_id', '=', 'first_clinic.user_id');
+            })
+            ->leftJoin('clinics as c2', 'first_clinic.min_id', '=', 'c2.id')
+            ->select(
+                'product_medicines.*',
+                'provinces.name as location_name',
+                'users.email',
+                'c2.latitude',
+                'c2.longitude'
+            );
 
         $medicine10 = $medicines->get();
         $medicines = $medicines->get();
@@ -186,10 +200,18 @@ class MedicineController extends Controller
                 ->orWhere('drug_ingredients.component_name', 'like', '%' . $name . '%');
         });
 
+        $clinicQuery = DB::table('clinics as c1')
+            ->select('c1.user_id', DB::raw('MIN(c1.id) as min_id'))
+            ->groupBy('c1.user_id');
+
         /* Join và select */
         $medicines->leftJoin('users', 'product_medicines.user_id', '=', 'users.id')
             ->leftJoin('provinces', 'provinces.id', '=', 'users.province_id')
-            ->select('product_medicines.*', 'provinces.name as location_name','users.email');
+            ->leftJoinSub($clinicQuery, 'first_clinic', function ($join) {
+                $join->on('product_medicines.user_id', '=', 'first_clinic.user_id');
+            })
+            ->leftJoin('clinics as c2', 'first_clinic.min_id', '=', 'c2.id')
+            ->select('product_medicines.*', 'provinces.name as location_name','users.email','c2.latitude','c2.longitude');
 
         $medicines = $medicines->distinct()->get();
 

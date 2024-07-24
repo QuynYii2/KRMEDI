@@ -138,45 +138,45 @@ class CheckoutApi extends Controller
             }
         }
 
-        $orderData = [
-            'path' => [
-                [
-                    "address" => "La Khe, Ha Dong, Hà Nội",
-                    "short_address" => "La Khe",
-                    "name" => "KRMEDI",
-                    "mobile" => "0973566792",
-                    "remarks" => "call me"
-                ],
-                [
-                    'address' => $address,
-                    'name' => $full_name,
-                    'mobile' => $phone
-                ]
-            ],
-        ];
-
-        $pathJson = json_encode($orderData['path']);
-        $itemsJson = json_encode($items);
-
-        $params = [
-            'token' => $this->getTokenAhamove(),
-            'order_time' => '0',
-            'path' => $pathJson,
-            'service_id' => 'SGN-BIKE',
-            'requests' => '[]',
-            'items' => $itemsJson
-        ];
-        $url = 'https://apistg.ahamove.com/v1/order/create?' . http_build_query($params);
-        $response = Http::post($url);
-        if ($response->successful()) {
-            $data = $response->json();
-            $order->aha_order_id = $data['order_id'];
-            $order->save();
-        } else {
-            $errorCode = $response->status();
-            $errorMessage = $response->body();
-            dd("Error {$errorCode}: {$errorMessage}");
-        }
+//        $orderData = [
+//            'path' => [
+//                [
+//                    "address" => "La Khe, Ha Dong, Hà Nội",
+//                    "short_address" => "La Khe",
+//                    "name" => "KRMEDI",
+//                    "mobile" => "0973566792",
+//                    "remarks" => "call me"
+//                ],
+//                [
+//                    'address' => $address,
+//                    'name' => $full_name,
+//                    'mobile' => $phone
+//                ]
+//            ],
+//        ];
+//
+//        $pathJson = json_encode($orderData['path']);
+//        $itemsJson = json_encode($items);
+//
+//        $params = [
+//            'token' => $this->getTokenAhamove(),
+//            'order_time' => '0',
+//            'path' => $pathJson,
+//            'service_id' => 'SGN-BIKE',
+//            'requests' => '[]',
+//            'items' => $itemsJson
+//        ];
+//        $url = 'https://apistg.ahamove.com/v1/order/create?' . http_build_query($params);
+//        $response = Http::post($url);
+//        if ($response->successful()) {
+//            $data = $response->json();
+//            $order->aha_order_id = $data['order_id'];
+//            $order->save();
+//        } else {
+//            $errorCode = $response->status();
+//            $errorMessage = $response->body();
+//            dd("Error {$errorCode}: {$errorMessage}");
+//        }
         $roleAdmin = Role::where('name', \App\Enums\Role::ADMIN)->first();
         $role_user = DB::table('role_users')->where('role_id', $roleAdmin->id)->first();
         $admin = User::where('id', $role_user->user_id)->first();

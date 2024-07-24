@@ -6,11 +6,13 @@ use App\Enums\OrderItemStatus;
 use App\Enums\OrderStatus;
 use App\Enums\TypeProductCart;
 use App\Http\Controllers\Controller;
+use App\Models\online_medicine\ProductMedicine;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class AdminOrderApi extends Controller
 {
@@ -127,6 +129,58 @@ class AdminOrderApi extends Controller
             $order->status = $status;
             $success = $order->save();
 
+            if ($status == OrderStatus::WAIT_PAYMENT){
+                $orderItems = OrderItem::where('order_id', $order->id)->get();
+                $items = [];
+                foreach ($orderItems as $orderItem) {
+                    $items[] = [
+                        '_id' => $orderItem->product_id,
+                        'num' => $orderItem->quantity,
+                        'name' => ProductMedicine::find($orderItem->product_id)->name,
+                        'price' => $orderItem->price
+                    ];
+                }
+
+                $orderData = [
+                    'path' => [
+                        [
+                            "address" => "La Khe, Ha Dong, Hà Nội",
+                            "short_address" => "La Khe",
+                            "name" => "KRMEDI",
+                            "mobile" => "0973566792",
+                            "remarks" => "call me"
+                        ],
+                        [
+                            'address' => $order->address,
+                            'name' => $order->full_name,
+                            'mobile' => $order->phone
+                        ]
+                    ],
+                ];
+
+                $pathJson = json_encode($orderData['path']);
+                $itemsJson = json_encode($items);
+
+                $params = [
+                    'token' => $this->getTokenAhamove(),
+                    'order_time' => '0',
+                    'path' => $pathJson,
+                    'service_id' => 'SGN-BIKE',
+                    'requests' => '[]',
+                    'items' => $itemsJson
+                ];
+                $url = 'https://apistg.ahamove.com/v1/order/create?' . http_build_query($params);
+                $response = Http::post($url);
+                if ($response->successful()) {
+                    $data = $response->json();
+                    $order->aha_order_id = $data['order_id'];
+                    $order->save();
+                } else {
+                    $errorCode = $response->status();
+                    $errorMessage = $response->body();
+                    dd("Error {$errorCode}: {$errorMessage}");
+                }
+            }
             if ($success) {
                 return response()->json($order);
             }
