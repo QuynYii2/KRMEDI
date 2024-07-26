@@ -20,9 +20,11 @@ use App\Http\Controllers\restapi\BookingApi;
 use App\Models\Booking;
 use App\Models\Chat;
 use App\Models\Clinic;
+use App\Models\Commune;
 use App\Models\Coupon;
 use App\Models\CouponApply;
 use App\Models\Department;
+use App\Models\District;
 use App\Models\FamilyManagement;
 use App\Models\NewEvent;
 use App\Models\online_medicine\ProductMedicine;
@@ -30,6 +32,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\PrescriptionResults;
 use App\Models\ProductInfo;
+use App\Models\Province;
 use App\Models\Question;
 use App\Models\Review;
 use App\Models\ServiceClinic;
@@ -820,12 +823,17 @@ class HomeController extends Controller
         if ($request->excel == 2) {
             $bookings = $query->get();
             foreach ($bookings as $item) {
-                $item->user_name = User::find($item->user_id)->name;
+                $user = User::find($item->user_id);
+                $district = District::find($user->district_id)->full_name??'';
+                $province = Province::find($user->province_id)->full_name??'';
+                $communes = Commune::find($user->commune_id)->full_name??'';
+                $detail_address = $user->detail_address??'';
+                $item->user_name = $user->name;
                 $item->name_clinic = Clinic::where('id', $item->clinic_id)->pluck('name')->first();
                 $item->department = Department::find($item->department_id)->name??'';
-                $item->doctor_name = User::find($item->doctor_id)->username ?? '';
-                $item->address = User::find($item->user_id)->detail_address??'';
-                $item->phone = User::find($item->user_id)->phone??'';
+                $item->doctor_name = $user->name ?? '';
+                $item->address = $detail_address.', '.$communes.', '.$district.', '.$province;
+                $item->phone = $user->phone??'';
             }
             return Excel::download(new BookingDoctorExport($bookings), 'lichsukham.xlsx');
         } else {
@@ -890,12 +898,17 @@ class HomeController extends Controller
         if ($request->excel == 2) {
             $bookings = $query->orderBy('bookings.created_at','desc')->get();
             foreach ($bookings as $item) {
-                $item->user_name = User::find($item->user_id)->name;
+                $user = User::find($item->user_id);
+                $district = District::find($user->district_id)->full_name??'';
+                $province = Province::find($user->province_id)->full_name??'';
+                $communes = Commune::find($user->commune_id)->full_name??'';
+                $detail_address = $user->detail_address??'';
+                $item->user_name = $user->name;
                 $item->name_clinic = Clinic::where('id', $item->clinic_id)->pluck('name')->first();
                 $item->department = Department::find($item->department_id)->name??'';
-                $item->doctor_name = User::find($item->doctor_id)->username ?? '';
-                $item->address = User::find($item->user_id)->detail_address??'';
-                $item->phone = User::find($item->user_id)->phone??'';
+                $item->doctor_name = $user->name ?? '';
+                $item->address = $detail_address.', '.$communes.', '.$district.', '.$province;
+                $item->phone =$user->phone??'';
             }
             return Excel::download(new BookingDoctorExport($bookings), 'lichsukham.xlsx');
         } else {
