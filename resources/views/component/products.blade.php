@@ -196,15 +196,34 @@
         return R * c;
     }
 
-    getCurrentLocation(function(currentLocation) {
+    getCurrentLocation(function (currentLocation) {
         var distanceProElements = document.querySelectorAll('.distance-pro');
+        var itemsWithDistances = [];
 
-        distanceProElements.forEach(function(distancePro) {
+        distanceProElements.forEach(function (distancePro) {
             var lat = parseFloat(distancePro.getAttribute('data-lat'));
             var lng = parseFloat(distancePro.getAttribute('data-lng'));
             var distance = calculateDistance(currentLocation.lat, currentLocation.lng, lat, lng).toFixed(2);
 
             distancePro.innerHTML = `${distance} km`;
+
+            // Store the product-item element along with its distance
+            itemsWithDistances.push({
+                element: distancePro.closest('.box-sp-medicine'),
+                distance: parseFloat(distance)
+            });
+        });
+
+        itemsWithDistances = itemsWithDistances.filter(item => item.element !== null);
+        // Sort the array by distance
+        itemsWithDistances.sort(function (a, b) {
+            return a.distance - b.distance;
+        });
+
+        var container = document.querySelector('#content-medicine');
+
+        itemsWithDistances.forEach(function (item) {
+            container.appendChild(item.element);
         });
     });
 </script>

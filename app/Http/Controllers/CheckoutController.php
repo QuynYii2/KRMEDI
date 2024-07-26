@@ -379,4 +379,15 @@ class CheckoutController extends Controller
             return back();
         }
     }
+
+    public function deleteAddress(Request $request)
+    {
+        $address = Address::find($request->id);
+        if ($address) {
+            $address->delete();
+            return response()->json(['status' => 'success']);
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'Address not found'], 404);
+        }
+    }
 }

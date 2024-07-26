@@ -2295,58 +2295,57 @@
                                 </div>
                             </div>`
             });
-        });
-        $('#modal-list-medicine-widget-chat').html(html);
+            $('#modal-list-medicine-widget-chat').html(html);
 
-        $('.handleSelectInputMedicine_widgetChat').click(function () {
-            let id = $(this).data('id');
-            let name = $(this).data('name');
-            let quantity = $(this).data('quantity');
-            elementInputMedicine_widgetChat.val(name);
-            next_elementInputMedicine_widgetChat.val(id);
-            next_elementQuantity_widgetChat.off('change');
+            $('.handleSelectInputMedicine_widgetChat').click(function () {
+                let id = $(this).data('id');
+                let name = $(this).data('name');
+                let quantity = $(this).data('quantity');
+                elementInputMedicine_widgetChat.val(name);
+                next_elementInputMedicine_widgetChat.val(id);
+                next_elementQuantity_widgetChat.off('change');
 
-            next_elementQuantity_widgetChat.attr('max', quantity);
+                next_elementQuantity_widgetChat.attr('max', quantity);
 
-            // Thêm sự kiện onchange
-            next_elementQuantity_widgetChat.on('change', function () {
-                // Lấy giá trị hiện tại của next_elementQuantity_widgetChat
-                var currentValue = next_elementQuantity_widgetChat.val();
+                // Thêm sự kiện onchange
+                next_elementQuantity_widgetChat.on('change', function () {
+                    // Lấy giá trị hiện tại của next_elementQuantity_widgetChat
+                    var currentValue = next_elementQuantity_widgetChat.val();
 
-                // Chuyển đổi giá trị thành số để so sánh
-                currentValue = parseInt(currentValue);
+                    // Chuyển đổi giá trị thành số để so sánh
+                    currentValue = parseInt(currentValue);
 
-                // Kiểm tra nếu giá trị lớn hơn quantity
-                if (currentValue > quantity) {
-                    // Hiển thị cảnh báo
-                    alert('Giá trị không thể lớn hơn ' + quantity);
-                    // Cài đặt lại giá trị về quantity
-                    next_elementQuantity_widgetChat.val(quantity);
-                }
+                    // Kiểm tra nếu giá trị lớn hơn quantity
+                    if (currentValue > quantity) {
+                        // Hiển thị cảnh báo
+                        alert('Giá trị không thể lớn hơn ' + quantity);
+                        // Cài đặt lại giá trị về quantity
+                        next_elementQuantity_widgetChat.val(quantity);
+                    }
+                });
+
+                getIngredientsByMedicineId(id)
+                    .then(result => {
+                        console.log(result.component_name); // Log kết quả
+                        next_elementMedicineIngredients_widgetChat.val(result.component_name); // Sử dụng kết quả
+                    })
+                    .catch(error => {
+                        console.error('Đã xảy ra lỗi:', error);
+                    });
             });
 
-            getIngredientsByMedicineId(id)
-                .then(result => {
-                    console.log(result.component_name); // Log kết quả
-                    next_elementMedicineIngredients_widgetChat.val(result.component_name); // Sử dụng kết quả
-                })
-                .catch(error => {
-                    console.error('Đã xảy ra lỗi:', error);
-                });
-        });
+            $('.input_medicine_name').click(function () {
+                elementInputMedicine_widgetChat = $(this);
+                next_elementInputMedicine_widgetChat = $(this).next('.medicine_id_hidden');
+                next_elementQuantity_widgetChat = $(this).parents().parents().find('input.quantity');
+                next_elementMedicineIngredients_widgetChat = $(this).parents().parents().find(
+                    'textarea.medicine_ingredients');
+            });
 
-        $('.input_medicine_name').click(function () {
-            elementInputMedicine_widgetChat = $(this);
-            next_elementInputMedicine_widgetChat = $(this).next('.medicine_id_hidden');
-            next_elementQuantity_widgetChat = $(this).parents().parents().find('input.quantity');
-            next_elementMedicineIngredients_widgetChat = $(this).parents().parents().find(
-                'textarea.medicine_ingredients');
+            $('.loadTrash_widgetChat').click(function () {
+                $(this).parent().parent().remove();
+            });
         });
-
-        $('.loadTrash_widgetChat').click(function () {
-            $(this).parent().parent().remove();
-        });
-
     }
 
 

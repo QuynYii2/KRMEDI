@@ -4,6 +4,15 @@
 @section('content')
     @include('layouts.partials.header')
     @include('component.banner')
+    <style>
+        .delete-address{
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            cursor: pointer;
+            color: #e00000;
+        }
+    </style>
     <div class="container">
         @if($carts->isNotEmpty())
             <form id="form_checkout" method="post" action="#">
@@ -335,7 +344,7 @@
                     <div class="list-address">
                         @foreach($addresses as $address)
                             <div class="address-item d-flex justify-content-between align-items-center border p-3"
-                                 style="border-radius: 5px">
+                                 style="border-radius: 5px; position: relative">
                                 <label for="address_order_{{$address->id}}" class="address">
                                     <div class="main-address">
                                         <b>{{ $address->username }}</b>
@@ -353,6 +362,7 @@
                                        data-province="{{ $address->provinces_name }}"
                                        data-district=" {{ $address->districts_name }}"
                                        value="{{$address->id}}">
+                                <div class="delete-address" data-id="{{$address->id}}"><i class="fa fa-window-close" aria-hidden="true"></i></div>
                             </div>
                         @endforeach
                     </div>
@@ -636,6 +646,37 @@
             }
             changeAddressFromApi(response, province, district,total_fee);
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.delete-address').forEach(function(element) {
+                element.addEventListener('click', function() {
+                    var addressId = this.getAttribute('data-id');
+                    if (confirm('Bạn có chắc muốn xoá địa chỉ này không?')) {
+                        fetch('{{ route('user.checkout.delete-address') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({ id: addressId })
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                this.closest('.address-item').remove();
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+                    }
+                });
+            });
+        });
+
     </script>
 
 
