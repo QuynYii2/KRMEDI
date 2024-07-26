@@ -15,6 +15,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PrescriptionResultController extends Controller
 {
@@ -86,7 +87,19 @@ class PrescriptionResultController extends Controller
         $drug_ingredient_search = $request->input('drug_ingredient_search');
         $object_search = $request->input('object_search');
 
-        $listMedicine = ProductMedicine::where('quantity', '>', 0);
+        $clinicQuery = DB::table('clinics as c1')
+            ->select('c1.user_id', DB::raw('MIN(c1.id) as min_id'))
+            ->groupBy('c1.user_id');
+        $listMedicine = ProductMedicine::where('quantity', '>', 0)
+            ->leftJoinSub($clinicQuery, 'first_clinic', function ($join) {
+                $join->on('product_medicines.user_id', '=', 'first_clinic.user_id');
+            })
+            ->leftJoin('clinics as c2', 'first_clinic.min_id', '=', 'c2.id')
+            ->select(
+                'product_medicines.*',
+                'c2.latitude',
+                'c2.longitude'
+        );
 
         if ($drug_ingredient_search) {
             $listMedicineId = DrugIngredients::where('component_name', 'like', '%' . $drug_ingredient_search . '%')->pluck('product_id');

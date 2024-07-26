@@ -2218,14 +2218,51 @@
             }
         });
     }
+    function getCurrentLocation(callback) {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var currentLocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                callback(currentLocation);
+            });
+        } else {
+            alert('Geolocation is not supported by this browser.');
+        }
+    }
+    function toRadians(degrees) {
+        return degrees * (Math.PI / 180);
+    }
+    function calculateDistance(lat1, lng1, lat2, lng2) {
+        var R = 6371; // Radius of the earth in km
+        var dLat = toRadians(lat2 - lat1);
+        var dLng = toRadians(lng2 - lng1);
 
+        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
+            Math.sin(dLng / 2) * Math.sin(dLng / 2);
+
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return R * c;
+    }
     function renderMedicine(data) {
         let html = '';
-        data.forEach((medicine) => {
-            let url = '{{ route('medicine.detail', ':id') }}';
-            url = url.replace(':id', medicine.id);
+        getCurrentLocation(function (currentLocation) {
+            data.forEach(function (item) {
+                item.distance = calculateDistance(currentLocation.lat, currentLocation.lng, item.latitude, item.longitude).toFixed(2);
+            });
 
-            html += `<div class="col-sm-6 col-xl-4 mb-3 col-6 find-my-medicine-2">
+            data.sort(function (a, b) {
+                return a.distance - b.distance;
+            });
+
+            data.forEach((medicine) => {
+                let url = '{{ route('medicine.detail', ':id') }}';
+                url = url.replace(':id', medicine.id);
+
+                html += `<div class="col-sm-6 col-xl-4 mb-3 col-6 find-my-medicine-2">
                                 <div class="m-md-2 ">
                                     <div class="frame component-medicine w-100">
                                         <div class="img-pro justify-content-center d-flex img_product--homeNew w-100">
@@ -2241,8 +2278,11 @@
                                                 </a>
                                                 <div
                                                     class="text-wrapper-3">${medicine.price} ${medicine.unit_price ?? 'VND'}</div>
-                                                <div
+                                                <div class="d-flex justify-content-between flex-wrap w-100">
+                                                    <div
                                                     class="text-wrapper-3">Còn lại: ${medicine.quantity}</div>
+                                                    <div class="distance-pro-3 text-wrapper-3">${medicine.distance} km</div>
+                                                </div>
                                             </div>
                                             <div class="div-wrapper">
                                                 <a style="cursor: pointer" class="handleSelectInputMedicine_widgetChat" data-id="${medicine.id}" data-name="${medicine.name}" data-quantity="${medicine.quantity}"
@@ -2254,8 +2294,8 @@
                                     </div>
                                 </div>
                             </div>`
+            });
         });
-
         $('#modal-list-medicine-widget-chat').html(html);
 
         $('.handleSelectInputMedicine_widgetChat').click(function () {

@@ -151,8 +151,15 @@
                         alert('Update success!')
                         window.location.href = orderUrl;
                     },
-                    error: function (error) {
-                        console.log(error);
+                    error: function (xhr) {
+                        let response = JSON.parse(xhr.responseText);
+
+                        // Check if the response contains error information
+                        if (response.error) {
+                            alert((response.message || 'Đã có lỗi xảy ra'));
+                        } else {
+                            alert('An unexpected error occurred');
+                        }
                     }
                 });
             }

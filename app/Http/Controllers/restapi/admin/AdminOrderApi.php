@@ -176,9 +176,15 @@ class AdminOrderApi extends Controller
                     $order->aha_order_id = $data['order_id'];
                     $order->save();
                 } else {
-                    $errorCode = $response->status();
-                    $errorMessage = $response->body();
-                    dd("Error {$errorCode}: {$errorMessage}");
+                    $errorMessage = json_decode($response->body(), true);
+                    $errorCode = $errorMessage['code'] ?? 'UNKNOWN_ERROR';
+                    $errorDescription = $errorMessage['description'] ?? 'Đã có lỗi xảy ra';
+
+                    return response()->json([
+                        'error' => true,
+                        'code' => $errorCode,
+                        'message' => $errorDescription
+                    ], $response->status());
                 }
             }
             if ($success) {

@@ -533,12 +533,21 @@
                             </div>
                         </div>`;
             } else {
-                data.forEach(async function (item) {
-                    let url = `{{ route('medicine.detail', ['id' => ':id']) }}`;
-                    url = url.replace(':id', item.id);
-                    let isSoldOut = item.quantity == 0;
-                    let isFavoriteClass = isUserWasWishlist(item.id);
-                    html += `<div class="col-md-3 col-6">
+                getCurrentLocation(function (currentLocation) {
+                    data.forEach(function (item) {
+                        item.distance = calculateDistance(currentLocation.lat, currentLocation.lng, item.latitude, item.longitude).toFixed(2);
+                    });
+
+                    data.sort(function (a, b) {
+                        return a.distance - b.distance;
+                    });
+
+                    data.forEach(function (item) {
+                        let url = `{{ route('medicine.detail', ['id' => ':id']) }}`;
+                        url = url.replace(':id', item.id);
+                        let isSoldOut = item.quantity == 0;
+                        let isFavoriteClass = isUserWasWishlist(item.id);
+                        html += `<div class="col-md-3 col-6">
         <div class="product-item ${isSoldOut ? 'sold-out-overlay' : ''}">
     <div class="img-pro">
         <img src="${item.thumbnail}" alt="">
@@ -573,7 +582,7 @@
                     </defs>
                 </svg> <p>${item.location_name ?? '{{ __('home.Toàn quốc') }}'}</p>
             </div>
-            <div class="distance-pro-2" data-latitude="${item.latitude}" data-longitude="${item.longitude}"></div>
+            <div class="distance-pro-2">${item.distance} km</div>
         </div>
         ${item.type_product == 0? `<div class="prices-pro">
                     ${formatCurrency(item.price)} ${item.price_unit?item.price_unit:''}
@@ -589,25 +598,15 @@
 </div>
     </div>`;
 
-                    function formatCurrency(amount) {
-                        const formattedAmount = amount.toString().replace(/,/g, '.');
+                        function formatCurrency(amount) {
+                            const formattedAmount = amount.toString().replace(/,/g, '.');
 
-                        return parseFloat(formattedAmount).toLocaleString('de-DE');
-                    }
+                            return parseFloat(formattedAmount).toLocaleString('de-DE');
+                        }
+                    });
+                    document.getElementById('content-medicine').innerHTML = html;
                 });
             }
-            document.getElementById('content-medicine').innerHTML = html;
-            getCurrentLocation(function(currentLocation) {
-                var distanceProElements = document.querySelectorAll('.distance-pro-2');
-
-                distanceProElements.forEach(function(distancePro) {
-                    var lat = parseFloat(distancePro.getAttribute('data-latitude'));
-                    var lng = parseFloat(distancePro.getAttribute('data-longitude'));
-                    var distance = calculateDistance(currentLocation.lat, currentLocation.lng, lat, lng).toFixed(2);
-
-                    distancePro.innerHTML = `${distance} km`;
-                });
-            });
         }
 
         function searchFilterMedicine(value) {
