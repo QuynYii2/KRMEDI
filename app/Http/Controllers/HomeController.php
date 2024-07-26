@@ -827,12 +827,12 @@ class HomeController extends Controller
                 $district = District::find($user->district_id)->full_name??'';
                 $province = Province::find($user->province_id)->full_name??'';
                 $communes = Commune::find($user->commune_id)->full_name??'';
-
+                $detail_address = $user->detail_address??'';
                 $item->user_name = $user->name;
                 $item->name_clinic = Clinic::where('id', $item->clinic_id)->pluck('name')->first();
                 $item->department = Department::find($item->department_id)->name??'';
                 $item->doctor_name = $user->name ?? '';
-                $item->address = $user->detail_address??''.', '.$communes.', '.$district.', '.$province;
+                $item->address = $detail_address.', '.$communes.', '.$district.', '.$province;
                 $item->phone = $user->phone??'';
             }
             return Excel::download(new BookingDoctorExport($bookings), 'lichsukham.xlsx');
@@ -902,11 +902,12 @@ class HomeController extends Controller
                 $district = District::find($user->district_id)->full_name??'';
                 $province = Province::find($user->province_id)->full_name??'';
                 $communes = Commune::find($user->commune_id)->full_name??'';
+                $detail_address = $user->detail_address??'';
                 $item->user_name = $user->name;
                 $item->name_clinic = Clinic::where('id', $item->clinic_id)->pluck('name')->first();
                 $item->department = Department::find($item->department_id)->name??'';
                 $item->doctor_name = $user->name ?? '';
-                $item->address = $user->detail_address??''.', '.$communes.', '.$district.', '.$province;
+                $item->address = $detail_address.', '.$communes.', '.$district.', '.$province;
                 $item->phone =$user->phone??'';
             }
             return Excel::download(new BookingDoctorExport($bookings), 'lichsukham.xlsx');
