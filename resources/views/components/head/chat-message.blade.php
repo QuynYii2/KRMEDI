@@ -527,6 +527,13 @@
                             </select>
                         </div>
                     </div>
+                    <div class="col-sm-4">
+                        <div class="form-group position-relative">
+                            <label for="inputSearchClinic" class="form-control-feedback"></label>
+                            <input type="search" id="inputSearchClinic" class="form-control handleSearchMedicine"
+                                   placeholder="Tìm kiếm theo nhà thuốc">
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="modal-body find-my-medicine-2">
@@ -2143,7 +2150,7 @@
         document.getElementById('chat-circle').click();
     }
 
-    let html_widgetChat = `<div class="service-result-item d-flex align-items-center justify-content-between border p-3">
+    let html_widgetChat = `<div class="service-result-item d-flex align-items-center justify-content-between border p-3" data-user-id="">
                     <div class="prescription-group">
                         <div class="row w-75">
                             <div class="form-group">
@@ -2202,10 +2209,11 @@
         let inputNameMedicine_Search = $('#inputSearchNameMedicine').val().toLowerCase();
         let inputDrugIngredient_Search = $('#inputSearchDrugIngredient').val().toLowerCase();
         let object_search = $('#object_search').val().toLowerCase();
+        let clinic_Search = $('#inputSearchClinic').val().toLowerCase();
 
         let url = '{{ route('view.prescription.result.get-medicine') }}'
         url = url +
-            `?name_search=${inputNameMedicine_Search}&drug_ingredient_search=${inputDrugIngredient_Search}&object_search=${object_search}`;
+            `?name_search=${inputNameMedicine_Search}&drug_ingredient_search=${inputDrugIngredient_Search}&object_search=${object_search}&clinic_search=${clinic_Search}`;
 
         $.ajax({
             url: url,
@@ -2250,15 +2258,38 @@
     function renderMedicine(data) {
         let html = '';
         getCurrentLocation(function (currentLocation) {
+            let existingClinics = new Set();
+
+            if ($('#list-service-result').children().length > 1) {
+                $('#list-service-result').children().each(function() {
+                    let clinicId = $(this).data('user-id');
+                    if (clinicId) {
+                        existingClinics.add(clinicId);
+                    }
+                });
+            }
+
+            // Separate medicines based on clinic_id
+            let sameClinicMedicines = [];
+            let differentClinicMedicines = [];
+
             data.forEach(function (item) {
                 item.distance = calculateDistance(currentLocation.lat, currentLocation.lng, item.latitude, item.longitude).toFixed(2);
+                if (existingClinics.has(item.user_id)) {
+                    sameClinicMedicines.push(item);
+                } else {
+                    differentClinicMedicines.push(item);
+                }
             });
 
-            data.sort(function (a, b) {
-                return a.distance - b.distance;
-            });
+            // Sort by distance
+            sameClinicMedicines.sort((a, b) => a.distance - b.distance);
+            differentClinicMedicines.sort((a, b) => a.distance - b.distance);
 
-            data.forEach((medicine) => {
+            // Combine the arrays
+            let sortedMedicines = [...sameClinicMedicines, ...differentClinicMedicines];
+
+            sortedMedicines.forEach((medicine) => {
                 let url = '{{ route('medicine.detail', ':id') }}';
                 url = url.replace(':id', medicine.id);
 
@@ -2285,7 +2316,7 @@
                                                 </div>
                                             </div>
                                             <div class="div-wrapper">
-                                                <a style="cursor: pointer" class="handleSelectInputMedicine_widgetChat" data-id="${medicine.id}" data-name="${medicine.name}" data-quantity="${medicine.quantity}"
+                                                <a style="cursor: pointer" class="handleSelectInputMedicine_widgetChat" data-id="${medicine.id}" data-name="${medicine.name}" data-quantity="${medicine.quantity}" data-user-id="${medicine.user_id}"
                                                    data-dismiss="modal">
                                                     <div class="text-wrapper-4">{{ __('home.Choose...') }}</div>
                                                 </a>
@@ -2295,58 +2326,59 @@
                                 </div>
                             </div>`
             });
-        });
-        $('#modal-list-medicine-widget-chat').html(html);
+            $('#modal-list-medicine-widget-chat').html(html);
 
-        $('.handleSelectInputMedicine_widgetChat').click(function () {
-            let id = $(this).data('id');
-            let name = $(this).data('name');
-            let quantity = $(this).data('quantity');
-            elementInputMedicine_widgetChat.val(name);
-            next_elementInputMedicine_widgetChat.val(id);
-            next_elementQuantity_widgetChat.off('change');
+            $('.handleSelectInputMedicine_widgetChat').click(function () {
+                let id = $(this).data('id');
+                let name = $(this).data('name');
+                let quantity = $(this).data('quantity');
+                let userId = $(this).data('user-id');
+                $('.service-result-item').attr('data-user-id', userId);
+                elementInputMedicine_widgetChat.val(name);
+                next_elementInputMedicine_widgetChat.val(id);
+                next_elementQuantity_widgetChat.off('change');
 
-            next_elementQuantity_widgetChat.attr('max', quantity);
+                next_elementQuantity_widgetChat.attr('max', quantity);
 
-            // Thêm sự kiện onchange
-            next_elementQuantity_widgetChat.on('change', function () {
-                // Lấy giá trị hiện tại của next_elementQuantity_widgetChat
-                var currentValue = next_elementQuantity_widgetChat.val();
+                // Thêm sự kiện onchange
+                next_elementQuantity_widgetChat.on('change', function () {
+                    // Lấy giá trị hiện tại của next_elementQuantity_widgetChat
+                    var currentValue = next_elementQuantity_widgetChat.val();
 
-                // Chuyển đổi giá trị thành số để so sánh
-                currentValue = parseInt(currentValue);
+                    // Chuyển đổi giá trị thành số để so sánh
+                    currentValue = parseInt(currentValue);
 
-                // Kiểm tra nếu giá trị lớn hơn quantity
-                if (currentValue > quantity) {
-                    // Hiển thị cảnh báo
-                    alert('Giá trị không thể lớn hơn ' + quantity);
-                    // Cài đặt lại giá trị về quantity
-                    next_elementQuantity_widgetChat.val(quantity);
-                }
+                    // Kiểm tra nếu giá trị lớn hơn quantity
+                    if (currentValue > quantity) {
+                        // Hiển thị cảnh báo
+                        alert('Giá trị không thể lớn hơn ' + quantity);
+                        // Cài đặt lại giá trị về quantity
+                        next_elementQuantity_widgetChat.val(quantity);
+                    }
+                });
+
+                getIngredientsByMedicineId(id)
+                    .then(result => {
+                        console.log(result.component_name); // Log kết quả
+                        next_elementMedicineIngredients_widgetChat.val(result.component_name); // Sử dụng kết quả
+                    })
+                    .catch(error => {
+                        console.error('Đã xảy ra lỗi:', error);
+                    });
             });
 
-            getIngredientsByMedicineId(id)
-                .then(result => {
-                    console.log(result.component_name); // Log kết quả
-                    next_elementMedicineIngredients_widgetChat.val(result.component_name); // Sử dụng kết quả
-                })
-                .catch(error => {
-                    console.error('Đã xảy ra lỗi:', error);
-                });
-        });
+            $('.input_medicine_name').click(function () {
+                elementInputMedicine_widgetChat = $(this);
+                next_elementInputMedicine_widgetChat = $(this).next('.medicine_id_hidden');
+                next_elementQuantity_widgetChat = $(this).parents().parents().find('input.quantity');
+                next_elementMedicineIngredients_widgetChat = $(this).parents().parents().find(
+                    'textarea.medicine_ingredients');
+            });
 
-        $('.input_medicine_name').click(function () {
-            elementInputMedicine_widgetChat = $(this);
-            next_elementInputMedicine_widgetChat = $(this).next('.medicine_id_hidden');
-            next_elementQuantity_widgetChat = $(this).parents().parents().find('input.quantity');
-            next_elementMedicineIngredients_widgetChat = $(this).parents().parents().find(
-                'textarea.medicine_ingredients');
+            $('.loadTrash_widgetChat').click(function () {
+                $(this).parent().parent().remove();
+            });
         });
-
-        $('.loadTrash_widgetChat').click(function () {
-            $(this).parent().parent().remove();
-        });
-
     }
 
 

@@ -16,6 +16,7 @@ use App\Models\Clinic;
 use App\Models\Commune;
 use App\Models\Department;
 use App\Models\District;
+use App\Models\FamilyManagement;
 use App\Models\PrescriptionResults;
 use App\Models\Province;
 use App\Models\ServiceClinic;
@@ -67,6 +68,23 @@ class MyBookingController extends Controller
         if ($request->excel == 2) {
             $bookings = $query->get();
             foreach ($bookings as $item){
+                $insurance = '';
+                if($item->insurance_use == 'no' || is_null($item->insurance_use)){
+                    $insurance = "Không sử dụng bảo hiểm";
+                }else if($item->insurance_use == 'yes' && is_null($item->member_family_id)){
+                    $insurance = Auth::user()->insurance_id;
+                }else if($item->insurance_use == 'yes' && $item->member_family_id !== null){
+                    $insurance = $item->insurance_family_id;
+
+                }
+
+                $familyMember = FamilyManagement::find($item->member_family_id)->name ?? '';
+                if(is_null($item->member_family_id)){
+                    $bookingFor = 'Bản thân';
+                }else{
+                    $bookingFor = 'Người nhà: ' . $familyMember;
+                }
+
                 $user = User::find($item->user_id);
                 $district = District::find($user->district_id)->full_name??'';
                 $province = Province::find($user->province_id)->full_name??'';
@@ -79,6 +97,8 @@ class MyBookingController extends Controller
                 $item->service_names = $service_names;
                 $item->phone = $user->phone;
                 $item->address = $detail_address.', '.$communes.', '.$district.', '.$province;
+                $item->booking_for = $bookingFor;
+                $item->insurance = $insurance;
             }
             return Excel::download(new BookingExport($bookings), 'lichsukham.xlsx');
         } else {

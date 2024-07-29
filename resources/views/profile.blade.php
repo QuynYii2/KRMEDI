@@ -503,6 +503,13 @@
                                         </select>
                                     </div>
                                 </div>
+                                @if (Auth::user()->type == 'NORMAL')
+                                    <div class="col-sm-4">
+                                        <label for="insurance_id">Mã bảo hiểm</label>
+                                        <input class="form-control" name="insurance_id" id="insurance_id"
+                                               value="{{ $doctor->insurance_id ?? '' }}">
+                                    </div>
+                                @endif
                             </div>
 
                             <div class="row">

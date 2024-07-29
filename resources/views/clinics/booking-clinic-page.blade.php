@@ -145,6 +145,15 @@
             box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
             padding: 16px;
         }
+        #select-insurance{
+            display: flex;
+            align-items: center;
+        }
+        .insurance_your_self input[type=text], .insurance_family input[type=text]
+        {
+            border-radius: 0.375rem;
+        }
+
         @media (max-width: 767px) {
             .zalo-chat {
                 right: 26px !important;
@@ -330,6 +339,24 @@
                     @endforeach
                 </div>
             </div>
+            <div class="select-service d-flex align-items-center">
+                <div class="mr-4">Sử dụng bảo hiểm y tế: </div>
+                <div id="select-insurance">
+                    <input class="m-0 inputBookingFor" id="insurance_yes" style="width: 20px;height: 20px;" type="radio" name="insurance_use" value="yes" checked>
+                    <label for="yes" style="font-size: 18px">Có</label>
+                    <input class="m-0 inputBookingFor" id="insurance_no" style="width: 20px;height: 20px;" type="radio" name="insurance_use" value="no">
+                    <label for="no" style="font-size: 18px">Không</label>
+                </div>
+            </div>
+            <div class="form-group insurance_your_self mt-1">
+                <div>Mã bảo hiểm y tế: (cập nhật mã bảo hiểm <a href="{{route('profile')}}">tại đây</a>)</div>
+                <input type="text" class="form-control" name="insurance_your_self" value="{{ Auth::user()->insurance_id }}" disabled/>
+            </div>
+            <div class="form-group insurance_family mt-1">
+                <div>Mã bảo hiểm y tế của người thân: </div>
+                <input type="text" class="form-control" name="insurance_family" value=""/>
+            </div>
+
             <div>
                 <div class="select-service">Chọn hình thức thanh toán (không bắt buộc)</div>
                 <div class="fundiin-payment">
@@ -672,6 +699,39 @@
             }
 
             this.submit(); // Submit the form with the updated action
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function toggleInsuranceFields() {
+                let insuranceYes = document.getElementById('insurance_yes').checked;
+                let myself = document.getElementById('myself').checked;
+                let family = document.getElementById('family').checked;
+
+                document.querySelector('.insurance_your_self').style.display = 'none';
+                document.querySelector('.insurance_family').style.display = 'none';
+
+                if (insuranceYes) {
+                    if (myself) {
+                        document.querySelector('.insurance_your_self').style.display = 'block';
+                        document.querySelector('input[name="insurance_family"]').removeAttribute('required');
+                    } else if (family) {
+                        document.querySelector('.insurance_family').style.display = 'block';
+                        document.querySelector('input[name="insurance_family"]').setAttribute('required', 'required');
+                    }
+                } else {
+                    document.querySelector('input[name="insurance_family"]').removeAttribute('required');
+                }
+            }
+
+            document.getElementById('insurance_yes').addEventListener('change', toggleInsuranceFields);
+            document.getElementById('insurance_no').addEventListener('change', toggleInsuranceFields);
+            document.getElementById('myself').addEventListener('change', toggleInsuranceFields);
+            document.getElementById('family').addEventListener('change', toggleInsuranceFields);
+
+            // Initialize the display based on the default checked values
+            toggleInsuranceFields();
         });
     </script>
 @endsection

@@ -823,7 +823,24 @@ class HomeController extends Controller
         if ($request->excel == 2) {
             $bookings = $query->get();
             foreach ($bookings as $item) {
+                $insurance = '';
+                if($item->insurance_use == 'no' || is_null($item->insurance_use)){
+                    $insurance = "Không sử dụng bảo hiểm";
+                }else if($item->insurance_use == 'yes' && is_null($item->member_family_id)){
+                    $insurance = Auth::user()->insurance_id;
+                }else if($item->insurance_use == 'yes' && $item->member_family_id !== null){
+                    $insurance = $item->insurance_family_id;
+                }
+
                 $user = User::find($item->user_id);
+
+                $familyMember = FamilyManagement::find($item->member_family_id)->name ?? '';
+                if(is_null($item->member_family_id)){
+                    $bookingFor = 'Bản thân: ' . $user->last_name . " " . $user->name;
+                }else{
+                    $bookingFor = 'Người nhà: ' . $familyMember;
+                }
+
                 $district = District::find($user->district_id)->full_name??'';
                 $province = Province::find($user->province_id)->full_name??'';
                 $communes = Commune::find($user->commune_id)->full_name??'';
@@ -834,6 +851,8 @@ class HomeController extends Controller
                 $item->doctor_name = $user->name ?? '';
                 $item->address = $detail_address.', '.$communes.', '.$district.', '.$province;
                 $item->phone = $user->phone??'';
+                $item->booking_for = $bookingFor;
+                $item->insurance = $insurance;
             }
             return Excel::download(new BookingDoctorExport($bookings), 'lichsukham.xlsx');
         } else {
@@ -898,7 +917,24 @@ class HomeController extends Controller
         if ($request->excel == 2) {
             $bookings = $query->orderBy('bookings.created_at','desc')->get();
             foreach ($bookings as $item) {
+                $insurance = '';
+                if($item->insurance_use == 'no' || is_null($item->insurance_use)){
+                    $insurance = "Không sử dụng bảo hiểm";
+                }else if($item->insurance_use == 'yes' && is_null($item->member_family_id)){
+                    $insurance = Auth::user()->insurance_id;
+                }else if($item->insurance_use == 'yes' && $item->member_family_id !== null){
+                    $insurance = $item->insurance_family_id;
+                }
+
                 $user = User::find($item->user_id);
+
+                $familyMember = FamilyManagement::find($item->member_family_id)->name ?? '';
+                if(is_null($item->member_family_id)){
+                    $bookingFor = 'Bản thân: ' . $user->last_name . " " . $user->name;
+                }else{
+                    $bookingFor = 'Người nhà: ' . $familyMember;
+                }
+
                 $district = District::find($user->district_id)->full_name??'';
                 $province = Province::find($user->province_id)->full_name??'';
                 $communes = Commune::find($user->commune_id)->full_name??'';
@@ -909,6 +945,8 @@ class HomeController extends Controller
                 $item->doctor_name = $user->name ?? '';
                 $item->address = $detail_address.', '.$communes.', '.$district.', '.$province;
                 $item->phone =$user->phone??'';
+                $item->booking_for = $bookingFor;
+                $item->insurance = $insurance;
             }
             return Excel::download(new BookingDoctorExport($bookings), 'lichsukham.xlsx');
         } else {
