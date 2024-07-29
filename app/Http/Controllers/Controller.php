@@ -212,4 +212,65 @@ class Controller extends BaseController
 //
 //        return $response;
 //    }
+
+    /**
+     * get access token kiot viet
+     */
+    public function getAccessToken()
+    {
+        $clientId = '2cd3a49a-f72b-4e5d-b76a-c0d9974245d1';
+        $clientSecret = 'CDA7ACE97648A59020FA3E2C80CF5B5432277897';
+        $endpoint = 'https://id.kiotviet.vn/connect/token';
+
+        $response = Http::asForm()->post($endpoint, [
+            'grant_type' => 'client_credentials',
+            'client_id' => $clientId,
+            'client_secret' => $clientSecret,
+            'scope' => 'PublicApi.Access',
+        ]);
+
+        $data = $response->json();
+
+        return $data['access_token'];
+    }
+
+    /**
+     * get hàng hóa kiot viet
+     */
+    public function getGoodsKiotViet($token)
+    {
+        $accessToken = $token;
+        $endpoint = 'https://public.kiotapi.com/categories';
+        $queryParameters = [
+            'pageSize' => 100,
+        ];
+
+        $endpoint .= '?' . http_build_query($queryParameters);
+        $response = Http::withHeaders([
+            'Retailer' => 'medi',
+            'Authorization' => 'Bearer ' . $accessToken,
+        ])->get($endpoint);
+
+        $data = $response->json();
+
+        return $data;
+    }
+
+    /**
+     * get chi tiết san pham kiot viet
+     */
+    public function getProductsKiotViet($token, $id)
+    {
+        $accessToken = $token;
+        $endpoint = 'https://public.kiotapi.com/products/' . $id;
+        $response = Http::withHeaders([
+            'Retailer' => 'medi',
+            'Authorization' => 'Bearer ' . $accessToken,
+        ])->get($endpoint);
+
+        $data = $response->json();
+
+        return $data;
+    }
+
 }

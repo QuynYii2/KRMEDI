@@ -10,7 +10,11 @@ use App\Models\DrugIngredients;
 use App\Models\online_medicine\CategoryProduct;
 use App\Models\online_medicine\ProductMedicine;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class BackendProductMedicineController extends Controller
 {
@@ -238,32 +242,49 @@ class BackendProductMedicineController extends Controller
             $params['brand_name'] = $translate->translateText($params['brand_name'], 'vi');
             $params['brand_name_en'] = $translate->translateText($params['brand_name'], 'en');
             $params['brand_name_laos'] = $translate->translateText($params['brand_name'], 'lo');
-            //check thumbnail not null
-            if (!$request->hasFile('thumbnail')) {
-                return response('Ảnh đại diện không được để trống', 400);
-            }
-
-            //check gallery not null
-            if (!$request->hasFile('gallery')) {
-                return response('Ảnh chi tiết không được để trống', 400);
-            }
 
             if ($request->hasFile('thumbnail')) {
                 $item = $request->file('thumbnail');
                 $itemPath = $item->store('product_medicine', 'public');
                 $thumbnail = asset('storage/' . $itemPath);
                 $params['thumbnail'] = $thumbnail;
+            }elseif ($request->input('thumbnail')) {
+                $thumbnailUrl = $request->input('thumbnail');
+                $thumbnailContents = file_get_contents($thumbnailUrl);
+                $thumbnailName = 'product_medicine/' . Str::random(40) . '.jpg';
+                Storage::disk('public')->put($thumbnailName, $thumbnailContents);
+                $thumbnail = asset('storage/' . $thumbnailName);
+                $params['thumbnail'] = $thumbnail;
+            } else {
+                return response('Ảnh đại diện không được để trống', 400);
             }
 
+            $galleryPaths = [];
+
             if ($request->hasFile('gallery')) {
-                $galleryPaths = array_map(function ($image) {
+                foreach ($request->file('gallery') as $image) {
                     $itemPath = $image->store('gallery', 'public');
-                    return asset('storage/' . $itemPath);
-                }, $request->file('gallery'));
-                $gallery = implode(',', $galleryPaths);
-            } else {
-                $gallery = '';
+                    $galleryPaths[] = asset('storage/' . $itemPath);
+                }
             }
+
+            if ($request->input('existing_images')) {
+                foreach ($request->input('existing_images') as $existingImageUrl) {
+                    $imageContents = file_get_contents($existingImageUrl);
+                    if ($imageContents !== false) {
+                        $imageName = 'gallery/' . Str::random(40) . '.jpg';
+                        Storage::disk('public')->put($imageName, $imageContents);
+                        $galleryPaths[] = asset('storage/' . $imageName);
+                    }
+                }
+            }
+
+            //check gallery not null
+            if (count($galleryPaths)<=0) {
+                return response('Ảnh chi tiết không được để trống', 400);
+            }
+
+            $gallery = implode(',', $galleryPaths);
 
             $productMedicine = new ProductMedicine();
 
@@ -296,5 +317,51 @@ class BackendProductMedicineController extends Controller
         } catch (\Exception $exception) {
             return response((new MainApi())->returnMessage($exception->getMessage()), 400);
         }
+    }
+
+    public function listProductKiotviet(Request $request)
+    {
+        $token = $this->getAccessToken();
+        $category = $this->getGoodsKiotViet($token);
+        $categories = $category['data'];
+        $endpoint = 'https://public.kiotapi.com/products';
+        $pageSize = 20;
+        $currentPage  = $request->page??1;
+        $currentItem = ($currentPage - 1) * $pageSize;
+        $Category_id = $request->id_category??'';
+        $response = Http::withHeaders([
+            'Retailer' => 'medi',
+            'Authorization' => 'Bearer ' . $token,
+        ])->get($endpoint,[
+            'pageSize' => $pageSize,
+            'currentItem' => $currentItem,
+            'categoryId' => $Category_id,
+        ]);
+
+        $products  = $response->json();
+        $totalItems = $products['total'];
+        $paginator = collect($products['data']);
+        $paginator = new LengthAwarePaginator(
+            $paginator,
+            $totalItems,
+            $pageSize,
+            $currentPage,
+            ['path' => url()->current(), 'query' => $request->except('page')]
+        );
+
+        return view('admin.product_medicine.index-kiotviet', compact( 'paginator','categories','Category_id'));
+    }
+
+    public function createProductKiotViet($id)
+    {
+        $token = $this->getAccessToken();
+        $data = $this->getProductsKiotViet($token,$id);
+        $categoryProductMedicine = CategoryProduct::where('status', 1)->get();
+        $reflector = new \ReflectionClass('App\Enums\online_medicine\ShapeProduct');
+        $shapes = $reflector->getConstants();
+        $reflector = new \ReflectionClass('App\Enums\online_medicine\UnitQuantityProduct');
+        $unit_quantity = $reflector->getConstants();
+
+        return view('admin.product_medicine.create-kiotviet', compact('categoryProductMedicine','data','unit_quantity','shapes'));
     }
 }

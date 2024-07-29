@@ -44,6 +44,8 @@ Route::group(['prefix' => 'product-medicine'], function () {
     Route::get('create', [BackendProductMedicineController::class, 'create'])->name('api.backend.product-medicine.create');
     Route::post('store', [BackendProductMedicineController::class, 'store'])->name('api.backend.product-medicine.store');
     Route::post('destroy/{id}', [BackendProductMedicineController::class, 'destroy'])->name('api.backend.product-medicine.destroy');
+    Route::get('list-kiotviet', [BackendProductMedicineController::class, 'listProductKiotviet'])->name('api.backend.list-product-kiotviet');
+    Route::get('create-product-kiot-viet/{id}', [BackendProductMedicineController::class, 'createProductKiotViet'])->name('api.backend.create-product-kiot-viet');
 });
 
 Route::group(['prefix' => 'category-product'], function () {
@@ -53,6 +55,7 @@ Route::group(['prefix' => 'category-product'], function () {
     Route::get('create', [BackendCategoryProductController::class, 'create'])->name('api.backend.category-product.create');
     Route::post('store', [BackendCategoryProductController::class, 'store'])->name('api.backend.category-product.store');
     Route::post('destroy/{id}', [BackendCategoryProductController::class, 'destroy'])->name('api.backend.category-product.destroy');
+    Route::get('list-kiotviet', [BackendCategoryProductController::class, 'listCategoryKiotviet'])->name('api.backend.list-category-kiotviet');
 });
 
 Route::group(['prefix' => 'service-clinic-pharmacy'], function () {
