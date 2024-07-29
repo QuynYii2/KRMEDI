@@ -148,7 +148,7 @@ class BackendCategoryProductController extends Controller
 
         foreach ($categories as $item){
             $category = CategoryProduct::where('name',$item['categoryName'])->get();
-            if (empty($category)){
+            if (count($category)<0){
                 $translate = new TranslateController();
                 $cate = new CategoryProduct();
                 $cate->name_en = $translate->translateText($item['categoryName'], 'en');

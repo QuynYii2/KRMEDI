@@ -212,7 +212,7 @@
 
             <div class="mt-3">
                 <h5>Danh sách đơn thuốc</h5>
-                @if(count($prescription_product)>0)
+                @if(isset($prescription_product)&&count($prescription_product)>0)
                 @foreach($prescription_product as $pro)
                     <div class=" d-flex align-items-center justify-content-between border p-3">
                         <div class="prescription-group d-flex align-items-center">
@@ -255,7 +255,20 @@
                     </div>
                 </div>
             </div>
-
+            @if(empty($bookings_edit->prescription_file))
+            <div class="mt-3">
+                <h5>Tải đơn thuốc lên</h5>
+                <input type="file" class="mt-2" name="prescription_file" accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg">
+            </div>
+                @else
+               <div class="mb-3">
+                   <a href="{{ asset($bookings_edit->prescription_file) }}"
+                      class="btn btn-success"
+                      download>
+                       Tải xuống đơn thuốc dạng PDF
+                   </a>
+               </div>
+@endif
 
             @if(!$isDoctor)
             <input type="text" name="services" id="services" class="form-control d-none">
