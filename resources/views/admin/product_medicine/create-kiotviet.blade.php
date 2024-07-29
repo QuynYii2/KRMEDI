@@ -138,7 +138,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <label for="quantity">{{ __('home.Quantity') }}</label>
-                    <input type="number" class="form-control" id="quantity" name="quantity" min="0" value="{{@$data['inventories'][0]->onHand}}">
+                    <input type="number" class="form-control" id="quantity" name="quantity" min="0" value="{{@$data['inventories'][0]['onHand']}}">
                 </div>
                 <div class="col-md-4">
                     <label for="unit_quantity">Unit Quantity</label>

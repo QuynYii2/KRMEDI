@@ -153,10 +153,14 @@
                         <div id="list-service-result-don-thuoc">
 
                         </div>
-                        <button type="button" class="btn btn-outline-primary mt-3 btn-add-medicine">Tạo đơn
-                        </button>
+                            <button type="button" class="btn btn-outline-primary mt-3 btn-add-medicine">Tạo đơn
+                            </button>
                     </div>
                 </div>
+            </div>
+            <div class="mt-3">
+                <h5>Tải đơn thuốc lên</h5>
+                <input type="file" class="mt-2" name="prescription_file" accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg">
             </div>
 
             <button type="submit" class="btn btn-primary up-date-button mt-4">{{ __('home.Save') }}</button>

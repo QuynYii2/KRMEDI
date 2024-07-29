@@ -23,11 +23,13 @@ use App\Models\SurveyAnswer;
 use App\Models\SurveyAnswerUser;
 use App\Models\SurveyQuestion;
 use App\Models\WishList;
+use Barryvdh\DomPDF\PDF;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\ZaloController;
 use App\Jobs\booking\ChangeBookingStatus;
@@ -35,6 +37,7 @@ use App\Models\User;
 use App\Models\ZaloFollower;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Pusher\Pusher;
 use setasign\Fpdi\Fpdi;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -267,6 +270,30 @@ class BookingController extends Controller
             $is_result = $request->input('is_result');
             if (!$is_result) {
                 $is_result = 0;
+            }
+            if ($request->hasFile('prescription_file')) {
+                $file = $request->file('prescription_file');
+                $extension = $file->getClientOriginalExtension();
+
+                $originalFilePath = 'prescriptions/' . time() . '.' . $extension;
+                Storage::disk('public')->put($originalFilePath, File::get($file));
+
+                if (in_array($extension, ['doc', 'docx', 'xls', 'xlsx', 'png', 'jpg', 'jpeg'])) {
+                    $pdfFileName =  time() . '.pdf';
+                    $pdfPath = 'prescriptions';
+                    $pdfUrl = 'storage/' . $pdfPath . '/' . $pdfFileName;
+                    $pdfFullPath = storage_path('app/public/' . $pdfPath . '/' . $pdfFileName);
+
+                    $pdfContent = $this->convertToPDF(Storage::disk('public')->path($originalFilePath), $extension);
+
+                    Storage::disk('public')->put($pdfPath . '/' . $pdfFileName, $pdfContent);
+
+                    Storage::disk('public')->delete($originalFilePath);
+
+                    $booking->prescription_file = $pdfUrl;
+                } else {
+                    $booking->prescription_file = $originalFilePath;
+                }
             }
 
             $bookingResults = $booking->extend['booking_results'] ?? [];
@@ -513,7 +540,33 @@ class BookingController extends Controller
     {
         try {
             $extend['isReminded'] = 0;
-            $booking = new Booking([
+            $filePath = null;
+            if ($request->hasFile('prescription_file')) {
+                $file = $request->file('prescription_file');
+                $extension = $file->getClientOriginalExtension();
+
+                $originalFilePath = 'prescriptions/' . time() . '.' . $extension;
+                Storage::disk('public')->put($originalFilePath, File::get($file));
+
+                if (in_array($extension, ['doc', 'docx', 'xls', 'xlsx', 'png', 'jpg', 'jpeg'])) {
+                    $pdfFileName =  time() . '.pdf';
+                    $pdfPath = 'prescriptions';
+                    $pdfUrl = 'storage/' . $pdfPath . '/' . $pdfFileName;
+                    $pdfFullPath = storage_path('app/public/' . $pdfPath . '/' . $pdfFileName);
+
+                    $pdfContent = $this->convertToPDF(Storage::disk('public')->path($originalFilePath), $extension);
+
+                    Storage::disk('public')->put($pdfPath . '/' . $pdfFileName, $pdfContent);
+
+                    Storage::disk('public')->delete($originalFilePath);
+
+                    $filePath = $pdfUrl;
+                } else {
+                    $filePath = $originalFilePath;
+                }
+            }
+
+                $booking = new Booking([
                 'user_id' => $request->user_id,
                 'clinic_id' => $request->clinic_id,
                 'department_id' => $request->department_id,
@@ -522,6 +575,7 @@ class BookingController extends Controller
                 'doctor_id'=>$request->doctor_id,
                 'status'=>$request->status,
                 'service'=>3,
+                'prescription_file'=>$filePath,
                 'extend'=>$extend,
             ]);
             $booking->save();
@@ -650,6 +704,35 @@ class BookingController extends Controller
         } catch (\Exception $e) {
             return response(['error' => -1, 'message' => $e->getMessage()], 400);
         }
+    }
+
+    private function convertToPDF($filePath, $extension)
+    {
+        $content = '';
+
+        switch ($extension) {
+            case 'doc':
+            case 'docx':
+            case 'xls':
+            case 'xlsx':
+            $spreadsheet = IOFactory::load($filePath);
+            $writer = IOFactory::createWriter($spreadsheet, 'Html');
+            ob_start();
+            $writer->save('php://output');
+            $content = ob_get_clean();
+            break;
+            case 'png':
+            case 'jpg':
+            case 'jpeg':
+                $image = file_get_contents($filePath);
+                $base64Image = base64_encode($image);
+                $content = "<img src='data:image/{$extension};base64,{$base64Image}' />";
+                break;
+        }
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($content);
+
+        return $pdf->output();
     }
 
     public function sendMessageToUserOnBookingCreated($booking)
