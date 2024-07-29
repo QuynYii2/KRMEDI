@@ -9,6 +9,7 @@
     <!-- Page Heading -->
     <h1 class="h3 mb-4 text-gray-800">{{ __('home.List Category product') }}</h1>
     <a href="{{ route('api.backend.category-product.create') }}" class="btn btn-primary mb-3">{{ __('home.Add') }}</a>
+    <a href="{{ route('api.backend.list-category-kiotviet') }}" class="btn btn-success mb-3 ml-3">Lấy danh mục KiotViet về</a>
     @if (session('success'))
         <div class="alert alert-success border-left-success alert-dismissible fade show" role="alert">
             {{ session('success') }}

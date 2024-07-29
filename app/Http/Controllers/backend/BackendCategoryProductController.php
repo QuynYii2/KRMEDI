@@ -139,4 +139,25 @@ class BackendCategoryProductController extends Controller
             return response('Thêm danh mục thất bại', 400);
         }
     }
+
+    public function listCategoryKiotviet()
+    {
+        $token = $this->getAccessToken();
+        $data = $this->getGoodsKiotViet($token);
+        $categories = $data['data'];
+
+        foreach ($categories as $item){
+            $category = CategoryProduct::where('name',$item['categoryName'])->get();
+            if (empty($category)){
+                $translate = new TranslateController();
+                $cate = new CategoryProduct();
+                $cate->name_en = $translate->translateText($item['categoryName'], 'en');
+                $cate->name_laos = $translate->translateText($item['categoryName'], 'lo');
+                $cate->name = $item['categoryName'];
+                $cate->save();
+            }
+        }
+
+        return redirect()->back()->with(['success'=>'Lấy danh mục bên KiotViet về thành công']);
+    }
 }
