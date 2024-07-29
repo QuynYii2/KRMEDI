@@ -86,6 +86,7 @@ class PrescriptionResultController extends Controller
         $name_search = $request->input('name_search');
         $drug_ingredient_search = $request->input('drug_ingredient_search');
         $object_search = $request->input('object_search');
+        $clinic_search = $request->input('clinic_search');
 
         $clinicQuery = DB::table('clinics as c1')
             ->select('c1.user_id', DB::raw('MIN(c1.id) as min_id'))
@@ -95,10 +96,12 @@ class PrescriptionResultController extends Controller
                 $join->on('product_medicines.user_id', '=', 'first_clinic.user_id');
             })
             ->leftJoin('clinics as c2', 'first_clinic.min_id', '=', 'c2.id')
+            ->leftJoin('users', 'product_medicines.user_id', '=', 'users.id')
             ->select(
                 'product_medicines.*',
                 'c2.latitude',
-                'c2.longitude'
+                'c2.longitude',
+                'users.detail_address as detail_address'
         );
 
         if ($drug_ingredient_search) {
@@ -107,11 +110,15 @@ class PrescriptionResultController extends Controller
         }
 
         if ($name_search) {
-            $listMedicine = $listMedicine->where('name', 'like', '%' . $name_search . '%');
+            $listMedicine = $listMedicine->where('product_medicines.name', 'like', '%' . $name_search . '%');
         }
 
         if ($object_search) {
             $listMedicine = $listMedicine->where('object_', $object_search);
+        }
+
+        if ($clinic_search) {
+            $listMedicine = $listMedicine->where('users.name', 'like', '%' . $clinic_search . '%');
         }
 
         $listMedicine = $listMedicine->get();
@@ -128,7 +135,7 @@ class PrescriptionResultController extends Controller
 
         $value_result = $prescription->prescriptions;
         $array_result = json_decode($value_result, true);
-        
+
         return view('ui.prescription-results.detail', compact('array_result', 'prescription'));
     }
 

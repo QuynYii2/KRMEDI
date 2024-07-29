@@ -32,6 +32,8 @@ class BookingDoctorExport implements FromCollection, WithHeadings
                 $item->check_in,
                 $item->department??'',
                 $item->doctor_name,
+                $item->booking_for,
+                $item->insurance,
                 $item->status,
             ];
             array_push($arr, $myArr);
@@ -41,6 +43,6 @@ class BookingDoctorExport implements FromCollection, WithHeadings
 
     public function headings(): array
     {
-        return ["STT","Người đăng ký","SĐT người đăng ký","Địa chỉ người đăng ký", "Phòng khám", "Giờ vào khám", "Phòng","Tên bác sĩ", "Trạng thái"];
+        return ["STT","Người đăng ký","SĐT người đăng ký","Địa chỉ người đăng ký", "Phòng khám", "Giờ vào khám", "Phòng","Tên bác sĩ", "Đặt khám cho", "Bảo hiểm", "Trạng thái"];
     }
 }
