@@ -286,27 +286,39 @@ class BackendProductMedicineController extends Controller
 
             $gallery = implode(',', $galleryPaths);
 
-            $productMedicine = new ProductMedicine();
+            $id_kiotviet = null;
+            if ($request->get('id_kiotviet')) {
+                $id_kiotviet = $request->get('id_kiotviet');
+            }
+            $dataProduct = ProductMedicine::where('user_id',$request->input('user_id'))->where('id_kiotviet',$id_kiotviet)->first();
+            if (isset($dataProduct)){
+                $dataProduct->quantity = $request->get('quantity');
+                $dataProduct->save();
+                $success = true;
+            }else{
+                $productMedicine = new ProductMedicine();
 
-            $productMedicine->gallery = $gallery;
-            $productMedicine->user_id = $request->input('user_id');
-            $productMedicine->type_product = $request->type_product;
+                $productMedicine->gallery = $gallery;
+                $productMedicine->user_id = $request->input('user_id');
+                $productMedicine->type_product = $request->type_product;
+                $productMedicine->id_kiotviet = $id_kiotviet;
 
-            $is_prescription = (bool)$request->input('is_prescription');
+                $is_prescription = (bool)$request->input('is_prescription');
 
-            $params['status'] = OnlineMedicineStatus::PENDING;
-            $params['is_prescription'] = $is_prescription;
+                $params['status'] = OnlineMedicineStatus::PENDING;
+                $params['is_prescription'] = $is_prescription;
 
-            $productMedicine->fill($params);
+                $productMedicine->fill($params);
 
-            $success = $productMedicine->save();
+                $success = $productMedicine->save();
 
-            if ($success) {
-                $drugIngredient = new DrugIngredients();
-                $drugIngredient->product_id = $productMedicine->id;
-                $drugIngredient->component_name = $request->input('ingredient');
+                if ($success) {
+                    $drugIngredient = new DrugIngredients();
+                    $drugIngredient->product_id = $productMedicine->id;
+                    $drugIngredient->component_name = $request->input('ingredient');
 
-                $success = $drugIngredient->save();
+                    $success = $drugIngredient->save();
+                }
             }
 
             if ($success) {

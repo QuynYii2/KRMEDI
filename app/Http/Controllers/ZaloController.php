@@ -147,7 +147,7 @@ class ZaloController extends Controller
     public function getToken(Request $request)
     {
         $code = $request->input('code');
-        $array_token = $this->getAccessToken($code);
+        $array_token = $this->getAccessTokenZalo($code);
         $dataToken = null;
         if ($array_token['status'] == 200) {
             $dataToken = $array_token['data'];
@@ -361,7 +361,7 @@ class ZaloController extends Controller
         return $url . $app_id_url . $redirect_url;
     }
 
-    private function getAccessToken($code)
+    private function getAccessTokenZalo($code)
     {
         try {
             $client = new Client();
