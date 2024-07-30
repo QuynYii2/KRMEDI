@@ -202,6 +202,13 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="col-sm-4">
+                            <div class="form-group position-relative">
+                                <label for="inputSearchClinic" class="form-control-feedback"></label>
+                                <input type="search" id="inputSearchClinic" class="form-control handleSearchMedicine"
+                                       placeholder="Tìm kiếm theo nhà thuốc">
+                            </div>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-body find-my-medicine-2">
@@ -748,10 +755,11 @@
             let inputNameMedicine_Search = $('#inputSearchNameMedicine').val().toLowerCase();
             let inputDrugIngredient_Search = $('#inputSearchDrugIngredient').val().toLowerCase();
             let object_search = $('#object_search').val().toLowerCase();
+            let clinic_Search = $('#inputSearchClinic').val().toLowerCase();
 
             let url = '{{ route('view.prescription.result.get-medicine') }}'
             url = url +
-                `?name_search=${inputNameMedicine_Search}&drug_ingredient_search=${inputDrugIngredient_Search}&object_search=${object_search}`;
+                `?name_search=${inputNameMedicine_Search}&drug_ingredient_search=${inputDrugIngredient_Search}&object_search=${object_search}&clinic_search=${clinic_Search}`;
 
             $.ajax({
                 url: url,
