@@ -357,7 +357,12 @@ class CheckoutApi extends Controller
                 return response()->json(['status' => false, 'message' => 'Đơn hàng không tồn tại'], 400);
             }
 
-            $order->status = $request->status;
+            if ($order->status == "ACCEPTED" && $request->status == "ASSIGNING"){
+                $order->status = "ACCEPTED";
+            } else {
+                $order->status = $request->status;
+            }
+
             $order->save();
 
             if ($request->status == "ACCEPTED") {
