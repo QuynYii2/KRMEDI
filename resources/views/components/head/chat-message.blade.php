@@ -2292,7 +2292,7 @@
             sortedMedicines.forEach((medicine) => {
                 let url = '{{ route('medicine.detail', ':id') }}';
                 url = url.replace(':id', medicine.id);
-console.log(medicine);
+
                 html += `<div class="col-sm-6 col-xl-4 mb-3 col-6 find-my-medicine-2">
                                 <div class="m-md-2 ">
                                     <div class="frame component-medicine w-100">
