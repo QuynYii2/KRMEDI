@@ -285,7 +285,7 @@
             class="btn btn-primary up-date-button mt-md-4">{{ __('home.Save') }}</button>
     <script>
         function submitForm() {
-            loadingMasterPage();
+            // loadingMasterPage();
             const headers = {
                 'Authorization': `Bearer ${token}`
             };

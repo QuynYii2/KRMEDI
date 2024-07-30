@@ -24,6 +24,7 @@
                     <label for="name">{{ __('home.Name') }}</label>
                     <input type="text" class="form-control" id="name" name="name" value="{{@$data['fullName']}}">
                 </div>
+                <input type="text" class="form-control" id="id_kiotviet" name="id_kiotviet" value="{{@$data['id']}}" hidden>
             </div>
             <div class="form-group">
                 <label for="short_description">Short Description</label>
@@ -232,7 +233,7 @@
         });
 
         function submitForm() {
-            loadingMasterPage();
+            // loadingMasterPage();
             const headers = {
                 'Authorization': `Bearer ${token}`
             };
@@ -331,34 +332,39 @@
             formData.append('_token', '{{ csrf_token() }}');
             formData.append('proved_by', '{{ Auth::user()->id }}');
             formData.append('type_product', active_type);
+            let idKiotvietElement = document.getElementById('id_kiotviet');
+            let idKiotvietValue = idKiotvietElement ? idKiotvietElement.value : null;
+            formData.append('id_kiotviet', idKiotvietValue);
 
             if (!isValid) {
                 alert('Please check input empty!');
                 return;
             }
 
-            try {
-                $.ajax({
-                    url: `{{route('api.backend.product-medicine.store')}}`,
-                    method: 'POST',
-                    headers: headers,
-                    contentType: false,
-                    cache: false,
-                    processData: false,
-                    data: formData,
-                    success: function (data) {
-                        alert(data.message);
-                        loadingMasterPage();
-                        window.location.href = `{{route('api.backend.product-medicine.index')}}`;
-                    },
-                    error: function (exception) {
-                        alert(exception.responseText);
-                        loadingMasterPage();
-                    }
-                });
-            } catch (error) {
-                loadingMasterPage();
-                throw error;
+            if (isValid){
+                try {
+                    $.ajax({
+                        url: `{{route('api.backend.product-medicine.store')}}`,
+                        method: 'POST',
+                        headers: headers,
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        data: formData,
+                        success: function (data) {
+                            alert(data.message);
+                            loadingMasterPage();
+                            window.location.href = `{{route('api.backend.product-medicine.index')}}`;
+                        },
+                        error: function (exception) {
+                            alert(exception.responseText);
+                            loadingMasterPage();
+                        }
+                    });
+                } catch (error) {
+                    loadingMasterPage();
+                    throw error;
+                }
             }
         }
     </script>

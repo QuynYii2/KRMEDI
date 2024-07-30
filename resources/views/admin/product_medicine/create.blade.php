@@ -196,7 +196,7 @@
             class="btn btn-primary up-date-button mt-md-4">{{ __('home.Save') }}</button>
     <script>
         function submitForm() {
-            loadingMasterPage();
+            // loadingMasterPage();
             const headers = {
                 'Authorization': `Bearer ${token}`
             };
@@ -290,28 +290,30 @@
                 return;
             }
 
-            try {
-                $.ajax({
-                    url: `{{route('api.backend.product-medicine.store')}}`,
-                    method: 'POST',
-                    headers: headers,
-                    contentType: false,
-                    cache: false,
-                    processData: false,
-                    data: formData,
-                    success: function (data) {
-                        alert(data.message);
-                        loadingMasterPage();
-                        window.location.href = `{{route('api.backend.product-medicine.index')}}`;
-                    },
-                    error: function (exception) {
-                        alert(exception.responseText);
-                        loadingMasterPage();
-                    }
-                });
-            } catch (error) {
-                loadingMasterPage();
-                throw error;
+            if (isValid){
+                try {
+                    $.ajax({
+                        url: `{{route('api.backend.product-medicine.store')}}`,
+                        method: 'POST',
+                        headers: headers,
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        data: formData,
+                        success: function (data) {
+                            alert(data.message);
+                            loadingMasterPage();
+                            window.location.href = `{{route('api.backend.product-medicine.index')}}`;
+                        },
+                        error: function (exception) {
+                            alert(exception.responseText);
+                            loadingMasterPage();
+                        }
+                    });
+                } catch (error) {
+                    loadingMasterPage();
+                    throw error;
+                }
             }
         }
     </script>
