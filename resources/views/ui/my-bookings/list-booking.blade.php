@@ -51,8 +51,16 @@
             </div>
         </div>
     </div>
-    <div class="d-flex align-items-center justify-content-between mb-3">
-        <div class="d-flex align-items-center">
+    <div class="d-flex align-items-end justify-content-between mb-3">
+        <div class="d-flex align-items-end">
+            <div class="mr-3">
+                <lable>Bảo hiểm</lable>
+                <select class="form-select w-100" name="insurance" >
+                    <option class="bg-white" value="">--Trạng thái--</option>
+                    <option class="bg-white" @if(request()->get('insurance') == 'yes') selected @endif value="yes">Có</option>
+                    <option class="bg-white" @if(request()->get('insurance') == 'no') selected @endif value="no">Không</option>
+                </select>
+            </div>
             <button type="submit" class="btn btn-warning mr-3" name="excel" value="1">Tìm kiếm</button>
             <a href="{{route('web.users.my.bookings.list')}}" class="btn btn-dark">Làm mới</a>
         </div>
