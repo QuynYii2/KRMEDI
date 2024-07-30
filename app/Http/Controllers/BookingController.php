@@ -41,6 +41,8 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use Pusher\Pusher;
 use setasign\Fpdi\Fpdi;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use PhpOffice\PhpSpreadsheet\IOFactory as SpreadsheetIOFactory;
+use PhpOffice\PhpSpreadsheet\Writer\Html as HtmlWriter;
 
 class BookingController extends Controller
 {
@@ -713,14 +715,22 @@ class BookingController extends Controller
         switch ($extension) {
             case 'doc':
             case 'docx':
+                $phpWord = \PhpOffice\PhpWord\IOFactory::load($filePath);
+                $htmlWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'HTML');
+                ob_start();
+                $htmlWriter->save('php://output');
+                $content = ob_get_clean();
+                break;
+
             case 'xls':
             case 'xlsx':
-            $spreadsheet = IOFactory::load($filePath);
-            $writer = IOFactory::createWriter($spreadsheet, 'Html');
-            ob_start();
-            $writer->save('php://output');
-            $content = ob_get_clean();
-            break;
+                $spreadsheet = SpreadsheetIOFactory::load($filePath);
+                $htmlWriter = new HtmlWriter($spreadsheet);
+                ob_start();
+                $htmlWriter->save('php://output');
+                $content = ob_get_clean();
+                break;
+
             case 'png':
             case 'jpg':
             case 'jpeg':

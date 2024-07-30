@@ -61,8 +61,8 @@
                 </div>
             @endif
         </div>
-        <h5>Danh sách đơn thuốc</h5>
         @if(count($data_product)>0)
+            <h5>Danh sách đơn thuốc</h5>
             <form id="form" action="{{ route('web.users.my.bookings.add-cart', $booking->id) }}" method="post"
                   enctype="multipart/form-data">
                 @csrf
@@ -98,6 +98,15 @@
                 <button type="submit" class="btn btn-primary mt-4">Mua hàng</button>
                 </form>
             <a href="{{route('web.users.my.bookings.prescription-download',$booking->id)}}" class="btn btn-success mt-3">Tải đơn thuốc</a>
+        @endif
+        @if($booking->prescription_file)
+            <div class="mb-3 mt-3">
+                <a href="{{ asset($booking->prescription_file) }}"
+                   class="btn btn-success"
+                   download>
+                    Tải xuống đơn thuốc dạng PDF
+                </a>
+            </div>
         @endif
         <div class="form-group ms-4 mt-4">
             <input disabled class="form-check-input" {{ $booking->is_result == 1 ? 'checked' : '' }} type="checkbox"
