@@ -65,6 +65,10 @@ class MyBookingController extends Controller
             $query->where('bookings.status', $request->input('status'));
         }
 
+        if ($request->filled('insurance')) {
+            $query->where('bookings.insurance_use', $request->input('insurance'));
+        }
+
         if ($request->excel == 2) {
             $bookings = $query->get();
             foreach ($bookings as $item){
