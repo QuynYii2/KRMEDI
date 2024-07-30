@@ -823,16 +823,15 @@ class HomeController extends Controller
         if ($request->excel == 2) {
             $bookings = $query->get();
             foreach ($bookings as $item) {
-                $insurance = '';
+                $user = User::find($item->user_id);
+
                 if($item->insurance_use == 'no' || is_null($item->insurance_use)){
                     $insurance = "Không sử dụng bảo hiểm";
                 }else if($item->insurance_use == 'yes' && is_null($item->member_family_id)){
-                    $insurance = Auth::user()->insurance_id;
+                    $insurance = $user->insurance_id;
                 }else if($item->insurance_use == 'yes' && $item->member_family_id !== null){
                     $insurance = $item->insurance_family_id;
                 }
-
-                $user = User::find($item->user_id);
 
                 $familyMember = FamilyManagement::find($item->member_family_id)->name ?? '';
                 if(is_null($item->member_family_id)){
@@ -917,16 +916,15 @@ class HomeController extends Controller
         if ($request->excel == 2) {
             $bookings = $query->orderBy('bookings.created_at','desc')->get();
             foreach ($bookings as $item) {
-                $insurance = '';
+                $user = User::find($item->user_id);
+
                 if($item->insurance_use == 'no' || is_null($item->insurance_use)){
                     $insurance = "Không sử dụng bảo hiểm";
                 }else if($item->insurance_use == 'yes' && is_null($item->member_family_id)){
-                    $insurance = Auth::user()->insurance_id;
+                    $insurance = $user->insurance_id;
                 }else if($item->insurance_use == 'yes' && $item->member_family_id !== null){
                     $insurance = $item->insurance_family_id;
                 }
-
-                $user = User::find($item->user_id);
 
                 $familyMember = FamilyManagement::find($item->member_family_id)->name ?? '';
                 if(is_null($item->member_family_id)){
