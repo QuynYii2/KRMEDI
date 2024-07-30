@@ -84,6 +84,14 @@
                         @endforeach
                     </select>
                 </div>
+                <div class="col-lg-3 col-md-5 col-12 px-1 line-fillter-user">
+                    <lable>Bảo hiểm</lable>
+                    <select class="form-select w-100" name="insurance" >
+                        <option class="bg-white" value="">--Trạng thái--</option>
+                        <option class="bg-white" @if(request()->get('insurance') == 'yes') selected @endif value="yes">Có</option>
+                        <option class="bg-white" @if(request()->get('insurance') == 'no') selected @endif value="no">Không</option>
+                    </select>
+                </div>
                 <button type="submit" class="btn btn-warning mx-3 text-search-booking" name="excel" value="1">Tìm kiếm</button>
                 @if($role_name->name != 'DOCTORS')
                 <a href="{{route('homeAdmin.list.booking')}}" class="btn btn-dark mr-3">Làm mới</a>

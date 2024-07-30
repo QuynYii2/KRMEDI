@@ -820,6 +820,17 @@ class HomeController extends Controller
             $query->where('bookings.user_id', $request->input('user_id'));
         }
 
+        if ($request->filled('insurance')) {
+            if ($request->input('insurance') == 'no') {
+                $query->where(function ($query) {
+                    $query->where('bookings.insurance_use', 'no')
+                        ->orWhereNull('bookings.insurance_use');
+                });
+            } else {
+                $query->where('bookings.insurance_use', $request->input('insurance'));
+            }
+        }
+
         if ($request->excel == 2) {
             $bookings = $query->get();
             foreach ($bookings as $item) {
