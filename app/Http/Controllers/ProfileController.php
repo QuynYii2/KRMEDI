@@ -251,6 +251,19 @@ class ProfileController extends Controller
             $img = asset('storage/' . $itemPath);
             $user->avt = $img;
         }
+        if ($request->hasFile('health_insurance_front')) {
+            $item = $request->file('health_insurance_front');
+            $itemPath = $item->store('license', 'public');
+            $health_insurance_front = asset('storage/' . $itemPath);
+            $user->health_insurance_front = $health_insurance_front;
+        }
+        if ($request->hasFile('health_insurance_back')) {
+            $item = $request->file('health_insurance_back');
+            $itemPath = $item->store('license', 'public');
+            $health_insurance_back = asset('storage/' . $itemPath);
+            $user->health_insurance_back = $health_insurance_back;
+        }
+        $user->date_health_insurance = $request->input('date_health_insurance');
         $user->created_by = $request->input('created_by');
         $user->updated_by = Auth::user()->id;
         $user->department_id = $request->input('department_id');
