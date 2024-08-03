@@ -525,7 +525,7 @@
 
                                     <div class="col-sm-4">
                                         <label for="insurance_id">Hạn BHXH</label>
-                                        <input class="form-control" type="date" value="{{ \Carbon\Carbon::parse($doctor->date_health_insurance)->format('Y-m-d') }}" name="date_health_insurance" id="date_health_insurance">
+                                        <input class="form-control" type="date" value="{{ $doctor->date_health_insurance ? \Carbon\Carbon::parse($doctor->date_health_insurance)->format('Y-m-d') : '' }}" name="date_health_insurance" id="date_health_insurance">
                                     </div>
                                 </div>
                             @endif
