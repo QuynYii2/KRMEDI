@@ -342,15 +342,16 @@
             <div class="select-service d-flex align-items-center">
                 <div class="mr-4">Sử dụng bảo hiểm y tế: </div>
                 <div id="select-insurance">
-                    <input class="m-0 inputBookingFor" id="insurance_yes" style="width: 20px;height: 20px;" type="radio" name="insurance_use" value="yes" checked>
+                    <input class="m-0 inputBookingFor" id="insurance_yes" style="width: 20px;height: 20px;" type="radio" name="insurance_use" value="yes" onclick="checkDataFullFill()" checked>
                     <label for="yes" style="font-size: 18px">Có</label>
-                    <input class="m-0 inputBookingFor" id="insurance_no" style="width: 20px;height: 20px;" type="radio" name="insurance_use" value="no">
+                    <input class="m-0 inputBookingFor" id="insurance_no" style="width: 20px;height: 20px;" type="radio" name="insurance_use" value="no" onclick="checkDataFullFill()">
                     <label for="no" style="font-size: 18px">Không</label>
                 </div>
             </div>
             <div class="form-group insurance_your_self mt-1">
                 <div>Mã bảo hiểm y tế: (cập nhật mã bảo hiểm <a href="{{route('profile')}}">tại đây</a>)</div>
-                <input type="text" class="form-control" name="insurance_your_self" value="{{ Auth::user()->insurance_id }}" disabled/>
+                <input type="text" class="form-control" id="insurance_your_selfs" name="insurance_your_self" value="{{ Auth::user()->insurance_id }}" disabled/>
+                <input type="text" class="form-control" id="insurance_dates" name="insurance_date" value="{{ Auth::user()->date_health_insurance }}" hidden/>
             </div>
             <div class="form-group insurance_family mt-1">
                 <div>Mã bảo hiểm y tế của người thân: </div>
@@ -596,9 +597,27 @@
             const submitButton = $('.button-apply-booking');
             var checkIn = $('#checkInTime').val();
             var checkOut = $('#checkOutTime').val();
+            var insuranceUse = $('input[name="insurance_use"]:checked').val();
+            var insuranceId = $('#insurance_your_selfs').val();
+            var insuranceDate = $('#insurance_dates').val();
+            var currentDate = new Date().toISOString().split('T')[0];
+            var insuranceDateObj = insuranceDate ? new Date(insuranceDate) : null;
+            var currentDateObj = new Date(currentDate);
             // var memberFamily = $('#member_family_id').val();
             // var department = $('#department_id').val();
             if (checkIn && checkOut) {
+                if (insuranceUse === 'yes') {
+                    if (!insuranceId) {
+                        submitButton.text('Vui lòng nhập bảo hiểm y tế');
+                        submitButton.attr("disabled", true);
+                        return;
+                    }
+                    if (insuranceDateObj && insuranceDateObj < currentDateObj) {
+                        submitButton.text('Bảo hiểm y tế đã hết hạn');
+                        submitButton.attr("disabled", true);
+                        return;
+                    }
+                }
                 // All values are not null or undefined
                 submitButton.text('Đặt lịch ngay');
                 submitButton.attr("disabled", false);

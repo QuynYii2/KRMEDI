@@ -512,6 +512,24 @@
                                 @endif
                             </div>
 
+                            @if (Auth::user()->type == 'NORMAL')
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label for="insurance_id">Mặt trước BHYT</label>
+                                        <input class="form-control" type="file" name="health_insurance_front" id="health_insurance_front">
+                                    </div>
+                                <div class="col-sm-4">
+                                    <label for="insurance_id">Mặt sau BHYT</label>
+                                    <input class="form-control" type="file" name="health_insurance_back" id="health_insurance_back">
+                                </div>
+
+                                    <div class="col-sm-4">
+                                        <label for="insurance_id">Hạn BHXH</label>
+                                        <input class="form-control" type="date" value="{{ \Carbon\Carbon::parse($doctor->date_health_insurance)->format('Y-m-d') }}" name="date_health_insurance" id="date_health_insurance">
+                                    </div>
+                                </div>
+                            @endif
+
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group focused">
