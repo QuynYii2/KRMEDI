@@ -17,7 +17,7 @@ class FamilyManagementController extends Controller
     public function index()
     {
         $family_members = FamilyManagement::where('user_id', auth()->user()->id)->get();
-
+        session()->forget('previous_url');
         return view('admin.family_management.index', compact('family_members'));
     }
 
