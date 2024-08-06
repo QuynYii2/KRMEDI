@@ -319,7 +319,7 @@
                                 {{ \App\Enums\RelationshipFamily::getLabels()[$memberFamily->relationship] ?? $memberFamily->relationship }}
                             </div>
                             <input style="right: 0" class="position-absolute top-0 m-2 family-member-check" type="radio"
-                                name="member_family_id" id="{{ $memberFamily->id }}" value="{{ $memberFamily->id }}"
+                                name="member_family_child_id" id="{{ $memberFamily->id }}" value="{{ $memberFamily->id }}"
                                    data-insurance-id="{{ $memberFamily->insurance_id }}" data-insurance-date="{{$memberFamily->insurance_date}}"
                                    onchange="updateCheckedMember()" onclick="checkDataFullFill()">
 
@@ -367,11 +367,13 @@
                 <div>Mã bảo hiểm y tế: (cập nhật mã bảo hiểm <a href="{{ route('profile', ['clinic_id' => $clinicDetail->id]) }}">tại đây</a>)</div>
                 <input type="text" class="form-control" id="insurance_your_selfs" name="insurance_your_self" value="{{ Auth::user()->insurance_id }}" disabled/>
                 <input type="text" class="form-control" id="insurance_dates" name="insurance_date" value="{{ Auth::user()->date_health_insurance }}" hidden/>
+                <input type="text" class="form-control" name="insurance_your_self_hidden" value="{{ Auth::user()->insurance_id }}" hidden/>
             </div>
             <div class="form-group insurance_family mt-1">
                 <div>Mã bảo hiểm y tế: (cập nhật mã bảo hiểm <a id="updateCheckedMember" href="#" onclick="validateSelectMember(event)">tại đây</a>)</div>
                 <input type="text" class="form-control" name="insurance_family" id="insuranceFamilyIDInput" value="" disabled/>
                 <input type="text" class="form-control" name="insurance_date" id="insuranceFamilyDateInput"  value="" hidden/>
+                <input type="text" class="form-control" name="insurance_family_hidden" id="insurance_family_hidden"  value="" hidden/>
             </div>
 
             <div>
@@ -515,6 +517,7 @@
                         var button = $("<button>")
                             .addClass("btn btn-outline-primary")
                             .attr("type", "button")
+                            .attr("data-date", workingHour)
                             .css({
                                 'margin-right': '7px',
                                 'margin-bottom': '5px'
@@ -581,6 +584,94 @@
                     })();
                 }
                 checkDataFullFill();
+                document.getElementById('bookingHospitalForm').addEventListener('change', function() {
+                    const formData = new FormData(this);
+                    const data = {};
+                    const services = [];
+                    formData.forEach((value, key) => {
+                        if (key === 'service[]') {
+                            services.push(value);
+                        } else {
+                            data[key] = value;
+                        }
+                    });
+                    if (services.length > 0) {
+                        data['service'] = services;
+                    }
+                    localStorage.setItem('bookingFormData', JSON.stringify(data));
+                });
+
+                const savedData = localStorage.getItem('bookingFormData');
+                if (savedData) {
+                    const formData = JSON.parse(savedData);
+                    console.log(607,formData)
+                    if (formData.checkInTime && formData.checkOutTime) {
+                        var checkInDate = new Date(formData.checkInTime);
+                        var checkOutDate = new Date(formData.checkOutTime);
+                        $(".timeContainer button").each(function() {
+                            var button = $(this);
+                            var buttonTime = button.attr("data-date");
+                            var timeParts = buttonTime.split("-");
+                            var buttonStartTime = new Date("2024-08-06 " + timeParts[0] + ":00");
+                            var buttonEndTime = new Date("2024-08-06 " + timeParts[1] + ":00");
+
+                            if ((checkInDate >= buttonStartTime && checkInDate < buttonEndTime) ||
+                                (checkOutDate > buttonStartTime && checkOutDate <= buttonEndTime) ||
+                                (checkInDate <= buttonStartTime && checkOutDate >= buttonEndTime)) {
+                                button.removeClass("btn-outline-primary").addClass("btn-primary");
+                            } else {
+                                button.removeClass("btn-primary").addClass("btn-outline-primary");
+                            }
+                        });
+                    }
+
+                    document.getElementById('checkInTime').value = formData.checkInTime || '';
+                    document.getElementById('checkOutTime').value = formData.checkOutTime || '';
+                    document.getElementById('clinic_id').value = formData.clinic_id || '';
+                    document.getElementById('user_id').value = formData.user_id || '';
+                    document.getElementById('department_id').value = formData.department_id || '';
+                    document.querySelector('[name="clinic_detail_name"]').value = formData.clinic_detail_name || '';
+                    document.querySelector('[name="clinic_detail_description"]').value = formData.clinic_detail_description || '';
+                    document.querySelector('[name="clinic_detail_image"]').value = formData.clinic_detail_image || '';
+
+                    if (formData.service) {
+                        formData.service.forEach(serviceId => {
+                            document.querySelector(`input[name="service[]"][value="${serviceId}"]`).checked = true;
+                        });
+                    }
+
+                    document.querySelector(`input[name="insurance_use"][value="${formData.insurance_use}"]`).checked = true;
+                    document.getElementById('insurance_dates').value = formData.insurance_date || '';
+
+                    document.getElementById('insurance_your_selfs').value = formData.insurance_your_self_hidden || '';
+                    document.getElementById('insuranceFamilyIDInput').value = formData.insurance_family_hidden || '';
+                    document.getElementById('insurance_family_hidden').value = formData.insurance_family_hidden || '';
+
+                    var insuranceUseLoad = $('input[name="insurance_use"]:checked').val();
+                    if (formData.member_family_id == "myself"){
+                        document.querySelector(`input[name="member_family_id"]`).checked = false;
+                        document.querySelector(`input[name="member_family_id"][value="${formData.member_family_id}"]`).checked = true;
+                        document.querySelector('.insurance_your_self').style.display = 'block';
+                        document.querySelector('.insurance_family').style.display = 'none';
+                        if (insuranceUseLoad == 'no'){
+                            document.querySelector('.insurance_your_self').style.display = 'none';
+                        }
+                    }else{
+                        document.querySelector(`input[name="member_family_id"]`).checked = false;
+                        document.querySelector(`input[name="member_family_id"][value="${formData.member_family_id}"]`).checked = true;
+                        document.querySelector('.insurance_family').style.display = 'block';
+                        document.querySelector('.insurance_your_self').style.display = 'none';
+                        if (formData.member_family_child_id) {
+                            document.querySelector('#my-family').style.setProperty('display', 'flex', 'important');
+                            document.querySelector(`input[name="member_family_child_id"][value="${formData.member_family_child_id}"]`).checked = true;
+                        }
+                        if (insuranceUseLoad == 'no'){
+                            document.querySelector('.insurance_family').style.display = 'none';
+                        }
+                    }
+                    checkDataFullFill();
+                    updateCheckedMember();
+                }
             }
 
             $("#datepicker").datepicker({
@@ -625,6 +716,11 @@
             var insuranceFamilyID = $('.family-member-check:checked').data('insurance-id');
             var insuranceFamilyDate = $('.family-member-check:checked').data('insurance-date');
             var insuranceFamilyDateObj = insuranceFamilyDate ? new Date(insuranceFamilyDate) : null;
+            if ($('input[name="member_family_id"]:checked').val() == 'myself'){
+                document.querySelector('#my-family').style.setProperty('display', 'none', 'important');
+            }else{
+                document.querySelector('#my-family').style.setProperty('display', 'flex', 'important');
+            }
             if (checkIn && checkOut) {
                 if (insuranceUse === 'yes') {
                     if (!insuranceId && myself.length > 0) {
@@ -744,7 +840,7 @@
             } else {
                 this.action = "{{ route('clinic.booking.store') }}"; // Default action
             }
-
+            localStorage.removeItem('bookingFormData');
             this.submit(); // Submit the form with the updated action
         });
     </script>
@@ -782,7 +878,7 @@
         });
 
         function updateCheckedMember() {
-            const selectedRadio = document.querySelector('input[name="member_family_id"]:checked');
+            const selectedRadio = document.querySelector('input[name="member_family_child_id"]:checked');
             if (selectedRadio) {
                 const memberFamilyId = selectedRadio.value;
                 const insuranceId = selectedRadio.getAttribute('data-insurance-id');
@@ -796,7 +892,8 @@
 
                 // Update the insurance input with the insurance_id of the selected family member
                 insuranceIDInput.value = insuranceId;
-                insuranceDateInput.value = insuranceDate
+                insuranceDateInput.value = insuranceDate;
+                document.getElementById('insurance_family_hidden').value = insuranceId;
             }
         }
 

@@ -165,7 +165,11 @@
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                    window.location.href = `{{route('api.backend.family-management.index')}}`;
+                    if (data.type == 1){
+                        window.location.href = data.url;
+                    }else{
+                        window.location.href = `{{route('api.backend.family-management.index')}}`;
+                    }
                 },
                 error: function (error) {
                     console.log(error)

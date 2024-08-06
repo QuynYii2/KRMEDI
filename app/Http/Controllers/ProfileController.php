@@ -363,7 +363,7 @@ class ProfileController extends Controller
         // Check if the previous route name is 'home.specialist.booking.detail'
         if ($previousRouteName === 'home.specialist.booking.detail' && $bookingDetailsId !== null) {
             return redirect()->route('home.specialist.booking.detail', $bookingDetailsId);
-        } else {
+        }else{
             return redirect()->route('profile');
         }
     }
