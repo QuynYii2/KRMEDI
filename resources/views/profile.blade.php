@@ -503,7 +503,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                @if (Auth::user()->type == 'NORMAL')
+                                @if ($roleItem->name == "NORMAL PEOPLE" || $roleItem->name == "PAITENTS")
                                     <div class="col-sm-4">
                                         <label for="insurance_id">Mã bảo hiểm</label>
                                         <input class="form-control" name="insurance_id" id="insurance_id"
@@ -512,7 +512,7 @@
                                 @endif
                             </div>
 
-                            @if (Auth::user()->type == 'NORMAL')
+                            @if ($roleItem->name == "NORMAL PEOPLE" || $roleItem->name == "PAITENTS")
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <label for="insurance_id">Mặt trước BHYT</label>
