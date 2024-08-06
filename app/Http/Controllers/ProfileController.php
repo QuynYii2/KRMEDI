@@ -22,6 +22,7 @@ use App\Models\SocialUser;
 use App\Models\Symptom;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -356,7 +357,15 @@ class ProfileController extends Controller
         $user->save();
         session()->forget('show_modal');
         toast('Cập nhật thông tin thành công!', 'success', 'top-left');
-        return redirect()->route('profile');
+
+        $previousRouteName = $request->input('previous_route');
+        $bookingDetailsId = $request->input('booking_clinic_id');
+        // Check if the previous route name is 'home.specialist.booking.detail'
+        if ($previousRouteName === 'home.specialist.booking.detail' && $bookingDetailsId !== null) {
+            return redirect()->route('home.specialist.booking.detail', $bookingDetailsId);
+        } else {
+            return redirect()->route('profile');
+        }
     }
 
     public function handleForgetPassword(Request $request)

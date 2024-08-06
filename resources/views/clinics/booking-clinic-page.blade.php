@@ -364,7 +364,7 @@
                 </div>
             </div>
             <div class="form-group insurance_your_self mt-1">
-                <div>Mã bảo hiểm y tế: (cập nhật mã bảo hiểm <a href="{{route('profile')}}">tại đây</a>)</div>
+                <div>Mã bảo hiểm y tế: (cập nhật mã bảo hiểm <a href="{{ route('profile', ['clinic_id' => $clinicDetail->id]) }}">tại đây</a>)</div>
                 <input type="text" class="form-control" id="insurance_your_selfs" name="insurance_your_self" value="{{ Auth::user()->insurance_id }}" disabled/>
                 <input type="text" class="form-control" id="insurance_dates" name="insurance_date" value="{{ Auth::user()->date_health_insurance }}" hidden/>
             </div>

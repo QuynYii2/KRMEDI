@@ -351,6 +351,8 @@
                     <form method="POST" action="{{ route('profile.update') }}" autocomplete="off"
                         enctype="multipart/form-data">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="previous_route" value="{{app('router')->getRoutes()->match(app('request')->create(URL::previous()))->getName()}}"/>
+                        <input type="hidden" name="booking_clinic_id" value="{{ request()->query('clinic_id') }}">
 
                         <input type="hidden" name="_method" value="PUT">
 
