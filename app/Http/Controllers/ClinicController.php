@@ -143,14 +143,14 @@ class ClinicController extends Controller
                 alert()->error('Error', 'Please login to booking.');
                 return back();
             } else {
-                if ($request->input('member_family_id')) {
                     if ($request->input('member_family_id') == 'family') {
-                        alert()->error('Error', 'Bạn chưa chọn thành viên trong gia đình!');
-                        return back();
-                    } elseif ($request->input('member_family_id') == 'myself') {
-                        $request->merge(['member_family_id' => null]);
+                        if (!$request->input('member_family_child_id')) {
+                            alert()->error('Error', 'Bạn chưa chọn thành viên trong gia đình!');
+                            return back();
+                        }
+                    } else  {
+                        $request->merge(['member_family_child_id' => null]);
                     }
-                }
                 $bookingApi = new BookingApi();
                 $requestData = $request->except('_token');
                 $request->merge($requestData);

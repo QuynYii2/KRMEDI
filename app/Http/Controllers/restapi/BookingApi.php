@@ -28,7 +28,7 @@ class BookingApi extends Controller
             $validated = Validator::make($request->all(), [
                 'checkInTime' => 'required|date',
                 'checkOutTime' => 'required|date|after:checkInTime',
-                'member_family_id' => 'nullable',
+                'member_family_child_id' => 'nullable',
                 'department_id' => 'nullable|numeric',
                 'clinic_id' => 'required|numeric',
                 'user_id' => 'required|numeric',

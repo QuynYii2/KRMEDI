@@ -273,6 +273,7 @@ class HomeController extends Controller
             } else {
                 $memberFamilys = null;
             }
+            session(['previous_url' => url()->full()]);
             return view('clinics.booking-clinic-page', compact('clinicDetail', 'id', 'services', 'memberFamilys', 'bookingsCheck'));
         }
         alert('Bạn cần đăng nhập để đặt lịch khám');

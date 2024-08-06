@@ -126,9 +126,21 @@ class FamilyManagementController extends Controller
             'district_id', 'ward_id', 'detail_address', 'insurance_id', 'insurance_date');
         $family->fill($params);
         $family->save();
-        return response()->json([
-            'message' => 'Thêm thông tin gia đình thành công',
-        ], 200);
+        $previousUrl = session('previous_url');
+        session()->forget('previous_url');
+        if ($previousUrl) {
+            return response()->json([
+                'message' => 'Thêm thông tin gia đình thành công',
+                'url'=>$previousUrl,
+                'type' => 1,
+            ], 200);
+        }else{
+            return response()->json([
+                'message' => 'Thêm thông tin gia đình thành công',
+                'type'=>0,
+                'url'=>null,
+            ], 200);
+        }
     }
 
     public function edit($id)
@@ -201,9 +213,21 @@ class FamilyManagementController extends Controller
             'province_id', 'district_id', 'ward_id', 'detail_address', 'insurance_id', 'insurance_date');
         $member->fill($params);
         $member->save();
-        return response()->json([
-            'message' => 'Cập nhật thông tin gia đình thành công',
-        ], 200);
+        $previousUrl = session('previous_url');
+        session()->forget('previous_url');
+        if ($previousUrl) {
+            return response()->json([
+                'message' => 'Cập nhật thông tin gia đình thành công',
+                'url'=>$previousUrl,
+                'type' => 1,
+            ], 200);
+        }else{
+            return response()->json([
+                'message' => 'Cập nhật thông tin gia đình thành công',
+                'type'=>0,
+                'url'=>null,
+            ], 200);
+        }
 
     }
 
