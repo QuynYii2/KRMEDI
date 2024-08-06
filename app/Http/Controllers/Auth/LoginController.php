@@ -47,15 +47,15 @@ class LoginController extends Controller
                 }
             }
 
-            $existToken = $user->token;
-            if ($existToken) {
-                try {
-                    $user = JWTAuth::setToken($existToken)->toUser();
-                    return response($this->returnMessage('The account is already logged in elsewhere!'), 400);
-                } catch (Exception $e) {
-
-                }
-            }
+//            $existToken = $user->token;
+//            if ($existToken) {
+//                try {
+//                    $user = JWTAuth::setToken($existToken)->toUser();
+//                    return response($this->returnMessage('The account is already logged in elsewhere!'), 400);
+//                } catch (Exception $e) {
+//
+//                }
+//            }
 
             (new MainController())->removeCouponExpiredAndAddCouponActive();
 

@@ -572,8 +572,6 @@
                             var timeParts = timeText.split("-");
                             var checkIn = selectedDate + " " + timeParts[0] + ":00";
                             var checkOut = selectedDate + " " + timeParts[1] + ":00";
-                            console.log("checkIn:", checkIn);
-                            console.log("checkOut:", checkOut);
                             $('#checkInTime').val(checkIn);
                             $('#checkOutTime').val(checkOut);
                             checkDataFullFill();
@@ -604,7 +602,6 @@
                 const savedData = localStorage.getItem('bookingFormData');
                 if (savedData) {
                     const formData = JSON.parse(savedData);
-                    console.log(607,formData)
                     if (formData.checkInTime && formData.checkOutTime) {
                         var checkInDate = new Date(formData.checkInTime);
                         var checkOutDate = new Date(formData.checkOutTime);
@@ -612,8 +609,8 @@
                             var button = $(this);
                             var buttonTime = button.attr("data-date");
                             var timeParts = buttonTime.split("-");
-                            var buttonStartTime = new Date("2024-08-06 " + timeParts[0] + ":00");
-                            var buttonEndTime = new Date("2024-08-06 " + timeParts[1] + ":00");
+                            var buttonStartTime = new Date(selectedDate + ' ' + timeParts[0] + ":00");
+                            var buttonEndTime = new Date(selectedDate + ' ' + timeParts[1] + ":00");
 
                             if ((checkInDate >= buttonStartTime && checkInDate < buttonEndTime) ||
                                 (checkOutDate > buttonStartTime && checkOutDate <= buttonEndTime) ||
@@ -684,6 +681,7 @@
                 $('#checkInTime').val('');
                 $('#checkOutTime').val('');
                 var selectedDate = $(this).val();
+                localStorage.setItem('selectedDate', selectedDate);
                 var clinicId = {{$clinicDetail->id}};
                 if (isRendered) {
                     $(".timeContainer").empty(); // Clear existing working hours
@@ -697,7 +695,14 @@
             });
 
             // Trigger the change event when the datepicker is loaded
-            $("#datepicker").trigger("change");
+            const selectedDateSelect = localStorage.getItem('selectedDate');
+
+            if (selectedDateSelect) {
+                $("#datepicker").datepicker("setDate", selectedDateSelect);
+                renderWorkingHours(selectedDateSelect, {{$clinicDetail->id}});
+            }else{
+                $("#datepicker").trigger("change");
+            }
         }
 
         function checkDataFullFill() {
@@ -841,6 +846,7 @@
                 this.action = "{{ route('clinic.booking.store') }}"; // Default action
             }
             localStorage.removeItem('bookingFormData');
+            localStorage.removeItem('selectedDate');
             this.submit(); // Submit the form with the updated action
         });
     </script>
