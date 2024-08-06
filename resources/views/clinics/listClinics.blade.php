@@ -147,6 +147,7 @@
 
     <script>
         localStorage.setItem('check-kham','active');
+        localStorage.removeItem('bookingFormData');
         var swiper = new Swiper(".mySwiperMap", {
             slidesPerView: 1.5,
             spaceBetween: 5,
