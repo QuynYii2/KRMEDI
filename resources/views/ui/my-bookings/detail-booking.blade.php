@@ -11,17 +11,17 @@
                 $clinic = \App\Models\Clinic::find($booking->clinic_id);
             @endphp
             <div class="form-group col-md-6">
-                <label for="clinic_id">Clinic Name</label>
+                <label for="clinic_id">Tên phòng khám / Bệnh viện</label>
                 <input disabled type="text" class="form-control" id="clinic_id"
                        value="{{ $clinic ? $clinic->name : '' }}">
             </div>
             <div class="form-group col-md-3">
-                <label for="check_in">Check In</label>
+                <label for="check_in">Giờ vào</label>
                 <input disabled type="text" class="form-control" id="check_in"
                        value="{{ \Carbon\Carbon::parse($booking->check_in)->format('s:i:H d-m-Y') }}">
             </div>
             <div class="form-group col-md-3">
-                <label for="check_out">Check Out</label>
+                <label for="check_out">Giờ ra</label>
                 <input disabled type="text" class="form-control" id="check_out"
                        value="{{ \Carbon\Carbon::parse($booking->check_out)->format('s:i:H d-m-Y') }}">
             </div>
@@ -32,22 +32,24 @@
         @endphp
         <div class="row">
             <div class="form-group col-md-6">
-                <label for="department_id">Department</label>
+                <label for="department_id">Chuyên khoa</label>
                 <input disabled type="text" class="form-control" id="department_id" value="{{ $department->name ?? "" }}">
             </div>
             <div class="form-group col-md-6">
-                <label for="doctor_id">Doctor Name</label>
+                <label for="doctor_id">Bác sĩ</label>
                 <input disabled type="text" class="form-control" id="doctor_id" value="{{ $doctor->username ?? "" }}">
             </div>
         </div>
+        @if($booking->member_family_id == null)
         <div class="form-group">
-            <label for="medical_history">Medical History</label>
+            <label for="medical_history">Lịch sử bệnh</label>
             <input disabled type="text" class="form-control" id="medical_history"
                    value="{!! strip_tags(\Illuminate\Support\Facades\Auth::user()->medical_history)  !!}">
         </div>
+        @endif
         <div class="row">
             <div class="form-group col-md-4">
-                <label for="status">Status</label>
+                <label for="status">Trạng thái</label>
                 <input disabled type="text" class="form-control" id="status" value="{{ $booking->status }}">
             </div>
             @if($booking->member_family_id)
@@ -56,7 +58,7 @@
                 @endphp
 
                 <div class="form-group col-md-4">
-                    <label for="member_family_id">Member family</label>
+                    <label for="member_family_id">Người thân</label>
                     <input disabled type="text" class="form-control" id="member_family_id" value="{{ $family->name }}">
                 </div>
             @endif

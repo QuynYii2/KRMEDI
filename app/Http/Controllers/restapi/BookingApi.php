@@ -66,6 +66,7 @@ class BookingApi extends Controller
             $extend['isReminded'] = 0;
             $booking->insurance_use = $request->input('insurance_use');
             $booking->extend = $extend;
+            $booking->member_family_id = $request->input('member_family_child_id');
             $booking->save();
 
             $newBooking = Booking::with('user', 'clinic.users')->find($booking->id);
