@@ -72,6 +72,30 @@
                 <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*">
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <label for="insurance_id">Mã bảo hiểm</label>
+                <input class="form-control" name="insurance_id" id="insurance_id" value="">
+            </div>
+            <div class="col-sm-6">
+                <label for="insurance_id">Hạn BHXH</label>
+                <input class="form-control" type="date" value="" name="insurance_date" id="insurance_date">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <label for="insurance_id">Mặt trước BHYT</label>
+                <input class="form-control" type="file" name="health_insurance_front" id="health_insurance_front" onchange="previewImage(event, 'frontPreview')">
+                <img id="frontPreview" src="" alt="Mặt trước BHYT" style="margin-top: 10px; max-width: 200px; height: auto; display: none;">
+            </div>
+            <div class="col-sm-6">
+                <label for="insurance_id">Mặt sau BHYT</label>
+                <input class="form-control" type="file" name="health_insurance_back" id="health_insurance_back" onchange="previewImage(event, 'backPreview')">
+                <img id="backPreview" src="" alt="Mặt sau BHYT" style="margin-top: 10px; max-width: 200px; height: auto; display: none;">
+            </div>
+        </div>
+
         <div class="row mt-3">
             <div class="col-sm-4">
                 <button class="btn btn-primary" type="button" onclick="submitForm()">{{ __('home.create') }}</button>
@@ -99,7 +123,7 @@
             let arrInput = ['name', 'date_of_birth',
                 'number_phone', 'email', 'sex',
                 'relationship', 'province_id', 'district_id',
-                'ward_id', 'detail_address'];
+                'ward_id', 'detail_address', 'insurance_id', 'insurance_date'];
             isValid = appendDataForm(arrInput, formData, isValid);
 
             if (!isValid) {
@@ -111,6 +135,15 @@
             if (!file) {
                 alert('Vui lòng chọn ảnh đại diện');
                 return;
+            }
+
+            let frontFile = $('#health_insurance_front')[0].files[0];
+            if (frontFile) {
+                formData.append('health_insurance_front', frontFile);
+            }
+            let backFile = $('#health_insurance_back')[0].files[0];
+            if (backFile) {
+                formData.append('health_insurance_back', backFile);
             }
 
             let url = `{{route('api.backend.family-management.store', ['type' => ':type'])}}`;
@@ -216,5 +249,23 @@
             }
             $('#ward_id').empty().append(html);
         }
+
+        function previewImage(event, previewId) {
+            let reader = new FileReader();
+            reader.onload = function() {
+                let output = document.getElementById(previewId);
+                output.src = reader.result;
+                output.style.display = 'block'; // Display the image
+            }
+            // Check if a file is selected
+            if (event.target.files[0]) {
+                reader.readAsDataURL(event.target.files[0]);
+            } else {
+                let output = document.getElementById(previewId);
+                output.style.display = 'none'; // Hide the image if no file is selected
+                output.src = ''; // Clear the src attribute
+            }
+        }
+
     </script>
 @endsection

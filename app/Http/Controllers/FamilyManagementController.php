@@ -95,8 +95,35 @@ class FamilyManagementController extends Controller
             $family->avatar = $avatar;
         }
 
+        // Handle insurance files
+        if ($request->hasFile('health_insurance_front')) {
+            $oldFrontPath = $family->health_insurance_front;
+            if ($oldFrontPath) {
+                $oldFrontPath = str_replace(asset('storage/'), '', $oldFrontPath);
+                Storage::disk('public')->delete($oldFrontPath);
+            }
+
+            $item = $request->file('health_insurance_front');
+            $itemPath = $item->store('health_insurance', 'public');
+            $healthInsuranceFront = asset('storage/' . $itemPath);
+            $family->health_insurance_front = $healthInsuranceFront;
+        }
+
+        if ($request->hasFile('health_insurance_back')) {
+            $oldBackPath = $family->health_insurance_back;
+            if ($oldBackPath) {
+                $oldBackPath = str_replace(asset('storage/'), '', $oldBackPath);
+                Storage::disk('public')->delete($oldBackPath);
+            }
+
+            $item = $request->file('health_insurance_back');
+            $itemPath = $item->store('health_insurance', 'public');
+            $healthInsuranceBack = asset('storage/' . $itemPath);
+            $family->health_insurance_back = $healthInsuranceBack;
+        }
+
         $params = $request->only('relationship', 'name', 'date_of_birth', 'number_phone', 'email', 'sex', 'province_id',
-            'district_id', 'ward_id', 'detail_address');
+            'district_id', 'ward_id', 'detail_address', 'insurance_id', 'insurance_date');
         $family->fill($params);
         $family->save();
         return response()->json([
@@ -144,8 +171,34 @@ class FamilyManagementController extends Controller
             $member->avatar = $avatar;
         }
 
+// Handle insurance files
+        if ($request->hasFile('health_insurance_front')) {
+            $oldFrontPath = $member->health_insurance_front;
+            if ($oldFrontPath) {
+                $oldFrontPath = str_replace(asset('storage/'), '', $oldFrontPath);
+                Storage::disk('public')->delete($oldFrontPath);
+            }
+
+            $item = $request->file('health_insurance_front');
+            $itemPath = $item->store('health_insurance', 'public');
+            $healthInsuranceFront = asset('storage/' . $itemPath);
+            $member->health_insurance_front = $healthInsuranceFront;
+        }
+
+        if ($request->hasFile('health_insurance_back')) {
+            $oldBackPath = $member->health_insurance_back;
+            if ($oldBackPath) {
+                $oldBackPath = str_replace(asset('storage/'), '', $oldBackPath);
+                Storage::disk('public')->delete($oldBackPath);
+            }
+
+            $item = $request->file('health_insurance_back');
+            $itemPath = $item->store('health_insurance', 'public');
+            $healthInsuranceBack = asset('storage/' . $itemPath);
+            $member->health_insurance_back = $healthInsuranceBack;
+        }
         $params = $request->only('relationship', 'name', 'date_of_birth', 'number_phone', 'email', 'sex',
-            'province_id', 'district_id', 'ward_id', 'detail_address');
+            'province_id', 'district_id', 'ward_id', 'detail_address', 'insurance_id', 'insurance_date');
         $member->fill($params);
         $member->save();
         return response()->json([

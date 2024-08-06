@@ -282,25 +282,27 @@
             <div class="mt-5">
                 <div class="d-flex align-items-center select-memberFamily">
                     <input class="m-0 inputBookingFor" style="width: 20px;height: 20px;" type="radio"
-                        name="member_family_id" checked id="myself" value="myself"><label
+                        name="member_family_id" checked id="myself" value="myself" onclick="checkDataFullFill()"><label
                         for="myself">{{ __('home.Cho mình') }}</label>
                     <input class="m-0 inputBookingFor" style="width: 20px;height: 20px;" type="radio"
-                        name="member_family_id" id="family" value="family"><label
+                        name="member_family_id" id="family" value="family" onclick="checkDataFullFill()"><label
                         for="family">{{ __('home.Cho người thân') }}</label>
                 </div>
             </div>
             <div class="d-flex mt-5 d-none" id="my-family">
                 @if ($memberFamilys->count() == 0)
                     <div class="col-auto mr-3 border-8">
-                        <div class="avtMember d-flex justify-content-center align-items-center">
-                            <img src="https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png"
-                                alt="">
-                        </div>
-                        <div class="d-flex align-items-center justify-content-center">
-                            <label for="yourself">{{ __('home.Bạn chưa có người thân') }}</label>
-                            <input hidden="" type="radio" name="memberFamily" id="yourself" value="yourself"><label
-                                for="yourself">{{ __('home.Cho mình') }}</label>
-                        </div>
+                        <a href="{{ route('api.backend.family-management.create') }}">
+                            <div class="avtMember d-flex justify-content-center align-items-center">
+                                <img src="{{ asset('img/add-new.png') }}" alt="add-new"/>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center">
+                                {{--                            <label for="yourself">{{ __('home.Bạn chưa có người thân') }}</label>--}}
+                                {{--                            <input hidden="" type="radio" name="memberFamily" id="yourself" value="yourself"><label--}}
+                                {{--                                for="yourself">{{ __('home.Cho mình') }}</label>--}}
+                                <label>Thêm Người thân</label>
+                            </div>
+                        </a>
                     </div>
                 @else
                     @foreach ($memberFamilys as $memberFamily)
@@ -316,10 +318,23 @@
                                 #
                                 {{ \App\Enums\RelationshipFamily::getLabels()[$memberFamily->relationship] ?? $memberFamily->relationship }}
                             </div>
-                            <input style="right: 0" class="position-absolute top-0 m-2" type="radio"
-                                name="member_family_id" id="{{ $memberFamily->id }}" value="{{ $memberFamily->id }}">
+                            <input style="right: 0" class="position-absolute top-0 m-2 family-member-check" type="radio"
+                                name="member_family_id" id="{{ $memberFamily->id }}" value="{{ $memberFamily->id }}"
+                                   data-insurance-id="{{ $memberFamily->insurance_id }}" data-insurance-date="{{$memberFamily->insurance_date}}"
+                                   onchange="updateCheckedMember()" onclick="checkDataFullFill()">
+
                         </div>
                     @endforeach
+                        <div class="col-auto mr-3 border-8">
+                            <a href="{{ route('api.backend.family-management.addMember') }}">
+                                <div class="avtMember d-flex justify-content-center align-items-center">
+                                    <img src="{{ asset('img/add-new.png') }}" alt="add-new"/>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <label>Thêm Người thân</label>
+                                </div>
+                            </a>
+                        </div>
                 @endif
             </div>
             <div>
@@ -354,8 +369,9 @@
                 <input type="text" class="form-control" id="insurance_dates" name="insurance_date" value="{{ Auth::user()->date_health_insurance }}" hidden/>
             </div>
             <div class="form-group insurance_family mt-1">
-                <div>Mã bảo hiểm y tế của người thân: </div>
-                <input type="text" class="form-control" name="insurance_family" value=""/>
+                <div>Mã bảo hiểm y tế: (cập nhật mã bảo hiểm <a id="updateCheckedMember" href="#" onclick="validateSelectMember(event)">tại đây</a>)</div>
+                <input type="text" class="form-control" name="insurance_family" id="insuranceFamilyIDInput" value="" disabled/>
+                <input type="text" class="form-control" name="insurance_date" id="insuranceFamilyDateInput"  value="" hidden/>
             </div>
 
             <div>
@@ -595,6 +611,9 @@
 
         function checkDataFullFill() {
             const submitButton = $('.button-apply-booking');
+            var myself = $('#myself:checked');
+            var family = $('#family:checked');
+            var familyMem = $('.family-member-check:checked');
             var checkIn = $('#checkInTime').val();
             var checkOut = $('#checkOutTime').val();
             var insuranceUse = $('input[name="insurance_use"]:checked').val();
@@ -603,16 +622,25 @@
             var currentDate = new Date().toISOString().split('T')[0];
             var insuranceDateObj = insuranceDate ? new Date(insuranceDate) : null;
             var currentDateObj = new Date(currentDate);
-            // var memberFamily = $('#member_family_id').val();
-            // var department = $('#department_id').val();
+            var insuranceFamilyID = $('.family-member-check:checked').data('insurance-id');
+            var insuranceFamilyDate = $('.family-member-check:checked').data('insurance-date');
+            var insuranceFamilyDateObj = insuranceFamilyDate ? new Date(insuranceFamilyDate) : null;
             if (checkIn && checkOut) {
                 if (insuranceUse === 'yes') {
-                    if (!insuranceId) {
+                    if (!insuranceId && myself.length > 0) {
+                        submitButton.text('Vui lòng nhập bảo hiểm y tế');
+                        submitButton.attr("disabled", true);
+                        return;
+                    } else if(familyMem && !insuranceFamilyID && myself.length === 0){
                         submitButton.text('Vui lòng nhập bảo hiểm y tế');
                         submitButton.attr("disabled", true);
                         return;
                     }
-                    if (insuranceDateObj && insuranceDateObj < currentDateObj) {
+                    if (insuranceDateObj && insuranceDateObj < currentDateObj && myself.length > 0) {
+                        submitButton.text('Bảo hiểm y tế đã hết hạn');
+                        submitButton.attr("disabled", true);
+                        return;
+                    } else if(insuranceFamilyDateObj && insuranceFamilyDateObj < currentDateObj  && myself.length === 0) {
                         submitButton.text('Bảo hiểm y tế đã hết hạn');
                         submitButton.attr("disabled", true);
                         return;
@@ -752,5 +780,38 @@
             // Initialize the display based on the default checked values
             toggleInsuranceFields();
         });
+
+        function updateCheckedMember() {
+            const selectedRadio = document.querySelector('input[name="member_family_id"]:checked');
+            if (selectedRadio) {
+                const memberFamilyId = selectedRadio.value;
+                const insuranceId = selectedRadio.getAttribute('data-insurance-id');
+                const insuranceDate = selectedRadio.getAttribute('data-insurance-date');
+                const updateLink = document.getElementById('updateCheckedMember');
+                const insuranceIDInput = document.getElementById('insuranceFamilyIDInput');
+                const insuranceDateInput = document.getElementById('insuranceFamilyDateInput');
+
+                const baseUrl = `{{ route('api.backend.family-management.edit', ':id') }}`;
+                updateLink.href = baseUrl.replace(':id', memberFamilyId);
+
+                // Update the insurance input with the insurance_id of the selected family member
+                insuranceIDInput.value = insuranceId;
+                insuranceDateInput.value = insuranceDate
+            }
+        }
+
+        // Initial call to set the link if a radio button is already checked
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCheckedMember();
+        });
+
+        function validateSelectMember(event){
+            const selectedRadio = document.querySelector('.family-member-check:checked');
+            if (!selectedRadio) {
+                event.preventDefault();
+                alert('Vui lòng chọn người thân');
+            }
+        }
+
     </script>
 @endsection

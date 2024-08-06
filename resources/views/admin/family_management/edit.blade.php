@@ -78,6 +78,33 @@
                 <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*">
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <label for="insurance_id">Mã bảo hiểm</label>
+                <input class="form-control" name="insurance_id" id="insurance_id" value="{{$member->insurance_id ?? ''}}">
+            </div>
+            <div class="col-sm-6">
+                <label for="insurance_id">Hạn BHXH</label>
+                <input class="form-control" type="date" value="{{$member->insurance_date ?? ''}}" name="insurance_date" id="insurance_date">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <label for="insurance_id">Mặt trước BHYT</label>
+                <input class="form-control" type="file" name="health_insurance_front" id="health_insurance_front" onchange="previewImage(event, 'frontPreview')">
+                @if($member->health_insurance_front)
+                    <img id="frontPreview" src="{{$member->health_insurance_front ?? ''}}" alt="Mặt trước BHYT" style="margin-top: 10px; max-width: 200px; height: auto;">
+                @endif
+            </div>
+            <div class="col-sm-6">
+                <label for="insurance_id">Mặt sau BHYT</label>
+                <input class="form-control" type="file" name="health_insurance_back" id="health_insurance_back" onchange="previewImage(event, 'backPreview')">
+                @if($member->health_insurance_back)
+                    <img id="backPreview" src="{{$member->health_insurance_back ?? ''}}" alt="Mặt sau BHYT" style="margin-top: 10px; max-width: 200px; height: auto;">
+                @endif
+            </div>
+        </div>
         <div class="row mt-3">
             <div class="col-sm-4">
                 <button class="btn btn-primary" type="button" onclick="submitForm()">{{ __('home.Sửa') }}</button>
@@ -104,7 +131,7 @@
             let arrInput = ['name', 'date_of_birth',
                 'number_phone', 'email', 'sex',
                 'relationship', 'province_id', 'district_id',
-                'ward_id', 'detail_address'];
+                'ward_id', 'detail_address', 'insurance_id', 'insurance_date'];
             isValid = appendDataForm(arrInput, formData, isValid);
 
             if (!isValid) {
@@ -119,6 +146,15 @@
             let file = $('#avatar')[0].files[0];
             if (file) {
                 formData.append('avatar', file);
+            }
+
+            let frontFile = $('#health_insurance_front')[0].files[0];
+            if (frontFile) {
+                formData.append('health_insurance_front', frontFile);
+            }
+            let backFile = $('#health_insurance_back')[0].files[0];
+            if (backFile) {
+                formData.append('health_insurance_back', backFile);
             }
 
             $.ajax({
@@ -240,5 +276,15 @@
             }
             $('#ward_id').empty().append(html);
         }
+
+        function previewImage(event, previewId) {
+            let reader = new FileReader();
+            reader.onload = function() {
+                let output = document.getElementById(previewId);
+                output.src = reader.result;
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
     </script>
 @endsection
