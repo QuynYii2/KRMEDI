@@ -65,7 +65,6 @@ class BookingApi extends Controller
 
             $extend['isReminded'] = 0;
             $booking->insurance_use = $request->input('insurance_use');
-            $booking->insurance_family_id = $request->input('insurance_family');
             $booking->extend = $extend;
             $booking->save();
 

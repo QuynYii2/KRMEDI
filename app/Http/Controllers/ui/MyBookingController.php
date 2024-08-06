@@ -85,8 +85,7 @@ class MyBookingController extends Controller
                 }else if($item->insurance_use == 'yes' && is_null($item->member_family_id)){
                     $insurance = Auth::user()->insurance_id;
                 }else if($item->insurance_use == 'yes' && $item->member_family_id !== null){
-                    $insurance = $item->insurance_family_id;
-
+                    $insurance = FamilyManagement::find($item->member_family_id)->insurance_id;
                 }
 
                 $familyMember = FamilyManagement::find($item->member_family_id)->name ?? '';

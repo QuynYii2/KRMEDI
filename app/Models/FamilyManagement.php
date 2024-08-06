@@ -13,7 +13,8 @@ class FamilyManagement extends Model
         'family_code', 'user_id', 'relationship',
         'name', 'date_of_birth', 'number_phone',
         'email', 'sex',
-        'province_id', 'district_id', 'ward_id', 'detail_address'
+        'province_id', 'district_id', 'ward_id', 'detail_address',
+        'insurance_id', 'insurance_date', 'health_insurance_back', 'health_insurance_front'
     ];
 
     public function users()
