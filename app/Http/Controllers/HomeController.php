@@ -841,8 +841,10 @@ class HomeController extends Controller
                     $insurance = "Không sử dụng bảo hiểm";
                 }else if($item->insurance_use == 'yes' && is_null($item->member_family_id)){
                     $insurance = $user->insurance_id;
+                    $insurance_date = Carbon::parse($user->date_health_insurance)->format('d/m/Y');
                 }else if($item->insurance_use == 'yes' && $item->member_family_id !== null){
                     $insurance = FamilyManagement::find($item->member_family_id)->insurance_id;
+                    $insurance_date = Carbon::parse(FamilyManagement::find($item->member_family_id)->insurance_date)->format('d/m/Y');
                 }
 
                 $familyMember = FamilyManagement::find($item->member_family_id)->name ?? '';
@@ -864,6 +866,7 @@ class HomeController extends Controller
                 $item->phone = $user->phone??'';
                 $item->booking_for = $bookingFor;
                 $item->insurance = $insurance;
+                $item->insurance_date = $insurance_date;
             }
             return Excel::download(new BookingDoctorExport($bookings), 'lichsukham.xlsx');
         } else {
