@@ -517,16 +517,17 @@
                             @if ($roleItem->name == "NORMAL PEOPLE" || $roleItem->name == "PAITENTS")
                                 <div class="row">
                                     <div class="col-sm-4">
-                                        <label for="insurance_id">Mặt trước BHYT</label>
-                                        <input class="form-control" type="file" name="health_insurance_front" id="health_insurance_front">
+                                        <label for="health_insurance_front">Mặt trước BHYT</label>
+                                        <input class="form-control" type="file" name="health_insurance_front" id="health_insurance_front" onchange="previewImage(event, 'frontPreview')">
+                                        <img id="frontPreview" src="{{ Auth::user()->health_insurance_front ?? '' }}" alt="Mặt trước BHYT" style="margin-top: 10px; max-width: 200px; height: auto; display: {{ Auth::user()->health_insurance_front ? 'block' : 'none' }};">
                                     </div>
-                                <div class="col-sm-4">
-                                    <label for="insurance_id">Mặt sau BHYT</label>
-                                    <input class="form-control" type="file" name="health_insurance_back" id="health_insurance_back">
-                                </div>
-
                                     <div class="col-sm-4">
-                                        <label for="insurance_id">Hạn BHXH</label>
+                                        <label for="health_insurance_back">Mặt sau BHYT</label>
+                                        <input class="form-control" type="file" name="health_insurance_back" id="health_insurance_back" onchange="previewImage(event, 'backPreview')">
+                                        <img id="backPreview" src="{{ Auth::user()->health_insurance_back ?? '' }}" alt="Mặt sau BHYT" style="margin-top: 10px; max-width: 200px; height: auto; display: {{ Auth::user()->health_insurance_back ? 'block' : 'none' }};">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label for="date_health_insurance">Hạn BHXH</label>
                                         <input class="form-control" type="date" value="{{ $doctor->date_health_insurance ? \Carbon\Carbon::parse($doctor->date_health_insurance)->format('Y-m-d') : '' }}" name="date_health_insurance" id="date_health_insurance">
                                     </div>
                                 </div>
@@ -1702,6 +1703,23 @@
             arrayDoctor.sort();
             let value = arrayDoctor.toString();
             $('#representative_doctor').val(value);
+        }
+
+        function previewImage(event, previewId) {
+            let reader = new FileReader();
+            reader.onload = function() {
+                let output = document.getElementById(previewId);
+                output.src = reader.result;
+                output.style.display = 'block'; // Display the image
+            }
+            // Check if a file is selected
+            if (event.target.files[0]) {
+                reader.readAsDataURL(event.target.files[0]);
+            } else {
+                let output = document.getElementById(previewId);
+                output.style.display = 'none'; // Hide the image if no file is selected
+                output.src = ''; // Clear the src attribute
+            }
         }
     </script>
 @endsection
