@@ -22,6 +22,7 @@ use App\Models\Province;
 use App\Models\ServiceClinic;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -84,8 +85,10 @@ class MyBookingController extends Controller
                     $insurance = "Không sử dụng bảo hiểm";
                 }else if($item->insurance_use == 'yes' && is_null($item->member_family_id)){
                     $insurance = Auth::user()->insurance_id;
+                    $insurance_date = Carbon::parse(Auth::user()->date_health_insurance)->format('d/m/Y');
                 }else if($item->insurance_use == 'yes' && $item->member_family_id !== null){
                     $insurance = FamilyManagement::find($item->member_family_id)->insurance_id;
+                    $insurance_date = Carbon::parse(FamilyManagement::find($item->member_family_id)->insurance_date)->format('d/m/Y');
                 }
 
                 $familyMember = FamilyManagement::find($item->member_family_id)->name ?? '';
@@ -109,6 +112,7 @@ class MyBookingController extends Controller
                 $item->address = $detail_address.', '.$communes.', '.$district.', '.$province;
                 $item->booking_for = $bookingFor;
                 $item->insurance = $insurance;
+                $item->insurance_date = $insurance_date;
             }
             return Excel::download(new BookingExport($bookings), 'lichsukham.xlsx');
         } else {
