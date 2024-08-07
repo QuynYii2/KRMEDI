@@ -157,15 +157,15 @@ class AuthController extends Controller
 
             (new MainController())->removeCouponExpiredAndAddCouponActive();
 
-            $existToken = $user->token;
-            if ($existToken) {
-                try {
-                    $user = JWTAuth::setToken($existToken)->toUser();
-                    toast('Tài khoản đang được đăng nhập ở một thiết bị khác!', 'error', 'top-left');
-                    return back()->withInput();
-                } catch (Exception $e) {
-                }
-            }
+//            $existToken = $user->token;
+//            if ($existToken) {
+//                try {
+//                    $user = JWTAuth::setToken($existToken)->toUser();
+//                    toast('Tài khoản đang được đăng nhập ở một thiết bị khác!', 'error', 'top-left');
+//                    return back()->withInput();
+//                } catch (Exception $e) {
+//                }
+//            }
 
             if (Auth::attempt($credentials)) {
                 $token = JWTAuth::fromUser($user);

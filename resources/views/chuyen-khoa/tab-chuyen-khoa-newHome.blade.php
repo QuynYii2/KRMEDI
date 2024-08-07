@@ -76,6 +76,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         const departmentLinks = document.querySelectorAll('.department-link');
         localStorage.removeItem('bookingFormData');
+        localStorage.removeItem('selectedDate');
         departmentLinks.forEach(link => {
             link.addEventListener('click', function(event) {
                 event.preventDefault();
