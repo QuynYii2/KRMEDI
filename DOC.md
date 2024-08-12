@@ -15,6 +15,8 @@
 14. composer require zaloplatform/zalo-php-sdk
 15. composer require setasign/fpdi
 16. composer require setasign/fpdf
+17.composer require phpoffice/phpword
+18.composer require phpoffice/phpspreadsheet
 
 [//]: # (Pusher để đẩy thông báo khi có người gọi đến)
 1. composer require pusher/pusher-php-server
