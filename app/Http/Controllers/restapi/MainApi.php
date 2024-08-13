@@ -147,6 +147,8 @@ class MainApi extends Controller
             $user_email = $request->input('email');
             $data = $request->input('data');
             $notification = $request->input('notification');
+            $user = User::where('email', $user_email)->first();
+            $platform = $user->devices_name;
 
             $user_email_1 = $data['user_email_1'] ?? '';
             $user_email_2 = $data['user_email_2'] ?? '';
@@ -174,7 +176,7 @@ class MainApi extends Controller
             }
 
             $response = $this->sendNotification($token, $data, $notification);
-            $this->sendVideoCallNotification($token, $data);
+            $this->sendVideoCallNotification($token, $data, $platform);
             $data = $response->getContents();
             return response($data);
         } catch (\Exception $exception) {
@@ -205,38 +207,61 @@ class MainApi extends Controller
         return $response->getBody();
     }
 
-    public function sendVideoCallNotification($firebaseToken, $data)
+    public function sendVideoCallNotification($firebaseToken, $data, $platform)
     {
         try {
             $client = new Client();
             $YOUR_SERVER_KEY = Constants::GG_KEY;
+
+            $notificationPayload = [
+                'title' => 'Bạn có 1 cuộc gọi mới',
+                'body' => 'Mở cái ứng dụng ra',
+                'icon' => 'ic_launcher',
+                'click_action' => 'TOP_STORY_ACTIVITY',
+                'sound' => 'video_call_channel_id',
+                'color' => '#ff0000',
+            ];
+
+            $androidPayload = [
+                'notification' => [
+                    'channel_id' => 'video_call_channel_id',
+                    'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+                    'image' => 'https://example.com/image.png',
+                ],
+            ];
+
+            $iosPayload = [
+                'aps' => [
+                    'alert' => [
+                        'title' => 'Custom Sound Notification',
+                        'body' => 'This notification has a custom sound!',
+                    ],
+                    'sound' => 'custom_sound.wav',
+                    'badge' => 1,
+                ],
+            ];
+
+            $payload = [
+                'to' => $firebaseToken,
+                'notification' => $notificationPayload,
+                'data' => array_merge($data, [
+                    'channel_id' => 'video_call_channel_id',
+                ]),
+            ];
+
+            // Add platform-specific fields
+            if ($platform === 'ANDROID') {
+                $payload['android'] = $androidPayload;
+            } elseif ($platform === 'IOS') {
+                $payload['apns'] = ['payload' => $iosPayload];
+            }
 
             $response = $client->post('https://fcm.googleapis.com/fcm/send', [
                 'headers' => [
                     'Authorization' => 'key=' . $YOUR_SERVER_KEY,
                     'Content-Type' => 'application/json',
                 ],
-                'json' => [
-                    'to' => $firebaseToken,
-                    'notification' => [
-                        'title' => 'Bạn có 1 cuộc gọi mới',
-                        'body' => 'Mở cái ứng dụng ra',
-                        'icon' => 'ic_launcher',
-                        'click_action' => 'TOP_STORY_ACTIVITY',
-                        'sound' => 'video_call_channel_id',
-                        'color' => '#ff0000',
-                    ],
-                    'android' => [
-                        'notification' => [
-                            'channel_id' => 'video_call_channel_id',
-                            'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
-                            'image' => 'https://example.com/image.png',
-                        ],
-                    ],
-                    'data' => array_merge($data, [
-                        'channel_id' => 'video_call_channel_id',
-                    ]),
-                ],
+                'json' => $payload,
             ]);
 
             return $response->getBody();
