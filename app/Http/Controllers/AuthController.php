@@ -170,6 +170,7 @@ class AuthController extends Controller
             if (Auth::attempt($credentials)) {
                 $token = JWTAuth::fromUser($user);
                 $user->token = $token;
+                $user->devices_name = 'web';
                 $user->save();
                 $expiration_time = time() + 86400;
                 setCookie('accessToken', $token, $expiration_time, '/');
