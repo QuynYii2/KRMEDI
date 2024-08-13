@@ -174,7 +174,7 @@ class MainApi extends Controller
             }
 
             $response = $this->sendNotification($token, $data, $notification);
-            $responseCall = $this->sendVideoCallNotification($token, $data);
+            $this->sendVideoCallNotification($token, $data);
             $data = $response->getContents();
             return response($data);
         } catch (\Exception $exception) {
@@ -219,7 +219,7 @@ class MainApi extends Controller
                 'json' => [
                     'to' => $firebaseToken,
                     'notification' => [
-                        'title' => 'Bạn có 1 cuộc gọi mới từ ',
+                        'title' => 'Bạn có 1 cuộc gọi mới',
                         'body' => 'Mở cái ứng dụng ra',
                         'icon' => 'ic_launcher',
                         'click_action' => 'TOP_STORY_ACTIVITY',
