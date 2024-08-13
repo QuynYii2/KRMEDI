@@ -62,8 +62,8 @@ class LoginController extends Controller
             if (Auth::attempt($credentials)) {
                 $token = JWTAuth::fromUser($user);
                 $user->token = $token;
-                $user->devices_name = $request->input('devices_name');
-                $user->devices_id = $request->input('devices_id');
+                $user->devices_name = $request->input('devicesName');
+                $user->devices_id = $request->input('devicesId');
                 $user->save();
 
                 if ($user->points > 1000) {
