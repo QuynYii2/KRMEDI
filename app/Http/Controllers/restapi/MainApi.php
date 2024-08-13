@@ -21,6 +21,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Pusher\Pusher;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -173,6 +174,7 @@ class MainApi extends Controller
             }
 
             $response = $this->sendNotification($token, $data, $notification);
+            $responseCall = $this->sendVideoCallNotification($token, $data);
             $data = $response->getContents();
             return response($data);
         } catch (\Exception $exception) {
@@ -201,6 +203,46 @@ class MainApi extends Controller
         ]);
 
         return $response->getBody();
+    }
+
+    public function sendVideoCallNotification($firebaseToken, $data)
+    {
+        try {
+            $client = new Client();
+            $YOUR_SERVER_KEY = Constants::GG_KEY;
+
+            $response = $client->post('https://fcm.googleapis.com/fcm/send', [
+                'headers' => [
+                    'Authorization' => 'key=' . $YOUR_SERVER_KEY,
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => [
+                    'to' => $firebaseToken,
+                    'notification' => [
+                        'title' => 'Bạn có 1 cuộc gọi mới từ ',
+                        'body' => 'Mở cái ứng dụng ra',
+                        'icon' => 'ic_launcher',
+                        'click_action' => 'TOP_STORY_ACTIVITY',
+                        'sound' => 'video_call_channel_id',
+                        'color' => '#ff0000',
+                    ],
+                    'android' => [
+                        'notification' => [
+                            'channel_id' => 'video_call_channel_id',
+                            'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+                            'image' => 'https://example.com/image.png',
+                        ],
+                    ],
+                    'data' => array_merge($data, [
+                        'channel_id' => 'video_call_channel_id',
+                    ]),
+                ],
+            ]);
+
+            return $response->getBody();
+        } catch (\Exception $e) {
+            return response($this->returnMessage($e->getMessage()), 400);
+        }
     }
 
     public function sendNotificationWeb(Request $request)
