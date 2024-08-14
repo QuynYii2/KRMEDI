@@ -302,6 +302,25 @@ class FamilyManagementController extends Controller
             $family->avatar = $avatar;
         }
 
+        if ($request->hasFile('insurance_card_front')) {
+            $item = $request->file('insurance_card_front');
+            $itemPath = $item->store('family_avatar', 'public');
+            $insurance_card_front = asset('storage/' . $itemPath);
+            $family->health_insurance_front = $insurance_card_front;
+        }
+        if ($request->hasFile('insurance_card_back')) {
+            $item = $request->file('insurance_card_back');
+            $itemPath = $item->store('family_avatar', 'public');
+            $insurance_card_back = asset('storage/' . $itemPath);
+            $family->health_insurance_back = $insurance_card_back;
+        }
+        if ($request->has('insurance_code')) {
+            $family->insurance_id = $request->input('insurance_code');
+        }
+        if ($request->has('insurance_period')) {
+            $family->insurance_date = $request->input('insurance_period');
+        }
+
         $success = $family->save();
 
         if ($success) {
@@ -419,6 +438,37 @@ class FamilyManagementController extends Controller
             $itemPath = $item->store('family_avatar', 'public');
             $avatar = asset('storage/' . $itemPath);
             $family->avatar = $avatar;
+        }
+
+        if ($request->hasFile('insurance_card_front')) {
+            $insurance_front = $family->health_insurance_front;
+            if ($insurance_front) {
+                $insurance_front = str_replace(asset('storage/'), '', $insurance_front);
+                Storage::disk('public')->delete($insurance_front);
+            }
+
+            $item = $request->file('insurance_card_front');
+            $itemPath = $item->store('family_avatar', 'public');
+            $insurance_card_front = asset('storage/' . $itemPath);
+            $family->health_insurance_front = $insurance_card_front;
+        }
+        if ($request->hasFile('insurance_card_back')) {
+            $insurance_back = $family->health_insurance_back;
+            if ($insurance_back) {
+                $insurance_back = str_replace(asset('storage/'), '', $insurance_back);
+                Storage::disk('public')->delete($insurance_back);
+            }
+
+            $item = $request->file('insurance_card_back');
+            $itemPath = $item->store('family_avatar', 'public');
+            $insurance_card_back = asset('storage/' . $itemPath);
+            $family->health_insurance_back = $insurance_card_back;
+        }
+        if ($request->has('insurance_code')) {
+            $family->insurance_id = $request->input('insurance_code');
+        }
+        if ($request->has('insurance_period')) {
+            $family->insurance_date = $request->input('insurance_period');
         }
 
         $params = $request->only('relationship', 'name', 'date_of_birth', 'number_phone', 'email', 'sex', 'province_id',

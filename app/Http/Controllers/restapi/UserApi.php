@@ -282,8 +282,12 @@ class UserApi extends Controller
                 $user->gender = $gender;
                 $user->birthday = $birthday;
                 $user->detail_address = $detail_address;
-                $user->insurance_id = $request->input('insurance_code');
-                $user->date_health_insurance = $request->input('insurance_period');
+                if ($request->has('insurance_code')) {
+                    $user->insurance_id = $request->input('insurance_code');
+                }
+                if ($request->has('insurance_period')) {
+                    $user->date_health_insurance = $request->input('insurance_period');
+                }
 
                 $success = $user->save();
                 if ($success) {
