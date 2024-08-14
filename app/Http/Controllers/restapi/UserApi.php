@@ -250,16 +250,40 @@ class UserApi extends Controller
                     }
                     $user->password = Hash::make($new_password);
                 }
+                if ($request->hasFile('insurance_card_front')) {
+                    $item = $request->file('insurance_card_front');
+                    $itemPath = $item->store('user/avt', 'public');
+                    $insurance_card_front = asset('storage/' . $itemPath);
+                } else {
+                    $insurance_card_front = $user->health_insurance_front;
+                }
+                if ($request->hasFile('insurance_card_back')) {
+                    $item = $request->file('insurance_card_back');
+                    $itemPath = $item->store('user/avt', 'public');
+                    $insurance_card_back = asset('storage/' . $itemPath);
+                } else {
+                    $insurance_card_back = $user->health_insurance_back;
+                }
+                if ($request->hasFile('avatar')) {
+                    $item = $request->file('avatar');
+                    $itemPath = $item->store('user/avt', 'public');
+                    $thumbnail = asset('storage/' . $itemPath);
+                } else {
+                    $thumbnail = $user->avt;
+                }
 
+                $user->avt = $thumbnail;
+                $user->health_insurance_front = $insurance_card_front;
+                $user->health_insurance_back = $insurance_card_back;
                 $user->nation_id = $nation_id;
                 $user->province_id = $province_id;
                 $user->district_id = $district_id;
                 $user->commune_id = $commune_id;
-
                 $user->gender = $gender;
                 $user->birthday = $birthday;
-
                 $user->detail_address = $detail_address;
+                $user->insurance_id = $request->input('insurance_code');
+                $user->date_health_insurance = $request->input('insurance_period');
 
                 $success = $user->save();
                 if ($success) {
@@ -347,7 +371,7 @@ class UserApi extends Controller
             $validatedData = $validated->validated();
 
             $userId = $validatedData['user_id'];
-            
+
             $minusBy = $validatedData['minus_by'];
 
             $user = User::find($userId);

@@ -527,7 +527,7 @@
                                         <img id="backPreview" src="{{ Auth::user()->health_insurance_back ?? '' }}" alt="Mặt sau BHYT" style="margin-top: 10px; max-width: 200px; height: auto; display: {{ Auth::user()->health_insurance_back ? 'block' : 'none' }};">
                                     </div>
                                     <div class="col-sm-4">
-                                        <label for="date_health_insurance">Hạn BHXH</label>
+                                        <label for="date_health_insurance">Hạn BHYT</label>
                                         <input class="form-control" type="date" value="{{ $doctor->date_health_insurance ? \Carbon\Carbon::parse($doctor->date_health_insurance)->format('Y-m-d') : '' }}" name="date_health_insurance" id="date_health_insurance">
                                     </div>
                                 </div>
