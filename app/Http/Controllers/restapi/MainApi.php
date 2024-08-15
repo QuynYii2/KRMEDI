@@ -218,7 +218,8 @@ class MainApi extends Controller
                 'body' => 'Mở cái ứng dụng ra',
                 'icon' => 'ic_launcher',
                 'click_action' => 'TOP_STORY_ACTIVITY',
-                'sound' => 'video_call_channel_id',
+                'sound' => 'custom_sound.wav',
+                'android_channel_id' => 'video_call_channel_id',
                 'color' => '#ff0000',
             ];
 
