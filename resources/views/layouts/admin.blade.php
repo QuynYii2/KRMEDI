@@ -1043,6 +1043,12 @@
                             <span>Chính sách</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="{{ route('view.admin.version.index') }}">
+                            <i class="bi bi-person"></i>
+                            <span>Quản lý version</span>
+                        </a>
+                    </li>
                 @endif
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ route('profile') }}">

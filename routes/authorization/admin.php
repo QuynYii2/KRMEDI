@@ -11,6 +11,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ShortVideoController;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\admin\FooterController;
+use \App\Http\Controllers\VersionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,6 +70,15 @@ Route::group(['prefix' => 'footer'], function () {
     Route::get('edit/{id}', [FooterController::class, 'edit'])->name('view.admin.footer.edit');
     Route::post('update/{id}', [FooterController::class, 'update'])->name('view.admin.footer.update');
     Route::get('delete/{id}', [FooterController::class, 'delete'])->name('view.admin.footer.delete');
+});
+
+Route::group(['prefix' => 'version'], function () {
+    Route::get('', [VersionController::class, 'index'])->name('view.admin.version.index');
+    Route::get('create', [VersionController::class, 'create'])->name('view.admin.version.create');
+    Route::post('store', [VersionController::class, 'store'])->name('view.admin.version.store');
+    Route::get('edit/{id}', [VersionController::class, 'edit'])->name('view.admin.version.edit');
+    Route::post('update/{id}', [VersionController::class, 'update'])->name('view.admin.version.update');
+    Route::get('delete/{id}', [VersionController::class, 'delete'])->name('view.admin.version.delete');
 });
 
 //chính sách
