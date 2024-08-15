@@ -88,6 +88,7 @@ Route::middleware(['user.active'])->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('logoutProcess');
     Route::post('/check-login', [AuthController::class, 'checkLogin'])->name('checkLogin');
     Route::post('/verify-otp', [AuthController::class, 'verifyOTP'])->name('verify.otp.submit');
+//    Route::get('/update-user-online', [AuthController::class, 'updateUserOnline'])->name('update-user-online');
 
     /* Start login social */
     /* Google */
@@ -689,3 +690,4 @@ Route::get('api/my-bookings/list/{userId}', [MyBookingController::class, 'listBo
 Route::get('api/my-bookings/history/{userId}', [MyBookingController::class, 'medicalHistoryApi'])->name('api.backend.my-bookings.history');
 //api chinh sách
 Route::get('/data-policy', [BackendQuestionController::class, 'getPolicy'])->name('api.backend.data.policy');
+Route::get('/data-version/{type}', [BackendQuestionController::class, 'getVersion'])->name('api.backend.data.version');
