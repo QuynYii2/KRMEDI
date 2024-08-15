@@ -15,6 +15,7 @@ use App\Models\PolicyModel;
 use App\Models\Question;
 use App\Models\ReportmentoringModel;
 use App\Models\User;
+use App\Models\VersionsModel;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -511,5 +512,11 @@ class BackendQuestionController extends Controller
         $policy = PolicyModel::first();
 
         return response()->json($policy);
+    }
+    public function getVersion($type)
+    {
+        $version = VersionsModel::where('type',$type)->orderBy('created_at','desc')->first();
+
+        return response()->json($version);
     }
 }
