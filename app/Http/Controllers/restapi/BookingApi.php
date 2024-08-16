@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\booking\ProcessBooking;
 use App\Models\Booking;
 use App\Models\Clinic;
+use App\Models\PrescriptionResults;
 use App\Models\SurveyAnswer;
 use App\Models\SurveyAnswerUser;
 use App\Models\SurveyQuestion;
@@ -19,6 +20,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class BookingApi extends Controller
 {
@@ -171,6 +173,7 @@ class BookingApi extends Controller
                 }
 
                 $arrayBooking['question'] = $arrQuestion;
+                $arrayBooking['examination_results_pdf'] = $booking->prescription_file??null;
 
                 $arrayBookings[] = $arrayBooking;
             }
@@ -229,6 +232,7 @@ class BookingApi extends Controller
                 }
 
                 $arrayBooking['question'] = $arrQuestion;
+                $arrayBooking['examination_results_pdf'] = $booking->prescription_file??null;
 
                 $arrayBookings[] = $arrayBooking;
             }
@@ -592,6 +596,34 @@ class BookingApi extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => -1, 'message' => $e->getMessage()]);
         }
+    }
+
+    public function examinationResultsPdf($id)
+    {
+        $data_prescription = PrescriptionResults::where('booking_id', $id)->first();
+
+        if (!$data_prescription) {
+            return response()->json([
+                'message' => 'Đơn thuốc không tồn tại.']);
+        }
+
+        $doctor_name = User::find($data_prescription->created_by);
+        $user_name = User::find($data_prescription->user_id);
+
+        $pdf = Pdf::loadView('components.head.pdf', [
+            'doctor' => $doctor_name->name,
+            'data' => json_decode($data_prescription->prescriptions, true),
+            'user_name' => $user_name->name,
+        ]);
+
+        $fileName = 'donthuoc_' . $data_prescription->id . '.pdf';
+        $filePath = 'prescriptions/' . $fileName;
+        $pdf->save(storage_path('app/public/' . $filePath));
+
+        return response()->json([
+            'message' => 'File PDF đã được lưu thành công.',
+            'pdf_url' => 'storage/'.$filePath,
+        ]);
     }
 
     //Booking reminder through zalo & fcm
