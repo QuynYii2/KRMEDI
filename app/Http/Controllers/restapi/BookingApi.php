@@ -172,8 +172,15 @@ class BookingApi extends Controller
                     }
                 }
 
+                $data_prescription = PrescriptionResults::where('booking_id', $booking->id)->orderBy('created_at','desc')->first();
+                $isPrescription = true;
+                if (!$data_prescription){
+                    $isPrescription = false;
+                }
+
                 $arrayBooking['question'] = $arrQuestion;
                 $arrayBooking['examination_results_pdf'] = $booking->prescription_file??null;
+                $arrayBooking['isPrescription'] = $isPrescription;
 
                 $arrayBookings[] = $arrayBooking;
             }
@@ -231,8 +238,15 @@ class BookingApi extends Controller
                     }
                 }
 
+                $data_prescription = PrescriptionResults::where('booking_id', $booking->id)->orderBy('created_at','desc')->first();
+                $isPrescription = true;
+                if (!$data_prescription){
+                    $isPrescription = false;
+                }
+
                 $arrayBooking['question'] = $arrQuestion;
                 $arrayBooking['examination_results_pdf'] = $booking->prescription_file??null;
+                $arrayBooking['isPrescription'] = $isPrescription;
 
                 $arrayBookings[] = $arrayBooking;
             }
