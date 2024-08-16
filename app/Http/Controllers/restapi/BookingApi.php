@@ -600,7 +600,7 @@ class BookingApi extends Controller
 
     public function examinationResultsPdf($id)
     {
-        $data_prescription = PrescriptionResults::where('booking_id', $id)->first();
+        $data_prescription = PrescriptionResults::where('booking_id', $id)->orderBy('created_at','desc')->first();
 
         if (!$data_prescription) {
             return response()->json([
