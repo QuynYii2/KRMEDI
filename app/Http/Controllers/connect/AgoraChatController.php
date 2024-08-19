@@ -479,7 +479,8 @@ class AgoraChatController extends Controller
         $notification = [
             "title" => "Cuộc gọi đến",
             "body" => $userCall->name ?? "Không rõ",
-            "android_channel_id" => "callkit_incoming_channel_id",
+            'sound' => 'custom_sound.wav',
+            "android_channel_id" => "video_call_channel_id",
             'click_action' => $content,
         ];
 
