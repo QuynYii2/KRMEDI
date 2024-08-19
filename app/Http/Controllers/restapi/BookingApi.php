@@ -69,6 +69,7 @@ class BookingApi extends Controller
             $booking->insurance_use = $request->input('insurance_use');
             $booking->extend = $extend;
             $booking->member_family_id = $request->input('member_family_child_id');
+            $booking->is_use_insurance  = $request->input('insurance_use');
             $booking->save();
 
             $newBooking = Booking::with('user', 'clinic.users')->find($booking->id);
