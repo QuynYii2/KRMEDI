@@ -472,6 +472,7 @@ class AgoraChatController extends Controller
 
     function sendNotificationToAppByFireBase($email, $userCall)
     {
+        dd('aaaa');
         $user_id_1 = $userCall->id;
         $user_id_2 = User::where('email', $email)->first()->id;
         $content = route('agora.joinMeeting', ['user_id_1' => $user_id_1, 'user_id_2' => $user_id_2]);
