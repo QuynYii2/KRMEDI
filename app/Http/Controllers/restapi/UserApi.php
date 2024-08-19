@@ -210,8 +210,12 @@ class UserApi extends Controller
             $user = User::find($userID);
 
             if ($userID && $user && $user->status == UserStatus::ACTIVE) {
-                $user->name = $name;
-                $user->last_name = $last_name;
+                if ($request->has('name')) {
+                    $user->name = $name;
+                }
+                if ($request->has('last_name')) {
+                    $user->last_name = $last_name;
+                }
 
                 if ($user->email != $email) {
                     $isEmail = filter_var($email, FILTER_VALIDATE_EMAIL);
