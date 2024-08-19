@@ -215,7 +215,7 @@ class MainApi extends Controller
 
             $notificationPayload = [
                 'title' => 'Bạn có 1 cuộc gọi mới',
-                'body' => 'Mở cái ứng dụng ra',
+                'body' => 'Bạn có thông báo mới',
                 'icon' => 'ic_launcher',
                 'click_action' => 'TOP_STORY_ACTIVITY',
                 'sound' => 'custom_sound.wav',
