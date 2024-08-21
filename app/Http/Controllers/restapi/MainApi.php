@@ -244,7 +244,7 @@ class MainApi extends Controller
                 return $result;
             }, []),
             'notification' => $notification,
-            'web' => [
+            'webpush' => [
                 'notification' => $notification,
             ],
         ];
