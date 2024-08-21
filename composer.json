@@ -39,7 +39,8 @@
         "symfony/mailgun-mailer": "^6.1",
         "symfony/postmark-mailer": "^6.1",
         "tinymce/tinymce": "^6.7",
-        "tymon/jwt-auth": "^2.0"
+        "tymon/jwt-auth": "^2.0",
+        "zaloplatform/zalo-php-sdk": "^4.0"
     },
     "require-dev": {
         "spatie/laravel-ignition": "^2.0",
