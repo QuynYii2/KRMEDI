@@ -105,7 +105,9 @@ class MainApi extends Controller
                 'Authorization' => "Bearer $accessToken",
                 'Content-Type' => 'application/json',
             ],
-            'json' => $payload,
+            'json' => [
+                'message' => $payload
+            ],
         ]);
 
         Log::debug('Send request to FCM', [
@@ -235,7 +237,7 @@ class MainApi extends Controller
     public function sendNotification($device_token, $data, $notification)
     {
         return $this->sendFcmRequest([
-            'to' => $device_token,
+            'token' => $device_token,
             'data' => $data,
             'notification' => $notification,
             'web' => [
@@ -280,7 +282,7 @@ class MainApi extends Controller
             ];
 
             $payload = [
-                'to' => $firebaseToken,
+                'token' => $firebaseToken,
                 'notification' => $notificationPayload,
                 'data' => array_merge($data, [
                     'channel_id' => 'video_call_channel_id',
@@ -508,7 +510,7 @@ class MainApi extends Controller
             ];
 
             return $this->sendFcmRequest([
-                'to' => $userToken,
+                'token' => $userToken,
                 'data' => $data,
                 'notification' => [
                     'title' => 'Bạn vừa nhận được 1 thông báo mới',
@@ -545,7 +547,7 @@ class MainApi extends Controller
             ];
 
             return $this->sendFcmRequest([
-                'to' => $hospitalToken,
+                'token' => $hospitalToken,
                 'data' => $data,
                 'notification' => [
                     'title' => 'Bạn vừa nhận được 1 thông báo mới',
@@ -572,7 +574,7 @@ class MainApi extends Controller
             ];
 
             return $this->sendFcmRequest([
-                'to' => $userToken,
+                'token' => $userToken,
                 'data' => $data,
                 'notification' => [
                     'title' => 'Bạn vừa nhận được 1 thông báo mới',
@@ -606,7 +608,7 @@ class MainApi extends Controller
             ];
 
             return $this->sendFcmRequest([
-                'to' => $userToken,
+                'token' => $userToken,
                 'data' => $data,
                 'notification' => [
                     'title' => $data['title'],
