@@ -238,7 +238,10 @@ class MainApi extends Controller
     {
         return $this->sendFcmRequest([
             'token' => $device_token,
-            'data' => $data,
+            'data' => array_reduce(array_keys($data), function ($result, $key) use ($data) {
+                $result[$key] = (string) $data[$key];
+                return $result;
+            }, []),
             'notification' => $notification,
             'web' => [
                 'notification' => $notification,
@@ -281,10 +284,15 @@ class MainApi extends Controller
                 ],
             ];
 
+            $transformedData = array_reduce(array_keys($data), function ($result, $key) use ($data) {
+                $result[$key] = (string) $data[$key];
+                return $result;
+            }, []);
+
             $payload = [
                 'token' => $firebaseToken,
                 'notification' => $notificationPayload,
-                'data' => array_merge($data, [
+                'data' => array_merge($transformedData, [
                     'channel_id' => 'video_call_channel_id',
                 ]),
             ];
@@ -505,8 +513,8 @@ class MainApi extends Controller
                 'sender' => $notificationWithSender->senders->avt ?? "",
                 'url' => $notificationWithSender->target_url ?? "#",
                 'description' => $notificationWithSender->description ?? "",
-                'id' => $notificationWithSender->id,
-                'cart_id' => $notificationWithSender->cart_id,
+                'id' => (string) $notificationWithSender->id,
+                'cart_id' => (string) $notificationWithSender->cart_id,
             ];
 
             return $this->sendFcmRequest([
@@ -543,7 +551,7 @@ class MainApi extends Controller
                 'sender' => $notificationWithSender->senders->avt ?? "",
                 'url' => $notificationWithSender->target_url ?? "#",
                 'description' => $notificationWithSender->description ?? "",
-                'id' => $notificationWithSender->id,
+                'id' => (string) $notificationWithSender->id,
             ];
 
             return $this->sendFcmRequest([
@@ -570,7 +578,7 @@ class MainApi extends Controller
                 'sender' => $notificationWithSender->senders->avt ?? "",
                 'url' => $notificationWithSender->target_url ?? "#",
                 'description' => $notificationWithSender->description ?? "",
-                'id' => $notificationWithSender->id,
+                'id' => (string) $notificationWithSender->id,
             ];
 
             return $this->sendFcmRequest([
@@ -604,7 +612,7 @@ class MainApi extends Controller
                 'title' => $notificationWithSender->title ?? "",
                 'sender' => $notificationWithSender->senders->avt ?? "",
                 'description' => $notificationWithSender->description ?? "",
-                'id' => $notificationWithSender->id,
+                'id' => (string) $notificationWithSender->id,
             ];
 
             return $this->sendFcmRequest([
