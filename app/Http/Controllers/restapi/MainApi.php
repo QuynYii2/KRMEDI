@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\restapi;
 
+use Throwable;
 use App\Enums\ClinicStatus;
 use App\Enums\Constants;
 use App\Enums\CouponStatus;
 use App\Enums\SocialUserStatus;
 use App\Enums\UserStatus;
+use Google\Client as GoogleClient;
 use App\Http\Controllers\Controller;
+use Psr\Http\Message\StreamInterface;
+use GuzzleHttp\Exception\GuzzleException;
 use App\Http\Controllers\TranslateController;
 use App\Models\Clinic;
 use App\Models\Coupon;
@@ -67,6 +71,44 @@ class MainApi extends Controller
             $array_data['message'] = $e->getMessage();
             return $array_data;
         }
+    }
+
+    private function fetchGoogleAccessToken():? string
+    {
+        try {
+            $client = new GoogleClient();
+            $client->setAuthConfig(storage_path('google/service-account.json'));
+            $client->addScope('https://www.googleapis.com/auth/firebase.messaging');
+            $client->refreshTokenWithAssertion();
+            $token = $client->getAccessToken();
+            return $token['access_token'];
+        } catch (Throwable $e) {
+            Log::error('Unable to fetch google access token', ['exception' => $e]);
+        }
+
+        return null;
+    }
+
+    /**
+     * This method is being used to send payload to FCM
+     *
+     * @param array $payload
+     * @return StreamInterface
+     * @throws GuzzleException
+     */
+    private function sendFcmRequest(array $payload): StreamInterface
+    {
+        $client = new Client();
+        $accessToken = $this->fetchGoogleAccessToken();
+        $response = $client->post('https://fcm.googleapis.com/v1/projects/chat-firebase-de134/messages:send', [
+            'headers' => [
+                'Authorization' => "Bearer $accessToken",
+                'Content-Type' => 'application/json',
+            ],
+            'json' => $payload,
+        ]);
+
+        return $response->getBody();
     }
 
     public function translateLanguage(Request $request)
@@ -186,25 +228,14 @@ class MainApi extends Controller
 
     public function sendNotification($device_token, $data, $notification)
     {
-        $client = new Client();
-        $YOUR_SERVER_KEY = Constants::GG_KEY;
-
-        $response = $client->post('https://fcm.googleapis.com/fcm/send', [
-            'headers' => [
-                'Authorization' => 'key=' . $YOUR_SERVER_KEY,
-                'Content-Type' => 'application/json',
-            ],
-            'json' => [
-                'to' => $device_token,
-                'data' => $data,
+        return $this->sendFcmRequest([
+            'to' => $device_token,
+            'data' => $data,
+            'notification' => $notification,
+            'web' => [
                 'notification' => $notification,
-                'web' => [
-                    'notification' => $notification,
-                ],
             ],
         ]);
-
-        return $response->getBody();
     }
 
     public function sendVideoCallNotification($firebaseToken, $data, $platform)
@@ -257,15 +288,7 @@ class MainApi extends Controller
                 $payload['apns'] = ['payload' => $iosPayload];
             }
 
-            $response = $client->post('https://fcm.googleapis.com/fcm/send', [
-                'headers' => [
-                    'Authorization' => 'key=' . $YOUR_SERVER_KEY,
-                    'Content-Type' => 'application/json',
-                ],
-                'json' => $payload,
-            ]);
-
-            return $response->getBody();
+            return $this->sendFcmRequest($payload);
         } catch (\Exception $e) {
             return response($this->returnMessage($e->getMessage()), 400);
         }
@@ -478,29 +501,23 @@ class MainApi extends Controller
                 'cart_id' => $notificationWithSender->cart_id,
             ];
 
-            $response = $client->post('https://fcm.googleapis.com/fcm/send', [
-                'headers' => [
-                    'Authorization' => 'key=' . $YOUR_SERVER_KEY,
-                    'Content-Type' => 'application/json',
+            return $this->sendFcmRequest([
+                'to' => $userToken,
+                'data' => $data,
+                'notification' => [
+                    'title' => 'Bạn vừa nhận được 1 thông báo mới',
+                    'body' => 'Cart',
                 ],
-                'json' => [
-                    'to' => $userToken,
-                    'data' => $data,
+                'web' => [
                     'notification' => [
                         'title' => 'Bạn vừa nhận được 1 thông báo mới',
                         'body' => 'Cart',
-                    ],
-                    'web' => [
-                        'notification' => [
-                            'title' => 'Bạn vừa nhận được 1 thông báo mới',
-                            'body' => 'Cart',
-                        ],
                     ],
                 ],
             ]);
         }
 
-        return $response->getBody();
+        return null;
     }
 
     private function sendBookingNotification($hospitalToken = null, $userToken = null, $notification)
@@ -521,23 +538,17 @@ class MainApi extends Controller
                 'id' => $notificationWithSender->id,
             ];
 
-            $response = $client->post('https://fcm.googleapis.com/fcm/send', [
-                'headers' => [
-                    'Authorization' => 'key=' . $YOUR_SERVER_KEY,
-                    'Content-Type' => 'application/json',
+            return $this->sendFcmRequest([
+                'to' => $hospitalToken,
+                'data' => $data,
+                'notification' => [
+                    'title' => 'Bạn vừa nhận được 1 thông báo mới',
+                    'body' => 'Booking',
                 ],
-                'json' => [
-                    'to' => $hospitalToken,
-                    'data' => $data,
+                'web' => [
                     'notification' => [
                         'title' => 'Bạn vừa nhận được 1 thông báo mới',
                         'body' => 'Booking',
-                    ],
-                    'web' => [
-                        'notification' => [
-                            'title' => 'Bạn vừa nhận được 1 thông báo mới',
-                            'body' => 'Booking',
-                        ],
                     ],
                 ],
             ]);
@@ -554,29 +565,23 @@ class MainApi extends Controller
                 'id' => $notificationWithSender->id,
             ];
 
-            $response = $client->post('https://fcm.googleapis.com/fcm/send', [
-                'headers' => [
-                    'Authorization' => 'key=' . $YOUR_SERVER_KEY,
-                    'Content-Type' => 'application/json',
+            return $this->sendFcmRequest([
+                'to' => $userToken,
+                'data' => $data,
+                'notification' => [
+                    'title' => 'Bạn vừa nhận được 1 thông báo mới',
+                    'body' => 'Booking',
                 ],
-                'json' => [
-                    'to' => $userToken,
-                    'data' => $data,
+                'web' => [
                     'notification' => [
                         'title' => 'Bạn vừa nhận được 1 thông báo mới',
                         'body' => 'Booking',
-                    ],
-                    'web' => [
-                        'notification' => [
-                            'title' => 'Bạn vừa nhận được 1 thông báo mới',
-                            'body' => 'Booking',
-                        ],
                     ],
                 ],
             ]);
         }
 
-        return $response->getBody();
+        return null;
     }
 
     public function sendQuestionNotification($userToken = null, $notificationID)
@@ -594,23 +599,17 @@ class MainApi extends Controller
                 'id' => $notificationWithSender->id,
             ];
 
-            $response = $client->post('https://fcm.googleapis.com/fcm/send', [
-                'headers' => [
-                    'Authorization' => 'key=' . $YOUR_SERVER_KEY,
-                    'Content-Type' => 'application/json',
+            return $this->sendFcmRequest([
+                'to' => $userToken,
+                'data' => $data,
+                'notification' => [
+                    'title' => $data['title'],
+                    'body' => $data['description'],
                 ],
-                'json' => [
-                    'to' => $userToken,
-                    'data' => $data,
+                'web' => [
                     'notification' => [
                         'title' => $data['title'],
                         'body' => $data['description'],
-                    ],
-                    'web' => [
-                        'notification' => [
-                            'title' => $data['title'],
-                            'body' => $data['description'],
-                        ],
                     ],
                 ],
             ]);
