@@ -27,14 +27,6 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class MainApi extends Controller
 {
-
-    private FcmService $fcmService;
-
-    public function __construct(FcmService $fcmService)
-    {
-        $this->fcmService = $fcmService;
-    }
-
     public function returnMessage($message)
     {
         return ['message' => $message];
@@ -213,7 +205,7 @@ class MainApi extends Controller
             ];
         }
 
-        return $this->fcmService->request($payload);
+        return FcmService::init()->request($payload);
     }
 
     public function sendVideoCallNotification($firebaseToken, $data, $platform, ?string $channel)
@@ -265,7 +257,7 @@ class MainApi extends Controller
                 $payload['apns'] = ['payload' => $iosPayload];
             }
 
-            return $this->fcmService->request($payload);
+            return FcmService::init()->request($payload);
         } catch (\Exception $e) {
             return response($this->returnMessage($e->getMessage()), 400);
         }
@@ -478,7 +470,7 @@ class MainApi extends Controller
                 'cart_id' => (string) $notificationWithSender->cart_id,
             ];
 
-            return $this->fcmService->request([
+            return FcmService::init()->request([
                 'token' => $userToken,
                 'data' => $data,
                 'notification' => [
@@ -515,7 +507,7 @@ class MainApi extends Controller
                 'id' => (string) $notificationWithSender->id,
             ];
 
-            return $this->fcmService->request([
+            return FcmService::init()->request([
                 'token' => $hospitalToken,
                 'data' => $data,
                 'notification' => [
@@ -542,7 +534,7 @@ class MainApi extends Controller
                 'id' => (string) $notificationWithSender->id,
             ];
 
-            return $this->fcmService->request([
+            return FcmService::init()->request([
                 'token' => $userToken,
                 'data' => $data,
                 'notification' => [
@@ -576,7 +568,7 @@ class MainApi extends Controller
                 'id' => (string) $notificationWithSender->id,
             ];
 
-            return $this->fcmService->request([
+            return FcmService::init()->request([
                 'token' => $userToken,
                 'data' => $data,
                 'notification' => [

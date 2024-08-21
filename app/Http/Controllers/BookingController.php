@@ -47,13 +47,6 @@ use PhpOffice\PhpSpreadsheet\Writer\Html as HtmlWriter;
 
 class BookingController extends Controller
 {
-
-    public function __construct(
-        private FcmService $fcmService,
-    )
-    {
-    }
-
     public function index()
     {
         if (Auth::check()) {
@@ -485,7 +478,7 @@ class BookingController extends Controller
                 'id' => (string) $notificationWithSender->id,
             ];
 
-            return $this->fcmService->request([
+            return FcmService::init()->request([
                 'token' => $userToken,
                 'data' => $data,
                 'notification' => [

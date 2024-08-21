@@ -35,7 +35,7 @@ class ProcessBooking implements ShouldQueue
         try {
             $newBooking = $this->booking;
 
-            $bookingController = new BookingController();
+//            $bookingController = new BookingController();
 //            $bookingController->sendMessageToUserOnBookingCreated($newBooking);
             // $bookingController->sendOAMessageFromAdminToClinic($newBooking);
 

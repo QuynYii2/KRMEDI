@@ -11,6 +11,18 @@ use GuzzleHttp\Exception\GuzzleException;
 
 class FcmService
 {
+
+    protected static ?FcmService $client = null;
+
+    public static function init()
+    {
+        if (self::$client === null) {
+            self::$client = new self();
+        }
+
+        return self::$client;
+    }
+
     private function fetchGoogleAccessToken():? string
     {
         try {

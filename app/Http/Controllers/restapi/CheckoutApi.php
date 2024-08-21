@@ -29,10 +29,6 @@ use Pusher\Pusher;
 
 class CheckoutApi extends Controller
 {
-    public function __construct(private FcmService $fcmService)
-    {
-    }
-
     public function checkoutByImm(Request $request)
     {
         try {
@@ -420,10 +416,7 @@ class CheckoutApi extends Controller
 
     public function sendNotification($device_token, $data)
     {
-        $client = new Client();
-        $YOUR_SERVER_KEY = Constants::GG_KEY;
-
-        return $this->fcmService->request([
+        return FcmService::init()->request([
             'token' => $device_token,
             'data' => $data,
             'notification' => [
