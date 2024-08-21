@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\restapi;
 
 use App\Enums\CartStatus;
+use App\Services\FcmService;
 use App\Enums\OrderItemStatus;
 use App\Enums\OrderStatus;
 use App\Enums\TypeProductCart;
@@ -28,6 +29,10 @@ use Pusher\Pusher;
 
 class CheckoutApi extends Controller
 {
+    public function __construct(private FcmService $fcmService)
+    {
+    }
+
     public function checkoutByImm(Request $request)
     {
         try {
@@ -418,25 +423,17 @@ class CheckoutApi extends Controller
         $client = new Client();
         $YOUR_SERVER_KEY = Constants::GG_KEY;
 
-        $response = $client->post('https://fcm.googleapis.com/fcm/send', [
-            'headers' => [
-                'Authorization' => 'key=' . $YOUR_SERVER_KEY,
-                'Content-Type' => 'application/json',
+        return $this->fcmService->request([
+            'token' => $device_token,
+            'data' => $data,
+            'notification' => [
+                'title' => 'Cập nhật trạng thái đơn hàng thành công',
+                'body' => 'order',
             ],
-            'json' => [
-                'to' => $device_token,
-                'data' => $data,
-                'notification' => [
-                    'title' => 'Cập nhật trạng thái đơn hàng thành công',
-                    'body' => 'order',
-                ],
-                'web' => [
-                    'notification' => 'Cập nhật trạng thái đơn hàng thành công',
-                ],
+            'webpush' => [
+                'notification' => 'Cập nhật trạng thái đơn hàng thành công',
             ],
         ]);
-
-        return $response->getBody();
     }
 
     public function calcDiscount(Request $request)

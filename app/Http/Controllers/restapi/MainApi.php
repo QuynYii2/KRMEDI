@@ -2,16 +2,12 @@
 
 namespace App\Http\Controllers\restapi;
 
-use Throwable;
-use App\Enums\ClinicStatus;
 use App\Enums\Constants;
 use App\Enums\CouponStatus;
+use App\Services\FcmService;
 use App\Enums\SocialUserStatus;
 use App\Enums\UserStatus;
-use Google\Client as GoogleClient;
 use App\Http\Controllers\Controller;
-use Psr\Http\Message\StreamInterface;
-use GuzzleHttp\Exception\GuzzleException;
 use App\Http\Controllers\TranslateController;
 use App\Models\Clinic;
 use App\Models\Coupon;
@@ -20,7 +16,6 @@ use App\Models\Role;
 use App\Models\RoleUser;
 use App\Models\SocialUser;
 use App\Models\User;
-use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,6 +27,14 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class MainApi extends Controller
 {
+
+    private FcmService $fcmService;
+
+    public function __construct(FcmService $fcmService)
+    {
+        $this->fcmService = $fcmService;
+    }
+
     public function returnMessage($message)
     {
         return ['message' => $message];
@@ -71,51 +74,6 @@ class MainApi extends Controller
             $array_data['message'] = $e->getMessage();
             return $array_data;
         }
-    }
-
-    private function fetchGoogleAccessToken():? string
-    {
-        try {
-            $client = new GoogleClient();
-            $client->setAuthConfig(storage_path('google/service-account.json'));
-            $client->addScope('https://www.googleapis.com/auth/firebase.messaging');
-            $client->refreshTokenWithAssertion();
-            $token = $client->getAccessToken();
-            return $token['access_token'];
-        } catch (Throwable $e) {
-            Log::error('Unable to fetch google access token', ['exception' => $e]);
-        }
-
-        return null;
-    }
-
-    /**
-     * This method is being used to send payload to FCM
-     *
-     * @param array $payload
-     * @return StreamInterface
-     * @throws GuzzleException
-     */
-    private function sendFcmRequest(array $payload): StreamInterface
-    {
-        $client = new Client();
-        $accessToken = $this->fetchGoogleAccessToken();
-        $response = $client->post('https://fcm.googleapis.com/v1/projects/chat-firebase-de134/messages:send', [
-            'headers' => [
-                'Authorization' => "Bearer $accessToken",
-                'Content-Type' => 'application/json',
-            ],
-            'json' => [
-                'message' => $payload
-            ],
-        ]);
-
-        Log::debug('Send request to FCM', [
-            'payload' => $payload,
-            'response' => optional($response->getBody())->getContents(),
-        ]);
-
-        return $response->getBody();
     }
 
     public function translateLanguage(Request $request)
@@ -255,7 +213,7 @@ class MainApi extends Controller
             ];
         }
 
-        return $this->sendFcmRequest($payload);
+        return $this->fcmService->request($payload);
     }
 
     public function sendVideoCallNotification($firebaseToken, $data, $platform, ?string $channel)
@@ -307,7 +265,7 @@ class MainApi extends Controller
                 $payload['apns'] = ['payload' => $iosPayload];
             }
 
-            return $this->sendFcmRequest($payload);
+            return $this->fcmService->request($payload);
         } catch (\Exception $e) {
             return response($this->returnMessage($e->getMessage()), 400);
         }
@@ -520,7 +478,7 @@ class MainApi extends Controller
                 'cart_id' => (string) $notificationWithSender->cart_id,
             ];
 
-            return $this->sendFcmRequest([
+            return $this->fcmService->request([
                 'token' => $userToken,
                 'data' => $data,
                 'notification' => [
@@ -557,7 +515,7 @@ class MainApi extends Controller
                 'id' => (string) $notificationWithSender->id,
             ];
 
-            return $this->sendFcmRequest([
+            return $this->fcmService->request([
                 'token' => $hospitalToken,
                 'data' => $data,
                 'notification' => [
@@ -584,7 +542,7 @@ class MainApi extends Controller
                 'id' => (string) $notificationWithSender->id,
             ];
 
-            return $this->sendFcmRequest([
+            return $this->fcmService->request([
                 'token' => $userToken,
                 'data' => $data,
                 'notification' => [
@@ -618,7 +576,7 @@ class MainApi extends Controller
                 'id' => (string) $notificationWithSender->id,
             ];
 
-            return $this->sendFcmRequest([
+            return $this->fcmService->request([
                 'token' => $userToken,
                 'data' => $data,
                 'notification' => [

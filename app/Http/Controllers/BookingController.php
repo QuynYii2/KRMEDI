@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\BookingStatus;
 use App\Enums\CartStatus;
 use App\Enums\Constants;
+use App\Services\FcmService;
 use App\Enums\ServiceClinicStatus;
 use App\Enums\SurveyType;
 use App\Enums\TypeProductCart;
@@ -46,6 +47,12 @@ use PhpOffice\PhpSpreadsheet\Writer\Html as HtmlWriter;
 
 class BookingController extends Controller
 {
+
+    public function __construct(
+        private FcmService $fcmService,
+    )
+    {
+    }
 
     public function index()
     {
@@ -475,30 +482,23 @@ class BookingController extends Controller
                 'sender' => $notificationWithSender->senders->avt ?? "",
                 'url' => $notificationWithSender->target_url ?? "#",
                 'description' => $notificationWithSender->description ?? "",
-                'id' => $notificationWithSender->id,
+                'id' => (string) $notificationWithSender->id,
             ];
 
-            $response = $client->post('https://fcm.googleapis.com/fcm/send', [
-                'headers' => [
-                    'Authorization' => 'key=' . $YOUR_SERVER_KEY,
-                    'Content-Type' => 'application/json',
+            return $this->fcmService->request([
+                'token' => $userToken,
+                'data' => $data,
+                'notification' => [
+                    'title' => 'Bạn vừa nhận được 1 thông báo mới',
+                    'body' => 'Booking',
                 ],
-                'json' => [
-                    'to' => $userToken,
-                    'data' => $data,
+                'webpush' => [
                     'notification' => [
                         'title' => 'Bạn vừa nhận được 1 thông báo mới',
                         'body' => 'Booking',
                     ],
-                    'web' => [
-                        'notification' => [
-                            'title' => 'Bạn vừa nhận được 1 thông báo mới',
-                            'body' => 'Booking',
-                        ],
-                    ],
                 ],
             ]);
-            return $response->getBody();
         }
 
         return true;
