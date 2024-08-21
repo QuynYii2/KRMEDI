@@ -239,7 +239,7 @@ class MainApi extends Controller
         return $this->sendFcmRequest([
             'token' => $device_token,
             'data' => array_reduce(array_keys($data), function ($result, $key) use ($data) {
-                $result[$key] = (string) $data[$key];
+                $result[$key] = is_array($data[$key]) ? json_encode($data[$key]) : (string) $data[$key];
                 return $result;
             }, []),
             'notification' => $notification,
@@ -285,7 +285,7 @@ class MainApi extends Controller
             ];
 
             $transformedData = array_reduce(array_keys($data), function ($result, $key) use ($data) {
-                $result[$key] = (string) $data[$key];
+                $result[$key] = is_array($data[$key]) ? json_encode($data[$key]) : (string) $data[$key];
                 return $result;
             }, []);
 
