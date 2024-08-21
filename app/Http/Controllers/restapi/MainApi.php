@@ -196,6 +196,7 @@ class MainApi extends Controller
             $user_email = $request->input('email');
             $data = $request->input('data');
             $notification = $request->input('notification');
+            $channel = $request->input('channel');
             $user = User::where('email', $user_email)->first();
             $platform = $user->devices_name;
 
@@ -224,8 +225,8 @@ class MainApi extends Controller
                 return response($this->returnMessage('Token not found'), 404);
             }
 
-            $response = $this->sendNotification($token, $data, $notification);
-            $this->sendVideoCallNotification($token, $data, $platform);
+            $response = $this->sendNotification($token, $data, $notification, $channel);
+            $this->sendVideoCallNotification($token, $data, $platform, $channel);
             $data = $response->getContents();
             return response($data);
         } catch (\Exception $exception) {
@@ -234,9 +235,9 @@ class MainApi extends Controller
         }
     }
 
-    public function sendNotification($device_token, $data, $notification)
+    public function sendNotification($device_token, $data, $notification, ?string $channel)
     {
-        return $this->sendFcmRequest([
+        $payload = [
             'token' => $device_token,
             'data' => array_reduce(array_keys($data), function ($result, $key) use ($data) {
                 $result[$key] = is_array($data[$key]) ? json_encode($data[$key]) : (string) $data[$key];
@@ -246,10 +247,19 @@ class MainApi extends Controller
             'web' => [
                 'notification' => $notification,
             ],
-        ]);
+        ];
+        if ($channel !== null) {
+            $payload['android'] = [
+                'notification' => [
+                    'channel_id' => $channel,
+                ]
+            ];
+        }
+
+        return $this->sendFcmRequest($payload);
     }
 
-    public function sendVideoCallNotification($firebaseToken, $data, $platform)
+    public function sendVideoCallNotification($firebaseToken, $data, $platform, ?string $channel)
     {
         try {
             $client = new Client();
@@ -258,18 +268,16 @@ class MainApi extends Controller
             $notificationPayload = [
                 'title' => 'Bạn có 1 cuộc gọi mới',
                 'body' => 'Bạn có thông báo mới',
-                'icon' => 'ic_launcher',
-                'click_action' => 'TOP_STORY_ACTIVITY',
-                'sound' => 'custom_sound.wav',
-                'android_channel_id' => 'video_call_channel_id',
-                'color' => '#ff0000',
             ];
 
             $androidPayload = [
                 'notification' => [
+                    'icon' => 'ic_launcher',
                     'channel_id' => 'video_call_channel_id',
                     'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
                     'image' => 'https://example.com/image.png',
+                    'sound' => 'custom_sound.wav',
+                    'color' => '#ff0000',
                 ],
             ];
 
