@@ -532,7 +532,7 @@ class MainApi extends Controller
                     'title' => 'Bạn vừa nhận được 1 thông báo mới',
                     'body' => 'Cart',
                 ],
-                'web' => [
+                'webpush' => [
                     'notification' => [
                         'title' => 'Bạn vừa nhận được 1 thông báo mới',
                         'body' => 'Cart',
@@ -569,7 +569,7 @@ class MainApi extends Controller
                     'title' => 'Bạn vừa nhận được 1 thông báo mới',
                     'body' => 'Booking',
                 ],
-                'web' => [
+                'webpush' => [
                     'notification' => [
                         'title' => 'Bạn vừa nhận được 1 thông báo mới',
                         'body' => 'Booking',
@@ -596,7 +596,7 @@ class MainApi extends Controller
                     'title' => 'Bạn vừa nhận được 1 thông báo mới',
                     'body' => 'Booking',
                 ],
-                'web' => [
+                'webpush' => [
                     'notification' => [
                         'title' => 'Bạn vừa nhận được 1 thông báo mới',
                         'body' => 'Booking',
@@ -630,7 +630,7 @@ class MainApi extends Controller
                     'title' => $data['title'],
                     'body' => $data['description'],
                 ],
-                'web' => [
+                'webpush' => [
                     'notification' => [
                         'title' => $data['title'],
                         'body' => $data['description'],
