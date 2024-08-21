@@ -227,6 +227,7 @@ class MainApi extends Controller
             $data = $response->getContents();
             return response($data);
         } catch (\Exception $exception) {
+            Log::error("Unable to call MainApi::sendNotificationFcm", ['exception' => $exception]);
             return response($this->returnMessage($exception->getMessage()), 400);
         }
     }
