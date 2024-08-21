@@ -108,7 +108,7 @@ class MainApi extends Controller
             'json' => $payload,
         ]);
 
-        Log::info('Send request to FCM', [
+        Log::debug('Send request to FCM', [
             'payload' => $payload,
             'response' => optional($response->getBody())->getContents(),
         ]);
