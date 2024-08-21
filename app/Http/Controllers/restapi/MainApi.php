@@ -225,9 +225,8 @@ class MainApi extends Controller
                 return response($this->returnMessage('Token not found'), 404);
             }
 
-            $response = $this->sendNotification($token, $data, $notification, $channel);
-            $this->sendVideoCallNotification($token, $data, $platform, $channel);
-            $data = $response->getContents();
+            //            $this->sendVideoCallNotification($token, $data, $platform, $channel);
+            $data = $this->sendNotification($token, $data, $notification, $channel)->getContents();
             return response($data);
         } catch (\Exception $exception) {
             Log::error("Unable to call MainApi::sendNotificationFcm", ['exception' => $exception]);
@@ -283,10 +282,6 @@ class MainApi extends Controller
 
             $iosPayload = [
                 'aps' => [
-                    'alert' => [
-                        'title' => 'Custom Sound Notification',
-                        'body' => 'This notification has a custom sound!',
-                    ],
                     'sound' => 'custom_sound.wav',
                     'badge' => 1,
                 ],
