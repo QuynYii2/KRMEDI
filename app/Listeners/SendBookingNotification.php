@@ -11,14 +11,9 @@ use Illuminate\Queue\InteractsWithQueue;
 
 class SendBookingNotification implements ShouldQueue
 {
-    /**
-     * Create the event listener.
-     */
-    public $booking;
 
     public function __construct()
     {
-        $this->booking = new BookingController();
     }
 
     /**
