@@ -479,9 +479,6 @@ class AgoraChatController extends Controller
         $notification = [
             "title" => "Cuộc gọi đến",
             "body" => $userCall->name ?? "Không rõ",
-            'sound' => 'custom_sound.wav',
-            "android_channel_id" => "video_call_channel_id",
-            'click_action' => $content,
         ];
 
         $uuid = rand(1000000000, 9999999999);
@@ -518,11 +515,30 @@ class AgoraChatController extends Controller
         ];
 
         $request = new Request();
-        $request->merge(['email' => $email, 'notification' => $notification, 'data' => $data]);
+        $request->merge([
+            'email' => $email,
+            'notification' => $notification,
+            'data' => $data,
+            'channel' => 'video_call_channel_id',
+            'addition_opts' => [
+                'android' => [
+                    'notification' => [
+                        'sound' => 'custom_sound.wav',
+                        'click_action' => $content,
+                    ],
+                ],
+                'apns' => [
+                    'payload' => [
+                        'aps' => [
+                            'sound' => 'custom_sound.wav',
+                            'badge' => 1,
+                        ],
+                    ],
+                ]
+            ]
+        ]);
 
-        $mainAPi = new MainApi();
-
-        $response = $mainAPi->sendNotificationFcm($request);
+        $response = (new MainApi())->sendNotificationFcm($request);
     }
 
     public function getInfoAgoraForApp(Request $request)

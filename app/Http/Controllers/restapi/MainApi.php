@@ -147,6 +147,7 @@ class MainApi extends Controller
             $data = $request->input('data');
             $notification = $request->input('notification');
             $channel = $request->input('channel');
+            $additionOpts = $request->input('addition_opts', []);
             $user = User::where('email', $user_email)->first();
             $platform = $user->devices_name;
 
@@ -176,7 +177,7 @@ class MainApi extends Controller
             }
 
             //            $this->sendVideoCallNotification($token, $data, $platform, $channel);
-            $data = $this->sendNotification($token, $data, $notification, $channel)->getContents();
+            $data = $this->sendNotification($token, $data, $notification, $channel, $additionOpts)->getContents();
             return response($data);
         } catch (\Exception $exception) {
             Log::error("Unable to call MainApi::sendNotificationFcm", ['exception' => $exception]);
@@ -184,7 +185,7 @@ class MainApi extends Controller
         }
     }
 
-    public function sendNotification($device_token, $data, $notification, ?string $channel)
+    public function sendNotification($device_token, $data, $notification, ?string $channel, $additionOpts = [])
     {
         $payload = [
             'token' => $device_token,
@@ -203,6 +204,10 @@ class MainApi extends Controller
                     'channel_id' => $channel,
                 ]
             ];
+        }
+
+        if (!empty($additionOpts)) {
+            $payload = array_merge_recursive($payload, $additionOpts);
         }
 
         return FcmService::init()->request($payload);
