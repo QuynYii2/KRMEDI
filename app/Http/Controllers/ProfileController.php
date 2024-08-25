@@ -82,6 +82,10 @@ class ProfileController extends Controller
     public function infoUserByEmail($email)
     {
         $user = User::where('email', $email)->first();
+        if ($user === null) {
+            return response()->json([]);
+        }
+
         $roleUser = DB::table('role_users')->where('user_id', $user->id)->first();
         $role = Role::find($roleUser->role_id);
 
