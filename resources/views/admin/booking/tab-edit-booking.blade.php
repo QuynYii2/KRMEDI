@@ -59,7 +59,7 @@
                      <select class="form-select" id="doctor_id" name="doctor_id" @if($isDoctor) disabled @endif>
                          <option value="">Bác sĩ phụ trách</option>
                         @foreach($list_doctor as $item_doctor)
-                            <option value="{{ $item_doctor->id }}" @if($item_doctor->id == $bookings_edit->doctor_id) selected @endif>{{ $item_doctor->username }}</option>
+                            <option value="{{ $item_doctor->id }}" @if($item_doctor->id == $bookings_edit->doctor_id) selected @endif>{{ $item_doctor->name }}</option>
                         @endforeach
                     </select>
                 </div>

@@ -166,7 +166,11 @@ class BookingController extends Controller
                 $repeaterItems[] = $item;
             }
         }
-        $list_doctor = User::where('department_id',$bookings_edit->department_id)->get();
+        if ($role_name->name == 'HOSPITALS'){
+            $list_doctor = User::where('manager_id',$role_id->user_id)->get();
+        }else{
+            $list_doctor = User::where('department_id',$bookings_edit->department_id)->get();
+        }
         $data_prescription = PrescriptionResults::where('booking_id',$id)->first();
         if (isset($data_prescription)){
             $prescription_product = json_decode($data_prescription->prescriptions, true);
@@ -526,9 +530,14 @@ class BookingController extends Controller
     {
         $reflector = new \ReflectionClass('App\Enums\ReasonCancel');
         $reasons = $reflector->getConstants();
-        $list_doctor = User::where('member','DOCTORS')->get();
+        $userData = Auth::user();
+        if ($userData->member == "HOSPITALS"){
+            $list_doctor = User::where('member','DOCTORS')->where('manager_id',$userData->id)->get();
+        }else{
+            $list_doctor = User::where('member','DOCTORS')->get();
+        }
 
-        return view('admin.booking.tab-create-booking', compact( 'reasons','list_doctor'));
+        return view('admin.booking.tab-create-booking', compact( 'reasons','list_doctor','userData'));
     }
 
     public function store(Request $request)
