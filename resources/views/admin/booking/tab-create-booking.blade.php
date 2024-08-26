@@ -41,14 +41,23 @@
                 <div class="col-md-3 form-group" >
                     <label for="clinic_id">{{ __('home.BusinessName') }}</label>
                     @php
+                    if ($userData->member == "HOSPITALS"){
+                        $clinic_name = \App\Models\Clinic::where('user_id',$userData->id)->first();
+                    }else{
                         $clinic_name = \App\Models\Clinic::all();
+                    }
                     @endphp
-                    <select class="form-select clinic_name" name="clinic_id" >
-                        <option value="">Tên doanh nghiệp</option>
-                        @foreach($clinic_name as $clinic)
-                            <option value="{{$clinic->id}}">{{$clinic->name}}</option>
+                    @if ($userData->member == "HOSPITALS")
+                        <input type="text" class="form-control" name="clinic_id" value="{{@$clinic_name->id}}" hidden>
+                        <input type="text" class="form-control" value="{{@$clinic_name->name}}" disabled>
+                    @else
+                        <select class="form-select clinic_name" name="clinic_id" >
+                            <option value="">Tên doanh nghiệp</option>
+                            @foreach($clinic_name as $clinic)
+                                <option value="{{$clinic->id}}">{{$clinic->name}}</option>
                             @endforeach
-                    </select>
+                        </select>
+                    @endif
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="department_id">{{ __('home.Department') }}</label>
@@ -64,12 +73,17 @@
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="doctor_id">{{ __('home.Doctor Name') }}</label>
-                     <select class="form-select doctor_name" name="doctor_id" >
-                         <option value="">Bác sĩ phụ trách</option>
-                        @foreach($list_doctor as $item_doctor)
-                            <option value="{{ $item_doctor->id }}" >{{ $item_doctor->name }}</option>
-                        @endforeach
-                    </select>
+                    @if ($userData->member == "DOCTORS")
+                        <input type="text" class="form-control" name="doctor_id" value="{{$userData->id}}" hidden>
+                        <input type="text" class="form-control" value="{{$userData->name}}" disabled>
+                        @else
+                        <select class="form-select doctor_name" name="doctor_id" >
+                            <option value="">Bác sĩ phụ trách</option>
+                            @foreach($list_doctor as $item_doctor)
+                                <option value="{{ $item_doctor->id }}" >{{ $item_doctor->name }}</option>
+                            @endforeach
+                        </select>
+                    @endif
                 </div>
             </div>
             <div class="row">
