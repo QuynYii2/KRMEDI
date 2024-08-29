@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\restapi\BookingApi;
 use App\Models\Booking;
 use App\Models\Chat;
+use App\Models\CheckInBookingModel;
 use App\Models\Clinic;
 use App\Models\Commune;
 use App\Models\Coupon;
@@ -551,6 +552,40 @@ class HomeController extends Controller
 
         return view('admin.home-admin', compact('isAdmin','bookings', 'bookingFilterName', 'departmentCounts', 'bookingLastPeriod', 'userReBooking', 'userCount',
             'orders', 'orderFilterName', 'orderLastPeriod', 'topOrderCount', 'users', 'userFilterName', 'userLastPeriod'));
+    }
+
+    public function bookingDetailSpecialistQr($id)
+    {
+        $clinicDetail = Clinic::where('id', $id)->first();
+        $arrayService = explode(',', $clinicDetail->service_id);
+        $services = ServiceClinic::whereIn('id', $arrayService)->get();
+        if (Auth::check()) {
+            $userId = Auth::user()->id;
+            $check_in_booking = new CheckInBookingModel();
+            $check_in_booking->clicic_id = $id;
+            $check_in_booking->user_id = $userId;
+            $check_in_booking->save();
+
+            $bookingsCheck = DB::table('bookings')
+                ->select(DB::raw('check_in as check_in_date'), 'clinic_id', DB::raw('COUNT(*) as num_bookings'))
+                ->groupBy('check_in_date', 'clinic_id')
+                ->having('num_bookings', '>=', 5)
+                ->get();
+            if (!$clinicDetail || $clinicDetail->status != ClinicStatus::ACTIVE) {
+                return response("Product not found", 404);
+            }
+            if ($userId) {
+                $memberFamilys = FamilyManagement::with('users')
+                    ->where('user_id', Auth::user()->id)
+                    ->get();
+            } else {
+                $memberFamilys = null;
+            }
+            session(['previous_url' => url()->full()]);
+            return view('clinics.booking-clinic-page', compact('clinicDetail', 'id', 'services', 'memberFamilys', 'bookingsCheck'));
+        }
+        alert('Bạn cần đăng nhập để đặt lịch khám');
+        return redirect(route('home'));
     }
 
     public function getDataForChart(Request $request)
