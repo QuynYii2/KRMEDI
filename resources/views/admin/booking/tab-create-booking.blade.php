@@ -29,7 +29,23 @@
                 <div class="col-md-3 form-group">
                     <label for="user">{{ __('home.Tên người đăng ký') }}</label>
                     @php
-                        $user = \App\Models\User::all();
+                        if ($userData->member == "HOSPITALS"){
+                            $dataClinic = \App\Models\Clinic::where('user_id',$userData->id)->first();
+                            if ($dataClinic){
+                                $check_in_booking = \App\Models\CheckInBookingModel::where('clinic_id',$dataClinic->id)->pluck('user_id');
+                                $user = \App\Models\User::whereIn('id',$check_in_booking)->get();
+                            }else{
+                                $user = \App\Models\User::all();
+                            }
+                    }else{
+                    $dataClinic = \App\Models\Clinic::where('user_id',$userData->manager_id)->first();
+                            if ($dataClinic){
+                                $check_in_booking = \App\Models\CheckInBookingModel::where('clinic_id',$dataClinic->id)->pluck('user_id');
+                                $user = \App\Models\User::whereIn('id',$check_in_booking)->get();
+                            }else{
+                                $user = \App\Models\User::all();
+                            }
+                    }
                     @endphp
                     <select class="form-select user_name" name="user_id" >
                         <option value="">Tên bệnh nhân</option>
@@ -41,13 +57,19 @@
                 <div class="col-md-3 form-group" >
                     <label for="clinic_id">{{ __('home.BusinessName') }}</label>
                     @php
-                    if ($userData->member == "HOSPITALS"){
-                        $clinic_name = \App\Models\Clinic::where('user_id',$userData->id)->first();
-                    }else{
-                        $clinic_name = \App\Models\Clinic::all();
-                    }
+                        $dataClinic = \App\Models\Clinic::where('user_id',$userData->manager_id)->first();
+                        if ($userData->member == "HOSPITALS"){
+                            $clinic_name = \App\Models\Clinic::where('user_id',$userData->id)->first();
+                        }else if($dataClinic){
+                             $clinic_name = \App\Models\Clinic::find($dataClinic->id);
+                        }else{
+                            $clinic_name = \App\Models\Clinic::all();
+                        }
                     @endphp
                     @if ($userData->member == "HOSPITALS")
+                        <input type="text" class="form-control" name="clinic_id" value="{{@$clinic_name->id}}" hidden>
+                        <input type="text" class="form-control" value="{{@$clinic_name->name}}" disabled>
+                        @elseif($dataClinic)
                         <input type="text" class="form-control" name="clinic_id" value="{{@$clinic_name->id}}" hidden>
                         <input type="text" class="form-control" value="{{@$clinic_name->name}}" disabled>
                     @else
