@@ -117,7 +117,7 @@
                                             <p class="text-center">{{$item['quantity']}}</p>
                                         </td>
                                         <td><p class="text-center">{{$item['treatment_days']}}</p></td>
-                                        <td>{{$item['detail_value']}}</td>
+                                        <td>{{$item['note']}}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>
