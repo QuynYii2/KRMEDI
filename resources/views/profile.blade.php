@@ -300,6 +300,7 @@
                 </div>
             </div>
 
+            @if(Auth::user()->member == "HOSPITALS")
             <div class="card shadow mb-4">
                 <div class="card-body">
                     <h3 class="text-center bold">My QrCode</h3>
@@ -308,6 +309,7 @@
                     </div>
                 </div>
             </div>
+                @endif
         </div>
 
         <div class="col-lg-8 order-lg-1">

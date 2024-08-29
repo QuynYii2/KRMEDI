@@ -42,9 +42,14 @@ class ProfileController extends Controller
         $nations = Nation::all();
         $doctor = User::where('id', Auth::user()->id)->first();
         $departments = DoctorDepartment::where('status', DoctorDepartmentStatus::ACTIVE)->get();
-        $url = route('web.users.my.bookings.detail', Auth::user()->id);
-        $qrCodes = QrCode::size(300)->generate($url);
         $clinic = Clinic::where('user_id', Auth::user()->id)->first();
+        if ($clinic){
+            $clinic_id = $clinic->id;
+        }else{
+            $clinic_id = Clinic::where('user_id', Auth::user()->manager_id)->first();
+        }
+        $url = route('home.specialist.booking.detail-qr', $clinic_id??75);
+        $qrCodes = QrCode::size(300)->generate($url);
         $services = ServiceClinic::where('status', ServiceClinicStatus::ACTIVE)->get();
         $symptoms = Symptom::where('status', SymptomStatus::ACTIVE)->get();
         $doctorLists = User::where('member', TypeUser::DOCTORS)->get();
