@@ -562,7 +562,7 @@ class HomeController extends Controller
         if (Auth::check()) {
             $userId = Auth::user()->id;
             $check_in_booking = new CheckInBookingModel();
-            $check_in_booking->clicic_id = $id;
+            $check_in_booking->clinic_id = $id;
             $check_in_booking->user_id = $userId;
             $check_in_booking->save();
 
