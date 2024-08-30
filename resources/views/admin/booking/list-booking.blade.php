@@ -28,9 +28,17 @@
         $role_name = \App\Models\Role::find($role_id->role_id);
     @endphp
     @if($role_name->name != 'DOCTORS')
+        @if($direct == 0)
     <form action="{{route('homeAdmin.list.booking')}}" method="get">
         @else
+            <form action="{{route('homeAdmin.list.booking.direct')}}" method="get">
+            @endif
+        @else
+                    @if($direct == 0)
             <form action="{{route('homeAdmin.list.booking.doctor')}}" method="get">
+                @else
+                    <form action="{{route('homeAdmin.list.booking.direct.doctor')}}" method="get">
+                    @endif
                 @endif
         <div class="card-body d-flex align-items-center flex-wrap p-0 pb-3">
             <div class="col-lg-3 col-md-6 col-12 px-1">
@@ -94,9 +102,17 @@
                 </div>
                 <button type="submit" class="btn btn-warning mx-3 text-search-booking" name="excel" value="1">Tìm kiếm</button>
                 @if($role_name->name != 'DOCTORS')
+                @if($direct == 0)
                 <a href="{{route('homeAdmin.list.booking')}}" class="btn btn-dark mr-3">Làm mới</a>
                     @else
+                    <a href="{{route('homeAdmin.list.booking.direct')}}" class="btn btn-dark mr-3">Làm mới</a>
+                    @endif
+                    @else
+                @if($direct == 0)
                     <a href="{{route('homeAdmin.list.booking.doctor')}}" class="btn btn-dark mr-3">Làm mới</a>
+                    @else
+                    <a href="{{route('homeAdmin.list.booking.direct.doctor')}}" class="btn btn-dark mr-3">Làm mới</a>
+                    @endif
                 @endif
             <button type="submit" class="btn btn-info" name="excel" value="2">Xuất Excel</button>
         </div>
