@@ -47,7 +47,7 @@
                     <input type="text" class="form-control" id="department_id" name="department_id"
                         value="{{ $department ? $department->name : '' }}" disabled>
                         @else
-                        <select class="form-select" id="departments_id" name="departments_id" @if($isDoctor) disabled @endif>
+                        <select class="form-select" id="departments_id" name="departments_id">
                             @foreach($listDepartment as $item_department)
                                 <option value="{{ $item_department->id }}" @if($item_department->id == $bookings_edit->department_id) selected @endif>{{ $item_department->name }}</option>
                             @endforeach
@@ -86,7 +86,7 @@
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="booking_status">{{ __('home.Trạng thái') }}</label>
-                    <select class="form-select" id="booking_status" name="status" @if($isDoctor) disabled @endif>
+                    <select class="form-select" id="booking_status" name="status">
                         <option value="{{ \App\Enums\BookingStatus::PENDING }}"
                             {{ $bookings_edit->status === \App\Enums\BookingStatus::PENDING ? 'selected' : '' }}>
                             {{ \App\Enums\BookingStatus::PENDING }}
@@ -139,7 +139,7 @@
                                     <div class="form-group">
                                         <label for="selectType{{ $index }}">Loại khám bệnh:</label>
                                         <select id="selectType{{ $index }}" class="form-control selectType"
-                                            name="select" @if($isDoctor) disabled @endif>
+                                            name="select">
                                             <option value="Khám bệnh"
                                                 {{ $item['selectValue'] === 'Khám bệnh' ? 'selected' : '' }}>
                                                 Khám bệnh</option>
@@ -158,7 +158,7 @@
                                     <div class="form-group">
                                         <label for="in_charged_{{ $index }}">Bác sĩ phụ trách:</label>
                                         <select id="in_charged_{{ $index }}" class="form-select doctor_selector"
-                                            name="doctor_id" @if($isDoctor) disabled @endif>
+                                            name="doctor_id">
                                             @if ($item['doctorId'] && $item['doctorName'])
                                                 <option value="{{ $item['doctorId'] }}">{{ $item['doctorName'] }}
                                                 </option>
@@ -169,7 +169,7 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="file">Tài liệu khám bệnh:</label>
-                                        <input type="file" name="file" class="form-control-file" accept=".pdf" @if($isDoctor) disabled @endif>
+                                        <input type="file" name="file" class="form-control-file" accept=".pdf">
                                         <input type="hidden" name="file_urls" value="{{ $item['fileUrl'] }}">
                                     </div>
                                 </div>
@@ -188,7 +188,7 @@
                                 <div class="col-md-3 firstSelector">
                                     <div class="form-group">
                                         <label for="selectType">Select:</label>
-                                        <select class="form-control selectType" name="select" @if($isDoctor) disabled @endif>
+                                        <select class="form-control selectType" name="select">
                                             <option value="Khám bệnh">Khám bệnh</option>
                                             <option value="Siêu âm">Siêu âm</option>
                                             <option value="XQuang">XQuang</option>
@@ -198,22 +198,22 @@
                                 <div class="col-md-3 select2Div">
                                     <div class="form-group">
                                         <label for="in_charged">Bác sĩ phụ trách:</label>
-                                        <select class="form-select doctor_selector" name="doctor_id" @if($isDoctor) disabled @endif></select>
+                                        <select class="form-select doctor_selector" name="doctor_id" ></select>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="file">Tài liệu khám bệnh:</label>
-                                        <input type="file" name="file" class="form-control-file" accept=".pdf" @if($isDoctor) disabled @endif>
+                                        <input type="file" name="file" class="form-control-file" accept=".pdf" >
                                     </div>
                                 </div>
                             </div>
                         @endforelse
                     </div>
-                    @if(!$isDoctor)
+{{--                    @if(!$isDoctor)--}}
                     <button data-repeater-create type="button" class="btn btn-primary" id="addBtn"><i
                             class="fa-solid fa-plus"></i></button>
-                        @endif
+{{--                        @endif--}}
                 </div>
                 </br>
             </div>
@@ -257,10 +257,10 @@
                         <div id="list-service-result-don-thuoc">
 
                         </div>
-                        @if(!$isDoctor)
+{{--                        @if(!$isDoctor)--}}
                         <button type="button" class="btn btn-outline-primary mt-3 btn-add-medicine">Tạo đơn
                         </button>
-                            @endif
+{{--                            @endif--}}
                     </div>
                 </div>
             </div>
@@ -279,7 +279,7 @@
                </div>
 @endif
 
-            @if(!$isDoctor)
+{{--            @if(!$isDoctor)--}}
             <input type="text" name="services" id="services" class="form-control d-none">
             @if ($bookings_edit->is_result == 1 && $bookings_edit->status === \App\Enums\BookingStatus::COMPLETE)
                 @if (isset($bookings_edit->extend['booking_results']))
@@ -288,7 +288,7 @@
                 @endif
             @endif
             <button type="submit" class="btn btn-primary up-date-button mt-4">{{ __('home.Save') }}</button>
-                @endif
+{{--                @endif--}}
         </form>
     </div>
 
