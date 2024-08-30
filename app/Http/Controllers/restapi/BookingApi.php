@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\booking\ProcessBooking;
 use App\Models\Booking;
 use App\Models\Clinic;
+use App\Models\Department;
 use App\Models\PrescriptionResults;
 use App\Models\SurveyAnswer;
 use App\Models\SurveyAnswerUser;
@@ -182,6 +183,8 @@ class BookingApi extends Controller
                 $arrayBooking['question'] = $arrQuestion;
                 $arrayBooking['examination_results_pdf'] = $booking->prescription_file??null;
                 $arrayBooking['isPrescription'] = $isPrescription;
+                $arrayBooking['department_name'] = Department::find($booking->department_id)->name??'';
+                $arrayBooking['clinic_name'] = Clinic::find($booking->user_id)->name??'';
 
                 $arrayBookings[] = $arrayBooking;
             }
@@ -248,6 +251,8 @@ class BookingApi extends Controller
                 $arrayBooking['question'] = $arrQuestion;
                 $arrayBooking['examination_results_pdf'] = $booking->prescription_file??null;
                 $arrayBooking['isPrescription'] = $isPrescription;
+                $arrayBooking['department_name'] = Department::find($booking->department_id)->name??'';
+                $arrayBooking['clinic_name'] = Clinic::find($booking->user_id)->name??'';
 
                 $arrayBookings[] = $arrayBooking;
             }
