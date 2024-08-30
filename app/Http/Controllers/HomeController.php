@@ -558,7 +558,7 @@ class HomeController extends Controller
     public function bookingDetailSpecialistQr($id)
     {
         if (Auth::check()) {
-            $bookingApi = new BookingApi();
+            $bookingApi = new Booking();
             $user = Auth::user();
             $currentDateTime = now();
             $bookingApi->check_in = $currentDateTime->format('Y-m-d H:i:s');
@@ -802,7 +802,7 @@ class HomeController extends Controller
     {
         $isAdmin = (new MainController())->checkAdmin();
         if ($isAdmin) {
-            $query = Booking::where('bookings.status', '!=', BookingStatus::DELETE)->where('type',0)
+            $query = Booking::where('bookings.status', '!=', BookingStatus::DELETE)->where('bookings.type',0)
                 ->orderBy('bookings.check_in', 'desc');
         } else {
             $clinic = Clinic::where('user_id', Auth::user()->id)->first();
@@ -811,7 +811,7 @@ class HomeController extends Controller
                 ->where('clinic_id', $clinic ? $clinic->id : '')
                 ->groupBy('user_id')
                 ->pluck('latest_id');
-            $query = Booking::whereIn('bookings.id', $latestBookings)->where('type',0)
+            $query = Booking::whereIn('bookings.id', $latestBookings)->where('bookings.type',0)
                 ->orderBy('check_in', 'desc');
         }
         $id_user = $query->pluck('user_id')->unique()->toArray();
@@ -923,7 +923,7 @@ class HomeController extends Controller
             ->where('doctor_id', Auth::user()->id)
             ->groupBy('user_id')
             ->pluck('latest_id');
-        $query = $baseQuery->whereIn('bookings.id', $latestBookings)->where('type',0)
+        $query = $baseQuery->whereIn('bookings.id', $latestBookings)->where('bookings.type',0)
             ->orderBy('check_in', 'desc');
         $id_user = $query->pluck('user_id')->unique()->toArray();
 
@@ -1011,7 +1011,7 @@ class HomeController extends Controller
     {
         $isAdmin = (new MainController())->checkAdmin();
         if ($isAdmin) {
-            $query = Booking::where('bookings.status', '!=', BookingStatus::DELETE)->where('type',1)
+            $query = Booking::where('bookings.status', '!=', BookingStatus::DELETE)->where('bookings.type',1)
                 ->orderBy('bookings.check_in', 'desc');
         } else {
             $clinic = Clinic::where('user_id', Auth::user()->id)->first();
@@ -1020,7 +1020,7 @@ class HomeController extends Controller
                 ->where('clinic_id', $clinic ? $clinic->id : '')
                 ->groupBy('user_id')
                 ->pluck('latest_id');
-            $query = Booking::whereIn('bookings.id', $latestBookings)->where('type',1)
+            $query = Booking::whereIn('bookings.id', $latestBookings)->where('bookings.type',1)
                 ->orderBy('check_in', 'desc');
         }
         $id_user = $query->pluck('user_id')->unique()->toArray();
@@ -1132,7 +1132,7 @@ class HomeController extends Controller
             ->where('doctor_id', Auth::user()->id)
             ->groupBy('user_id')
             ->pluck('latest_id');
-        $query = $baseQuery->whereIn('bookings.id', $latestBookings)->where('type',1)
+        $query = $baseQuery->whereIn('bookings.id', $latestBookings)->where('bookings.type',1)
             ->orderBy('check_in', 'desc');
         $id_user = $query->pluck('user_id')->unique()->toArray();
 

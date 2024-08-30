@@ -54,6 +54,7 @@
                     @endforeach
                 </select>
             </div>
+            @if($direct == 0)
             <div class="col-lg-2 col-md-4 col-6 px-1">
                 <lable>Dịch vụ</lable>
                 <select class="form-select w-100" name="service" >
@@ -63,6 +64,7 @@
                     @endforeach
                 </select>
             </div>
+            @endif
             <div class="col-lg-2 col-md-4 col-6 px-1">
                 <lable>Trạng thái</lable>
                 <select class="form-select w-100" name="status" >
@@ -92,6 +94,7 @@
                         @endforeach
                     </select>
                 </div>
+            @if($direct == 0)
                 <div class="col-lg-3 col-md-5 col-12 px-1 line-fillter-user">
                     <lable>Bảo hiểm</lable>
                     <select class="form-select w-100" name="insurance" >
@@ -100,6 +103,7 @@
                         <option class="bg-white" @if(request()->get('insurance') == 'no') selected @endif value="no">Không</option>
                     </select>
                 </div>
+            @endif
                 <button type="submit" class="btn btn-warning mx-3 text-search-booking" name="excel" value="1">Tìm kiếm</button>
                 @if($role_name->name != 'DOCTORS')
                 @if($direct == 0)
