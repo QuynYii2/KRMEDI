@@ -71,6 +71,7 @@ class BookingApi extends Controller
             $booking->extend = $extend;
             $booking->member_family_id = $request->input('member_family_child_id');
             $booking->insurance_use = $request->input('is_use_insurance');
+            $booking->type = 0;
             $booking->save();
 
             $newBooking = Booking::with('user', 'clinic.users')->find($booking->id);
@@ -184,7 +185,7 @@ class BookingApi extends Controller
                 $arrayBooking['examination_results_pdf'] = $booking->prescription_file??null;
                 $arrayBooking['isPrescription'] = $isPrescription;
                 $arrayBooking['department_name'] = Department::find($booking->department_id)->name??'';
-                $arrayBooking['clinic_name'] = Clinic::find($booking->user_id)->name??'';
+                $arrayBooking['clinic_name'] = Clinic::find($booking->clinic_id)->name??'';
 
                 $arrayBookings[] = $arrayBooking;
             }
@@ -252,7 +253,7 @@ class BookingApi extends Controller
                 $arrayBooking['examination_results_pdf'] = $booking->prescription_file??null;
                 $arrayBooking['isPrescription'] = $isPrescription;
                 $arrayBooking['department_name'] = Department::find($booking->department_id)->name??'';
-                $arrayBooking['clinic_name'] = Clinic::find($booking->user_id)->name??'';
+                $arrayBooking['clinic_name'] = Clinic::find($booking->clinic_id)->name??'';
 
                 $arrayBookings[] = $arrayBooking;
             }
