@@ -920,7 +920,6 @@ class HomeController extends Controller
             ->where('bookings.status', '!=', BookingStatus::DELETE);
         $latestBookings = Booking::select(DB::raw('MAX(id) as latest_id'))
             ->where('status', '!=', BookingStatus::DELETE)
-            ->where('doctor_id', Auth::user()->id)
             ->groupBy('user_id')
             ->pluck('latest_id');
         $query = $baseQuery->whereIn('bookings.id', $latestBookings)->where('bookings.type',0)
@@ -1129,7 +1128,6 @@ class HomeController extends Controller
             ->where('bookings.status', '!=', BookingStatus::DELETE);
         $latestBookings = Booking::select(DB::raw('MAX(id) as latest_id'))
             ->where('status', '!=', BookingStatus::DELETE)
-            ->where('doctor_id', Auth::user()->id)
             ->groupBy('user_id')
             ->pluck('latest_id');
         $query = $baseQuery->whereIn('bookings.id', $latestBookings)->where('bookings.type',1)
