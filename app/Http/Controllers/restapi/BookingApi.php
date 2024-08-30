@@ -185,6 +185,7 @@ class BookingApi extends Controller
                 $arrayBooking['examination_results_pdf'] = $booking->prescription_file??null;
                 $arrayBooking['isPrescription'] = $isPrescription;
                 $arrayBooking['department_name'] = Department::find($booking->department_id)->name??'';
+                $arrayBooking['department_image'] = Department::find($booking->department_id)->thumbnail??'';
                 $arrayBooking['clinic_name'] = Clinic::find($booking->clinic_id)->name??'';
 
                 $arrayBookings[] = $arrayBooking;
@@ -253,6 +254,7 @@ class BookingApi extends Controller
                 $arrayBooking['examination_results_pdf'] = $booking->prescription_file??null;
                 $arrayBooking['isPrescription'] = $isPrescription;
                 $arrayBooking['department_name'] = Department::find($booking->department_id)->name??'';
+                $arrayBooking['department_image'] = Department::find($booking->department_id)->thumbnail??'';
                 $arrayBooking['clinic_name'] = Clinic::find($booking->clinic_id)->name??'';
 
                 $arrayBookings[] = $arrayBooking;
