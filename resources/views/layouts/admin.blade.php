@@ -647,10 +647,15 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('api.backend.booking.create') }}">
-                                        <i class="bi bi-circle"></i><span>Trả kết quả</span>
+                                    <a href="{{ route('homeAdmin.list.booking.direct.doctor') }}">
+                                        <i class="bi bi-circle"></i><span>Đặt không qua app</span>
                                     </a>
                                 </li>
+{{--                                <li>--}}
+{{--                                    <a href="{{ route('api.backend.booking.create') }}">--}}
+{{--                                        <i class="bi bi-circle"></i><span>Trả kết quả</span>--}}
+{{--                                    </a>--}}
+{{--                                </li>--}}
                             </ul>
                         </li>
                     @endif
@@ -688,10 +693,15 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('api.backend.booking.create') }}">
-                                    <i class="bi bi-circle"></i><span>Trả kết quả</span>
+                                <a href="{{ route('homeAdmin.list.booking.direct') }}">
+                                    <i class="bi bi-circle"></i><span>Đặt không qua app</span>
                                 </a>
                             </li>
+{{--                            <li>--}}
+{{--                                <a href="{{ route('api.backend.booking.create') }}">--}}
+{{--                                    <i class="bi bi-circle"></i><span>Trả kết quả</span>--}}
+{{--                                </a>--}}
+{{--                            </li>--}}
                         </ul>
                     </li>
                         @endif

@@ -41,9 +41,18 @@
                     <label for="department_id">{{ __('home.Department') }}</label>
                     @php
                         $department = \App\Models\Department::find($bookings_edit->department_id);
+                        $listDepartment = \App\Models\Department::where('status','ACTIVE')->get();
                     @endphp
+                    @if($department)
                     <input type="text" class="form-control" id="department_id" name="department_id"
                         value="{{ $department ? $department->name : '' }}" disabled>
+                        @else
+                        <select class="form-select" id="departments_id" name="departments_id" @if($isDoctor) disabled @endif>
+                            @foreach($listDepartment as $item_department)
+                                <option value="{{ $item_department->id }}" @if($item_department->id == $bookings_edit->department_id) selected @endif>{{ $item_department->name }}</option>
+                            @endforeach
+                        </select>
+                    @endif
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="doctor_id">{{ __('home.Doctor Name') }}</label>

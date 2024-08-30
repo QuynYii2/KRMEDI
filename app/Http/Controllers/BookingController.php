@@ -401,6 +401,7 @@ class BookingController extends Controller
             $booking->doctor_id = $request->input('doctor_id');
             $booking->is_result = $is_result;
             $booking->status = $status;
+            $booking->department_id = $request->get('departments_id');
 
             $reason = $request->input('reason_text');
 
