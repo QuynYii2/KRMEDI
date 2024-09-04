@@ -89,8 +89,6 @@ Route::middleware(['user.active'])->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('logoutProcess');
     Route::post('/check-login', [AuthController::class, 'checkLogin'])->name('checkLogin');
     Route::post('/verify-otp', [AuthController::class, 'verifyOTP'])->name('verify.otp.submit');
-    Route::post('api/app-send-otp', [AuthController::class, 'appSendOtp'])->name('app.send.otp');
-    Route::post('api/app-verify-otp', [AuthController::class, 'appVerifyOtp'])->name('app.verify.otp');
 //    Route::get('/update-user-online', [AuthController::class, 'updateUserOnline'])->name('update-user-online');
 
     /* Start login social */
@@ -612,6 +610,8 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('/register', [RegisterController::class, 'register'])->name('api.user.register');
     Route::get('/logout-all', [UserApi::class, 'logout']);
     Route::post('/open-key', [UserApi::class, 'calcPoint'])->name('api.user.open');
+    Route::post('app-send-otp', [AuthController::class, 'appSendOtp'])->name('app.send.otp');
+    Route::post('app-verify-otp', [AuthController::class, 'appVerifyOtp'])->name('app.verify.otp');
 });
 /* Product */
 Route::group(['prefix' => 'products'], function () {
