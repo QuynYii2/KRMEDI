@@ -139,9 +139,9 @@ class AuthController extends Controller
 
         $data =  $sms->sendSMS(1, $phone, $content);
         if ($data){
-            return response()->json(['message' => 'OTP sent successfully. Please verify.']);
+            return response()->json(['message' => 'OTP sent successfully. Please verify.','status'=>true]);
         }
-        return response()->json(['message' => 'Failed to send OTP. Please try again.']);
+        return response()->json(['message' => 'Failed to send OTP. Please try again.','status'=>false]);
     }
 
     public function appVerifyOtp(Request $request)
@@ -149,10 +149,10 @@ class AuthController extends Controller
         $otpCache = Cache::get('otp_' . $request->session()->get('user_data')['phone']);
 
         if (!$otpCache || $otpCache != $request->get('otp')) {
-            return response()->json(['message' => 'Invalid or expired OTP.']);
+            return response()->json(['message' => 'Invalid or expired OTP.','status'=>false]);
         }
         session()->forget(['user_data', 'otp_verification']);
-        return response()->json(['message' => 'check OTP successfully.']);
+        return response()->json(['message' => 'check OTP successfully.','status'=>true]);
     }
 
     public function login(Request $request)
