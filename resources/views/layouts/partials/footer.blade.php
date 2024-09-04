@@ -102,6 +102,14 @@
                 </div>
                 <p class="krm-describe-footer">CÔNG TY TNHH IL VIỆT NAM</p>
                 <p class="krm-describe-footer pt-0">Địa chỉ: V7-B07, Lô đất TTDV 01, Khu đô thị mới An Hưng, Phường La Khê, Quận Hà Đông, Thành phố Hà Nội, Việt Nam</p>
+                <div class="d-flex align-items-center">
+                    <a href="">
+                        <img src="{{asset('img/icon-app-android.png')}}" alt="">
+                    </a>
+                    <a href="https://apps.apple.com/vn/app/krmedi/id6476542829?l=vi" style="margin-left: 15px">
+                        <img src="{{asset('img/icon-app-ios.png')}}" alt="">
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -109,6 +117,7 @@
         <p class="text-line-footer">CUSTOMER SERVICES: +82. 10. 8874. 0164</p>
         <p class="text-line-footer">ADDRESS: Incheon INCHEON 20, Solsaem-ro, Yeonsu-gu, Incheon, Republic of Korea samyong A, 101,1103</p>
     </div>
+
 </footer>
 <div class="pc-hidden container mt-4 footer-mobile-box">
     <div class="container d-md-flex mb-md-5">
@@ -228,6 +237,14 @@
                 <p class="status_message">{{ __('home.Kakaotalk') }}</p>
             </li>
         </ul>
+    </div>
+    <div class="d-flex align-items-center justify-content-center mt-3">
+        <a href="">
+            <img src="{{asset('img/icon-app-android.png')}}" alt="">
+        </a>
+        <a href="https://apps.apple.com/vn/app/krmedi/id6476542829?l=vi" style="margin-left: 15px">
+            <img src="{{asset('img/icon-app-ios.png')}}" alt="">
+        </a>
     </div>
     <div class="mt-3">
         <div class="border-top">
