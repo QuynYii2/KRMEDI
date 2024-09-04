@@ -114,6 +114,47 @@ class AuthController extends Controller
         return back()->withToastError('Failed to send OTP. Please try again.');
     }
 
+    public function appSendOtp(Request $request)
+    {
+        $phone = $request->get('phone');
+        $userData['phone']=$phone;
+        session([
+            'user_data' => $userData,
+            'otp_verification' => false
+        ]);
+        $sms = new SendSMSController();
+        $otp = random_int(100000, 999999);
+        $provider = $this->getNetworkProvider($phone);
+
+        if ($provider === 'viettel') {
+            $content = "Ma OTP dang ky tai khoan IL VIETNAM cua ban la: " . $otp;
+        } else {
+            $content = "IL VIETNAM: Ma OTP dang ky tai khoan https://krmedi.vn/ cua ban la: " . $otp;
+        }
+
+        // lưu cache otp 5 phút
+        $key = 'otp_' . $phone;
+        $expiresAt = now()->addMinutes(5);
+        Cache::put($key, $otp, $expiresAt);
+
+        $data =  $sms->sendSMS(1, $phone, $content);
+        if ($data){
+            return response()->json(['message' => 'OTP sent successfully. Please verify.']);
+        }
+        return response()->json(['message' => 'Failed to send OTP. Please try again.']);
+    }
+
+    public function appVerifyOtp(Request $request)
+    {
+        $otpCache = Cache::get('otp_' . $request->session()->get('user_data')['phone']);
+
+        if (!$otpCache || $otpCache != $request->get('otp')) {
+            return response()->json(['message' => 'Invalid or expired OTP.']);
+        }
+        session()->forget(['user_data', 'otp_verification']);
+        return response()->json(['message' => 'check OTP successfully.']);
+    }
+
     public function login(Request $request)
     {
         try {
@@ -357,6 +398,19 @@ class AuthController extends Controller
             return redirect()->route('home')->withToastSuccess('Registration successful and user logged in.');
         }
         return back()->withToastError('Failed to register user. Please try again.');
+    }
+
+    public function updateUserOnline(Request $request){
+        $userId = $request->get('user_id');
+        $isOnline = $request->get('is_online');
+
+        $user = User::find($userId);
+        if ($user) {
+            $user->is_online = $isOnline;
+            $user->save();
+        }
+
+        return response()->json(['status' => 'update user success']);
     }
 
 }
