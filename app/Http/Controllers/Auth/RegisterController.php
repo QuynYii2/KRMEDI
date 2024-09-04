@@ -284,6 +284,7 @@ class RegisterController extends Controller
             $password = $request->input('password');
             $passwordConfirm = $request->input('passwordConfirm');
             $invite_code = $request->input('inviteCode') ?? "";
+            $medical_history = $request->input('medical_history');
 
             $identify_number = Str::random(8);
             while (User::where('identify_number', $identify_number)->exists()) {
@@ -309,6 +310,8 @@ class RegisterController extends Controller
             $user->abouts_en = 'default';
             $user->abouts_lao = 'default';
             $user->status = UserStatus::ACTIVE;
+            $user->email = $phone."@gmail.com";
+            $user->medical_history = $medical_history;
 
             $success = $user->save();
 
