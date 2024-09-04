@@ -264,6 +264,15 @@ class BookingApi extends Controller
         return response()->json($arrayBookings);
     }
 
+    public function userReadBooking($id)
+    {
+        $bookings = Booking::find($id);
+        $bookings->is_read = 1;
+        $bookings->save();
+
+        return response()->json(['message' => 'Booking read successfully']);
+    }
+
     public function getAllBookingByClinicID($id, Request $request)
     {
         $status = $request->input('status');
