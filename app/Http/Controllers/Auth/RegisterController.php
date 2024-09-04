@@ -265,4 +265,76 @@ class RegisterController extends Controller
             return response((new MainApi())->returnMessage('Error, Please try again!'), 400);
         }
     }
+
+    public function registerPhone(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'phone' => ['required', 'string', 'unique:users,phone'],
+                'password' => ['required', 'string', new NoSpacesRule],
+                'passwordConfirm' => ['required', 'string', 'same:password', new NoSpacesRule],
+                'invite_code' => ['nullable'],
+            ]);
+
+            if ($validator->fails()) {
+                return response((new MainApi())->returnMessage($validator->errors()->first()), 400);
+            }
+            /* All user */
+            $phone = $request->input('phone');
+            $password = $request->input('password');
+            $passwordConfirm = $request->input('passwordConfirm');
+            $invite_code = $request->input('inviteCode') ?? "";
+
+            $identify_number = Str::random(8);
+            while (User::where('identify_number', $identify_number)->exists()) {
+                $identify_number = Str::random(8);
+            }
+
+            $user = new User();
+            $oldUser = User::where('phone', $phone)->first();
+            if ($oldUser) {
+                return response((new MainApi())->returnMessage('Phone already exited!'), 400);
+            }
+            if ($password != $passwordConfirm) {
+                return response((new MainApi())->returnMessage('Password or Password Confirm incorrect!'), 400);
+            }
+            if (strlen($password) < 5) {
+                return response((new MainApi())->returnMessage('Password invalid!'), 400);
+            }
+            $user->phone = $phone;
+            $user->password = Hash::make($password);
+            $user->type = 'NORMAL';
+            $user->member = 'PAITENTS';
+            $user->abouts = 'default';
+            $user->abouts_en = 'default';
+            $user->abouts_lao = 'default';
+            $user->status = UserStatus::ACTIVE;
+
+            $success = $user->save();
+
+            if ($success) {
+                //Cộng điểm giới thiệu
+                if ($invite_code) {
+                    $getUserInvite = User::where('identify_number', $identify_number)->first();
+                    $getUserInvite->points = $getUserInvite->points + 1;
+                    $getUserInvite->save();
+                }
+                $newUser = User::where('phone', $phone)->first();
+
+                $roleNormal = Role::where('name', \App\Enums\Role::PAITENTS)->first();
+                RoleUser::create([
+                    'role_id' => $roleNormal->id,
+                    'user_id' => $newUser->id
+                ]);
+                $response = $user->toArray();
+                $roleUser = RoleUser::where('user_id', $user->id)->first();
+                $role = Role::find($roleUser->role_id);
+                $response['role'] = $role->name;
+                return response()->json($response);
+            }
+            return response((new MainApi())->returnMessage('Register fail!'), 400);
+        } catch (\Exception $exception) {
+            return response((new MainApi())->returnMessage('Error, Please try again!'), 400);
+        }
+    }
 }
