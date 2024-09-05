@@ -557,29 +557,19 @@ class HomeController extends Controller
 
     public function bookingDetailSpecialistQr($id)
     {
-        if (Auth::check()) {
-            $bookingApi = new Booking();
-            $user = Auth::user();
-            $currentDateTime = now();
-            $bookingApi->check_in = $currentDateTime->format('Y-m-d H:i:s');
-            $bookingApi->check_out = $currentDateTime->addHour()->format('Y-m-d H:i:s');
-            $bookingApi->clinic_id = $id;
-            $bookingApi->user_id  = $user->id;
-            $bookingApi->type  = 1;
-            $bookingApi->save();
-
-            $newBooking = Booking::with('user', 'clinic.users')->find($bookingApi->id);
-            if ($newBooking) {
-                ProcessBooking::dispatch($newBooking);
-            }
-            $check_in_booking = new CheckInBookingModel();
-            $check_in_booking->clinic_id = $id;
-            $check_in_booking->user_id = $user->id;
-            $check_in_booking->save();
-            alert('Đặt lịch khám thành công');
-            return redirect(route('home'));
+        if (!Auth::check()) {
+            session()->put('booking_data', [
+                'clinic_id' => $id,
+                'type' => 1,
+                'created_at' => now()
+            ]);
+            alert('Vui lòng đăng nhập để tiếp tục');
+            return redirect(route('login'));
         }
-        alert('Vui lòng đăng nhập để tiếp tục');
+
+        $this->processBooking($id, Auth::user());
+
+        alert('Đặt lịch khám thành công');
         return redirect(route('home'));
     }
 

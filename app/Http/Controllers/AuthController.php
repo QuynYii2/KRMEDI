@@ -223,7 +223,15 @@ class AuthController extends Controller
 
                 $role_user = DB::table('role_users')->where('user_id', $user->id)->first();
                 $roleNames = Role::where('id', $role_user->role_id)->pluck('name');
-
+                if (session()->has('booking_data')) {
+                    $bookingData = session()->get('booking_data');
+                    $createdAt = \Carbon\Carbon::parse($bookingData['created_at']);
+                    if ($createdAt->diffInMinutes(now()) <= 5) {
+                        $this->processBooking($bookingData['clinic_id'], Auth::user());
+                        alert('Đặt lịch khám thành công');
+                    }
+                    session()->forget('booking_data');
+                }
                 if ($callback_url) {
                     return redirect($callback_url);
                 }
@@ -394,6 +402,15 @@ class AuthController extends Controller
             session()->forget(['user_data', 'otp_verification']);
 
             session()->put('show_modal', true);
+            if (session()->has('booking_data')) {
+                $bookingData = session()->get('booking_data');
+                $createdAt = \Carbon\Carbon::parse($bookingData['created_at']);
+                if ($createdAt->diffInMinutes(now()) <= 5) {
+                    $this->processBooking($bookingData['clinic_id'], Auth::user());
+                    alert('Đặt lịch khám thành công');
+                }
+                session()->forget('booking_data');
+            }
 
             return redirect()->route('home')->withToastSuccess('Registration successful and user logged in.');
         }
