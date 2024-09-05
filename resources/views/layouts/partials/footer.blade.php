@@ -104,7 +104,7 @@
                 <p class="krm-describe-footer pt-0">Địa chỉ: V7-B07, Lô đất TTDV 01, Khu đô thị mới An Hưng, Phường La Khê, Quận Hà Đông, Thành phố Hà Nội, Việt Nam</p>
                 <div class="d-flex align-items-center">
                     <div class="d-flex flex-column align-items-center justify-content-center">
-                        <img src="{{asset('img/qr-ios.png')}}" alt="" style="width: 100px">
+                        <img src="{{asset('img/qr-android.png')}}" alt="" style="width: 100px">
                         <a href="#">
                             <img src="{{asset('img/icon-app-android.png')}}" alt="" style="width: 100px">
                         </a>
@@ -247,7 +247,7 @@
     </div>
     <div class="d-flex align-items-center justify-content-center">
         <div class="d-flex flex-column align-items-center justify-content-center">
-            <img src="{{asset('img/qr-ios.png')}}" alt="" style="width: 100px">
+            <img src="{{asset('img/qr-android.png')}}" alt="" style="width: 100px">
             <a href="#">
                 <img src="{{asset('img/icon-app-android.png')}}" alt="" style="width: 100px">
             </a>
