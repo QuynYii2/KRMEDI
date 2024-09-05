@@ -177,9 +177,10 @@ class BookingController extends Controller
         }else{
             $prescription_product = [];
         }
+        $departments = Department::where('status','ACTIVE')->get();
 
         if ($owner == Auth::id() || $isAdmin || $isDoctor) {
-            return view('admin.booking.tab-edit-booking', compact('bookings_edit', 'isAdmin', 'services', 'reasons', 'repeaterItems', 'user_zalo_id', 'doctor_id', 'doctor_name','list_doctor','isDoctor','prescription_product'));
+            return view('admin.booking.tab-edit-booking', compact('bookings_edit', 'isAdmin', 'services', 'reasons', 'repeaterItems', 'user_zalo_id', 'doctor_id', 'doctor_name','list_doctor','isDoctor','prescription_product','departments'));
         } else {
             session()->flash('error', 'You do not have permission.');
             return \redirect()->back();
