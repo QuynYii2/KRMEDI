@@ -1,7 +1,7 @@
 @php
     $footer = \App\Models\FooterModel::all();
 @endphp
-<footer class="d-block mt-5 mobile-hidden">
+<footer class="d-block mt-5 mobile-hidden h-auto">
     <div class="">
         <div class="container d-md-flex mb-md-5 box-footer-md">
             <div class="col-md-6"><img class="w-200" src="{{ asset('img/icons_logo/logo-krmedi-footer.png') }}"></div>
@@ -102,17 +102,21 @@
                 </div>
                 <p class="krm-describe-footer">CÔNG TY TNHH IL VIỆT NAM</p>
                 <p class="krm-describe-footer pt-0">Địa chỉ: V7-B07, Lô đất TTDV 01, Khu đô thị mới An Hưng, Phường La Khê, Quận Hà Đông, Thành phố Hà Nội, Việt Nam</p>
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center justify-content-between">
                     <div class="d-flex flex-column align-items-center justify-content-center">
-                        <img src="{{asset('img/qr-android.png')}}" alt="" style="width: 100px">
-                        <a href="#">
-                            <img src="{{asset('img/icon-app-android.png')}}" alt="" style="width: 100px">
+                        <a href="https://upload.app/download/krmedi/com.ilglobal.krmedi/4a88ee096106795f3aaad8c0bf54cb56c6eba008fe33630d98c0bbdeabe8b286" target="_blank">
+                            <img src="{{asset('img/qr-android.png')}}" alt="" style="width: 170px">
+                        </a>
+                        <a href="https://upload.app/download/krmedi/com.ilglobal.krmedi/4a88ee096106795f3aaad8c0bf54cb56c6eba008fe33630d98c0bbdeabe8b286" target="_blank">
+                            <img src="{{asset('img/icon-app-android.png')}}" alt="" style="width: 150px">
                         </a>
                     </div>
-                    <div class="d-flex flex-column align-items-center justify-content-center" style="margin-left: 20px">
-                        <img src="{{asset('img/qr-ios.png')}}" alt="" style="width: 100px">
-                        <a href="https://apps.apple.com/vn/app/krmedi/id6476542829?l=vi" >
-                            <img src="{{asset('img/icon-app-ios.png')}}" alt="" style="width: 100px">
+                    <div class="d-flex flex-column align-items-center justify-content-center" style="margin-left: 40px">
+                        <a href="https://apps.apple.com/vn/app/krmedi/id6476542829?l=vi" target="_blank">
+                            <img src="{{asset('img/qr-ios.png')}}" alt="" style="width: 170px">
+                        </a>
+                        <a href="https://apps.apple.com/vn/app/krmedi/id6476542829?l=vi" target="_blank">
+                            <img src="{{asset('img/icon-app-ios.png')}}" alt="" style="width: 150px">
                         </a>
                     </div>
 
@@ -247,15 +251,19 @@
     </div>
     <div class="d-flex align-items-center justify-content-center">
         <div class="d-flex flex-column align-items-center justify-content-center">
-            <img src="{{asset('img/qr-android.png')}}" alt="" style="width: 100px">
-            <a href="#">
-                <img src="{{asset('img/icon-app-android.png')}}" alt="" style="width: 100px">
+            <a href="https://upload.app/download/krmedi/com.ilglobal.krmedi/4a88ee096106795f3aaad8c0bf54cb56c6eba008fe33630d98c0bbdeabe8b286" target="_blank">
+                <img src="{{asset('img/qr-android.png')}}" alt="" style="width: 140px">
+            </a>
+            <a href="https://upload.app/download/krmedi/com.ilglobal.krmedi/4a88ee096106795f3aaad8c0bf54cb56c6eba008fe33630d98c0bbdeabe8b286" target="_blank">
+                <img src="{{asset('img/icon-app-android.png')}}" alt="" style="width: 110px">
             </a>
         </div>
-        <div class="d-flex flex-column align-items-center justify-content-center" style="margin-left: 20px">
-            <img src="{{asset('img/qr-ios.png')}}" alt="" style="width: 100px">
-            <a href="https://apps.apple.com/vn/app/krmedi/id6476542829?l=vi" >
-                <img src="{{asset('img/icon-app-ios.png')}}" alt="" style="width: 100px">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="margin-left: 50px">
+            <a href="https://apps.apple.com/vn/app/krmedi/id6476542829?l=vi" target="_blank">
+                <img src="{{asset('img/qr-ios.png')}}" alt="" style="width: 140px">
+            </a>
+            <a href="https://apps.apple.com/vn/app/krmedi/id6476542829?l=vi" target="_blank">
+                <img src="{{asset('img/icon-app-ios.png')}}" alt="" style="width: 110px">
             </a>
         </div>
 
