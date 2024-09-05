@@ -564,7 +564,7 @@ class HomeController extends Controller
                 'created_at' => now()
             ]);
             alert('Vui lòng đăng nhập để tiếp tục');
-            return redirect(route('login'));
+            return redirect(route('loginProcess'));
         }
 
         $this->processBooking($id, Auth::user());
