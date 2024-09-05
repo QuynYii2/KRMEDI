@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\booking\ProcessBooking;
+use App\Models\Booking;
+use App\Models\CheckInBookingModel;
 use App\Models\ZaloOaModel;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -212,6 +215,29 @@ class Controller extends BaseController
 //
 //        return $response;
 //    }
+
+    public function processBooking($clinicId, $user)
+    {
+        $currentDateTime = now();
+
+        $bookingApi = new Booking();
+        $bookingApi->check_in = $currentDateTime->format('Y-m-d H:i:s');
+        $bookingApi->check_out = $currentDateTime->addHour()->format('Y-m-d H:i:s');
+        $bookingApi->clinic_id = $clinicId;
+        $bookingApi->user_id  = $user->id;
+        $bookingApi->type  = 1;
+        $bookingApi->save();
+
+        $newBooking = Booking::with('user', 'clinic.users')->find($bookingApi->id);
+        if ($newBooking) {
+            ProcessBooking::dispatch($newBooking);
+        }
+
+        $check_in_booking = new CheckInBookingModel();
+        $check_in_booking->clinic_id = $clinicId;
+        $check_in_booking->user_id = $user->id;
+        $check_in_booking->save();
+    }
 
     /**
      * get access token kiot viet
