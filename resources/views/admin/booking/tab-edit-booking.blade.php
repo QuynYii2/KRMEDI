@@ -142,7 +142,7 @@
                                             name="select">
                                             @foreach($departments as $item_departments)
                                             <option value="{{$item_departments->name}}"
-                                                {{ $item['selectValue'] === '$item_departments->name' ? 'selected' : '' }}>
+                                                {{ $item['selectValue'] === $item_departments->name ? 'selected' : '' }}>
                                                 {{$item_departments->name}}</option>
                                             @endforeach
 {{--                                                <option value="Khám bệnh"--}}
