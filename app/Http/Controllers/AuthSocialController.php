@@ -55,6 +55,15 @@ class AuthSocialController extends Controller
                 $token = JWTAuth::fromUser($existingUser);
                 setcookie("accessToken", $token, time() + 3600 * 24);
                 if (!$existingUser->provider_name) {
+                    if (session()->has('booking_data')) {
+                        $bookingData = session()->get('booking_data');
+                        $createdAt = \Carbon\Carbon::parse($bookingData['created_at']);
+                        if ($createdAt->diffInMinutes(now()) <= 5) {
+                            $this->processBooking($bookingData['clinic_id'], Auth::user());
+                            alert('Đặt lịch khám thành công');
+                        }
+                        session()->forget('booking_data');
+                    }
                     return redirect(route('home'));
                 }
             } else {
@@ -83,6 +92,15 @@ class AuthSocialController extends Controller
                 setcookie("accessToken", $token, time() + 3600 * 24);
             }
             toast('Register success!', 'success', 'top-left');
+            if (session()->has('booking_data')) {
+                $bookingData = session()->get('booking_data');
+                $createdAt = \Carbon\Carbon::parse($bookingData['created_at']);
+                if ($createdAt->diffInMinutes(now()) <= 5) {
+                    $this->processBooking($bookingData['clinic_id'], Auth::user());
+                    alert('Đặt lịch khám thành công');
+                }
+                session()->forget('booking_data');
+            }
             return redirect()->route('login.social.choose.role');
         } catch (\Exception $exception) {
             return $exception;
@@ -121,6 +139,15 @@ class AuthSocialController extends Controller
                 $token = JWTAuth::fromUser($existingUser);
                 setcookie("accessToken", $token, time() + 3600 * 24);
                 if (!$existingUser->provider_name) {
+                    if (session()->has('booking_data')) {
+                        $bookingData = session()->get('booking_data');
+                        $createdAt = \Carbon\Carbon::parse($bookingData['created_at']);
+                        if ($createdAt->diffInMinutes(now()) <= 5) {
+                            $this->processBooking($bookingData['clinic_id'], Auth::user());
+                            alert('Đặt lịch khám thành công');
+                        }
+                        session()->forget('booking_data');
+                    }
                     return redirect(route('home'));
                 }
             } else {
@@ -150,6 +177,15 @@ class AuthSocialController extends Controller
             }
 
             toast('Register success!', 'success', 'top-left');
+            if (session()->has('booking_data')) {
+                $bookingData = session()->get('booking_data');
+                $createdAt = \Carbon\Carbon::parse($bookingData['created_at']);
+                if ($createdAt->diffInMinutes(now()) <= 5) {
+                    $this->processBooking($bookingData['clinic_id'], Auth::user());
+                    alert('Đặt lịch khám thành công');
+                }
+                session()->forget('booking_data');
+            }
             return redirect()->route('login.social.choose.role');
         } catch (\Exception $exception) {
             return $exception;
@@ -189,6 +225,15 @@ class AuthSocialController extends Controller
                 $token = JWTAuth::fromUser($existingUser);
                 setcookie("accessToken", $token, time() + 3600 * 24);
                 if (!$existingUser->provider_name) {
+                    if (session()->has('booking_data')) {
+                        $bookingData = session()->get('booking_data');
+                        $createdAt = \Carbon\Carbon::parse($bookingData['created_at']);
+                        if ($createdAt->diffInMinutes(now()) <= 5) {
+                            $this->processBooking($bookingData['clinic_id'], Auth::user());
+                            alert('Đặt lịch khám thành công');
+                        }
+                        session()->forget('booking_data');
+                    }
                     return redirect(route('home'));
                 }
             } else {
@@ -218,6 +263,15 @@ class AuthSocialController extends Controller
             }
 
             toast('Register success!', 'success', 'top-left');
+            if (session()->has('booking_data')) {
+                $bookingData = session()->get('booking_data');
+                $createdAt = \Carbon\Carbon::parse($bookingData['created_at']);
+                if ($createdAt->diffInMinutes(now()) <= 5) {
+                    $this->processBooking($bookingData['clinic_id'], Auth::user());
+                    alert('Đặt lịch khám thành công');
+                }
+                session()->forget('booking_data');
+            }
             return redirect()->route('login.social.choose.role');
         } catch (\Exception $exception) {
             return $exception;
@@ -442,6 +496,15 @@ class AuthSocialController extends Controller
                 setcookie("accessToken", $token, time() + 3600 * 24);
 
                 toast('Register logged in!', 'success', 'top-left');
+                if (session()->has('booking_data')) {
+                    $bookingData = session()->get('booking_data');
+                    $createdAt = \Carbon\Carbon::parse($bookingData['created_at']);
+                    if ($createdAt->diffInMinutes(now()) <= 5) {
+                        $this->processBooking($bookingData['clinic_id'], Auth::user());
+                        alert('Đặt lịch khám thành công');
+                    }
+                    session()->forget('booking_data');
+                }
                 return redirect(route('home'));
             } else {
                 $identify_number = Str::random(8);
@@ -479,6 +542,15 @@ class AuthSocialController extends Controller
                 setcookie("accessToken", $token, time() + 3600 * 24);
 
                 toast('Register success!', 'success', 'top-left');
+                if (session()->has('booking_data')) {
+                    $bookingData = session()->get('booking_data');
+                    $createdAt = \Carbon\Carbon::parse($bookingData['created_at']);
+                    if ($createdAt->diffInMinutes(now()) <= 5) {
+                        $this->processBooking($bookingData['clinic_id'], Auth::user());
+                        alert('Đặt lịch khám thành công');
+                    }
+                    session()->forget('booking_data');
+                }
                 return redirect()->route('login.social.choose.role');
             }
         } catch (\Exception $exception) {
