@@ -140,17 +140,22 @@
                                         <label for="selectType{{ $index }}">Loại khám bệnh:</label>
                                         <select id="selectType{{ $index }}" class="form-control selectType"
                                             name="select">
-                                            <option value="Khám bệnh"
-                                                {{ $item['selectValue'] === 'Khám bệnh' ? 'selected' : '' }}>
-                                                Khám bệnh</option>
-                                            <option value="Siêu âm"
-                                                {{ $item['selectValue'] === 'Siêu âm' ? 'selected' : '' }}>
-                                                Siêu
-                                                âm</option>
-                                            <option value="XQuang"
-                                                {{ $item['selectValue'] === 'XQuang' ? 'selected' : '' }}>
-                                                XQuang
-                                            </option>
+                                            @foreach($departments as $item_departments)
+                                            <option value="{{$item_departments->name}}"
+                                                {{ $item['selectValue'] === '$item_departments->name' ? 'selected' : '' }}>
+                                                {{$item_departments->name}}</option>
+                                            @endforeach
+{{--                                                <option value="Khám bệnh"--}}
+{{--                                                    {{ $item['selectValue'] === 'Khám bệnh' ? 'selected' : '' }}>--}}
+{{--                                                    Khám bệnh</option>--}}
+{{--                                            <option value="Siêu âm"--}}
+{{--                                                {{ $item['selectValue'] === 'Siêu âm' ? 'selected' : '' }}>--}}
+{{--                                                Siêu--}}
+{{--                                                âm</option>--}}
+{{--                                            <option value="XQuang"--}}
+{{--                                                {{ $item['selectValue'] === 'XQuang' ? 'selected' : '' }}>--}}
+{{--                                                XQuang--}}
+{{--                                            </option>--}}
                                         </select>
                                     </div>
                                 </div>
@@ -189,9 +194,12 @@
                                     <div class="form-group">
                                         <label for="selectType">Select:</label>
                                         <select class="form-control selectType" name="select">
-                                            <option value="Khám bệnh">Khám bệnh</option>
-                                            <option value="Siêu âm">Siêu âm</option>
-                                            <option value="XQuang">XQuang</option>
+                                            @foreach($departments as $item_departments)
+                                                <option value="{{$item_departments->name}}">{{$item_departments->name}}</option>
+                                            @endforeach
+                                                {{--                                            <option value="Khám bệnh">Khám bệnh</option>--}}
+{{--                                            <option value="Siêu âm">Siêu âm</option>--}}
+{{--                                            <option value="XQuang">XQuang</option>--}}
                                         </select>
                                     </div>
                                 </div>
