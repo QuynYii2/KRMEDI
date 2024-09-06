@@ -6,8 +6,10 @@ use App\Enums\BookingResultStatus;
 use App\Enums\online_medicine\OnlineMedicineStatus;
 use App\Http\Controllers\Controller;
 use App\Imports\ExcelImportClass;
+use App\Jobs\booking\ProcessBooking;
 use App\Models\Booking;
 use App\Models\BookingResult;
+use App\Models\CheckInBookingModel;
 use App\Models\Clinic;
 use App\Models\FamilyManagement;
 use App\Models\online_medicine\ProductMedicine;
@@ -147,6 +149,31 @@ class BookingResultApi extends Controller
         $result->result_en = $array_result;
         $result->result_laos = $array_result;
         return response()->json($result);
+    }
+
+    public function CheckInBookingQr($id,$user_id)
+    {
+        $currentDateTime = now();
+
+        $bookingApi = new Booking();
+        $bookingApi->check_in = $currentDateTime->format('Y-m-d H:i:s');
+        $bookingApi->check_out = $currentDateTime->addHour()->format('Y-m-d H:i:s');
+        $bookingApi->clinic_id = $id;
+        $bookingApi->user_id  = $user_id;
+        $bookingApi->type  = 1;
+        $bookingApi->save();
+
+        $newBooking = Booking::with('user', 'clinic.users')->find($bookingApi->id);
+        if ($newBooking) {
+            ProcessBooking::dispatch($newBooking);
+        }
+
+        $check_in_booking = new CheckInBookingModel();
+        $check_in_booking->clinic_id = $id;
+        $check_in_booking->user_id = $user_id;
+        $check_in_booking->save();
+
+        return response()->json(['status' => true, 'message' => 'Đặt lịch thành công']);
     }
 
     public function delete($id)
