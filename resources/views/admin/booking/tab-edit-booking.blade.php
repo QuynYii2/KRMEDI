@@ -9,6 +9,26 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <style>
+        .spinner {
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #000;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+    </style>
 @endsection
 @section('main-content')
     @php
@@ -266,7 +286,12 @@
 
                         </div>
 {{--                        @if(!$isDoctor)--}}
-                        <button type="button" class="btn btn-outline-primary mt-3 btn-add-medicine">Tạo đơn
+                        <button type="button" class="btn btn-outline-primary mt-3 btn-add-medicine-loading">
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Đang tải...
+                        </button>
+                        <button type="button" class="btn btn-outline-primary mt-3 btn-add-medicine-booking" style="display:none;">
+                            Tạo đơn
                         </button>
 {{--                            @endif--}}
                     </div>
@@ -300,7 +325,7 @@
         </form>
     </div>
 
-    <div class="modal fade" id="modal-add-medicine-widget-chat" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="modal-add-medicine-widget-chat-booking" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
             <div class="modal-content">
                 <div class="modal-header ">
@@ -345,7 +370,7 @@
                     </form>
                 </div>
                 <div class="modal-body find-my-medicine-2">
-                    <div class="row" id="modal-list-medicine-widget-chat">
+                    <div class="row" id="modal-list-medicine-widget-chat-booking">
 
                     </div>
                 </div>
@@ -821,13 +846,22 @@
     </script>
 
     <script>
+        $(window).on('load', function() {
+            $('.btn-add-medicine-loading').css('display','none');
+            $('.btn-add-medicine-booking').fadeIn();
+        });
+        let elementInputMedicine_widgetChat_Booking;
+        let next_elementInputMedicine_widgetChat_Booking;
+        let next_elementQuantity_widgetChat_Booking;
+        let next_elementMedicineIngredients_widgetChat_Booking;
+
         let html_widgetChat = `<div class="service-result-item-don-thuoc d-flex align-items-center justify-content-between border p-3">
                     <div class="prescription-group d-flex align-items-center">
                         <div class="row w-100">
                             <div class="form-group">
                                 <label for="medicine_name">Medicine Name</label>
-                                <input type="text" class="form-control medicine_name input_medicine_name" value=""
-                                    name="medicines[@index][medicine_name]"  data-toggle="modal" data-target="#modal-add-medicine-widget-chat" readonly>
+                                <input type="text" class="form-control medicine_name input_medicine_name_booking" value=""
+                                    name="medicines[@index][medicine_name]"  data-toggle="modal" data-target="#modal-add-medicine-widget-chat-booking" readonly>
                                 <input type="text" hidden class="form-control medicine_id_hidden" name="medicines[@index][medicine_id_hidden]" value="">
 
                             </div>
@@ -855,10 +889,21 @@
                 </div>`;
 
 
-        $('.btn-add-medicine').click(function () {
+        $('.btn-add-medicine-booking').click(function () {
             let newIndex = $('#list-service-result-don-thuoc .service-result-item-don-thuoc').length;
             let newHtml = html_widgetChat.replace(/@index/g, newIndex);
             $('#list-service-result-don-thuoc').append(newHtml);
+            $('.input_medicine_name_booking').click(function () {
+                elementInputMedicine_widgetChat_Booking = $(this);
+                next_elementInputMedicine_widgetChat_Booking = $(this).next('.medicine_id_hidden');
+                next_elementQuantity_widgetChat_Booking = $(this).parents().parents().find('input.quantity');
+                next_elementMedicineIngredients_widgetChat_Booking = $(this).parents().parents().find(
+                    'textarea.medicine_ingredients');
+            });
+
+            $('.loadTrash_widgetChat').click(function () {
+                $(this).closest('.service-result-item-don-thuoc').remove();
+            });
             loadData_widgetChat();
             loadListMedicine();
         });
@@ -926,7 +971,7 @@
                                                     class="text-wrapper-3">Còn lại: ${medicine.quantity}</div>
                                             </div>
                                             <div class="div-wrapper">
-                                                <a style="cursor: pointer" class="handleSelectInputMedicine_widgetChat" data-id="${medicine.id}" data-name="${medicine.name}" data-quantity="${medicine.quantity}"
+                                                <a style="cursor: pointer" class="handleSelectInputMedicine_widgetChat-booking" data-id="${medicine.id}" data-name="${medicine.name}" data-quantity="${medicine.quantity}"
                                                    data-dismiss="modal">
                                                     <div class="text-wrapper-4">{{ __('home.Choose...') }}</div>
                                                 </a>
@@ -937,22 +982,22 @@
                             </div>`
             });
 
-            $('#modal-list-medicine-widget-chat').html(html);
+            $('#modal-list-medicine-widget-chat-booking').html(html);
 
-            $('.handleSelectInputMedicine_widgetChat').click(function () {
+            $('.handleSelectInputMedicine_widgetChat-booking').click(function () {
                 let id = $(this).data('id');
                 let name = $(this).data('name');
                 let quantity = $(this).data('quantity');
-                elementInputMedicine_widgetChat.val(name);
-                next_elementInputMedicine_widgetChat.val(id);
-                next_elementQuantity_widgetChat.off('change');
+                elementInputMedicine_widgetChat_Booking.val(name);
+                next_elementInputMedicine_widgetChat_Booking.val(id);
+                next_elementQuantity_widgetChat_Booking.off('change');
 
-                next_elementQuantity_widgetChat.attr('max', quantity);
+                next_elementQuantity_widgetChat_Booking.attr('max', quantity);
 
                 // Thêm sự kiện onchange
-                next_elementQuantity_widgetChat.on('change', function () {
+                next_elementQuantity_widgetChat_Booking.on('change', function () {
                     // Lấy giá trị hiện tại của next_elementQuantity_widgetChat
-                    var currentValue = next_elementQuantity_widgetChat.val();
+                    var currentValue = next_elementQuantity_widgetChat_Booking.val();
 
                     // Chuyển đổi giá trị thành số để so sánh
                     currentValue = parseInt(currentValue);
@@ -962,35 +1007,41 @@
                         // Hiển thị cảnh báo
                         alert('Giá trị không thể lớn hơn ' + quantity);
                         // Cài đặt lại giá trị về quantity
-                        next_elementQuantity_widgetChat.val(quantity);
+                        next_elementQuantity_widgetChat_Booking.val(quantity);
                     }
                 });
 
-                getIngredientsByMedicineId(id)
+                getIngredientsByMedicineIdBooking(id)
                     .then(result => {
                         console.log(result.component_name); // Log kết quả
-                        next_elementMedicineIngredients_widgetChat.val(result.component_name); // Sử dụng kết quả
+                        next_elementMedicineIngredients_widgetChat_Booking.val(result.component_name); // Sử dụng kết quả
                     })
                     .catch(error => {
                         console.error('Đã xảy ra lỗi:', error);
                     });
             });
 
-            $('.input_medicine_name').click(function () {
-                elementInputMedicine_widgetChat = $(this);
-                next_elementInputMedicine_widgetChat = $(this).next('.medicine_id_hidden');
-                next_elementQuantity_widgetChat = $(this).parents().parents().find('input.quantity');
-                next_elementMedicineIngredients_widgetChat = $(this).parents().parents().find(
-                    'textarea.medicine_ingredients');
-            });
-
-            $('.loadTrash_widgetChat').click(function () {
-                $(this).closest('.service-result-item-don-thuoc').remove();
-            });
-
         }
 
         loadData_widgetChat();
+
+        async function getIngredientsByMedicineIdBooking(id) {
+            let url = `{{ route('medicine.get-ingredients-by-medicine-id', ['id' => ':id']) }}`;
+            url = url.replace(':id', id);
+
+            let result = await fetch(url, {
+                method: 'GET',
+            });
+
+            if (result.ok) {
+                let data = await result.json();
+                return data;
+            }
+
+            return {
+                'component_name': ''
+            };
+        }
 
         function loadData_widgetChat() {
             $('.service_name_item').on('click', function () {
