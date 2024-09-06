@@ -415,14 +415,31 @@ class BookingController extends Controller
             $medicines = $request->get('medicines');
             if (isset($medicines) && count($medicines)>0){
                 $dataUser = User::find($booking->user_id);
-                $prescription_result = new PrescriptionResults();
-                $prescription_result->full_name = $dataUser->username;
-                $prescription_result->email = $dataUser->email??'';
-                $prescription_result->user_id = $dataUser->id;
-                $prescription_result->created_by = Auth::id();
-                $prescription_result->prescriptions = json_encode($medicines);
-                $prescription_result->booking_id = $booking->id;
-                $prescription_result->save();
+                $prescription_result = PrescriptionResults::where('booking_id', $booking->id)->first();
+
+                if ($prescription_result) {
+                    $existingPrescriptions = json_decode($prescription_result->prescriptions, true);
+                    if (!is_array($existingPrescriptions)) {
+                        $existingPrescriptions = [];
+                    }
+                    if (is_array($medicines)) {
+                        $mergedPrescriptions = array_merge($existingPrescriptions, $medicines);
+                    } else {
+                        $mergedPrescriptions = $existingPrescriptions;
+                    }
+                    $prescription_result->prescriptions = json_encode($mergedPrescriptions);
+                    $prescription_result->created_by = Auth::id();
+                    $prescription_result->save();
+                } else {
+                    $prescription_result = new PrescriptionResults();
+                    $prescription_result->full_name = $dataUser->username;
+                    $prescription_result->email = $dataUser->email ?? '';
+                    $prescription_result->user_id = $dataUser->id;
+                    $prescription_result->created_by = Auth::id();
+                    $prescription_result->prescriptions = json_encode($medicines);
+                    $prescription_result->booking_id = $booking->id;
+                    $prescription_result->save();
+                }
             }
 
             if ($success) {
@@ -456,7 +473,7 @@ class BookingController extends Controller
 
                     $pusher->trigger('noti-events', 'noti-events', $requestData);
                     $userToken = User::find($booking->user_id)->token_firebase ?? "";
-                    $dataSend = $this->sendBookingNotifications( $userToken, $notifi);
+//                    $dataSend = $this->sendBookingNotifications( $userToken, $notifi);
                     ChangeBookingStatus::dispatch($booking);
                 }
                 alert('Update success');
