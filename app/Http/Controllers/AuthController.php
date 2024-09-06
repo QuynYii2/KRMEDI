@@ -333,6 +333,7 @@ class AuthController extends Controller
         $user-> password = Hash::make($userData['password']);  // Ensure password is hashed
         $user-> token = $userData['_token'];
         $member = $request->session()->get('user_data')['member'];
+        $user->member = $member;
         $invite_code = $userData['invite_code'];
         $identify_number = Str::random(8);
         while (User::where('identify_number', $identify_number)->exists()) {
@@ -365,9 +366,10 @@ class AuthController extends Controller
 
             if($userData['type'] == \App\Enums\Role::MEDICAL) {
                 $user->medical_license_img = $userData['medical_license_img'];
+                $user->status = $userData['status'];
             }elseif ($userData['type'] == \App\Enums\Role::BUSINESS){
                 $user->business_license_img = $userData['business_license_img'];
-
+                $user->status = $userData['status'];
                 $openDate = $request->input('open_date', '00:00');
                 $closeDate = $request->input('close_date', '23:59');
                 $currentDate = Carbon::now();
