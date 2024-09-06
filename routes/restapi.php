@@ -203,7 +203,7 @@ Route::group(['prefix' => 'booking-result'], function () {
     Route::get('/list-business', [BookingResultApi::class, 'getListByBusinessID'])->name('restapi.booking.result.business');
     Route::get('/detail/{id}', [BookingResultApi::class, 'detail'])->name('restapi.booking.result.detail');
 });
-Route::get('/check-in-booking-qr/{id}/{user_id}', [BookingResultApi::class, 'CheckInBookingQr'])->name('restapi.booking.check.qr');
+Route::get('/check-in-booking-qr/{id}', [BookingResultApi::class, 'CheckInBookingQr'])->name('restapi.booking.check.qr');
 
 /* Medical result*/
 Route::group(['prefix' => 'medical-results'], function () {
