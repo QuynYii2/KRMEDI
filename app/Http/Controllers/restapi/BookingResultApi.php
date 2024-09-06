@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class BookingResultApi extends Controller
 {
@@ -151,8 +152,12 @@ class BookingResultApi extends Controller
         return response()->json($result);
     }
 
-    public function CheckInBookingQr($id,$user_id)
+    public function CheckInBookingQr($id)
     {
+        $user_id = JWTAuth::user()->id;
+        if (!$user_id){
+            return response()->json(['status' => false, 'message' => 'Vui lòng đăng nhập để dặt lịch']);
+        }
         $currentDateTime = now();
 
         $bookingApi = new Booking();
