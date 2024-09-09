@@ -122,8 +122,8 @@
                         <select id="member" name="member" class="form-control form-select">
                             <option
                                 {{ $user->member == 'PAITENTS' ? 'selected' : '' }} value="PAITENTS">{{ __('home.PAITENTS') }}</option>
-                            <option
-                                {{ $user->member == 'NORMAL PEOPLE' ? 'selected' : '' }} value="NORMAL PEOPLE">{{ __('home.NORMAL PEOPLE') }}</option>
+{{--                            <option--}}
+{{--                                {{ $user->member == 'NORMAL PEOPLE' ? 'selected' : '' }} value="NORMAL PEOPLE">{{ __('home.NORMAL PEOPLE') }}</option>--}}
                         </select>
                     </div>
                     <div class="form-group col-md-4">
@@ -214,8 +214,8 @@
                     showOnlyMedical();
                     break;
                 default:
-                    html = `<option {{ $user->member == 'PAITENTS' ? 'selected' : '' }} value="{{\App\Enums\Role::PAITENTS}}">Bệnh nhân</option>
-                                                <option {{ $user->member == 'NORMAL PEOPLE' ? 'selected' : '' }} value="{{\App\Enums\Role::NORMAL_PEOPLE}}">Người bình thường</option>`;
+                    html = `<option {{ $user->member == 'PAITENTS' ? 'selected' : '' }} value="{{\App\Enums\Role::PAITENTS}}">Bệnh nhân</option>`;
+                                                {{--<option {{ $user->member == 'NORMAL PEOPLE' ? 'selected' : '' }} value="{{\App\Enums\Role::NORMAL_PEOPLE}}">Người bình thường</option>`;--}}
                     clearAppend();
                     showOnlyNormal();
                     break;

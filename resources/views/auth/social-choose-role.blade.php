@@ -68,7 +68,7 @@
                         <label for="member_user_login">{{ __('home.Member') }}</label>
                         <select id="member_user_login" name="member" class="form-select">
                             <option value="PAITENTS">{{ __('home.PAITENTS') }}</option>
-                            <option value="NORMAL_PEOPLE">{{ __('home.NORMAL PEOPLE') }}</option>
+{{--                            <option value="NORMAL_PEOPLE">{{ __('home.NORMAL PEOPLE') }}</option>--}}
                         </select>
                     </div>
                 </div>
@@ -116,8 +116,8 @@
                         showRoleOther();
                         break;
                     default:
-                        html = `<option value="{{\App\Enums\Role::PAITENTS}}">Bệnh nhân</option>
-                                                <option value="{{\App\Enums\Role::NORMAL_PEOPLE}}">Người bình thường</option>`;
+                        html = `<option value="{{\App\Enums\Role::PAITENTS}}">Bệnh nhân</option>`;
+                                                {{--<option value="{{\App\Enums\Role::NORMAL_PEOPLE}}">Người bình thường</option>`;--}}
                         clearAppend();
                         break;
                 }
