@@ -178,7 +178,9 @@ class BookingResultApi extends Controller
         $check_in_booking->user_id = $user_id;
         $check_in_booking->save();
 
-        return response()->json(['status' => true, 'message' => 'Đặt lịch thành công']);
+        $clinic = Clinic::find($id);
+
+        return response()->json(['status' => true,'data'=>$clinic,'message' => 'Đặt lịch thành công']);
     }
 
     public function delete($id)
