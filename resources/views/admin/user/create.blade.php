@@ -116,7 +116,7 @@
                                 class="small text-danger">*</span></label>
                         <select id="member" name="member" class="form-control form-select">
                             <option value="PAITENTS">{{ __('home.PAITENTS') }}</option>
-                            <option value="NORMAL_PEOPLE">{{ __('home.NORMAL PEOPLE') }}</option>
+{{--                            <option value="NORMAL_PEOPLE">{{ __('home.NORMAL PEOPLE') }}</option>--}}
                         </select>
                     </div>
                     <div class="form-group col-md-4">
@@ -194,8 +194,8 @@
                         showOnlyMedical();
                         break;
                     default:
-                        html = `<option value="{{\App\Enums\Role::PAITENTS}}">Bệnh nhân</option>
-                                                <option value="{{\App\Enums\Role::NORMAL_PEOPLE}}">Người bình thường</option>`;
+                        html = `<option value="{{\App\Enums\Role::PAITENTS}}">Bệnh nhân</option>`;
+                                                {{--<option value="{{\App\Enums\Role::NORMAL_PEOPLE}}">Người bình thường</option>`;--}}
                         clearAppend();
                         showOnlyNormal();
                         break;

@@ -1168,8 +1168,8 @@
                                                 <option value="{{Role::NURSES}}">Y tá</option>`;
                     break;
                 case 'NORMAL':
-                    html = `<option value="{{Role::PAITENTS}}">Bệnh nhân</option>
-                                                <option value="{{Role::NORMAL_PEOPLE}}">Người bình thường</option>`;
+                    html = `<option value="{{Role::PAITENTS}}">Bệnh nhân</option>`;
+                                                {{--<option value="{{Role::NORMAL_PEOPLE}}">Người bình thường</option>`;--}}
                     break;
                 default:
                     html = ``;

@@ -260,9 +260,9 @@
                                             <select id="member" name="member" class="form-select">
                                                 <option
                                                     value="{{Role::PAITENTS }}">{{ __('home.PAITENTS') }}</option>
-                                                <option
-                                                    value="{{Role::NORMAL_PEOPLE }}">{{ __('home.NORMAL PEOPLE') }}
-                                                </option>
+{{--                                                <option--}}
+{{--                                                    value="{{Role::NORMAL_PEOPLE }}">{{ __('home.NORMAL PEOPLE') }}--}}
+{{--                                                </option>--}}
                                             </select>
                                         </div>
                                         <div class="form-element" id="elemet-upload-file-sign-up">
@@ -569,8 +569,8 @@
                                                 <option value="{{Role::NURSES}}">Y tá</option>`;
                     break;
                 default:
-                    html = `<option value="{{Role::PAITENTS}}">Bệnh nhân</option>
-                                                <option value="{{Role::NORMAL_PEOPLE}}">Người bình thường</option>`;
+                    html = `<option value="{{Role::PAITENTS}}">Bệnh nhân</option>`;
+                                                {{--<option value="{{Role::NORMAL_PEOPLE}}">Người bình thường</option>`;--}}
                     break;
             }
             $('#member').empty().append(html);
