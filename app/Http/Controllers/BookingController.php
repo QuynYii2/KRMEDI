@@ -473,7 +473,7 @@ class BookingController extends Controller
 
                     $pusher->trigger('noti-events', 'noti-events', $requestData);
                     $userToken = User::find($booking->user_id)->token_firebase ?? "";
-//                    $dataSend = $this->sendBookingNotifications( $userToken, $notifi);
+                    $dataSend = $this->sendBookingNotifications( $userToken, $notifi);
                     ChangeBookingStatus::dispatch($booking);
                 }
                 alert('Update success');
@@ -843,7 +843,7 @@ class BookingController extends Controller
     {
         try {
             $fpdi = new Fpdi();
-            $count = $fpdi->setSourceFile($file);
+            $pageCount = $fpdi->setSourceFile($file);
 
             // Save the PNG image to a temporary file
             if ($qrCode) {
@@ -856,55 +856,61 @@ class BookingController extends Controller
                 file_put_contents($imagePath, $qrCode);
             }
 
-            $template = $fpdi->importPage($count);
-            $size = $fpdi->getTemplateSize($template);
-            $fpdi->AddPage($size['orientation'], array($size['width'], $size['height']));
-            $fpdi->useTemplate($template);
+            for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+                $template = $fpdi->importPage($pageNo);
+                $size = $fpdi->getTemplateSize($template);
+                $fpdi->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                $fpdi->useTemplate($template);
 
-            $right = $size['width'] - 10; // Right position
-            $bottom = $size['height'] - 10; // Bottom position
+                // Chỉ chèn mã QR và các thông tin khác vào trang cuối cùng
+                if ($pageNo == $pageCount) {
+                    $right = $size['width'] - 10; // Vị trí bên phải
+                    $bottom = $size['height'] - 10; // Vị trí dưới cùng
 
-            $fpdi->AddFont('arial-unicode-ms', '', 'arial-unicode-ms.php', public_path('fonts'));
+                    $fpdi->AddFont('arial-unicode-ms', '', 'arial-unicode-ms.php', public_path('fonts'));
+                    $fpdi->SetFont('arial-unicode-ms', '', 10, '', true);
+                    $fpdi->SetTextColor(0, 0, 0);
 
-            $fpdi->SetFont('arial-unicode-ms', '', 10, '', true);
-            $fpdi->SetTextColor(0, 0, 0);
+                    $dateString = $booking->check_out;
+                    $timestamp = strtotime($dateString);
 
-            $dateString = $booking->check_out;
-            $timestamp = strtotime($dateString);
+                    $day = date("d", $timestamp);
+                    $month = date("m", $timestamp);
+                    $year = date("Y", $timestamp);
 
-            $day = date("d", $timestamp);
-            $month = date("m", $timestamp);
-            $year = date("Y", $timestamp);
+                    // Chèn thông tin ngày tháng
+                    $textLine1 = iconv('UTF-8', 'cp1258', 'Ngày ' . $day . ' tháng ' . $month . ' Năm ' . $year);
+                    $fpdi->SetXY($right - $fpdi->GetStringWidth($textLine1), $bottom - 38);
+                    $fpdi->Cell(0, 0, $textLine1, 0, 0, 'C');
 
-            // Text
-            $textLine1 = iconv('UTF-8', 'cp1258', 'Ngày ' . $day . ' tháng ' . $month . ' Năm ' . $year);
-            $fpdi->SetXY($right - $fpdi->GetStringWidth($textLine1), $bottom - 38);
-            $fpdi->Cell(0, 0, $textLine1, 0, 0, 'C');
+                    // Chèn tên bác sĩ và chữ ký nếu có
+                    if ($doctorName) {
+                        $textLine2 = iconv('UTF-8', 'cp1258', 'Bác sỹ kết luận');
+                        $fpdi->SetXY($right - $fpdi->GetStringWidth($textLine2) - 20, $bottom - 33);
+                        $fpdi->Cell(0, 0, $textLine2, 0, 0, 'C');
 
-            if ($doctorName) {
-                $textLine2 = iconv('UTF-8', 'cp1258', 'Bác sỹ kết luận');
-                $fpdi->SetXY($right - $fpdi->GetStringWidth($textLine2) - 20, $bottom - 33);
-                $fpdi->Cell(0, 0, $textLine2, 0, 0, 'C');
+                        $textLine3 = iconv('UTF-8', 'cp1258', $doctorName);
+                        $fpdi->SetFont('arial-unicode-ms', '', 9, '', true);
+                        $fpdi->SetXY($right - $fpdi->GetStringWidth($textLine3) - 33, $bottom - 27);
+                        $fpdi->Cell(0, 0, $textLine3, 0, 0, 'C');
 
-                $textLine3 = iconv('UTF-8', 'cp1258', $doctorName);
-                $fpdi->SetFont('arial-unicode-ms', '', 9, '', true);
-                $fpdi->SetXY($right - $fpdi->GetStringWidth($textLine3) - 33, $bottom - 27);
-                $fpdi->Cell(0, 0, $textLine3, 0, 0, 'C');
+                        if ($doctorSignature) {
+                            $signaturePath = public_path($doctorSignature);
+                            $signatureWidth = 60;
+                            $signatureHeight = 20;
+                            $signatureX = $right - $signatureWidth;
+                            $signatureY = $bottom - 20;
+                            $fpdi->Image($signaturePath, $signatureX, $signatureY, $signatureWidth, $signatureHeight);
+                        }
+                    }
 
-                if ($doctorSignature) {
-                    $signaturePath = public_path($doctorSignature);
-                    $signatureWidth = 60;
-                    $signatureHeight = 20;
-                    $signatureX = $right - $signatureWidth;
-                    $signatureY = $bottom - 20;
-                    $fpdi->Image($signaturePath, $signatureX, $signatureY, $signatureWidth, $signatureHeight);
+                    // Chèn mã QR vào trang cuối cùng
+                    if ($qrCode) {
+                        $imageWidth = 30;
+                        $imageHeight = 30;
+                        $fpdi->Image($imagePath, 10, $bottom - $imageHeight, $imageWidth, $imageHeight);
+                    }
                 }
-            }
-
-            if ($qrCode) {
-                $imageWidth = 30;
-                $imageHeight = 30;
-                $fpdi->Image($imagePath, 10, $bottom - $imageHeight, $imageWidth, $imageHeight);
             }
 
             $fpdi->Output($outputFilePath, 'F');
