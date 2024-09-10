@@ -176,8 +176,8 @@ class MainApi extends Controller
                 return response($this->returnMessage('Token not found'), 404);
             }
 
-            //            $this->sendVideoCallNotification($token, $data, $platform, $channel);
-            $data = $this->sendNotification($token, $data, $notification, $channel, $additionOpts)->getContents();
+                        $this->sendVideoCallNotification($token, $data, $platform, $channel,$notification);
+//            $data = $this->sendNotification($token, $data, $notification, $channel, $additionOpts)->getContents();
             return response($data);
         } catch (\Exception $exception) {
             Log::error("Unable to call MainApi::sendNotificationFcm", ['exception' => $exception]);
@@ -213,15 +213,15 @@ class MainApi extends Controller
         return FcmService::init()->request($payload);
     }
 
-    public function sendVideoCallNotification($firebaseToken, $data, $platform, ?string $channel)
+    public function sendVideoCallNotification($firebaseToken, $data, $platform, ?string $channel,$notification)
     {
         try {
             $client = new Client();
             $YOUR_SERVER_KEY = Constants::GG_KEY;
 
             $notificationPayload = [
-                'title' => 'Bạn có 1 cuộc gọi mới',
-                'body' => 'Bạn có thông báo mới',
+                'title' => $notification['title'],
+                'body' => $notification['body'],
             ];
 
             $androidPayload = [
