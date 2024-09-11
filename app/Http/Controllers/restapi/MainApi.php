@@ -216,8 +216,16 @@ class MainApi extends Controller
     public function sendVideoCallNotification($firebaseToken, $data, $platform, ?string $channel,$notification)
     {
         try {
-            $client = new Client();
-            $YOUR_SERVER_KEY = Constants::GG_KEY;
+            $channel_id = 'default_channel_id';
+            $routeKey = '/chat-screen';
+            $arguments = '';
+            if ($channel == 'chats'){
+                $channel_id = 'chat_channel_id';
+                $routeKey = '/chat-screen';
+            }elseif ($channel == 'callkit_incoming_channel_id' || $channel == 'callkit_missed_channel_id'){
+                $channel_id = 'video_call_channel_id';
+                $routeKey = '/video_ui_kit';
+            }
 
             $notificationPayload = [
                 'title' => $notification['title'],
@@ -227,7 +235,7 @@ class MainApi extends Controller
             $androidPayload = [
                 'notification' => [
                     'icon' => 'ic_launcher',
-                    'channel_id' => 'video_call_channel_id',
+                    'channel_id' => $channel_id,
                     'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
                     'image' => 'https://example.com/image.png',
                     'sound' => 'custom_sound.wav',
@@ -246,12 +254,13 @@ class MainApi extends Controller
                 $result[$key] = is_array($data[$key]) ? json_encode($data[$key]) : (string) $data[$key];
                 return $result;
             }, []);
-
+            $transformedData['routeKey'] = $routeKey;
+            $transformedData['arguments'] = $arguments;
             $payload = [
                 'token' => $firebaseToken,
                 'notification' => $notificationPayload,
                 'data' => array_merge($transformedData, [
-                    'channel_id' => 'video_call_channel_id',
+                    'channel_id' => $channel_id,
                 ]),
             ];
 

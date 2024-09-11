@@ -167,9 +167,9 @@ class BookingController extends Controller
             }
         }
         if ($role_name->name == 'HOSPITALS'){
-            $list_doctor = User::where('manager_id',$role_id->user_id)->get();
+            $list_doctor = User::where('manager_id',$role_id->user_id)->orWhere('id',$bookings_edit->doctor_id)->get();
         }else{
-            $list_doctor = User::where('department_id',$bookings_edit->department_id)->get();
+            $list_doctor = User::where('department_id',$bookings_edit->department_id)->orWhere('id',$bookings_edit->doctor_id)->get();
         }
         $data_prescription = PrescriptionResults::where('booking_id',$id)->first();
         if (isset($data_prescription)){
@@ -445,12 +445,25 @@ class BookingController extends Controller
             if ($success) {
                 if ($isSendOaToUser) {
                     //Queue on change booking status notifications
+                    if ($status == 'PENDING'){
+                        $nameStatus = 'Chờ xác nhận';
+                        $routerName= '/med-appointment-screen';
+                    }elseif ($status == 'APPROVED'){
+                        $nameStatus = 'Xác nhận';
+                        $routerName= '/med-appointment-screen';
+                    }elseif ($status == 'COMPLETE'){
+                        $nameStatus = 'Hoàn thành';
+                        $routerName= '/completed-appointment-screen';
+                    }else{
+                        $nameStatus = 'Hủy';
+                        $routerName= '/review-med-screen';
+                    }
                     $notifi = Notification::create([
-                        'title' => 'Thông báo trạng thái lịch khám',
+                        'title' => 'Thông báo đặt lịch khám',
                         'sender_id' => $booking->user_id,
                         'follower' => $booking->user_id,
                         'target_url' => route('web.users.my.bookings.detail', ['id' => $booking->id]),
-                        'description' => 'Trạng thái lịch khám của bạn đã thay đổi, Vui lòng đến kiểm tra!',
+                        'description' => 'Trạng thái lịch khám của bạn đã được'.$nameStatus.', Vui lòng đến kiểm tra!',
                         'booking_id' => $booking->id
                     ]);
                     $notifi->save();
@@ -473,7 +486,7 @@ class BookingController extends Controller
 
                     $pusher->trigger('noti-events', 'noti-events', $requestData);
                     $userToken = User::find($booking->user_id)->token_firebase ?? "";
-                    $dataSend = $this->sendBookingNotifications( $userToken, $notifi);
+                    $dataSend = $this->sendBookingNotifications( $userToken, $notifi,$booking,$routerName);
                     ChangeBookingStatus::dispatch($booking);
                 }
                 alert('Update success');
@@ -486,37 +499,61 @@ class BookingController extends Controller
         }
     }
 
-    private function sendBookingNotifications($userToken = null, $notification)
+    private function sendBookingNotifications($userToken = null, $notification,$booking,$routerName)
     {
-        $client = new Client();
-        $YOUR_SERVER_KEY = Constants::GG_KEY;
-
         if ($userToken) {
             $notificationWithSender = Notification::with('senders')->find($notification->id);
+
+            // Prepare notification payload
+            $notificationPayload = [
+                'title' => $notificationWithSender->title ?? 'Thông báo mới',
+                'body' => $notificationWithSender->description ?? 'Bạn có một thông báo mới.',
+            ];
+
             $data = [
                 'title' => $notificationWithSender->title ?? "",
                 'sender' => $notificationWithSender->senders->avt ?? "",
                 'url' => $notificationWithSender->target_url ?? "#",
                 'description' => $notificationWithSender->description ?? "",
                 'id' => (string) $notificationWithSender->id,
+                'routeKey'=>$routerName,
+                'arguments'=>$booking,
             ];
 
-            return FcmService::init()->request([
-                'token' => $userToken,
-                'data' => $data,
+            $androidPayload = [
                 'notification' => [
-                    'title' => 'Bạn vừa nhận được 1 thông báo mới',
-                    'body' => 'Booking',
+                    'icon' => 'ic_launcher',
+                    'channel_id' => 'default_channel_id',
+                    'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+                    'sound' => 'custom_sound.wav',
                 ],
-                'webpush' => [
-                    'notification' => [
-                        'title' => 'Bạn vừa nhận được 1 thông báo mới',
-                        'body' => 'Booking',
-                    ],
-                ],
-            ]);
-        }
+            ];
 
+            $iosPayload = [
+                'aps' => [
+                    'sound' => 'custom_sound.wav',
+                    'badge' => 1,
+                ],
+            ];
+
+            $payload = [
+                'token' => $userToken,
+                'notification' => $notificationPayload,
+                'data' => array_merge($data, [
+                    'channel_id' => 'default_channel_id',
+                ]),
+            ];
+
+            $platform = $notification->platform ?? 'ANDROID';
+
+            if ($platform === 'ANDROID') {
+                $payload['android'] = $androidPayload;
+            } elseif ($platform === 'IOS') {
+                $payload['apns'] = ['payload' => $iosPayload];
+            }
+
+            return FcmService::init()->request($payload);
+        }
         return true;
     }
 
