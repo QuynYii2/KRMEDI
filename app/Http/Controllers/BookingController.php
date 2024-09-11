@@ -584,7 +584,7 @@ class BookingController extends Controller
                 'description' => $notificationWithSender->description ?? "",
                 'id' => (string) $notificationWithSender->id,
                 'routeKey'=>$routerName,
-                'arguments'=>$arrayBooking,
+                'arguments'=>json_encode($arrayBooking),
             ];
 
             $androidPayload = [
