@@ -440,22 +440,34 @@ class BookingController extends Controller
                     $prescription_result->booking_id = $booking->id;
                     $prescription_result->save();
                 }
+//                $notifis = Notification::create([
+//                    'title' => 'Thông báo trả kết quả',
+//                    'sender_id' => $booking->user_id,
+//                    'follower' => $booking->user_id,
+//                    'target_url' => route('web.users.my.bookings.detail', ['id' => $booking->id]),
+//                    'description' => 'Bạn vừa được trả kết quả khám, Vui lòng đến kiểm tra!',
+//                    'booking_id' => $booking->id
+//                ]);
+//                $notifis->save();
+//                $userTokens = User::find($booking->user_id)->token_firebase ?? "";
+//                $routerNames = '';
+//                $this->sendBookingNotifications( $userTokens, $notifis,$prescription_result,$routerNames);
             }
 
             if ($success) {
                 if ($isSendOaToUser) {
                     //Queue on change booking status notifications
                     if ($status == 'PENDING'){
-                        $nameStatus = 'Chờ xác nhận';
+                        $nameStatus = 'chờ xác nhận';
                         $routerName= '/med-appointment-screen';
                     }elseif ($status == 'APPROVED'){
-                        $nameStatus = 'Xác nhận';
+                        $nameStatus = 'xác nhận';
                         $routerName= '/med-appointment-screen';
                     }elseif ($status == 'COMPLETE'){
-                        $nameStatus = 'Hoàn thành';
+                        $nameStatus = 'hoàn thành';
                         $routerName= '/completed-appointment-screen';
                     }else{
-                        $nameStatus = 'Hủy';
+                        $nameStatus = 'hủy';
                         $routerName= '/review-med-screen';
                     }
                     $notifi = Notification::create([
@@ -463,7 +475,7 @@ class BookingController extends Controller
                         'sender_id' => $booking->user_id,
                         'follower' => $booking->user_id,
                         'target_url' => route('web.users.my.bookings.detail', ['id' => $booking->id]),
-                        'description' => 'Trạng thái lịch khám của bạn đã được'.$nameStatus.', Vui lòng đến kiểm tra!',
+                        'description' => 'Trạng thái lịch khám của bạn đã được '.$nameStatus.'. Vui lòng đến kiểm tra!',
                         'booking_id' => $booking->id
                     ]);
                     $notifi->save();
@@ -486,7 +498,62 @@ class BookingController extends Controller
 
                     $pusher->trigger('noti-events', 'noti-events', $requestData);
                     $userToken = User::find($booking->user_id)->token_firebase ?? "";
-                    $dataSend = $this->sendBookingNotifications( $userToken, $notifi,$booking,$routerName);
+                    $survey_answer_user = SurveyAnswerUser::where('booking_id', $booking->id)->get();
+                    $arrQuestion = [];
+                    foreach ($survey_answer_user as $survey_answer) {
+                        $surveyResult = $survey_answer->result;
+
+                        /* Tách chuỗi thành mảng sử dụng dấu '-' */
+                        $parts = explode('-', $surveyResult);
+
+                        /* Lấy idQuestion */
+                        $idQuestion = $parts[0];
+
+                        $question = SurveyQuestion::find($idQuestion);
+
+                        $typeQuestion = SurveyQuestion::find($idQuestion) ? SurveyQuestion::find($idQuestion)->type : '';
+
+                        if ($typeQuestion == SurveyType::TEXT) {
+                            $pos = strpos($surveyResult, '-');
+                            $answer = '';
+                            if ($pos !== false) {
+                                /* Nếu tìm thấy dấu "-", cắt bỏ phần đầu của chuỗi */
+                                $result = substr($surveyResult, $pos + 1);
+
+                                $answer = $result;
+                                $question['answers'] = $answer;
+                            }
+                            array_push($arrQuestion, $question);
+                        } else {
+
+                            /* Lấy phần còn lại của mảng, bắt đầu từ phần tử thứ hai */
+                            $idAnswersArray = array_slice($parts, 1);
+
+                            /* Chuyển mảng thành chuỗi nếu cần */
+                            $idAnswers = implode(',', $idAnswersArray);
+                            $idAnswers = explode(',', $idAnswers);
+
+                            $answer = SurveyAnswer::whereIn('id', $idAnswers)->get();
+                            $question['answers'] = $answer;
+                            array_push($arrQuestion, $question);
+                        }
+                    }
+                    $data_prescription = PrescriptionResults::where('booking_id', $booking->id)->orderBy('created_at','desc')->first();
+                    $isPrescription = true;
+                    if (!$data_prescription){
+                        $isPrescription = false;
+                    }
+
+                    $arrayBooking = $booking->toArray();
+                    $arrayBooking['time_convert_checkin'] = date('Y-m-d H:i:s', strtotime($booking->check_in));
+                    $arrayBooking['question'] = $arrQuestion;
+                    $arrayBooking['examination_results_pdf'] = $booking->prescription_file??null;
+                    $arrayBooking['isPrescription'] = $isPrescription;
+                    $arrayBooking['department_name'] = Department::find($booking->department_id)->name??'';
+                    $arrayBooking['department_image'] = Department::find($booking->department_id)->thumbnail??'';
+                    $arrayBooking['clinic_name'] = Clinic::find($booking->clinic_id)->name??'';
+
+                    $dataSend = $this->sendBookingNotifications( $userToken, $notifi,$arrayBooking,$routerName);
                     ChangeBookingStatus::dispatch($booking);
                 }
                 alert('Update success');
@@ -499,7 +566,7 @@ class BookingController extends Controller
         }
     }
 
-    private function sendBookingNotifications($userToken = null, $notification,$booking,$routerName)
+    private function sendBookingNotifications($userToken = null, $notification,$arrayBooking,$routerName)
     {
         if ($userToken) {
             $notificationWithSender = Notification::with('senders')->find($notification->id);
@@ -517,7 +584,7 @@ class BookingController extends Controller
                 'description' => $notificationWithSender->description ?? "",
                 'id' => (string) $notificationWithSender->id,
                 'routeKey'=>$routerName,
-                'arguments'=>$booking,
+                'arguments'=>$arrayBooking,
             ];
 
             $androidPayload = [
@@ -525,13 +592,13 @@ class BookingController extends Controller
                     'icon' => 'ic_launcher',
                     'channel_id' => 'default_channel_id',
                     'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
-                    'sound' => 'custom_sound.wav',
+                    'sound' => 'default',
                 ],
             ];
 
             $iosPayload = [
                 'aps' => [
-                    'sound' => 'custom_sound.wav',
+                    'sound' => 'default',
                     'badge' => 1,
                 ],
             ];

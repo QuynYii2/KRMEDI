@@ -238,14 +238,14 @@ class MainApi extends Controller
                     'channel_id' => $channel_id,
                     'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
                     'image' => 'https://example.com/image.png',
-                    'sound' => 'custom_sound.wav',
+                    'sound' => 'default',
                     'color' => '#ff0000',
                 ],
             ];
 
             $iosPayload = [
                 'aps' => [
-                    'sound' => 'custom_sound.wav',
+                    'sound' => 'default',
                     'badge' => 1,
                 ],
             ];
