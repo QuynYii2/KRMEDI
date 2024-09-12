@@ -565,7 +565,7 @@ class BookingController extends Controller
                         ->where('clinics.id', $booking->clinic_id)  // Lấy bản ghi clinic với id = 123
                         ->where('clinics.status', ClinicStatus::ACTIVE)
                         ->select('clinics.*', 'users.email')
-                        ->first();  // Lấy duy nhất một bản ghi
+                        ->first();
 
                     if ($clinic) {
                         // Tìm bác sĩ đại diện
@@ -630,7 +630,7 @@ class BookingController extends Controller
                         $clinicData['info_doctor'] = $detailDoctor->toArray();
                         $clinicData['introduce'] = str_replace(array("\r", "\n"), '', strip_tags(html_entity_decode($clinicData['introduce'])));
 
-                        $arrayBooking['clinicOrHospitalBookingInformations'] =  $clinicData;
+//                        $arrayBooking['clinicOrHospitalBookingInformations'] =  $clinicData;
                     }
                     $dataSend = $this->sendBookingNotifications( $userToken, $notifi,$arrayBooking,$routerName);
                     ChangeBookingStatus::dispatch($booking);
