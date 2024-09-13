@@ -176,8 +176,8 @@ class MainApi extends Controller
                 return response($this->returnMessage('Token not found'), 404);
             }
 
-                        $this->sendVideoCallNotification($token, $data, $platform, $channel,$notification);
-//            $data = $this->sendNotification($token, $data, $notification, $channel, $additionOpts)->getContents();
+//                        $this->sendVideoCallNotification($token, $data, $platform, $channel,$notification);
+            $data = $this->sendNotification($token, $data, $notification, $channel, $additionOpts)->getContents();
             return response($data);
         } catch (\Exception $exception) {
             Log::error("Unable to call MainApi::sendNotificationFcm", ['exception' => $exception]);
