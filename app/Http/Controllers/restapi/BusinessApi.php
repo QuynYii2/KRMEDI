@@ -157,6 +157,7 @@ class BusinessApi extends Controller
         return DB::table('clinics')
             ->join('users', 'users.id', '=', 'clinics.user_id')
             ->where('clinics.status', ClinicStatus::ACTIVE)
+            ->orderBy('clinics.created_at', 'desc')
             ->when($type, function ($query) use ($type) {
                 return $query->where('clinics.type', $type);
             })
@@ -258,7 +259,7 @@ class BusinessApi extends Controller
                 $clinic['symptoms'] = $symptoms->toArray();
                 $clinic['info_doctor'] = $detailDoctor->toArray();
                 $clinic['introduce'] = str_replace(array("\r", "\n"), '', strip_tags(html_entity_decode($clinic['introduce'])));
-                
+
                 return $clinic;
             });
     }
