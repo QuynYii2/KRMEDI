@@ -560,78 +560,6 @@ class BookingController extends Controller
                     $arrayBooking['department_image'] = Department::find($booking->department_id)->thumbnail??'';
                     $arrayBooking['clinic_name'] = Clinic::find($booking->clinic_id)->name??'';
 
-                    $clinic = DB::table('clinics')
-                        ->join('users', 'users.id', '=', 'clinics.user_id')
-                        ->where('clinics.id', $booking->clinic_id)  // Lấy bản ghi clinic với id = 123
-                        ->where('clinics.status', ClinicStatus::ACTIVE)
-                        ->select('clinics.*', 'users.email')
-                        ->first();
-
-                    if ($clinic) {
-                        // Tìm bác sĩ đại diện
-                        $detailDoctor = User::where('id', $clinic->representative_doctor)->get();
-
-                        // Tìm các dịch vụ phòng khám cung cấp
-                        $array = explode(',', $clinic->service_id);
-                        $services = ServiceClinic::whereIn('id', $array)->get();
-
-                        // Tìm địa chỉ
-                        $addressArray = explode(',', $clinic->address);
-                        $addressP = Province::where('id', $addressArray[1] ?? null)->first();
-                        $addressD = District::where('id', $addressArray[2] ?? null)->first();
-                        $addressC = Commune::where('id', $addressArray[3] ?? null)->first();
-
-                        // Tìm khoa (departments)
-                        $list_departments = explode(',', $clinic->department);
-                        $departments = Department::whereIn('id', $list_departments)
-                            ->where('isFilter', 1)
-                            ->get();
-
-                        // Tìm triệu chứng (symptoms)
-                        $list_symptoms = explode(',', $clinic->symptom);
-                        $symptoms = Symptom::whereIn('id', $list_symptoms)
-                            ->where('isFilter', 1)
-                            ->get();
-
-                        // Tính toán đánh giá và sao
-                        $reviews = Review::where('clinic_id', $clinic->id)
-                            ->where('status', ReviewStatus::APPROVED)
-                            ->get();
-                        $totalReview = $reviews->count();
-                        $totalStar = $reviews->sum('star');
-                        $calcReview = ($totalReview > 0) ? ($totalStar / $totalReview) : 0;
-
-                        // Chuẩn bị dữ liệu trả về
-                        $clinicData = (array)$clinic;
-                        $clinicData['total_reviews'] = $totalReview;
-                        $clinicData['calc_reviews'] = $calcReview;
-                        $clinicData['total_star'] = $totalStar;
-                        $clinicData['total_services'] = $services->count();
-                        $clinicData['services'] = $services->toArray();
-
-                        // Ghép địa chỉ
-                        $addressInfo = '';
-                        if ($addressC) {
-                            $addressInfo .= $addressC->name;
-                        }
-                        if ($addressD) {
-                            $addressInfo .= ', ' . $addressD->name;
-                        }
-                        if ($addressP) {
-                            $addressInfo .= ', ' . $addressP->name;
-                        }
-                        $clinicData['addressInfo'] = $addressInfo;
-
-                        // Thêm các khoa và triệu chứng
-                        $clinicData['total_departments'] = $departments->count();
-                        $clinicData['departments'] = $departments->toArray();
-                        $clinicData['total_symptoms'] = $symptoms->count();
-                        $clinicData['symptoms'] = $symptoms->toArray();
-                        $clinicData['info_doctor'] = $detailDoctor->toArray();
-                        $clinicData['introduce'] = str_replace(array("\r", "\n"), '', strip_tags(html_entity_decode($clinicData['introduce'])));
-
-//                        $arrayBooking['clinicOrHospitalBookingInformations'] =  $clinicData;
-                    }
                     $dataSend = $this->sendBookingNotifications( $userToken, $notifi,$arrayBooking,$routerName);
                     ChangeBookingStatus::dispatch($booking);
                 }
@@ -669,7 +597,7 @@ class BookingController extends Controller
             $androidPayload = [
                 'notification' => [
                     'icon' => 'ic_launcher',
-                    'channel_id' => 'default_channel_id',
+                    'channel_id' => 'booking_channel_id',
                     'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
                     'sound' => 'default',
                 ],
@@ -686,7 +614,7 @@ class BookingController extends Controller
                 'token' => $userToken,
                 'notification' => $notificationPayload,
                 'data' => array_merge($data, [
-                    'channel_id' => 'default_channel_id',
+                    'channel_id' => 'booking_channel_id',
                 ]),
             ];
 
