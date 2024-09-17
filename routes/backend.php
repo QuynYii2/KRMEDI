@@ -134,6 +134,7 @@ Route::group(['prefix' => 'medical-favourites'], function () {
 
 Route::group(['prefix' => 'booking'], function () {
     Route::get('list-users/{id}/{status}', [BookingApi::class, 'getAllBookingByUserId'])->name('api.booking.list.users');
+    Route::get('count-home-booking/{id}/{status}', [BookingApi::class, 'countBookingByUserId'])->name('api.booking.count-home-booking');
     Route::get('users-read-booking/{id}', [BookingApi::class, 'userReadBooking'])->name('api.booking.users.read.booking');
     Route::get('list-clinics/{id}', [BookingApi::class, 'getAllBookingByClinicID'])->name('api.booking.list.clinics');
     Route::post('create', [BookingApi::class, 'createBooking'])->name('api.user.createBooking');

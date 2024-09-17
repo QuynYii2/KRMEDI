@@ -264,6 +264,13 @@ class BookingApi extends Controller
         return response()->json($arrayBookings);
     }
 
+    public function countBookingByUserId($id,$status)
+    {
+        $bookings = Booking::where('user_id',$id)->where('status',$status)->where('is_read',0)->count();
+
+        return response()->json(['message' => 'Booking not read','data'=>$bookings]);
+    }
+
     public function userReadBooking($id)
     {
         $bookings = Booking::find($id);
