@@ -64,7 +64,9 @@
                         $listDepartment = \App\Models\Department::where('status','ACTIVE')->get();
                     @endphp
                     @if($department)
-                    <input type="text" class="form-control" id="department_id" name="department_id"
+                        <input type="text" class="form-control" id="departments_id" name="departments_id"
+                               value="{{ $department ? $department->id : '' }}" hidden>
+                    <input type="text" class="form-control"
                         value="{{ $department ? $department->name : '' }}" disabled>
                         @else
                         <select class="form-select" id="departments_id" name="departments_id">
