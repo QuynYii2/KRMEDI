@@ -226,7 +226,7 @@ class PrescriptionResultApi extends Controller
         $message['carts'] = $carts;
         $message['prescription_id'] = $prescription_id;
 
-        broadcast(new NewMessage($message));
+//        broadcast(new NewMessage($message));
     }
 
     public function exportAndDownload(Request $request)
