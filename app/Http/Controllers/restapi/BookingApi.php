@@ -277,7 +277,7 @@ class BookingApi extends Controller
         $bookings->is_read = 1;
         $bookings->save();
 
-        return response()->json(['message' => 'Booking read successfully']);
+        return response()->json(['message' => 'Booking read successfully','status'=>true]);
     }
 
     public function getAllBookingByClinicID($id, Request $request)
