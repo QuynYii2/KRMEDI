@@ -165,7 +165,7 @@ class MainApi extends Controller
             }
 
             $data['link'] = $link;
-            $data['toFirebaseID'] = $toFirebaseID;
+            $data['fromFirebaseID'] = $toFirebaseID;
 
             $user = User::where('email', $user_email)->first();
 
