@@ -147,7 +147,7 @@ class MainApi extends Controller
             $data = $request->input('data');
             $notification = $request->input('notification');
             $channel = $request->input('channel');
-            $toFirebaseID = $request->input('toFirebaseID');
+            $toFirebaseID = $notification['toFirebaseID'] ?? null;
             $additionOpts = $request->input('addition_opts', []);
             $user = User::where('email', $user_email)->first();
             $platform = $user->devices_name;
