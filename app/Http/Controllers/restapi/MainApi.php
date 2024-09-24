@@ -147,6 +147,7 @@ class MainApi extends Controller
             $data = $request->input('data');
             $notification = $request->input('notification');
             $channel = $request->input('channel');
+            $toFirebaseID = $request->input('toFirebaseID');
             $additionOpts = $request->input('addition_opts', []);
             $user = User::where('email', $user_email)->first();
             $platform = $user->devices_name;
@@ -176,7 +177,7 @@ class MainApi extends Controller
                 return response($this->returnMessage('Token not found'), 404);
             }
 
-                        $this->sendVideoCallNotification($token, $data, $platform, $channel,$notification);
+                        $this->sendVideoCallNotification($token, $data, $platform, $channel,$notification,$toFirebaseID);
 //            $data = $this->sendNotification($token, $data, $notification, $channel, $additionOpts)->getContents();
             return response($data);
         } catch (\Exception $exception) {
@@ -213,7 +214,7 @@ class MainApi extends Controller
         return FcmService::init()->request($payload);
     }
 
-    public function sendVideoCallNotification($firebaseToken, $data, $platform, ?string $channel,$notification)
+    public function sendVideoCallNotification($firebaseToken, $data, $platform, ?string $channel,$notification,$toFirebaseID)
     {
         try {
             $channel_id = 'default_channel_id';
@@ -222,6 +223,7 @@ class MainApi extends Controller
             if ($channel == 'chats'){
                 $channel_id = 'chat_channel_id';
                 $routeKey = '/chat-screen';
+                $arguments = $toFirebaseID;
             }elseif ($channel == 'callkit_incoming_channel_id' || $channel == 'callkit_missed_channel_id'){
                 $channel_id = 'video_call_channel_id';
                 $routeKey = '/video_ui_kit';
