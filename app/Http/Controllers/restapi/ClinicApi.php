@@ -189,7 +189,7 @@ class ClinicApi extends Controller
                 });
             }
         }
-        
+
         if (!empty($clinicSymptoms) && ($clinicSymptoms[0] != "")) {
             if (!in_array('all', $clinicSymptoms)) {
                 $clinics->where(function ($query) use ($clinicSymptoms) {
@@ -270,6 +270,18 @@ class ClinicApi extends Controller
 
         $response['email'] = $user->email;
         $response['departments'] = $departments;
+        return response()->json($response);
+    }
+
+    public function detailLocation($id)
+    {
+        $clinic = Clinic::find($id);
+        if (!$clinic || $clinic->status != ClinicStatus::ACTIVE) {
+            return response("Clinic not found", 404);
+        }
+
+        $response['latitude'] = $clinic->latitude;
+        $response['longitude'] = $clinic->longitude;
         return response()->json($response);
     }
 

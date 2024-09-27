@@ -80,6 +80,7 @@ Route::group(['prefix' => 'clinics'], function () {
     Route::get('/search', [ClinicApi::class, 'searchClinics'])->name('clinics.restapi.search');
     Route::get('/get-specialist', [ClinicApi::class, 'getAllSpecialist'])->name('clinics.restapi.specialist');
     Route::get('/get-location', [ClinicApi::class, 'getAllLocation'])->name('clinics.restapi.location');
+    Route::get('/detail-location/{id}', [ClinicApi::class, 'detailLocation'])->name('clinics.restapi.detail.location');
 });
 
 Route::group(['prefix' => 'pharmacies'], function () {
