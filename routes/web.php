@@ -68,6 +68,22 @@ use \App\Http\Controllers\ReviewMentoringController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('/home-screen/{id}', function ($id) {
+    $userAgent = request()->header('User-Agent');
+
+    if (str_contains($userAgent, 'Android') ) {
+        return redirect()->to('krmedi://krmedi.vn/home-screen?hospitalId='.$id);
+    }else if(str_contains($userAgent, 'iPhone')){
+
+        return redirect()->to('https://krmedi.vn/home-screen?hospitalId='.$id);
+    } else {return redirect()->route('home'); }
+
+
+});
+
+Route::get('/home-screen', function () {
+    return view('deeplink');
+});
 
 Route::middleware(['user.active'])->group(function () {
     Route::get('/lang/{locale}', [MainController::class, 'setLanguage'])->name('language');
