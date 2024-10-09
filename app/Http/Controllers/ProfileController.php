@@ -116,7 +116,7 @@ class ProfileController extends Controller
             return response()->json(['message' => 'No users found for the given role_id'], 404);
         }
 
-        $users = User::whereIn('id', $userIds)->get();
+        $users = User::whereIn('id', $userIds)->paginate(10);
 
         $users->map(function ($user) {
             $user->abouts = str_replace(array("\r", "\n"), '', strip_tags(html_entity_decode($user->abouts)));
