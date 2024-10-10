@@ -18,8 +18,8 @@ class SendSMSController extends Controller
     public function __construct()
     {
         $this->site = 'ILVIETNAM';
-        $this->loginName = 'admin';
-        $this->password = 'ILVIETNAM@1';
+        $this->loginName = 'ILVIETNAM';
+        $this->password = 'IlvietnamQrIm6868';
         $this->sendServiceCode = '11';
         $this->brandName = 'IL VIETNAM';
         $this->unicode = '0';
@@ -28,15 +28,19 @@ class SendSMSController extends Controller
     public function sendSMS($user_id, $to, $content)
     {
         $SmsId = random_int(100000, 999999) . "-" . time();
-        $url = "https://api.s247.vn:8443/api/sms?site=" . $this->site . "&LoginName=" . $this->loginName
-            . "&Password=" . $this->password . "&SendServiceCode=" . $this->sendServiceCode . "&BrandName=" . $this->brandName
-            . "&mobile=" . $to . "&Message=" . $content . "&SmsId=" . $SmsId ."&Unicode=" . $this->unicode;
+        $url = "https://apisms.idiqr.com/smsapi/sendSMS?username=" . $this->loginName . "&password=" . $this->password
+            . "&source_addr=" . $this->brandName . "&dest_addr=" . $to . "&message=" . $content .
+            "&type=". $this->unicode . "&request_id=" . $SmsId;
+
+//        $url = "https://api.s247.vn:8443/api/sms?site=" . $this->site . "&LoginName=" . $this->loginName
+//            . "&Password=" . $this->password . "&SendServiceCode=" . $this->sendServiceCode . "&BrandName=" . $this->brandName
+//            . "&mobile=" . $to . "&Message=" . $content . "&SmsId=" . $SmsId . "&Unicode=" . $this->unicode;
 
         // call url by HTTP:get method
         $client = new \GuzzleHttp\Client();
         $response = $client->request('GET', $url);
         $response = json_decode($response->getBody(), true);
-        if ($response['code'] == 1) {
+        if ($response) {
             $this->WriteLogSMS($user_id, $to, $content);
 
             return true;
