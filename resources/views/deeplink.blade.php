@@ -17,7 +17,7 @@
 <h1>Ứng dụng Krmedi hiện không hỗ trợ trên web.</h1>
 <p>Vui lòng tải ứng dụng từ</p>
 <div class="line-link">
-    <a href="#" target="_blank"><img src="https://krmedi.vn/img/icon-app-android.png" alt="Play Store"></a>
+    <a href="https://play.google.com/store/apps/details?id=com.ilglobal.krmedi" target="_blank"><img src="https://krmedi.vn/img/icon-app-android.png" alt="Play Store"></a>
     <a href="https://apps.apple.com/vn/app/krmedi/id6476542829?l=vi" target="_blank">
         <img src="https://krmedi.vn/img/icon-app-ios.png" alt="App Store"></a>
 </div>
