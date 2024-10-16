@@ -48,7 +48,7 @@ class ProfileController extends Controller
         }else{
             $clinic_id = Clinic::where('user_id', Auth::user()->manager_id)->first();
         }
-        $url = route('home.specialist.booking.detail-qr', $clinic_id??75);
+        $url = url('/home-screen/'. $clinic_id);
         $qrCodes = QrCode::size(300)->generate($url);
         $services = ServiceClinic::where('status', ServiceClinicStatus::ACTIVE)->get();
         $symptoms = Symptom::where('status', SymptomStatus::ACTIVE)->get();

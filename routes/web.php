@@ -72,7 +72,7 @@ Route::get('/home-screen/{id}', function ($id) {
     $userAgent = request()->header('User-Agent');
 
     if (str_contains($userAgent, 'Android') ) {
-        return redirect()->to('krmedi://krmedi.vn/home-screen?hospitalId='.$id);
+        return response()->view('checkdeeplink', ['id' => $id]);
     }else if(str_contains($userAgent, 'iPhone')){
 
         return redirect()->to('https://krmedi.vn/home-screen?hospitalId='.$id);
