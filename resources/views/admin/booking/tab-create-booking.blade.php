@@ -171,7 +171,7 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="file">Tài liệu khám bệnh:</label>
-                                        <input type="file" name="file" class="form-control-file" accept=".pdf">
+                                        <input type="file" name="file" class="form-control-file" accept=".pdf, .jpg, .jpeg, .png, .gif">
                                     </div>
                                 </div>
                             </div>

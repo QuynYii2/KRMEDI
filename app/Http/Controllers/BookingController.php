@@ -345,11 +345,11 @@ class BookingController extends Controller
                 foreach ($bookingResultList as $index => $result) {
                     if (isset($result['select']) && isset($result['doctor_id']) && (isset($result['file_urls']) || isset($result['file']))) {
                         $validator = Validator::make($result, [
-                            'file.*' => 'mimes:pdf',
+                            'file.*' => 'mimes:pdf,jpg,jpeg,png,gif',
                         ]);
 
                         if ($validator->fails()) {
-                            alert('Error', 'Tài liệu phải là định dạng PDF', 'error');
+                            alert('Error', 'Tài liệu phải là định dạng PDF hoặc ảnh (jpg, jpeg, png, gif)', 'error');
                             return redirect()->back()->withErrors($validator)->withInput();
                         }
 
@@ -360,19 +360,21 @@ class BookingController extends Controller
 
                         // Handle the new file input
                         if (isset($result['file']) && $result['file']) {
-                            $qrCode = null;
-                            if (isset($result['doctor_id']) && $result['doctor_id']) {
-                                $url = route('qr.code.show.doctor.info', $result['doctor_id']);
-                                $qrCode = QrCode::format('png')->size(150)->generate($url);
-                            }
                             $itemPath = $result['file']->store('bookings_result', 'public');
                             $fileUrl = asset('storage/' . $itemPath);
+                            $fileExtension = $result['file']->getClientOriginalExtension();
 
-                            if ($fileUrl) {
-                                $doctorName        = User::find($result['doctor_id'])->name ?? "";
-                                $doctorSignature   = User::find($result['doctor_id'])->signature ?? "";
-                                $this->insertQRCodeIntoPDF($fileUrl, $qrCode, $booking, $doctorName, $doctorSignature);
+                            if ($fileExtension === 'pdf') {
+                                $qrCode = null;
+                                if (isset($result['doctor_id']) && $result['doctor_id']) {
+                                    $url = route('qr.code.show.doctor.info', $result['doctor_id']);
+                                    $qrCode = QrCode::format('png')->size(150)->generate($url);
+                                    $doctorName        = User::find($result['doctor_id'])->name ?? "";
+                                    $doctorSignature   = User::find($result['doctor_id'])->signature ?? "";
+                                    $this->insertQRCodeIntoPDF($fileUrl, $qrCode, $booking, $doctorName, $doctorSignature);
+                                }
                             }
+
                         } else if ($result['file_urls']) {
                             // If file input is not set, use the existing value with file_urls
                             $fileUrl = $booking->extend['booking_results'][$index]['url'] ?? $result['file_urls'] ?? '';
@@ -700,11 +702,11 @@ class BookingController extends Controller
                 foreach ($bookingResultList as $index => $result) {
                     if (isset($result['select']) && isset($result['doctors_id']) && (isset($result['file_urls']) || isset($result['file']))) {
                         $validator = Validator::make($result, [
-                            'file.*' => 'mimes:pdf',
+                            'file.*' => 'mimes:pdf,jpg,jpeg,png,gif',
                         ]);
 
                         if ($validator->fails()) {
-                            alert('Error', 'Tài liệu phải là định dạng PDF', 'error');
+                            alert('Error', 'Tài liệu phải là định dạng PDF hoặc ảnh (jpg, jpeg, png, gif)', 'error');
                             return redirect()->back()->withErrors($validator)->withInput();
                         }
 
@@ -715,18 +717,19 @@ class BookingController extends Controller
 
                         // Handle the new file input
                         if (isset($result['file']) && $result['file']) {
-                            $qrCode = null;
-                            if (isset($result['doctors_id']) && $result['doctors_id']) {
-                                $url = route('qr.code.show.doctor.info', $result['doctors_id']);
-                                $qrCode = QrCode::format('png')->size(150)->generate($url);
-                            }
                             $itemPath = $result['file']->store('bookings_result', 'public');
                             $fileUrl = asset('storage/' . $itemPath);
+                            $fileExtension = $result['file']->getClientOriginalExtension();
 
-                            if ($fileUrl) {
-                                $doctorName        = User::find($result['doctors_id'])->name ?? "";
-                                $doctorSignature   = User::find($result['doctors_id'])->signature ?? "";
-                                $this->insertQRCodeIntoPDF($fileUrl, $qrCode, $booking, $doctorName, $doctorSignature);
+                            if ($fileExtension === 'pdf') {
+                                $qrCode = null;
+                                if (isset($result['doctors_id']) && $result['doctors_id']) {
+                                    $url = route('qr.code.show.doctor.info', $result['doctors_id']);
+                                    $qrCode = QrCode::format('png')->size(150)->generate($url);
+                                    $doctorName        = User::find($result['doctors_id'])->name ?? "";
+                                    $doctorSignature   = User::find($result['doctors_id'])->signature ?? "";
+                                    $this->insertQRCodeIntoPDF($fileUrl, $qrCode, $booking, $doctorName, $doctorSignature);
+                                }
                             }
                         } else if ($result['file_urls']) {
                             // If file input is not set, use the existing value with file_urls
