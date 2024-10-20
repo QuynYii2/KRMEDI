@@ -185,7 +185,7 @@ class RegisterController extends Controller
             }
 
             $user->email = $email;
-            $user->name = $name ?? '';
+            $user->name = $name ?? $username;
             $user->last_name = $name ?? '';
             $user->provider_name = $provider_name;
             $user->provider_id = $provider_id;
