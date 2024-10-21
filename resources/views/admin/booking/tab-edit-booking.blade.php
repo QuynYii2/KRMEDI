@@ -147,8 +147,10 @@
                 </div>
             </div>
             <div class="row" id="showReasonCancel_{{$value->id}}">
+                @if($value->reason_cancel)
                 <label for="reason_text">Lí do hủy: </label>
                 <input type="text" class="form-control" id="reason_text" disabled value="{{ $value->reason_cancel }}">
+                    @endif
             </div>
 
             {{-- @if ($bookings_edit->is_result == 1 && $bookings_edit->status === \App\Enums\BookingStatus::COMPLETE) --}}
