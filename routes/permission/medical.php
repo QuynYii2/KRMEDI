@@ -222,6 +222,7 @@ Route::group(['prefix' => 'settings'], function () {
 
 Route::group(['prefix' => 'booking'], function () {
     Route::get('/edit/{id}', [BookingController::class, 'edit'])->name('api.backend.booking.edit');
+    Route::get('/edit-direct/{id}', [BookingController::class, 'editDirect'])->name('api.backend.booking.edit.direct');
     Route::post('/update/{id}', [BookingController::class, 'update'])->name('api.backend.booking.update');
     Route::delete('/delete/{id}', [BookingController::class, 'delete'])->name('api.backend.booking.delete');
     Route::get('/create', [BookingController::class, 'create'])->name('api.backend.booking.create');

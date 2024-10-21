@@ -125,69 +125,172 @@ class BookingController extends Controller
 
     public function edit($id)
     {
-        $bookings_edit = Booking::find($id);
-        $owner = $bookings_edit->clinic->user_id;
-        $serviceID = $bookings_edit->service;
-        $arrayService = explode(',', $serviceID);
-        $services = ServiceClinic::where('status', ServiceClinicStatus::ACTIVE)->get();
+        $dataBooking = Booking::find($id);
+        $userId = $dataBooking->user_id;
+        $checkInDate = \Carbon\Carbon::parse($dataBooking->check_in)->format('Y-m-d');
+        $owner = $dataBooking->clinic->user_id;
         $isAdmin = (new MainController())->checkAdmin();
+
         $role_id = RoleUser::where('user_id',Auth::id())->first();
         $role_name = Role::find($role_id->role_id);
         $isDoctor = $role_name->name == 'DOCTORS';
-
-        $userId = $bookings_edit->user_id;
-        $userFollower = ZaloFollower::where('extend->user_id', $userId)->first();
-        $user_zalo_id = $userFollower->user_id ?? 0;
-
-        $doctor_id = null;
-        $doctor_name = null;
-
-        if (isset($bookings_edit->doctor_id) && $bookings_edit->doctor_id) {
-            $doctor = User::find($bookings_edit->doctor_id);
-            $doctor_id = $bookings_edit->doctor_id;
-            $doctor_name = $doctor->name;
+        if ($role_name->name == 'DOCTORS'){
+            $bookings_edit = Booking::where('user_id', $userId)->where('doctor_id',Auth::id())->where('type',0)
+                ->whereDate('check_in', $checkInDate)->get();
+        }elseif ($role_name->name == 'HOSPITALS' || $role_name->name == 'CLINICS' || $role_name->name == 'PHARMACIES'){
+            $clinic = Clinic::where('user_id', Auth::user()->id)->first();
+            $bookings_edit = Booking::where('user_id', $userId)->where('type',0)->where('clinic_id',$clinic->id)
+                ->whereDate('check_in', $checkInDate)->get();
+        }else{
+            $bookings_edit = Booking::where('user_id', $userId)->where('type',0)
+                ->whereDate('check_in', $checkInDate)->get();
         }
 
+        foreach ($bookings_edit as $value){
+            $value->services = ServiceClinic::where('status', ServiceClinicStatus::ACTIVE)->get();
+            $value->repeaterItems = [];
+
+            $doctor_id = null;
+            $doctor_name = null;
+
+            if (isset($value->doctor_id) && $value->doctor_id) {
+                $doctor = User::find($value->doctor_id);
+                $value->doctor_name = $doctor->name;
+            }
+            $repeaterItems = [];
+            if (isset($value->extend['booking_results'])) {
+                foreach ($value->extend['booking_results'] as $bookingResult) {
+                    $selectValue = $bookingResult['type'];
+                    $fileUrl = $bookingResult['url'];
+                    $doctorId = $bookingResult['doctor_id'];
+                    $doctorName = User::find($doctorId)->name;
+
+                    // Create a new repeater item array
+                    $items = [
+                        'selectValue' => $selectValue,
+                        'fileUrl' => $fileUrl,
+                        'doctorId' => $doctorId,
+                        'doctorName' => $doctorName,
+                    ];
+
+                    // Add the repeater item to the array
+                    $repeaterItems[] = $items;
+                }
+                $value->repeaterItems = $repeaterItems??[];
+            }
+
+            $data_prescription = PrescriptionResults::where('booking_id',$value->id)->first();
+            if (isset($data_prescription)){
+                $value->prescription_product = json_decode($data_prescription->prescriptions, true);
+            }else{
+                $value->prescription_product = [];
+            }
+
+            if ($role_name->name == 'HOSPITALS'){
+                $value->list_doctor = User::where('manager_id',$role_id->user_id)->orWhere('id',$value->doctor_id)->get();
+            }else{
+                $value->list_doctor = User::where('department_id',$value->department_id)->orWhere('id',$value->doctor_id)->get();
+            }
+
+        }
+
+        $userFollower = ZaloFollower::where('extend->user_id', $userId)->first();
+        $user_zalo_id = $userFollower->user_id ?? 0;
 
         $reflector = new \ReflectionClass('App\Enums\ReasonCancel');
         $reasons = $reflector->getConstants();
 
-        $repeaterItems = [];
-
-        if (isset($bookings_edit->extend['booking_results'])) {
-            foreach ($bookings_edit->extend['booking_results'] as $bookingResult) {
-                $selectValue = $bookingResult['type'];
-                $fileUrl = $bookingResult['url'];
-                $doctorId = $bookingResult['doctor_id'];
-                $doctorName = User::find($doctorId)->name;
-
-                // Create a new repeater item array
-                $item = [
-                    'selectValue' => $selectValue,
-                    'fileUrl' => $fileUrl,
-                    'doctorId' => $doctorId,
-                    'doctorName' => $doctorName,
-                ];
-
-                // Add the repeater item to the array
-                $repeaterItems[] = $item;
-            }
-        }
-        if ($role_name->name == 'HOSPITALS'){
-            $list_doctor = User::where('manager_id',$role_id->user_id)->orWhere('id',$bookings_edit->doctor_id)->get();
-        }else{
-            $list_doctor = User::where('department_id',$bookings_edit->department_id)->orWhere('id',$bookings_edit->doctor_id)->get();
-        }
-        $data_prescription = PrescriptionResults::where('booking_id',$id)->first();
-        if (isset($data_prescription)){
-            $prescription_product = json_decode($data_prescription->prescriptions, true);
-        }else{
-            $prescription_product = [];
-        }
         $departments = Department::where('status','ACTIVE')->get();
 
         if ($owner == Auth::id() || $isAdmin || $isDoctor) {
-            return view('admin.booking.tab-edit-booking', compact('bookings_edit', 'isAdmin', 'services', 'reasons', 'repeaterItems', 'user_zalo_id', 'doctor_id', 'doctor_name','list_doctor','isDoctor','prescription_product','departments'));
+            return view('admin.booking.tab-edit-booking', compact('bookings_edit', 'isAdmin', 'reasons', 'user_zalo_id', 'doctor_id', 'doctor_name','isDoctor','departments','dataBooking'));
+        } else {
+            session()->flash('error', 'You do not have permission.');
+            return \redirect()->back();
+        }
+    }
+
+    public function editDirect($id)
+    {
+        $dataBooking = Booking::find($id);
+        $userId = $dataBooking->user_id;
+        $checkInDate = \Carbon\Carbon::parse($dataBooking->check_in)->format('Y-m-d');
+        $owner = $dataBooking->clinic->user_id;
+        $isAdmin = (new MainController())->checkAdmin();
+
+        $role_id = RoleUser::where('user_id',Auth::id())->first();
+        $role_name = Role::find($role_id->role_id);
+        $isDoctor = $role_name->name == 'DOCTORS';
+        if ($role_name->name == 'DOCTORS'){
+            $bookings_edit = Booking::where('user_id', $userId)->where('doctor_id',Auth::id())->where('type',1)
+                ->whereDate('check_in', $checkInDate)->get();
+        }elseif ($role_name->name == 'HOSPITALS' || $role_name->name == 'CLINICS' || $role_name->name == 'PHARMACIES'){
+            $clinic = Clinic::where('user_id', Auth::user()->id)->first();
+            $bookings_edit = Booking::where('user_id', $userId)->where('type',1)->where('clinic_id',$clinic->id)
+                ->whereDate('check_in', $checkInDate)->get();
+        } else{
+            $bookings_edit = Booking::where('user_id', $userId)->where('type',1)
+                ->whereDate('check_in', $checkInDate)->get();
+        }
+
+        foreach ($bookings_edit as $value){
+            $value->services = ServiceClinic::where('status', ServiceClinicStatus::ACTIVE)->get();
+            $value->repeaterItems = [];
+
+            $doctor_id = null;
+            $doctor_name = null;
+
+            if (isset($value->doctor_id) && $value->doctor_id) {
+                $doctor = User::find($value->doctor_id);
+                $value->doctor_name = $doctor->name;
+            }
+            $repeaterItems = [];
+            if (isset($value->extend['booking_results'])) {
+                foreach ($value->extend['booking_results'] as $bookingResult) {
+                    $selectValue = $bookingResult['type'];
+                    $fileUrl = $bookingResult['url'];
+                    $doctorId = $bookingResult['doctor_id'];
+                    $doctorName = User::find($doctorId)->name;
+
+                    // Create a new repeater item array
+                    $items = [
+                        'selectValue' => $selectValue,
+                        'fileUrl' => $fileUrl,
+                        'doctorId' => $doctorId,
+                        'doctorName' => $doctorName,
+                    ];
+
+                    // Add the repeater item to the array
+                    $repeaterItems[] = $items;
+                }
+                $value->repeaterItems = $repeaterItems??[];
+            }
+
+            $data_prescription = PrescriptionResults::where('booking_id',$value->id)->first();
+            if (isset($data_prescription)){
+                $value->prescription_product = json_decode($data_prescription->prescriptions, true);
+            }else{
+                $value->prescription_product = [];
+            }
+
+            if ($role_name->name == 'HOSPITALS'){
+                $value->list_doctor = User::where('manager_id',$role_id->user_id)->orWhere('id',$value->doctor_id)->get();
+            }else{
+                $value->list_doctor = User::where('department_id',$value->department_id)->orWhere('id',$value->doctor_id)->get();
+            }
+
+        }
+
+        $userFollower = ZaloFollower::where('extend->user_id', $userId)->first();
+        $user_zalo_id = $userFollower->user_id ?? 0;
+
+        $reflector = new \ReflectionClass('App\Enums\ReasonCancel');
+        $reasons = $reflector->getConstants();
+
+        $departments = Department::where('status','ACTIVE')->get();
+
+        if ($owner == Auth::id() || $isAdmin || $isDoctor) {
+            return view('admin.booking.tab-edit-booking', compact('bookings_edit', 'isAdmin', 'reasons', 'user_zalo_id', 'doctor_id', 'doctor_name','isDoctor','departments','dataBooking'));
         } else {
             session()->flash('error', 'You do not have permission.');
             return \redirect()->back();
@@ -312,7 +415,7 @@ class BookingController extends Controller
 
             $bookingResults = $booking->extend['booking_results'] ?? [];
 
-            $bookingResultList = $request->booking_result_list;
+            $bookingResultList = $request->booking_result_list??[];
 
             //Check booking files changes
             $isChange = false;
@@ -408,10 +511,10 @@ class BookingController extends Controller
                 $isSendOaToUser = true;
             }
 
-            $booking->doctor_id = $request->input('doctor_id');
+            $booking->doctor_id = $request->input('doctor_id')??$booking->doctor_id;
             $booking->is_result = $is_result;
             $booking->status = $status;
-            $booking->department_id = $request->get('departments_id');
+            $booking->department_id = $request->get('departments_id')??$booking->department_id;
 
             $reason = $request->input('reason_text');
 
@@ -512,7 +615,7 @@ class BookingController extends Controller
                     ChangeBookingStatus::dispatch($booking);
                 }
                 alert('Update success');
-                return Redirect::route('api.backend.booking.edit', ['id' => $id])->with('success', 'Đặt lịch thành công');
+                return back()->with('success', 'Đặt lịch thành công');
             }
 
             return response()->json(['error' => 0, 'data' => $booking]);
