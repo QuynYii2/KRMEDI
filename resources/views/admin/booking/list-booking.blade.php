@@ -45,27 +45,27 @@
                 <lable>Từ khóa</lable>
                 <input type="text" class="form-control" name="key_search" placeholder="Tìm kiếm..." value="{{request()->get('key_search')}}">
             </div>
-            <div class="col-lg-3 col-md-6 col-6 px-1">
-                <lable>Chuyên khoa</lable>
-                <select class="form-select w-100" name="specialist" >
-                    <option class="bg-white" value="">--Chuyên khoa--</option>
-                    @foreach($department as $departments)
-                        <option class="bg-white" value="{{$departments->id}}" @if(request()->get('specialist') == $departments->id) selected @endif>{{$departments->name}}</option>
-                    @endforeach
-                </select>
-            </div>
-            @if($direct == 0)
-            <div class="col-lg-2 col-md-4 col-6 px-1">
-                <lable>Dịch vụ</lable>
-                <select class="form-select w-100" name="service" >
-                    <option class="bg-white" value="">--Dịch vụ--</option>
-                    @foreach($service as $services)
-                        <option class="bg-white" value="{{$services->id}}" @if(request()->get('service') == $services->id) selected @endif>{{$services->name}}</option>
-                    @endforeach
-                </select>
-            </div>
-            @endif
-            <div class="col-lg-2 col-md-4 col-6 px-1">
+{{--            <div class="col-lg-3 col-md-6 col-6 px-1">--}}
+{{--                <lable>Chuyên khoa</lable>--}}
+{{--                <select class="form-select w-100" name="specialist" >--}}
+{{--                    <option class="bg-white" value="">--Chuyên khoa--</option>--}}
+{{--                    @foreach($department as $departments)--}}
+{{--                        <option class="bg-white" value="{{$departments->id}}" @if(request()->get('specialist') == $departments->id) selected @endif>{{$departments->name}}</option>--}}
+{{--                    @endforeach--}}
+{{--                </select>--}}
+{{--            </div>--}}
+{{--            @if($direct == 0)--}}
+{{--            <div class="col-lg-2 col-md-4 col-6 px-1">--}}
+{{--                <lable>Dịch vụ</lable>--}}
+{{--                <select class="form-select w-100" name="service" >--}}
+{{--                    <option class="bg-white" value="">--Dịch vụ--</option>--}}
+{{--                    @foreach($service as $services)--}}
+{{--                        <option class="bg-white" value="{{$services->id}}" @if(request()->get('service') == $services->id) selected @endif>{{$services->name}}</option>--}}
+{{--                    @endforeach--}}
+{{--                </select>--}}
+{{--            </div>--}}
+{{--            @endif--}}
+            <div class="col-lg-3 col-md-4 col-6 px-1">
                 <lable>Trạng thái</lable>
                 <select class="form-select w-100" name="status" >
                     <option class="bg-white" value="">--Trạng thái--</option>
@@ -76,7 +76,7 @@
 {{--                    <option class="bg-white" @if(request()->get('status') == 'DELETE') selected @endif value="DELETE">DELETE</option>--}}
                 </select>
             </div>
-            <div class="col-lg-2 col-md-4 col-6 px-1">
+            <div class="col-lg-3 col-md-4 col-6 px-1">
                 <lable>Thời gian khám</lable>
                 <div class="position-relative">
                     <i class="bi bi-calendar4-week" style="position: absolute;top: 50%;transform: translateY(-50%);left: 10px"></i>
@@ -131,9 +131,9 @@
                 <th scope="col">{{ __('home.Người đăng ký') }}</th>
                 <th scope="col">{{ __('home.clinics') }}</th>
                 <th scope="col">{{ __('home.giờ vào') }}</th>
-                <th scope="col">{{ __('home.Department') }}</th>
-                <th scope="col">{{ __('home.Doctor Name') }}</th>
-                <th scope="col">{{ __('home.Trạng thái') }}</th>
+{{--                <th scope="col">{{ __('home.Department') }}</th>--}}
+{{--                <th scope="col">{{ __('home.Doctor Name') }}</th>--}}
+{{--                <th scope="col">{{ __('home.Trạng thái') }}</th>--}}
                 <th scope="col">{{ __('home.Thao tác') }}</th>
             </tr>
             </thead>
@@ -160,16 +160,20 @@
                         $doctor = \App\Models\User::find($item->doctor_id);
                         $department = \App\Models\Department::find($item->department_id);
                     @endphp
-                    <td>{{$department ? $department->name : ''}}</td>
-                    <td>{{$doctor ? $doctor->username : ''}} - {{$doctor ? $doctor->email : ''}}</td>
-                    <td>{{$item->status}}</td>
+{{--                    <td>{{$department ? $department->name : ''}}</td>--}}
+{{--                    <td>{{$doctor ? $doctor->username : ''}} - {{$doctor ? $doctor->email : ''}}</td>--}}
+{{--                    <td>{{$item->status}}</td>--}}
                     <td class="d-flex">
                         {{--                        <form action="{{ route('web.booking.result.list', $item->id) }}" method="get">--}}
                         {{--                            <button type="submit" class="btn btn-secondary">--}}
                         {{--                                <i class="fa-solid fa-eye"></i>--}}
                         {{--                            </button>--}}
                         {{--                        </form>--}}
-                        <form action="{{route('api.backend.booking.edit',$item->id)}}" method="get">
+                        @if($direct == 1)
+                        <form action="{{route('api.backend.booking.edit.direct',$item->id)}}" method="get">
+                            @else
+                                <form action="{{route('api.backend.booking.edit',$item->id)}}" method="get">
+                                @endif
                             <button type="submit" class="btn btn-primary">
                                 @if($role_name->name != 'DOCTORS')
                                 <i class="fa-solid fa-pen-to-square"></i>

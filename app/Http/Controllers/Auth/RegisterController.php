@@ -30,7 +30,7 @@ class RegisterController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'email' => ['required', 'email', 'unique:users,email'],
-                'username' => ['required', 'string', 'unique:users,username', new NoSpacesRule],
+                'username' => ['required', 'string', 'unique:users,username'],
                 'password' => ['required', 'string', new NoSpacesRule],
                 'passwordConfirm' => ['required', 'string', 'same:password', new NoSpacesRule],
                 'member' => ['required', 'string'],

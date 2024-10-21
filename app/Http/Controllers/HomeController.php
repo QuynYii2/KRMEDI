@@ -792,18 +792,23 @@ class HomeController extends Controller
     {
         $isAdmin = (new MainController())->checkAdmin();
         if ($isAdmin) {
-            $query = Booking::where('bookings.status', '!=', BookingStatus::DELETE)->where('bookings.type',0)
-                ->orderBy('bookings.check_in', 'desc');
+            $latestBookings = Booking::select(DB::raw('DATE(check_in) as check_in_date, MAX(id) as latest_id'))
+                ->where('bookings.status', '!=', BookingStatus::DELETE)
+                ->where('bookings.type', 0)
+                ->groupBy(DB::raw('DATE(check_in)'), 'user_id')
+                ->pluck('latest_id');
         } else {
             $clinic = Clinic::where('user_id', Auth::user()->id)->first();
-            $latestBookings = Booking::select(DB::raw('MAX(id) as latest_id'))
+            $latestBookings = Booking::select(DB::raw('DATE(check_in) as check_in_date, MAX(id) as latest_id'))
                 ->where('status', '!=', BookingStatus::DELETE)
                 ->where('clinic_id', $clinic ? $clinic->id : '')
-                ->groupBy('user_id')
+                ->groupBy(DB::raw('DATE(check_in)'), 'user_id')
                 ->pluck('latest_id');
-            $query = Booking::whereIn('bookings.id', $latestBookings)->where('bookings.type',0)
-                ->orderBy('check_in', 'desc');
         }
+
+        $query = Booking::whereIn('id', $latestBookings)->where('type', 0)
+            ->orderBy('check_in', 'desc');
+
         $id_user = $query->pluck('user_id')->unique()->toArray();
         if ($request->filled('key_search')) {
             $key_search = $request->input('key_search');
@@ -904,16 +909,26 @@ class HomeController extends Controller
 
     public function listBookingDoctor(Request $request)
     {
-        $baseQuery = Booking::join('clinics', 'bookings.clinic_id', '=', 'clinics.id')
-            ->join('users as users_patient', 'bookings.user_id', '=', 'users_patient.id')
-            ->select('bookings.*', 'clinics.name as clinic_name', 'users_patient.name as user_name')
-            ->where('bookings.status', '!=', BookingStatus::DELETE);
-        $latestBookings = Booking::select(DB::raw('MAX(id) as latest_id'))
+        $subQuery = Booking::select('user_id', DB::raw('MAX(id) as latest_id'))
             ->where('status', '!=', BookingStatus::DELETE)
-            ->groupBy('user_id')
-            ->pluck('latest_id');
-        $query = $baseQuery->whereIn('bookings.id', $latestBookings)->where('bookings.type',0)
-            ->orderBy('check_in', 'desc');
+            ->where('doctor_id', Auth::id())
+            ->where('type', 0)
+            ->groupBy('user_id', DB::raw('DATE(check_in)'));
+
+        $baseQuery = Booking::joinSub($subQuery, 'latest_bookings', function($join) {
+            $join->on('bookings.id', '=', 'latest_bookings.latest_id');
+        })
+            ->join('clinics', 'bookings.clinic_id', '=', 'clinics.id')
+            ->join('users as users_patient', 'bookings.user_id', '=', 'users_patient.id')
+            ->select(
+                'bookings.*',
+                'clinics.name as clinic_name',
+                'users_patient.name as user_name'
+            )
+            ->orderBy('bookings.check_in', 'desc');
+
+        $query = $baseQuery;
+
         $id_user = $query->pluck('user_id')->unique()->toArray();
 
         if ($request->filled('key_search')) {
@@ -948,6 +963,16 @@ class HomeController extends Controller
 
         if ($request->filled('user_id')) {
             $query->where('bookings.user_id', $request->input('user_id'));
+        }
+        if ($request->filled('insurance')) {
+            if ($request->input('insurance') == 'no') {
+                $query->where(function ($query) {
+                    $query->where('bookings.insurance_use', 'no')
+                        ->orWhereNull('bookings.insurance_use');
+                });
+            } else {
+                $query->where('bookings.insurance_use', $request->input('insurance'));
+            }
         }
 
         if ($request->excel == 2) {
@@ -1000,19 +1025,29 @@ class HomeController extends Controller
     {
         $isAdmin = (new MainController())->checkAdmin();
         if ($isAdmin) {
-            $query = Booking::where('bookings.status', '!=', BookingStatus::DELETE)->where('bookings.type',1)
+            $subQuery = Booking::select('user_id', DB::raw('MAX(id) as latest_id'))
+                ->where('status', '!=', BookingStatus::DELETE)
+                ->where('type', 1)
+                ->groupBy('user_id', DB::raw('DATE(check_in)'));
+
+            $query = Booking::joinSub($subQuery, 'latest_bookings', function($join) {
+                $join->on('bookings.id', '=', 'latest_bookings.latest_id');
+            })
                 ->orderBy('bookings.check_in', 'desc');
         } else {
             $clinic = Clinic::where('user_id', Auth::user()->id)->first();
-            $latestBookings = Booking::select(DB::raw('MAX(id) as latest_id'))
+            $subQuery = Booking::select('user_id', DB::raw('MAX(id) as latest_id'))
                 ->where('status', '!=', BookingStatus::DELETE)
-                ->where('clinic_id', $clinic ? $clinic->id : '')
-                ->groupBy('user_id')
-                ->pluck('latest_id');
-            $query = Booking::whereIn('bookings.id', $latestBookings)->where('bookings.type',1)
-                ->orderBy('check_in', 'desc');
+                ->where('clinic_id', $clinic->id)
+                ->where('type', 1)
+                ->groupBy('user_id', DB::raw('DATE(check_in)'));
+
+            $query = Booking::joinSub($subQuery, 'latest_bookings', function($join) {
+                $join->on('bookings.id', '=', 'latest_bookings.latest_id');
+            })
+                ->orderBy('bookings.check_in', 'desc');
         }
-        $id_user = $query->pluck('user_id')->unique()->toArray();
+        $id_user = $query->pluck('bookings.user_id')->unique()->toArray();
         if ($request->filled('key_search')) {
             $key_search = $request->input('key_search');
             $query->join('clinics', 'bookings.clinic_id', '=', 'clinics.id')
@@ -1112,16 +1147,24 @@ class HomeController extends Controller
 
     public function listBookingDirectDoctor(Request $request)
     {
-        $baseQuery = Booking::join('clinics', 'bookings.clinic_id', '=', 'clinics.id')
-            ->join('users as users_patient', 'bookings.user_id', '=', 'users_patient.id')
-            ->select('bookings.*', 'clinics.name as clinic_name', 'users_patient.name as user_name')
-            ->where('bookings.status', '!=', BookingStatus::DELETE);
-        $latestBookings = Booking::select(DB::raw('MAX(id) as latest_id'))
+        $subQuery = Booking::select('user_id', DB::raw('MAX(id) as latest_id'))
             ->where('status', '!=', BookingStatus::DELETE)
-            ->groupBy('user_id')
-            ->pluck('latest_id');
-        $query = $baseQuery->whereIn('bookings.id', $latestBookings)->where('bookings.type',1)
-            ->orderBy('check_in', 'desc');
+            ->where('doctor_id', Auth::id())
+            ->where('type', 1)
+            ->groupBy('user_id', DB::raw('DATE(check_in)'));
+
+        $query = Booking::joinSub($subQuery, 'latest_bookings', function($join) {
+            $join->on('bookings.id', '=', 'latest_bookings.latest_id');
+        })
+            ->join('clinics', 'bookings.clinic_id', '=', 'clinics.id')
+            ->join('users as users_patient', 'bookings.user_id', '=', 'users_patient.id')
+            ->select(
+                'bookings.*',
+                'clinics.name as clinic_name',
+                'users_patient.name as user_name'
+            )
+            ->orderBy('bookings.check_in', 'desc');
+
         $id_user = $query->pluck('user_id')->unique()->toArray();
 
         if ($request->filled('key_search')) {
