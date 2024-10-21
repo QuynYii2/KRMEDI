@@ -46,7 +46,7 @@ class ProfileController extends Controller
         if ($clinic){
             $clinic_id = $clinic->id;
         }else{
-            $clinic_id = Clinic::where('user_id', Auth::user()->manager_id)->first()->id;
+            $clinic_id = Clinic::where('user_id', Auth::user()->manager_id)->first()->id??134;
         }
         $url = url('/home-screen/'. $clinic_id);
         $qrCodes = QrCode::size(300)->generate($url);
