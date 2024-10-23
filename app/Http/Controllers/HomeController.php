@@ -909,116 +909,123 @@ class HomeController extends Controller
 
     public function listBookingDoctor(Request $request)
     {
-        $subQuery = Booking::select('user_id', DB::raw('MAX(id) as latest_id'))
-            ->where('status', '!=', BookingStatus::DELETE)
-            ->where('doctor_id', Auth::id())
-            ->where('type', 0)
-            ->groupBy('user_id', DB::raw('DATE(check_in)'));
+        $manager = User::find(Auth::user()->manager_id);
+        if ($manager){
+            $clinic = Clinic::where('user_id',$manager->id)->first();
+            $subQuery = Booking::select('user_id', DB::raw('MAX(id) as latest_id'))
+                ->where('status', '!=', BookingStatus::DELETE)
+                ->where('clinic_id', $clinic ? $clinic->id : '')
+                ->where('type', 0)
+                ->groupBy('user_id', DB::raw('DATE(check_in)'));
 
-        $baseQuery = Booking::joinSub($subQuery, 'latest_bookings', function($join) {
-            $join->on('bookings.id', '=', 'latest_bookings.latest_id');
-        })
-            ->join('clinics', 'bookings.clinic_id', '=', 'clinics.id')
-            ->join('users as users_patient', 'bookings.user_id', '=', 'users_patient.id')
-            ->select(
-                'bookings.*',
-                'clinics.name as clinic_name',
-                'users_patient.name as user_name'
-            )
-            ->orderBy('bookings.check_in', 'desc');
+            $baseQuery = Booking::joinSub($subQuery, 'latest_bookings', function($join) {
+                $join->on('bookings.id', '=', 'latest_bookings.latest_id');
+            })
+                ->join('clinics', 'bookings.clinic_id', '=', 'clinics.id')
+                ->join('users as users_patient', 'bookings.user_id', '=', 'users_patient.id')
+                ->select(
+                    'bookings.*',
+                    'clinics.name as clinic_name',
+                    'users_patient.name as user_name'
+                )
+                ->orderBy('bookings.check_in', 'desc');
 
-        $query = $baseQuery;
+            $query = $baseQuery;
 
-        $id_user = $query->pluck('user_id')->unique()->toArray();
+            $id_user = $query->pluck('user_id')->unique()->toArray();
 
-        if ($request->filled('key_search')) {
-            $key_search = $request->input('key_search');
-            $query->where(function ($q) use ($key_search) {
+            if ($request->filled('key_search')) {
+                $key_search = $request->input('key_search');
+                $query->where(function ($q) use ($key_search) {
                     $q->where('clinics.name', 'LIKE', "%$key_search%")
                         ->orWhere('users_patient.name', 'LIKE', "%$key_search%")
                         ->orWhere('users_patient.phone', 'LIKE', "%$key_search%");
                 });
-        }
+            }
 
-        if ($request->filled('date_range')) {
-            $dates = explode(' - ', $request->input('date_range'));
-            $start_date = $dates[0];
-            $end_date = $dates[1];
-            $query->whereDate('bookings.check_in', '>=', $start_date)
-                ->whereDate('bookings.check_in', '<=', $end_date);
-        }
+            if ($request->filled('date_range')) {
+                $dates = explode(' - ', $request->input('date_range'));
+                $start_date = $dates[0];
+                $end_date = $dates[1];
+                $query->whereDate('bookings.check_in', '>=', $start_date)
+                    ->whereDate('bookings.check_in', '<=', $end_date);
+            }
 
-        if ($request->filled('specialist')) {
-            $query->where('bookings.department_id', $request->input('specialist'));
-        }
+            if ($request->filled('specialist')) {
+                $query->where('bookings.department_id', $request->input('specialist'));
+            }
 
-        if ($request->filled('service')) {
-            $serviceId = $request->input('service');
-            $query->whereRaw("FIND_IN_SET(?, bookings.service)", [$serviceId]);
-        }
+            if ($request->filled('service')) {
+                $serviceId = $request->input('service');
+                $query->whereRaw("FIND_IN_SET(?, bookings.service)", [$serviceId]);
+            }
 
-        if ($request->filled('status')) {
-            $query->where('bookings.status', $request->input('status'));
-        }
+            if ($request->filled('status')) {
+                $query->where('bookings.status', $request->input('status'));
+            }
 
-        if ($request->filled('user_id')) {
-            $query->where('bookings.user_id', $request->input('user_id'));
-        }
-        if ($request->filled('insurance')) {
-            if ($request->input('insurance') == 'no') {
-                $query->where(function ($query) {
-                    $query->where('bookings.insurance_use', 'no')
-                        ->orWhereNull('bookings.insurance_use');
-                });
+            if ($request->filled('user_id')) {
+                $query->where('bookings.user_id', $request->input('user_id'));
+            }
+            if ($request->filled('insurance')) {
+                if ($request->input('insurance') == 'no') {
+                    $query->where(function ($query) {
+                        $query->where('bookings.insurance_use', 'no')
+                            ->orWhereNull('bookings.insurance_use');
+                    });
+                } else {
+                    $query->where('bookings.insurance_use', $request->input('insurance'));
+                }
+            }
+
+            if ($request->excel == 2) {
+                $bookings = $query->orderBy('bookings.created_at','desc')->get();
+                foreach ($bookings as $item) {
+                    $user = User::find($item->user_id);
+
+                    if($item->insurance_use == 'no' || is_null($item->insurance_use)){
+                        $insurance = "Không sử dụng bảo hiểm";
+                    }else if($item->insurance_use == 'yes' && is_null($item->member_family_id)){
+                        $insurance = $user->insurance_id;
+                    }else if($item->insurance_use == 'yes' && $item->member_family_id !== null){
+                        $insurance = FamilyManagement::find($item->member_family_id)->insurance_id;
+                    }
+
+                    $familyMember = FamilyManagement::find($item->member_family_id)->name ?? '';
+                    if(is_null($item->member_family_id)){
+                        $bookingFor = 'Bản thân: ' . $user->last_name . " " . $user->name;
+                    }else{
+                        $bookingFor = 'Người nhà: ' . $familyMember;
+                    }
+
+                    $district = District::find($user->district_id)->full_name??'';
+                    $province = Province::find($user->province_id)->full_name??'';
+                    $communes = Commune::find($user->commune_id)->full_name??'';
+                    $detail_address = $user->detail_address??'';
+                    $item->user_name = $user->name;
+                    $item->name_clinic = Clinic::where('id', $item->clinic_id)->pluck('name')->first();
+                    $item->department = Department::find($item->department_id)->name??'';
+                    $item->doctor_name = $user->name ?? '';
+                    $item->address = $detail_address.', '.$communes.', '.$district.', '.$province;
+                    $item->phone =$user->phone??'';
+                    $item->booking_for = $bookingFor;
+                    $item->insurance = $insurance;
+                }
+                return Excel::download(new BookingDoctorExport($bookings), 'lichsukham.xlsx');
             } else {
-                $query->where('bookings.insurance_use', $request->input('insurance'));
+                $bookings = $query->orderBy('bookings.created_at','desc')->paginate(20);
             }
+
+            $department = Department::all();
+            $service = ServiceClinic::all();
+            $users = User::whereIn('id',$id_user)->get();
+            $direct = 0;
+
+            return view('admin.booking.list-booking', compact('bookings', 'service', 'department','users','direct'));
+        }else{
+            return back();
         }
 
-        if ($request->excel == 2) {
-            $bookings = $query->orderBy('bookings.created_at','desc')->get();
-            foreach ($bookings as $item) {
-                $user = User::find($item->user_id);
-
-                if($item->insurance_use == 'no' || is_null($item->insurance_use)){
-                    $insurance = "Không sử dụng bảo hiểm";
-                }else if($item->insurance_use == 'yes' && is_null($item->member_family_id)){
-                    $insurance = $user->insurance_id;
-                }else if($item->insurance_use == 'yes' && $item->member_family_id !== null){
-                    $insurance = FamilyManagement::find($item->member_family_id)->insurance_id;
-                }
-
-                $familyMember = FamilyManagement::find($item->member_family_id)->name ?? '';
-                if(is_null($item->member_family_id)){
-                    $bookingFor = 'Bản thân: ' . $user->last_name . " " . $user->name;
-                }else{
-                    $bookingFor = 'Người nhà: ' . $familyMember;
-                }
-
-                $district = District::find($user->district_id)->full_name??'';
-                $province = Province::find($user->province_id)->full_name??'';
-                $communes = Commune::find($user->commune_id)->full_name??'';
-                $detail_address = $user->detail_address??'';
-                $item->user_name = $user->name;
-                $item->name_clinic = Clinic::where('id', $item->clinic_id)->pluck('name')->first();
-                $item->department = Department::find($item->department_id)->name??'';
-                $item->doctor_name = $user->name ?? '';
-                $item->address = $detail_address.', '.$communes.', '.$district.', '.$province;
-                $item->phone =$user->phone??'';
-                $item->booking_for = $bookingFor;
-                $item->insurance = $insurance;
-            }
-            return Excel::download(new BookingDoctorExport($bookings), 'lichsukham.xlsx');
-        } else {
-            $bookings = $query->orderBy('bookings.created_at','desc')->paginate(20);
-        }
-
-        $department = Department::all();
-        $service = ServiceClinic::all();
-        $users = User::whereIn('id',$id_user)->get();
-        $direct = 0;
-
-        return view('admin.booking.list-booking', compact('bookings', 'service', 'department','users','direct'));
     }
 
     public function listBookingDirect(Request $request)
@@ -1147,104 +1154,110 @@ class HomeController extends Controller
 
     public function listBookingDirectDoctor(Request $request)
     {
-        $subQuery = Booking::select('user_id', DB::raw('MAX(id) as latest_id'))
-            ->where('status', '!=', BookingStatus::DELETE)
-            ->where('doctor_id', Auth::id())
-            ->where('type', 1)
-            ->groupBy('user_id', DB::raw('DATE(check_in)'));
+        $manager = User::find(Auth::user()->manager_id);
+        if ($manager) {
+            $clinic = Clinic::where('user_id', $manager->id)->first();
+            $subQuery = Booking::select('user_id', DB::raw('MAX(id) as latest_id'))
+                ->where('status', '!=', BookingStatus::DELETE)
+                ->where('clinic_id', $clinic->id)
+                ->where('type', 1)
+                ->groupBy('user_id', DB::raw('DATE(check_in)'));
 
-        $query = Booking::joinSub($subQuery, 'latest_bookings', function($join) {
-            $join->on('bookings.id', '=', 'latest_bookings.latest_id');
-        })
-            ->join('clinics', 'bookings.clinic_id', '=', 'clinics.id')
-            ->join('users as users_patient', 'bookings.user_id', '=', 'users_patient.id')
-            ->select(
-                'bookings.*',
-                'clinics.name as clinic_name',
-                'users_patient.name as user_name'
-            )
-            ->orderBy('bookings.check_in', 'desc');
+            $query = Booking::joinSub($subQuery, 'latest_bookings', function ($join) {
+                $join->on('bookings.id', '=', 'latest_bookings.latest_id');
+            })
+                ->join('clinics', 'bookings.clinic_id', '=', 'clinics.id')
+                ->join('users as users_patient', 'bookings.user_id', '=', 'users_patient.id')
+                ->select(
+                    'bookings.*',
+                    'clinics.name as clinic_name',
+                    'users_patient.name as user_name'
+                )
+                ->orderBy('bookings.check_in', 'desc');
 
-        $id_user = $query->pluck('user_id')->unique()->toArray();
+            $id_user = $query->pluck('user_id')->unique()->toArray();
 
-        if ($request->filled('key_search')) {
-            $key_search = $request->input('key_search');
-            $query->where(function ($q) use ($key_search) {
-                $q->where('clinics.name', 'LIKE', "%$key_search%")
-                    ->orWhere('users_patient.name', 'LIKE', "%$key_search%")
-                    ->orWhere('users_patient.phone', 'LIKE', "%$key_search%");
-            });
-        }
-
-        if ($request->filled('date_range')) {
-            $dates = explode(' - ', $request->input('date_range'));
-            $start_date = $dates[0];
-            $end_date = $dates[1];
-            $query->whereDate('bookings.check_in', '>=', $start_date)
-                ->whereDate('bookings.check_in', '<=', $end_date);
-        }
-
-        if ($request->filled('specialist')) {
-            $query->where('bookings.department_id', $request->input('specialist'));
-        }
-
-        if ($request->filled('service')) {
-            $serviceId = $request->input('service');
-            $query->whereRaw("FIND_IN_SET(?, bookings.service)", [$serviceId]);
-        }
-
-        if ($request->filled('status')) {
-            $query->where('bookings.status', $request->input('status'));
-        }
-
-        if ($request->filled('user_id')) {
-            $query->where('bookings.user_id', $request->input('user_id'));
-        }
-
-        if ($request->excel == 2) {
-            $bookings = $query->orderBy('bookings.created_at','desc')->get();
-            foreach ($bookings as $item) {
-                $user = User::find($item->user_id);
-
-                if($item->insurance_use == 'no' || is_null($item->insurance_use)){
-                    $insurance = "Không sử dụng bảo hiểm";
-                }else if($item->insurance_use == 'yes' && is_null($item->member_family_id)){
-                    $insurance = $user->insurance_id;
-                }else if($item->insurance_use == 'yes' && $item->member_family_id !== null){
-                    $insurance = FamilyManagement::find($item->member_family_id)->insurance_id;
-                }
-
-                $familyMember = FamilyManagement::find($item->member_family_id)->name ?? '';
-                if(is_null($item->member_family_id)){
-                    $bookingFor = 'Bản thân: ' . $user->last_name . " " . $user->name;
-                }else{
-                    $bookingFor = 'Người nhà: ' . $familyMember;
-                }
-
-                $district = District::find($user->district_id)->full_name??'';
-                $province = Province::find($user->province_id)->full_name??'';
-                $communes = Commune::find($user->commune_id)->full_name??'';
-                $detail_address = $user->detail_address??'';
-                $item->user_name = $user->name;
-                $item->name_clinic = Clinic::where('id', $item->clinic_id)->pluck('name')->first();
-                $item->department = Department::find($item->department_id)->name??'';
-                $item->doctor_name = $user->name ?? '';
-                $item->address = $detail_address.', '.$communes.', '.$district.', '.$province;
-                $item->phone =$user->phone??'';
-                $item->booking_for = $bookingFor;
-                $item->insurance = $insurance;
+            if ($request->filled('key_search')) {
+                $key_search = $request->input('key_search');
+                $query->where(function ($q) use ($key_search) {
+                    $q->where('clinics.name', 'LIKE', "%$key_search%")
+                        ->orWhere('users_patient.name', 'LIKE', "%$key_search%")
+                        ->orWhere('users_patient.phone', 'LIKE', "%$key_search%");
+                });
             }
-            return Excel::download(new BookingDoctorExport($bookings), 'lichsukham.xlsx');
-        } else {
-            $bookings = $query->orderBy('bookings.created_at','desc')->paginate(20);
+
+            if ($request->filled('date_range')) {
+                $dates = explode(' - ', $request->input('date_range'));
+                $start_date = $dates[0];
+                $end_date = $dates[1];
+                $query->whereDate('bookings.check_in', '>=', $start_date)
+                    ->whereDate('bookings.check_in', '<=', $end_date);
+            }
+
+            if ($request->filled('specialist')) {
+                $query->where('bookings.department_id', $request->input('specialist'));
+            }
+
+            if ($request->filled('service')) {
+                $serviceId = $request->input('service');
+                $query->whereRaw("FIND_IN_SET(?, bookings.service)", [$serviceId]);
+            }
+
+            if ($request->filled('status')) {
+                $query->where('bookings.status', $request->input('status'));
+            }
+
+            if ($request->filled('user_id')) {
+                $query->where('bookings.user_id', $request->input('user_id'));
+            }
+
+            if ($request->excel == 2) {
+                $bookings = $query->orderBy('bookings.created_at', 'desc')->get();
+                foreach ($bookings as $item) {
+                    $user = User::find($item->user_id);
+
+                    if ($item->insurance_use == 'no' || is_null($item->insurance_use)) {
+                        $insurance = "Không sử dụng bảo hiểm";
+                    } else if ($item->insurance_use == 'yes' && is_null($item->member_family_id)) {
+                        $insurance = $user->insurance_id;
+                    } else if ($item->insurance_use == 'yes' && $item->member_family_id !== null) {
+                        $insurance = FamilyManagement::find($item->member_family_id)->insurance_id;
+                    }
+
+                    $familyMember = FamilyManagement::find($item->member_family_id)->name ?? '';
+                    if (is_null($item->member_family_id)) {
+                        $bookingFor = 'Bản thân: ' . $user->last_name . " " . $user->name;
+                    } else {
+                        $bookingFor = 'Người nhà: ' . $familyMember;
+                    }
+
+                    $district = District::find($user->district_id)->full_name ?? '';
+                    $province = Province::find($user->province_id)->full_name ?? '';
+                    $communes = Commune::find($user->commune_id)->full_name ?? '';
+                    $detail_address = $user->detail_address ?? '';
+                    $item->user_name = $user->name;
+                    $item->name_clinic = Clinic::where('id', $item->clinic_id)->pluck('name')->first();
+                    $item->department = Department::find($item->department_id)->name ?? '';
+                    $item->doctor_name = $user->name ?? '';
+                    $item->address = $detail_address . ', ' . $communes . ', ' . $district . ', ' . $province;
+                    $item->phone = $user->phone ?? '';
+                    $item->booking_for = $bookingFor;
+                    $item->insurance = $insurance;
+                }
+                return Excel::download(new BookingDoctorExport($bookings), 'lichsukham.xlsx');
+            } else {
+                $bookings = $query->orderBy('bookings.created_at', 'desc')->paginate(20);
+            }
+
+            $department = Department::all();
+            $service = ServiceClinic::all();
+            $users = User::whereIn('id', $id_user)->get();
+            $direct = 1;
+
+            return view('admin.booking.list-booking', compact('bookings', 'service', 'department', 'users', 'direct'));
+        }else{
+            return back();
         }
-
-        $department = Department::all();
-        $service = ServiceClinic::all();
-        $users = User::whereIn('id',$id_user)->get();
-        $direct = 1;
-
-        return view('admin.booking.list-booking', compact('bookings', 'service', 'department','users','direct'));
     }
 
     public function listBookingHistory($id,Request $request)
