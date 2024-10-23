@@ -203,7 +203,7 @@ class BookingController extends Controller
         $departments = Department::where('status','ACTIVE')->get();
 
         if ($owner == Auth::id() || $isAdmin || $isDoctor) {
-            return view('admin.booking.tab-edit-booking', compact('bookings_edit', 'isAdmin', 'reasons', 'user_zalo_id', 'doctor_id', 'doctor_name','isDoctor','departments','dataBooking'));
+            return view('admin.booking.tab-edit-booking', compact('bookings_edit', 'isAdmin', 'reasons', 'user_zalo_id','isDoctor','departments','dataBooking'));
         } else {
             session()->flash('error', 'You do not have permission.');
             return \redirect()->back();
@@ -512,6 +512,7 @@ class BookingController extends Controller
             }
 
             $booking->doctor_id = $request->input('doctor_id')??$booking->doctor_id;
+            $booking->type = $request->input('type');
             $booking->is_result = $is_result;
             $booking->status = $status;
             $booking->department_id = $request->get('departments_id')??$booking->department_id;
@@ -761,6 +762,7 @@ class BookingController extends Controller
                 'status'=>$request->status,
                 'service'=>3,
                 'prescription_file'=>$filePath,
+                    'type' => $request->input('type'),
                 'extend'=>$extend,
             ]);
             $booking->save();
@@ -880,15 +882,109 @@ class BookingController extends Controller
                 alert('Create success');
                 $user_id = Auth::id();
                 $role = RoleUser::where('user_id',$user_id)->first();
-                if ($role->role_id == 39){
-                    return Redirect::route('homeAdmin.list.booking.doctor')->with('success', 'Đặt lịch thành công');
+                if ($booking->status == 'PENDING'){
+                    $nameStatus = 'chờ xác nhận';
+                    $routerName= '/med-appointment-screen';
+                }elseif ($booking->status == 'APPROVED'){
+                    $nameStatus = 'xác nhận';
+                    $routerName= '/med-appointment-screen';
+                }elseif ($booking->status == 'COMPLETE'){
+                    $nameStatus = 'hoàn thành';
+                    $routerName= '/completed-appointment-screen';
                 }else{
-                    return Redirect::route('homeAdmin.list.booking')->with('success', 'Đặt lịch thành công');
+                    $nameStatus = 'hủy';
+                    $routerName= '/review-med-screen';
+                }
+                $notifi = Notification::create([
+                    'title' => 'Thông báo đặt lịch khám',
+                    'sender_id' => $booking->user_id,
+                    'follower' => $booking->user_id,
+                    'target_url' => route('web.users.my.bookings.detail', ['id' => $booking->id]),
+                    'description' => 'Trạng thái lịch khám của bạn đã được '.$nameStatus.'. Vui lòng đến kiểm tra!',
+                    'booking_id' => $booking->id
+                ]);
+                $notifi->save();
+
+                $options = array(
+                    'cluster' => 'ap1',
+                    'encrypted' => true
+                );
+
+                $PUSHER_APP_KEY = '3ac4f810445d089829e8';
+                $PUSHER_APP_SECRET = 'c6cafb046a45494f80b2';
+                $PUSHER_APP_ID = '1714303';
+
+                $pusher = new Pusher($PUSHER_APP_KEY, $PUSHER_APP_SECRET, $PUSHER_APP_ID, $options);
+
+                $requestData = [
+                    'user_id' => $booking->user_id,
+                    'title' => 'Trạng thái booking đã thay đổi',
+                ];
+
+                $pusher->trigger('noti-events', 'noti-events', $requestData);
+                $userToken = User::find($booking->user_id)->token_firebase ?? "";
+
+                $dataSend = $this->sendBookingNotifications( $userToken, $notifi,$booking->id,$routerName);
+                ChangeBookingStatus::dispatch($booking);
+                if ($role->role_id == 39){
+                    if ($booking->type == 0){
+                        return Redirect::route('homeAdmin.list.booking.doctor')->with('success', 'Trả kết quả thành công');
+                    }else{
+                        return Redirect::route('homeAdmin.list.booking.direct.doctor')->with('success', 'Trả kết quả thành công');
+                    }
+                }else{
+                    if ($booking->type == 0){
+                        return Redirect::route('homeAdmin.list.booking')->with('success', 'Trả kết quả thành công');
+                    }else{
+                        return Redirect::route('homeAdmin.list.booking.direct')->with('success', 'Trả kết quả thành công');
+                    }
                 }
             }
             return response()->json(['error' => 0, 'data' => $booking]);
         } catch (\Exception $e) {
             return response(['error' => -1, 'message' => $e->getMessage()], 400);
+        }
+    }
+
+    public function createItem($id)
+    {
+        $bookings_edit = Booking::find($id);
+        $owner = $bookings_edit->clinic->user_id;
+        $isAdmin = (new MainController())->checkAdmin();
+        $role_id = RoleUser::where('user_id',Auth::id())->first();
+        $role_name = Role::find($role_id->role_id);
+        $isDoctor = $role_name->name == 'DOCTORS';
+        $userName = User::find($bookings_edit->user_id)->name;
+        $clinicName = Clinic::find($bookings_edit->clinic_id)->name;
+        $userData = Auth::user();
+
+        $doctor_id = null;
+        $doctor_name = null;
+
+        if (isset($bookings_edit->doctor_id) && $bookings_edit->doctor_id) {
+            $doctor = User::find($bookings_edit->doctor_id);
+            $doctor_id = $bookings_edit->doctor_id;
+            $doctor_name = $doctor->name;
+        }
+
+
+        $reflector = new \ReflectionClass('App\Enums\ReasonCancel');
+        $reasons = $reflector->getConstants();
+
+
+        if ($role_name->name == 'HOSPITALS'){
+            $list_doctor = User::where('manager_id',$role_id->user_id)->orWhere('id',$bookings_edit->doctor_id)->get();
+        }else{
+            $list_doctor = User::where('department_id',$bookings_edit->department_id)->orWhere('id',$bookings_edit->doctor_id)->get();
+        }
+
+        $departments = Department::where('status','ACTIVE')->get();
+
+        if ($owner == Auth::id() || $isAdmin || $isDoctor) {
+            return view('admin.booking.tab-create-item-booking', compact('bookings_edit', 'isAdmin', 'reasons', 'doctor_id', 'doctor_name','list_doctor','isDoctor','departments','userName','clinicName','userData'));
+        } else {
+            session()->flash('error', 'You do not have permission.');
+            return \redirect()->back();
         }
     }
 

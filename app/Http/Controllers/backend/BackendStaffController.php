@@ -95,7 +95,7 @@ class BackendStaffController extends Controller
             $user->member = $member;
             $user->status = UserStatus::ACTIVE;
 
-            $user->name = '';
+            $user->name = $username;
             $user->last_name = '';
             $user->phone = $phone;
             $user->address_code = '';
@@ -229,6 +229,7 @@ class BackendStaffController extends Controller
                 }
             }
 
+            $user->name = $username;
             $user->type = $member;
             $user->member = $member;
             $user->phone = $phone;

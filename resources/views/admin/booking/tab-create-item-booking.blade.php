@@ -3,31 +3,16 @@
     {{ __('home.Edit') }}
 @endsection
 @section('page-style')
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css"/>
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <style>
-        .spinner {
-            border: 2px solid rgba(0, 0, 0, 0.1);
-            border-left-color: #000;
-            border-radius: 50%;
-            width: 16px;
-            height: 16px;
-            animation: spin 1s linear infinite;
+        .select2-container .select2-selection--single {
+            padding-top: 3px;
+            height: 38px;
         }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
     </style>
 @endsection
 @section('main-content')
@@ -36,332 +21,159 @@
         use App\Enums\online_medicine\ObjectOnlineMedicine;
     @endphp
     <div class="container-fluid">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3  text-gray-800">{{ __('home.List Booking') }}</h1>
-            <a href="{{route('api.backend.booking.create.item',$dataBooking->id)}}" class="btn btn-success">Trả kết
-                quả</a>
-        </div>
-
-        @foreach($bookings_edit as $value)
-            <form id="form" action="{{ route('api.backend.booking.update', $value->id) }}" method="post"
-                  class="mb-5 pb-4" style="border-bottom: 1px solid black"
-                  enctype="multipart/form-data">
-                @csrf
-                <div class="row">
-                    <input type="text" class="form-control" name="type" value="{{$value->type}}" hidden>
-                    <div class="col-md-3 form-group">
-                        <label for="user">{{ __('home.Tên người đăng ký') }}</label>
-                        @php
-                            $user_name = \App\Models\User::where('id', $value->user_id)->value('name');
-                        @endphp
-                        <input type="text" class="form-control" id="user" name="user" value="{{ $user_name }}"
-                               disabled>
-                    </div>
-                    <div class="col-md-3 form-group">
-                        <label for="clinic_id">{{ __('home.BusinessName') }}</label>
-                        @php
-                            $clinic_name = \App\Models\Clinic::where('id', $value->clinic_id)->value('name');
-                        @endphp
-                        <input type="text" class="form-control" id="user" name="clinic_id" value="{{ $clinic_name }}"
-                               disabled>
-                    </div>
-                    <div class="col-md-3 form-group">
-                        <label for="department_id">{{ __('home.Department') }}</label>
-                        @php
-                            $department = \App\Models\Department::find($value->department_id);
-                            $listDepartment = \App\Models\Department::where('status','ACTIVE')->get();
-                        @endphp
-                        {{--                    @if($department)--}}
-                        {{--                        <input type="text" class="form-control" id="departments_id" name="departments_id"--}}
-                        {{--                               value="{{ $department ? $department->id : '' }}" hidden>--}}
-                        {{--                    <input type="text" class="form-control"--}}
-                        {{--                        value="{{ $department ? $department->name : '' }}" disabled>--}}
-                        {{--                        @else--}}
-                        <select class="form-select" id="departments_id" name="departments_id"
-                                @if($isDoctor) disabled @endif>
-                            @foreach($listDepartment as $item_department)
-                                <option value="{{ $item_department->id }}"
-                                        @if($item_department->id == $value->department_id) selected @endif>{{ $item_department->name }}</option>
-                            @endforeach
-                        </select>
-                        {{--                    @endif--}}
-                    </div>
-                    <div class="col-md-3 form-group">
-                        <label for="doctor_id">{{ __('home.Doctor Name') }}</label>
-                        @php
-                            $doctor = \App\Models\User::where('id', $value->doctor_id)->first();
-                            $doctor_info = '';
-                            if ($doctor) {
-                                $doctor_info = $doctor->username . '-' . $doctor->email;
-                            }
-                        @endphp
-                        {{--                    <input type="text" class="form-control" id="doctor_id" name="doctor_id" value="{{ $doctor_info }}"--}}
-                        {{--                        disabled>--}}
-                        <select class="form-select" id="doctor_id" name="doctor_id" @if($isDoctor) disabled @endif>
-                            <option value="">Bác sĩ phụ trách</option>
-                            @foreach($value->list_doctor as $item_doctor)
-                                <option value="{{ $item_doctor->id }}"
-                                        @if($item_doctor->id == $value->doctor_id) selected @endif>{{ $item_doctor->name??$item_doctor->username }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+        <h1 class="h3 mb-4 text-gray-800">Trả kết quả khám bệnh</h1>
+        <form id="form" action="{{ route('api.backend.booking.store') }}" method="post"
+              enctype="multipart/form-data">
+            @csrf
+            <div class="row">
+                <input type="text" class="form-control" name="type" value="{{$bookings_edit->type}}" hidden>
+                <div class="col-md-3 form-group">
+                    <label for="user">{{ __('home.Tên người đăng ký') }}</label>
+                    <input type="text" class="form-control" name="user_id" value="{{@$bookings_edit->user_id}}" hidden>
+                    <input type="text" class="form-control" value="{{@$userName}}" disabled>
                 </div>
-                <div class="row">
-                    <div class="col-md-3 form-group">
-                        <label for="check_in">{{ __('home.Thời gian bắt đầu') }}</label>
-                        <input disabled type="datetime-local" class="form-control" id="check_in" name="check_in"
-                               value="{{ $value->check_in }}">
-                    </div>
-                    <div class="col-md-3 form-group">
-                        <label for="check_out">{{ __('home.Thời gian kết thúc') }}</label>
-                        <input disabled type="datetime-local" class="form-control" id="check_out" name="check_out"
-                               value="{{ $value->check_out }}">
-                    </div>
-                    <div class="booking-item d-flex w-auto" data-booking-id="{{ $value->id }}">
-                        <div class="col-md-12 form-group">
-                            <label for="booking_status">{{ __('home.Trạng thái') }}</label>
-                            <select class="form-select booking_status" id="booking_status_{{$value->id}}" name="status">
-                                <option value="{{ \App\Enums\BookingStatus::PENDING }}"
-                                    {{ $value->status === \App\Enums\BookingStatus::PENDING ? 'selected' : '' }}>
-                                    {{ \App\Enums\BookingStatus::PENDING }}
-                                </option>
-                                <option value="{{ \App\Enums\BookingStatus::COMPLETE }}"
-                                    {{ $value->status === \App\Enums\BookingStatus::COMPLETE ? 'selected' : '' }}>
-                                    {{ \App\Enums\BookingStatus::COMPLETE }}
-                                </option>
-                                <option value="{{ \App\Enums\BookingStatus::APPROVED }}"
-                                    {{ $value->status === \App\Enums\BookingStatus::APPROVED ? 'selected' : '' }}>
-                                    {{ \App\Enums\BookingStatus::APPROVED }}
-                                </option>
-                                <option value="{{ \App\Enums\BookingStatus::CANCEL }}"
-                                    {{ $value->status === \App\Enums\BookingStatus::CANCEL ? 'selected' : '' }}>
-                                    {{ \App\Enums\BookingStatus::CANCEL }}
-                                </option>
-                            </select>
-                        </div>
-                        <div class=" col-md-12 form-group mt-4">
-                            <label for="services"></label>
-                            <input type="checkbox" name="is_result" {{ $value->is_result == 1 ? 'checked' : '' }}
-                            class="is_result" id="is_result_{{ $value->id }}" value="1">
-                            <label for="is_result">{{ __('home.Result') }}</label>
-                            @if (isset(Auth::user()->extend['isActivated']) && Auth::user()->extend['isActivated'])
-                                @if (
-                                    $value->is_result == 1 &&
-                                        $value->status === \App\Enums\BookingStatus::COMPLETE &&
-                                        $user_zalo_id != 0)
-                                    <a href="{{ route('admin.send.booking.result', ['id' => $value->id, 'userId' => $user_zalo_id]) }}"
-                                       class="btn btn-outline-dark ms-5">Gửi thông báo qua zalo</a>
-                                @endif
-                            @endif
-                        </div>
-                    </div>
+                <div class="col-md-3 form-group">
+                    <label for="clinic_id">{{ __('home.BusinessName') }}</label>
+                    <input type="text" class="form-control" name="clinic_id" value="{{@$bookings_edit->clinic_id}}"
+                           hidden>
+                    <input type="text" class="form-control" value="{{@$clinicName}}" disabled>
                 </div>
-                <div class="row" id="showReasonCancel_{{$value->id}}">
-                    @if($value->reason_cancel)
-                        <label for="reason_text">Lí do hủy: </label>
-                        <input type="text" class="form-control" id="reason_text" disabled
-                               value="{{ $value->reason_cancel }}">
-                    @endif
-                </div>
-
-                {{-- @if ($bookings_edit->is_result == 1 && $bookings_edit->status === \App\Enums\BookingStatus::COMPLETE) --}}
-                <div id="trackFile_{{$value->id}}" style="display: none;">
-                    <div id="repeater_{{$value->id}}">
-                        <div data-repeater-list="booking_result_list">
-                            @forelse ($value->repeaterItems as $index => $item)
-                                <div class="d-flex align-items-center row" data-repeater-item>
-                                    <div class="col-md-1">
-                                        <button type="button" data-repeater-delete class="btn btn-danger mt-3"><i
-                                                class="fa-solid fa-x"></i></button>
-                                    </div>
-                                    <div class="col-md-3 firstSelector">
-                                        <div class="form-group">
-                                            <label for="selectType{{ $index }}">Loại khám bệnh:</label>
-                                            <select id="selectType{{ $index }}" class="form-control selectType"
-                                                    name="select">
-                                                @foreach($departments as $item_departments)
-                                                    <option value="{{$item_departments->name}}"
-                                                        {{ $item['selectValue'] === $item_departments->name ? 'selected' : '' }}>
-                                                        {{$item_departments->name}}</option>
-                                                @endforeach
-                                                {{--                                                <option value="Khám bệnh"--}}
-                                                {{--                                                    {{ $item['selectValue'] === 'Khám bệnh' ? 'selected' : '' }}>--}}
-                                                {{--                                                    Khám bệnh</option>--}}
-                                                {{--                                            <option value="Siêu âm"--}}
-                                                {{--                                                {{ $item['selectValue'] === 'Siêu âm' ? 'selected' : '' }}>--}}
-                                                {{--                                                Siêu--}}
-                                                {{--                                                âm</option>--}}
-                                                {{--                                            <option value="XQuang"--}}
-                                                {{--                                                {{ $item['selectValue'] === 'XQuang' ? 'selected' : '' }}>--}}
-                                                {{--                                                XQuang--}}
-                                                {{--                                            </option>--}}
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 select2Div">
-                                        <div class="form-group">
-                                            <label for="in_charged_{{ $index }}">Bác sĩ phụ trách:</label>
-                                            <select id="in_charged_{{ $index }}" class="form-select doctor_selector"
-                                                    name="doctor_id">
-                                                @if ($item['doctorId'] && $item['doctorName'])
-                                                    <option value="{{ $item['doctorId'] }}">{{ $item['doctorName'] }}
-                                                    </option>
-                                                @endif
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="file">Tài liệu khám bệnh:</label>
-                                            <input type="file" name="file" class="form-control-file"
-                                                   accept=".pdf, .jpg, .jpeg, .png, .gif">
-                                            <input type="hidden" name="file_urls" value="{{ $item['fileUrl'] }}">
-                                        </div>
-                                    </div>
-                                    @if (Storage::exists(str_replace('/storage', 'public', $item['fileUrl'])))
-                                        <div class="col-md-2 viewFile">
-                                            <a target="_blank" href="{{ asset($item['fileUrl']) }}">Xem tài liệu
-                                                khám</a>
-                                        </div>
-                                    @endif
-                                </div>
-                            @empty
-                                <div class="d-flex align-items-center row" data-repeater-item>
-                                    <div class="col-md-1">
-                                        <button type="button" class="btn btn-danger mt-3" data-repeater-delete><i
-                                                class="fa-solid fa-x"></i></button>
-                                    </div>
-                                    <div class="col-md-3 firstSelector">
-                                        <div class="form-group">
-                                            <label for="selectType">Select:</label>
-                                            <select class="form-control selectType" name="select">
-                                                @foreach($departments as $item_departments)
-                                                    <option
-                                                        value="{{$item_departments->name}}">{{$item_departments->name}}</option>
-                                                @endforeach
-                                                {{--                                            <option value="Khám bệnh">Khám bệnh</option>--}}
-                                                {{--                                            <option value="Siêu âm">Siêu âm</option>--}}
-                                                {{--                                            <option value="XQuang">XQuang</option>--}}
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 select2Div">
-                                        <div class="form-group">
-                                            <label for="in_charged">Bác sĩ phụ trách:</label>
-                                            <select class="form-select doctor_selector" name="doctor_id"></select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="file">Tài liệu khám bệnh:</label>
-                                            <input type="file" name="file" class="form-control-file"
-                                                   accept=".pdf, .jpg, .jpeg, .png, .gif">
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforelse
-                        </div>
-                        {{--                    @if(!$isDoctor)--}}
-                        <button data-repeater-create type="button" class="btn btn-primary" id="addBtn"><i
-                                class="fa-solid fa-plus"></i></button>
-                        {{--                        @endif--}}
-                    </div>
-                    </br>
-                </div>
-                {{-- @endif --}}
-
-                <div class="mt-3">
-                    <h5>Danh sách đơn thuốc</h5>
-                    @if(isset($value->prescription_product)&&count($value->prescription_product)>0)
-                        @foreach($value->prescription_product as $pro)
-                            <div class=" d-flex align-items-center justify-content-between border p-3">
-                                <div class="prescription-group d-flex align-items-center">
-                                    <div class="row w-100">
-                                        <div class="form-group">
-                                            <label for="medicine_name">Medicine Name</label>
-                                            <input type="text" class="form-control medicine_name "
-                                                   value="{{$pro['medicine_name']}}" readonly>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="medicine_ingredients">Medicine Ingredients</label>
-                                            <input type="text" class="form-control medicine_ingredients "
-                                                   value="{{$pro['medicine_ingredients']}}">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="quantity">{{ __('home.Quantity') }}</label>
-                                            <input type="number" min="1" class="form-control quantity"
-                                                   value="{{$pro['quantity']}}" readonly>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="detail_value">Note</label>
-                                            <input type="text" class="form-control note" value="{{$pro['note']}}"
-                                                   readonly>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="treatment_days">Số ngày điều trị</label>
-                                            <input type="number" min="1" class="form-control treatment_days" readonly
-                                                   value="{{$pro['treatment_days']}}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                <div class="col-md-3 form-group">
+                    <label for="department_id">{{ __('home.Department') }}</label>
+                    @php
+                        $department = \App\Models\Department::all();
+                    @endphp
+                    @if ($userData->member == "DOCTORS")
+                        <input type="text" class="form-control" name="department_id" value="{{$userData->department_id}}" hidden>
+                        <input type="text" class="form-control" value="{{$userData->specialty}}" disabled>
+                    @else
+                    <select class="form-select department_name" name="department_id">
+                        <option value="">Tên phòng</option>
+                        @foreach($department as $val)
+                            <option value="{{$val->id}}">{{$val->name}}</option>
                         @endforeach
-                        <a href="{{route('web.users.my.bookings.prescription-download',$value->id)}}"
-                           class="btn btn-success mt-3">Tải đơn thuốc</a>
+                    </select>
                     @endif
-                    <div class="modal-body">
-                        <div class="list-service-result-don-thuoc mt-2 mb-3" data-prescription-id="{{ $value->id }}">
-                            <div id="list-service-result-don-thuoc-{{ $value->id }}">
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="doctor_id">{{ __('home.Doctor Name') }}</label>
+                    @if ($userData->member == "DOCTORS")
+                        <input type="text" class="form-control" name="doctor_id" value="{{$userData->id}}" hidden>
+                        <input type="text" class="form-control" value="{{$userData->name}}" disabled>
+                    @else
+                        <select class="form-select doctor_name" name="doctor_id">
+                            <option value="">Bác sĩ phụ trách</option>
+                            @foreach($list_doctor as $item_doctor)
+                                <option value="{{ $item_doctor->id }}">{{ $item_doctor->name }}</option>
+                            @endforeach
+                        </select>
+                    @endif
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 form-group">
+                    <label for="check_in">{{ __('home.Thời gian bắt đầu') }}</label>
+                    <input type="datetime-local" class="form-control" id="check_in" name="check_in"
+                           value="">
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="check_out">{{ __('home.Thời gian kết thúc') }}</label>
+                    <input type="datetime-local" class="form-control" id="check_out" name="check_out"
+                           value="">
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="booking_status">{{ __('home.Trạng thái') }}</label>
+                    <select class="form-select" id="booking_status" name="status">
+                        <option value="{{ \App\Enums\BookingStatus::PENDING }}">
+                            {{ \App\Enums\BookingStatus::PENDING }}
+                        </option>
+                        <option value="{{ \App\Enums\BookingStatus::COMPLETE }}">
+                            {{ \App\Enums\BookingStatus::COMPLETE }}
+                        </option>
+                        <option value="{{ \App\Enums\BookingStatus::APPROVED }}">
+                            {{ \App\Enums\BookingStatus::APPROVED }}
+                        </option>
+                    </select>
+                </div>
+                <div class=" col-md-3 form-group mt-4">
+                    <label for="services"></label>
+                    <input type="checkbox" name="is_result"
+                           class="is_result" id="is_result" value="1">
+                    <label for="is_result">{{ __('home.Result') }}</label>
+                </div>
+            </div>
+            <div class="row" id="showReasonCancel">
 
+            </div>
+
+            <div id="trackFile" style="display: none;">
+                <div id="repeater">
+                    <div data-repeater-list="booking_result_list">
+                        <div class="d-flex align-items-center row" data-repeater-item>
+                            <div class="col-md-1">
+                                <button type="button" class="btn btn-danger mt-3" data-repeater-delete><i
+                                        class="fa-solid fa-x"></i></button>
                             </div>
-                            @if(!$isDoctor)
-                                <button type="button" class="btn btn-outline-primary mt-3 btn-add-medicine-loading"
-                                        data-prescription-id="{{ $value->id }}">
-                                    <span class="spinner-border spinner-border-sm" role="status"
-                                          aria-hidden="true"></span>
-                                    Đang tải...
-                                </button>
-                                <button type="button" class="btn btn-outline-primary mt-3 btn-add-medicine-booking"
-                                        data-prescription-id="{{ $value->id }}" style="display:none;">
-                                    Tạo đơn
-                                </button>
-                            @endif
+                            <div class="col-md-3 firstSelector">
+                                <div class="form-group">
+                                    <label for="selectType">Loại khám bệnh:</label>
+                                    <select class="form-control selectType" name="select">
+                                        @foreach($departments as $item_departments)
+                                            <option
+                                                value="{{$item_departments->name}}">{{$item_departments->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3 select2Div">
+                                <div class="form-group d-flex flex-column">
+                                    <label for="in_charged">Bác sĩ phụ trách:</label>
+                                    <select class="form-select doctor_selector" name="doctors_id"></select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="file">Tài liệu khám bệnh:</label>
+                                    <input type="file" name="file" class="form-control-file"
+                                           accept=".pdf, .jpg, .jpeg, .png, .gif">
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    <button data-repeater-create type="button" class="btn btn-primary" id="addBtn"><i
+                            class="fa-solid fa-plus"></i></button>
                 </div>
-                @if(empty($value->prescription_file))
-                    @if(!$isDoctor)
-                        <div class="mt-3">
-                            <h5>Tải đơn thuốc lên</h5>
-                            <input type="file" class="mt-2" name="prescription_file"
-                                   accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg">
-                        </div>
-                    @endif
-                @else
-                    <div class="mb-3">
-                        <a href="{{ asset($value->prescription_file) }}"
-                           class="btn btn-success"
-                           download>
-                            Tải xuống đơn thuốc dạng PDF
-                        </a>
-                    </div>
-                @endif
+                </br>
+            </div>
 
-                {{--            @if(!$isDoctor)--}}
-                <input type="text" name="services" id="services" class="form-control d-none">
-                @if ($value->is_result == 1 && $value->status === \App\Enums\BookingStatus::COMPLETE)
-                    @if (isset($value->extend['booking_results']))
-                        <button type="button" class="btn btn-success mt-4 me-2"><i class="fa-regular fa-eye"
-                                                                                   onclick="window.location.href = '{{ route('web.users.booking.result', ['id' => $value->id]) }}';"></i>
+            @if ($userData->member != "DOCTORS")
+            <div class="mt-3">
+                <h5>Danh sách đơn thuốc</h5>
+                <div class="modal-body">
+                    <div class="list-service-result-don-thuoc mt-2 mb-3">
+                        <div id="list-service-result-don-thuoc">
+
+                        </div>
+                        <button type="button" class="btn btn-outline-primary mt-3 btn-add-medicine-loading">
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Đang tải...
                         </button>
-                    @endif
-                @endif
-                <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-primary up-date-button mt-4">{{ __('home.Save') }}</button>
+                        <button type="button" class="btn btn-outline-primary mt-3 btn-add-medicine-booking"
+                                style="display:none;">
+                            Tạo đơn
+                        </button>
+                    </div>
                 </div>
-                {{--                @endif--}}
-            </form>
-        @endforeach
+            </div>
+            <div class="mt-3">
+                <h5>Tải đơn thuốc lên</h5>
+                <input type="file" class="mt-2" name="prescription_file"
+                       accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg">
+            </div>
+            @endif
+
+            <button type="submit" class="btn btn-primary up-date-button mt-4">{{ __('home.Save') }}</button>
+        </form>
     </div>
 
     <div class="modal fade" id="modal-add-medicine-widget-chat-booking" tabindex="-1" aria-hidden="true">
@@ -427,49 +239,47 @@
     <script src="{{ asset('js/jquery.repeater.js') }}"></script>
     <script>
         $(document).ready(function () {
-            function showOrHidden(bookingId) {
-                let value = $('#booking_status_' + bookingId).val();
-                let html = `<div class="form-group">
-                        <label for="reason_text_${bookingId}">Lí do hủy: </label>
-                        <input type="text" class="form-control" id="reason_text_${bookingId}" name="reason_text" value="{{ $dataBooking->reason_cancel }}">
-                        <p class="small text-danger mt-1" id="support_reason_${bookingId}">Vui lòng chọn/nhập lý do hủy</p>
-                        <ul class="list-reason" style="list-style: none; padding-left: 0">`;
-
-                @foreach ($reasons as $reason)
-                    html += `<li class="new-select">
-                        <input onchange="changeReason('${bookingId}');" class="reason_item"
-                               value="{{ $reason }}"
-                               id="reason_{{ $reason }}_${bookingId}"
-                               name="reason_item_${bookingId}"
-                               type="radio" {{ $reason == 'Other' ? 'checked' : '' }}>
-                        <label for="reason_{{ $reason }}_${bookingId}">{{ $reason }}</label>
-                    </li>`;
-                @endforeach
-
-                    html += `</ul></div>`;
-
-                if (value === `{{ \App\Enums\BookingStatus::CANCEL }}`) {
-                    $('#showReasonCancel_' + bookingId).empty().append(html);
-                } else {
-                    $('#showReasonCancel_' + bookingId).empty();
-                }
-            }
-
-            // Gán sự kiện thay đổi cho từng trạng thái booking
-            $(".booking_status").change(function () {
-                let bookingId = $(this).closest('.booking-item').data('booking-id');
-                showOrHidden(bookingId);
+            let html = `<div class="form-group">
+                    <label for="reason_text">Lí do hủy: </label>
+                    <input type="text" class="form-control" id="reason_text" name="reason_text" value="{{ $bookings_edit->reason_cancel }}">
+                    <p class="small text-danger mt-1" id="support_reason">Vui lòng chọn/nhập lý do hủy</p>
+                    <ul class="list-reason " style="list-style: none; padding-left: 0">
+                        @foreach ($reasons as $reason)
+            <li class="new-select">
+                <input onchange="changeReason();" class="reason_item"
+                       value="{{ $reason }}"
+                                       id="{{ $reason }}"
+                                       {{ $reason == 'Other' ? 'checked' : '' }}
+            name="reason_item"
+            type="radio">
+     <label for="{{ $reason }}">{{ $reason }}</label>
+                            </li>
+                        @endforeach
+            </ul>
+        </div>`;
+            showOrHidden(html);
+            $('#booking_status').change(function () {
+                showOrHidden(html);
             });
-        });
+        })
 
-        function changeReason(bookingId) {
-            let value = $('input[name="reason_item_' + bookingId + '"]:checked').val();
-            if (value !== 'Other') {
-                $('#support_reason_' + bookingId).addClass('d-none');
-                $('#reason_text_' + bookingId).val(value).prop('disabled', false);
+        function showOrHidden(html) {
+            let value = $('#booking_status').val();
+            if (value === `{{ \App\Enums\BookingStatus::CANCEL }}`) {
+                $('#showReasonCancel').empty().append(html);
             } else {
-                $('#support_reason_' + bookingId).removeClass('d-none');
-                $('#reason_text_' + bookingId).val('').prop('disabled', false);
+                $('#showReasonCancel').empty();
+            }
+        }
+
+        function changeReason() {
+            let value = $('input[name="reason_item"]:checked').val();
+            if (value !== 'Other') {
+                $('#support_reason').addClass('d-none');
+                $('#reason_text').val(value).prop('disabled', false /* or 'true' to  disabled input */);
+            } else {
+                $('#support_reason').removeClass('d-none');
+                $('#reason_text').val('').prop('disabled', false);
             }
         }
     </script>
@@ -566,7 +376,6 @@
         // getInputServiceName();
     </script>
     <script>
-
         $(document).ready(function () {
             $(window).on('popstate', function () {
                 location.reload();
@@ -688,7 +497,7 @@
                                 alert('Create success!')
                                 // window.location.href = ``;
                                 window.location.href =
-                                    `{{ route('web.booking.result.list', $dataBooking->id) }}`;
+                                    `{{ route('web.booking.result.list', $bookings_edit->id) }}`;
                             },
                             error: function (error) {
                                 console.log(error);
@@ -718,7 +527,7 @@
     <div class="row">
      <div class="form-group">
             <label for="service_result">{{ __('home.Service Name') }}</label>
-            <input type="text" class="form-control service_result" value="{{ $dataBooking->service }}" id="service_result" name="service_result">
+            <input type="text" class="form-control service_result" value="{{ $bookings_edit->service }}" id="service_result" name="service_result">
         </div>
 <div class="form-group">
         <label for="result">{{ __('home.Result') }}</label>
@@ -788,43 +597,41 @@
         $(document).ready(function () {
             initialSelect2($('.doctor_selector'));
 
-            $('[id^=repeater_]').each(function () {
-                var repeaterId = $(this).attr('id');
-                var count = $(this).find('[data-repeater-item]').length;
+            var count = $('[data-repeater-item]').length;
+            $('#repeater').repeater({
+                show: function () {
+                    var $item = $(this);
 
-                $(this).repeater({
-                    show: function () {
-                        var $item = $(this);
-                        $item.find('.selectType option[selected]').removeAttr('selected');
-                        $item.find('.selectType option:first').prop('selected', true);
-                        $item.find('.selectType').attr('name', `booking_result_list[${count}][select]`);
-                        $item.find('input[type="file"]').attr('name', `booking_result_list[${count}][file]`);
-                        $item.find('input[type="file"]').val('');
-                        $item.find('.select2Div').remove();
-
-                        // Thêm select2 cho bác sĩ
-                        $item.find('.firstSelector').after(`
-                    <div class="col-md-3 select2Div">
-                        <div class="form-group">
-                            <label for="in_charged">Bác sĩ phụ trách:</label>
-                            <select class="form-select doctor_selector" name="booking_result_list[${count}][doctor_id]"></select>
+                    $item.find('.selectType option[selected]').removeAttr('selected');
+                    $item.find('.selectType option:first').prop('selected', true);
+                    $item.find('.selectType').attr('name', `booking_result_list[${count}][select]`);
+                    $item.find('input[type="file"]').attr('name',
+                        `booking_result_list[${count}][file]`);
+                    $item.find('input[type="file"]').val('');
+                    $item.find('input[type="hidden"]').remove();
+                    $item.find('.viewFile').remove();
+                    $item.find('.select2Div').remove();
+                    $item.find('.firstSelector').after(`
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="in_charged">Bác sĩ phụ trách:</label>
+                                <select class="form-select doctor_selector" name="booking_result_list[${count}][doctors_id]"></select>
+                            </div>
                         </div>
-                    </div>
-                `);
+                    `);
 
-                        initialSelect2($item.find('.doctor_selector'));
+                    // Find the last data-repeater-item and insert the new item after it
+                    var $lastItem = $('[data-repeater-item]').last();
+                    $item.insertAfter($lastItem);
 
-                        // Chèn item mới vào cuối
-                        var $lastItem = $(this).find('[data-repeater-item]').last();
-                        $item.insertAfter($lastItem);
-                        $item.slideDown();
-                        count++;
-                    },
-                    hide: function (deleteElement) {
-                        $(this).slideUp(deleteElement);
-                    },
-                    isFirstItemUndeletable: true
-                });
+                    $item.slideDown();
+                    initialSelect2($item.find('.doctor_selector'));
+                    count++;
+                },
+                hide: function (deleteElement) {
+                    $(this).slideUp(deleteElement);
+                },
+                isFirstItemUndeletable: true
             });
 
             function initialSelect2(selectElement) {
@@ -866,27 +673,23 @@
     <script>
         $(document).ready(function () {
             // Function to check the conditions and show/hide the trackFile div
-            function checkConditions(bookingId) {
-                var isChecked = $("#is_result_" + bookingId).is(":checked");
-                var selectedValue = $("#booking_status_" + bookingId).val();
+            function checkConditions() {
+                var isChecked = $("#is_result").is(":checked");
+                var selectedValue = $("#booking_status").val();
 
                 if (isChecked && selectedValue === "COMPLETE") {
-                    $("#trackFile_" + bookingId).show();
+                    $("#trackFile").show();
                 } else {
-                    $("#trackFile_" + bookingId).hide();
+                    $("#trackFile").hide();
                 }
             }
 
-            $(".booking-item").each(function () {
-                var bookingId = $(this).data("booking-id");
+            // Check conditions on page load
+            checkConditions();
 
-                // Check conditions on page load for each booking
-                checkConditions(bookingId);
-
-                // Check conditions when is_result checkbox or booking_status select changes
-                $("#is_result_" + bookingId + ", #booking_status_" + bookingId).change(function () {
-                    checkConditions(bookingId);
-                });
+            // Check conditions when is_result checkbox or booking_status select changes
+            $("#is_result, #booking_status").change(function () {
+                checkConditions();
             });
         });
     </script>
@@ -936,12 +739,9 @@
 
 
         $('.btn-add-medicine-booking').click(function () {
-            let prescriptionId = $(this).data('prescription-id');
-            let listContainer = $(`#list-service-result-don-thuoc-${prescriptionId}`);
-            let newIndex = listContainer.find('.service-result-item-don-thuoc').length;
+            let newIndex = $('#list-service-result-don-thuoc .service-result-item-don-thuoc').length;
             let newHtml = html_widgetChat.replace(/@index/g, newIndex);
-            listContainer.append(newHtml);
-
+            $('#list-service-result-don-thuoc').append(newHtml);
             $('.input_medicine_name_booking').click(function () {
                 elementInputMedicine_widgetChat_Booking = $(this);
                 next_elementInputMedicine_widgetChat_Booking = $(this).next('.medicine_id_hidden');
