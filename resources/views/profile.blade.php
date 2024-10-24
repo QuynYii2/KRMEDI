@@ -300,7 +300,7 @@
                 </div>
             </div>
 
-            @if(Auth::user()->member == "HOSPITALS")
+            @if(Auth::user()->member == "HOSPITALS" || Auth::user()->member == "CLINICS")
             <div class="card shadow mb-4">
                 <div class="card-body">
                     <h3 class="text-center bold">My QrCode</h3>

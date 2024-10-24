@@ -12,11 +12,13 @@ use App\Models\BookingResult;
 use App\Models\CheckInBookingModel;
 use App\Models\Clinic;
 use App\Models\FamilyManagement;
+use App\Models\Notification;
 use App\Models\online_medicine\ProductMedicine;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Pusher\Pusher;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class BookingResultApi extends Controller
@@ -179,6 +181,34 @@ class BookingResultApi extends Controller
         $check_in_booking->save();
 
         $clinic = Clinic::find($id);
+
+        $notifi = Notification::create([
+            'title' => 'Thông báo đặt lịch khám',
+            'sender_id' => $bookingApi->user_id,
+            'follower' => $clinic->user_id,
+            'target_url' => route('web.users.my.bookings.detail', ['id' => $bookingApi->id]),
+            'description' => 'Có lịch khám mới. Vui lòng đến kiểm tra!',
+            'booking_id' => $bookingApi->id
+        ]);
+        $notifi->save();
+
+        $options = array(
+            'cluster' => 'ap1',
+            'encrypted' => true
+        );
+
+        $PUSHER_APP_KEY = '3ac4f810445d089829e8';
+        $PUSHER_APP_SECRET = 'c6cafb046a45494f80b2';
+        $PUSHER_APP_ID = '1714303';
+
+        $pusher = new Pusher($PUSHER_APP_KEY, $PUSHER_APP_SECRET, $PUSHER_APP_ID, $options);
+
+        $requestData = [
+            'user_id' => $bookingApi->user_id,
+            'title' => 'Đặt lịch thành công',
+        ];
+
+        $pusher->trigger('noti-events', 'noti-events', $requestData);
 
         return response()->json(['status' => true,'data'=>$clinic,'message' => 'Đặt lịch thành công']);
     }
