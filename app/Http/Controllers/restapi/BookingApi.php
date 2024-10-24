@@ -12,6 +12,7 @@ use App\Jobs\booking\ProcessBooking;
 use App\Models\Booking;
 use App\Models\Clinic;
 use App\Models\Department;
+use App\Models\Notification;
 use App\Models\PrescriptionResults;
 use App\Models\SurveyAnswer;
 use App\Models\SurveyAnswerUser;
@@ -22,6 +23,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Pusher\Pusher;
 
 class BookingApi extends Controller
 {
@@ -79,6 +81,34 @@ class BookingApi extends Controller
             if ($newBooking) {
                 ProcessBooking::dispatch($newBooking);
             }
+            $clinic = Clinic::find($request->get('clinic_id'));
+            $notifi = Notification::create([
+                'title' => 'Thông báo đặt lịch khám',
+                'sender_id' => $booking->user_id,
+                'follower' => $clinic->user_id,
+                'target_url' => route('web.users.my.bookings.detail', ['id' => $booking->id]),
+                'description' => 'Có lịch khám mới. Vui lòng đến kiểm tra!',
+                'booking_id' => $booking->id
+            ]);
+            $notifi->save();
+
+            $options = array(
+                'cluster' => 'ap1',
+                'encrypted' => true
+            );
+
+            $PUSHER_APP_KEY = '3ac4f810445d089829e8';
+            $PUSHER_APP_SECRET = 'c6cafb046a45494f80b2';
+            $PUSHER_APP_ID = '1714303';
+
+            $pusher = new Pusher($PUSHER_APP_KEY, $PUSHER_APP_SECRET, $PUSHER_APP_ID, $options);
+
+            $requestData = [
+                'user_id' => $booking->user_id,
+                'title' => 'Đặt lịch thành công',
+            ];
+
+            $pusher->trigger('noti-events', 'noti-events', $requestData);
 
             return response()->json(['error' => 0, 'data' => $booking]);
         } catch (\Exception $e) {
