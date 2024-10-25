@@ -17,7 +17,7 @@
             color: #000;
             font-size: 24px;
             font-style: normal;
-            font-weight: 700 !important;
+            font-weight: 800;
             line-height: normal;
         }
 
@@ -245,18 +245,17 @@
                                 title: 'Location'
                             });
                             var urlDetail = "{{ route('home.specialist.booking.detail', ['id' => ':id']) }}".replace(':id', location.id);
-                            var urlDetailClinic = "{{ route('home.specialist.detail', ['id' => ':id']) }}".replace(':id', location.id);
                             let gallery = location.gallery;
                             let arrayGallery = gallery.split(',');
 
                             list_map += `<div class="swiper-slide swiper-slide-height slide_${count_address} bg-white" data-index="${count_address}" ><div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
                                 <div class="box-img-item-map">
-                                    <a href=${urlDetailClinic}><img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img" style="height: 100%;object-fit: cover;"></a>
+                                    <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img" style="height: 100%;object-fit: cover;">
                                 </div>
                                 <div class="p-2 box-info-item-map">
                                     <div class="form-group mb-1">
                                         <div class="d-flex justify-content-between mt-md-2">
-                                            <a href=${urlDetailClinic}><div class="fs-18px name-address-map">${location.name}</div></a>
+                                            <div class="fs-18px name-address-map">${location.name}</div>
                                         </div>
                                         <div class="d-flex mt-md-2">
                                             <div class="d-flex col-md-6 justify-content-center align-items-center">
@@ -442,7 +441,7 @@
                     if (distance >= searchRadius || isNaN(distance)) {
                         continue;
                     }
-                    var urlDetail = "{{ route('home.specialist.detail', ['id' => ':id']) }}".replace(':id', item.id);
+                    var urlDetail = "{{ route('clinic.detail', ['id' => ':id']) }}".replace(':id', item.id);
 
                     let img = '';
                     let gallery = item.gallery;
@@ -466,27 +465,24 @@
                             <div class="border-specialList" data-marker-index="${index_map}" style="gap:unset;padding:5px">
                                 <div class="content__item d-flex">
                                     <div class="specialList-clinics--img d-flex flex-column">
-                                        <a href=${urlDetail}>${img}</a>
+                                        ${img}
                                         <button id="showMapBtnTab_${index_map}" class="search-way" style="border:none; background-color: transparent"><i class="fa-solid fa-location-arrow"></i>Chỉ đường</button>
                                         @if (Auth::check())
                     <div class="zalo-follow-only-button" style="height:20px" data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>
 @endif
                     </div>
                     <div class="specialList-clinics--main w-100">
-                        <a href=${urlDetail}>
-                            <div class="title-specialList-clinics">
-                                @if (locationHelper() == 'vi')
-                                    ${item.name}
-                                @else
-                                    ${item.name_en}
-                                @endif
-                            </div>
-                        </a>
-
+                        <div class="title-specialList-clinics">
+@if (locationHelper() == 'vi')
+                    ${item.name}
+                                            @else
+                    ${item.name_en}
+                                            @endif
+                    </div>
                     <div class="address-specialList-clinics">
                         <div class="d-flex align-items-center address-clinics">
                             <i class="fas fa-map-marker-alt mr-2"></i>
-                            <div style="-webkit-line-clamp: 3!important; font-size: 14px; margin-top: 5px">${item.address_detail} ${item.addressInfo}</div>
+                            <div style="-webkit-line-clamp: 3!important;">${item.address_detail} ${item.addressInfo}</div>
                                             </div>
                                         </div>
                                         <div class="d-flex justify-content-between align-items-center flex-wrap">

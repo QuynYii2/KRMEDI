@@ -249,6 +249,7 @@
   }
   .container #myTabContent .product-item .img-pro img {
     border-radius: 24px 24px 0px 100px;
+    height: 300px;
     object-fit: cover;
   }
   .container #myTabContent .product-item .img-pro i {
@@ -620,8 +621,6 @@
     background: linear-gradient(90deg, #F2994A, #F2C94C);
     color: white;
     border-radius: 0 0 120px 120px;
-      padding: 8px 0 !important;
-      font-size: 22px
   }
   .container .titleServiceHomeNew {
     color: #000;

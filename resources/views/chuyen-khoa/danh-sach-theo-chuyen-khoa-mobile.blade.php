@@ -93,9 +93,7 @@
         }
         @media (max-width: 767px) {
             .mySwiperMap,.mySwiperMapPharmacies {
-                position: absolute;
-                bottom: 0;
-                width: 100%;
+                margin-top: calc(-100% + 205px);
             }
         }
     </style>

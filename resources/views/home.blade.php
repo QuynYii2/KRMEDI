@@ -1323,17 +1323,13 @@
         <div class="container">
             <div id="find-doctor--homeNew">
                 <div class="title-findDoctor--homeNew d-md-flex justify-content-center">
-                    <div class="text-center krm-tieuDe-findDoctor">{{ __('home.Find a doctor') }}</div>
+                    <div class="py-3 text-center krm-tieuDe-findDoctor">{{ __('home.Find a doctor') }}</div>
                 </div>
                 <div class="tab-content py-4" id="myTabContent">
                     <div class="tab-pane fade show active" id="available" role="tabpanel"
                          aria-labelledby="available-tab">
                         @php
-                            $doctors = \App\Models\User::join('departments', 'users.department_id', '=', 'departments.id')
-                                ->where('users.member', \App\Enums\TypeUser::DOCTORS)
-                                ->where('users.status', 'ACTIVE')
-                                ->select('users.*', 'departments.name as department_name')
-                                ->paginate(12);
+                            $doctors = \App\Models\User::where('member', \App\Enums\TypeUser::DOCTORS)->where('status', 'ACTIVE')->paginate(12);
                         @endphp
                         <div class="row">
                             @foreach($doctors as $doctor)
@@ -1375,15 +1371,15 @@
                                                             <a class="max-3-line-content-home"
                                                                href="{{ route('examination.doctor_info', $doctor->id) }}">{{$doctor->name}}</a>
                                                         </div>
-{{--                                                        <a href="{{ route('examination.doctor_info', $doctor->id) }}" class="location-pro webkit-line-clamp-newHome d-flex line-service">--}}
-{{--                                                            <div class="box-about-doctor">--}}
-{{--                                                                @if(locationHelper() == 'vi')--}}
-{{--                                                                    {!! ($doctor->abouts ?? __('home.no Service Name') ) !!}--}}
-{{--                                                                @else--}}
-{{--                                                                    {!! ($doctor->abouts_en  ?? __('home.no Service Name') ) !!}--}}
-{{--                                                                @endif--}}
-{{--                                                            </div>--}}
-{{--                                                        </a>--}}
+                                                        <a href="{{ route('examination.doctor_info', $doctor->id) }}" class="location-pro webkit-line-clamp-newHome d-flex line-service">
+                                                            <div class="box-about-doctor">
+                                                                @if(locationHelper() == 'vi')
+                                                                    {!! ($doctor->abouts ?? __('home.no Service Name') ) !!}
+                                                                @else
+                                                                    {!! ($doctor->abouts_en  ?? __('home.no Service Name') ) !!}
+                                                                @endif
+                                                            </div>
+                                                        </a>
                                                         <div class="price-pro">
                                                             @php
                                                                 if ($doctor->province_id == null) {
@@ -1432,7 +1428,7 @@
                                                                               transform="translate(0.5 0.933594)"/>
                                                                     </clipPath>
                                                                 </defs>
-                                                            </svg> &nbsp; {{$doctor->department_name}}
+                                                            </svg> &nbsp; {{$doctor->time_working_1}}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1682,7 +1678,7 @@
                         <h2>{{ __('home.Clinics/Pharmacies') }}</h2>
                         <p>{{ __('home.Find your suitable clinics/pharmacies and book now') }}!</p>
                     </div>
-                    <div class="w-100">
+                    <div>
                         <div class=" clip-path-container">
                             <div id="allAddressesMap" class="p-2 w-100 h-100">
 
@@ -2662,8 +2658,6 @@
         });
 
         var locations = {!! json_encode($coordinatesArray) !!};
-        const validLocations = locations.filter(location => location.latitude !== null && location.longitude !== null);
-
         var infoWindows = [];
         var directionsService;
         var directionsRenderer;
@@ -2841,11 +2835,8 @@
             });
         }
 
-        // getCurrentLocation(function (currentLocation) {
-        //     initMap(currentLocation, validLocations);
-        // });
         getCurrentLocation(function (currentLocation) {
-            initMap(currentLocation);
+            initMap(currentLocation, locations);
         });
         document.addEventListener('DOMContentLoaded', function() {
             const departmentLinks = document.querySelectorAll('.department-link');
