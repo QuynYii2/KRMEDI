@@ -1325,7 +1325,7 @@
                 <div class="title-findDoctor--homeNew d-md-flex justify-content-center">
                     <div class="text-center krm-tieuDe-findDoctor">{{ __('home.Find a doctor') }}</div>
                 </div>
-                <div class="tab-content py-4" id="myTabContent">
+                <div class="tab-content py-4" id="myTabContent" style="margin-bottom: 10px">
                     <div class="tab-pane fade show active" id="available" role="tabpanel"
                          aria-labelledby="available-tab">
                         @php
@@ -1349,9 +1349,9 @@
                                         }
                                         $class = !$isFavourite ? 'bi-heart' : 'bi-heart-fill text-danger';
                                     @endphp
-                                    <div class="col-lg-3 col-md-4 col-6">
+                                    <div class="col-lg-2 col-md-3 col-4" style="padding: 0 5px !important;">
                                         <div class="">
-                                            <div class="product-item">
+                                            <div class="product-item" style="margin-bottom: 15px">
                                                 <div style="min-height: 170px"
                                                      class="img-pro justify-content-center d-flex">
                                                     <a href="{{ route('examination.doctor_info', $doctor->id) }}" class="d-inline-block w-100">
@@ -1416,7 +1416,7 @@
                                                             </svg> &nbsp;
                                                             {{$addressP}}
                                                         </div>
-                                                        <div class="price-pro">
+                                                        <div class="price-pro" style="text-wrap: nowrap; overflow: hidden">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="21"
                                                                  height="21" viewBox="0 0 21 21" fill="none">
                                                                 <g clip-path="url(#clip0_5506_14923)">
