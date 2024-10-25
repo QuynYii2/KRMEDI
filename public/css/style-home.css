@@ -679,6 +679,8 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+      text-align: center;
+      font-size: 15px;
   }
   .background-image_HomeNew--departments {
     background: url(../img/homeNew-img/background/Icon.png) no-repeat 100% 100%;
@@ -786,7 +788,7 @@
 }
 
 .krm-title-sub-news {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 800;
   line-height: 20px;
   display: -webkit-box;
@@ -811,7 +813,7 @@
 }
 
 .krm-title-news {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 800;
   line-height: 30px;
   margin-top: 16px;

@@ -20,7 +20,7 @@ input.number {
   border: none;
   width: 40px;
   height: 40px;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 800;
 }
 
@@ -110,7 +110,7 @@ input:focus-visible {
     border-bottom: none;
   }
   .modal-cart .modal-dialog .modal-content .modal-header .modal-title {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 800;
   }
   .modal-cart .modal-dialog .modal-content .modal-body {
@@ -137,7 +137,7 @@ input:focus-visible {
     object-fit: cover;
   }
   .modal-cart .modal-dialog .modal-content .modal-body .product-cart .title .title-name {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 800;
   }
   .modal-cart .modal-dialog .modal-content .modal-body .product-cart .title .price {

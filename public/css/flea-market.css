@@ -302,7 +302,7 @@ p {
 
 .text-content-product {
   color: #000;
-  font-size: 32px;
+  font-size: 20px;
   font-style: normal;
   font-weight: 800;
   line-height: normal;
@@ -328,7 +328,7 @@ p {
 }
 
 header h2 {
-  font-size: 24px;
+  font-size: 16px;
   font-weight: 600;
 }
 
@@ -346,7 +346,6 @@ header p {
 .price-input .field {
   display: flex;
   width: 100%;
-  height: 45px;
   align-items: center;
 }
 
@@ -354,8 +353,7 @@ header p {
   width: 100%;
   height: 100%;
   outline: none;
-  font-size: 19px;
-  margin-left: 12px;
+  font-size: 16px;
   border-radius: 5px;
   text-align: center;
   border: 1px solid #999;
@@ -469,9 +467,10 @@ input[type=range]::-moz-range-thumb {
   background: var(--Grey-Light, #D6D6D6);
   display: flex;
   width: 100%;
-  height: 56px;
+  padding: 10px;
   justify-content: center;
   align-items: center;
+    font-size: 14px;
 }
 
 .b-radius {
@@ -486,7 +485,7 @@ input[type=range]::-moz-range-thumb {
 .text-wrapper-input input[type=radio] {
   box-sizing: border-box;
   padding: 0;
-  height: 36px;
+  height: 21px;
   width: 21px;
 }
 
@@ -643,7 +642,7 @@ input[type=range]::-moz-range-thumb {
   }
   .col-md-4.col-6 .product-item .content-pro .location-pro {
     color: var(--White, #FFF);
-    font-size: 18px;
+    font-size: 15px;
     font-style: normal;
     font-weight: 800;
     line-height: normal;
@@ -733,7 +732,7 @@ input[type=range]::-moz-range-thumb {
 }
 .product-item .content-pro .name-product a {
   color: #FFFFFF;
-  font-size: 18px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 800;
   line-height: normal;
