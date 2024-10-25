@@ -189,7 +189,7 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    height: 44px;
+   margin-bottom: 7px;
   }
   .max-5-line-title {
     display: -webkit-box;
@@ -277,7 +277,7 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    height: 44px;
+    margin-bottom: 7px;
   }
   .max-5-line-title {
     display: -webkit-box;

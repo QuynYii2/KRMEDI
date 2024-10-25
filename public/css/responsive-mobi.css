@@ -372,7 +372,7 @@ img {
     height: 40px;
   }
   .container .mainServiceHomeNew .border-HomeNew span {
-    font-size: 18px;
+    font-size: 16px;
   }
   .container #find-doctor--homeNew #myTabContent .product-item {
     border-radius: 16px;
@@ -681,7 +681,7 @@ img {
     font-size: 18px;
   }
   .ac-text_content {
-    font-size: 32px;
+    font-size: 20px;
   }
   .clinics-header a {
     font-size: 18px;
@@ -798,10 +798,10 @@ img {
     font-weight: 800;
   }
   .container .titleServiceHomeNew {
-    font-size: 32px;
+    font-size: 26px;
   }
   .container .mainServiceHomeNew .border-HomeNew span {
-    font-size: 16px;
+    font-size: 15px;
   }
   .container #find-doctor--homeNew #myTabContent .product-item .img-pro {
     height: 100%;
@@ -924,24 +924,24 @@ img {
   /* END NEW HOME */
   /* medicine detail */
   .product-details .body .text-wrapper {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 800;
   }
   .product-details .body .price {
-    font-size: 32px;
+    font-size: 18px;
     font-weight: 800;
-    margin-top: 24px;
+    margin-top: 15px;
   }
   .product-details .body .brand-name {
     margin-top: 24px;
   }
   .product-details .body .brand-name .text-wrapper-2 {
-    font-size: 24px;
+    font-size: 16px;
     font-weight: 400;
     margin-right: 10px;
   }
   .product-details .body .brand-name .text-wrapper-3 {
-    font-size: 25px;
+    font-size: 17px;
     font-weight: 800;
   }
   .product-details .button {

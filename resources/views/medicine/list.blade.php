@@ -71,7 +71,7 @@
                 border-radius: 60px 0 16px 0;
                 background: #FFF;
                 display: flex;
-                padding: 16px 18px !important;
+                padding: 11px 18px !important;
                 justify-content: center;
                 align-items: center;
                 gap: 10px;
@@ -88,11 +88,11 @@
             justify-content: center;
             align-items: center;
             border-radius: 8px;
-            height: 48px;
             width: 270px;
             color: #f7f7f7;
             border: none;
             margin-top: 24px;
+            padding: 10px;
         }
 
         .sold-out-overlay {
@@ -226,7 +226,7 @@
         </div>
 
         <div class="medicine-list row">
-            <div class="col-md-3 medicine-list--filter d-none d-sm-block">
+            <div class="col-lg-3 col-md-4 medicine-list--filter d-none d-sm-block">
                 <div class="filter">
                     <div class="filter-header d-flex justify-content-between">
                         <div class="text-wrapper">{{ __('home.Filter') }}</div>
@@ -323,15 +323,15 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-9 medicine-list--item">
+            <div class="col-lg-9 col-md-8 medicine-list--item">
                 <div class="page row" id="content-medicine">
                     @foreach($medicines as $medicine)
-                        <div class="col-md-4 col-6 col-sm-4 col-xl-4 d-none d-sm-block box-sp-medicine">
+                        <div class="col-md-6 col-6 col-sm-4 col-xl-4 d-none d-sm-block box-sp-medicine">
                             @include('component.products')
                         </div>
                     @endforeach
                     @foreach($medicine10 as $medicine)
-                        <div class="col-md-4 col-6 col-sm-4 col-xl-4 d-block d-sm-none">
+                        <div class="col-md-6 col-6 col-sm-4 col-xl-4 d-block d-sm-none">
                             @include('component.products')
                         </div>
                     @endforeach

@@ -203,13 +203,40 @@
 .mySwiperMap,.mySwiperMapPharmacies{
     margin-top: -240px;
 }
+.development_function{
+    font-size: 22px;
+}
+#listWishList .col-xl-3 {
+    padding: 0 5px!important;
+}
+.header .header-detail--left .back h5,.list-doctor .card-body .card-title{
+    font-size: 16px;
+}
+.frame .text-wrapper-2,.text-cmt{
+    font-size: 14px;
+}
+.title-my-personal-doctor{
+    font-size: 20px;
+}
+.card .bi-heart {
+    font-size: 19px;
+}
+#listMyDoctor .col-6{
+    padding: 0 8px;
+}
+.no_event{
+    font-size: 20px;
+}
+#content-medicine .col-md-4{
+    padding: 0px;
+}
 @media (max-width: 1400px) {
     .header .header-detail--left .back h5 {
         font-size: 16px;
     }
 
     header h2, .field input, .flea-text {
-        font-size: 18px;
+        font-size: 16px;
     }
 
     .box-header-market, .header-3-pc {
@@ -238,7 +265,7 @@
     }
 
     .col-md-4.col-6 .product-item .content-pro .location-pro {
-        font-size: 15px;
+        font-size: 14px;
     }
 
     .col-md-4.col-6 .product-item .content-pro .prices-pro, .product-item .content-pro .price-pro, .container .location-info, .container .hanoi {
@@ -335,12 +362,21 @@
     .container .titleServiceHomeNew, .title-clinics h2, .container .flea-content, .ac-text_content,.container .danh-sach-theo-chuyen-khoa .title-Danh-sach,
     .container .detail-clinic-theo-chuyen-khoa-title .title-detail-clinic,.background-image_Clinics .container .title-list-clinic,
     .fs-32px{
-        font-size: 24px !important;
+        font-size: 20px !important;
     }
 
     .krm-title-news, .text-font-24, .text-content-product, .find-my-medicine-2 .frame .text-wrapper-3,
     .container .detail-clinic-theo-chuyen-khoa-title .border-specialList .specialList-clinics--main .title-specialList-clinics{
-        font-size: 18px !important;
+        font-size: 16px !important;
+    }
+    .text-font-16{
+        font-size: 15px;
+    }
+    .text-ads-plan{
+        font-size: 14px;
+    }
+    .no-brand{
+        font-size: 12px!important;
     }
 
     footer {
@@ -496,7 +532,7 @@
     }
 
     .list--doctor p, .list-title .list--doctor p,.recruitment-details--title {
-        font-size: 20px !important;
+        font-size: 18px !important;
     }
 
     .find-my-medicine .frame .div {
@@ -512,7 +548,7 @@
     }
 
     .header_comment, .title-my-personal-doctor {
-        font-size: 24px !important;
+        font-size: 18px !important;
     }
 
     .text-header-comment {
@@ -580,7 +616,7 @@
     .container .danh-sach-theo-chuyen-khoa .specialList-clinics .border-specialList .specialList-clinics--main .group-button .button-detail-specialList,
     .container .danh-sach-theo-chuyen-khoa .product-item .content-pro .location-pro p,.container .danh-sach-theo-chuyen-khoa .product-item .content-pro .price-pro,
     .col-md-4.col-6 .product-item .content-pro .prices-pro{
-        font-size: 16px!important;
+        font-size: 15px!important;
     }
     .item-btn-specialist {
         padding: 0px !important;
@@ -724,6 +760,25 @@
     .mySwiperMap,.mySwiperMapPharmacies{
         margin-top: -277px;
     }
+    .development_function{
+        font-size: 18px;
+        margin-top: 26px;
+    }
+    #listWishList .col-xl-3 ,.list-doctor .col-6{
+        padding: 0px 5px !important;
+    }
+    .product-item .content-pro .price-pro{
+        font-size: 15px!important;
+    }
+    .style-b,.cl-select,.fs-16px{
+        font-size: 14px;
+    }
+    .container #myTabContent .product-item .content-pro .name-product a{
+        font-size: 16px;
+    }
+    .container #recruitment-homeNew .title-recruitment--homeNew .krm-title-recruitment{
+        font-size: 20px!important;
+    }
 }
 
 @media (max-width: 767px) {
@@ -737,7 +792,7 @@
     .list--doctor p, .list--doctor p, .list-title .list--doctor p, .header_comment, .title-my-personal-doctor,.container .danh-sach-theo-chuyen-khoa .title-Danh-sach,
     .container .detail-clinic-theo-chuyen-khoa-title .title-detail-clinic,.container .tab-chuyen-khoa .titleServiceHomeNew,
     .fs-32px,.text-select-method{
-        font-size: 18px !important;
+        font-size: 16px !important;
     }
 
     .container #myTabContent .product-item .content-pro .name-product a, .bg-tuyen-dung .border-radius-homeNew .krm-name-recruitment,
@@ -1130,5 +1185,30 @@
     }
     .text-map-item-address{
         font-size: 14px;
+    }
+    .add-cv-bt{
+        font-size: 14px;
+        padding: 8px;
+    }
+    .text-ads-plan{
+        font-size: 12px!important;
+    }
+    .font-16-600{
+        font-size: 14px;
+    }
+    .recruitment-details h3{
+        font-size: 15px;
+}
+    #content-medicine .col-6{
+        padding: 0 6px;
+    }
+    .product-item .SeeDetail{
+        padding: 10px 16px;
+    }
+}
+
+@media (max-width: 500px){
+    .box-wish-list{
+        margin-top: 0px!important;
     }
 }
