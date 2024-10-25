@@ -825,30 +825,30 @@
                                         <img loading="lazy" width="50px" src="{{$productImg}}" alt="">
                                     @endforeach
                                 </div>
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="form-group focused">
-                                            <label class="form-control-label" for="zalo_app_id"><a
-                                                    href="https://oa.zalo.me/home">{{ __('home.zalo_app_id') }}</a></label>
-                                            <input type="text" id="zalo_app_id" class="form-control"
-                                                   name="zalo_app_id" placeholder="<Enter your zalo app id>"
-                                                   value="{{ old('zalo_app_id', Auth::user()->extend['zalo_app_id'] ?? '') }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group focused">
-                                            <label class="form-control-label" for="zalo_secret_id"><a
-                                                    href="https://oa.zalo.me/home">{{ __('home.zalo_secret_id') }}</a></label>
-                                            <input type="text" id="zalo_secret_id" class="form-control"
-                                                   name="zalo_secret_id" placeholder="<Enter your zalo secret id>"
-                                                   value="{{ old('zalo_secret_id', Auth::user()->extend['zalo_secret_id'] ?? '') }}">
-                                        </div>
-                                    </div>
-                                </div>
-                                @if (!isset(Auth::user()->extend['isActivated']) || !Auth::user()->extend['isActivated'])
-                                    <a href="{{ route('zalo.service.auth.verify') }}" type="button"
-                                       class="btn btn-outline-primary">{{ __('home.activate_zalo_oa') }}</a>
-                                @endif
+{{--                                <div class="row">--}}
+{{--                                    <div class="col-lg-6">--}}
+{{--                                        <div class="form-group focused">--}}
+{{--                                            <label class="form-control-label" for="zalo_app_id"><a--}}
+{{--                                                    href="https://oa.zalo.me/home">{{ __('home.zalo_app_id') }}</a></label>--}}
+{{--                                            <input type="text" id="zalo_app_id" class="form-control"--}}
+{{--                                                   name="zalo_app_id" placeholder="<Enter your zalo app id>"--}}
+{{--                                                   value="{{ old('zalo_app_id', Auth::user()->extend['zalo_app_id'] ?? '') }}">--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="col-lg-6">--}}
+{{--                                        <div class="form-group focused">--}}
+{{--                                            <label class="form-control-label" for="zalo_secret_id"><a--}}
+{{--                                                    href="https://oa.zalo.me/home">{{ __('home.zalo_secret_id') }}</a></label>--}}
+{{--                                            <input type="text" id="zalo_secret_id" class="form-control"--}}
+{{--                                                   name="zalo_secret_id" placeholder="<Enter your zalo secret id>"--}}
+{{--                                                   value="{{ old('zalo_secret_id', Auth::user()->extend['zalo_secret_id'] ?? '') }}">--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                                @if (!isset(Auth::user()->extend['isActivated']) || !Auth::user()->extend['isActivated'])--}}
+{{--                                    <a href="{{ route('zalo.service.auth.verify') }}" type="button"--}}
+{{--                                       class="btn btn-outline-primary">{{ __('home.activate_zalo_oa') }}</a>--}}
+{{--                                @endif--}}
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label for="time_work">{{ __('home.Time work') }}</label>
@@ -945,28 +945,28 @@
 {{--                                    </ul>--}}
 {{--                                </div>--}}
 
-                                <div class="row mb-3">
-                                    <div class="col-md-4">
-                                        <label for="open_date">{{ __('home.open_date') }}</label>
-                                        <input type="datetime-local" class="form-control" id="open_date" name="open_date" required
-                                               value="{{$clinic->open_date}}">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="close_date">{{ __('home.close_date') }}</label>
-                                        <input type="datetime-local" class="form-control" id="close_date" name="close_date"
-                                               value="{{$clinic->close_date}}">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="type">{{ __('home.type') }}</label>
-                                        <select class="form-select" id="type" name="time_work">
-                                            <option
-                                                value="{{\App\Enums\TypeBusiness::CLINICS}}" {{ $clinic->type === \App\Enums\TypeBusiness::CLINICS ? 'selected' : '' }}>{{\App\Enums\TypeBusiness::CLINICS}}</option>
-                                            <option
-                                                value="{{\App\Enums\TypeBusiness::PHARMACIES}}" {{ $clinic->type === \App\Enums\TypeBusiness::PHARMACIES ? 'selected' : '' }}>{{\App\Enums\TypeBusiness::PHARMACIES}}</option>
-                                            <option
-                                                value="{{\App\Enums\TypeBusiness::HOSPITALS}}" {{ $clinic->type === \App\Enums\TypeBusiness::HOSPITALS ? 'selected' : '' }}>{{\App\Enums\TypeBusiness::HOSPITALS}}</option>
-                                        </select>
-                                    </div>
+{{--                                <div class="row mb-3">--}}
+{{--                                    <div class="col-md-4">--}}
+{{--                                        <label for="open_date">{{ __('home.open_date') }}</label>--}}
+{{--                                        <input type="datetime-local" class="form-control" id="open_date" name="open_date" required--}}
+{{--                                               value="{{$clinic->open_date}}">--}}
+{{--                                    </div>--}}
+{{--                                    <div class="col-md-4">--}}
+{{--                                        <label for="close_date">{{ __('home.close_date') }}</label>--}}
+{{--                                        <input type="datetime-local" class="form-control" id="close_date" name="close_date"--}}
+{{--                                               value="{{$clinic->close_date}}">--}}
+{{--                                    </div>--}}
+{{--                                    <div class="col-md-4">--}}
+{{--                                        <label for="type">{{ __('home.type') }}</label>--}}
+{{--                                        <select class="form-select" id="type" name="time_work">--}}
+{{--                                            <option--}}
+{{--                                                value="{{\App\Enums\TypeBusiness::CLINICS}}" {{ $clinic->type === \App\Enums\TypeBusiness::CLINICS ? 'selected' : '' }}>{{\App\Enums\TypeBusiness::CLINICS}}</option>--}}
+{{--                                            <option--}}
+{{--                                                value="{{\App\Enums\TypeBusiness::PHARMACIES}}" {{ $clinic->type === \App\Enums\TypeBusiness::PHARMACIES ? 'selected' : '' }}>{{\App\Enums\TypeBusiness::PHARMACIES}}</option>--}}
+{{--                                            <option--}}
+{{--                                                value="{{\App\Enums\TypeBusiness::HOSPITALS}}" {{ $clinic->type === \App\Enums\TypeBusiness::HOSPITALS ? 'selected' : '' }}>{{\App\Enums\TypeBusiness::HOSPITALS}}</option>--}}
+{{--                                        </select>--}}
+{{--                                    </div>--}}
 
                                     <div hidden="">
                                         <label for="combined_address"></label>
@@ -989,37 +989,37 @@
                                                class="form-control">
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-element">
-                                            <input name="emergency" id="emergency" type="checkbox" value="1"
-                                                   @if($clinic->emergency == 1) checked @endif>
-                                            <label for="emergency">{{ __('home.Is there an emergency room') }}?</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-element">
-                                            <input name="insurance" id="insurance" type="checkbox" value="1"
-                                                   @if($clinic->insurance == 1) checked @endif>
-                                            <label for="insurance">{{ __('home.Is health insurance applicable') }}?</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-element">
-                                            <input name="parking" id="parking" type="checkbox" value="1"
-                                                   @if($clinic->parking == 1) checked @endif>
-                                            <label for="parking">{{ __('home.Is there parking') }}?</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-element d-flex">
-                                            <label class="col-6" for="costs">{{ __('home.Medical examination costs') }}?</label>
-                                            <input name="costs" class="form-control col-6" id="costs" type="number" value="{{$clinic->costs}}">
-                                        </div>
-                                    </div>
-                                </div>
+{{--                                <div class="row">--}}
+{{--                                    <div class="col-md-6">--}}
+{{--                                        <div class="form-element">--}}
+{{--                                            <input name="emergency" id="emergency" type="checkbox" value="1"--}}
+{{--                                                   @if($clinic->emergency == 1) checked @endif>--}}
+{{--                                            <label for="emergency">{{ __('home.Is there an emergency room') }}?</label>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="col-md-6">--}}
+{{--                                        <div class="form-element">--}}
+{{--                                            <input name="insurance" id="insurance" type="checkbox" value="1"--}}
+{{--                                                   @if($clinic->insurance == 1) checked @endif>--}}
+{{--                                            <label for="insurance">{{ __('home.Is health insurance applicable') }}?</label>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                                <div class="row">--}}
+{{--                                    <div class="col-md-6">--}}
+{{--                                        <div class="form-element">--}}
+{{--                                            <input name="parking" id="parking" type="checkbox" value="1"--}}
+{{--                                                   @if($clinic->parking == 1) checked @endif>--}}
+{{--                                            <label for="parking">{{ __('home.Is there parking') }}?</label>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="col-md-6">--}}
+{{--                                        <div class="form-element d-flex">--}}
+{{--                                            <label class="col-6" for="costs">{{ __('home.Medical examination costs') }}?</label>--}}
+{{--                                            <input name="costs" class="form-control col-6" id="costs" type="number" value="{{$clinic->costs}}">--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
 
 {{--                                <div class="row">--}}
 {{--                                    <div class="col-md-12">--}}
