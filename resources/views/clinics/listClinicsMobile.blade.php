@@ -141,7 +141,10 @@
         }
         @media (max-width: 767px) {
             .mySwiperMap {
-                margin-top: calc(-100% + 205px);
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+                margin-top: 0!important;
             }
         }
     </style>

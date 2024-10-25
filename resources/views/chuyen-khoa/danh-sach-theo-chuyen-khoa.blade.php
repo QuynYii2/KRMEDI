@@ -115,27 +115,17 @@
                                                 @php
                                                     $galleryArray = explode(',', $clinic->gallery);
                                                 @endphp
-                                                <img class="content__item__image" src="{{ $galleryArray[0] }}" alt=""/>
+                                                <a href="{{ route('home.specialist.detail', $clinic->id) }}">
+                                                    <img class="content__item__image" src="{{ $galleryArray[0] }}" alt=""/>
+                                                </a>
                                                 <button id="showMapBtn" class="search-way" style="border: none"><i class="fa-solid fa-location-arrow"></i>Chỉ đường</button>
-                                                <div class="group-button d-flex flex-column box-desktop-line-address mt-2">
-                                                    <a href="{{ route('home.specialist.booking.detail', $clinic->id) }}"
-                                                       class="item-btn-specialist">
-                                                        <div class="button-booking-specialList line-dk-btn">
-                                                            {{ __('home.Đặt khám') }}
-                                                        </div>
-                                                    </a>
-                                                    <a href="{{ route('home.specialist.detail', $clinic->id) }}"
-                                                       class="item-btn-specialist">
-                                                        <div class="button-detail-specialList">
-                                                            {{ __('home.Xem chi tiết') }}
-                                                        </div>
-                                                    </a>
-                                                </div>
                                             </div>
-                                            <div class="specialList-clinics--main w-100">
-                                                <div class="title-specialList-clinics">
-                                                    {{ $clinic->name }}
-                                                </div>
+                                            <div class="specialList-clinics--main w-100" style="display: flex; flex-direction: column">
+                                                <a href="{{ route('home.specialist.detail', $clinic->id) }}">
+                                                    <div class="title-specialList-clinics" style="font-size: 16px !important;">
+                                                        {{ $clinic->name }}
+                                                    </div>
+                                                </a>
                                                 <div class="address-specialList-clinics d-flex align-items-center">
                                                     @php
                                                         $array = explode(',', $clinic->address);
@@ -154,12 +144,12 @@
                                                     @endphp
                                                     <div class="d-flex align-items-center">
                                                         <i class="fas fa-map-marker-alt mr-2"></i>
-                                                        <div class="text-address m-0">{{ $clinic->address_detail }}
+                                                        <div class="text-address" style="font-size: 14px !important; margin-top: 5px; margin-left: 0">{{ $clinic->address_detail }}
                                                             , {{ $addressC->name ?? '' }} , {{ $addressD->name ?? '' }}
                                                             , {{ $addressP->name ?? '' }}</div>
                                                     </div>
                                                 </div>
-                                                <div class="time-working d-flex justify-content-between mt-2">
+                                                <div class="time-working d-flex justify-content-between mt-2 align-items-center">
                                                 <span class="color-timeWorking">
                                                     <span
                                                         class="fs-14 font-weight-600"><i
@@ -191,6 +181,20 @@
                                                     </a>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="group-button d-flex box-desktop-line-address align-items-center justify-content-center" style="gap: 10px; margin-bottom: 8px">
+                                            <a href="{{ route('home.specialist.booking.detail', $clinic->id) }}"
+                                               class="item-btn-specialist">
+                                                <div class="button-booking-specialList line-dk-btn">
+                                                    {{ __('home.Đặt khám') }}
+                                                </div>
+                                            </a>
+                                            <a href="{{ route('home.specialist.detail', $clinic->id) }}"
+                                               class="item-btn-specialist">
+                                                <div class="button-detail-specialList mt-0">
+                                                    {{ __('home.Xem chi tiết') }}
+                                                </div>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -235,27 +239,18 @@
                                                 @php
                                                     $galleryArray = explode(',', $pharmacy->gallery);
                                                 @endphp
-                                                <img class="content__item__image" src="{{ $galleryArray[0] }}"
-                                                     alt=""/>
+                                                <a href="{{route('home.specialist.detail', $pharmacy->id)}}">
+                                                    <img class="content__item__image" src="{{ $galleryArray[0] }}"
+                                                         alt=""/>
+                                                </a>
                                                 <button id="showMapBtnPharmacy" class="search-way" style="border: none"><i class="fa-solid fa-location-arrow"></i>Chỉ đường</button>
-                                                <div class="group-button d-flex flex-column box-desktop-line-address mt-2">
-                                                    <a href="{{ route('home.specialist.booking.detail', $pharmacy->id) }}" class="item-btn-specialist">
-                                                        <div class="button-booking-specialList line-dk-btn">
-                                                            {{ __('home.Đặt khám') }}
-                                                        </div>
-                                                    </a>
-                                                    <a href="{{route('home.specialist.detail', $pharmacy->id)}}"
-                                                       class="item-btn-specialist">
-                                                        <div class="button-detail-specialList">
-                                                            {{ __('home.Xem chi tiết') }}
-                                                        </div>
-                                                    </a>
-                                                </div>
                                             </div>
-                                            <div class="specialList-clinics--main w-100">
-                                                <div class="title-specialList-clinics">
-                                                    {{ $pharmacy->name }}
-                                                </div>
+                                            <div class="specialList-clinics--main w-100" style="display: flex; flex-direction: column">
+                                                <a href="{{route('home.specialist.detail', $pharmacy->id)}}">
+                                                    <div class="title-specialList-clinics" style="font-size: 16px !important;">
+                                                        {{ $pharmacy->name }}
+                                                    </div>
+                                                </a>
                                                 <div class="address-specialList-clinics d-flex align-items-center">
                                                     <div class="d-flex align-items-center">
                                                         <i class="fas fa-map-marker-alt mr-2"></i>
@@ -274,12 +269,12 @@
                                                                 $array[3] ?? null,
                                                             )->first();
                                                         @endphp
-                                                        <div>{{ $pharmacy->address_detail }}
+                                                        <div class="text-address" style="font-size: 14px !important; margin-top: 5px; margin-left: 0">{{ $pharmacy->address_detail }}
                                                             , {{ $addressC->name ?? '' }} , {{ $addressD->name ?? '' }}
                                                             , {{ $addressP->name ?? '' }}</div>
                                                     </div>
                                                 </div>
-                                                <div class="time-working d-flex justify-content-between mt-2">
+                                                <div class="time-working d-flex justify-content-between mt-2 align-items-center">
                                                 <span class="color-timeWorking">
                                                     <span
                                                         class="fs-14 font-weight-600">{{ \Carbon\Carbon::parse($pharmacy->open_date)->format('H:i') }}
@@ -310,6 +305,19 @@
                                                     </a>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="group-button d-flex box-desktop-line-address justify-content-center"  style="gap: 10px; margin-bottom: 8px">
+                                            <a href="{{ route('home.specialist.booking.detail', $pharmacy->id) }}" class="item-btn-specialist">
+                                                <div class="button-booking-specialList line-dk-btn">
+                                                    {{ __('home.Đặt khám') }}
+                                                </div>
+                                            </a>
+                                            <a href="{{route('home.specialist.detail', $pharmacy->id)}}"
+                                               class="item-btn-specialist">
+                                                <div class="button-detail-specialList mt-0">
+                                                    {{ __('home.Xem chi tiết') }}
+                                                </div>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -380,10 +388,6 @@
                                                         <a class="name-product--fleaMarket name-doctors"
                                                            href="{{ route('examination.doctor_info', $doctor->id) }}">{{$doctor->name}}</a>
                                                     </div>
-                                                    <div
-                                                        class="location-pro box-about-doctor box-about-doctor-specialist">
-                                                        {!! $doctor->abouts !!}
-                                                    </div>
                                                     <div class="price-pro">
                                                         @php
                                                             if ($doctor->province_id == null) {
@@ -426,7 +430,7 @@
                                                                           transform="translate(0.5 0.933594)"/>
                                                                 </clipPath>
                                                             </defs>
-                                                        </svg> &nbsp; {{ $doctor->time_working_1 }}
+                                                        </svg> &nbsp; {{ $doctor->department->name }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -751,6 +755,7 @@
                             title: 'Location'
                         });
                         var urlDetail = "{{ route('home.specialist.booking.detail', ['id' => ':id']) }}".replace(':id', location.id);
+                        var urlDetailClinic = "{{ route('home.specialist.detail', ['id' => ':id']) }}".replace(':id', location.id);
                         let img = '';
                         let gallery = location.gallery;
                         let arrayGallery = gallery.split(',');
@@ -758,12 +763,16 @@
 
                         list_map += `<div class="swiper-slide swiper-slide-height slide_${count_address} bg-white" data-index="${count_address}" ><div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
                 <div class="box-img-item-map">
-                    <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img" style="height: 100%;object-fit: cover;">
+                    <a href=${urlDetailClinic}>
+                        <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img" style="height: 100%;object-fit: cover;">
+                    </a>
                 </div>
                 <div class="p-2 box-info-item-map">
                     <div class="form-group mb-1">
                         <div class="d-flex justify-content-between mt-md-2">
+                        <a href=${urlDetailClinic}>
                             <div class="fs-18px name-address-map">${location.name}</div>
+                        </a>
                         </div>
                         <div class="d-flex mt-md-2">
                             <div class="d-flex col-md-6 justify-content-center align-items-center">
@@ -902,19 +911,23 @@
                             title: 'Location'
                         });
                         var urlDetail = "{{ route('home.specialist.booking.detail', ['id' => ':id']) }}".replace(':id', locationsPharmacies.id);
+                        var urlDetailClinic = "{{ route('home.specialist.detail', ['id' => ':id']) }}".replace(':id', locationsPharmacies.id);
                         let img = '';
                         let gallery = locationsPharmacies.gallery;
                         let arrayGallery = gallery.split(',');
 
                         list_map_pharmacies += `<div class="swiper-slide swiper-slide-height slide_pharmacies_${count_address_pharmacies} bg-white" data-index="${count_address_pharmacies}" ><div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
                 <div class="box-img-item-map">
-                    <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img" style="height: 100%;object-fit: cover;">
+                    <a href=${urlDetailClinic}>
+                        <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img" style="height: 100%;object-fit: cover;">
+                    </a>
                 </div>
                 <div class="p-2 box-info-item-map">
                     <div class="form-group mb-1">
                         <div class="d-flex justify-content-between mt-md-2">
+                        <a href=${urlDetailClinic}>
                             <div class="fs-18px name-address-map">${locationsPharmacies.name}</div>
-
+                        </a>
                         </div>
                         <div class="d-flex mt-md-2">
                             <div class="d-flex col-md-6 justify-content-center align-items-center">
