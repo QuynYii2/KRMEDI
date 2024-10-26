@@ -1389,7 +1389,7 @@
 {{--                                                                @endif--}}
 {{--                                                            </div>--}}
 {{--                                                        </a>--}}
-                                                        <div class="price-pro">
+                                                        <div class="price-pro" style="display: flex; align-items: center">
                                                             @php
                                                                 if ($doctor->province_id == null) {
                                                                     $addressP = 'Ha Noi';
@@ -1421,7 +1421,7 @@
                                                             </svg> &nbsp;
                                                             {{$addressP}}
                                                         </div>
-                                                        <div class="price-pro" style="text-wrap: nowrap; overflow: hidden">
+                                                        <div class="price-pro" style="text-wrap: nowrap; overflow: hidden; display: flex; align-items: center">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="21"
                                                                  height="21" viewBox="0 0 21 21" fill="none">
                                                                 <g clip-path="url(#clip0_5506_14923)">
