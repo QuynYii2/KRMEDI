@@ -98,7 +98,7 @@
 
 <div class="background-image_Clinics mb-3 d-none d-sm-flex">
     <div class="container">
-        <div class=" justify-content-center align-items-center mb-5 d-none d-sm-flex">
+        <div class=" justify-content-center align-items-center mb-3 d-none d-sm-flex">
             <div class="title-list-clinic">{{ __('home.Y tế gần bạn') }}</div>
         </div>
         <div class=" medicine-search d-block d-sm-none">
