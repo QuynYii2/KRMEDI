@@ -1354,7 +1354,7 @@
                                         }
                                         $class = !$isFavourite ? 'bi-heart' : 'bi-heart-fill text-danger';
                                     @endphp
-                                    <div class="col-lg-2 col-md-3 col-4" style="padding: 0 5px !important;">
+                                    <div class="col-lg-2 col-md-3 col-sm-4 col-6" style="padding: 0 5px !important;">
                                         <div class="">
                                             <div class="product-item" style="margin-bottom: 15px">
                                                 <div style="height: 200px"
@@ -1389,7 +1389,7 @@
 {{--                                                                @endif--}}
 {{--                                                            </div>--}}
 {{--                                                        </a>--}}
-                                                        <div class="price-pro">
+                                                        <div class="price-pro" style="display: flex; align-items: center">
                                                             @php
                                                                 if ($doctor->province_id == null) {
                                                                     $addressP = 'Ha Noi';
@@ -1421,7 +1421,7 @@
                                                             </svg> &nbsp;
                                                             {{$addressP}}
                                                         </div>
-                                                        <div class="price-pro" style="text-wrap: nowrap; overflow: hidden">
+                                                        <div class="price-pro" style="text-wrap: nowrap; overflow: hidden; display: flex; align-items: center">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="21"
                                                                  height="21" viewBox="0 0 21 21" fill="none">
                                                                 <g clip-path="url(#clip0_5506_14923)">
@@ -1558,7 +1558,7 @@
                                     $class = !$isFavourite ? 'bi-heart' : 'bi-heart-fill text-danger';
                                             $isSoldOut = $product->quantity == 0;
                                 @endphp
-                                <div class="col-lg-2 col-md-3 col-4">
+                                <div class="col-lg-2 col-md-3 col-sm-4 col-6">
                                     <div class="">
                                         <div
                                             class="product-item {{ $isSoldOut ? 'sold-out-overlay' : '' }} krm-hover-buy-online">
