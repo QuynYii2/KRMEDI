@@ -129,11 +129,11 @@
             <p style="color: red;text-align: center;margin:30px 0;display: none" class="text-not-address w-100">Không có phòng khám nào như bạn cần tìm quanh bạn</p>
             <div class="box-list-clinic-address">
                 <div class="body row box-productInformation-clinic" id="productInformation"></div>
-                <div class="box-content-map">
+                <div class="box-content-map" style="position: relative">
                     <div id="allAddressesMap" class="show active fade map_clinic_desktop w-100" style="height: 800px;">
 
                     </div>
-                    <div class="swiper mySwiperMap">
+                    <div class="swiper mySwiperMap" style="position: absolute; width: 100%; bottom: 0">
                         <div class="swiper-wrapper data-map">
 
                         </div>
