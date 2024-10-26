@@ -65,7 +65,7 @@
 }
 .container .danh-sach-theo-chuyen-khoa .title-Danh-sach {
   color: #000;
-  font-size: 24px;
+  font-size: 20px;
   font-style: normal;
   font-weight: 800;
   line-height: normal;
@@ -256,7 +256,6 @@
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-  min-height: 85px;
 }
 .container .danh-sach-theo-chuyen-khoa .product-item .content-pro .price-pro {
   color: var(--White, #FFF);

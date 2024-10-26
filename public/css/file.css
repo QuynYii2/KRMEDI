@@ -1071,7 +1071,7 @@ section {
   }
   #show_inf #inf-doctor #img_info #qr_code p {
     color: #000;
-    font-size: 32px;
+    font-size: 20px;
     font-weight: 800;
   }
   #show_inf #inf-doctor #about {
@@ -1079,7 +1079,7 @@ section {
     margin-left: 15px;
   }
   #show_inf #inf-doctor #about h5 {
-    font-size: 48px;
+    font-size: 20px;
     font-weight: 800;
   }
   #show_inf #inf-doctor #about .dess {
@@ -1088,12 +1088,12 @@ section {
   }
   #show_inf #inf-doctor #about .dess p {
     color: #929292;
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 400;
   }
   #show_inf #inf-doctor #about .dess span {
     color: #000;
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 800;
     margin-left: 10px;
   }

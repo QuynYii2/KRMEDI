@@ -372,7 +372,7 @@
                             <img src="{{asset('img/icon-filter.png')}}" alt="">
                         </button>
                     </div>
-                    <div class="row">
+                    <div class="row doctor-mb">
                         @if(count($doctorsSpecial)>0)
                         @foreach ($doctorsSpecial as $doctor)
                             @if ($doctor == '')

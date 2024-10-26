@@ -37,11 +37,11 @@
     font-size: 18px;
 }
 .container .danh-sach-theo-chuyen-khoa .nav-item .nav-link.active{
-    font-size: 20px!important;
-    padding: 4px 12px!important;
+    font-size: 18px!important;
+    padding: 4px 25px!important;
 }
 .container .danh-sach-theo-chuyen-khoa .nav-item .nav-link{
-    padding: 4px 12px!important;
+    padding: 4px 25px!important;
 }
 #chat-widget-all-online,#chat-widget-connected{
     font-size: 14px!important;
@@ -92,8 +92,11 @@
     color: #0070E0;
 }
 .box-about-doctor-specialist{
-    min-height: 72px;
-    max-height: 72px;
+    display: -webkit-box!important;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .box-list-clinic-address{
     display: flex;
@@ -209,6 +212,9 @@
 #listWishList .col-xl-3,#content-medicine .col-6,#productsAdsPlan1 .col-6,#productsAdsPlan2 .col-6,#productsAdsPlan3 .col-6 {
     padding: 0 5px!important;
 }
+.doctor-mb .col-6{
+    padding: 0 8px!important;
+}
 .header .header-detail--left .back h5,.list-doctor .card-body .card-title{
     font-size: 16px;
 }
@@ -229,6 +235,10 @@
 }
 #content-medicine .col-md-4{
     padding: 0px;
+}
+#qrContent svg{
+    width: 200px;
+    height: 200px;
 }
 @media (max-width: 1400px) {
     .header .header-detail--left .back h5 {
@@ -728,10 +738,6 @@
     .container .danh-sach-theo-chuyen-khoa .nav-item .nav-link.active{
         padding: 12px 16px!important;
     }
-    .box-about-doctor-specialist{
-        min-height: 63px;
-        max-height: 63px;
-    }
     .background-image_Clinics{
         margin-top: 70px!important;
     }
@@ -820,7 +826,7 @@
     }
 
     .container .titleServiceHomeNew, .title-clinics h2, .container #recruitment-homeNew .title-recruitment--homeNew .krm-title-recruitment {
-        font-size: 20px !important;
+        font-size: 16px !important;
     }
 
     .header-center a, .container .mainServiceHomeNew span, .container #recruitment-homeNew .title-recruitment--homeNew a,
