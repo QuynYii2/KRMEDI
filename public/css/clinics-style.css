@@ -12,7 +12,7 @@
 }
 .background-image_Clinics .container .title-list-clinic {
   color: #FFF;
-  font-size: 48px;
+  font-size: 32px;
   font-style: normal;
   font-weight: 800;
   line-height: normal;
@@ -23,7 +23,7 @@
   border-radius: 16px;
   background: #EBB700;
   display: flex;
-  padding: 40px;
+  padding: 30px;
   flex-direction: column;
   align-items: flex-start;
   gap: 16px;
