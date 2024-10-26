@@ -521,7 +521,10 @@
 }
 .product-item .content-pro .location-pro {
   margin: 5px 0;
-  font-size: 16px;
+  font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 0;
 }
 .product-item .content-pro .location-pro p {
   margin-left: 5px;

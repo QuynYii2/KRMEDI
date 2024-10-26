@@ -91,7 +91,7 @@ p {
 
     .name-product {
         color: black;
-        font-weight: 800;
+        font-weight: 700;
         -webkit-line-clamp: 3;
         display: -webkit-box;
         -webkit-box-orient: vertical;
@@ -779,9 +779,9 @@ input[type="range"]::-moz-range-thumb {
 
     .location-pro {
         color: #FFFFFF;
-        font-size: 16px;
+        font-size: 14px;
         font-style: normal;
-        font-weight: 800;
+        font-weight: 700;
         line-height: normal;
     }
 
@@ -789,7 +789,7 @@ input[type="range"]::-moz-range-thumb {
         color: #FFFFFF;
         //font-size: 24px;
         font-style: normal;
-        font-weight: 800;
+        font-weight: 700;
         line-height: normal;
     }
 
@@ -805,9 +805,9 @@ input[type="range"]::-moz-range-thumb {
         border: 0;
         a{
             color: var(--Black, #000);
-            font-size: 16px;
+            font-size: 12px;
             font-style: normal;
-            font-weight: 800;
+            font-weight: 700;
             line-height: normal;
         }
     }
@@ -825,9 +825,9 @@ input[type="range"]::-moz-range-thumb {
         .name-product {
             a {
                 color: #FFFFFF;
-                font-size: 18px;
+                font-size: 16px;
                 font-style: normal;
-                font-weight: 800;
+                font-weight: 700;
                 line-height: normal;
                 min-height: 50px;
             }

@@ -705,7 +705,8 @@ input[type=range]::-moz-range-thumb {
 }
 .product-item .SeeDetail {
   display: flex;
-  padding: 10px 14px;
+    margin-top: 5px;
+  padding: 6px 16px;
   justify-content: center;
   align-items: center;
   gap: 10px;
@@ -716,9 +717,9 @@ input[type=range]::-moz-range-thumb {
 }
 .product-item .SeeDetail a {
   color: var(--Black, #000);
-  font-size: 16px;
+  font-size: 12px;
   font-style: normal;
-  font-weight: 800;
+  font-weight: 700;
   line-height: normal;
 }
 .product-item .img_product--homeNew img {
@@ -730,7 +731,7 @@ input[type=range]::-moz-range-thumb {
   color: #FFFFFF;
   font-size: 16px;
   font-style: normal;
-  font-weight: 800;
+  font-weight: 700;
   line-height: normal;
 }
 

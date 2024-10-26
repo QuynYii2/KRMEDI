@@ -82,10 +82,12 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
-            height: 70px;
+            height: 60px;
+            margin-bottom: 5px;
         }
 
         .max-3-line-content-home {
+            text-wrap: nowrap;
             display: -webkit-box;
             -webkit-line-clamp: 1;
             -webkit-box-orient: vertical;
@@ -115,8 +117,11 @@
         .sold-out-overlay .sold-out-overlay-text {
             position: absolute;
             color: black;
-            top: 50%;
+            top: 40%;
             display: block;
+            .sold-out{
+                font-size: 30px;
+            }
         }
 
         .prev {
@@ -1325,7 +1330,7 @@
                 <div class="title-findDoctor--homeNew d-md-flex justify-content-center">
                     <div class="text-center krm-tieuDe-findDoctor">{{ __('home.Find a doctor') }}</div>
                 </div>
-                <div class="tab-content py-4" id="myTabContent">
+                <div class="tab-content py-4" id="myTabContent" style="margin-bottom: 10px">
                     <div class="tab-pane fade show active" id="available" role="tabpanel"
                          aria-labelledby="available-tab">
                         @php
@@ -1349,10 +1354,10 @@
                                         }
                                         $class = !$isFavourite ? 'bi-heart' : 'bi-heart-fill text-danger';
                                     @endphp
-                                    <div class="col-lg-3 col-md-4 col-6">
+                                    <div class="col-lg-2 col-md-3 col-4" style="padding: 0 5px !important;">
                                         <div class="">
-                                            <div class="product-item">
-                                                <div style="min-height: 170px"
+                                            <div class="product-item" style="margin-bottom: 15px">
+                                                <div style="height: 200px"
                                                      class="img-pro justify-content-center d-flex">
                                                     <a href="{{ route('examination.doctor_info', $doctor->id) }}" class="d-inline-block w-100">
                                                         <img loading="lazy" src="{{$doctor->avt}}" alt="">
@@ -1369,7 +1374,7 @@
                                                         <img loading="lazy" src="{{$department}}">
                                                     </s>
                                                 </div>
-                                                <div class="content-pro p-md-3 p-2">
+                                                <div class="content-pro p-md-2 p-2">
                                                     <div class="">
                                                         <div class="name-product" style="height: auto">
                                                             <a class="max-3-line-content-home"
@@ -1416,7 +1421,7 @@
                                                             </svg> &nbsp;
                                                             {{$addressP}}
                                                         </div>
-                                                        <div class="price-pro">
+                                                        <div class="price-pro" style="text-wrap: nowrap; overflow: hidden">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="21"
                                                                  height="21" viewBox="0 0 21 21" fill="none">
                                                                 <g clip-path="url(#clip0_5506_14923)">
@@ -1553,7 +1558,7 @@
                                     $class = !$isFavourite ? 'bi-heart' : 'bi-heart-fill text-danger';
                                             $isSoldOut = $product->quantity == 0;
                                 @endphp
-                                <div class="col-lg-3 col-md-4 col-6">
+                                <div class="col-lg-2 col-md-3 col-4">
                                     <div class="">
                                         <div
                                             class="product-item {{ $isSoldOut ? 'sold-out-overlay' : '' }} krm-hover-buy-online">
@@ -1569,7 +1574,7 @@
                                                     <h1 class="sold-out">{{__('home.Sold Out')}}</h1>
                                                 </div>
                                             </div>
-                                            <div class="content-pro p-md-3 p-2">
+                                            <div class="content-pro p-md-2 p-2">
                                                 <div class="">
                                                     <div class="name-product" style="height: auto">
                                                         <a class="name-product--fleaMarket max-3-line-content"
@@ -1600,7 +1605,7 @@
                                                             </defs>
                                                         </svg> &nbsp; {{$addressP}}
                                                     </div>
-                                                    <div class="prices-pro">
+                                                    <div class="prices-pro"  style="font-size: 14px;">
                                                         {{number_format($product->price, 0, ',', '.') }} {{$product->price_unit ?? 'VND'}}
                                                     </div>
                                                 </div>
