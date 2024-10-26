@@ -1683,7 +1683,7 @@
         <div class="container">
             <div id="map-location" class="pb-5 d-flex justify-content-center">
                 <div class="content-item  justify-content-center w-100">
-                    <div class="title-clinics">
+                    <div class="title-clinics w-100">
                         <h2>{{ __('home.Clinics/Pharmacies') }}</h2>
                         <p>{{ __('home.Find your suitable clinics/pharmacies and book now') }}!</p>
                     </div>
