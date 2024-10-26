@@ -41,7 +41,7 @@
             <a href="{{route('medicine')}}" class="recruitment-details--title"><i class="fa-solid fa-arrow-left"></i>
                 {{ __('home.Product details') }}</a>
             <div class="row recruitment-details--content">
-                <div class="col-md-5 recruitment-details ">
+                <div class="col-lg-5 col-md-6 recruitment-details ">
                     @if(!empty($medicine->thumbnail))
                         <div
                             class="d-flex justify-content-center border-radius-1px color-Grey-Dark col-10 col-md-12 p-0">
@@ -68,7 +68,7 @@
                         @endforeach
                     </div>
                 </div>
-                <div class="col-md-7 recruitment-details--content--right">
+                <div class="col-lg-7 col-md-6 recruitment-details--content--right">
                     <div class="product-details">
                         <div class="body">
                             <p class="text-wrapper">
