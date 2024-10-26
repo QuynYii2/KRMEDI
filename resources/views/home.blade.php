@@ -1354,7 +1354,7 @@
                                         }
                                         $class = !$isFavourite ? 'bi-heart' : 'bi-heart-fill text-danger';
                                     @endphp
-                                    <div class="col-lg-2 col-md-3 col-4" style="padding: 0 5px !important;">
+                                    <div class="col-lg-2 col-md-3 col-sm-4 col-6" style="padding: 0 5px !important;">
                                         <div class="">
                                             <div class="product-item" style="margin-bottom: 15px">
                                                 <div style="height: 200px"
@@ -1558,7 +1558,7 @@
                                     $class = !$isFavourite ? 'bi-heart' : 'bi-heart-fill text-danger';
                                             $isSoldOut = $product->quantity == 0;
                                 @endphp
-                                <div class="col-lg-2 col-md-3 col-4">
+                                <div class="col-lg-2 col-md-3 col-sm-4 col-6">
                                     <div class="">
                                         <div
                                             class="product-item {{ $isSoldOut ? 'sold-out-overlay' : '' }} krm-hover-buy-online">
