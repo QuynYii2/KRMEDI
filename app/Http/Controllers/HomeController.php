@@ -69,7 +69,7 @@ class HomeController extends Controller
         $products = ProductMedicine::where('status', OnlineMedicineStatus::APPROVED)->orderBy(
             'id',
             'desc'
-        )->paginate(4);
+        )->paginate(6);
         $productsFlea = ProductInfo::where('status', ProductStatus::ACTIVE)->get();
         $medicines = ProductMedicine::where('product_medicines.status', OnlineMedicineStatus::APPROVED)
             ->leftJoin('users', 'product_medicines.user_id', '=', 'users.id')

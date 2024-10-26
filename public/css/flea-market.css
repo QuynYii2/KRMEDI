@@ -709,18 +709,19 @@ input[type=range]::-moz-range-thumb {
 }
 .product-item .SeeDetail {
   display: flex;
-  padding: 16px 16px;
+    margin-top: 5px;
+  padding: 6px 16px;
   justify-content: center;
   align-items: center;
   gap: 10px;
   border-radius: 86px 0 36px 0;
-  width: 70%;
+  width: 60%;
   background: #FFFFFF;
   border: 0;
 }
 .product-item .SeeDetail a {
   color: var(--Black, #000);
-  font-size: 16px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 800;
   line-height: normal;
