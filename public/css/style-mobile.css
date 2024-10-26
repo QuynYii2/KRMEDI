@@ -58,7 +58,7 @@
 }
 .title-specialList-clinics{
     -webkit-line-clamp:2!important;
-    font-size: 18px!important;
+    font-size: 16px!important;
 }
 .header-mobile-clinics{
     display: none;
@@ -71,13 +71,13 @@
     margin: 0 10px;
 }
 .clinicDistanceSpan{
-    font-size: 16px;
+    font-size: 14px;
 }
 .address-specialList-clinics{
     font-size: 16px!important;
 }
 .time-working{
-    font-size: 14px!important;
+    font-size: 12px!important;
     margin-top: 5px;
 }
 .search-way{
@@ -135,7 +135,7 @@
     margin-right: 10px;
 }
 .address-clinics,.distance{
-    font-size: 15px!important;
+    font-size: 12px!important;
 }
  .button-booking-specialList {
     display: flex;
@@ -479,8 +479,8 @@
         color: white;
     }
 
-    .krm-title-footer, .product-item .content-pro .price-pro, .container .name,.text-title-satisfied,.title-specialList-clinics {
-        font-size: 18px !important;
+    .krm-title-footer, .product-item .content-pro .price-pro, .container .name,.text-title-satisfied, .title-specialList-clinics {
+        font-size: 16px !important;
     }
 
     button.krm-button-submit {

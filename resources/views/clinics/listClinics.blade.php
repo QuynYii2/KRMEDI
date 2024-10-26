@@ -121,7 +121,7 @@
         <div class="clinics-list">
             <div class="clinics-header row">
                 <div class=" d-flex justify-content-between">
-                    <span class="fs-32px text-phong-mall">Phòng khám gần bạn</span>
+                    <span class="fs-24px text-phong-mall" style="font-weight: 800">Phòng khám gần bạn</span>
                     <span>
                     </span>
                 </div>
@@ -129,11 +129,11 @@
             <p style="color: red;text-align: center;margin:30px 0;display: none" class="text-not-address w-100">Không có phòng khám nào như bạn cần tìm quanh bạn</p>
             <div class="box-list-clinic-address">
                 <div class="body row box-productInformation-clinic" id="productInformation"></div>
-                <div class="box-content-map">
+                <div class="box-content-map" style="position: relative">
                     <div id="allAddressesMap" class="show active fade map_clinic_desktop w-100" style="height: 800px;">
 
                     </div>
-                    <div class="swiper mySwiperMap">
+                    <div class="swiper mySwiperMap" style="position: absolute; width: 100%; bottom: 0">
                         <div class="swiper-wrapper data-map">
 
                         </div>
@@ -486,13 +486,13 @@
                     <div class="address-specialList-clinics">
                         <div class="d-flex align-items-center address-clinics">
                             <i class="fas fa-map-marker-alt mr-2"></i>
-                            <div style="-webkit-line-clamp: 3!important; font-size: 14px; margin-top: 5px">${item.address_detail} ${item.addressInfo}</div>
+                            <div style="-webkit-line-clamp: 3!important; font-size: 12px; margin-top: 5px">${item.address_detail} ${item.addressInfo}</div>
                                             </div>
                                         </div>
                                         <div class="d-flex justify-content-between align-items-center flex-wrap">
-                                            <div class="time-working w-100 d-flex justify-content-between">
+                                            <div class="time-working w-100 d-flex justify-content-between" style="font-size: 12px !important">
                                                 <span class="color-timeWorking">
-                                                    <span class="fs-14 font-weight-600"><i class="fa-regular fa-clock"></i> ${formattedOpenDate} - ${formattedCloseDate}</span>
+                                                    <span class="fs-12 font-weight-600"><i class="fa-regular fa-clock"></i> ${formattedOpenDate} - ${formattedCloseDate}</span>
                                                 </span>
                                                 <span class="distance"><i class="fas fa-map-marker-alt mr-2"></i>${distance.toFixed(2).replace('.', ',')} Km</span>
                                             </div>

@@ -63,8 +63,8 @@
     width: 100%;
   }
   .container .krm-tieuDe-findDoctor {
-    width: 430px;
-    font-size: 24px;
+    width: 350px;
+    font-size: 22px;
   }
 }
 @media all {
@@ -296,9 +296,9 @@
   }
   .container #myTabContent .product-item .content-pro .price-pro {
     color: var(--White, #FFF);
-    font-size: 16px;
+    font-size: 14px;
     font-style: normal;
-    font-weight: 800;
+    font-weight: 700;
     line-height: normal;
   }
   .container #myTabContent .product-item:hover {
@@ -576,7 +576,7 @@
   .container .item-information #myTabContent .product-item .content-pro .name-product a, .container #find-doctor--homeNew #myTabContent .product-item .content-pro .name-product a {
     color: var(--White, #FFF);
     font-style: normal;
-    font-weight: 800;
+    font-weight: 700;
     line-height: normal;
   }
   .container .item-information .nav-header--homeNew ul.nav-fill li.nav-item a.nav-link, .container #find-doctor--homeNew .nav-header--homeNew ul.nav-fill li.nav-item a.nav-link {
@@ -621,7 +621,7 @@
     color: white;
     border-radius: 0 0 120px 120px;
       padding: 8px 0 !important;
-      font-size: 22px
+      font-size: 20px
   }
   .container .titleServiceHomeNew {
     color: #000;

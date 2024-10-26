@@ -144,7 +144,7 @@
                                                     @endphp
                                                     <div class="d-flex align-items-center">
                                                         <i class="fas fa-map-marker-alt mr-2"></i>
-                                                        <div class="text-address" style="font-size: 14px !important; margin-top: 5px; margin-left: 0">{{ $clinic->address_detail }}
+                                                        <div class="text-address" style="font-size: 12px !important; margin-top: 5px; margin-left: 0">{{ $clinic->address_detail }}
                                                             , {{ $addressC->name ?? '' }} , {{ $addressD->name ?? '' }}
                                                             , {{ $addressP->name ?? '' }}</div>
                                                     </div>
@@ -269,7 +269,7 @@
                                                                 $array[3] ?? null,
                                                             )->first();
                                                         @endphp
-                                                        <div class="text-address" style="font-size: 14px !important; margin-top: 5px; margin-left: 0">{{ $pharmacy->address_detail }}
+                                                        <div class="text-address" style="font-size: 12px !important; margin-top: 5px; margin-left: 0">{{ $pharmacy->address_detail }}
                                                             , {{ $addressC->name ?? '' }} , {{ $addressD->name ?? '' }}
                                                             , {{ $addressP->name ?? '' }}</div>
                                                     </div>
