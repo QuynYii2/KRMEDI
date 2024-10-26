@@ -121,7 +121,7 @@
         <div class="clinics-list">
             <div class="clinics-header row">
                 <div class=" d-flex justify-content-between">
-                    <span class="fs-24px text-phong-mall">Phòng khám gần bạn</span>
+                    <span class="fs-24px text-phong-mall" style="font-weight: 800">Phòng khám gần bạn</span>
                     <span>
                     </span>
                 </div>
