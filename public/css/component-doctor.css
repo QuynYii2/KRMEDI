@@ -89,7 +89,7 @@
 }
 
 .find-my-medicine .frame .frame-wrapper-heart i {
-  font-size: 24px;
+  font-size: 19px;
   height: 100%;
 }
 
@@ -182,10 +182,10 @@
   .serviceDoctor div, p, h2, h1, h3, h4, h5, h6, span, strong, small,
   li, ul, ol, button, td, th, form, fieldset, legend, textarea, select,
   option, label, table, blockquote, pre {
-    font-size: 18px;
+    font-size: 16px;
   }
   .find-my-medicine .frame .text-wrapper, .text-wrapper-2, .text-wrapper-3 {
-    font-size: 18px;
+    font-size: 16px;
   }
   .div-2 img {
     width: 20px;

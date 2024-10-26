@@ -40,7 +40,7 @@
     @include('component.banner')
 
     <div class="container">
-        <h2 class="text-center" >Chức năng đang phát triển</h2>
+        <h2 class="text-center development_function" >Chức năng đang phát triển</h2>
     </div>
 
 

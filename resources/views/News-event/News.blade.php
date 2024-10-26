@@ -167,7 +167,7 @@
                     <p class="text-content-product">{{ __('home.All Event') }}</p>
                 </div>
                 <div class="d-flex justify-content-center">
-                    <h3>{{ __('home.Không có sự kiện nào') }}</h3>
+                    <h3 class="no_event">{{ __('home.Không có sự kiện nào') }}</h3>
                 </div>
             @endif
         </div>

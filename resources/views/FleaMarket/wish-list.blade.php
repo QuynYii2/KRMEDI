@@ -14,9 +14,8 @@
         }
     </style>
     <div class="container mt-70 box-wish-list">
-        <div class="pc-hidden">@include('What-free.header-wFree')</div>
-        <div class="d-flex mt-88">
-            <div class="col-md-3  mobile-hidden">
+        <div class="d-flex mt-88 flex-wrap">
+            <div class="col-md-4 col-lg-3 mb-4">
                 <div class="border-radius ">
                     <div class="flea-text">{{ __('home.Filter') }}</div>
                     @foreach($categoryProduct as $category)
@@ -67,7 +66,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="mt-100">
+                <div class="mt-100 mobile-hidden">
                     <div class=" w-100 row align-items-center justify-content-center">
                         <div class="p-0">
                             <img loading="lazy" src="{{asset('img/image 16.png')}}" alt="">
@@ -75,7 +74,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-9 medicine-list--item">
+            <div class="col-md-8 col-lg-9 medicine-list--item">
                 <div class="page row" id="listWishList">
                 </div>
             </div>
@@ -225,7 +224,7 @@
                 let product = res[i];
                 let url = `{{ route('flea.market.product.detail', ['id' => ':id']) }}`.replace(':id', product.id);
                 html += `
-                        <div class="col-xl-3 col-md-4 col-6">
+                        <div class="col-xl-3 col-md-6 col-6">
                             <div class="product-item">
                                 <div class="img-pro">
                                     <img loading="lazy" class="b-radius-8px" src="${product.thumbnail}" alt="">

@@ -8,7 +8,7 @@
 @section('content')
     <style>
         .list-title .list--doctor p{
-            font-size: 28px;
+            font-size: 18px;
         }
         @media (max-width: 575px) {
             h3.no-data.text-center {

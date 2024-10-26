@@ -1,11 +1,13 @@
 .input-quantity {
-  font-size: 24px;
+  font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 3px;
+    text-align: center;
+    width: 15%!important;
 }
 
 .header .header-detail {
-  height: 100px;
+  height: 80px;
   align-items: center;
 }
 .header .header-detail--left {
@@ -67,7 +69,7 @@
 }
 
 .banner {
-  margin-top: 100px;
+  margin-top: 80px;
   margin-bottom: 40px;
 }
 .banner img {
@@ -102,7 +104,7 @@
 }
 
 .recruitment-details--title {
-  font-size: 32px;
+  font-size: 20px;
   font-weight: 800;
   margin-top: 20px;
   color: black;
@@ -444,7 +446,7 @@
   border: none;
 }
 .medicine-search--center .shopping-bag .fa-bag-shopping {
-  font-size: 32px;
+  font-size: 26px;
 }
 .medicine-search--center .text-wrapper {
   position: absolute;
@@ -460,7 +462,7 @@
   text-align: center;
 }
 .medicine-search--right .div-wrapper {
-  height: 48px;
+  padding: 10px;
   background: rgb(66, 66, 66);
   border-radius: 8px;
   display: flex;
@@ -497,7 +499,7 @@
   object-fit: cover;
 }
 .product-item .img-pro i {
-  font-size: 24px;
+  font-size: 19px;
   position: absolute;
   top: 0;
   right: 0;
@@ -506,11 +508,11 @@
   color: rgb(255, 0, 0);
 }
 .product-item .content-pro {
-  padding: 0 10px;
+  padding: 0 10px 10px 10px;
 }
 .product-item .content-pro .name-pro a {
   color: #ffffff;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 800;
   -webkit-line-clamp: 1;
   display: -webkit-box;
@@ -530,7 +532,7 @@
   color: #FFFFFF;
 }
 .product-item .content-pro .price-pro {
-  font-size: 24px;
+  font-size: 16px;
   font-weight: 800;
   color: #FFFFFF;
 }

@@ -62,7 +62,7 @@
                                             <div class="col-md-4 p-0 content__item__image">
                                                 <img class="content__item__image" src="{{$item->thumbnail}}">
                                             </div>
-                                            <div class="col-md-8 pr-0">
+                                            <div class="col-md-8 pr-0 pl-0">
 
                                                 <strong class="fs-16px max-2-line-title">
                                                     @if(locationHelper() == 'vi')

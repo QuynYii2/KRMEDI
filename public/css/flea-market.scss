@@ -208,7 +208,7 @@ p {
 
 .flea-button {
     display: flex;
-    padding: 8px;
+    padding: 10px;
     justify-content: center;
     align-items: center;
     gap: 10px;
@@ -217,12 +217,10 @@ p {
     max-width: 120px;
     color: var(--White, #FFF);
     text-align: center;
-    font-size: 16px;
+    font-size: 14px;
     font-style: normal;
     font-weight: 600;
     line-height: normal;
-    max-height: 52px;
-    height: 52px;
 }
 
 .border-radius-1px {
@@ -327,7 +325,7 @@ p {
 
 .flea-prise {
     color: #000000;
-    font-size: 24px;
+    font-size: 16px;
     font-style: normal;
     font-weight: 800;
     line-height: normal;
@@ -355,7 +353,7 @@ p {
 
 .text-content-product {
     color: #000;
-    font-size: 32px;
+    font-size: 18px;
     font-style: normal;
     font-weight: 800;
     line-height: normal;
@@ -383,7 +381,7 @@ p {
 
 
 header h2 {
-    font-size: 24px;
+    font-size: 16px;
     font-weight: 600;
 }
 
@@ -401,7 +399,6 @@ header p {
 .price-input .field {
     display: flex;
     width: 100%;
-    height: 45px;
     align-items: center;
 }
 
@@ -409,8 +406,7 @@ header p {
     width: 100%;
     height: 100%;
     outline: none;
-    font-size: 19px;
-    margin-left: 12px;
+    font-size: 16px;
     border-radius: 5px;
     text-align: center;
     border: 1px solid #999;

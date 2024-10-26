@@ -43,7 +43,7 @@
             justify-content: center;
             align-items: center;
             border-radius: 8px;
-            height: 48px;
+            padding: 10px;
             width: 270px;
             color: #f7f7f7;
             border: none;
@@ -136,7 +136,7 @@
         </div>
 
         <div class="medicine-list row">
-            <div class="col-md-3 medicine-list--filter d-none d-sm-block">
+            <div class="col-lg-3 col-md-4 medicine-list--filter d-none d-sm-block">
                 <div class="filter">
                     <div class="filter-header d-flex justify-content-between">
                         <div class="text-wrapper">{{ __('home.Filter') }}</div>
@@ -228,15 +228,15 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-9 medicine-list--item">
+            <div class="col-lg-9 col-md-8 medicine-list--item">
                 <div class="page row" id="content-medicine">
                     @foreach($medicines as $medicine)
-                        <div class="col-md-4 col-6 col-sm-4 col-xl-3 d-none d-sm-block">
+                        <div class="col-md-6 col-6 col-sm-4 col-xl-3 d-none d-sm-block">
                             @include('component.products')
                         </div>
                     @endforeach
                     @foreach($medicine10 as $medicine)
-                        <div class="col-md-4 col-6 col-sm-4 col-xl-3 d-block d-sm-none">
+                        <div class="col-md-6 col-6 col-sm-4 col-xl-3 d-block d-sm-none">
                             @include('component.products')
                         </div>
                     @endforeach

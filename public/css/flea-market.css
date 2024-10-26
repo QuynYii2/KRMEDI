@@ -68,7 +68,7 @@ p {
 }
 .container .name {
   color: var(--Black, #1A202C);
-  font-size: 48px;
+  font-size: 20px;
   font-style: normal;
   font-weight: 800;
   line-height: normal;
@@ -76,14 +76,14 @@ p {
 }
 .container .hanoi {
   color: var(--Black, #1A202C);
-  font-size: 24px;
+  font-size: 20px;
   font-style: normal;
   font-weight: 800;
   line-height: normal;
 }
 .container .location-info {
   color: var(--Grey-Dark, #929292);
-  font-size: 24px;
+  font-size: 20px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
@@ -160,7 +160,7 @@ p {
 
 .flea-button {
   display: flex;
-  padding: 8px;
+  padding: 10px;
   justify-content: center;
   align-items: center;
   gap: 10px;
@@ -169,12 +169,10 @@ p {
   max-width: 120px;
   color: var(--White, #FFF);
   text-align: center;
-  font-size: 16px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-  max-height: 52px;
-  height: 52px;
 }
 
 .border-radius-1px {
@@ -276,7 +274,7 @@ p {
 
 .flea-prise {
   color: #000000;
-  font-size: 24px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 800;
   line-height: normal;
@@ -302,7 +300,7 @@ p {
 
 .text-content-product {
   color: #000;
-  font-size: 32px;
+  font-size: 18px;
   font-style: normal;
   font-weight: 800;
   line-height: normal;
@@ -328,7 +326,7 @@ p {
 }
 
 header h2 {
-  font-size: 24px;
+  font-size: 16px;
   font-weight: 600;
 }
 
@@ -346,7 +344,6 @@ header p {
 .price-input .field {
   display: flex;
   width: 100%;
-  height: 45px;
   align-items: center;
 }
 
@@ -354,8 +351,7 @@ header p {
   width: 100%;
   height: 100%;
   outline: none;
-  font-size: 19px;
-  margin-left: 12px;
+  font-size: 16px;
   border-radius: 5px;
   text-align: center;
   border: 1px solid #999;
@@ -469,9 +465,10 @@ input[type=range]::-moz-range-thumb {
   background: var(--Grey-Light, #D6D6D6);
   display: flex;
   width: 100%;
-  height: 56px;
+  padding: 10px;
   justify-content: center;
   align-items: center;
+    font-size: 14px;
 }
 
 .b-radius {
@@ -486,7 +483,7 @@ input[type=range]::-moz-range-thumb {
 .text-wrapper-input input[type=radio] {
   box-sizing: border-box;
   padding: 0;
-  height: 36px;
+  height: 21px;
   width: 21px;
 }
 
@@ -556,7 +553,6 @@ input[type=range]::-moz-range-thumb {
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    min-height: 48px;
   }
   .col-md-4.col-6 .product-item .content-pro .name-product a {
     color: #FFFFFF;
@@ -636,21 +632,20 @@ input[type=range]::-moz-range-thumb {
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    min-height: 48px;
   }
   .col-md-4.col-6 .product-item .content-pro .name-product a {
     color: #FFFFFF;
   }
   .col-md-4.col-6 .product-item .content-pro .location-pro {
     color: var(--White, #FFF);
-    font-size: 18px;
+    font-size: 15px;
     font-style: normal;
     font-weight: 800;
     line-height: normal;
   }
   .col-md-4.col-6 .product-item .content-pro .prices-pro {
     color: var(--White, #FFF);
-    font-size: 24px;
+    font-size: 16px;
     font-style: normal;
     font-weight: 800;
     line-height: normal;
@@ -659,12 +654,12 @@ input[type=range]::-moz-range-thumb {
     border-radius: 60px 0px 16px 0px;
     background: var(--White, #FFF);
     display: flex;
-    padding: 16px 16px;
+    padding: 12px 16px;
     justify-content: center;
     align-items: center;
     gap: 10px;
     color: var(--Black, #000);
-    font-size: 18px;
+    font-size: 16px;
     font-style: normal;
     font-weight: 800;
     line-height: normal;
@@ -738,7 +733,6 @@ input[type=range]::-moz-range-thumb {
   font-style: normal;
   font-weight: 700;
   line-height: normal;
-  min-height: 50px;
 }
 
 /*# sourceMappingURL=flea-market.css.map */

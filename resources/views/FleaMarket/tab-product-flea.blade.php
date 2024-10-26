@@ -102,7 +102,7 @@
                 let isFavorite = item.isFavorit ? 'bi-heart-fill' : 'bi-heart';
 
                 var html = `
-                    <div class="col-md-4 col-6">
+                    <div class="col-lg-4 col-md-6 col-6">
                         <div class="product-item">
                              <div class="img-pro justify-content-center d-flex img_product--homeNew">
                                   <img src="${item.thumbnail}" alt="">
