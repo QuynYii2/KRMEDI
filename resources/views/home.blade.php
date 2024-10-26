@@ -1374,7 +1374,7 @@
                                                         <img loading="lazy" src="{{$department}}">
                                                     </s>
                                                 </div>
-                                                <div class="content-pro p-md-3 p-2">
+                                                <div class="content-pro p-md-2 p-2">
                                                     <div class="">
                                                         <div class="name-product" style="height: auto">
                                                             <a class="max-3-line-content-home"

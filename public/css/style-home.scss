@@ -368,7 +368,7 @@
                     .name-product {
                         a {
                             color: var(--White, #FFF);
-                            font-size: 18px;
+                            font-size: 16px;
                             font-style: normal;
                             font-weight: 800;
                             line-height: normal;
@@ -388,10 +388,13 @@
                     }
 
                     .price-pro {
+                        display: flex;
+                        align-items: center;
+                        gap: 0;
                         color: var(--White, #FFF);
-                        font-size: 16px;
+                        font-size: 14px;
                         font-style: normal;
-                        font-weight: 800;
+                        font-weight: 700;
                         line-height: normal;
                     }
                 }
@@ -551,13 +554,13 @@
                 .krm-title-recruitment {
                     color: var(--Black, #ffffff);
                     font-style: normal;
-                    font-size: 24px;
+                    font-size: 20px;
                     font-weight: 800;
                     line-height: normal;
                 }
 
                 .space-gach {
-                    padding: 0 24px;
+                    padding: 0 16px;
                     color: white;
                     font-size: 24px;
                     font-weight: 100;
@@ -566,7 +569,7 @@
                 a {
                     color: var(--Grey-Dark, #ffffff);
                     font-style: normal;
-                    font-size: 16px;
+                    font-size: 14px;
                     font-weight: 600;
                     line-height: normal;
                 }
@@ -750,7 +753,7 @@
                                 color: var(--White, #FFF);
                                 //font-size: 18px;
                                 font-style: normal;
-                                font-weight: 800;
+                                font-weight: 700;
                                 line-height: normal;
                                 //min-height: 50px;
                             }
