@@ -34,7 +34,7 @@
     border: none;
 }
 .nav .nav-item .nav-link.active,.nav .nav-item .nav-link{
-    font-size: 20px;
+    font-size: 18px;
 }
 .container .danh-sach-theo-chuyen-khoa .nav-item .nav-link.active{
     font-size: 20px!important;
@@ -206,7 +206,7 @@
 .development_function{
     font-size: 22px;
 }
-#listWishList .col-xl-3 {
+#listWishList .col-xl-3,#content-medicine .col-6,#productsAdsPlan1 .col-6,#productsAdsPlan2 .col-6,#productsAdsPlan3 .col-6 {
     padding: 0 5px!important;
 }
 .header .header-detail--left .back h5,.list-doctor .card-body .card-title{
@@ -269,7 +269,7 @@
     }
 
     .col-md-4.col-6 .product-item .content-pro .prices-pro, .product-item .content-pro .price-pro, .container .location-info, .container .hanoi {
-        font-size: 20px;
+        font-size: 18px;
     }
 
     .product-item .content-pro .price-pro {
@@ -277,11 +277,11 @@
     }
 
     .container .name {
-        font-size: 32px;
+        font-size: 20px;
     }
 
     .news-content {
-        font-size: 32px;
+        font-size: 18px;
     }
 }
 
@@ -299,7 +299,7 @@
     }
 
     .text-content-product {
-        font-size: 24px;
+        font-size: 18px;
     }
 }
 
@@ -362,7 +362,7 @@
     .container .titleServiceHomeNew, .title-clinics h2, .container .flea-content, .ac-text_content,.container .danh-sach-theo-chuyen-khoa .title-Danh-sach,
     .container .detail-clinic-theo-chuyen-khoa-title .title-detail-clinic,.background-image_Clinics .container .title-list-clinic,
     .fs-32px{
-        font-size: 20px !important;
+        font-size: 18px !important;
     }
 
     .krm-title-news, .text-font-24, .text-content-product, .find-my-medicine-2 .frame .text-wrapper-3,
@@ -524,7 +524,7 @@
     }
 
     .news-content,.other-clinics .title {
-        font-size: 24px;
+        font-size: 18px;
     }
 
     .box-detail-news {
@@ -764,7 +764,7 @@
         font-size: 18px;
         margin-top: 26px;
     }
-    #listWishList .col-xl-3 ,.list-doctor .col-6{
+    #listWishList .col-xl-3 ,.list-doctor .col-6,#content-medicine .col-6{
         padding: 0px 5px !important;
     }
     .product-item .content-pro .price-pro{

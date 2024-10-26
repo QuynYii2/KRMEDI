@@ -231,12 +231,12 @@
             <div class="col-lg-9 col-md-8 medicine-list--item">
                 <div class="page row" id="content-medicine">
                     @foreach($medicines as $medicine)
-                        <div class="col-md-4 col-6 col-sm-4 col-xl-3 d-none d-sm-block">
+                        <div class="col-md-6 col-6 col-sm-4 col-xl-3 d-none d-sm-block">
                             @include('component.products')
                         </div>
                     @endforeach
                     @foreach($medicine10 as $medicine)
-                        <div class="col-md-4 col-6 col-sm-4 col-xl-3 d-block d-sm-none">
+                        <div class="col-md-6 col-6 col-sm-4 col-xl-3 d-block d-sm-none">
                             @include('component.products')
                         </div>
                     @endforeach

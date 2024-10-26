@@ -160,7 +160,7 @@
         </ul>
     </div>
 </div>
-<div style="z-index: 2;" class="modal container fade" id="staticBackdrop" data-keyboard="false" tabindex="-1"
+<div style="z-index: 2;" class="modal fade" id="staticBackdrop" data-keyboard="false" tabindex="-1"
      aria-labelledby="staticBackdropLabel"
      aria-hidden="true">
     <div class="modal-dialog">

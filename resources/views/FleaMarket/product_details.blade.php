@@ -23,7 +23,7 @@
             <div class="recruitment-details--title"><a href="{{route('flea-market.index')}}"><i
                         class="fa-solid fa-arrow-left"></i> {{ __('home.Product details') }}</a></div>
             <div class="row recruitment-details--content">
-                <div class="col-md-8 recruitment-details ">
+                <div class="col-lg-5 col-md-6 recruitment-details ">
                     @if(!empty($pr_json->thumbnail))
                         <div class="d-flex justify-content-center border-radius-1px color-Grey-Dark col-10 col-md-12">
                             <img src="{{asset($pr_json->thumbnail)}}" alt="show"
@@ -45,7 +45,7 @@
                         @endforeach
                     </div>
                 </div>
-                <div class="col-md-4 recruitment-details--content--right">
+                <div class=" col-lg-7 col-md-6 recruitment-details--content--right">
                     <div class="form-1" id="form-hospital">
                         <div>
                             <strong class="flea-prise">
@@ -118,7 +118,7 @@
                 </div>
             </div>
             <div class="row recruitment-details--text mt-45">
-                <div class="col-md-8">
+                <div class="col-12">
                     <hr>
 
                     {{-- Start nội dung mô tả (backend)--}}
