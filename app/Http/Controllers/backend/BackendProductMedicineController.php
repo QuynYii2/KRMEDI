@@ -341,8 +341,9 @@ class BackendProductMedicineController extends Controller
         $currentPage  = $request->page??1;
         $currentItem = ($currentPage - 1) * $pageSize;
         $Category_id = $request->id_category??'';
+        $user = Auth::user();
         $response = Http::withHeaders([
-            'Retailer' => 'krmedi',
+            'Retailer' => $user->retailer_kiot_viet??'krmedi',
             'Authorization' => 'Bearer ' . $token,
         ])->get($endpoint,[
             'pageSize' => $pageSize,

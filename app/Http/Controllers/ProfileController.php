@@ -363,6 +363,9 @@ class ProfileController extends Controller
         $user->extend = $extendData;
         $user->status = ClinicStatus::ACTIVE;
         $user->insurance_id = $request->input('insurance_id');
+        $user->client_id_kiot_viet = $request->input('client_id_kiot_viet');
+        $user->client_secret_kiot_viet = $request->input('client_secret_kiot_viet');
+        $user->retailer_kiot_viet = $request->input('retailer_kiot_viet');
         $user->save();
         session()->forget('show_modal');
         toast('Cập nhật thông tin thành công!', 'success', 'top-left');

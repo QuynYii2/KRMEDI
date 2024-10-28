@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Jobs\booking\ProcessBooking;
 use App\Models\Booking;
 use App\Models\CheckInBookingModel;
+use App\Models\User;
 use App\Models\ZaloOaModel;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class Controller extends BaseController
@@ -244,8 +246,9 @@ class Controller extends BaseController
      */
     public function getAccessToken()
     {
-        $clientId = '28eaf390-fc63-486e-b45c-bbc303090296';
-        $clientSecret = 'E02FEB39EB68969E3E0F1A7AEE9B2955910B283F';
+        $user = Auth::user();
+        $clientId = $user->client_id_kiot_viet??'28eaf390-fc63-486e-b45c-bbc303090296';
+        $clientSecret = $user->client_secret_kiot_viet??'E02FEB39EB68969E3E0F1A7AEE9B2955910B283F';
         $endpoint = 'https://id.kiotviet.vn/connect/token';
 
         $response = Http::asForm()->post($endpoint, [
@@ -270,10 +273,10 @@ class Controller extends BaseController
         $queryParameters = [
             'pageSize' => 100,
         ];
-
+        $user = Auth::user();
         $endpoint .= '?' . http_build_query($queryParameters);
         $response = Http::withHeaders([
-            'Retailer' => 'krmedi',
+            'Retailer' => $user->retailer_kiot_viet??'krmedi',
             'Authorization' => 'Bearer ' . $accessToken,
         ])->get($endpoint);
 
@@ -287,10 +290,11 @@ class Controller extends BaseController
      */
     public function getProductsKiotViet($token, $id)
     {
+        $user = Auth::user();
         $accessToken = $token;
         $endpoint = 'https://public.kiotapi.com/products/' . $id;
         $response = Http::withHeaders([
-            'Retailer' => 'krmedi',
+            'Retailer' => $user->retailer_kiot_viet??'krmedi',
             'Authorization' => 'Bearer ' . $accessToken,
         ])->get($endpoint);
 

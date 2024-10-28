@@ -878,6 +878,25 @@
                                                placeholder="">
                                     </div>
                                 </div>
+                            @if($roleItem->name != "NORMAL PEOPLE" || $roleItem->name != "PAITENTS")
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label for="time_work">ClientId KiotViet</label>
+                                        <input class="form-control" id="client_id_kiot_viet" name="client_id_kiot_viet" type="text" value="{{@$doctor->client_id_kiot_viet}}"
+                                               placeholder="">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="open_date">Mã bảo mật</label>
+                                        <input class="form-control" id="client_secret_kiot_viet" name="client_secret_kiot_viet" type="text" value="{{@$doctor->client_secret_kiot_viet}}"
+                                               placeholder="">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="close_date">Tên cửa hàng</label>
+                                        <input class="form-control" id="retailer_kiot_viet" name="retailer_kiot_viet" type="text" value="{{@$doctor->retailer_kiot_viet}}"
+                                               placeholder="">
+                                    </div>
+                                </div>
+                                @endif
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label for="experienceHospital">{{ __('home.EXPERIENCE') }}</label>
