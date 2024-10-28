@@ -553,18 +553,6 @@ class BookingController extends Controller
                     $prescription_result->booking_id = $booking->id;
                     $prescription_result->save();
                 }
-//                $notifis = Notification::create([
-//                    'title' => 'Thông báo trả kết quả',
-//                    'sender_id' => $booking->user_id,
-//                    'follower' => $booking->user_id,
-//                    'target_url' => route('web.users.my.bookings.detail', ['id' => $booking->id]),
-//                    'description' => 'Bạn vừa được trả kết quả khám. Vui lòng đến kiểm tra!',
-//                    'booking_id' => $booking->id
-//                ]);
-//                $notifis->save();
-//                $userTokens = User::find($booking->user_id)->token_firebase ?? "";
-//                $routerNames = '';
-//                $this->sendBookingNotifications( $userTokens, $notifis,$prescription_result,$routerNames);
             }
 
             if ($success) {
@@ -649,7 +637,7 @@ class BookingController extends Controller
             $androidPayload = [
                 'notification' => [
                     'icon' => 'ic_launcher',
-                    'channel_id' => 'default_channel_id',
+                    'channel_id' => 'booking_channel_id',
                     'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
                     'sound' => 'default',
                 ],
@@ -666,7 +654,7 @@ class BookingController extends Controller
                 'token' => $userToken,
                 'notification' => $notificationPayload,
                 'data' => array_merge($data, [
-                    'channel_id' => 'default_channel_id',
+                    'channel_id' => 'booking_channel_id',
                 ]),
             ];
 
