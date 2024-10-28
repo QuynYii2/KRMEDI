@@ -26,11 +26,11 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="short_description">Short Description</label>
+                <label for="short_description">Mô tả</label>
                 <textarea class="form-control" name="short_description" id="short_description"></textarea>
             </div>
             <div class="form-group">
-                <label for="description">{{ __('home.Mô tả dài việt') }}</label>
+                <label for="description">Nội dung</label>
                 <textarea class="form-control" name="description" id="description"></textarea>
             </div>
             <div class="row">
@@ -40,12 +40,12 @@
                            value="">
                 </div>
                 <div class="form-group col-md-4">
-                    <label for="number_register">Number Register</label>
+                    <label for="number_register">Số Đăng Ký</label>
                     <input type="number" class="form-control" id="number_register"
                            name="number_register">
                 </div>
                 <div class="form-group col-md-4">
-                    <label for="specifications">Specifications</label>
+                    <label for="specifications">Quy cách đóng gói</label>
                     <input type="text" class="form-control" id="specifications"
                            name="specifications">
                 </div>
@@ -104,7 +104,7 @@
                     </div>
                 </div>
                 <div class="col-sm-3">
-                    <label for="is_prescription">Choose prescription medications(Yes/No)</label>
+                    <label for="is_prescription">Chọn thuốc theo đơn (Có/ Không)</label>
                     <input type="checkbox" id="is_prescription" name="is_prescription">
                 </div>
             </div>
@@ -133,7 +133,7 @@
                     <input type="number" class="form-control" id="quantity" name="quantity" min="0">
                 </div>
                 <div class="col-md-4">
-                    <label for="unit_quantity">Unit Quantity</label>
+                    <label for="unit_quantity">Số lượng đơn vị</label>
                     <select class="form-select" id="unit_quantity" name="unit_quantity">
                         @foreach($unit_quantity as $unit_quantity_item)
                             <option value="{{ $unit_quantity_item }}">{{ $unit_quantity_item }}</option>
@@ -141,7 +141,7 @@
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label for="shape">Shape</label>
+                    <label for="shape">Hình dạng</label>
                     <select class="form-select" id="shape" name="shape">
                         @foreach($shapes as $shape)
                             <option value="{{ $shape }}">{{ $shape }}</option>
@@ -151,12 +151,12 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <label for="manufacturing_country">Manufacturing Country</label>
+                    <label for="manufacturing_country">Quốc gia sản xuất</label>
                     <input type="text" class="form-control" id="manufacturing_country"
                            name="manufacturing_country">
                 </div>
                 <div class="col-md-6">
-                    <label for="manufacturing_company">Manufacturing Company</label>
+                    <label for="manufacturing_company">Công ty sản xuất</label>
                     <input type="text" class="form-control" id="manufacturing_company"
                            name="manufacturing_company">
                 </div>
@@ -170,23 +170,23 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="side_effects">Side Effects</label>
+                <label for="side_effects">Tác dụng phụ</label>
                 <textarea class="form-control" name="side_effects" id="side_effects"></textarea>
             </div>
             <div class="form-group">
-                <label for="uses">Uses</label>
+                <label for="uses">Công dụng</label>
                 <textarea class="form-control" name="uses" id="uses"></textarea>
             </div>
             <div class="form-group">
-                <label for="user_manual">User Manual</label>
+                <label for="user_manual">Hướng dẫn sử dụng</label>
                 <textarea class="form-control" name="user_manual" id="user_manual"></textarea>
             </div>
             <div class="form-group">
-                <label for="notes">Notes</label>
+                <label for="notes">Ghi chú</label>
                 <textarea class="form-control" name="notes" id="notes"></textarea>
             </div>
             <div class="form-group">
-                <label for="preserve">Preserve</label>
+                <label for="preserve">Bảo quản </label>
                 <textarea class="form-control" name="preserve" id="preserve"></textarea>
             </div>
         </div>
