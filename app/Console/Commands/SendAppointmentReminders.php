@@ -30,7 +30,7 @@ class SendAppointmentReminders extends Command
     public function handle()
     {
         $upcomingAppointments = Booking::where('check_in', '>=', Carbon::now())
-            ->where('check_in', '<=', Carbon::now()->addHour(2))
+            ->where('check_in', '<=', Carbon::now()->addHours(2))
             ->get();
 
         foreach ($upcomingAppointments as $appointment) {
