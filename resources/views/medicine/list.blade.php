@@ -71,7 +71,7 @@
                 border-radius: 60px 0 16px 0;
                 background: #FFF;
                 display: flex;
-                padding: 11px 18px !important;
+                padding: 6px 14px !important;
                 justify-content: center;
                 align-items: center;
                 gap: 10px;
@@ -326,12 +326,12 @@
             <div class="col-lg-9 col-md-8 medicine-list--item">
                 <div class="page row" id="content-medicine">
                     @foreach($medicines as $medicine)
-                        <div class="col-md-6 col-6 col-sm-4 col-xl-4 d-none d-sm-block box-sp-medicine">
+                        <div class="col-md-4 col-6 col-sm-4 col-xl-3 d-none d-sm-block box-sp-medicine">
                             @include('component.products')
                         </div>
                     @endforeach
                     @foreach($medicine10 as $medicine)
-                        <div class="col-md-6 col-6 col-sm-4 col-xl-4 d-block d-sm-none">
+                        <div class="col-md-4 col-6 col-sm-4 col-xl-3 d-block d-sm-none">
                             @include('component.products')
                         </div>
                     @endforeach
