@@ -50,8 +50,8 @@ class CheckoutController extends Controller
             )
             ->get();
 
-        $province_name = Province::find(Auth::user()->province_id)->name;
-        $district_name = District::find(Auth::user()->district_id)->name;
+        $province_name = Province::where('code',Auth::user()->province_id)->first()->name;
+        $district_name = District::where('code',Auth::user()->district_id)->first()->name;
         $total_fee = 0;
         $url = 'https://apistg.ahamove.com/v1/order/estimated_fee';
         $path = json_encode([

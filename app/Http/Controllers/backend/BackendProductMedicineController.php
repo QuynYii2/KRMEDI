@@ -290,7 +290,7 @@ class BackendProductMedicineController extends Controller
             if ($request->get('id_kiotviet')) {
                 $id_kiotviet = $request->get('id_kiotviet');
             }
-            $dataProduct = ProductMedicine::where('user_id',$request->input('user_id'))->where('id_kiotviet',$id_kiotviet)->first();
+            $dataProduct = ProductMedicine::where('user_id',$request->input('user_id'))->where('id_kiotviet',$id_kiotviet)->whereNotNull('id_kiotviet')->first();
             if (isset($dataProduct)){
                 $dataProduct->quantity = $request->get('quantity');
                 $dataProduct->save();
