@@ -365,7 +365,7 @@
                                 <div class="col-lg-2 col-md-3 col-sm-4 col-6">
                                     <div class="p-lg-0">
                                         <div class="product-item">
-                                            <div class="img-pro h-100 justify-content-center d-flex">
+                                            <div class="img-pro justify-content-center d-flex" >
                                                 <img src="{{ $doctor->avt }}" alt="">
                                                 <a class="button-heart" data-favorite="0">
                                                     <i id="icon-heart" class="bi-heart bi"
