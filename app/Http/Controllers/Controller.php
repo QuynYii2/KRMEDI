@@ -244,8 +244,8 @@ class Controller extends BaseController
      */
     public function getAccessToken()
     {
-        $clientId = '2cd3a49a-f72b-4e5d-b76a-c0d9974245d1';
-        $clientSecret = 'CDA7ACE97648A59020FA3E2C80CF5B5432277897';
+        $clientId = '28eaf390-fc63-486e-b45c-bbc303090296';
+        $clientSecret = 'E02FEB39EB68969E3E0F1A7AEE9B2955910B283F';
         $endpoint = 'https://id.kiotviet.vn/connect/token';
 
         $response = Http::asForm()->post($endpoint, [
@@ -273,7 +273,7 @@ class Controller extends BaseController
 
         $endpoint .= '?' . http_build_query($queryParameters);
         $response = Http::withHeaders([
-            'Retailer' => 'medi',
+            'Retailer' => 'krmedi',
             'Authorization' => 'Bearer ' . $accessToken,
         ])->get($endpoint);
 
@@ -290,7 +290,7 @@ class Controller extends BaseController
         $accessToken = $token;
         $endpoint = 'https://public.kiotapi.com/products/' . $id;
         $response = Http::withHeaders([
-            'Retailer' => 'medi',
+            'Retailer' => 'krmedi',
             'Authorization' => 'Bearer ' . $accessToken,
         ])->get($endpoint);
 
