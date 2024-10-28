@@ -561,7 +561,7 @@ input[type=range]::-moz-range-thumb {
     color: var(--White, #FFF);
     font-size: 12px;
     font-style: normal;
-    font-weight: 800;
+    font-weight: 700;
     line-height: normal;
   }
   .col-md-4.col-6 .product-item .content-pro .prices-pro {
@@ -640,7 +640,7 @@ input[type=range]::-moz-range-thumb {
     color: var(--White, #FFF);
     font-size: 15px;
     font-style: normal;
-    font-weight: 800;
+    font-weight: 700;
     line-height: normal;
   }
   .col-md-4.col-6 .product-item .content-pro .prices-pro {
@@ -694,7 +694,7 @@ input[type=range]::-moz-range-thumb {
   color: #FFFFFF;
   font-size: 16px;
   font-style: normal;
-  font-weight: 800;
+  font-weight: 700;
   line-height: normal;
 }
 .product-item .prices-pro {
