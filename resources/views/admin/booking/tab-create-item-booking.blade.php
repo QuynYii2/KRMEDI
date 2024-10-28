@@ -723,12 +723,27 @@
                                 <input type="number" min="1" class="form-control quantity" name="medicines[@index][quantity]">
                             </div>
                             <div class="form-group">
-                                <label for="detail_value">Note</label>
-                                <input type="text" class="form-control detail_value" name="medicines[@index][note]">
+                                <label for="detail_value">Thời gian uống</label>
+                                <input type="text" class="form-control detail_value" name="medicines[@index][note]" hidden>
+                                <input type="number" min="1" class="form-control treatment_days" name="medicines[@index][treatment_days]" value="1" hidden>
+                                <select class="form-control detail_value" name="medicines[@index][note_date][]" multiple style="height: 155px;">
+                                    <option value="1">Trước ăn sáng</option>
+                                    <option value="2">Sau ăn sáng</option>
+                                    <option value="3">Trước ăn trưa</option>
+                                    <option value="4">Sau ăn trưa</option>
+                                    <option value="5">Trước ăn tối</option>
+                                    <option value="6">Sau ăn tối</option>
+                                </select>
                             </div>
-                            <div class="form-group">
-                                <label for="treatment_days">Số ngày điều trị</label>
-                                <input type="number" min="1" class="form-control treatment_days" name="medicines[@index][treatment_days]" value="1">
+                            <div class="d-flex">
+                                 <div class="form-group w-50 mr-2">
+                                    <label for="treatment_days">Ngày bắt đầu điều trị</label>
+                                    <input type="date" class="form-control treatment_days" name="medicines[@index][date_start]">
+                                </div>
+                                 <div class="form-group w-50">
+                                    <label for="treatment_days">Ngày kết thúc điều trị</label>
+                                    <input type="date" class="form-control treatment_days" name="medicines[@index][date_end]">
+                                </div>
                             </div>
                         </div>
                         <div class="action mt-3 mx-3">

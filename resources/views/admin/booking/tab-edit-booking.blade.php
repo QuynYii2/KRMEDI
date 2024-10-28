@@ -284,7 +284,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="medicine_ingredients">Medicine Ingredients</label>
-                                            <input type="text" class="form-control medicine_ingredients "
+                                            <input type="text" class="form-control medicine_ingredients " readonly
                                                    value="{{$pro['medicine_ingredients']}}">
                                         </div>
                                         <div class="form-group">
@@ -292,16 +292,44 @@
                                             <input type="number" min="1" class="form-control quantity"
                                                    value="{{$pro['quantity']}}" readonly>
                                         </div>
+                                        @if($pro['note'])
                                         <div class="form-group">
                                             <label for="detail_value">Note</label>
                                             <input type="text" class="form-control note" value="{{$pro['note']}}"
                                                    readonly>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="treatment_days">Số ngày điều trị</label>
-                                            <input type="number" min="1" class="form-control treatment_days" readonly
-                                                   value="{{$pro['treatment_days']}}">
-                                        </div>
+                                            @else
+                                            <div class="form-group">
+                                                <label for="detail_value">Thời gian uống</label>
+                                                <select class="form-control detail_value" multiple style="height: 155px;" readonly="">
+                                                    <option value="1" @if(in_array(1, $pro['note_date'])) selected @endif>Trước ăn sáng</option>
+                                                    <option value="2" @if(in_array(2, $pro['note_date'])) selected @endif>Sau ăn sáng</option>
+                                                    <option value="3" @if(in_array(3, $pro['note_date'])) selected @endif>Trước ăn trưa</option>
+                                                    <option value="4" @if(in_array(4, $pro['note_date'])) selected @endif>Sau ăn trưa</option>
+                                                    <option value="5" @if(in_array(5, $pro['note_date'])) selected @endif>Trước ăn tối</option>
+                                                    <option value="6" @if(in_array(6, $pro['note_date'])) selected @endif>Sau ăn tối</option>
+                                                </select>
+                                            </div>
+                                        @endif
+                                        @if(isset($pro['date_start']) && isset($pro['date_end']))
+                                            <div class="d-flex">
+                                                <div class="form-group w-50 mr-2">
+                                                    <label for="treatment_days">Ngày bắt đầu điều trị</label>
+                                                    <input type="date" class="form-control treatment_days" value="{{$pro['date_start']}}" readonly>
+                                                </div>
+                                                <div class="form-group w-50">
+                                                    <label for="treatment_days">Ngày kết thúc điều trị</label>
+                                                    <input type="date" class="form-control treatment_days" value="{{$pro['date_end']}}" readonly>
+                                                </div>
+                                            </div>
+                                            @else
+                                            <div class="form-group">
+                                                <label for="treatment_days">Số ngày điều trị</label>
+                                                <input type="number" min="1" class="form-control treatment_days" readonly
+                                                       value="{{$pro['treatment_days']}}">
+                                            </div>
+                                            @endif
+
                                     </div>
                                 </div>
                             </div>
@@ -920,12 +948,27 @@
                                 <input type="number" min="1" class="form-control quantity" name="medicines[@index][quantity]">
                             </div>
                             <div class="form-group">
-                                <label for="detail_value">Note</label>
-                                <input type="text" class="form-control detail_value" name="medicines[@index][note]">
+                                <label for="detail_value">Thời gian uống</label>
+                                <input type="text" class="form-control detail_value" name="medicines[@index][note]" value="" hidden>
+                                <input type="number" min="1" class="form-control treatment_days" name="medicines[@index][treatment_days]" value="1" hidden>
+                                <select class="form-control detail_value" name="medicines[@index][note_date][]" multiple style="height: 155px;">
+                                    <option value="1">Trước ăn sáng</option>
+                                    <option value="2">Sau ăn sáng</option>
+                                    <option value="3">Trước ăn trưa</option>
+                                    <option value="4">Sau ăn trưa</option>
+                                    <option value="5">Trước ăn tối</option>
+                                    <option value="6">Sau ăn tối</option>
+                                </select>
                             </div>
-                            <div class="form-group">
-                                <label for="treatment_days">Số ngày điều trị</label>
-                                <input type="number" min="1" class="form-control treatment_days" name="medicines[@index][treatment_days]" value="1">
+                            <div class="d-flex">
+                                 <div class="form-group w-50 mr-2">
+                                    <label for="treatment_days">Ngày bắt đầu điều trị</label>
+                                    <input type="date" class="form-control treatment_days" name="medicines[@index][date_start]">
+                                </div>
+                                 <div class="form-group w-50">
+                                    <label for="treatment_days">Ngày kết thúc điều trị</label>
+                                    <input type="date" class="form-control treatment_days" name="medicines[@index][date_end]">
+                                </div>
                             </div>
                         </div>
                         <div class="action mt-3 mx-3">
