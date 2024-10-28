@@ -26,7 +26,7 @@
     }
     .contact_doctor{
         background: #ff5d4b;
-        padding: 7px 20px;
+        padding: 4px 10px;
         border-radius: 8px;
         color: #f0f0f0;
         width: fit-content;
@@ -37,7 +37,7 @@
     <div class="img-pro">
         <img src="{{asset($medicine->thumbnail)}}" alt="">
         <div class="{{ $isSoldOut ? 'sold-out-overlay-text d-flex justify-content-center align-items-center w-100' : 'd-none' }} ">
-            <h1 class="sold-out">{{__('home.Sold Out')}}</h1>
+            <h1 class="sold-out fs-32px">{{__('home.Sold Out')}}</h1>
         </div>
         <a class="button-heart" data-favorite="0">
             <i id="heart-icon-{{$medicine->id}}" class="{{$heart}} bi" data-product-id="{{$medicine->id}}"
