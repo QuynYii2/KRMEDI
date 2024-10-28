@@ -29,8 +29,8 @@ class SendAppointmentReminders extends Command
      */
     public function handle()
     {
-        $upcomingAppointments = Booking::where('check_in', '>=', Carbon::now())
-            ->where('check_in', '<=', Carbon::now()->addHours(2))
+        $upcomingAppointments = Booking::where('check_in', '>=', Carbon::now()->addHours(2))
+            ->where('check_in', '<=', Carbon::now()->addHours(2)->endOfMinute())
             ->get();
 
         foreach ($upcomingAppointments as $appointment) {
@@ -83,7 +83,18 @@ class SendAppointmentReminders extends Command
                     $payload['apns'] = ['payload' => $iosPayload];
                 }
 
-                return FcmService::init()->request($payload);
+                $response = FcmService::init()->request($payload);
+                $responseBody = json_decode($response, true);
+
+                if (isset($responseBody['name'])) {
+                    // Success
+                    $this->info("Notification sent successfully to user {$user->name} (User ID: {$user->id}).");
+                } else {
+                    // Failure
+                    $this->error("Failed to send notification to user {$user->name} (User ID: {$user->id}).");
+                }
+            }else{
+                $this->error("User not found");
             }
         }
     }
