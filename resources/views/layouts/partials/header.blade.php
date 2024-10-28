@@ -88,7 +88,7 @@
                     <div class="dropdown">
                         <div class="dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
                             <img src="{{Auth::user()->avt ?? asset('img/user-circle.png')}}" style="width: 40px; height: 40px; border-radius: 25px;"> &nbsp;
-                            <span class="krm-name-user mr-2">{{Auth::user()->name}}</span>
+                            <span class="krm-name-user mr-2">{{ \Illuminate\Support\Str::limit(Auth::user()->name, 20, '...') }}</span>
                             <span class="caret"></span>
                         </div>
                         <div class="dropdown-menu">
