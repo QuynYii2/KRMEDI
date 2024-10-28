@@ -342,7 +342,7 @@ class BackendProductMedicineController extends Controller
         $currentItem = ($currentPage - 1) * $pageSize;
         $Category_id = $request->id_category??'';
         $response = Http::withHeaders([
-            'Retailer' => 'medi',
+            'Retailer' => 'krmedi',
             'Authorization' => 'Bearer ' . $token,
         ])->get($endpoint,[
             'pageSize' => $pageSize,
