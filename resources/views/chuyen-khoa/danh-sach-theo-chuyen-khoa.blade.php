@@ -362,10 +362,10 @@
                                 <h1 class="d-flex align-items-center justify-content-center mt-4">{{ __('home.null') }}
                                 </h1>
                             @else
-                                <div class="col-lg-3 col-md-4 col-6">
+                                <div class="col-lg-2 col-md-3 col-sm-4 col-6">
                                     <div class="p-lg-0">
                                         <div class="product-item">
-                                            <div class="img-pro h-100 justify-content-center d-flex">
+                                            <div class="img-pro justify-content-center d-flex" >
                                                 <img src="{{ $doctor->avt }}" alt="">
                                                 <a class="button-heart" data-favorite="0">
                                                     <i id="icon-heart" class="bi-heart bi"
@@ -382,13 +382,13 @@
                                                     <img src="{{$department}}" class="icon-ck">
                                                 </s>
                                             </div>
-                                            <div class="content-pro p-3">
+                                            <div class="content-pro p-2">
                                                 <div class="">
                                                     <div class="name-product" style="height: auto">
                                                         <a class="name-product--fleaMarket name-doctors"
                                                            href="{{ route('examination.doctor_info', $doctor->id) }}">{{$doctor->name}}</a>
                                                     </div>
-                                                    <div class="price-pro">
+                                                    <div class="price-pro d-flex align-items-center">
                                                         @php
                                                             if ($doctor->province_id == null) {
                                                                 $addressP = 'Ha Noi';
@@ -415,7 +415,7 @@
                                                         </svg> &nbsp;
                                                         {{ $addressP }}
                                                     </div>
-                                                    <div class="price-pro">
+                                                    <div class="price-pro d-flex align-items-center">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="21"
                                                              height="21" viewBox="0 0 21 21" fill="none">
                                                             <g clip-path="url(#clip0_5506_14923)">
