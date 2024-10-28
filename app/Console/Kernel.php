@@ -29,6 +29,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('cart:prescription-reminder')->dailyAt('12:00')->dailyAt('19:00');
         $schedule->job(new \App\Jobs\UpdateOrderStatus)->everyMinute();
+        $schedule->command('appointments:remind')->everyMinute();
     }
 
     /**
