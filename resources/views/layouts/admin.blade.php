@@ -1333,9 +1333,9 @@
         let labelElement = $(`label[for='${input}']`);
         let text = labelElement.text();
         if (!text) {
-            text = 'The input'
+            text = 'Các trường thông tin'
         }
-        text = text + ' not empty!'
+        text = text + ' không được để trống!'
         return text;
     }
 
@@ -1779,9 +1779,9 @@
         let labelElement = $(`label[for='${input}']`);
         let text = labelElement.text();
         if (!text) {
-            text = 'The input'
+            text = 'Các trường thông tin'
         }
-        text = text + ' not empty!'
+        text = text + ' không được để trống!'
         return text;
     }
 
