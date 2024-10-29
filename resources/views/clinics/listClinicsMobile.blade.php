@@ -409,6 +409,7 @@
                 getCurrentLocation(function(currentLocation) {
                     initMap(currentLocation, locations);
                 });
+                $('.text-not-address').css('display', 'none');
             } else {
                 $('.text-not-address').css('display', 'inline-block');
                 $('#productInformation').html('');

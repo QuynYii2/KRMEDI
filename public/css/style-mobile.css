@@ -1211,6 +1211,19 @@
     .product-item .SeeDetail{
         padding: 10px 16px;
     }
+    .doctor-info div,.doctor-info p{
+        font-size: 14px;
+    }
+    .doctor-info p strong{
+        font-size: 16px;
+    }
+    .doctor-image img{
+        height: auto;
+        padding: 30px 20px;
+    }
+    .line-dk-btn {
+        margin-left: 13px !important;
+    }
 }
 
 @media (max-width: 500px){

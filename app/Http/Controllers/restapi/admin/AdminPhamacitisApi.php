@@ -17,10 +17,12 @@ class AdminPhamacitisApi extends Controller
         if ($status) {
             $doctor_infos = User::where('status', $status)
                 ->where('member', TypeMedical::PHAMACISTS)
+                ->orderBy('created_at','desc')
                 ->get();
         } else {
             $doctor_infos = User::where('status', '!=', DoctorInfoStatus::DELETED)
                 ->where('member', TypeMedical::PHAMACISTS)
+                ->orderBy('created_at','desc')
                 ->get();
         }
         return response()->json($doctor_infos);

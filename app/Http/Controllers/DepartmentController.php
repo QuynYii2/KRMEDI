@@ -12,9 +12,7 @@ class DepartmentController extends Controller
     public function index()
     {
         $departments = Department::where('status', DepartmentStatus::ACTIVE)
-            ->orderBy('order', 'asc')
-            ->orderBy('isFilter', 'desc')
-            ->orderBy('id', 'desc')
+            ->orderBy('created_at', 'desc')
             ->paginate(10);
 
         return view('admin.department_symptom.lists-department', ['departments' => $departments]);

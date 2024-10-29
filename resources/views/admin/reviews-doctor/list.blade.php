@@ -11,7 +11,6 @@
                 <th scope="col">#</th>
                 <th scope="col">{{ __('home.Title') }}</th>
                 <th scope="col">{{ __('home.Star') }}</th>
-                <th scope="col">{{ __('home.Parent') }}</th>
                 <th scope="col">{{ __('home.Status') }}</th>
                 <th scope="col">{{ __('home.Action') }}</th>
             </tr>
@@ -59,7 +58,6 @@
                                         <th scope="row">${i + 1}</th>
                                         <td>${data.title}</td>
                                         <td>${data.number_star}</td>
-                                        <td>${data.parent_id}</td>
                                         <td>${data.status}</td>
                                         <td>
                                             <a href="${reviewDetailUrl}" class="btn btn-success" >{{ __('home.Detail') }}</a>

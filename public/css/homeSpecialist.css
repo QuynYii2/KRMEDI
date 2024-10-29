@@ -271,7 +271,7 @@
 }
 .container .detail-clinic-theo-chuyen-khoa-title .title-detail-clinic {
   color: #000;
-  font-size: 32px;
+  font-size: 20px;
   font-style: normal;
   font-weight: 800;
   line-height: normal;
@@ -306,8 +306,7 @@
 }
 .container .detail-clinic-theo-chuyen-khoa-title .border-specialList .specialList-clinics--main .group-button .button-direct-specialList {
   display: flex;
-  height: 40px;
-  padding: 13px 16px 12px 16px;
+  padding: 8px 16px 8px 16px;
   justify-content: center;
   align-items: center;
   gap: 10px;
@@ -315,7 +314,7 @@
   border-radius: 45px;
   background: var(--secon1, #088180);
   color: #FFF;
-  font-size: 18px;
+  font-size: 15px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;

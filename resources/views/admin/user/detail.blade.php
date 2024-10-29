@@ -5,7 +5,7 @@
 @section('main-content')
     <div class="">
         <!-- Page Heading -->
-        <h1 class="h3 mb-4 text-gray-800"> Detail User </h1>
+        <h1 class="h3 mb-4 text-gray-800"> Chi tiết người dùng </h1>
         <div class="container-fluid">
             <form action="{{ route('api.admin.users.update', $user->id) }}" method="POST" autocomplete="off" enctype="multipart/form-data">
                 @csrf
