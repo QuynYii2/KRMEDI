@@ -14,6 +14,7 @@ use App\Models\Clinic;
 use App\Models\FamilyManagement;
 use App\Models\Notification;
 use App\Models\online_medicine\ProductMedicine;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -211,6 +212,19 @@ class BookingResultApi extends Controller
         $pusher->trigger('noti-events', 'noti-events', $requestData);
 
         return response()->json(['status' => true,'data'=>$clinic,'message' => 'Đặt lịch thành công']);
+    }
+
+    public function sendMedicationSchedule(Request $request)
+    {
+        $user_id = JWTAuth::user()->id;
+        $user = User::find($user_id);
+        $user->is_send = $request->get('is_send');
+        $user->save();
+        if ($request->get('is_send') == 1){
+            return response()->json(['status' => true,'message' => 'Bật nhắc uống thuốc thành công']);
+        }else{
+            return response()->json(['status' => true,'message' => 'Tắt nhắc uống thuốc thành công']);
+        }
     }
 
     public function delete($id)
