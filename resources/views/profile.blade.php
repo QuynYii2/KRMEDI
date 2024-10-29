@@ -449,7 +449,9 @@
                                         <label for="province_id">{{ __('home.Tỉnh') }}</label>
                                         <select name="province_id" id="province_id" class="form-control"
                                             onchange="callGetAllDistricts(this.value)">
-
+                                            @foreach($province as $provinces)
+                                                <option value="{{$provinces->code}}" @if($provinces->code == $doctor->province_id) @endif>{{ $provinces->name }}</option>
+                                                @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -459,6 +461,9 @@
                                         <select name="district_id" id="district_id" class="form-control"
                                             onchange="callGetAllCommunes(this.value)">
                                             <option value="">{{ __('home.Chọn quận') }}</option>
+                                            @foreach($district as $districts)
+                                                <option value="{{$districts->code}}" @if($districts->code == $doctor->district_id) @endif>{{ $districts->name }}</option>
+                                                @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -467,6 +472,9 @@
                                         <label for="commune_id">{{ __('home.Xã') }}</label>
                                         <select name="commune_id" id="commune_id" class="form-control">
                                             <option value="">{{ __('home.Chọn xã') }}</option>
+                                            @foreach($commune as $communes)
+                                                <option value="{{$communes->code}}" @if($communes->code == $doctor->commune_id) @endif>{{ $communes->name }}</option>
+                                                @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -1219,7 +1227,7 @@
     <script src="{{ asset('signature_pad@4.2.0/dist/signature_pad.umd.min.js') }}"></script>
 
     <script>
-        callGetAllProvince();
+        // callGetAllProvince();
 
         async function callGetAllProvince() {
             $.ajax({

@@ -12,9 +12,12 @@ use App\Enums\TypeUser;
 use App\Enums\UserStatus;
 use App\Http\Controllers\restapi\MainApi;
 use App\Models\Clinic;
+use App\Models\Commune;
 use App\Models\Department;
+use App\Models\District;
 use App\Models\DoctorDepartment;
 use App\Models\Nation;
+use App\Models\Province;
 use App\Models\Role;
 use App\Models\RoleUser;
 use App\Models\ServiceClinic;
@@ -50,6 +53,9 @@ class ProfileController extends Controller
         }
         $url = url('/home-screen/'. $clinic_id);
         $qrCodes = QrCode::size(300)->generate($url);
+        $province = Province::all();
+        $district = District::where('code',$doctor->district_id)->get();
+        $commune = Commune::where('code',$doctor->commune_id)->get();
         $services = ServiceClinic::where('status', ServiceClinicStatus::ACTIVE)->get();
         $symptoms = Symptom::where('status', SymptomStatus::ACTIVE)->get();
         $doctorLists = User::where('member', TypeUser::DOCTORS)->get();
@@ -68,6 +74,9 @@ class ProfileController extends Controller
             'symptoms',
             'doctorLists',
             'listDepartments',
+            'province',
+            'district',
+            'commune'
         ));
     }
 
