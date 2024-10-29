@@ -23,7 +23,7 @@ class User extends Authenticatable implements JWTSubject
         'username', 'phone', 'address_code', 'status', 'type',
         'provider_id', 'provider_name', 'prescription', 'free', 'abouts', 'abouts_en', 'abouts_lao', 'workspace',
         'last_seen', 'extend', 'average_star', 'identify_number', 'signature', 'token','avt','devices_name','devices_id','health_insurance_front','health_insurance_back','insurance_id',
-        'date_health_insurance','client_id_kiot_viet','client_secret_kiot_viet','retailer_kiot_viet'
+        'date_health_insurance','client_id_kiot_viet','client_secret_kiot_viet','retailer_kiot_viet','is_send'
     ];
 
     /**
