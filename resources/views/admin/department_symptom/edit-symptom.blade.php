@@ -78,7 +78,7 @@
 
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="isFilter" id="isFilter"
-                                    {{ $department->isFilter ? 'checked' : '' }}>
+                                    {{ $symptom->isFilter ? 'checked' : '' }}>
                                 <label class="form-check-label" for="isFilter">
                                     Khả dụng để lọc?
                                 </label>

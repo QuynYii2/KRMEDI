@@ -21,7 +21,7 @@
             </div>
             <div class="form-group">
                 <label for="website_description">{{ __('home.Mô tả ngắn việt') }} </label>
-                <textarea class="form-control" name="website_description"
+                <textarea class="form-control" name="website_description" rows="5"
                           id="website_description" required></textarea>
             </div>
             <div class="row">
@@ -117,7 +117,7 @@
             </div>
             <div class="form-group">
                 <label>{{ __('home.Mô tả ngắn việt') }}</label>
-                <textarea class="form-control" name="website_description" required
+                <textarea class="form-control" name="website_description" required rows="5"
                           id="website_description">{{$settingConfig->website_description}}</textarea>
             </div>
             <div class="row">
@@ -172,3 +172,13 @@
         </form>
     @endif
 @endsection
+<script>
+    document.querySelectorAll('textarea').forEach(function (textarea) {
+        if (textarea.style.display === 'none' || textarea.getAttribute('aria-hidden') === 'true') {
+            textarea.removeAttribute('required');
+        } else {
+            textarea.setAttribute('required', 'required');
+        }
+    });
+
+</script>

@@ -5,7 +5,7 @@
 @section('main-content')
     <div class="">
         <!-- Page Heading -->
-        <h1 class="h3 mb-4 text-gray-800"> List User </h1>
+        <h1 class="h3 mb-4 text-gray-800"> Danh sách người dùng </h1>
         <div class="d-flex align-items-center justify-content-between">
             <div class="mb-3 col-md-3">
                 <input class="form-control" id="inputSearchUser" type="text" placeholder="Search.."/>

@@ -5,7 +5,7 @@
 @section('main-content')
     <div class="">
         <!-- Page Heading -->
-        <h1 class="h3 mb-4 text-gray-800"> Create User </h1>
+        <h1 class="h3 mb-4 text-gray-800"> Thêm người dùng </h1>
         <div class="container-fluid">
             <form action="{{ route('api.admin.users.create') }}" method="POST" autocomplete="off" enctype="multipart/form-data">
                 @csrf

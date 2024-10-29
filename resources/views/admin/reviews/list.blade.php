@@ -10,9 +10,6 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">{{ __('home.Full Name') }}</th>
-                <th scope="col">{{ __('home.Email') }}</th>
-                <th scope="col">{{ __('home.PhoneNumber') }}</th>
-                <th scope="col">{{ __('home.Addresses') }}</th>
                 <th scope="col">{{ __('home.Star') }}</th>
                 <th scope="col">{{ __('home.Content') }}</th>
                 <th scope="col">{{ __('home.Status') }}</th>
@@ -63,9 +60,6 @@
                 html = html + `<tr>
                                         <th scope="row">${i + 1}</th>
                                         <td>${data.name}</td>
-                                        <td>${data.email}</td>
-                                        <td>${data.phone}</td>
-                                        <td>${data.address}</td>
                                         <td>${data.star}</td>
                                         <td>
                                         @if(locationHelper() == 'vi')

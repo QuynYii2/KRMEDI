@@ -29,7 +29,7 @@
                                 <a href="{{route('view.admin.footer.edit',$val->id)}}" class="btn btn-primary">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
-                                <button onclick="confirmDeleteUser({{$val->id}})" type="button" class="btn btn-danger">
+                                <button onclick="confirmDeleteFooter({{$val->id}})" type="button" class="btn btn-danger">
                                     <i class="fa-regular fa-trash-can"></i>
                                 </button>
                             </div>
@@ -42,20 +42,14 @@
 
     </div>
     <script>
-        let accessToken = `Bearer ` + token;
-        let headers = {
-            Authorization: accessToken,
-        }
-
-
-        function confirmDeleteUser(id) {
+        function confirmDeleteFooter(id) {
             let text = `Are you sure you want to delete?`;
             if (confirm(text) === true) {
-                deleteUser(id);
+                deleteFooter(id);
             }
         }
 
-        async function deleteUser(id) {
+        async function deleteFooter(id) {
             let deleteUrl = `{{ route('view.admin.footer.delete', ['id'=>':id']) }}`;
             deleteUrl = deleteUrl.replace(':id', id);
 

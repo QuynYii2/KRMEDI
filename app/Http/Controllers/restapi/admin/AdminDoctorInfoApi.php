@@ -21,10 +21,12 @@ class AdminDoctorInfoApi extends Controller
         if ($status) {
             $doctor_infos = User::where('status', $status)
                 ->where('member', TypeMedical::DOCTORS)
+                ->orderBy('created_at','desc')
                 ->get();
         } else {
             $doctor_infos = User::where('status', '!=', DoctorInfoStatus::DELETED)
                 ->where('member', TypeMedical::DOCTORS)
+                ->orderBy('created_at','desc')
                 ->get();
         }
         return response()->json($doctor_infos);
@@ -34,6 +36,7 @@ class AdminDoctorInfoApi extends Controller
     {
         $doctor_infos_byUser = User::where('member', TypeMedical::DOCTORS)
             ->where('status', '!=', UserStatus::DELETED)
+            ->orderBy('created_at','desc')
             ->get();
         return response()->json($doctor_infos_byUser);
     }

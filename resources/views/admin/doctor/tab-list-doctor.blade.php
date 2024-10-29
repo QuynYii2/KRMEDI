@@ -4,12 +4,13 @@
         <thead>
         <tr>
             <th scope="col">#</th>
-            <th scope="col">{{ __('home.Thumbnail') }}</th>
+            <th scope="col">Hình ảnh</th>
             <th scope="col">{{ __('home.Chuyên Môn') }}</th>
             <th scope="col">{{ __('home.Năm kinh nghiệm') }}</th>
             <th scope="col">{{ __('home.Dịch vụ cung cấp') }}</th>
             <th scope="col">{{ __('home.Thời gian') }}</th>
             <th scope="col">{{ __('home.Những ngày làm việc') }}</th>
+            <th scope="col">Hành động</th>
         </tr>
         </thead>
         <tbody id="ProductsAdmin">
