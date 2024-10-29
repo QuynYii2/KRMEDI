@@ -16,6 +16,49 @@
             border: 0 solid black;
             opacity: 0.5;
         }
+        .list-tab-medicine{
+            display: flex;
+            flex-direction: column;
+            li{
+                color: black;
+                padding: 15px 10px;
+                font-size: 18px;
+                border-bottom: 1px solid #e4e8ed;
+                border-radius: 5px;
+            }
+            li:hover{
+                background: #cccccc;
+                font-weight: 700;
+            }
+            li.active{
+                background: #cccccc;
+                font-weight: 700;
+            }
+        }
+        .medicine-tab-title{
+            font-size: 18px !important;
+            font-weight: 800 !important;
+            text-decoration: underline;
+        }
+        .medicineTab{
+            max-height: 800px;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        .duration-500 {
+            animation-duration: .5s;
+        }
+        .transition-all {
+            transition-property: all;
+            transition-timing-function: cubic-bezier(.4,0,.2,1);
+            transition-duration: .15s;
+        }
+        .medicine-current-tab{
+            padding: 15px;
+            border: 1px solid #e4e8ed;
+            border-radius: 5px;
+            box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+        }
     </style>
     @include('layouts.partials.header')
     @include('component.banner')
@@ -175,11 +218,96 @@
             </div>
             <div class="recruitment-details--text--line"></div>
             <div class="recruitment-details--text">
-                @if(locationHelper() == 'vi')
-                    {!! $medicine->description !!}
-                @else
-                    {!! $medicine->description_en !!}
-                @endif
+                <div class="row">
+                    <div class="col-md-3 col-xl-2 ">
+                        <ul class="list-tab-medicine">
+                            <li><a href="javascript:void(0);" data-target="descriptionTab">Mô tả sản phẩm</a></li>
+                            <li><a href="javascript:void(0);" data-target="ingredientTab">Thành phần</a></li>
+                            <li><a href="javascript:void(0);" data-target="congdungTab">Công dụng</a></li>
+                            <li><a href="javascript:void(0);" data-target="hdsdTab">Hướng dẫn sử dụng</a></li>
+                            <li><a href="javascript:void(0);" data-target="sideEffectsTab">Tác dụng phụ</a></li>
+                            <li><a href="javascript:void(0);" data-target="noteTab">Lưu ý</a></li>
+                            <li><a href="javascript:void(0);" data-target="preserveTab">Bảo quản</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-9 col-xl-10">
+                        <div class="medicine-current-tab" id="descriptionTab">
+                            <h5 class="medicine-tab-title">Mô tả sản phẩm</h5>
+                            <div class="medicineTab">
+                                @if(locationHelper() == 'vi')
+                                    {!! $medicine->description !!}
+                                @else
+                                    {!! $medicine->description_en !!}
+                                @endif
+                            </div>
+                            <div class="d-flex justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
+                                <p class="see-more-medicine transition-all duration-500 text-decoration-underline">Xem thêm</p>
+                                <p class="see-less-medicine transition-all duration-500 text-decoration-underline d-none">Thu gọn</p>
+                            </div>
+                        </div>
+                        <div class="medicine-current-tab" id="ingredientTab">
+                            <h5 class="medicine-tab-title">Thành phần</h5>
+                            <div class="medicineTab">
+                                {!! $medicineIngredient !!}
+                            </div>
+                            <div class="d-flex justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
+                                <p class="see-more-medicine transition-all duration-500 text-decoration-underline">Xem thêm</p>
+                                <p class="see-less-medicine transition-all duration-500 text-decoration-underline d-none">Thu gọn</p>
+                            </div>
+                        </div>
+                        <div class="medicine-current-tab" id="congdungTab">
+                            <h5 class="medicine-tab-title">Công dụng</h5>
+                            <div class="medicineTab">
+                                {!! $medicine->uses!!}
+                            </div>
+                            <div class="d-flex justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
+                                <p class="see-more-medicine transition-all duration-500 text-decoration-underline">Xem thêm</p>
+                                <p class="see-less-medicine transition-all duration-500 text-decoration-underline d-none">Thu gọn</p>
+                            </div>
+                        </div>
+                        <div class="medicine-current-tab" id="hdsdTab">
+                            <h5 class="medicine-tab-title">Hướng dẫn sử dụng</h5>
+                            <div class="medicineTab">
+                                {!! $medicine->user_manual !!}
+                            </div>
+                            <div class="d-flex justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
+                                <p class="see-more-medicine transition-all duration-500 text-decoration-underline">Xem thêm</p>
+                                <p class="see-less-medicine transition-all duration-500 text-decoration-underline d-none">Thu gọn</p>
+                            </div>
+                        </div>
+                        <div class="medicine-current-tab" id="sideEffectsTab">
+                            <h5 class="medicine-tab-title">Tác dụng phụ</h5>
+                            <div class="medicineTab">
+                                {!! $medicine->side_effects !!}
+                            </div>
+                            <div class="d-flex justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
+                                <p class="see-more-medicine transition-all duration-500 text-decoration-underline">Xem thêm</p>
+                                <p class="see-less-medicine transition-all duration-500 text-decoration-underline d-none">Thu gọn</p>
+                            </div>
+                        </div>
+                        <div class="medicine-current-tab" id="noteTab">
+                            <h5 class="medicine-tab-title">Lưu ý</h5>
+                            <div class="medicineTab">
+                                {!! $medicine->notes!!}
+                            </div>
+                            <div class="d-flex justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
+                                <p class="see-more-medicine transition-all duration-500 text-decoration-underline">Xem thêm</p>
+                                <p class="see-less-medicine transition-all duration-500 text-decoration-underline d-none">Thu gọn</p>
+                            </div>
+                        </div>
+                        <div class="medicine-current-tab" id="preserveTab">
+                            <h5 class="medicine-tab-title">Bảo quản</h5>
+                            <div class="medicineTab">
+                                {!! $medicine->preserve!!}
+                            </div>
+                            <div class="d-flex justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
+                                <p class="see-more-medicine transition-all duration-500 text-decoration-underline">Xem thêm</p>
+                                <p class="see-less-medicine transition-all duration-500 text-decoration-underline d-none">Thu gọn</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -266,6 +394,52 @@
         //         }
         //     });
         // }
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const tabs = document.querySelectorAll(".list-tab-medicine li a");
+            const tabContents = document.querySelectorAll(".medicine-current-tab");
+
+            tabs.forEach(tab => {
+                tab.addEventListener("click", function () {
+                    tabs.forEach(t => t.parentElement.classList.remove("active"));
+                    tabContents.forEach(content => content.style.display = "none");
+
+                    tab.parentElement.classList.add("active");
+                    const targetTab = document.getElementById(this.getAttribute("data-target"));
+                    if (targetTab) {
+                        targetTab.style.display = "block";
+                    }
+                });
+            });
+
+            tabs[0].click();
+
+            const medicineTabContainers = document.querySelectorAll(".medicine-current-tab");
+            medicineTabContainers.forEach(container => {
+                const medicineTab = container.querySelector(".medicineTab");
+                const toggleButton = container.querySelector(".toggle-expand");
+                const seeMore = toggleButton.querySelector(".see-more-medicine");
+                const seeLess = toggleButton.querySelector(".see-less-medicine");
+
+                if (medicineTab.scrollHeight > 800) {
+                    toggleButton.style.display = "flex";
+                }
+
+                toggleButton.addEventListener("click", function () {
+                    if (medicineTab.style.maxHeight === "none") {
+                        medicineTab.style.maxHeight = "800px";
+                        seeMore.classList.remove("d-none");
+                        seeLess.classList.add("d-none");
+                    } else {
+                        medicineTab.style.maxHeight = "none";
+                        seeMore.classList.add("d-none");
+                        seeLess.classList.remove("d-none");
+                    }
+                });
+            });
+        });
+
     </script>
     <script src="{{asset('js/send-mess.js')}}" type="module"></script>
 @endsection

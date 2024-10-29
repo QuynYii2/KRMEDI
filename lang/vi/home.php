@@ -419,7 +419,7 @@ return [
     'For kids' => 'Cho trẻ em',
     'For women' => 'Dành cho nữ',
     'For men' => 'Dành cho nam',
-    'For adults' => 'Dành cho ngươi lớn',
+    'For adults' => 'Dành cho người lớn',
     'Manufacturing Company' => 'Công ty sản xuất',
     'Manufacturing Country' => 'Quốc gia sản xuất',
     'News details' => 'Chi tiết tin tức',

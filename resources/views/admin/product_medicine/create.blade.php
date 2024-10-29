@@ -22,38 +22,38 @@
             <div class="row">
                 <div class="col-md-12 form-group">
                     <label for="name">{{ __('home.Name') }}</label>
-                    <input type="text" class="form-control" id="name" name="name" value="">
+                    <input type="text" class="form-control" id="name" name="name" value="" required>
                 </div>
             </div>
             <div class="form-group">
-                <label for="short_description">Mô tả</label>
-                <textarea class="form-control" name="short_description" id="short_description"></textarea>
+                <label for="short_description">Mô tả ngắn</label>
+                <textarea class="form-control" name="short_description" id="short_description" required></textarea>
             </div>
             <div class="form-group">
                 <label for="description">Nội dung</label>
-                <textarea class="form-control" name="description" id="description"></textarea>
+                <textarea class="form-control" name="description" id="description" required></textarea>
             </div>
             <div class="row">
                 <div class="col-md-4 form-group">
                     <label for="brand_name">{{ __('home.Brand Name') }}</label>
                     <input type="text" class="form-control" id="brand_name" name="brand_name"
-                           value="">
+                           value="" required>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="number_register">Số Đăng Ký</label>
                     <input type="number" class="form-control" id="number_register"
-                           name="number_register">
+                           name="number_register" required>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="specifications">Quy cách đóng gói</label>
                     <input type="text" class="form-control" id="specifications"
-                           name="specifications">
+                           name="specifications" required>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4">
                     <label for="category_id">{{ __('home.Category') }}</label>
-                    <select class="form-select" id="category_id" name="category_id">
+                    <select class="form-select" id="category_id" name="category_id" required>
                         <option value="0">{{ __('home.Khác') }}</option>
                         @if($categoryProductMedicine)
                             @foreach($categoryProductMedicine as $index => $cateProductMedicine)
@@ -64,7 +64,7 @@
                 </div>
                 <div class="col-md-4">
                     <label for="object_">{{ __('home.Object') }}</label>
-                    <select class="form-select" id="object_" name="object_">
+                    <select class="form-select" id="object_" name="object_" required>
                         <option value="{{ ObjectOnlineMedicine::KIDS }}">{{ __('home.For kids') }}</option>
                         <option value="{{ ObjectOnlineMedicine::FOR_WOMEN }}">{{ __('home.For women') }}
                         </option>
@@ -75,21 +75,21 @@
                 </div>
                 <div class="col-md-4">
                     <label for="filter_">{{ __('home.Filter') }}</label>
-                    <select class="form-select" id="filter_" name="filter_">
+                    <select class="form-select" id="filter_" name="filter_" required>
                         <option value="{{ FilterOnlineMedicine::HEALTH }}">{{ __('home.Heath') }}</option>
                         <option value="{{ FilterOnlineMedicine::BEAUTY }}">{{ __('home.Beauty') }}</option>
                         <option value="{{ FilterOnlineMedicine::PET }}">{{ __('home.Pets') }}</option>
                     </select>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mt-3">
                 <div class="col-md-6">
                     <label for="thumbnail">{{ __('home.Thumbnail') }}</label>
-                    <input type="file" class="form-control" id="thumbnail" name="thumbnail" accept="image/*">
+                    <input type="file" class="form-control" id="thumbnail" name="thumbnail" accept="image/*" required>
                 </div>
                 <div class="col-md-6">
                     <label for="gallery">{{ __('home.gallery') }}</label>
-                    <input type="file" class="form-control" id="gallery" name="gallery[]" multiple accept="image/*">
+                    <input type="file" class="form-control" id="gallery" name="gallery[]" multiple accept="image/*" required>
                 </div>
             </div>
             <div class="row">
@@ -108,14 +108,14 @@
                     <input type="checkbox" id="is_prescription" name="is_prescription">
                 </div>
             </div>
-            <div class="row">
+            <div class="row mt-3">
                 <div class="col-md-4">
                     <label for="price">{{ __('home.Price') }}</label>
-                    <input type="number" class="form-control" id="price" name="price" value="">
+                    <input type="number" class="form-control" id="price" name="price" value="" required>
                 </div>
                 <div class="col-md-4">
                     <label for="unit_price">{{ __('home.Price Unit') }}</label>
-                    <input type="text" class="form-control" id="unit_price" name="unit_price" value="">
+                    <input type="text" class="form-control" id="unit_price" name="unit_price" value="" required>
                 </div>
                 <div class="col-md-4">
                     <label for="status">{{ __('home.Status') }}</label>
@@ -127,14 +127,14 @@
                     </select>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mt-3">
                 <div class="col-md-4">
                     <label for="quantity">{{ __('home.Quantity') }}</label>
-                    <input type="number" class="form-control" id="quantity" name="quantity" min="0">
+                    <input type="number" class="form-control" id="quantity" name="quantity" min="0" required>
                 </div>
                 <div class="col-md-4">
                     <label for="unit_quantity">Số lượng đơn vị</label>
-                    <select class="form-select" id="unit_quantity" name="unit_quantity">
+                    <select class="form-select" id="unit_quantity" name="unit_quantity" required>
                         @foreach($unit_quantity as $unit_quantity_item)
                             <option value="{{ $unit_quantity_item }}">{{ $unit_quantity_item }}</option>
                         @endforeach
@@ -142,27 +142,27 @@
                 </div>
                 <div class="col-md-4">
                     <label for="shape">Hình dạng</label>
-                    <select class="form-select" id="shape" name="shape">
+                    <select class="form-select" id="shape" name="shape" required>
                         @foreach($shapes as $shape)
                             <option value="{{ $shape }}">{{ $shape }}</option>
                         @endforeach
                     </select>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mt-3">
                 <div class="col-md-6">
                     <label for="manufacturing_country">Quốc gia sản xuất</label>
                     <input type="text" class="form-control" id="manufacturing_country"
-                           name="manufacturing_country">
+                           name="manufacturing_country" required>
                 </div>
                 <div class="col-md-6">
                     <label for="manufacturing_company">Công ty sản xuất</label>
                     <input type="text" class="form-control" id="manufacturing_company"
-                           name="manufacturing_company">
+                           name="manufacturing_company" required>
                 </div>
                 <div class="col-md-6">
                     <div class="form-check mt-3 mb-3">
-                        <input class="form-check-input" type="checkbox" value="1" id="type_product" name="type_product">
+                        <input class="form-check-input" type="checkbox" value="1" id="type_product" name="type_product" required>
                         <label class="form-check-label" for="type_product">
                             Sản phẩm theo chỉ định của bác sĩ
                         </label>
@@ -171,15 +171,15 @@
             </div>
             <div class="form-group">
                 <label for="side_effects">Tác dụng phụ</label>
-                <textarea class="form-control" name="side_effects" id="side_effects"></textarea>
+                <textarea class="form-control" name="side_effects" id="side_effects" required></textarea>
             </div>
             <div class="form-group">
                 <label for="uses">Công dụng</label>
-                <textarea class="form-control" name="uses" id="uses"></textarea>
+                <textarea class="form-control" name="uses" id="uses" required></textarea>
             </div>
             <div class="form-group">
                 <label for="user_manual">Hướng dẫn sử dụng</label>
-                <textarea class="form-control" name="user_manual" id="user_manual"></textarea>
+                <textarea class="form-control" name="user_manual" id="user_manual" required></textarea>
             </div>
             <div class="form-group">
                 <label for="notes">Ghi chú</label>
@@ -187,7 +187,7 @@
             </div>
             <div class="form-group">
                 <label for="preserve">Bảo quản </label>
-                <textarea class="form-control" name="preserve" id="preserve"></textarea>
+                <textarea class="form-control" name="preserve" id="preserve" required></textarea>
             </div>
         </div>
     </form>
@@ -224,11 +224,11 @@
                 let ingredient_quantity = ingredient_quantities[j].value;
 
                 if (!ingredient_name || !ingredient_quantity) {
-                    alert('Ingredient name or Ingredient quantity not null')
+                    alert('Thành phần thuốc và số lượng không được trống')
                     return;
                 }
 
-                let ingredient_value = ingredient_name + '(' + ingredient_quantity + '%)';
+                let ingredient_value = ingredient_name + '(' + ingredient_quantity + ')';
                 if (!ingredient) {
                     ingredient = ingredient_value;
                 } else {
@@ -285,10 +285,10 @@
             formData.append('proved_by', '{{ Auth::user()->id }}');
             formData.append('type_product', active_type);
 
-            if (!isValid) {
-                alert('Please check input empty!');
-                return;
-            }
+            // if (!isValid) {
+            //     alert('Vui lòng kiểm tra lại thông tin đã nhập');
+            //     return;
+            // }
 
             if (isValid){
                 try {
@@ -325,8 +325,8 @@
                                     <input type="text" class="form-control ingredient_name" name="ingredient_name">
                                 </div>
                                 <div class="form-group">
-                                    <label>{{ __('home.Quantity') }} (Accountable by %)</label>
-                                    <input type="number" class="form-control ingredient_quantity" name="ingredient_quantity">
+                                    <label>Hàm lượng</label>
+                                    <input type="text" class="form-control ingredient_quantity" name="ingredient_quantity">
                                 </div>
                             </div>
                             <div class="btn-remove w-25 d-flex align-items-center justify-content-center">

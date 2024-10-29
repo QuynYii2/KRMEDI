@@ -7,17 +7,17 @@ use BenSampo\Enum\Enum;
 final class ShapeProduct extends Enum
 {
     /* Dạng thuốc tiêm */
-    const INJECTION = 'INJECTION';
+    const INJECTION = 'Dạng Thuốc Tiêm';
     /* Dạng dung dịch */
-    const SOLUTION = 'SOLUTION';
+    const SOLUTION = 'Dạng Dung Dịch';
     /* Dạng viên sủi */
-    const EFFERVESCENT = 'EFFERVESCENT';
+    const EFFERVESCENT = 'Dạng Viên Sủi';
     /* Dạng bột */
-    const POWDER = 'POWDER';
+    const POWDER = 'Dạng Bột';
     /* Dạng viên nén */
-    const TABLET = 'TABLET';
+    const TABLET = 'Dạng Viên Nén';
     /* Dạng viên nang */
-    const CAPSULE = 'CAPSULE';
+    const CAPSULE = 'Dạng Viên Nang';
     /* Dạng khác */
-    const OTHER = 'OTHER';
+    const OTHER = 'Dạng Khác';
 }

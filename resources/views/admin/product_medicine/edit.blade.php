@@ -34,7 +34,7 @@
                 </textarea>
             </div>
             <div class="form-group">
-                <label for="description">{{ __('home.Mô tả dài việt') }}</label>
+                <label for="description">Nội dung</label>
                 <textarea class="form-control" name="description" id="description">
                     {{ $productMedicine->description ?? '' }}
                 </textarea>
@@ -51,7 +51,7 @@
                            name="number_register" value="{{ $productMedicine->number_register ?? '' }}">
                 </div>
                 <div class="form-group col-md-4">
-                    <label for="specifications">Specifications</label>
+                    <label for="specifications">Quy cách đóng gói</label>
                     <input type="text" class="form-control" id="specifications"
                            name="specifications" value="{{ $productMedicine->specifications ?? '' }}">
                 </div>
@@ -108,7 +108,7 @@
                     </select>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mt-3">
                 <div class="col-md-6">
                     <label for="thumbnail">{{ __('home.Thumbnail') }}</label>
                     <input type="file" class="form-control" id="thumbnail" name="thumbnail" accept="image/*">
@@ -135,7 +135,7 @@
                                     $array_value = explode('(', $list_drugIngredient);
                                     if (count($array_value) > 1){
                                         $percent_one = $array_value[1];
-                                        $percent_array = explode('%', $percent_one);
+                                        $percent_array = explode(')', $percent_one);
                                     }
                                 @endphp
                                 <div class="p-3 border mt-3 mb-3 d-flex align-items-center justify-content-between">
@@ -147,8 +147,8 @@
                                                    name="ingredient_name">
                                         </div>
                                         <div class="form-group">
-                                            <label>{{ __('home.Quantity') }} (Accountable by %)</label>
-                                            <input type="number" class="form-control ingredient_quantity"
+                                            <label>Hàm lượng</label>
+                                            <input type="text" class="form-control ingredient_quantity"
                                                    value="{{ isset($percent_array) ? $percent_array[0] : '' }}"
                                                    name="ingredient_quantity">
                                         </div>
@@ -173,7 +173,7 @@
                             {{ $productMedicine->is_prescription ? 'checked' : '' }}>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mt-3">
                 <div class="col-md-4">
                     <label for="price">{{ __('home.Price') }}</label>
                     <input type="number" class="form-control" id="price" name="price"
@@ -196,7 +196,7 @@
                     </select>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mt-3">
                 <div class="col-md-4">
                     <label for="quantity">{{ __('home.Quantity') }}</label>
                     <input type="number" class="form-control" id="quantity" name="quantity" min="0"
@@ -225,7 +225,7 @@
                     </select>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mt-3">
                 <div class="col-md-6">
                     <label for="manufacturing_country">{{ __('home.Manufacturing Country') }}</label>
                     <input type="text" class="form-control" id="manufacturing_country"
@@ -262,7 +262,7 @@
             <div class="form-group">
                 <label for="user_manual">{{ __('home.User Manual') }}</label>
                 <textarea class="form-control" name="user_manual" id="user_manual">
-                    {{ $productMedicine->uses }}
+                    {{ $productMedicine->user_manual }}
                 </textarea>
             </div>
             <div class="form-group">
@@ -313,12 +313,12 @@
                 let ingredient_quantity = ingredient_quantities[j].value;
 
                 if (!ingredient_name || !ingredient_quantity) {
-                    alert('Ingredient name or Ingredient quantity not null')
+                    alert('Thành phần thuốc và số lượng không được trống')
                     loadingMasterPage();
                     return;
                 }
 
-                let ingredient_value = ingredient_name + '(' + ingredient_quantity + '%)';
+                let ingredient_value = ingredient_name + '(' + ingredient_quantity + ')';
                 if (!ingredient) {
                     ingredient = ingredient_value;
                 } else {
@@ -364,9 +364,9 @@
                 formData.append(fieldTextarea, content);
             });
 
-            if (!isValid) {
-                return;
-            }
+            // if (!isValid) {
+            //     return;
+            // }
 
             const photo = $('#thumbnail')[0].files[0];
             const remember = document.getElementById("type_product");
@@ -412,7 +412,7 @@
                                     <input type="text" class="form-control ingredient_name" name="ingredient_name">
                                 </div>
                                 <div class="form-group">
-                                    <label>{{ __('home.Quantity') }} (Accountable by %)</label>
+                                    <label>Hàm lượng</label>
                                     <input type="number" class="form-control ingredient_quantity" name="ingredient_quantity">
                                 </div>
                             </div>
