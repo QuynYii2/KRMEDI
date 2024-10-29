@@ -450,7 +450,7 @@
                                         <select name="province_id" id="province_id" class="form-control"
                                             onchange="callGetAllDistricts(this.value)">
                                             @foreach($province as $provinces)
-                                                <option value="{{$provinces->code}}" @if($provinces->code == $doctor->province_id) @endif>{{ $provinces->name }}</option>
+                                                <option value="{{$provinces->code}}" @if($provinces->code == $doctor->province_id) selected @endif>{{ $provinces->name }}</option>
                                                 @endforeach
                                         </select>
                                     </div>
@@ -462,7 +462,7 @@
                                             onchange="callGetAllCommunes(this.value)">
                                             <option value="">{{ __('home.Chọn quận') }}</option>
                                             @foreach($district as $districts)
-                                                <option value="{{$districts->code}}" @if($districts->code == $doctor->district_id) @endif>{{ $districts->name }}</option>
+                                                <option value="{{$districts->code}}" @if($districts->code == $doctor->district_id) selected @endif>{{ $districts->name }}</option>
                                                 @endforeach
                                         </select>
                                     </div>
@@ -473,7 +473,7 @@
                                         <select name="commune_id" id="commune_id" class="form-control">
                                             <option value="">{{ __('home.Chọn xã') }}</option>
                                             @foreach($commune as $communes)
-                                                <option value="{{$communes->code}}" @if($communes->code == $doctor->commune_id) @endif>{{ $communes->name }}</option>
+                                                <option value="{{$communes->code}}" @if($communes->code == $doctor->commune_id) selected @endif>{{ $communes->name }}</option>
                                                 @endforeach
                                         </select>
                                     </div>

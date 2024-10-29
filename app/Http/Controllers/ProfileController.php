@@ -54,8 +54,8 @@ class ProfileController extends Controller
         $url = url('/home-screen/'. $clinic_id);
         $qrCodes = QrCode::size(300)->generate($url);
         $province = Province::all();
-        $district = District::where('code',$doctor->district_id)->get();
-        $commune = Commune::where('code',$doctor->commune_id)->get();
+        $district = District::where('province_code',$doctor->province_id)->get();
+        $commune = Commune::where('district_code',$doctor->district_id)->get();
         $services = ServiceClinic::where('status', ServiceClinicStatus::ACTIVE)->get();
         $symptoms = Symptom::where('status', SymptomStatus::ACTIVE)->get();
         $doctorLists = User::where('member', TypeUser::DOCTORS)->get();
