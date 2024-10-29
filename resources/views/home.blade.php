@@ -1612,7 +1612,7 @@
                                             </div>
                                             <div class="d-flex justify-content-end">
                                                 <div class="SeeDetail">
-                                                    <a href="{{ route('flea.market.product.detail', $product->id) }}"
+                                                    <a href="{{ route('medicine.detail', $product->id) }}"
                                                        target="_blank">{{ __('home.See details') }}</a>
                                                 </div>
                                             </div>

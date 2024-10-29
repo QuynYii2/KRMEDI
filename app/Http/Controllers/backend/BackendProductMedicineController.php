@@ -166,6 +166,9 @@ class BackendProductMedicineController extends Controller
 
             $productMedicine->gallery = $gallery;
             $productMedicine->type_product = $request->type_product;
+            $productMedicine->user_manual = $request->user_manual;
+            $productMedicine->uses = $request->uses;
+            $productMedicine->side_effects = $request->side_effects;
 
             $is_prescription = (bool)$request->input('is_prescription');
             $params['is_prescription'] = $is_prescription;

@@ -7,9 +7,9 @@ use BenSampo\Enum\Enum;
 final class UnitQuantityProduct extends Enum
 {
     /* Hộp */
-    const BOX = 'BOX' ;
+    const BOX = 'Hộp';
     /* Vỉ */
-    const PACK = 'PACK';
+    const PACK = 'Vỉ';
     /* Khác */
-    const OTHER = 'OTHER';
+    const OTHER = 'Khác';
 }
