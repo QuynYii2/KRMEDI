@@ -637,7 +637,7 @@ class BookingController extends Controller
             $androidPayload = [
                 'notification' => [
                     'icon' => 'ic_launcher',
-                    'channel_id' => 'booking_channel_id',
+                    'channel_id' => 'default_channel_id',
                     'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
                     'sound' => 'default',
                 ],
@@ -654,7 +654,7 @@ class BookingController extends Controller
                 'token' => $userToken,
                 'notification' => $notificationPayload,
                 'data' => array_merge($data, [
-                    'channel_id' => 'booking_channel_id',
+                    'channel_id' => 'default_channel_id',
                 ]),
             ];
 

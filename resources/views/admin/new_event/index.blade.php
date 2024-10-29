@@ -22,7 +22,7 @@
             <tr>
                 <th scope="col">STT</th>
                 <th scope="col">{{ __('home.Tiêu đề') }}</th>
-                <th scope="col">{{ __('home.người tạo') }}</th>
+{{--                <th scope="col">{{ __('home.người tạo') }}</th>--}}
                 <th scope="col">{{ __('home.Trạng thái') }}</th>
                 <th scope="col">{{ __('home.Thao tác') }}</th>
             </tr>
@@ -38,7 +38,7 @@
                             {{ $newEvent->title_en }}
                         @endif
                     </td>
-                    <td>{{ $newEvent->user_id }}</td>
+{{--                    <td>{{ $newEvent->user_id }}</td>--}}
                     <td>{{ $newEvent->status }}</td>
                     <td class="d-flex">
                         <a href="{{ route('api.new-event.edit', ['id' => $newEvent->id]) }}"
