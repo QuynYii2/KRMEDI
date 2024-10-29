@@ -78,6 +78,7 @@ class VerifyCsrfToken extends Middleware
         '/api/notifications',
         '/api/aha-orders/**',
         '/api/set-status-order',
+        '/send-medication-schedule',
         //KÊ ĐƠN
         '/api/prescription/*'
     ];
