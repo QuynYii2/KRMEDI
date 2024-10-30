@@ -46,8 +46,8 @@ class SendAppointmentReminders extends Command
                         'url' => "#",
                         'description' => "Bạn có một lịch khám sắp diễn ra.",
                         'id' => '1',
-                        'routeKey'=>'/med-appointment-screen',
-                        'arguments'=>json_encode($appointment),
+                        'routeKey'=>'/booking-user',
+                        'arguments'=>json_encode($appointment->id),
                     ];
 
                     $androidPayload = [
