@@ -40,7 +40,7 @@
                            value="" required>
                 </div>
                 <div class="form-group col-md-4">
-                    <label for="number_register">Số Đăng Ký</label>
+                    <label for="number_register">Số đăng ký</label>
                     <input type="text" class="form-control" id="number_register"
                            name="number_register" required>
                 </div>
@@ -133,7 +133,7 @@
                     <input type="number" class="form-control" id="quantity" name="quantity" min="0" required>
                 </div>
                 <div class="col-md-4">
-                    <label for="unit_quantity">Số lượng đơn vị</label>
+                    <label for="unit_quantity">Đơn vị số lượng</label>
                     <select class="form-select" id="unit_quantity" name="unit_quantity" required>
                         @foreach($unit_quantity as $unit_quantity_item)
                             <option value="{{ $unit_quantity_item }}">{{ $unit_quantity_item }}</option>
