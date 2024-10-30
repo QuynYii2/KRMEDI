@@ -22,7 +22,7 @@
             li{
                 color: black;
                 padding: 15px 10px;
-                font-size: 18px;
+                font-size: 16px;
                 border-bottom: 1px solid #e4e8ed;
                 border-radius: 5px;
             }
@@ -219,7 +219,7 @@
             <div class="recruitment-details--text--line"></div>
             <div class="recruitment-details--text">
                 <div class="row">
-                    <div class="col-md-3 col-xl-2 ">
+                    <div class="col-md-3 col-xl-2 mb-2">
                         <ul class="list-tab-medicine">
                             <li><a href="javascript:void(0);" data-target="descriptionTab">Mô tả sản phẩm</a></li>
                             <li><a href="javascript:void(0);" data-target="ingredientTab">Thành phần</a></li>
