@@ -41,7 +41,7 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label for="number_register">Số Đăng Ký</label>
-                    <input type="number" class="form-control" id="number_register"
+                    <input type="text" class="form-control" id="number_register"
                            name="number_register" required>
                 </div>
                 <div class="form-group col-md-4">

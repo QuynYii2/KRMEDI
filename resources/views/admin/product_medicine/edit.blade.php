@@ -47,7 +47,7 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label for="number_register">{{ __('home.Number Register') }}</label>
-                    <input type="number" class="form-control" id="number_register"
+                    <input type="text" class="form-control" id="number_register"
                            name="number_register" value="{{ $productMedicine->number_register ?? '' }}">
                 </div>
                 <div class="form-group col-md-4">
