@@ -446,7 +446,7 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group focused">
-                                        <label for="province_id">{{ __('home.Tỉnh') }}</label>
+                                        <label for="province_id">Tỉnh/Thành phố</label>
                                         <select name="province_id" id="province_id" class="form-control"
                                             onchange="callGetAllDistricts(this.value)">
                                             @foreach($province as $provinces)
@@ -457,7 +457,7 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group focused">
-                                        <label for="district_id">{{ __('home.Quận') }}</label>
+                                        <label for="district_id">Quận/Huyện</label>
                                         <select name="district_id" id="district_id" class="form-control"
                                             onchange="callGetAllCommunes(this.value)">
                                             <option value="">{{ __('home.Chọn quận') }}</option>
@@ -469,7 +469,7 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group focused">
-                                        <label for="commune_id">{{ __('home.Xã') }}</label>
+                                        <label for="commune_id">Phường/Xã</label>
                                         <select name="commune_id" id="commune_id" class="form-control">
                                             <option value="">{{ __('home.Chọn xã') }}</option>
                                             @foreach($commune as $communes)
@@ -490,31 +490,31 @@
 {{--                                            value="{{ old('address_code', Auth::user()->address_code) }}" required>--}}
 {{--                                    </div>--}}
 {{--                                </div>--}}
-                                <div class="col-sm-4">
-                                    <label for="detail_address">{{ __('home.địa chỉ chi tiết việt') }}
+                                <div class="col-sm-12">
+                                    <label for="detail_address">Địa chỉ chi tiết
                                         <span class="small text-danger">*</span>
                                     </label>
                                     <input class="form-control" name="detail_address" id="detail_address"
                                            value="{{ $doctor->detail_address }}" required>
                                 </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group focused">
-                                        <label class="form-control-label" for="member">{{ __('home.Member') }}<span
-                                                class="small text-danger">*</span></label>
-                                        <select id="member" name="member" class="form-control" disabled>
-                                            @foreach ($roles as $role)
-                                                @php
-                                                    $isSelected = false;
-                                                    if ($role->id == $roleItem->id) {
-                                                        $isSelected = true;
-                                                    }
-                                                @endphp
-                                                <option {{ $isSelected ? 'selected' : '' }} value="{{ $role->id }}">
-                                                    {{ $role->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
+{{--                                <div class="col-sm-4">--}}
+{{--                                    <div class="form-group focused">--}}
+{{--                                        <label class="form-control-label" for="member">{{ __('home.Member') }}<span--}}
+{{--                                                class="small text-danger">*</span></label>--}}
+{{--                                        <select id="member" name="member" class="form-control" disabled>--}}
+{{--                                            @foreach ($roles as $role)--}}
+{{--                                                @php--}}
+{{--                                                    $isSelected = false;--}}
+{{--                                                    if ($role->id == $roleItem->id) {--}}
+{{--                                                        $isSelected = true;--}}
+{{--                                                    }--}}
+{{--                                                @endphp--}}
+{{--                                                <option {{ $isSelected ? 'selected' : '' }} value="{{ $role->id }}">--}}
+{{--                                                    {{ $role->name }}</option>--}}
+{{--                                            @endforeach--}}
+{{--                                        </select>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
                                 @if ($roleItem->name == "NORMAL PEOPLE" || $roleItem->name == "PAITENTS")
                                     <div class="col-sm-4">
                                         <label for="insurance_id">Mã bảo hiểm</label>
@@ -543,21 +543,21 @@
                                 </div>
                             @endif
 
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <div class="form-group focused">
-                                        <label class="form-control-label" for="status">{{ __('home.Status') }}</label>
-                                        <input type="text" id="status" class="form-control" name="status"
-                                               disabled value="{{ old('status', Auth::user()->status) }}">
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group focused">
-                                        <label class="form-control-label" for="role">{{ __('home.role') }}</label>
-                                        <input type="text" id="role" name="type" class="form-control"
-                                            value="{{ Auth::user()->roles->first()->name ?? '' }}" readonly>
-                                    </div>
-                                </div>
+                            <div class="row mt-3">
+{{--                                <div class="col-sm-4">--}}
+{{--                                    <div class="form-group focused">--}}
+{{--                                        <label class="form-control-label" for="status">{{ __('home.Status') }}</label>--}}
+{{--                                        <input type="text" id="status" class="form-control" name="status"--}}
+{{--                                               disabled value="{{ old('status', Auth::user()->status) }}">--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                                <div class="col-sm-4">--}}
+{{--                                    <div class="form-group focused">--}}
+{{--                                        <label class="form-control-label" for="role">{{ __('home.role') }}</label>--}}
+{{--                                        <input type="text" id="role" name="type" class="form-control"--}}
+{{--                                            value="{{ Auth::user()->roles->first()->name ?? '' }}" readonly>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
                                 <div class="col-sm-4">
                                     <div class="form-group focused">
                                         <label class="form-control-label"
@@ -574,6 +574,11 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="experienceHospital">Số năm kinh nghiệm</label>
+                                    <input class="form-control" type="number" id="experienceHospital"
+                                           name="experienceHospital" placeholder="{{ __('home.EXPERIENCE') }}">
                                 </div>
                             </div>
 
@@ -818,12 +823,12 @@
                             @if (Auth::user()->type == 'BUSINESS' || (new MainController())->checkAdmin())
 
                                 <div>
-                                    <label for="introduce">{{ __('home.introduce') }}</label>
+                                    <label for="introduce">Giới thiệu</label>
                                     <textarea type="text" class="form-control" id="introduce" name="introduce" >
                                         {{$clinic->introduce}}
                                     </textarea>
                                 </div>
-                                <div>
+                                <div class="mt-3">
                                     <label>{{ __('home.gallery') }}</label>
                                     <input type="file" class="form-control" id="gallery" name="gallery" multiple>
                                     @php
@@ -894,24 +899,17 @@
                                                placeholder="">
                                     </div>
                                     <div class="form-group col-md-4">
-                                        <label for="open_date">Mã bảo mật</label>
+                                        <label for="open_date">Mã bảo mật KiotViet</label>
                                         <input class="form-control" id="client_secret_kiot_viet" name="client_secret_kiot_viet" type="text" value="{{@$doctor->client_secret_kiot_viet}}"
                                                placeholder="">
                                     </div>
                                     <div class="form-group col-md-4">
-                                        <label for="close_date">Tên cửa hàng</label>
+                                        <label for="close_date">Tên cửa hàng KiotViet</label>
                                         <input class="form-control" id="retailer_kiot_viet" name="retailer_kiot_viet" type="text" value="{{@$doctor->retailer_kiot_viet}}"
                                                placeholder="">
                                     </div>
                                 </div>
                                 @endif
-                                <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <label for="experienceHospital">{{ __('home.EXPERIENCE') }}</label>
-                                        <input class="form-control" type="number" id="experienceHospital"
-                                            name="experienceHospital" placeholder="{{ __('home.EXPERIENCE') }}">
-                                    </div>
-                                </div>
 {{--                                <div class="form-group">--}}
 {{--                                    <label for="service_clinic">{{ __('home.Service Clinics') }}</label>--}}
 {{--                                    <input type="text" class="form-control" id="service_clinic" name="service_clinic" disabled>--}}
@@ -1185,7 +1183,7 @@
                         </div>
 
                         <!-- Button -->
-                        <div class="pl-lg-4 mt-4">
+                        <div class="pl-lg-4 mt-2 mb-4">
                             <div class="row">
                                 <div class="col text-center">
                                     <button type="submit"

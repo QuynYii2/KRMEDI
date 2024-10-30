@@ -384,7 +384,7 @@ return [
     'Category Product' => 'Danh mục sản phẩm',
     'Approval Product Medicine' => 'Duyệt sản phẩm thuốc',
     'Short Description' => 'Mô tả ngắn',
-    'Number Register' => 'Số lượng đăng ký',
+    'Number Register' => 'Số đăng ký',
     'Quản lý dịch vụ phòng khám' => 'Quản lý dịch vụ phòng khám',
     'Duyệt đăng ký phòng khám' => 'Duyệt đăng ký phòng khám',
     'Product Medicine' => 'Sản phẩm thuốc',
