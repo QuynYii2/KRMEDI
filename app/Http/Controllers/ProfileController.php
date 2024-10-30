@@ -142,9 +142,9 @@ class ProfileController extends Controller
         $translate = new TranslateController();
 
         $request->validate([
-            'username' => 'required|string',
+//            'username' => 'required|string',
             'name' => 'required|string|max:255',
-            'last_name' => 'nullable|string|max:255',
+//            'last_name' => 'nullable|string|max:255',
 
             'email' => 'required|string|email|max:255',
             'phone' => 'required|string|max:255',
@@ -161,7 +161,7 @@ class ProfileController extends Controller
         $zaloAppID = $request->input('zalo_app_id') ?? "";
         $zaloSecretID = $request->input('zalo_secret_id') ?? "";
 
-        $username = $request->input('username');
+//        $username = $request->input('username');
 
         $user = User::findOrFail(Auth::user()->id);
 
@@ -175,8 +175,8 @@ class ProfileController extends Controller
 
         $extendData = $user->extend ?? [];
 
-        if ($username != Auth::user()->username) {
-            $oldUser = User::where('username', $username)
+        if ($request->input('name') != Auth::user()->username) {
+            $oldUser = User::where('username', $request->input('name'))
                 ->where('status', '!=', UserStatus::DELETED)
                 ->first();
             if ($oldUser) {
@@ -207,10 +207,11 @@ class ProfileController extends Controller
             }
         }
 
-        $user->username = $username;
+        $user->username = $request->input('name');
 
         $user->name = $request->input('name');
-        $user->last_name = $request->input('last_name');
+        $user->last_name = $request->input('name');
+//        $user->last_name = $request->input('last_name');
 
         $user->email = $request->input('email');
         $user->phone = $request->input('phone');
