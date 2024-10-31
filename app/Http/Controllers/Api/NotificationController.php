@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
+use App\Models\FamilyManagement;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -26,7 +28,7 @@ class NotificationController extends Controller
             }
 
             $validatedData = $validated->validated();
-            
+
             $limit = $validatedData['limit'] ?? "";
             $user_id = $validatedData['user_id'];
 
@@ -37,6 +39,21 @@ class NotificationController extends Controller
                 $notifications = $notifications->simplePaginate($limit, ['*'], 'page', $page);
             } else {
                 $notifications = $notifications->get();
+            }
+            foreach ($notifications as $item){
+                if($item->booking_id){
+                    $booking = Booking::find($item->booking_id);
+                    if($booking){
+                        $name_family = FamilyManagement::find($booking->member_family_id);
+                        if($name_family){
+                            $item->followers->name = $name_family->name??'không có dữ liệu';
+                            $item->followers->birthday = $name_family->date_of_birth??'không có dữ liệu';
+                            $item->followers->gender = $name_family->sex??'không có dữ liệu';
+                    }
+
+                    }
+                }
+
             }
 
             $unseenNoti = Notification::where('follower', $user_id)->where('seen', 0)->count();
@@ -73,12 +90,12 @@ class NotificationController extends Controller
             $validatedData = $validated->validated();
 
             $user_id = $validatedData['user_id'];
-            
+
             $notifications = Notification::where('follower', $user_id)->where('seen', 0)->get();
 
             foreach ($notifications as $noti) {
                 $noti->seen = 1;
-    
+
                 $noti->save();
             }
 
