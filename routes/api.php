@@ -6,6 +6,7 @@ use App\Http\Controllers\connect\CallVideoController;
 use App\Http\Controllers\ui\MyBookingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use \App\Http\Controllers\backend\BackendClinicController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,3 +39,6 @@ Route::post('my-bookings/history/{userId}', [MyBookingController::class, 'update
 Route::post('/end-call', [CallVideoController::class, 'endCall']);
 
 Route::post('/download-record', [AgoraChatController::class, 'downloadRecord']);
+
+/* api list outstanding hospital clinic */
+Route::get('/outstanding-hospital-clinic', [BackendClinicController::class, 'getOutstandingHospitalClinic']);
