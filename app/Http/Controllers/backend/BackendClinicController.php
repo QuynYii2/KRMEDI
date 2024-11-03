@@ -402,4 +402,23 @@ class BackendClinicController extends Controller
             return response($exception, 400);
         }
     }
+
+    public function getOutstandingHospitalClinic()
+    {
+        $clinics = Clinic::where('type', 'CLINICS')->orderBy('created_at', 'desc')->get();
+        $hospitals = Clinic::where('type', 'HOSPITALS')->orderBy('created_at', 'desc')->get();
+
+        $mergedList = [];
+        $maxLength = max($clinics->count(), $hospitals->count());
+
+        for ($i = 0; $i < $maxLength; $i++) {
+            if (isset($clinics[$i])) {
+                $mergedList[] = $clinics[$i];
+            }
+            if (isset($hospitals[$i])) {
+                $mergedList[] = $hospitals[$i];
+            }
+        }
+        return response()->json($mergedList);
+    }
 }
