@@ -42,3 +42,4 @@ Route::post('/download-record', [AgoraChatController::class, 'downloadRecord']);
 
 /* api list outstanding hospital clinic */
 Route::get('/outstanding-hospital-clinic', [BackendClinicController::class, 'getOutstandingHospitalClinic']);
+Route::get('/outstanding-doctor', [BackendClinicController::class, 'getOutstandingDoctor']);
