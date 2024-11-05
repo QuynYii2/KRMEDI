@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class BackendClinicController extends Controller
@@ -405,8 +406,20 @@ class BackendClinicController extends Controller
 
     public function getOutstandingHospitalClinic()
     {
-        $clinics = Clinic::where('type', 'CLINICS')->orderBy('created_at', 'desc')->get();
-        $hospitals = Clinic::where('type', 'HOSPITALS')->orderBy('created_at', 'desc')->get();
+        $clinics = DB::table('clinics')
+            ->leftJoin('bookings', 'clinics.id', '=', 'bookings.clinic_id')
+            ->select('clinics.*', DB::raw('COUNT(bookings.id) as booking_count'))
+            ->where('clinics.type', 'CLINICS')
+            ->groupBy('clinics.id')
+            ->orderByDesc('booking_count')
+            ->get();
+        $hospitals = DB::table('clinics')
+            ->leftJoin('bookings', 'clinics.id', '=', 'bookings.clinic_id')
+            ->select('clinics.*', DB::raw('COUNT(bookings.id) as booking_count'))
+            ->where('clinics.type', 'HOSPITALS')
+            ->groupBy('clinics.id')
+            ->orderByDesc('booking_count')
+            ->get();
 
         $mergedList = [];
         $maxLength = max($clinics->count(), $hospitals->count());
@@ -421,4 +434,18 @@ class BackendClinicController extends Controller
         }
         return response()->json($mergedList);
     }
+
+    public function getOutstandingDoctor()
+    {
+        $doctors = DB::table('users')
+            ->leftJoin('bookings', 'users.id', '=', 'bookings.doctor_id')
+            ->select('users.*', DB::raw('COUNT(bookings.id) as read_count'))
+            ->where('users.status', 'ACTIVE')
+            ->groupBy('users.id')
+            ->orderByDesc('read_count')
+            ->get();
+
+        return response()->json($doctors);
+    }
+
 }
