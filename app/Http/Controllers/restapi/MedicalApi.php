@@ -51,7 +51,7 @@ class MedicalApi extends Controller
         return response()->json($medicals);
     }
 
-    private function processSearchMedical($type, $star, $experience, $prescription, $free)
+    private function processSearchMedical($type, $star, $experience, $free, $prescription)
     {
         if (!$type) {
             $type = TypeMedical::DOCTORS;
@@ -61,7 +61,7 @@ class MedicalApi extends Controller
             ->where('status', UserStatus::ACTIVE);
 
         if ($prescription !== null) {
-            $query->where('prescription', $prescription);
+            $query->where('prescription', intval($prescription));
         }
 
         if ($free !== null) {
