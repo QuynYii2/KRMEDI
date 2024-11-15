@@ -179,7 +179,7 @@
     <div class="modal fade" id="modal-add-medicine-widget-chat-booking" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
             <div class="modal-content">
-                <div class="modal-header ">
+                <div class="modal-header">
                     <form class="row w-100">
                         <div class="col-sm-4">
                             <div class="form-group position-relative">
@@ -727,7 +727,7 @@
                                 <input type="text" class="form-control detail_value" name="medicines[@index][note]" hidden>
                                 <input type="number" min="1" class="form-control treatment_days" name="medicines[@index][treatment_days]" value="1" hidden>
                                 <select class="form-control detail_value" name="medicines[@index][note_date][]" multiple style="height: 155px;">
-                                    <option value="1">Trước ăn sáng</option>
+                                    <option value="1" selected >Trước ăn sáng</option>
                                     <option value="2">Sau ăn sáng</option>
                                     <option value="3">Trước ăn trưa</option>
                                     <option value="4">Sau ăn trưa</option>
