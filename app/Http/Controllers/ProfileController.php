@@ -131,6 +131,7 @@ class ProfileController extends Controller
             $user->abouts = str_replace(array("\r", "\n"), '', strip_tags(html_entity_decode($user->abouts)));
             $user->abouts_en = str_replace(array("\r", "\n"), '', strip_tags(html_entity_decode($user->abouts_en)));
             $user->abouts_lao = str_replace(array("\r", "\n"), '', strip_tags(html_entity_decode($user->abouts_lao)));
+            $user->average_star = round($user->average_star, 1);
             return $user;
         });
 
