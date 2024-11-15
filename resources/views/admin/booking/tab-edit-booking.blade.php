@@ -952,7 +952,7 @@
                                 <input type="text" class="form-control detail_value" name="medicines[@index][note]" value="" hidden>
                                 <input type="number" min="1" class="form-control treatment_days" name="medicines[@index][treatment_days]" value="1" hidden>
                                 <select class="form-control detail_value" name="medicines[@index][note_date][]" multiple style="height: 155px;">
-                                    <option value="1">Trước ăn sáng</option>
+                                    <option value="1" selected >Trước ăn sáng</option>
                                     <option value="2">Sau ăn sáng</option>
                                     <option value="3">Trước ăn trưa</option>
                                     <option value="4">Sau ăn trưa</option>
