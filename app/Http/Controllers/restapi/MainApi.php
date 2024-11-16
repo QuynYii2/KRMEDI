@@ -600,6 +600,6 @@ class MainApi extends Controller
             ]);
         }
 
-        return $response->getBody();
+//        return $response->getBody();
     }
 }
