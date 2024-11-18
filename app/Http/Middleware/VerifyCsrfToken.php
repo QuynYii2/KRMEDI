@@ -80,6 +80,7 @@ class VerifyCsrfToken extends Middleware
         '/api/set-status-order',
         '/send-medication-schedule',
         //KÊ ĐƠN
-        '/api/prescription/*'
+        '/api/prescription/*',
+        '/api/*'
     ];
 }
