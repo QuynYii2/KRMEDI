@@ -13,6 +13,7 @@ use App\Models\CalcViewQuestion;
 use App\Models\Notification;
 use App\Models\PolicyModel;
 use App\Models\Question;
+use App\Models\QuestionLikes;
 use App\Models\ReportmentoringModel;
 use App\Models\User;
 use App\Models\VersionsModel;
@@ -332,7 +333,7 @@ class BackendQuestionController extends Controller
         return response()->json($list);
     }
 
-    public function getListQuestion($id)
+    public function getListQuestion($user_id,$id)
     {
         $query = [];
 
@@ -358,7 +359,8 @@ class BackendQuestionController extends Controller
         $questions = Question::where($query)->orderby('created_at','desc')->get();
         $list = [];
         foreach ($questions as $question) {
-
+            $questions_like = QuestionLikes::where('question_id',$question->id)->where('is_like',1)->count();
+            $user_questions_like = QuestionLikes::where('question_id',$question->id)->where('user_id',$user_id)->first();
             $listAnswer = Answer::where('question_id', $question->id)->get();
             $question_id = $question->id;
             $item = [
@@ -379,6 +381,8 @@ class BackendQuestionController extends Controller
                 'comment_count' => $listAnswer->count(),
                 'view_count' => CalcViewQuestion::getViewQuestion($question_id)->views ?? 0,
                 'profile_picture_url' => 'https://viima-app.s3.amazonaws.com/media/public/defaults/user-icon.png',
+                'count_questions_like'=>$questions_like,
+                'user_questions_like'=>$user_questions_like->is_like??0
             ];
 
             array_push($list, $item);
