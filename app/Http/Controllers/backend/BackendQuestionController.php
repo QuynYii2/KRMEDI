@@ -40,6 +40,17 @@ class BackendQuestionController extends Controller
         $user_id = $request->input('user_id');
         $statusQuestion = Question::find($id);
         $dataUser = User::select('name', 'avt')->find($statusQuestion->user_id);
+
+        $calcViewQuestions = CalcViewQuestion::where('question_id', $id)->first();
+        if ($calcViewQuestions) {
+            $calcViewQuestions->views += 1;
+        } else {
+            $calcViewQuestions = new CalcViewQuestion();
+            $calcViewQuestions->question_id = $id;
+            $calcViewQuestions->views = 1;
+        }
+        $calcViewQuestions->save();
+
         $question = CalcViewQuestion::getViewQuestion($id);
 
         if (is_null($question)) {
@@ -78,15 +89,6 @@ class BackendQuestionController extends Controller
         if (isset($report)){
             $isReport = true;
         }
-
-        // if ($question === null) {
-        //     $question = new CalcViewQuestion();
-        //     $question->views = 1;
-        //     $question->question_id = $id;
-        // } else {
-        //     $question->views;
-        // }
-        // $question->save();
 
         $responseData = [
             'statusQuestion' => $statusQuestion,
