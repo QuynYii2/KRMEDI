@@ -38,8 +38,14 @@
         </div>
         <label for="title">Hình ảnh</label>
         <div class="form-group col-md-12">
-            <img src="{{asset($review->gallery)}}" alt="" class="w-25">
+            @php
+                $galleries = explode(',', $review->gallery);
+            @endphp
+            @foreach($galleries as $gallery)
+                <img src="{{ asset($gallery) }}" alt="Image" class="w-25">
+            @endforeach
         </div>
+
         <div class="text-center mt-3 ">
             <button type="button" class="btn btn-primary" id="btnSaveReview">{{ __('home.Save') }}</button>
         </div>

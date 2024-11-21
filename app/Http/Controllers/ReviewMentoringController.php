@@ -35,7 +35,7 @@ class ReviewMentoringController extends Controller
     public function detail($id)
     {
         $review = Question::find($id);
-        $review->name_category = Department::find($review->category_id)->name;
+        $review->name_category = Department::find($review->category_id)->name ?? 'N/A';
         $reflector = new \ReflectionClass('App\Enums\DoctorReviewStatus');
         $status = $reflector->getConstants();
 
