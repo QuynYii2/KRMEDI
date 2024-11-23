@@ -222,78 +222,22 @@ class MedicineController extends Controller
 
     public function searchOnlineMedicineNoPaginate(Request $request)
     {
-        $medicines = ProductMedicine::where('product_medicines.status', OnlineMedicineStatus::APPROVED);
+        $medicines = ProductMedicine::all();
 
-        $name = $request->input('name');
-        $filter = $request->input('filter');
-        $object = $request->input('object');
-        $price = $request->input('price');
-        $min_price = $request->input('min_price');
-        $max_price = $request->input('max_price');
-        $category = $request->input('category');
-        $location = $request->input('location');
+        $medicineList = $medicines->map(function ($medicine) {
+            $medicineIngredient = DrugIngredients::where('product_id', $medicine->id)->first();
+            $component_name = $medicineIngredient ? $medicineIngredient->component_name : null;
 
-
-        // Tìm kiếm theo filter
-        $medicines->when($filter, function ($query) use ($filter) {
-            $filterValues = explode(',', $filter);
-            $ifFilterValuesHasZero = in_array(0, $filterValues);
-            if (!$ifFilterValuesHasZero) {
-                $query->whereIn('filter_', $filterValues);
+            if ($component_name) {
+                $component_name = str_replace("),", ")," . "<br>", $component_name);
             }
-        });
 
-        // Tìm kiếm theo object
-        $medicines->when($object, function ($query) use ($object) {
-            $objectValues = explode(',', $object);
-            $query->whereIn('object_', $objectValues);
-        });
+            $medicine->medicineIngredient = $component_name;
 
-        // Tìm kiếm theo giá
-        $medicines->when($min_price, function ($query) use ($min_price) {
-            $query->where('price', '>=', $min_price);
-        });
-
-        $medicines->when($max_price, function ($query) use ($max_price) {
-            $query->where('price', '<=', $max_price);
-        });
-
-        // Tìm kiếm theo category
-        $medicines->when($category, function ($query) use ($category) {
-            $query->where('category_id', $category);
-        });
-
-        // Tìm kiếm theo location
-        $medicines->when($location, function ($query) use ($location) {
-            $query->where('provinces.id', $location);
-        });
-        // Tìm kiếm theo tên
-        $medicines->when($name, function ($query) use ($name) {
-            $query->where(function ($query) use ($name) {
-                $query->orWhere('product_medicines.name', 'like', "%$name%")
-                    ->orWhere('product_medicines.name_en', 'like', "%$name%")
-                    ->orWhere('product_medicines.name_laos', 'like', "%$name%");
-            });
-        });
-
-
-        // Join và select
-        $medicines->leftJoin('users', 'product_medicines.user_id', '=', 'users.id')
-            ->leftJoin('provinces', 'provinces.id', '=', 'users.province_id')
-            ->select('product_medicines.*', 'provinces.name as location_name');
-
-        // Paginate
-        $medicines = $medicines->get();
-
-        $medicines->map(function ($medicine) {
-            $medicine->description = str_replace(array("\r", "\n"), '', strip_tags(html_entity_decode($medicine->description)));
-            $medicine->description_en = str_replace(array("\r", "\n"), '', strip_tags(html_entity_decode($medicine->description_en)));
-            $medicine->description_lao = str_replace(array("\r", "\n"), '', strip_tags(html_entity_decode($medicine->description_lao)));
             return $medicine;
         });
 
-
-        return response()->json($medicines);
+        return response()->json($medicineList);
     }
 
 
