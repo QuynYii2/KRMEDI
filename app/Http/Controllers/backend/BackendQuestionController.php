@@ -394,6 +394,77 @@ class BackendQuestionController extends Controller
         return response()->json($list);
     }
 
+    public function getNewListQuestion($user_id,$id)
+    {
+        $query = [];
+
+        $param = ['status', '=', QuestionStatus::APPROVED];
+        array_push($query, $param);
+
+        if ($id) {
+            switch ($id) {
+                case MentoringCategory::ALL:
+                    break;
+                case MentoringCategory::HEALTH:
+                case MentoringCategory::BEAUTY:
+                case MentoringCategory::LOSING_WEIGHT:
+                case MentoringCategory::KIDS:
+                case MentoringCategory::PETS:
+                case MentoringCategory::OTHER:
+                    $param = ['category_id', '=', $id];
+                    array_push($query, $param);
+                    break;
+            }
+        }
+
+        $questions = Question::with('users')->where($query)->orderBy('created_at', 'desc')->get();
+
+        $list = [];
+        foreach ($questions as $question) {
+            $questions_like = QuestionLikes::where('question_id',$question->id)->where('is_like',1)->count();
+            $user_questions_like = QuestionLikes::where('question_id',$question->id)->where('user_id',$user_id)->first();
+            $listAnswer = Answer::where('question_id', $question->id)->get();
+            $question_id = $question->id;
+            $answersQuestion = DB::table('answers')
+                ->join('users', 'answers.user_id', '=', 'users.id')
+                ->where('answers.status', '!=', AnswerStatus::DELETED)
+                ->where('answers.question_id', $question_id)
+                ->orderByDesc('answers.likes')
+                ->select('answers.*', 'users.avt as avatar', 'users.name as user_name')
+                ->get();
+
+            $item = [
+                'id' => $question_id,
+                'parent' => null,
+                'title' => $question->title,
+                'title_en' => $question->title_en,
+                'title_laos' => $question->title_laos,
+                'content' => $question->content,
+                'content_en' => $question->content_en,
+                'content_laos' => $question->content_laos,
+                'pings' => null,
+                'attachments' => '',
+                'creator' => $question->user_id,
+                'created' => $question->created_at,
+                'modified' => $question->updated_at,
+                'fullname' => User::getNameByID($question->user_id),
+                'comment_count' => $listAnswer->count(),
+                'view_count' => CalcViewQuestion::getViewQuestion($question_id)->views ?? 0,
+                'profile_picture_url' => $question->users->avt ?? '',
+                'count_questions_like'=>$questions_like,
+                'user_questions_like'=>$user_questions_like->is_like??0,
+                'gallery' => $question->gallery,
+                'gallery_public' => $question->gallery_public,
+                'answers' => $answersQuestion
+            ];
+
+            array_push($list, $item);
+
+        }
+
+        return response()->json($list);
+    }
+
     public function getQuestionByUserId($id)
     {
         $query = [];
