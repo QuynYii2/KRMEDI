@@ -576,6 +576,18 @@ class BackendClinicController extends Controller
             ->orderByDesc('booking_count')
             ->get();
 
+        $clinics->transform(function ($clinic) {
+            $gallery = explode(',', $clinic->gallery);
+            $clinic->gallery = $gallery[0] ?? null;
+            return $clinic;
+        });
+
+        $hospitals->transform(function ($hospital) {
+            $gallery = explode(',', $hospital->gallery);
+            $hospital->gallery = $gallery[0] ?? null;
+            return $hospital;
+        });
+
         $mergedList = [];
         $maxLength = max($clinics->count(), $hospitals->count());
 
