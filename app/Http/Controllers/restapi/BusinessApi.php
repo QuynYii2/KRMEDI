@@ -229,6 +229,7 @@ class BusinessApi extends Controller
                 $totalStar = $reviews->sum('star');
                 $calcReview = ($totalReview > 0) ? ($totalStar / $totalReview) : 0;
 
+                $clinic['info_doctor'] = $detailDoctor->toArray();
                 $clinic['total_reviews'] = $totalReview;
                 $clinic['calc_reviews'] = $calcReview;
                 $clinic['total_star'] = $totalStar;
@@ -257,7 +258,6 @@ class BusinessApi extends Controller
                 /* Show symptoms*/
                 $clinic['total_symptoms'] = $symptoms->count();
                 $clinic['symptoms'] = $symptoms->toArray();
-                $clinic['info_doctor'] = $detailDoctor->toArray();
                 $clinic['introduce'] = str_replace(array("\r", "\n"), '', strip_tags(html_entity_decode($clinic['introduce'])));
 
                 return $clinic;
