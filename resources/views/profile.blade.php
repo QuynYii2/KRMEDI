@@ -542,7 +542,8 @@
                                     </div>
                                 </div>
                             @endif
-
+                            <input type="text" id="role" name="type" class="form-control"
+                                   value="{{ Auth::user()->roles->first()->name ?? '' }}" hidden>
                             <div class="row mt-3">
 {{--                                <div class="col-sm-4">--}}
 {{--                                    <div class="form-group focused">--}}
