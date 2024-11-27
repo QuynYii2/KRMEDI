@@ -883,12 +883,12 @@
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="open_date">{{ __('home.Thời gian bắt đầu') }}</label>
-                                        <input class="form-control" id="open_date" name="open_date" type="time"
+                                        <input class="form-control" id="open_date" name="open_date" type="datetime-local"
                                                placeholder="">
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="close_date">{{ __('home.Thời gian kết thúc') }}</label>
-                                        <input class="form-control" id="close_date" name="close_date" type="time"
+                                        <input class="form-control" id="close_date" name="close_date" type="datetime-local"
                                                placeholder="">
                                     </div>
                                 </div>
