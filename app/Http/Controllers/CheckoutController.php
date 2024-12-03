@@ -94,7 +94,7 @@ class CheckoutController extends Controller
             $errorCode = $response->status();
             $errorMessage = $response->body();
 
-            alert()->error('Error', $errorMessage);
+            alert()->error('Error', 'Khoảng cách không phù hợp để mua hàng');
             return back();
         }
 
