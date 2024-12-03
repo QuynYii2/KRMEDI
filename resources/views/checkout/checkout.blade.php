@@ -56,7 +56,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             @php
-                                                $province = \App\Models\Province::find(Auth::user()->province_id);
+                                                $province = \App\Models\Province::where('code',Auth::user()->province_id)->first();
                                             @endphp
 
                                             <input readonly type="text" class="form-control address_code" id="province" name="province"
@@ -67,7 +67,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             @php
-                                                $district = \App\Models\District::find(Auth::user()->district_id);
+                                                $district = \App\Models\District::where('code',Auth::user()->district_id)->first();
                                             @endphp
 
                                             <input readonly type="text" class="form-control address_code" id="district" name="district"
@@ -396,6 +396,7 @@
                 let id = input_value.val();
                 let province = input_value.data('province');
                 let district = input_value.data('district');
+                document.getElementById('btnOrder').disabled = true;
                 getAddressDetail(id, province, district);
             })
 
@@ -408,11 +409,13 @@
             })
 
             $('.inputCheckAddress').change(function () {
+                document.getElementById('btnOrder').disabled = true;
                 let checked = document.getElementById('switch').checked;
                 if (checked) {
                     getAddressDefault();
                 } else {
                     showAddress();
+                    document.getElementById('btnOrder').disabled = false;
                 }
             });
 
@@ -556,7 +559,14 @@
                 headers: headeres,
                 method: 'GET',
                 success: function (response) {
-                    changeAddressFromApi(response, province, district,response.total_fee)
+                    if(response.status){
+                        changeAddressFromApi(response.data, province, district,response.data.total_fee);
+                        document.getElementById('btnOrder').disabled = false;
+                    }else{
+                        document.getElementById('btnOrder').disabled = false;
+                        alert('Địa chỉ ngoài vùng để vận chuyển');
+                    }
+
                 },
                 error: function (exception) {
                     console.log(exception);
@@ -604,8 +614,15 @@
                 headers: headeres,
                 method: 'GET',
                 success: function (response) {
-                    console.log(response);
-                    renderAddress(response);
+                    if (response.status){
+                        renderAddress(response.data);
+                        document.getElementById('btnOrder').disabled = false;
+                    }else {
+                        document.getElementById('btnOrder').disabled = false;
+                        document.getElementById('switch').checked = false;
+                        alert('Địa chỉ ngoài vùng để vận chuyển');
+                    }
+
                 },
                 error: function (exception) {
                     console.log(exception);
