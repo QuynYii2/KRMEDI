@@ -417,8 +417,9 @@ class CheckoutApi extends Controller
 
     public function sendNotification($device_token, $data,$notification,$platform)
     {
+        if ($platform !="web"){
         $channel_id = 'default_channel_id';
-        $routeKey = '/chat-screen';
+        $routeKey = null;
         $arguments = '';
 
         $notificationPayload = [
@@ -466,6 +467,7 @@ class CheckoutApi extends Controller
         }
 
         return FcmService::init()->request($payload);
+        }
 //        return FcmService::init()->request([
 //            'token' => $device_token,
 //            'data' => $data,
