@@ -232,6 +232,17 @@ class OrderApi extends Controller
         ];
 
         $pusher->trigger('noti-events', 'noti-events', $requestData);
+
+        $options = array(
+            'cluster' => 'ap1',
+            'encrypted' => true
+        );
+
+        $pusher = new Pusher($PUSHER_APP_KEY, $PUSHER_APP_SECRET, $PUSHER_APP_ID, $options);
+
+        //DATA WEB CALL WEB
+        $pusher->trigger('aha-move-events', 'aha-move-events', $order);
+
         return \redirect()->back()->with(['success' => 'Duyệt hoàn hàng thành công']);
     }
 
