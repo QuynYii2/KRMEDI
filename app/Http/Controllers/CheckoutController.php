@@ -50,6 +50,11 @@ class CheckoutController extends Controller
             )
             ->get();
 
+        if (!Auth::user()->province_id || !Auth::user()->district_id){
+            alert()->error('Error', 'Vui lòng cập nhật địa chỉ để tiếp tục');
+            return back();
+        }
+
         $province_name = Province::where('code',Auth::user()->province_id)->first()->name;
         $district_name = District::where('code',Auth::user()->district_id)->first()->name;
         $total_fee = 0;
@@ -88,7 +93,9 @@ class CheckoutController extends Controller
         } else {
             $errorCode = $response->status();
             $errorMessage = $response->body();
-            dd("Error {$errorCode}: {$errorMessage}");
+
+            alert()->error('Error', $errorMessage);
+            return back();
         }
 
         return view('checkout.checkout', compact('carts', 'addresses','total_fee'));
