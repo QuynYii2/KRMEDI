@@ -40,8 +40,8 @@ class MedicineController extends Controller
                 'c2.longitude'
             );
 
-        $medicine10 = $medicines->get();
-        $medicines = $medicines->get();
+        $medicine10 = $medicines->orderBy('created_at','desc')->get();
+        $medicines = $medicines->orderBy('created_at','desc')->get();
 
         // count all medicine
         $countAllMedicine = ProductMedicine::where('product_medicines.status', OnlineMedicineStatus::APPROVED)->count();
