@@ -108,8 +108,8 @@ class AddressApi extends Controller
         if (!$address || $address->status == AddressStatus::DELETED) {
             return response((new MainApi())->returnMessage('Not found!'), 404);
         }
-        $province = Province::find($address->province_id);
-        $district = District::find($address->district_id);
+        $province = Province::where('code',$address->province_id)->first();
+        $district = District::where('code',$address->district_id)->first();
         $address = $address->toArray();
         $address['province'] = $province ? $province->name : '';
         $address['district'] = $district ? $district->name : '';
@@ -149,8 +149,10 @@ class AddressApi extends Controller
         } else {
             $errorCode = $response->status();
             $errorMessage = $response->body();
+
+            return response()->json(['status'=>false,'data'=>$errorCode]);
         }
-        return response()->json($address);
+        return response()->json(['status'=>$address,'data'=>$address]);
     }
 
     public function getAddressDefault(Request $request)
@@ -173,8 +175,8 @@ class AddressApi extends Controller
             return response((new MainApi())->returnMessage('User not created!'), 404);
         }
 
-        $province = Province::find($address->province_id);
-        $district = District::find($address->district_id);
+        $province = Province::where('code',$address->province_id)->first();
+        $district = District::where('code',$address->district_id)->first();
         $address = $address->toArray();
         $address['province'] = $province ? $province->name : '';
         $address['district'] = $district ? $district->name : '';
@@ -214,8 +216,9 @@ class AddressApi extends Controller
         } else {
             $errorCode = $response->status();
             $errorMessage = $response->body();
+            return response()->json(['status'=>false,'data'=>$errorCode]);
         }
-        return response()->json($address);
+        return response()->json(['status'=>true,'data'=>$address]);
     }
 
     public function delete($id)
