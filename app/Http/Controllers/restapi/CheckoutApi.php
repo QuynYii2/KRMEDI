@@ -377,7 +377,7 @@ class CheckoutApi extends Controller
             $data = $request->all();
             $user = User::find($order->user_id);
             $token = $user->token_firebase;
-            $response = $this->sendNotification($token, $data);
+            $platform = $user->devices_name;
             $notification = Notification::create([
                 'title' => 'Thay đổi trạng thái đơn hàng',
                 'sender_id' => $user->id,
@@ -386,6 +386,7 @@ class CheckoutApi extends Controller
                 'description' => 'Trạng thái đơn hàng của bạn đã thay đổi, Vui lòng vào kiểm tra!',
             ]);
             $notification->save();
+            $response = $this->sendNotification($token, $data,$notification,$platform);
             $order_item = OrderItem::where('order_id',$order->id)->first();
             if ($order_item->type_product == "MEDICINE"){
                 $product_medicine = ProductMedicine::find($order_item->product_id);
@@ -414,19 +415,68 @@ class CheckoutApi extends Controller
         }
     }
 
-    public function sendNotification($device_token, $data)
+    public function sendNotification($device_token, $data,$notification,$platform)
     {
-        return FcmService::init()->request([
-            'token' => $device_token,
-            'data' => $data,
+        $channel_id = 'default_channel_id';
+        $routeKey = '/chat-screen';
+        $arguments = '';
+
+        $notificationPayload = [
+            'title' => $notification['title'],
+            'body' => $notification['body'],
+        ];
+
+        $androidPayload = [
             'notification' => [
-                'title' => 'Cập nhật trạng thái đơn hàng thành công',
-                'body' => 'order',
+                'icon' => 'ic_launcher',
+                'channel_id' => $channel_id,
+                'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+                'image' => 'https://example.com/image.png',
+                'sound' => 'default',
+                'color' => '#ff0000',
             ],
-            'webpush' => [
-                'notification' => 'Cập nhật trạng thái đơn hàng thành công',
+        ];
+
+        $iosPayload = [
+            'aps' => [
+                'sound' => 'default',
+                'badge' => 1,
             ],
-        ]);
+        ];
+
+        $transformedData = array_reduce(array_keys($data), function ($result, $key) use ($data) {
+            $result[$key] = is_array($data[$key]) ? json_encode($data[$key]) : (string) $data[$key];
+            return $result;
+        }, []);
+        $transformedData['routeKey'] = $routeKey;
+        $transformedData['arguments'] = $arguments;
+        $payload = [
+            'token' => $device_token,
+            'notification' => $notificationPayload,
+            'data' => array_merge($transformedData, [
+                'channel_id' => $channel_id,
+            ]),
+        ];
+
+        // Add platform-specific fields
+        if ($platform === 'ANDROID') {
+            $payload['android'] = $androidPayload;
+        } elseif ($platform === 'IOS') {
+            $payload['apns'] = ['payload' => $iosPayload];
+        }
+
+        return FcmService::init()->request($payload);
+//        return FcmService::init()->request([
+//            'token' => $device_token,
+//            'data' => $data,
+//            'notification' => [
+//                'title' => 'Cập nhật trạng thái đơn hàng thành công',
+//                'body' => 'order',
+//            ],
+//            'webpush' => [
+//                'notification' => 'Cập nhật trạng thái đơn hàng thành công',
+//            ],
+//        ]);
     }
 
     public function calcDiscount(Request $request)
