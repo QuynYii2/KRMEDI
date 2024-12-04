@@ -1,6 +1,7 @@
 @php use App\Enums\online_medicine\FilterOnlineMedicine;use App\Enums\online_medicine\ObjectOnlineMedicine;use App\Http\Controllers\MainController;use App\Models\User;use Illuminate\Support\Facades\Auth; @endphp
 @extends('layouts.master')
 @section('title', 'Online Medicine')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 @section('content')
     @include('layouts.partials.header')
     @include('component.banner')
@@ -10,6 +11,22 @@
         $isMedical = (new MainController())->checkMedical();
     @endphp
     <style>
+        .swiper-wrapper{
+            height: 382px;
+            margin-bottom: 30px;
+        }
+        .swiper-button-next:after, .swiper-button-prev:after{
+            min-width: 36px!important;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 16px;
+            background: white;
+            color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+        }
         .bi-heart-fill {
             color: red;
         }
@@ -21,6 +38,12 @@
             align-items: center;
             justify-content: center;
             display: flex;
+        }
+
+        @media (max-width: 768px) {
+            .swiper-wrapper {
+                height: 485px;
+            }
         }
 
         @media (max-width: 575px) {
@@ -45,6 +68,9 @@
 
             .product-item .content-pro .location-pro p {
                 color: #FFFFFF;
+            }
+            .swiper-wrapper {
+                height: 382px;
             }
 
         }
@@ -108,6 +134,17 @@
         }
     </style>
     <div class="medicine container" id="online-medicine">
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                @foreach($medicines as $medicine)
+                    <div class="swiper-slide">
+                        @include('component.products')
+                    </div>
+                @endforeach
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
         <div class="row medicine-search d-none d-sm-flex w-100 justify-content-between">
             <div class="medicine-search--left col-md-3 d-flex justify-content-around flex-wrap">
                 <div class="title pl-0 col-lg-5 col-md-12">
@@ -423,7 +460,34 @@
     </div>
     @include('component.modal-cart')
     @include('component.modalCreatPrescription')
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
+        var swiper = new Swiper(".mySwiper", {
+            slidesPerView: 5,
+            spaceBetween: 10,
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            breakpoints: {
+                1150: {
+                    slidesPerView: 5,
+                },
+                992: {
+                    slidesPerView: 4,
+                },
+                768: {
+                    slidesPerView: 3.5,
+                },
+                575: {
+                    slidesPerView: 3,
+                },
+                300: {
+                    slidesPerView: 2,
+                },
+            },
+        });
+
         let medical_favourites = `{{ $medical_favourites }}`;
 
         function isUserWasWishlist(medicineId) {
