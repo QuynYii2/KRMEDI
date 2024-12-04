@@ -542,6 +542,7 @@
                     method: "GET",
                     data: data,
                     success: function (data) {
+
                         renderJson2Html(data);
                     },
                     error: function (exception) {

@@ -147,7 +147,6 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
 //            'last_name' => 'nullable|string|max:255',
 
-            'email' => 'required|string|email|max:255',
             'phone' => 'required|string|max:255',
 
 //            'address_code' => 'required|string|max:255',
@@ -188,7 +187,7 @@ class ProfileController extends Controller
 
         $email = $request->input('email');
         $phone = $request->input('phone');
-        if ($email != Auth::user()->email) {
+        if ($email != null && $email != Auth::user()->email) {
             $oldUser = User::where('email', $email)
                 ->where('status', '!=', UserStatus::DELETED)
                 ->first();

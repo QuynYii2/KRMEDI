@@ -395,9 +395,9 @@
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <label class="form-control-label" for="email">{{ __('home.Email address') }}
-                                            <span class="small text-danger">*</span></label>
+                                        </label>
                                         <input type="email" id="email" class="form-control" name="email"
-                                            placeholder="example@example.com" required
+                                            placeholder="example@example.com"
                                             value="{{ old('email', Auth::user()->email) }}">
                                     </div>
                                 </div>

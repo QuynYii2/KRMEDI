@@ -240,7 +240,7 @@
                                     {!! $medicine->description_en !!}
                                 @endif
                             </div>
-                            <div class="d-flex justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
+                            <div class="justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
                                 <p class="see-more-medicine transition-all duration-500 text-decoration-underline">Xem thêm</p>
                                 <p class="see-less-medicine transition-all duration-500 text-decoration-underline d-none">Thu gọn</p>
                             </div>
@@ -250,7 +250,7 @@
                             <div class="medicineTab">
                                 {!! $medicineIngredient !!}
                             </div>
-                            <div class="d-flex justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
+                            <div class="justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
                                 <p class="see-more-medicine transition-all duration-500 text-decoration-underline">Xem thêm</p>
                                 <p class="see-less-medicine transition-all duration-500 text-decoration-underline d-none">Thu gọn</p>
                             </div>
@@ -260,7 +260,7 @@
                             <div class="medicineTab">
                                 {!! $medicine->uses!!}
                             </div>
-                            <div class="d-flex justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
+                            <div class="justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
                                 <p class="see-more-medicine transition-all duration-500 text-decoration-underline">Xem thêm</p>
                                 <p class="see-less-medicine transition-all duration-500 text-decoration-underline d-none">Thu gọn</p>
                             </div>
@@ -270,7 +270,7 @@
                             <div class="medicineTab">
                                 {!! $medicine->user_manual !!}
                             </div>
-                            <div class="d-flex justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
+                            <div class="justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
                                 <p class="see-more-medicine transition-all duration-500 text-decoration-underline">Xem thêm</p>
                                 <p class="see-less-medicine transition-all duration-500 text-decoration-underline d-none">Thu gọn</p>
                             </div>
@@ -280,7 +280,7 @@
                             <div class="medicineTab">
                                 {!! $medicine->side_effects !!}
                             </div>
-                            <div class="d-flex justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
+                            <div class="justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
                                 <p class="see-more-medicine transition-all duration-500 text-decoration-underline">Xem thêm</p>
                                 <p class="see-less-medicine transition-all duration-500 text-decoration-underline d-none">Thu gọn</p>
                             </div>
@@ -290,7 +290,7 @@
                             <div class="medicineTab">
                                 {!! $medicine->notes!!}
                             </div>
-                            <div class="d-flex justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
+                            <div class="justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
                                 <p class="see-more-medicine transition-all duration-500 text-decoration-underline">Xem thêm</p>
                                 <p class="see-less-medicine transition-all duration-500 text-decoration-underline d-none">Thu gọn</p>
                             </div>
@@ -300,7 +300,7 @@
                             <div class="medicineTab">
                                 {!! $medicine->preserve!!}
                             </div>
-                            <div class="d-flex justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
+                            <div class="justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
                                 <p class="see-more-medicine transition-all duration-500 text-decoration-underline">Xem thêm</p>
                                 <p class="see-less-medicine transition-all duration-500 text-decoration-underline d-none">Thu gọn</p>
                             </div>
@@ -424,6 +424,8 @@
 
                 if (medicineTab.scrollHeight > 800) {
                     toggleButton.style.display = "flex";
+                }else{
+                    toggleButton.style.display = "none";
                 }
 
                 toggleButton.addEventListener("click", function () {
