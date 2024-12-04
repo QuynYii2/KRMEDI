@@ -65,7 +65,7 @@
                 </div>
                 <div class="order-info">
                     @foreach($val->products as $index => $item)
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center justify-content-between">
                             <img src="{{ asset($item->thumbnail) }}" alt="" class="product-thumbnail">
                             <div class="product-info">
                                 <div class="product-name">
