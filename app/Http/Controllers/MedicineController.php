@@ -215,7 +215,7 @@ class MedicineController extends Controller
             ->leftJoin('clinics as c2', 'first_clinic.min_id', '=', 'c2.id')
             ->select('product_medicines.*', 'provinces.name as location_name','users.email','c2.latitude','c2.longitude');
 
-        $medicines = $medicines->distinct()->get();
+        $medicines = $medicines->distinct()->orderBy('created_at','desc')->get();
 
         return response()->json($medicines);
     }
