@@ -221,11 +221,14 @@ class ProfileController extends Controller
         $province = $request->input('province_id');
         $district = $request->input('district_id');
         $commune = $request->input('commune_id');
+        if($province == null){
+            return redirect()->back()->withInput()->withErrors('Vui lòng chọn Thành phố');
+        }
         if ($district == null) {
-            return response('Cần cập nhật địa chỉ thành phố', 400);
+            return redirect()->back()->withInput()->withErrors('Vui lòng chọn Quận');
         }
         if ($commune == null) {
-            return response('Cần cập nhật địa chỉ quận/huyện', 400);
+            return redirect()->back()->withInput()->withErrors('Vui lòng chọn Xã');
         }
         $province_id = explode('-', $province);
         $district_id = explode('-', $district);

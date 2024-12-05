@@ -101,7 +101,7 @@ class BackendClinicController extends Controller
 
             $name = $request->input('name');
             if ($name == null) {
-                return response("Name not null!", 400);
+                return redirect()->back()->withInput()->withErrors('name', 'Tên không được để trống');
             }
 
             $translate = new TranslateController();
@@ -110,12 +110,9 @@ class BackendClinicController extends Controller
 
             $phone = $request->input('phone');
             if ($phone == null) {
-                return response("Phone not null!", 400);
+                return redirect()->back()->withInput()->withErrors('name', 'Số điện thoại không được để trống');
             }
             $email = $request->input('email');
-            if ($email == null) {
-                return response("Email not null!", 400);
-            }
             $address_detail = $request->input('address_detail');
 
             $address_detail_en = $translate->translateText($address_detail, 'en');
@@ -164,24 +161,8 @@ class BackendClinicController extends Controller
             /* Save user */
             $user = new User();
 
-            $username = $request->input('username');
             $password = $request->input('password');
             $passwordConfirm = $request->input('passwordConfirm');
-
-            $isEmail = filter_var($email, FILTER_VALIDATE_EMAIL);
-            if (!$isEmail) {
-                return response((new MainApi())->returnMessage('Email invalid!'), 400);
-            }
-
-            $oldUser = User::where('email', $email)->first();
-            if ($oldUser) {
-                return response((new MainApi())->returnMessage('Email already exited!'), 400);
-            }
-
-            $oldUser = User::where('username', $username)->first();
-            if ($oldUser) {
-                return response((new MainApi())->returnMessage('Username already exited!'), 400);
-            }
 
             $oldUser = User::where('phone', $phone)->first();
             if ($oldUser) {
@@ -198,17 +179,15 @@ class BackendClinicController extends Controller
 
             $user->email = $email;
             $user->phone = $phone;
-
-            $user->province_id = explode('-', $province_id)[0];
-            $user->district_id = explode('-', $district_id)[0];
-            $user->commune_id = explode('-', $commune_id)[0];
+            $user->province_id = $province_id;
+            $user->district_id = $district_id;
+            $user->commune_id = $commune_id;
             $user->detail_address = $address_detail;
             $user->year_of_experience = 0;
             $user->bac_si_dai_dien = $representativeDoctor;
             $user->name = $name;
             $user->last_name = $name;
             $user->password = Hash::make($password);
-            $user->username = $username;
             $user->address_code = '';
             $user->type = \App\Enums\Role::BUSINESS;
             $user->member = $type;
@@ -260,7 +239,7 @@ class BackendClinicController extends Controller
             $clinic->facilities = $facilities;
             $clinic->equipment = $equipment;
             $clinic->costs = $costs;
-            (new MainController())->createRoleUser($type, $username);
+            (new MainController())->createRoleUsers($type, $phone);
 
             $clinic->user_id = $user->id;
 
@@ -293,7 +272,7 @@ class BackendClinicController extends Controller
             $name_laos = $translate->translateText($name, 'lo');
 
             $phone = $request->input('phone') ?? $clinic->phone;
-            $email = $request->input('email') ?? $clinic->email;
+            $email = $request->input('email');
             $address_detail = $request->input('address_detail') ?? $clinic->address_detail;
 
             $address_detail_en = $translate->translateText($address_detail, 'en');
@@ -374,9 +353,19 @@ class BackendClinicController extends Controller
             $clinic->costs = $costs;
             $clinic->representative_doctor = $representativeDoctor;
 
+            $user = User::where('id', $clinic->user_id)->first();
+            $user->name = $name;
+            $user->phone = $phone;
+            $user->email = $email;
+            $user->province_id = $province_id;
+            $user->district_id = $district_id;
+            $user->commune_id = $commune_id;
+            $user->detail_address = $address_detail;
+            $user->bac_si_dai_dien = $representativeDoctor;
 
+            $successful = $user->save();
             $success = $clinic->save();
-            if ($success) {
+            if ($success && $successful) {
                 toast('Success, Update profile success!', 'success', 'top-left');
                 return redirect()->route('homeAdmin.list.clinics');
             }
