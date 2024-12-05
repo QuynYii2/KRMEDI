@@ -21,30 +21,39 @@
     <form id="form">
         @csrf
         <div class="row">
-            <div class="col-lg-4">
+{{--            <div class="col-lg-4">--}}
+{{--                <div class="form-group focused">--}}
+{{--                    <label class="form-control-label" for="username">{{ __('home.Username') }}<span--}}
+{{--                            class="small text-danger">*</span></label>--}}
+{{--                    <input type="text" id="username" class="form-control" name="username"--}}
+{{--                           placeholder="{{ __('home.Username') }}"--}}
+{{--                           value="">--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--            <div class="col-lg-4">--}}
+{{--                <div class="form-group focused">--}}
+{{--                    <label class="form-control-label" for="name">{{ __('home.Name') }}<span--}}
+{{--                            class="small text-danger">*</span></label>--}}
+{{--                    <input type="text" id="name" class="form-control" name="name" placeholder="{{ __('home.Name') }}"--}}
+{{--                           required--}}
+{{--                           value="">--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--            <div class="col-lg-4">--}}
+{{--                <div class="form-group focused">--}}
+{{--                    <label class="form-control-label"--}}
+{{--                           for="last_name"></label>--}}
+{{--                    <input type="text" id="last_name" class="form-control" name="last_name"--}}
+{{--                           placeholder="{{ __('home.Last name') }}"--}}
+{{--                           value="">--}}
+{{--                </div>--}}
+{{--            </div>--}}
+            <div class="col-lg-12">
                 <div class="form-group focused">
-                    <label class="form-control-label" for="username">{{ __('home.Username') }}<span
+                    <label class="form-control-label" for="name">Họ và tên<span
                             class="small text-danger">*</span></label>
-                    <input type="text" id="username" class="form-control" name="username"
-                           placeholder="{{ __('home.Username') }}"
-                           value="">
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="form-group focused">
-                    <label class="form-control-label" for="name">{{ __('home.Name') }}<span
-                            class="small text-danger">*</span></label>
-                    <input type="text" id="name" class="form-control" name="name" placeholder="{{ __('home.Name') }}"
+                    <input type="text" id="name" class="form-control" name="name" placeholder="Họ và tên"
                            required
-                           value="">
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="form-group focused">
-                    <label class="form-control-label"
-                           for="last_name"></label>
-                    <input type="text" id="last_name" class="form-control" name="last_name"
-                           placeholder="{{ __('home.Last name') }}"
                            value="">
                 </div>
             </div>
@@ -272,7 +281,7 @@
                 </ul>
             </div>
         </div>
-        <input hidden="" id="address_code" name="address_code" value="">
+{{--        <input hidden="" id="address_code" name="address_code" value="">--}}
         <button type="button" class="btn btn-primary up-date-button mt-md-4">{{ __('home.Save') }}</button>
     </form>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
@@ -296,8 +305,8 @@
                 const fieldNames = [
                     "specialty", "workspace", "identifier", "service_price", "detail_address",
                     "province_id", "district_id", "commune_id", "time_working_1", "time_working_2", "apply_for",
-                    "address_code", "name", "year_of_experience", "status", "department_id", "username",
-                    "email", "phone", "last_name", "password", "passwordConfirm", "member", "type"
+                    "name", "year_of_experience", "status", "department_id",
+                    "email", "phone", "password", "passwordConfirm", "member", "type"
                 ];
 
                 let isValid = true
@@ -402,15 +411,15 @@
                 let id_code = $(this).val();
                 let myArray = id_code.split('-');
                 let code = myArray[1];
-                $('#address_code').val(myArray[2]);
-                callGetAllDistricts(code);
+                // $('#address_code').val(myArray[2]);
+                callGetAllDistricts(id_code);
             })
 
             $('#district_id').on('change', function () {
                 let id_code = $(this).val();
                 let myArray = id_code.split('-');
                 let code = myArray[1];
-                callGetAllCommunes(code);
+                callGetAllCommunes(id_code);
             })
         })
 
@@ -459,29 +468,43 @@
 
         function showAllProvince(res) {
             let html = ``;
+            let select = ``;
             for (let i = 0; i < res.length; i++) {
                 let data = res[i];
                 let code = data.code;
-                html = html + `<option class="province province-item" data-code="${code}" value="${data.id}-${data.code}-${data.code_name}">${data.name}</option>`;
+                if (i == 0) {
+                    select = `selected`;
+                } else {
+                    select = ``;
+                }
+                html = html + `<option ${select} class="province province-item" data-code="${code}" value="${data.code}">${data.name}</option>`;
             }
 
             $('#province_id').empty().append(html);
+            callGetAllDistricts($('#province_id').find(':selected').data('code'));
         }
 
         function showAllDistricts(res) {
             let html = ``;
+            let select = ``;
             for (let i = 0; i < res.length; i++) {
                 let data = res[i];
-                html = html + `<option class="district district-item" value="${data.id}-${data.code}">${data.name}</option>`;
+                if (i == 0) {
+                    select = `selected`;
+                } else {
+                    select = ``;
+                }
+                html = html + `<option ${select} class="district district-item" data-code="${data.code}" value="${data.code}">${data.name}</option>`;
             }
             $('#district_id').empty().append(html);
+            callGetAllCommunes($('#district_id').find(':selected').data('code'));
         }
 
         function showAllCommunes(res) {
             let html = ``;
             for (let i = 0; i < res.length; i++) {
                 let data = res[i];
-                html = html + `<option value="${data.id}-${data.code}">${data.name}</option>`;
+                html = html + `<option value="${data.code}">${data.name}</option>`;
             }
             $('#commune_id').empty().append(html);
         }

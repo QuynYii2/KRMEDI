@@ -8,6 +8,7 @@ use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\TranslateController;
+use App\Models\Province;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -72,7 +73,7 @@ class AdminDoctorInfoApi extends Controller
     {
         try {
             $email = $request->input('email');
-            $username = $request->input('username');
+            $username = $request->input('name');
             $password = $request->input('password');
             $passwordConfirm = $request->input('passwordConfirm');
             $member = $request->input('member');
@@ -87,10 +88,10 @@ class AdminDoctorInfoApi extends Controller
                 return response('Email already exited!', 400);
             }
 
-            $oldUserName = User::where('username', $username)->first();
-            if ($oldUserName) {
-                return response('Username already exited!', 400);
-            }
+//            $oldUserName = User::where('username', $username)->first();
+//            if ($oldUserName) {
+//                return response('Username already exited!', 400);
+//            }
 
             if ($password != $passwordConfirm) {
                 return response('Password or Password Confirm incorrect!', 400);
@@ -104,7 +105,7 @@ class AdminDoctorInfoApi extends Controller
             $created_by = Auth::user()->id;
             $item = $this->saveDoctorInfo($request, $doctor_infos, $created_by);
             if ($item) {
-                (new MainController())->createRoleUser($member, $username);
+                (new MainController())->createRoleUser($member, $email);
 
                 if ($doctor_infos->member == 'DOCTORS') {
                     toast('Register success!', 'success', 'top-left');
@@ -177,18 +178,18 @@ class AdminDoctorInfoApi extends Controller
         $time_working_1 = $request->input('time_working_1');
         $time_working_2 = $request->input('time_working_2');
 
-        $province = $request->input('province_id');
-        $district = $request->input('district_id');
-        $commune = $request->input('commune_id');
+//        $province = $request->input('province_id');
+//        $district = $request->input('district_id');
+//        $commune = $request->input('commune_id');
         $update_by = $request->input('update_by');
 
-        $provinceArray = explode('-', $province);
-        $districtArray = explode('-', $district);
-        $communeArray = explode('-', $commune);
+//        $provinceArray = explode('-', $province);
+//        $districtArray = explode('-', $district);
+//        $communeArray = explode('-', $commune);
 
-        $province_id = $provinceArray[0];
-        $district_id = $districtArray[0];
-        $commune_id = $communeArray[0];
+        $province_id = $request->input('province_id');
+        $district_id = $request->input('district_id');
+        $commune_id = $request->input('commune_id');
 
         $detail_address = $request->input('detail_address');
 
@@ -211,12 +212,13 @@ class AdminDoctorInfoApi extends Controller
 
         $department_id = $request->input('department_id');
         $symptom_id = $request->input('symptom_id');
-        $address_code = $request->input('address_code');
+        $province = Province::where('code',$province_id)->first();
+        $address_code = $province->code_name??null;
 
 
         $doctor->name = $name;
-        $doctor->username = $username;
-        $doctor->last_name = $last_name;
+        $doctor->username = $name;
+        $doctor->last_name = $name;
         $doctor->phone = $phone;
         $doctor->workplace = $workspace;
         $doctor->email = $email;

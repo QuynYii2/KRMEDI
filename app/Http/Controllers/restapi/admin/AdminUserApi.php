@@ -69,7 +69,7 @@ class AdminUserApi extends Controller
         }
         /* All user */
         $email = $request->input('email');
-        $username = $request->input('username');
+        $username = $request->input('name');
         $password = $request->input('password');
         $passwordConfirm = $request->input('passwordConfirm');
         $member = $request->input('member');
@@ -78,7 +78,7 @@ class AdminUserApi extends Controller
         $status = $request->input('status');
 
         $name_user = $request->input('name');
-        $last_name = $request->input('last_name');
+        $last_name = $request->input('name');
         $phone = $request->input('phone');
 
         $detail_address = $request->input('detail_address');
@@ -300,7 +300,6 @@ class AdminUserApi extends Controller
         }
 
         $request->validate([
-            'username' => 'required|string|max:255',
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
             'phone' => 'required|string|max:15',
@@ -309,8 +308,8 @@ class AdminUserApi extends Controller
             'avt' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $user->username = $request->input('username');
-        $user->last_name = $request->input('last_name');
+        $user->username = $request->input('name');
+        $user->last_name = $request->input('name');
         $user->name = $request->input('name');
         $user->email = $request->input('email');
         $user->phone = $request->input('phone');
