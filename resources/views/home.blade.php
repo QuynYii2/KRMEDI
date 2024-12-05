@@ -2846,12 +2846,12 @@
             });
         }
 
-        // getCurrentLocation(function (currentLocation) {
-        //     initMap(currentLocation, validLocations);
-        // });
         getCurrentLocation(function (currentLocation) {
-            initMap(currentLocation);
+            initMap(currentLocation, validLocations);
         });
+        // getCurrentLocation(function (currentLocation) {
+        //     initMap(currentLocation);
+        // });
         document.addEventListener('DOMContentLoaded', function() {
             const departmentLinks = document.querySelectorAll('.department-link');
 
