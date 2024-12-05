@@ -2169,12 +2169,25 @@
                                 <input type="number" min="1" class="form-control quantity" name="quantity">
                             </div>
                             <div class="form-group">
-                                <label for="detail_value">Note</label>
-                                <input type="text" class="form-control detail_value" name="detail_value">
+                                <label for="detail_value">Thời gian uống</label>
+                                <select class="form-control detail_value" name="note_date[]" multiple style="height: 155px;">
+                                    <option value="1" selected >Trước ăn sáng</option>
+                                    <option value="2">Sau ăn sáng</option>
+                                    <option value="3">Trước ăn trưa</option>
+                                    <option value="4">Sau ăn trưa</option>
+                                    <option value="5">Trước ăn tối</option>
+                                    <option value="6">Sau ăn tối</option>
+                                </select>
                             </div>
-                            <div class="form-group">
-                                <label for="treatment_days">Số ngày điều trị</label>
-                                <input type="number" min="1" class="form-control treatment_days" name="treatment_days" value="1">
+                             <div class="d-flex">
+                                 <div class="form-group w-50 mr-2">
+                                    <label for="date_start">Ngày bắt đầu điều trị</label>
+                                    <input type="date" class="form-control date_start" name="date_start">
+                                </div>
+                                 <div class="form-group w-50">
+                                    <label for="date_end">Ngày kết thúc điều trị</label>
+                                    <input type="date" class="form-control date_end" name="date_end">
+                                </div>
                             </div>
                         </div>
                         <div class="action mt-3">
@@ -2418,7 +2431,8 @@
             var detail = prescriptionForm.getElementsByClassName('detail_value');
 
             // Lấy các phần tử con có class 'treatment_days'
-            var treatment = prescriptionForm.getElementsByClassName('treatment_days');
+            var data_date_start = prescriptionForm.getElementsByClassName('date_start');
+            var data_date_end = prescriptionForm.getElementsByClassName('date_end');
 
             // Lấy các phần tử con có class 'medicine_id_hidden'
             var medicine_id_hidden = prescriptionForm.getElementsByClassName('medicine_id_hidden');
@@ -2427,8 +2441,10 @@
                 let name = medicine_name[j].value;
                 let ingredients = medicine_ingredients[j].value;
                 let quantity_value = quantity[j].value;
-                let detail_value = detail[j].value;
-                let treatment_value = treatment[j].value;
+                let detail_value = Array.from(detail[j].selectedOptions).map(option => option.value);
+                // let treatment_value = treatment[j].value;
+                let date_start = data_date_start[j].value;
+                let date_end = data_date_end[j].value;
 
                 let medicine_id_hidden_value = '';
                 if (medicine_id_hidden[j]) {
@@ -2444,11 +2460,13 @@
                     medicine_name: name,
                     medicine_ingredients: ingredients,
                     quantity: quantity_value,
-                    note: detail_value ?? '',
+                    note_date: detail_value ?? '',
                     medicine_id: medicine_id_hidden_value ?? '',
-                    treatment_days: treatment_value,
+                    date_start : date_start,
+                    date_end: date_end,
+                    // treatment_days: treatment_value,
                 }
-                item = JSON.stringify(item);
+
                 my_array.push(item);
             }
 
@@ -2457,7 +2475,7 @@
             ];
 
             itemList.forEach(item => {
-                formData.append(item, my_array.toString());
+                formData.append(item, JSON.stringify(my_array));
             });
 
             formData.append('chatUserId', chatUserId);
@@ -2470,7 +2488,7 @@
                 var medicine_id = group.find('.medicine_id_hidden').val();
                 var quantity = group.find('.quantity').val();
                 var note = group.find('.detail_value').val();
-                var treatmentDays = group.find('.treatment_days').val();
+                var treatmentDays = group.find('.date_start').val();
 
                 var product = {
                     id: medicine_id,

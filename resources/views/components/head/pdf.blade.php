@@ -21,7 +21,8 @@
         <th>STT</th>
         <th>Tên thuốc</th>
         <th>Số lượng</th>
-        <th>Số ngày sử dụng</th>
+        <th>Số ngày bắt đầu</th>
+        <th>Số ngày kết thúc</th>
         <th>Lưu ý</th>
     </tr>
     @foreach($data as $key => $item)
@@ -29,8 +30,23 @@
             <td>{{ $key+1 }}</td>
             <td>{{ $item['medicine_name'] }}</td>
             <td>{{ $item['quantity'] }}</td>
-            <td>{{ $item['treatment_days'] }}</td>
-            <td>{{ $item['note'] }}</td>
+            <td>{{ $item['date_start'] }}</td>
+            <td>{{ $item['date_end'] }}</td>
+            <td>@foreach($item['note_date'] as $key => $items)
+                @if($items[$key] == 1)
+                    Uống trước ăn sáng,
+                    @elseif($items[$key] == 2)
+                    Uống sau ăn sáng
+                    @elseif($items[$key] == 3)
+                        Uống trước ăn trưa
+                    @elseif($items[$key] == 4)
+                        Uống sau ăn trưa
+                    @elseif($items[$key] == 5)
+                        Uống trước ăn tối
+                    @elseif($items[$key] == 6)
+                        Uống sau ăn tối
+                    @endif
+                @endforeach</td>
         </tr>
     @endforeach
 </table>
