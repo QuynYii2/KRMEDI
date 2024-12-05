@@ -198,20 +198,22 @@
                                     </a>
                                 @endif
                             </div>
-                            <div class="col-lg-6 col-12 mb-2">
-                                @if(Auth::check())
-                                    @if($medicine->type_product == 0 || $name_role == 'HOSPITALS' || $name_role == 'DOCTORS')
-                                    <button id="btnBuyNow" {{ $prMedicine->quantity == 0 ? 'disabled' : '' }}
-                                    class=" button-buyNow btn btn-primary w-100">{{ __('home.Add cart') }}</button>
-                                        @else
-                                        <button {{ $prMedicine->quantity == 0 ? 'disabled' : '' }}
-                                        class=" button-buyNow btn btn-primary w-100 contact_doctor" style="padding: 11px 50px" data-mail="{{$user_email}}" data-id="{{$medicine->user_id}}">Liên hệ</button>
-                                        @endif
-                                @else
-                                    <button onclick="alertLogin();"
-                                            class=" button-buyNow btn btn-primary w-100">{{ __('home.Buy now') }}</button>
-                                @endif
-                            </div>
+{{--                            <div class="col-lg-6 col-12 mb-2">--}}
+{{--                                @if(Auth::check())--}}
+{{--                                    123--}}
+{{--                                --}}
+{{--                                    @if($medicine->type_product == 0 || $name_role == 'HOSPITALS' || $name_role == 'DOCTORS')--}}
+{{--                                    <button id="btnBuyNow" {{ $prMedicine->quantity == 0 ? 'disabled' : '' }}--}}
+{{--                                    class=" button-buyNow btn btn-primary w-100">{{ __('home.Add cart') }}</button>--}}
+{{--                                        @else--}}
+{{--                                        <button {{ $prMedicine->quantity == 0 ? 'disabled' : '' }}--}}
+{{--                                        class=" button-buyNow btn btn-primary w-100 contact_doctor" style="padding: 11px 50px" data-mail="{{$user_email}}" data-id="{{$medicine->user_id}}">Liên hệ</button>--}}
+{{--                                        @endif--}}
+{{--                                @else--}}
+{{--                                    <button onclick="alertLogin();"--}}
+{{--                                            class=" button-buyNow btn btn-primary w-100">{{ __('home.Buy now') }}</button>--}}
+{{--                                @endif--}}
+{{--                            </div>--}}
                         </div>
                     </div>
                 </div>
@@ -240,7 +242,7 @@
                                     {!! $medicine->description_en !!}
                                 @endif
                             </div>
-                            <div class="d-flex justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
+                            <div class="justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
                                 <p class="see-more-medicine transition-all duration-500 text-decoration-underline">Xem thêm</p>
                                 <p class="see-less-medicine transition-all duration-500 text-decoration-underline d-none">Thu gọn</p>
                             </div>
@@ -250,7 +252,7 @@
                             <div class="medicineTab">
                                 {!! $medicineIngredient !!}
                             </div>
-                            <div class="d-flex justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
+                            <div class="justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
                                 <p class="see-more-medicine transition-all duration-500 text-decoration-underline">Xem thêm</p>
                                 <p class="see-less-medicine transition-all duration-500 text-decoration-underline d-none">Thu gọn</p>
                             </div>
@@ -260,7 +262,7 @@
                             <div class="medicineTab">
                                 {!! $medicine->uses!!}
                             </div>
-                            <div class="d-flex justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
+                            <div class="justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
                                 <p class="see-more-medicine transition-all duration-500 text-decoration-underline">Xem thêm</p>
                                 <p class="see-less-medicine transition-all duration-500 text-decoration-underline d-none">Thu gọn</p>
                             </div>
@@ -270,7 +272,7 @@
                             <div class="medicineTab">
                                 {!! $medicine->user_manual !!}
                             </div>
-                            <div class="d-flex justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
+                            <div class="justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
                                 <p class="see-more-medicine transition-all duration-500 text-decoration-underline">Xem thêm</p>
                                 <p class="see-less-medicine transition-all duration-500 text-decoration-underline d-none">Thu gọn</p>
                             </div>
@@ -280,7 +282,7 @@
                             <div class="medicineTab">
                                 {!! $medicine->side_effects !!}
                             </div>
-                            <div class="d-flex justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
+                            <div class="justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
                                 <p class="see-more-medicine transition-all duration-500 text-decoration-underline">Xem thêm</p>
                                 <p class="see-less-medicine transition-all duration-500 text-decoration-underline d-none">Thu gọn</p>
                             </div>
@@ -290,7 +292,7 @@
                             <div class="medicineTab">
                                 {!! $medicine->notes!!}
                             </div>
-                            <div class="d-flex justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
+                            <div class="justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
                                 <p class="see-more-medicine transition-all duration-500 text-decoration-underline">Xem thêm</p>
                                 <p class="see-less-medicine transition-all duration-500 text-decoration-underline d-none">Thu gọn</p>
                             </div>
@@ -300,7 +302,7 @@
                             <div class="medicineTab">
                                 {!! $medicine->preserve!!}
                             </div>
-                            <div class="d-flex justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
+                            <div class="justify-content-center align-items-center mt-3 toggle-expand" style="cursor: pointer">
                                 <p class="see-more-medicine transition-all duration-500 text-decoration-underline">Xem thêm</p>
                                 <p class="see-less-medicine transition-all duration-500 text-decoration-underline d-none">Thu gọn</p>
                             </div>
@@ -424,6 +426,8 @@
 
                 if (medicineTab.scrollHeight > 800) {
                     toggleButton.style.display = "flex";
+                }else{
+                    toggleButton.style.display = "none";
                 }
 
                 toggleButton.addEventListener("click", function () {

@@ -65,7 +65,7 @@
                 </div>
                 <div class="order-info">
                     @foreach($val->products as $index => $item)
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center justify-content-between">
                             <img src="{{ asset($item->thumbnail) }}" alt="" class="product-thumbnail">
                             <div class="product-info">
                                 <div class="product-name">
@@ -79,10 +79,15 @@
                                         {{ number_format($item->price) }}
                                     </p>
                                 </div>
-                                <div class="product-name mb-3">
-                                    Trạng thái đơn hàng: {{ $val->status }}
+                                <div class="d-flex justify-content-between mb-3">
+                                    <div class="product-buy-time">
+                                        Thời gian mua hàng: {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
+                                    </div>
+                                    <div class="product-name ">
+                                        Trạng thái đơn hàng: {{ $val->status }}
+                                    </div>
                                 </div>
-                                @if ($val->status == 'COMPLETED')
+                                @if ($val->status == 'COMPLETED' && \Carbon\Carbon::parse($val->updated_at)->diffInHours(\Carbon\Carbon::now()) < 2)
                                     <button data-bs-toggle="modal" data-bs-target="#staticBackdrop{{$key}}" class="btn btn-danger">Hoàn đơn</button>
                                 @endif
                                 @if ($val->status == 'REFUND')

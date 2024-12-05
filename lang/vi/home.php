@@ -555,7 +555,7 @@ return [
     'Bạn có chắc chắn muốn xóa không' => 'Bạn có chắc chắn muốn xóa không',
     'name_en' => 'Tên tiếng anh',
     'name_laos' => 'Tên tiếng Lào',
-    'địa chỉ chi tiết việt' => 'Địa chỉ chi tiết tiếng Việt',
+    'địa chỉ chi tiết việt' => 'Địa chỉ chi tiết',
     'địa chỉ chi tiết anh' => 'Địa chỉ chi tiết tiếng Anh',
     'địa chỉ chi tiết lào' => 'Địa chỉ chi tiết tiếng Lào',
     'Tỉnh' => 'Tỉnh',

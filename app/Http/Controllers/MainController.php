@@ -180,6 +180,24 @@ class MainController extends Controller
         }
     }
 
+    public function createRoleUsers($member, $userPhone)
+    {
+        $role = Role::where('name', $member)->first();
+        $newUser = User::where('phone', $userPhone)->first();
+        if ($role) {
+            RoleUser::create([
+                'role_id' => $role->id,
+                'user_id' => $newUser->id
+            ]);
+        } else {
+            $roleNormal = Role::where('name', \App\Enums\Role::PAITENTS)->first();
+            RoleUser::create([
+                'role_id' => $roleNormal->id,
+                'user_id' => $newUser->id
+            ]);
+        }
+    }
+
     public function setLanguage(Request $request, $locale)
     {
         switch ($locale) {

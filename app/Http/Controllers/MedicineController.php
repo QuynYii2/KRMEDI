@@ -84,7 +84,7 @@ class MedicineController extends Controller
         $medicine = ProductMedicine::find($id);
         $medicineIngredient = DrugIngredients::where('product_id', $id)->first()->component_name;
         $medicineIngredient = str_replace("),", ")," . "<br>", $medicineIngredient);
-        $user_email = User::find($medicine->user_id)->email;
+//        $user_email = User::find($medicine->user_id)->email;
         $categoryMedicines = CategoryProduct::where('status', true)->get();
         $carts = null;
         $name_role = '';
@@ -96,7 +96,7 @@ class MedicineController extends Controller
             $role = RoleUser::where('user_id',Auth::user()->id)->first();
             $name_role = Role::find($role->role_id)->name;
         }
-        return view('medicine.detailMedicine', compact('medicine', 'categoryMedicines', 'carts', 'id','name_role','user_email', 'medicineIngredient'));
+        return view('medicine.detailMedicine', compact('medicine', 'categoryMedicines', 'carts', 'id','name_role', 'medicineIngredient'));
     }
 
     public function wishList()

@@ -395,9 +395,9 @@
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <label class="form-control-label" for="email">{{ __('home.Email address') }}
-                                            <span class="small text-danger">*</span></label>
+                                        </label>
                                         <input type="email" id="email" class="form-control" name="email"
-                                            placeholder="example@example.com" required
+                                            placeholder="example@example.com"
                                             value="{{ old('email', Auth::user()->email) }}">
                                     </div>
                                 </div>
@@ -449,9 +449,10 @@
                                         <label for="province_id">Tỉnh/Thành phố</label>
                                         <select name="province_id" id="province_id" class="form-control"
                                             onchange="callGetAllDistricts(this.value)">
+                                            <option value="">Chọn thành phố</option>
                                             @foreach($province as $provinces)
                                                 <option value="{{$provinces->code}}" @if($provinces->code == $doctor->province_id) selected @endif>{{ $provinces->name }}</option>
-                                                @endforeach
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -826,7 +827,7 @@
                                 <div>
                                     <label for="introduce">Giới thiệu</label>
                                     <textarea type="text" class="form-control" id="introduce" name="introduce" >
-                                        {{$clinic->introduce}}
+                                        {!! $clinic->introduce !!}
                                     </textarea>
                                 </div>
                                 <div class="mt-3">
