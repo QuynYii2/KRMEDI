@@ -826,11 +826,11 @@
 
     function logout() {
         let uid = current_user.uid;
+        window.location.href = "{{ route('logoutProcess') }}";
         try {
             setOnline(uid, false);
             signOut(auth);
             localStorage.setItem('current_users',null);
-            window.location.href = "{{ route('logoutProcess') }}";
         } catch (error) {
             console.error('Logout error:', error);
         }
