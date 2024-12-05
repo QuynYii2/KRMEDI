@@ -106,7 +106,7 @@ class PrescriptionResultApi extends Controller
 
             $created_by = $request->input('created_by');
 
-            $prescriptions = $request->input('prescriptions') ?? '{}';
+            $prescriptions = $request->input('prescriptions') ?? '[]';
 
             $notes = $request->input('notes');
             $notes_en = $request->input('notes_en') ?? $notes;
@@ -124,9 +124,9 @@ class PrescriptionResultApi extends Controller
 
             $prescription_result->prescriptions = $prescriptions;
 
-            $prescription_result->notes = $notes;
-            $prescription_result->notes_en = $notes_en;
-            $prescription_result->notes_laos = $notes_laos;
+//            $prescription_result->notes = $notes;
+//            $prescription_result->notes_en = $notes_en;
+//            $prescription_result->notes_laos = $notes_laos;
 
             $prescription_result->status = $status;
             $success = $prescription_result->save();
@@ -150,7 +150,8 @@ class PrescriptionResultApi extends Controller
 
 
             if ($success) {
-                $data_prescriptions = '[' .$request->get('prescriptions'). ']';
+                $data_prescriptions = $request->get('prescriptions');
+
                 $doctor_name = User::find($prescription_result->created_by);
                 $user_name = User::find($prescription_result->user_id);
 
@@ -238,7 +239,7 @@ class PrescriptionResultApi extends Controller
                 return response((new MainApi())->returnMessage('Not found!'), 400);
             }
 
-            $medicines = '[' . $prescription->prescriptions . ']';
+            $medicines = $prescription->prescriptions;
             $medicines = json_decode($medicines, true);
             if (is_array($medicines)) {
                 return Excel::download(new MedicineExport($medicines), 'prescription.xlsx');
@@ -383,7 +384,7 @@ class PrescriptionResultApi extends Controller
 
             $count = 0;
 
-            $medicines = '[' . $prescription->prescriptions . ']';
+            $medicines = $prescription->prescriptions;
             $medicines = json_decode($medicines, true);
             foreach ($medicines as $row) {
 
