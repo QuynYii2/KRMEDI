@@ -825,8 +825,8 @@
     }
 
     function logout() {
-        let uid = current_user.uid;
         window.location.href = "{{ route('logoutProcess') }}";
+        let uid = current_user.uid;
         try {
             setOnline(uid, false);
             signOut(auth);
