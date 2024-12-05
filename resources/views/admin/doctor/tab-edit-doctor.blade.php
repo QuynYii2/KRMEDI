@@ -21,31 +21,40 @@
 
         @csrf
         <div class="row">
-            <div class="col-lg-4">
+{{--            <div class="col-lg-4">--}}
+{{--                <div class="form-group focused">--}}
+{{--                    <label class="form-control-label" for="username">{{ __('home.Username') }}<span--}}
+{{--                            class="small text-danger">*</span></label>--}}
+{{--                    <input type="text" id="username" class="form-control" name="username"--}}
+{{--                           placeholder="{{ __('home.Username') }}"--}}
+{{--                           value="{{ $doctor->username }}">--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--            <div class="col-lg-4">--}}
+{{--                <div class="form-group focused">--}}
+{{--                    <label class="form-control-label" for="name">{{ __('home.Name') }}<span--}}
+{{--                            class="small text-danger">*</span></label>--}}
+{{--                    <input type="text" id="name" class="form-control" name="name" placeholder="{{ __('home.Name') }}"--}}
+{{--                           required--}}
+{{--                           value="{{ $doctor->name }}">--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--            <div class="col-lg-4">--}}
+{{--                <div class="form-group focused">--}}
+{{--                    <label class="form-control-label"--}}
+{{--                           for="last_name">{{ __('home.Last name') }}</label>--}}
+{{--                    <input type="text" id="last_name" class="form-control" name="last_name"--}}
+{{--                           placeholder="{{ __('home.Last name') }}"--}}
+{{--                           value="{{ $doctor->last_name }}">--}}
+{{--                </div>--}}
+{{--            </div>--}}
+            <div class="col-12">
                 <div class="form-group focused">
-                    <label class="form-control-label" for="username">{{ __('home.Username') }}<span
+                    <label class="form-control-label" for="username">Họ và tên<span
                             class="small text-danger">*</span></label>
-                    <input type="text" id="username" class="form-control" name="username"
-                           placeholder="{{ __('home.Username') }}"
-                           value="{{ $doctor->username }}">
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="form-group focused">
-                    <label class="form-control-label" for="name">{{ __('home.Name') }}<span
-                            class="small text-danger">*</span></label>
-                    <input type="text" id="name" class="form-control" name="name" placeholder="{{ __('home.Name') }}"
-                           required
+                    <input type="text" id="name" class="form-control" name="name"
+                           placeholder="Họ và tên"
                            value="{{ $doctor->name }}">
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="form-group focused">
-                    <label class="form-control-label"
-                           for="last_name">{{ __('home.Last name') }}</label>
-                    <input type="text" id="last_name" class="form-control" name="last_name"
-                           placeholder="{{ __('home.Last name') }}"
-                           value="{{ $doctor->last_name }}">
                 </div>
             </div>
         </div>
@@ -150,28 +159,38 @@
         <div class="row">
             <div class="col-sm-4">
                 <label for="province_id">{{ __('home.Tỉnh') }}</label>
+                @php
+                    $province = \App\Models\Province::all();
+                @endphp
                 <select name="province_id" id="province_id" class="form-control">
-
+                    @foreach($province as $provinces)
+                        <option @if($doctor->province_id == $provinces->code) selected @endif
+                        value="{{$provinces->code ?? null}}"> {{$provinces->name ?? null}}</option>
+                    @endforeach
                 </select>
             </div>
             <div class="col-sm-4">
                 <label for="district_id">{{ __('home.Quận') }}</label>
                 @php
-                    $district = \App\Models\District::find($doctor->district_id);
+                    $district = \App\Models\District::where('province_code',$doctor->province_id)->get();
                 @endphp
                 <select name="district_id" id="district_id" class="form-control">
-                    <option
-                        value="{{$district->id ?? null}}-{{$district->code ?? null}}"> {{$district->name ?? null}}</option>
+                    @foreach($district as $districts)
+                    <option @if($doctor->district_id == $districts->code) selected @endif
+                        value="{{$districts->code ?? null}}"> {{$districts->name ?? null}}</option>
+                        @endforeach
                 </select>
             </div>
             <div class="col-sm-4">
                 <label for="commune_id">{{ __('home.Xã') }}</label>
                 @php
-                    $commune = \App\Models\Commune::find($doctor->commune_id);
+                    $commune = \App\Models\Commune::where('district_code',$doctor->district_id)->get();
                 @endphp
                 <select name="commune_id" id="commune_id" class="form-control">
-                    <option
-                        value="{{$commune->id ?? null}}-{{$commune->code ?? null}}">{{$commune->name ?? null}}</option>
+                    @foreach($commune as $communes)
+                    <option @if($doctor->commune_id == $communes->code) selected @endif
+                        value="{{$communes->code ?? null}}">{{$communes->name ?? null}}</option>
+                        @endforeach
                 </select>
             </div>
         </div>
@@ -354,7 +373,7 @@
                     @endforeach
                 </ul>
             </div>
-            <input hidden="" id="address_code" name="address_code" value="{{$doctor->address_code ?? 'code_default'}}">
+{{--            <input hidden="" id="address_code" name="address_code" value="{{$doctor->address_code ?? 'code_default'}}">--}}
             <input hidden="" id="update_by" name="update_by" value="{{Auth::user()->id}}">
         </div>
         <div class="row">
@@ -378,8 +397,8 @@
                 const fieldNames = [
                     "specialty", "workspace", "identifier", "service_price", "detail_address",
                     "province_id", "district_id", "commune_id", "time_working_1", "time_working_2",
-                    "apply_for", "address_code", "update_by", "name", "year_of_experience", "status",
-                    "department_id", "username", "email", "phone", "last_name", "member", "type"
+                    "apply_for", "update_by", "name", "year_of_experience", "status",
+                    "department_id", "email", "phone", "member", "type"
                 ];
 
                 const passwords = [
@@ -484,20 +503,21 @@
     </script>
     <script>
         $(document).ready(function () {
-            callGetAllProvince();
+            // callGetAllProvince();
 
             $('#province_id').on('change', function () {
                 let id_code = $(this).val();
                 let myArray = id_code.split('-');
                 let code = myArray[1];
-                callGetAllDistricts(code);
+                // $('#address_code').val(myArray[2]);
+                callGetAllDistricts(id_code);
             })
 
             $('#district_id').on('change', function () {
                 let id_code = $(this).val();
                 let myArray = id_code.split('-');
                 let code = myArray[1];
-                callGetAllCommunes(code);
+                callGetAllCommunes(id_code);
             })
         })
 
@@ -554,26 +574,32 @@
                 if (province_id == data.id) {
                     supHtml = 'selected';
                 }
-                html = html + `<option ${supHtml} class="province province-item" data-code="${code}" value="${data.id}-${data.code}">${data.name}</option>`;
+                html = html + `<option ${supHtml} class="province province-item" data-code="${code}" value="${data.code}">${data.name}</option>`;
             }
 
             $('#province_id').empty().append(html);
+            callGetAllDistricts($('#province_id').find(':selected').data('code'));
         }
 
         function showAllDistricts(res) {
             let html = ``;
+            let select=``;
             for (let i = 0; i < res.length; i++) {
                 let data = res[i];
-                html = html + `<option class="district district-item" value="${data.id}-${data.code}">${data.name}</option>`;
+                if (i == 0) {
+                    select = `selected`;
+                }
+                html = html + `<option class="district district-item" data-code="${data.code}" value="${data.code}">${data.name}</option>`;
             }
             $('#district_id').empty().append(html);
+            callGetAllCommunes($('#district_id').find(':selected').data('code'));
         }
 
         function showAllCommunes(res) {
             let html = ``;
             for (let i = 0; i < res.length; i++) {
                 let data = res[i];
-                html = html + `<option value="${data.id}-${data.code}">${data.name}</option>`;
+                html = html + `<option value="${data.code}">${data.name}</option>`;
             }
             $('#commune_id').empty().append(html);
         }

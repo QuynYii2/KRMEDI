@@ -50,24 +50,28 @@ class AdminDoctorReviewApi extends Controller
             if ($success) {
                 $user = User::find($reviewDoctor->created_by);
                 if ($status == 'APPROVED'){
-                    $userNotification = Notification::create([
-                        'title' => 'Đánh giá bác sĩ',
-                        'sender_id' => $user->id,
-                        'follower' => $user->id,
-                        'description' => 'Đánh giá bác sĩ của bạn đã được duyệt. Vui lòng đến kiểm tra!',
-                    ]);
-                    $mainApi = new MainApi();
-                    $mainApi->sendQuestionNotification($user->token_firebase,$userNotification->id);
+                    if ($user){
+                        $userNotification = Notification::create([
+                            'title' => 'Đánh giá bác sĩ',
+                            'sender_id' => $user->id,
+                            'follower' => $user->id,
+                            'description' => 'Đánh giá bác sĩ của bạn đã được duyệt. Vui lòng đến kiểm tra!',
+                        ]);
+                        $mainApi = new MainApi();
+                        $mainApi->sendQuestionNotification($user->token_firebase,$userNotification->id);
+                    }
                 }
                 if ($status == 'REFUSE'){
-                    $userNotification = Notification::create([
-                        'title' => 'Đánh giá bác sĩ',
-                        'sender_id' => $user->id,
-                        'follower' => $user->id,
-                        'description' => 'Đánh giá bác sĩ của bạn đã bị từ chối',
-                    ]);
-                    $mainApi = new MainApi();
-                    $mainApi->sendQuestionNotification($user->token_firebase,$userNotification->id);
+                    if ($user){
+                        $userNotification = Notification::create([
+                            'title' => 'Đánh giá bác sĩ',
+                            'sender_id' => $user->id,
+                            'follower' => $user->id,
+                            'description' => 'Đánh giá bác sĩ của bạn đã bị từ chối',
+                        ]);
+                        $mainApi = new MainApi();
+                        $mainApi->sendQuestionNotification($user->token_firebase,$userNotification->id);
+                    }
                 }
                 return response()->json($reviewDoctor);
             }

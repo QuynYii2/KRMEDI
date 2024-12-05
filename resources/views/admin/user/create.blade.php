@@ -10,24 +10,31 @@
             <form action="{{ route('api.admin.users.create') }}" method="POST" autocomplete="off" enctype="multipart/form-data">
                 @csrf
                 <div class="row">
-                    <div class="col-md-4 form-group">
-                        <label class="form-control-label" for="username">{{ __('home.Username') }}
+{{--                    <div class="col-md-4 form-group">--}}
+{{--                        <label class="form-control-label" for="username">{{ __('home.Username') }}--}}
+{{--                            <span class="small text-danger">*</span>--}}
+{{--                        </label>--}}
+{{--                        <input type="text" id="username" class="form-control" name="username" placeholder="Username"--}}
+{{--                               required value="">--}}
+{{--                    </div>--}}
+{{--                    <div class="col-md-4 form-group">--}}
+{{--                        <label class="form-control-label" for="name">{{ __('home.Name') }}--}}
+{{--                            <span class="small text-danger">*</span>--}}
+{{--                        </label>--}}
+{{--                        <input type="text" id="name" class="form-control" name="name" placeholder="Name" required--}}
+{{--                               value="">--}}
+{{--                    </div>--}}
+{{--                    <div class="col-md-4 form-group">--}}
+{{--                        <label class="form-control-label" for="last_name">{{ __('home.Last name') }}</label>--}}
+{{--                        <input type="text" id="last_name" class="form-control" name="last_name"--}}
+{{--                               placeholder="Last name" required value="">--}}
+{{--                    </div>--}}
+                    <div class="col-12 form-group">
+                        <label class="form-control-label" for="username">Họ và tên
                             <span class="small text-danger">*</span>
                         </label>
-                        <input type="text" id="username" class="form-control" name="username" placeholder="Username"
+                        <input type="text" id="name" class="form-control" name="name" placeholder="Họ và tên"
                                required value="">
-                    </div>
-                    <div class="col-md-4 form-group">
-                        <label class="form-control-label" for="name">{{ __('home.Name') }}
-                            <span class="small text-danger">*</span>
-                        </label>
-                        <input type="text" id="name" class="form-control" name="name" placeholder="Name" required
-                               value="">
-                    </div>
-                    <div class="col-md-4 form-group">
-                        <label class="form-control-label" for="last_name">{{ __('home.Last name') }}</label>
-                        <input type="text" id="last_name" class="form-control" name="last_name"
-                               placeholder="Last name" required value="">
                     </div>
                 </div>
 
@@ -96,7 +103,7 @@
 {{--                        <input type="text" id="address_code" class="form-control" name="address_code"--}}
 {{--                               placeholder="ha_noi" value="">--}}
 {{--                    </div>--}}
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-12">
                         <label for="detail_address">{{ __('home.địa chỉ chi tiết việt') }}</label>
                         <input class="form-control" name="detail_address" id="detail_address" value="">
                     </div>
@@ -115,7 +122,7 @@
                         <label class="form-control-label" for="member">{{ __('home.Member') }}<span
                                 class="small text-danger">*</span></label>
                         <select id="member" name="member" class="form-control form-select">
-                            <option value="PAITENTS">{{ __('home.PAITENTS') }}</option>
+                            <option value="PAITENTS">Bệnh nhân</option>
 {{--                            <option value="NORMAL_PEOPLE">{{ __('home.NORMAL PEOPLE') }}</option>--}}
                         </select>
                     </div>

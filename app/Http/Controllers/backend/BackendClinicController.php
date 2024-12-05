@@ -239,6 +239,7 @@ class BackendClinicController extends Controller
             $clinic->facilities = $facilities;
             $clinic->equipment = $equipment;
             $clinic->costs = $costs;
+            
             (new MainController())->createRoleUsers($type, $phone);
 
             $clinic->user_id = $user->id;

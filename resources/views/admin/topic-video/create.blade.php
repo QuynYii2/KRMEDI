@@ -5,7 +5,7 @@
 @section('main-content')
     <div class="container">
         <!-- Page Heading -->
-        <h1 class="h3 mb-4 text-gray-800">{{ __('home.Create Service Clinics') }}</h1>
+        <h1 class="h3 mb-4 text-gray-800">Tạo danh mục video</h1>
         @if (session('success'))
             <div class="alert alert-success border-left-success alert-dismissible fade show" role="alert">
                 {{ session('success') }}
@@ -23,7 +23,7 @@
             </div>
             <div class="row">
                 <div class="form-group col-md-4">
-                    <label for="thumbnail">{{ __('home.Thumbnail') }}</label>
+                    <label for="thumbnail">Hình ảnh</label>
                     <input type="file" class="form-control" id="thumbnail" name="thumbnail" multiple accept="image/*">
                 </div>
                 <div class="form-group col-md-4">
@@ -34,7 +34,9 @@
                     </select>
                 </div>
             </div>
-            <button type="button" id="btnCreateTopic" class="btn btn-primary float-right">{{ __('home.Save') }}</button>
+            <div class="row justify-content-center mt-3">
+                <button type="button" id="btnCreateTopic" class="btn btn-primary float-right" style="width: fit-content">{{ __('home.Save') }}</button>
+            </div>
         </form>
     </div>
     <script>

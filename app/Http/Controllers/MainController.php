@@ -162,10 +162,10 @@ class MainController extends Controller
         return [$role, $type];
     }
 
-    public function createRoleUser($member, $username)
+    public function createRoleUser($member, $email)
     {
         $role = Role::where('name', $member)->first();
-        $newUser = User::where('username', $username)->first();
+        $newUser = User::where('email', $email)->first();
         if ($role) {
             RoleUser::create([
                 'role_id' => $role->id,

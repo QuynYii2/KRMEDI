@@ -82,9 +82,11 @@
                         name="user_id">
                 </div>
             </div>
-            <button type="button" class="btn btn-primary float-right" id="btnUpdateVideo">
-                {{ __('home.Save') }}
-            </button>
+            <div class="row justify-content-center mt-3">
+                <button type="button" class="btn btn-primary float-right" id="btnUpdateVideo" style="width: fit-content">
+                    {{ __('home.Save') }}
+                </button>
+            </div>
         </form>
     </div>
     <script>
