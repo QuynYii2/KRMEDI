@@ -129,7 +129,10 @@
         .list-symptoms,
         .list-service {
             list-style-type: none;
-            padding: 0;
+            max-height: 300px;
+            overflow: auto;
+            background: white;
+            padding: 0 10px;
             margin: 0;
         }
 
@@ -168,36 +171,41 @@
         <div>
             <div class="row">
                 <div class="col-md-12">
-                    <label for="name">{{ __('home.Name') }}</label>
+                    <label for="name">{{ __('home.Name') }}
+                        <span class="small text-danger">*</span>
+                    </label>
                     <input type="text" class="form-control" id="name" name="name" value="{{$clinic->name}}" required>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mt-3">
                 <div class="col-md-6">
-                    <label for="phone">{{ __('home.PhoneNumber') }}</label>
+                    <label for="phone">{{ __('home.PhoneNumber') }}
+                        <span class="small text-danger">*</span>
+                    </label>
                     <input type="number" class="form-control" id="phone" name="phone"
-                           value="{{$clinic->phone}}">
+                           value="{{ $clinic->phone ?: ($clinic->users->phone ?? '') }}">
                 </div>
                 <div class="col-md-6">
                     <label for="email">{{ __('home.Email') }}</label>
                     <input type="email" class="form-control" id="email" name="email"
-                           value="{{$clinic->email}}" required>
+                           value="{{ $clinic->email}}">
                 </div>
             </div>
-            <div class="row">
+            <div class="row mt-3">
                 <div class="col-sm-12">
-                    <label for="address_detail">{{ __('home.địa chỉ chi tiết việt') }}</label>
+                    <label for="address_detail">{{ __('home.địa chỉ chi tiết việt') }}
+                        <span class="small text-danger">*</span>
+                    </label>
                     <input type="text" class="form-control" name="address_detail" id="address_detail"
                            value="{{$clinic->address_detail}}" required>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mt-3">
                 <div class="col-sm-4">
                     <div class="form-group focused">
                         <label for="province_id">{{ __('home.Tỉnh') }}</label>
                         <select name="province_id" id="province_id" class="form-control"
                                 onchange="callGetAllDistricts(this.value)">
-
                         </select>
                     </div>
                 </div>
@@ -225,7 +233,7 @@
                     {{$clinic->introduce}}
                 </textarea>
             </div>
-            <div>
+            <div class="mt-3">
                 <label>{{ __('home.gallery') }}</label>
                 <input type="file" class="form-control" id="gallery" name="gallery" multiple>
                 @php
@@ -261,7 +269,7 @@
                 <label for="user_id">{{ __('home.Username') }}</label>
                 <input type="text" class="form-control" id="user_id" name="user_id" value="{{Auth::user()->id}}">
             </div>
-            <div class="form-group">
+            <div class="form-group mt-3">
                 <label for="service_clinic">{{ __('home.Service Clinics') }}</label>
                 <input type="text" class="form-control" id="service_clinic" name="service_clinic" disabled>
                 <ul class="list-service">
