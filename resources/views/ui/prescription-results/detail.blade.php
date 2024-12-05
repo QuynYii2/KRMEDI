@@ -41,15 +41,36 @@
                                            value="{{ $item['quantity'] }}" id="quantity">
                                 </div>
                                 <div class="form-group">
-                                    <label for="detail_value">Detail</label>
-                                    <input disabled type="text" class="form-control detail_value" id="detail_value"
-                                           value="{{ isset($item['note']) ? $item['note'] : '' }}">
+                                    <label for="detail_value">Thời gian uống</label>
+                                    <select class="form-control detail_value" multiple style="height: 155px;" readonly="">
+                                        <option value="1" @if(in_array(1, $item['note_date'])) selected @endif>Trước ăn sáng</option>
+                                        <option value="2" @if(in_array(2, $item['note_date'])) selected @endif>Sau ăn sáng</option>
+                                        <option value="3" @if(in_array(3, $item['note_date'])) selected @endif>Trước ăn trưa</option>
+                                        <option value="4" @if(in_array(4, $item['note_date'])) selected @endif>Sau ăn trưa</option>
+                                        <option value="5" @if(in_array(5, $item['note_date'])) selected @endif>Trước ăn tối</option>
+                                        <option value="6" @if(in_array(6, $item['note_date'])) selected @endif>Sau ăn tối</option>
+                                    </select>
                                 </div>
-                                <div class="form-group">
-                                    <label for="detail_value">Number of days of use</label>
-                                    <input disabled type="text" class="form-control detail_value" id="detail_value"
-                                           value="{{ isset($item['treatment_days']) ? $item['treatment_days'] : '' }}">
+                                <div class="d-flex">
+                                    <div class="form-group w-50 mr-2">
+                                        <label for="treatment_days">Ngày bắt đầu điều trị</label>
+                                        <input type="date" class="form-control treatment_days" value="{{$item['date_start']}}" readonly>
+                                    </div>
+                                    <div class="form-group w-50">
+                                        <label for="treatment_days">Ngày kết thúc điều trị</label>
+                                        <input type="date" class="form-control treatment_days" value="{{$item['date_end']}}" readonly>
+                                    </div>
                                 </div>
+{{--                                <div class="form-group">--}}
+{{--                                    <label for="detail_value">Detail</label>--}}
+{{--                                    <input disabled type="text" class="form-control detail_value" id="detail_value"--}}
+{{--                                           value="{{ isset($item['note']) ? $item['note'] : '' }}">--}}
+{{--                                </div>--}}
+{{--                                <div class="form-group">--}}
+{{--                                    <label for="detail_value">Number of days of use</label>--}}
+{{--                                    <input disabled type="text" class="form-control detail_value" id="detail_value"--}}
+{{--                                           value="{{ isset($item['treatment_days']) ? $item['treatment_days'] : '' }}">--}}
+{{--                                </div>--}}
                             </div>
                         </div>
                     @endforeach

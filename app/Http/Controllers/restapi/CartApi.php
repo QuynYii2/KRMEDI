@@ -161,12 +161,13 @@ class CartApi extends Controller
                     'user_id' => $userID,
                     'type_product' => $typeProduct,
                     'status' => CartStatus::PENDING,
-                    'note' => $productData['note'] ?? "",
+                    'note' => null,
                     'prescription_id' => $prescription_id,
                     'treatment_days' => $productData['treatment_days'] ?? 0,
                     'remind_remain' => $productData['treatment_days'] ?? 0,
                     'doctor_id' => $doctorID
                 ]);
+
             }
 
             if ($typeProduct == TypeProductCart::MEDICINE) {
