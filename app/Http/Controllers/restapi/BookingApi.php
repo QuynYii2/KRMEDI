@@ -82,15 +82,15 @@ class BookingApi extends Controller
                 ProcessBooking::dispatch($newBooking);
             }
             $clinic = Clinic::find($request->get('clinic_id'));
-            $notifi = Notification::create([
-                'title' => 'Thông báo đặt lịch khám',
-                'sender_id' => $booking->user_id,
-                'follower' => $clinic->user_id,
-                'target_url' => route('web.users.my.bookings.detail', ['id' => $booking->id]),
-                'description' => 'Có lịch khám mới. Vui lòng đến kiểm tra!',
-                'booking_id' => $booking->id
-            ]);
-            $notifi->save();
+//            $notifi = Notification::create([
+//                'title' => 'Thông báo đặt lịch khám',
+//                'sender_id' => $booking->user_id,
+//                'follower' => $clinic->user_id,
+//                'target_url' => route('web.users.my.bookings.detail', ['id' => $booking->id]),
+//                'description' => 'Có lịch khám mới. Vui lòng đến kiểm tra!',
+//                'booking_id' => $booking->id
+//            ]);
+//            $notifi->save();
 
             $options = array(
                 'cluster' => 'ap1',
