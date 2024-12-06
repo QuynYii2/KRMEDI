@@ -102,11 +102,11 @@
                                 <i class="fa-solid fa-eye"></i>
                             </button>
                         </form>
-                        <form action="{{ route('web.users.my.bookings.generate', $item->id) }}" method="get">
-                            <button type="submit" class="btn btn-success">
-                                <i class="fa-solid fa-qrcode"></i>
-                            </button>
-                        </form>
+{{--                        <form action="{{ route('web.users.my.bookings.generate', $item->id) }}" method="get">--}}
+{{--                            <button type="submit" class="btn btn-success">--}}
+{{--                                <i class="fa-solid fa-qrcode"></i>--}}
+{{--                            </button>--}}
+{{--                        </form>--}}
                     </td>
                 </tr>
             @endforeach

@@ -136,13 +136,13 @@
                                 $addressP = null;
 
                                 if ($address[count($address) - 1] != ""){
-                                $addressC = \App\Models\Commune::where('id', $address[count($address) - 1])->first()->name;
+                                $addressC = \App\Models\Commune::where('code', $address[count($address) - 1])->first()->name;
                                 }
                                 if ($address[count($address) - 2] != ""){
-                                $addressD = \App\Models\District::where('id', $address[count($address) - 2])->first()->name;
+                                $addressD = \App\Models\District::where('code', $address[count($address) - 2])->first()->name;
                                 }
                                 if ($address[count($address) - 3] != ""){
-                                $addressP = \App\Models\Province::where('id', $address[count($address) - 3])->first()->name;
+                                $addressP = \App\Models\Province::where('code', $address[count($address) - 3])->first()->name;
                                 }
                                 if ($addressC != null && $addressD != null && $addressP != null){
                                 $addressAll =$clinic->address_detail . ' , ' . $addressC . ', ' . $addressD . ', ' . $addressP;
