@@ -335,6 +335,11 @@
         var directionsRenderer;
         var latitude = {{ $clinicDetail->latitude }};
         var longitude = {{ $clinicDetail->longitude }};
+        var clinicName = "{{$clinicDetail->name}}";
+        var clinicID = {{$clinicDetail->id}};
+        var clinicGallery = "{{$clinicDetail->gallery}}";
+        var galleryArray = clinicGallery.split(',');
+        var firstImage = galleryArray[0];
 
         function getCurrentLocation(callback) {
             if (navigator.geolocation) {
@@ -413,18 +418,16 @@
                                 map: map,
                                 title: 'Location'
                             });
-                            var urlDetail = "{{ route('home.specialist.booking.detail', ['id' => ':id']) }}".replace(':id', location.id);
-                            let gallery = location.gallery;
-                            let arrayGallery = gallery.split(',');
+                            var urlDetail = "{{ route('home.specialist.booking.detail', ['id' => ':id']) }}".replace(':id', clinicID);
 
                             var infoWindowContent = `<div class="p-0 m-0 tab-pane fade show active background-modal b-radius" id="modalBooking">
                                 <div class="box-img-item-map">
-                                    <img loading="lazy" class="b-radius" src="${arrayGallery[0]}" alt="img" style="height: 100%;object-fit: cover;">
+                                    <img loading="lazy" class="b-radius" src="${firstImage}" alt="img" style="height: 100%;object-fit: cover;">
                                 </div>
                                 <div class="p-2 box-info-item-map">
                                     <div class="form-group mb-1">
                                         <div class="d-flex justify-content-between mt-md-2">
-                                            <div class="fs-18px name-address-map">${location.name}</div>
+                                            <div class="fs-18px name-address-map">${clinicName}</div>
 
                                         </div>
                                         <div class="d-flex mt-md-2">
@@ -560,6 +563,7 @@
                     "Authorization": accessToken
                 },
                 success: function(response) {
+                    console.log(response);
                     mapClinic(response);
                 },
                 error: function(exception) {
