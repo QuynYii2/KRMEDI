@@ -985,11 +985,11 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="{{ route('web.users.my.coupons.list') }}">
-                        <i class="bi bi-memory"></i><span>Quản lý voucher</span>
-                    </a>
-                </li>
+{{--                <li class="nav-item">--}}
+{{--                    <a class="nav-link collapsed" href="{{ route('web.users.my.coupons.list') }}">--}}
+{{--                        <i class="bi bi-memory"></i><span>Quản lý voucher</span>--}}
+{{--                    </a>--}}
+{{--                </li>--}}
 
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="{{url('my-bookings/list')}}">

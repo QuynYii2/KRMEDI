@@ -65,6 +65,7 @@
                 </div>
                 <div class="order-info">
                     @foreach($val->products as $index => $item)
+                        @if($item)
                         <div class="d-flex align-items-center justify-content-between">
                             <img src="{{ asset($item->thumbnail) }}" alt="" class="product-thumbnail">
                             <div class="product-info">
@@ -103,6 +104,7 @@
                                 @endif
                             </div>
                         </div>
+                        @endif
                         @if ($val->status == 'COMPLETED')
                             <div class="modal fade" id="staticBackdrop{{$key}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel{{$key}}" aria-hidden="true">
                                 <div class="modal-dialog">
