@@ -354,19 +354,20 @@ class BackendClinicController extends Controller
             $clinic->costs = $costs;
             $clinic->representative_doctor = $representativeDoctor;
 
-            $user = User::where('id', $clinic->user_id)->first();
-            $user->name = $name;
-            $user->phone = $phone;
-            $user->email = $email;
-            $user->province_id = $province_id;
-            $user->district_id = $district_id;
-            $user->commune_id = $commune_id;
-            $user->detail_address = $address_detail;
-            $user->bac_si_dai_dien = $representativeDoctor;
-
-            $successful = $user->save();
+            if($clinic->user_id !== 4 && $clinic->user_id !== 259){
+                $user = User::where('id', $clinic->user_id)->first();
+                $user->name = $name;
+                $user->phone = $phone;
+                $user->email = $email;
+                $user->province_id = $province_id;
+                $user->district_id = $district_id;
+                $user->commune_id = $commune_id;
+                $user->detail_address = $address_detail;
+                $user->bac_si_dai_dien = $representativeDoctor;
+                $user->save();
+            }
             $success = $clinic->save();
-            if ($success && $successful) {
+            if ($success) {
                 toast('Success, Update profile success!', 'success', 'top-left');
                 return redirect()->route('homeAdmin.list.clinics');
             }
