@@ -20,7 +20,7 @@
                 <input type="number" class="form-control" id="number_phone" name="number_phone">
             </div>
             <div class="col-sm-6">
-                <label for="email">{{ __('home.Email') }}</label>
+                <label for="email">Email</label>
                 <input type="email" class="form-control" id="email" name="email">
             </div>
         </div>
