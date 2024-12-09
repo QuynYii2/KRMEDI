@@ -135,18 +135,18 @@
                                 $addressD = null;
                                 $addressP = null;
 
-                                if ($address[count($address) - 1] != ""){
-                                $addressC = \App\Models\Commune::where('code', $address[count($address) - 1])->first()->name;
-                                }
-                                if ($address[count($address) - 2] != ""){
-                                $addressD = \App\Models\District::where('code', $address[count($address) - 2])->first()->name;
-                                }
-                                if ($address[count($address) - 3] != ""){
-                                $addressP = \App\Models\Province::where('code', $address[count($address) - 3])->first()->name;
-                                }
-                                if ($addressC != null && $addressD != null && $addressP != null){
-                                $addressAll =$clinic->address_detail . ' , ' . $addressC . ', ' . $addressD . ', ' . $addressP;
-                                }
+//                                if ($address[count($address) - 1] != ""){
+//                                $addressC = \App\Models\Commune::where('code', $address[count($address) - 1])->first()->name;
+//                                }
+//                                if ($address[count($address) - 2] != ""){
+//                                $addressD = \App\Models\District::where('code', $address[count($address) - 2])->first()->name;
+//                                }
+//                                if ($address[count($address) - 3] != ""){
+//                                $addressP = \App\Models\Province::where('code', $address[count($address) - 3])->first()->name;
+//                                }
+//                                if ($addressC != null && $addressD != null && $addressP != null){
+//                                $addressAll =$clinic->address_detail . ' , ' . $addressC . ', ' . $addressD . ', ' . $addressP;
+//                                }
                             @endphp
                             <div class="brand-name d-flex">
                                 <div class="text-wrapper-2">{{ __('home.Name Pharmacy') }} :&nbsp;<b
@@ -154,7 +154,7 @@
                             </div>
                             <div class="brand-name d-flex">
                                 <div class="text-wrapper-2">{{ __('home.Location') }}:&nbsp;<b
-                                        class="text-wrapper-3 text-black">{{ $addressAll ?? 'Toàn quốc' }}</b></div>
+                                        class="text-wrapper-3 text-black">{{ $clinic->address_detail ?? 'Toàn quốc' }}</b></div>
                             </div>
                             <div class="brand-name d-flex">
                                 <div class="text-wrapper-2">{{ __('home.Category') }}:</div>
@@ -198,22 +198,20 @@
                                     </a>
                                 @endif
                             </div>
-{{--                            <div class="col-lg-6 col-12 mb-2">--}}
-{{--                                @if(Auth::check())--}}
-{{--                                    123--}}
-{{--                                --}}
-{{--                                    @if($medicine->type_product == 0 || $name_role == 'HOSPITALS' || $name_role == 'DOCTORS')--}}
-{{--                                    <button id="btnBuyNow" {{ $prMedicine->quantity == 0 ? 'disabled' : '' }}--}}
-{{--                                    class=" button-buyNow btn btn-primary w-100">{{ __('home.Add cart') }}</button>--}}
+                            <div class="col-lg-6 col-12 mb-2">
+                                @if(Auth::check())
+                                    @if($medicine->type_product == 0 || $name_role == 'HOSPITALS' || $name_role == 'DOCTORS')
+                                        <button id="btnBuyNow" {{ $prMedicine->quantity == 0 ? 'disabled' : '' }}
+                                        class=" button-buyNow btn btn-primary w-100">{{ __('home.Add cart') }}</button>
 {{--                                        @else--}}
 {{--                                        <button {{ $prMedicine->quantity == 0 ? 'disabled' : '' }}--}}
 {{--                                        class=" button-buyNow btn btn-primary w-100 contact_doctor" style="padding: 11px 50px" data-mail="{{$user_email}}" data-id="{{$medicine->user_id}}">Liên hệ</button>--}}
-{{--                                        @endif--}}
-{{--                                @else--}}
-{{--                                    <button onclick="alertLogin();"--}}
-{{--                                            class=" button-buyNow btn btn-primary w-100">{{ __('home.Buy now') }}</button>--}}
-{{--                                @endif--}}
-{{--                            </div>--}}
+                                    @endif
+                                @else
+                                    <button onclick="alertLogin();"
+                                            class=" button-buyNow btn btn-primary w-100">{{ __('home.Buy now') }}</button>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>
