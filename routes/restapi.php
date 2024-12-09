@@ -59,6 +59,7 @@ Route::group(['prefix' => 'orders'], function () {
     Route::put('/cancel/{id}', [OrderApi::class, 'cancelOrder'])->name('restapi.api.orders.cancel');
     Route::post('status/{id}', [OrderApi::class,'statusOrder'])->name('restapi.api.orders.status');
     Route::get('refund-approval/{id}', [OrderApi::class,'refundApproval'])->name('restapi.api.orders.refund-approval');
+    Route::get('cancel/ahamove/{id}', [OrderApi::class,'cancelAhamove'])->name('restapi.api.orders.cancel.ahamove');
 });
 
 Route::group(['prefix' => 'business'], function () {
