@@ -261,7 +261,7 @@
                 let ingredient_quantity = ingredient_quantities[j].value;
 
                 if (!ingredient_name || !ingredient_quantity) {
-                    alert('Ingredient name or Ingredient quantity not null')
+                    alert('Vui lòng điền thành phần thuốc và hàm lượng')
                     return;
                 }
 
