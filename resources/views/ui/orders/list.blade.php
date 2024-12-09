@@ -88,6 +88,9 @@
                                         Trạng thái đơn hàng: {{ $val->status }}
                                     </div>
                                 </div>
+                                @if ($val->status == 'ACCEPTED')
+                                    <a href="{{route('restapi.api.orders.cancel.ahamove',$val->aha_order_id)}}" class="btn btn-danger">Hủy đơn hàng</a>
+                                    @endif
                                 @if ($val->status == 'COMPLETED' && \Carbon\Carbon::parse($val->updated_at)->diffInHours(\Carbon\Carbon::now()) < 2)
                                     <button data-bs-toggle="modal" data-bs-target="#staticBackdrop{{$key}}" class="btn btn-danger">Hoàn đơn</button>
                                 @endif

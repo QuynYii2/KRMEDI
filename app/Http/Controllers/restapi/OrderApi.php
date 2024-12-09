@@ -13,6 +13,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\ProductInfo;
 use App\Models\User;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Pusher\Pusher;
@@ -121,6 +122,34 @@ class OrderApi extends Controller
             return response($exception, 400);
         }
     }
+
+    public function cancelAhamove($id)
+    {
+        $token = $this->getTokenAhamove();
+        $orderId = $id;
+
+        $client = new Client();
+
+        try {
+            $response = $client->request('GET', 'https://apistg.ahamove.com/v1/order/cancel', [
+                'query' => [
+                    'token' => $token,
+                    'order_id' => $orderId,
+                    'comment' => 'Người gửi yêu cầu hủy đơn',
+                ]
+            ]);
+
+            $order = Order::where('aha_order_id',$id)->first();
+            $order->status = 'CANCELED';
+            $order->save();
+
+            return \redirect()->back()->with(['success' => 'Hủy đơn hàng thành công']);
+
+        } catch (\Exception $exception){
+            return \redirect()->back()->with(['error' => $exception->getMessage()]);
+        }
+
+}
 
     public function statusOrder(Request $request,$id)
     {
