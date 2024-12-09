@@ -68,7 +68,7 @@
                         @if($item)
                         <div class="d-flex align-items-center justify-content-between">
                             <img src="{{ asset($item->thumbnail) }}" alt="" class="product-thumbnail">
-                            <div class="product-info">
+                            <div class="product-info w-100">
                                 <div class="product-name">
                                     {{ $item->name }}
                                 </div>
@@ -81,10 +81,10 @@
                                     </p>
                                 </div>
                                 <div class="d-flex justify-content-between mb-3">
-                                    <div class="product-buy-time">
+                                    <div class="product-buy-time" style="font-size: 14px">
                                         Thời gian mua hàng: {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
                                     </div>
-                                    <div class="product-name ">
+                                    <div class="product-name" style="font-size: 14px">
                                         Trạng thái đơn hàng: {{ $val->status }}
                                     </div>
                                 </div>
