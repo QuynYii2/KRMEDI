@@ -129,16 +129,16 @@ class BackendProductMedicineController extends Controller
             if (empty($params['short_description'])) {
                 return response('Mô tả sản phẩm không được để trống', 400);
             }
-            $params['short_description'] = $translate->translateText($params['short_description'], 'vi');
-            $params['short_description_en'] = $translate->translateText($params['short_description'], 'en');
-            $params['short_description_laos'] = $translate->translateText($params['short_description'], 'lo');
+//            $params['short_description'] = $translate->translateText($params['short_description'], 'vi');
+//            $params['short_description_en'] = $translate->translateText($params['short_description'], 'en');
+//            $params['short_description_laos'] = $translate->translateText($params['short_description'], 'lo');
             //check description
             if (empty($params['description'])) {
                 return response('Mô tả sản phẩm không được để trống', 400);
             }
-            $params['description'] = $translate->translateText($params['description'], 'vi');
-            $params['description_en'] = $translate->translateText($params['description'], 'en');
-            $params['description_laos'] = $translate->translateText($params['description'], 'lo');
+//            $params['description'] = $translate->translateText($params['description'], 'vi');
+//            $params['description_en'] = $translate->translateText($params['description'], 'en');
+//            $params['description_laos'] = $translate->translateText($params['description'], 'lo');
             //check brand_name
             if (empty($params['brand_name'])) {
                 return response('Tên thương hiệu không được để trống', 400);
@@ -228,16 +228,17 @@ class BackendProductMedicineController extends Controller
             if (empty($params['short_description'])) {
                 return response('Mô tả sản phẩm không được để trống', 400);
             }
-            $params['short_description'] = $translate->translateText($params['short_description'], 'vi');
-            $params['short_description_en'] = $translate->translateText($params['short_description'], 'en');
-            $params['short_description_laos'] = $translate->translateText($params['short_description'], 'lo');
+//            $params['short_description'] =
+//            $params['short_description'] = $translate->translateText($params['short_description'], 'vi');
+//            $params['short_description_en'] = $translate->translateText($params['short_description'], 'en');
+//            $params['short_description_laos'] = $translate->translateText($params['short_description'], 'lo');
             //check description
             if (empty($params['description'])) {
                 return response('Mô tả sản phẩm không được để trống', 400);
             }
-            $params['description'] = $translate->translateText($params['description'], 'vi');
-            $params['description_en'] = $translate->translateText($params['description'], 'en');
-            $params['description_laos'] = $translate->translateText($params['description'], 'lo');
+//            $params['description'] = $translate->translateText($params['description'], 'vi');
+//            $params['description_en'] = $translate->translateText($params['description'], 'en');
+//            $params['description_laos'] = $translate->translateText($params['description'], 'lo');
             //check brand_name
             if (empty($params['brand_name'])) {
                 return response('Tên thương hiệu không được để trống', 400);
