@@ -208,7 +208,7 @@
 {{--                                        class=" button-buyNow btn btn-primary w-100 contact_doctor" style="padding: 11px 50px" data-mail="{{$user_email}}" data-id="{{$medicine->user_id}}">Liên hệ</button>--}}
                                     @endif
                                 @else
-                                    <button onclick="alertLogin();"
+                                    <button onclick="alert('Vui lòng đăng nhập để mua hàng')"
                                             class=" button-buyNow btn btn-primary w-100">{{ __('home.Buy now') }}</button>
                                 @endif
                             </div>
