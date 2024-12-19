@@ -1466,7 +1466,7 @@
                 }
             @endphp
             @if($departments == '' || $departments->isEmpty())
-                <h5 class="d-flex align-items-center justify-content-center mt-4">Đang cập nhật dữ liệu</h5>
+                <h5 class="d-flex align-items-center justify-content-center mt-4"></h5>
             @else
                 <div class="">
                     <div
