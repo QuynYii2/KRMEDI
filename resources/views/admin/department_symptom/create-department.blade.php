@@ -48,7 +48,7 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <select class="form-select" name="department_order_id" required>
+                                    <select class="form-select" name="department_order_id" >
                                         @forelse ($departments as $dep)
                                             <option value="{{ $dep->id }}">{{ $dep->name }}</option>
                                         @empty
