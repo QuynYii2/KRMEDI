@@ -371,7 +371,7 @@ class ProfileController extends Controller
                     'equipment' => $request->input('hospital_equipment'),
                     'costs' => $request->input('costs'),
                     'representative_doctor' => $request->input('representative_doctor', ''),
-                    'address' => ',' . $province_id[0] . ',' . $district_id[0] . ',' . $commune_id[0],
+                    'address' => ',' . $province_id . ',' . $district_id . ',' . $commune_id,
                     'latitude' => $newLatitude,
                     'longitude' => $newLongitude,
                 ]
