@@ -1330,7 +1330,10 @@
                 <div class="title-findDoctor--homeNew d-md-flex justify-content-center">
                     <div class="text-center krm-tieuDe-findDoctor">{{ __('home.Find a doctor') }}</div>
                 </div>
-                <div class="tab-content py-4" id="myTabContent" style="margin-bottom: 10px">
+                @if(!$doctors || $doctors->isEmpty())
+                    <h1 class="d-flex align-items-center justify-content-center mt-4">Đang cập nhật dữ liệu</h1>
+                @else
+                    <div class="tab-content py-4" id="myTabContent" style="margin-bottom: 10px">
                     <div class="tab-pane fade show active" id="available" role="tabpanel"
                          aria-labelledby="available-tab">
                         @php
@@ -1449,6 +1452,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
             </div>
         </div>
         <div class="container">
@@ -1543,8 +1547,8 @@
                 <div class="tab-pane fade show active" id="popularProduct" role="tabpanel"
                      aria-labelledby="popularProduct-tab">
                     <div class="row">
-                        @if($products == '')
-                            <h1 class="d-flex align-items-center justify-content-center mt-4">{{ __('home.null') }}</h1>
+                        @if($products == '' || $products->isEmpty())
+                            <h1 class="d-flex align-items-center justify-content-center mt-4">Đang cập nhật dữ liệu</h1>
                         @else
                             @foreach($products as $product)
                                 @php
@@ -1634,48 +1638,52 @@
                 <a class="mau-chu-dao" href="{{route('index.new')}}">{{ __('home.See all') }} <i
                         class="fa-solid fa-chevron-right pl-2 mau-chu-dao"></i></a>
             </div>
-            <div class="d-md-flex main-recruitment--homeNew justify-content-between">
-                <div class="col-md-7 p-0">
-                    <a href="{{route('detail.new',$newEvens->first()->id ?? 0)}}">
-                        <div>
-                            <img src="{{$newEvens->first()->thumbnail ?? '#'}}" class="krm-img-news" alt="??">
-                        </div>
-                        <div class="krm-title-news">
-                            @if(locationHelper() == 'vi')
-                                {!! $newEvens->first()->title ?? '' !!}
-                            @else
-                                {!! $newEvens->first()->title_en ?? '' !!}
-                            @endif
-                        </div>
-                    </a>
-
-                </div>
-                <div class="col-md-5">
-                    @foreach($newEvens as $news)
-                        <a href="{{route('detail.new',$news->id)}}">
-                            <div class="d-flex mb-3 krm-border-news-event">
-                                <div class="col-md-4 pl-0"><img src="{{$news->thumbnail}}" alt="11"
-                                                                class="krm-img-sub-news"></div>
-                                <div class="col-md-8 p-0">
-                                    <div class="krm-title-sub-news">
-                                        @if(locationHelper() == 'vi')
-                                            {!! $news->title !!}
-                                        @else
-                                            {!! $news->title_en !!}
-                                        @endif</div>
-                                    <div class="krm-description-sub-news">
-                                        @if(locationHelper() == 'vi')
-                                            {!! $news->short_description !!}
-                                        @else
-                                            {!! $news->short_description_en !!}
-                                        @endif
-                                    </div>
-                                </div>
+            @if($newEvens == '' || $newEvens->isEmpty())
+                <h1 class="d-flex align-items-center justify-content-center mt-4">Đang cập nhật dữ liệu</h1>
+            @else
+                <div class="d-md-flex main-recruitment--homeNew justify-content-between">
+                    <div class="col-md-7 p-0">
+                        <a href="{{route('detail.new',$newEvens->first()->id ?? 0)}}">
+                            <div>
+                                <img src="{{$newEvens->first()->thumbnail ?? '#'}}" class="krm-img-news" alt="??">
+                            </div>
+                            <div class="krm-title-news">
+                                @if(locationHelper() == 'vi')
+                                    {!! $newEvens->first()->title ?? '' !!}
+                                @else
+                                    {!! $newEvens->first()->title_en ?? '' !!}
+                                @endif
                             </div>
                         </a>
-                    @endforeach
+
+                    </div>
+                    <div class="col-md-5">
+                        @foreach($newEvens as $news)
+                            <a href="{{route('detail.new',$news->id)}}">
+                                <div class="d-flex mb-3 krm-border-news-event">
+                                    <div class="col-md-4 pl-0"><img src="{{$news->thumbnail}}" alt="11"
+                                                                    class="krm-img-sub-news"></div>
+                                    <div class="col-md-8 p-0">
+                                        <div class="krm-title-sub-news">
+                                            @if(locationHelper() == 'vi')
+                                                {!! $news->title !!}
+                                            @else
+                                                {!! $news->title_en !!}
+                                            @endif</div>
+                                        <div class="krm-description-sub-news">
+                                            @if(locationHelper() == 'vi')
+                                                {!! $news->short_description !!}
+                                            @else
+                                                {!! $news->short_description_en !!}
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
                 </div>
-            </div>
+            @endif
         </div>
     </div>
 
