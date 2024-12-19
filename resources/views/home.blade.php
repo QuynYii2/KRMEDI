@@ -1338,7 +1338,7 @@
                         ->paginate(12);
                 @endphp
                 @if(!$doctors || $doctors->isEmpty())
-                    <h1 class="d-flex align-items-center justify-content-center mt-4">Đang cập nhật dữ liệu</h1>
+                    <h5 class="d-flex align-items-center justify-content-center mt-4">Đang cập nhật dữ liệu</h5>
                 @else
                     <div class="tab-content py-4" id="myTabContent" style="margin-bottom: 10px">
                     <div class="tab-pane fade show active" id="available" role="tabpanel"
@@ -1548,7 +1548,7 @@
                      aria-labelledby="popularProduct-tab">
                     <div class="row">
                         @if($products == '' || $products->isEmpty())
-                            <h1 class="d-flex align-items-center justify-content-center mt-4">Đang cập nhật dữ liệu</h1>
+                            <h5 class="d-flex align-items-center justify-content-center mt-4">Đang cập nhật dữ liệu</h5>
                         @else
                             @foreach($products as $product)
                                 @php
@@ -1639,7 +1639,7 @@
                         class="fa-solid fa-chevron-right pl-2 mau-chu-dao"></i></a>
             </div>
             @if($newEvens == '' || $newEvens->isEmpty())
-                <h1 class="d-flex align-items-center justify-content-center mt-4">Đang cập nhật dữ liệu</h1>
+                <h5 class="d-flex align-items-center justify-content-center mt-4">Đang cập nhật dữ liệu</h5>
             @else
                 <div class="d-md-flex main-recruitment--homeNew justify-content-between">
                     <div class="col-md-7 p-0">
