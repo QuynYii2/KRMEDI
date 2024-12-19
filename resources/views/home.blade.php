@@ -1456,33 +1456,37 @@
             </div>
         </div>
         <div class="container">
-            <div class="">
-                <div
-                    class="titleServiceHomeNew d-flex justify-content-between align-items-center">{{__('home.Chuyên khoa khám')}}
-                    <a class="" style="font-size: 16px;color: #929292" href="{{route('home.specialist')}}">{{__('home.see more')}}</a>
-                </div>
-                <div class="mainServiceHomeNew row container">
-                    @php
-                        if (\Illuminate\Support\Facades\Auth::check()&&\Illuminate\Support\Facades\Auth::user()->type != 'NORMAL'){
-                        $departments = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->take(18)->get();
-                        $departmentsMobile = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->take(6)->get();
-                        }else{
-                         $departments = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->where('isFilter', 1)->take(18)->get();
-                        $departmentsMobile = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->where('isFilter', 1)->take(6)->get();
-                        }
-                    @endphp
-                    @foreach($departments as $index => $departmentItem)
-                        @php
-                            $showDesktop = $index > 5;
-                        @endphp
-                        <div class="col-lg-2 col-md-3 col-6 p-2 d-none {{ $showDesktop == true ? 'd-md-block' : 'd-sm-block' }}">
-                            <a href="{{route('home.specialist.department',$departmentItem->id)}}" class="department-link" data-id="{{$departmentItem->id}}">
-                                <div class="align-items-center krm-border-chuyen-khoa">
-                                    <div class="d-flex justify-content-center align-content-center krm-img-chuyen-khoa">
-                                        <img loading="lazy" src="{{$departmentItem->thumbnail}}" alt="thumbnail"
-                                             class="krm-icon-chuyen-khoa">
-                                    </div>
-                                    <div class="d-flex align-content-center justify-content-center">
+            @php
+                if (\Illuminate\Support\Facades\Auth::check()&&\Illuminate\Support\Facades\Auth::user()->type != 'NORMAL'){
+                $departments = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->take(18)->get();
+                $departmentsMobile = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->take(6)->get();
+                }else{
+                 $departments = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->where('isFilter', 1)->take(18)->get();
+                $departmentsMobile = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->where('isFilter', 1)->take(6)->get();
+                }
+            @endphp
+            @if($departments == '' || $departments->isEmpty())
+                <h5 class="d-flex align-items-center justify-content-center mt-4">Đang cập nhật dữ liệu</h5>
+            @else
+                <div class="">
+                    <div
+                        class="titleServiceHomeNew d-flex justify-content-between align-items-center">{{__('home.Chuyên khoa khám')}}
+                        <a class="" style="font-size: 16px;color: #929292" href="{{route('home.specialist')}}">{{__('home.see more')}}</a>
+                    </div>
+                    <div class="mainServiceHomeNew row container">
+
+                        @foreach($departments as $index => $departmentItem)
+                            @php
+                                $showDesktop = $index > 5;
+                            @endphp
+                            <div class="col-lg-2 col-md-3 col-6 p-2 d-none {{ $showDesktop == true ? 'd-md-block' : 'd-sm-block' }}">
+                                <a href="{{route('home.specialist.department',$departmentItem->id)}}" class="department-link" data-id="{{$departmentItem->id}}">
+                                    <div class="align-items-center krm-border-chuyen-khoa">
+                                        <div class="d-flex justify-content-center align-content-center krm-img-chuyen-khoa">
+                                            <img loading="lazy" src="{{$departmentItem->thumbnail}}" alt="thumbnail"
+                                                 class="krm-icon-chuyen-khoa">
+                                        </div>
+                                        <div class="d-flex align-content-center justify-content-center">
                                             <span style="height: 40px;">
                                                 @if(locationHelper() == 'vi')
                                                     {{ ($departmentItem->name ?? __('home.no name') ) }}
@@ -1490,13 +1494,14 @@
                                                     {{ ($departmentItem->name_en  ?? __('home.no name') ) }}
                                                 @endif
                                             </span>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-                        </div>
-                    @endforeach
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
-            </div>
+            @endif
         </div>
     </div>
     <div class="bg-tuyen-dung">
