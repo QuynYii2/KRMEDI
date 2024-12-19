@@ -1330,19 +1330,19 @@
                 <div class="title-findDoctor--homeNew d-md-flex justify-content-center">
                     <div class="text-center krm-tieuDe-findDoctor">{{ __('home.Find a doctor') }}</div>
                 </div>
+                @php
+                    $doctors = \App\Models\User::join('departments', 'users.department_id', '=', 'departments.id')
+                        ->where('users.member', \App\Enums\TypeUser::DOCTORS)
+                        ->where('users.status', 'ACTIVE')
+                        ->select('users.*', 'departments.name as department_name')
+                        ->paginate(12);
+                @endphp
                 @if(!$doctors || $doctors->isEmpty())
                     <h1 class="d-flex align-items-center justify-content-center mt-4">Đang cập nhật dữ liệu</h1>
                 @else
                     <div class="tab-content py-4" id="myTabContent" style="margin-bottom: 10px">
                     <div class="tab-pane fade show active" id="available" role="tabpanel"
                          aria-labelledby="available-tab">
-                        @php
-                            $doctors = \App\Models\User::join('departments', 'users.department_id', '=', 'departments.id')
-                                ->where('users.member', \App\Enums\TypeUser::DOCTORS)
-                                ->where('users.status', 'ACTIVE')
-                                ->select('users.*', 'departments.name as department_name')
-                                ->paginate(12);
-                        @endphp
                         <div class="row">
                             @foreach($doctors as $doctor)
                                 @if($doctor == '')
