@@ -55,7 +55,7 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <select class="form-select" name="symptom_order_id" required>
+                                    <select class="form-select" name="symptom_order_id">
                                         @forelse ($symptoms as $sym)
                                             <option value="{{ $sym->id }}">{{ $sym->name }}</option>
                                         @empty
