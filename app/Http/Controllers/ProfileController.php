@@ -233,8 +233,8 @@ class ProfileController extends Controller
         $province_id = explode('-', $province);
         $district_id = explode('-', $district);
         $commune_id = explode('-', $commune);
-        $newLatitude = $request->input('new_latitude');
-        $newLongitude = $request->input('new_longitude');
+        $newLatitude = $request->input('new_latitude') ?? $user->latitude;
+        $newLongitude = $request->input('new_longitude') ?? $user->longitude;
         $user->province_id = $province_id[0];
 
         $user->district_id = $district_id[0];
@@ -372,8 +372,8 @@ class ProfileController extends Controller
                     'costs' => $request->input('costs'),
                     'representative_doctor' => $request->input('representative_doctor', ''),
                     'address' => $address,
-                    'latitude' => $request->input('new_latitude'),
-                    'longitude' => $request->input('new_longitude'),
+                    'latitude' => $newLatitude,
+                    'longitude' => $newLongitude,
                 ]
             );
         }
