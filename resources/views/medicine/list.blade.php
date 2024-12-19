@@ -134,6 +134,7 @@
         }
     </style>
     <div class="medicine container" id="online-medicine">
+        @if($medicines && count($medicines)>0)
         <div class="swiper mySwiper">
             <div class="swiper-wrapper">
                 @foreach($medicines as $medicine)
@@ -145,6 +146,7 @@
             <div class="swiper-button-next"></div>
             <div class="swiper-button-prev"></div>
         </div>
+        @endif
         <div class="row medicine-search d-none d-sm-flex w-100 justify-content-between">
             <div class="medicine-search--left col-md-3 d-flex justify-content-around flex-wrap">
                 <div class="title pl-0 col-lg-5 col-md-12">
@@ -657,7 +659,7 @@
                 </div>
                 <div class="d-flex justify-content-end">
                     <div class="SeeDetail">
-                        <a href="{{route('medicine.detail', $medicine->id)}}" target="_blank">{{ __('home.See details') }}</a>
+                        <a href="{{route('medicine.detail', $medicine->id??1)}}" target="_blank">{{ __('home.See details') }}</a>
         </div>
     </div>
 </div>
