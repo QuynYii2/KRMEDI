@@ -1330,16 +1330,19 @@
                 <div class="title-findDoctor--homeNew d-md-flex justify-content-center">
                     <div class="text-center krm-tieuDe-findDoctor">{{ __('home.Find a doctor') }}</div>
                 </div>
-                <div class="tab-content py-4" id="myTabContent" style="margin-bottom: 10px">
+                @php
+                    $doctors = \App\Models\User::join('departments', 'users.department_id', '=', 'departments.id')
+                        ->where('users.member', \App\Enums\TypeUser::DOCTORS)
+                        ->where('users.status', 'ACTIVE')
+                        ->select('users.*', 'departments.name as department_name')
+                        ->paginate(12);
+                @endphp
+                @if(!$doctors || $doctors->isEmpty())
+                    <h5 class="d-flex align-items-center justify-content-center mt-4">Đang cập nhật dữ liệu</h5>
+                @else
+                    <div class="tab-content py-4" id="myTabContent" style="margin-bottom: 10px">
                     <div class="tab-pane fade show active" id="available" role="tabpanel"
                          aria-labelledby="available-tab">
-                        @php
-                            $doctors = \App\Models\User::join('departments', 'users.department_id', '=', 'departments.id')
-                                ->where('users.member', \App\Enums\TypeUser::DOCTORS)
-                                ->where('users.status', 'ACTIVE')
-                                ->select('users.*', 'departments.name as department_name')
-                                ->paginate(12);
-                        @endphp
                         <div class="row">
                             @foreach($doctors as $doctor)
                                 @if($doctor == '')
@@ -1449,36 +1452,41 @@
                         </div>
                     </div>
                 </div>
+                @endif
             </div>
         </div>
         <div class="container">
-            <div class="">
-                <div
-                    class="titleServiceHomeNew d-flex justify-content-between align-items-center">{{__('home.Chuyên khoa khám')}}
-                    <a class="" style="font-size: 16px;color: #929292" href="{{route('home.specialist')}}">{{__('home.see more')}}</a>
-                </div>
-                <div class="mainServiceHomeNew row container">
-                    @php
-                        if (\Illuminate\Support\Facades\Auth::check()&&\Illuminate\Support\Facades\Auth::user()->type != 'NORMAL'){
-                        $departments = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->take(18)->get();
-                        $departmentsMobile = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->take(6)->get();
-                        }else{
-                         $departments = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->where('isFilter', 1)->take(18)->get();
-                        $departmentsMobile = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->where('isFilter', 1)->take(6)->get();
-                        }
-                    @endphp
-                    @foreach($departments as $index => $departmentItem)
-                        @php
-                            $showDesktop = $index > 5;
-                        @endphp
-                        <div class="col-lg-2 col-md-3 col-6 p-2 d-none {{ $showDesktop == true ? 'd-md-block' : 'd-sm-block' }}">
-                            <a href="{{route('home.specialist.department',$departmentItem->id)}}" class="department-link" data-id="{{$departmentItem->id}}">
-                                <div class="align-items-center krm-border-chuyen-khoa">
-                                    <div class="d-flex justify-content-center align-content-center krm-img-chuyen-khoa">
-                                        <img loading="lazy" src="{{$departmentItem->thumbnail}}" alt="thumbnail"
-                                             class="krm-icon-chuyen-khoa">
-                                    </div>
-                                    <div class="d-flex align-content-center justify-content-center">
+            @php
+                if (\Illuminate\Support\Facades\Auth::check()&&\Illuminate\Support\Facades\Auth::user()->type != 'NORMAL'){
+                $departments = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->take(18)->get();
+                $departmentsMobile = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->take(6)->get();
+                }else{
+                 $departments = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->where('isFilter', 1)->take(18)->get();
+                $departmentsMobile = \App\Models\Department::where('status', \App\Enums\DepartmentStatus::ACTIVE)->where('isFilter', 1)->take(6)->get();
+                }
+            @endphp
+            @if($departments == '' || $departments->isEmpty())
+                <h5 class="d-flex align-items-center justify-content-center mt-4"></h5>
+            @else
+                <div class="">
+                    <div
+                        class="titleServiceHomeNew d-flex justify-content-between align-items-center">{{__('home.Chuyên khoa khám')}}
+                        <a class="" style="font-size: 16px;color: #929292" href="{{route('home.specialist')}}">{{__('home.see more')}}</a>
+                    </div>
+                    <div class="mainServiceHomeNew row container">
+
+                        @foreach($departments as $index => $departmentItem)
+                            @php
+                                $showDesktop = $index > 5;
+                            @endphp
+                            <div class="col-lg-2 col-md-3 col-6 p-2 d-none {{ $showDesktop == true ? 'd-md-block' : 'd-sm-block' }}">
+                                <a href="{{route('home.specialist.department',$departmentItem->id)}}" class="department-link" data-id="{{$departmentItem->id}}">
+                                    <div class="align-items-center krm-border-chuyen-khoa">
+                                        <div class="d-flex justify-content-center align-content-center krm-img-chuyen-khoa">
+                                            <img loading="lazy" src="{{$departmentItem->thumbnail}}" alt="thumbnail"
+                                                 class="krm-icon-chuyen-khoa">
+                                        </div>
+                                        <div class="d-flex align-content-center justify-content-center">
                                             <span style="height: 40px;">
                                                 @if(locationHelper() == 'vi')
                                                     {{ ($departmentItem->name ?? __('home.no name') ) }}
@@ -1486,13 +1494,14 @@
                                                     {{ ($departmentItem->name_en  ?? __('home.no name') ) }}
                                                 @endif
                                             </span>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-                        </div>
-                    @endforeach
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
-            </div>
+            @endif
         </div>
     </div>
     <div class="bg-tuyen-dung">
@@ -1543,8 +1552,8 @@
                 <div class="tab-pane fade show active" id="popularProduct" role="tabpanel"
                      aria-labelledby="popularProduct-tab">
                     <div class="row">
-                        @if($products == '')
-                            <h1 class="d-flex align-items-center justify-content-center mt-4">{{ __('home.null') }}</h1>
+                        @if($products == '' || $products->isEmpty())
+                            <h5 class="d-flex align-items-center justify-content-center mt-4">Đang cập nhật dữ liệu</h5>
                         @else
                             @foreach($products as $product)
                                 @php
@@ -1634,48 +1643,52 @@
                 <a class="mau-chu-dao" href="{{route('index.new')}}">{{ __('home.See all') }} <i
                         class="fa-solid fa-chevron-right pl-2 mau-chu-dao"></i></a>
             </div>
-            <div class="d-md-flex main-recruitment--homeNew justify-content-between">
-                <div class="col-md-7 p-0">
-                    <a href="{{route('detail.new',$newEvens->first()->id ?? 0)}}">
-                        <div>
-                            <img src="{{$newEvens->first()->thumbnail ?? '#'}}" class="krm-img-news" alt="??">
-                        </div>
-                        <div class="krm-title-news">
-                            @if(locationHelper() == 'vi')
-                                {!! $newEvens->first()->title ?? '' !!}
-                            @else
-                                {!! $newEvens->first()->title_en ?? '' !!}
-                            @endif
-                        </div>
-                    </a>
-
-                </div>
-                <div class="col-md-5">
-                    @foreach($newEvens as $news)
-                        <a href="{{route('detail.new',$news->id)}}">
-                            <div class="d-flex mb-3 krm-border-news-event">
-                                <div class="col-md-4 pl-0"><img src="{{$news->thumbnail}}" alt="11"
-                                                                class="krm-img-sub-news"></div>
-                                <div class="col-md-8 p-0">
-                                    <div class="krm-title-sub-news">
-                                        @if(locationHelper() == 'vi')
-                                            {!! $news->title !!}
-                                        @else
-                                            {!! $news->title_en !!}
-                                        @endif</div>
-                                    <div class="krm-description-sub-news">
-                                        @if(locationHelper() == 'vi')
-                                            {!! $news->short_description !!}
-                                        @else
-                                            {!! $news->short_description_en !!}
-                                        @endif
-                                    </div>
-                                </div>
+            @if($newEvens == '' || $newEvens->isEmpty())
+                <h5 class="d-flex align-items-center justify-content-center mt-4">Đang cập nhật dữ liệu</h5>
+            @else
+                <div class="d-md-flex main-recruitment--homeNew justify-content-between">
+                    <div class="col-md-7 p-0">
+                        <a href="{{route('detail.new',$newEvens->first()->id ?? 0)}}">
+                            <div>
+                                <img src="{{$newEvens->first()->thumbnail ?? '#'}}" class="krm-img-news" alt="??">
+                            </div>
+                            <div class="krm-title-news">
+                                @if(locationHelper() == 'vi')
+                                    {!! $newEvens->first()->title ?? '' !!}
+                                @else
+                                    {!! $newEvens->first()->title_en ?? '' !!}
+                                @endif
                             </div>
                         </a>
-                    @endforeach
+
+                    </div>
+                    <div class="col-md-5">
+                        @foreach($newEvens as $news)
+                            <a href="{{route('detail.new',$news->id)}}">
+                                <div class="d-flex mb-3 krm-border-news-event">
+                                    <div class="col-md-4 pl-0"><img src="{{$news->thumbnail}}" alt="11"
+                                                                    class="krm-img-sub-news"></div>
+                                    <div class="col-md-8 p-0">
+                                        <div class="krm-title-sub-news">
+                                            @if(locationHelper() == 'vi')
+                                                {!! $news->title !!}
+                                            @else
+                                                {!! $news->title_en !!}
+                                            @endif</div>
+                                        <div class="krm-description-sub-news">
+                                            @if(locationHelper() == 'vi')
+                                                {!! $news->short_description !!}
+                                            @else
+                                                {!! $news->short_description_en !!}
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
                 </div>
-            </div>
+            @endif
         </div>
     </div>
 
