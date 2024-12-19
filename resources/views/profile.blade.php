@@ -352,6 +352,8 @@
                 <div class="card-body">
                     <form method="POST" action="{{ route('profile.update') }}" autocomplete="off"
                         enctype="multipart/form-data">
+                        <input type="hidden" name="new_latitude" id="new_latitude">
+                        <input type="hidden" name="new_longitude" id="new_longitude">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="previous_route" value="{{app('router')->getRoutes()->match(app('request')->create(URL::previous()))->getName()}}"/>
                         <input type="hidden" name="booking_clinic_id" value="{{ request()->query('clinic_id') }}">
@@ -1752,6 +1754,47 @@
                 output.src = ''; // Clear the src attribute
             }
         }
+
+        let debounceTimeout; // Variable to store the debounce timeout
+
+        function updateLatLongInputs() {
+            const detailAddress = document.getElementById('detail_address').value;
+            const province = document.getElementById('province_id').options[document.getElementById('province_id').selectedIndex].text;
+            const district = document.getElementById('district_id').options[document.getElementById('district_id').selectedIndex].text;
+            const commune = document.getElementById('commune_id').options[document.getElementById('commune_id').selectedIndex].text;
+
+            const fullAddress = `${detailAddress}, ${commune}, ${district}, ${province}`;
+
+            const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(fullAddress)}&key=AIzaSyBw3G5DUAOaV9CFr3Pft_X-949-64zXaBg`;
+
+            fetch(geocodeUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "OK") {
+                        const location = data.results[0].geometry.location;
+
+                        console.log(`Latitude: ${location.lat}, Longitude: ${location.lng}`);
+
+                        // Update hidden input values
+                        document.getElementById('new_latitude').value = location.lat;
+                        document.getElementById('new_longitude').value = location.lng;
+                    } else {
+                        console.error("Geocoding failed: " + data.status);
+                    }
+                })
+                .catch(error => console.error("Error: ", error));
+        }
+
+        function debounceUpdateLatLongInputs() {
+            clearTimeout(debounceTimeout); // Clear the existing timeout
+            debounceTimeout = setTimeout(updateLatLongInputs, 700); // Set a new timeout for 0.7 seconds
+        }
+
+        // Event listeners for inputs
+        document.getElementById('detail_address').addEventListener('input', debounceUpdateLatLongInputs);
+        document.getElementById('province_id').addEventListener('change', updateLatLongInputs);
+        document.getElementById('district_id').addEventListener('change', updateLatLongInputs);
+        document.getElementById('commune_id').addEventListener('change', updateLatLongInputs);
     </script>
 @endsection
 
