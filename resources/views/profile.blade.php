@@ -822,7 +822,7 @@
                             @endif
 
                             {{-- Business only --}}
-                            @if (Auth::user()->type == 'BUSINESS' || (new MainController())->checkAdmin())
+                            @if (Auth::user()->type == 'BUSINESS' )
 
                                 <div>
                                     <label for="introduce">Giới thiệu</label>
