@@ -545,6 +545,7 @@
                             @endif
                             <input type="text" id="role" name="type" class="form-control"
                                    value="{{ Auth::user()->roles->first()->name ?? '' }}" hidden>
+                            @if (Auth::user()->type == !'NORMAL')
                             <div class="row mt-3">
 {{--                                <div class="col-sm-4">--}}
 {{--                                    <div class="form-group focused">--}}
@@ -583,6 +584,7 @@
                                            name="experienceHospital" placeholder="{{ __('home.EXPERIENCE') }}">
                                 </div>
                             </div>
+                            @endif
 
                             @if (Auth::user()->type == 'NORMAL')
                                 <div class="row">
