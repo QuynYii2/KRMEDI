@@ -176,6 +176,8 @@
     @endif
     <form action="{{route('api.backend.clinics.create')}}" method="POST" enctype="multipart/form-data">
         @csrf
+        <input type="hidden" name="new_latitude" id="new_latitude">
+        <input type="hidden" name="new_longitude" id="new_longitude">
         <div>
             <div class="row">
                 <div class="col-md-12">
@@ -195,14 +197,6 @@
                 <div class="col-md-6">
                     <label for="email">Email</label>
                     <input type="email" class="form-control" id="email" name="email"  value="" >
-                </div>
-            </div>
-            <div class="row mt-3">
-                <div class="col-mb-12">
-                    <label for="address_detail">{{ __('home.địa chỉ chi tiết việt') }}
-                        <span class="small text-danger">*</span>
-                    </label>
-                    <input type="text" class="form-control" name="address_detail" id="address_detail" value="" required>
                 </div>
             </div>
             <div class="row mt-3">
@@ -249,6 +243,14 @@
                             <option value="">{{ __('home.Chọn xã') }}</option>
                         </select>
                     </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-mb-12">
+                    <label for="address_detail">{{ __('home.địa chỉ chi tiết việt') }}
+                        <span class="small text-danger">*</span>
+                    </label>
+                    <input type="text" class="form-control" name="address_detail" id="address_detail" value="" required>
                 </div>
             </div>
             <div>
@@ -577,14 +579,8 @@
         function showAllProvince(res) {
             let html = ``;
             let select = ``;
-            let pro = `{{ $doctor->province_id }}`;
             for (let i = 0; i < res.length; i++) {
                 let data = res[i];
-                if (data.code == pro) {
-                    select = `selected`;
-                } else {
-                    select = ``;
-                }
                 let code = data.code;
                 html = html +
                     `<option ${select} class="province province-item" data-code="${code}" value="${data.code}">${data.name}</option>`;
@@ -596,14 +592,8 @@
         function showAllDistricts(res) {
             let html = ``;
             let select = ``;
-            let dis = `{{ $doctor->district_id }}`;
             for (let i = 0; i < res.length; i++) {
                 let data = res[i];
-                if (data.code == dis) {
-                    select = `selected`;
-                } else {
-                    select = ``;
-                }
                 html = html + `<option ${select} class="district district-item" value="${data.code}">${data.name}</option>`;
             }
             $('#district_id').empty().append(html);
@@ -613,14 +603,8 @@
         function showAllCommunes(res) {
             let html = ``;
             let select = ``;
-            let cm = `{{ $doctor->commune_id }}`;
             for (let i = 0; i < res.length; i++) {
                 let data = res[i];
-                if (data.code == cm) {
-                    select = `selected`;
-                } else {
-                    select = ``;
-                }
                 html = html + `<option ${select} value="${data.code}">${data.name}</option>`;
             }
             $('#commune_id').empty().append(html);
@@ -1063,5 +1047,46 @@
                 $('#hospital_information').val(arrayItem);
             });
         });
+
+        let debounceTimeout; // Variable to store the debounce timeout
+
+        function updateLatLongInputs() {
+            const detailAddress = document.getElementById('address_detail').value;
+            const province = document.getElementById('province_id').options[document.getElementById('province_id').selectedIndex].text;
+            const district = document.getElementById('district_id').options[document.getElementById('district_id').selectedIndex].text;
+            const commune = document.getElementById('commune_id').options[document.getElementById('commune_id').selectedIndex].text;
+
+            const fullAddress = `${detailAddress}, ${commune}, ${district}, ${province}`;
+
+            const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(fullAddress)}&key=AIzaSyBw3G5DUAOaV9CFr3Pft_X-949-64zXaBg`;
+
+            fetch(geocodeUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "OK") {
+                        const location = data.results[0].geometry.location;
+
+                        console.log(`Latitude: ${location.lat}, Longitude: ${location.lng}`);
+
+                        // Update hidden input values
+                        document.getElementById('new_latitude').value = location.lat;
+                        document.getElementById('new_longitude').value = location.lng;
+                    } else {
+                        console.error("Geocoding failed: " + data.status);
+                    }
+                })
+                .catch(error => console.error("Error: ", error));
+        }
+
+        function debounceUpdateLatLongInputs() {
+            clearTimeout(debounceTimeout); // Clear the existing timeout
+            debounceTimeout = setTimeout(updateLatLongInputs, 700); // Set a new timeout for 0.7 seconds
+        }
+
+        // Event listeners for inputs
+        document.getElementById('address_detail').addEventListener('input', debounceUpdateLatLongInputs);
+        document.getElementById('province_id').addEventListener('change', updateLatLongInputs);
+        document.getElementById('district_id').addEventListener('change', updateLatLongInputs);
+        document.getElementById('commune_id').addEventListener('change', updateLatLongInputs);
     </script>
 @endsection
