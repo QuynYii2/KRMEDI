@@ -85,6 +85,12 @@ class BackendStaffController extends Controller
             if ($password != $password_confirm) {
                 return response('Password không trùng khớp', 400);
             }
+            $img=null;
+            if ($request->hasFile('avt')) {
+                $item = $request->file('avt');
+                $itemPath = $item->store('license', 'public');
+                $img = asset('storage/' . $itemPath);
+            }
 
             $user = new User();
             $user->username = $username;
@@ -94,7 +100,7 @@ class BackendStaffController extends Controller
             $user->type = $member;
             $user->member = $member;
             $user->status = UserStatus::ACTIVE;
-
+            $user->avt = $img;
             $user->name = $username;
             $user->last_name = '';
             $user->phone = $phone;
@@ -227,6 +233,13 @@ class BackendStaffController extends Controller
                 if ($isExistPhone) {
                     return response('Phone đã tồn tai', 400);
                 }
+            }
+
+            if ($request->hasFile('avt')) {
+                $item = $request->file('avt');
+                $itemPath = $item->store('license', 'public');
+                $img = asset('storage/' . $itemPath);
+                $user->avt = $img;
             }
 
             $user->name = $username;
