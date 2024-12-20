@@ -916,88 +916,101 @@
                                     </div>
                                 </div>
                                 @endif
-{{--                                <div class="form-group">--}}
-{{--                                    <label for="service_clinic">{{ __('home.Service Clinics') }}</label>--}}
-{{--                                    <input type="text" class="form-control" id="service_clinic" name="service_clinic" disabled>--}}
-{{--                                    <ul class="list-service">--}}
-{{--                                        @php--}}
-{{--                                            $arrayService = explode(',', $clinic->service_id);--}}
-{{--                                        @endphp--}}
-{{--                                        @foreach($services as $service)--}}
-{{--                                            <li class="new-select">--}}
-{{--                                                <input onchange="getInputService();" class="service_clinic_item" value="{{$service->id}}"--}}
-{{--                                                       id="service_{{$service->id}}"--}}
-{{--                                                       name="service_clinic"--}}
-{{--                                                       {{ in_array($service->id, $arrayService) ? 'checked' : '' }}--}}
-{{--                                                       type="checkbox">--}}
-{{--                                                <label for="service_{{$service->id}}">{{$service->name}}</label>--}}
-{{--                                            </li>--}}
-{{--                                        @endforeach--}}
-{{--                                    </ul>--}}
-{{--                                </div>--}}
+                                @if(Auth::user()->type == 'BUSINESS' && Auth::user()->member == 'HOSPITALS')
+                                    <div class="form-group mt-3">
+                                        @php
+                                            $currentService = [];
+                                            $list_service = $clinic->service_id;
+                                            $array_service = explode(',', $list_service);
 
-{{--                                <div class="form-group">--}}
-{{--                                    <label for="department">{{ __('home.Department') }}</label>--}}
-{{--                                    <input type="text" class="form-control" id="department_list" name="department_text" disabled>--}}
-{{--                                    <ul class="list-department">--}}
-{{--                                        @php--}}
-{{--                                            $arrayDepartment = explode(',', $clinic->department);--}}
-{{--                                        @endphp--}}
-{{--                                        @foreach($listDepartments as $department)--}}
-{{--                                            <li class="new-select">--}}
-{{--                                                <input onchange="getInputDepartment();" class="department_item" value="{{$department->id}}"--}}
-{{--                                                       id="department_{{$department->id}}"--}}
-{{--                                                       name="department"--}}
-{{--                                                       {{ in_array($department->id, $arrayDepartment) ? 'checked' : '' }}--}}
-{{--                                                       type="checkbox">--}}
-{{--                                                <label for="department_{{$department->id}}">{{$department->name}}</label>--}}
-{{--                                            </li>--}}
-{{--                                        @endforeach--}}
-{{--                                    </ul>--}}
-{{--                                </div>--}}
+                                            foreach ($array_service as $serviceID) {
+                                                $serviceChoose = $services->find($serviceID);
+                                                if ($serviceChoose) {
+                                                    $currentService[] = $serviceChoose;
+                                                }
+                                            }
 
-{{--                                <div class="form-group">--}}
-{{--                                    <label for="symptom">{{ __('home.symptoms') }}</label>--}}
-{{--                                    <input type="text" class="form-control" id="symptom" name="symptom" disabled>--}}
-{{--                                    <ul class="list-symptoms">--}}
-{{--                                        @php--}}
-{{--                                            $arraySymptoms = explode(',', $clinic->symptom);--}}
-{{--                                        @endphp--}}
-{{--                                        @foreach($symptoms as $symptom)--}}
-{{--                                            <li class="new-select">--}}
-{{--                                                <input onchange="getInputSymptom();" class="symptom_item" value="{{$symptom->id}}"--}}
-{{--                                                       id="symptom_{{$symptom->id}}"--}}
-{{--                                                       name="symptom"--}}
-{{--                                                       {{ in_array($symptom->id, $arraySymptoms) ? 'checked' : '' }}--}}
-{{--                                                       type="checkbox">--}}
-{{--                                                <label for="symptom_{{$symptom->id}}">{{$symptom->name}}</label>--}}
-{{--                                            </li>--}}
-{{--                                        @endforeach--}}
-{{--                                    </ul>--}}
-{{--                                </div>--}}
+                                            $currentServiceIds = array_map(function($service) {
+                                                return $service->id;
+                                            }, $currentService);
+                                        @endphp
+                                        <label for="service_clinic">Dịch vụ phòng khám</label>
+                                        <input type="text" class="form-control" id="service_clinic" name="service_clinic" disabled>
+                                        <ul class="list-service">
+                                            @foreach($services as $service)
+                                                <li class="new-select">
+                                                    <input onchange="getInputService();" class="service_clinic_item" value="{{ $service->id }}"
+                                                           id="service_{{ $service->id }}"
+                                                           name="service_clinic"
+                                                           type="checkbox"
+                                                           @if(in_array($service->id, $currentServiceIds)) checked @endif>
+                                                    <label for="service_{{ $service->id }}">
+                                                        {{ $service->name }}
+                                                        <span class="text-danger">({{ number_format(intval($service->service_price), 0, ',', '.') }} VND)</span>
+                                                    </label>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
 
-{{--                                <div class="row mb-3">--}}
-{{--                                    <div class="col-md-4">--}}
-{{--                                        <label for="open_date">{{ __('home.open_date') }}</label>--}}
-{{--                                        <input type="datetime-local" class="form-control" id="open_date" name="open_date" required--}}
-{{--                                               value="{{$clinic->open_date}}">--}}
-{{--                                    </div>--}}
-{{--                                    <div class="col-md-4">--}}
-{{--                                        <label for="close_date">{{ __('home.close_date') }}</label>--}}
-{{--                                        <input type="datetime-local" class="form-control" id="close_date" name="close_date"--}}
-{{--                                               value="{{$clinic->close_date}}">--}}
-{{--                                    </div>--}}
-{{--                                    <div class="col-md-4">--}}
-{{--                                        <label for="type">{{ __('home.type') }}</label>--}}
-{{--                                        <select class="form-select" id="type" name="time_work">--}}
-{{--                                            <option--}}
-{{--                                                value="{{\App\Enums\TypeBusiness::CLINICS}}" {{ $clinic->type === \App\Enums\TypeBusiness::CLINICS ? 'selected' : '' }}>{{\App\Enums\TypeBusiness::CLINICS}}</option>--}}
-{{--                                            <option--}}
-{{--                                                value="{{\App\Enums\TypeBusiness::PHARMACIES}}" {{ $clinic->type === \App\Enums\TypeBusiness::PHARMACIES ? 'selected' : '' }}>{{\App\Enums\TypeBusiness::PHARMACIES}}</option>--}}
-{{--                                            <option--}}
-{{--                                                value="{{\App\Enums\TypeBusiness::HOSPITALS}}" {{ $clinic->type === \App\Enums\TypeBusiness::HOSPITALS ? 'selected' : '' }}>{{\App\Enums\TypeBusiness::HOSPITALS}}</option>--}}
-{{--                                        </select>--}}
-{{--                                    </div>--}}
+                                    <div class="form-group">
+                                        @php
+                                            $currentDepartment = [];
+                                            $list_department = $clinic->department;
+                                            $array_department = explode(',', $list_department);
+
+                                            foreach ($array_department as $departmentID) {
+                                                $departmentChoose = $listDepartments->find($departmentID);
+                                                if ($departmentChoose) {
+                                                    $currentDepartment[] = $departmentChoose->id;
+                                                }
+                                            }
+                                        @endphp
+                                        <label for="department">{{ __('home.Department') }}</label>
+                                        <input type="text" class="form-control" id="department" name="department_text" disabled>
+                                        <ul class="list-department">
+                                            @foreach($listDepartments as $department)
+                                                <li class="new-select">
+                                                    <input onchange="getInputDepartment();" class="department_item" value="{{ $department->id }}"
+                                                           id="department_{{ $department->id }}"
+                                                           name="department"
+                                                           type="checkbox"
+                                                           @if(in_array($department->id, $currentDepartment)) checked @endif>
+                                                    <label for="department_{{ $department->id }}">{{ $department->name }}</label>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @php
+                                            $currentSymptom = [];
+                                            $list_symptom = $clinic->symptom;
+                                            $array_symptom = explode(',', $list_symptom);
+
+                                            foreach ($array_symptom as $symptomID) {
+                                                $symptomChoose = $symptoms->find($symptomID);
+                                                if ($symptomChoose) {
+                                                    $currentSymptom[] = $symptomChoose->id;
+                                                }
+                                            }
+                                        @endphp
+                                        <label for="symptom">{{ __('home.symptoms') }}</label>
+                                        <input type="text" class="form-control" id="symptom" name="symptom" disabled>
+                                        <ul class="list-symptoms">
+                                            @foreach($symptoms as $symptom)
+                                                <li class="new-select">
+                                                    <input onchange="getInputSymptom();" class="symptom_item" value="{{ $symptom->id }}"
+                                                           id="symptom_{{ $symptom->id }}"
+                                                           name="symptom"
+                                                           type="checkbox"
+                                                           @if(in_array($symptom->id, $currentSymptom)) checked @endif>
+                                                    <label for="symptom_{{ $symptom->id }}">{{ $symptom->name }}</label>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
 
                                     <div hidden="">
                                         <label for="combined_address"></label>

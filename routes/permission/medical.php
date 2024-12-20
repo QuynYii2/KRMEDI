@@ -10,6 +10,7 @@ use App\Http\Controllers\backend\BackendProductInfoController;
 use App\Http\Controllers\backend\BackendProductMedicineController;
 use App\Http\Controllers\backend\BackendReviewController;
 use App\Http\Controllers\backend\BackendServiceClinicController;
+use App\Http\Controllers\backend\BackendServiceHospitalController;
 use App\Http\Controllers\backend\BackendStaffController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ClinicController;
@@ -66,6 +67,15 @@ Route::group(['prefix' => 'new-event'], function () {
     Route::get('edit/{id}', [BackendNewEventController::class, 'edit'])->name('api.new-event.edit');
     Route::post('update', [BackendNewEventController::class, 'update'])->name('api.new-event.update');
     Route::post('destroy/{id}', [BackendNewEventController::class, 'destroy'])->name('api.new-event.destroy');
+});
+
+Route::group(['prefix' => 'service-hospital'], function () {
+    Route::get('index', [BackendServiceHospitalController::class, 'index'])->name('api.serviceHospital.index');
+    Route::get('create', [BackendServiceHospitalController::class, 'create'])->name('api.serviceHospital.create');
+    Route::post('store', [BackendServiceHospitalController::class, 'store'])->name('api.serviceHospital.store');
+    Route::get('edit/{id}', [BackendServiceHospitalController::class, 'edit'])->name('api.serviceHospital.edit');
+    Route::post('update/{id}', [BackendServiceHospitalController::class, 'update'])->name('api.serviceHospital.update');
+    Route::get('destroy/{id}', [BackendServiceHospitalController::class, 'destroy'])->name('api.serviceHospital.destroy');
 });
 
 Route::get('/about', function () {

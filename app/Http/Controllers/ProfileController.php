@@ -56,7 +56,7 @@ class ProfileController extends Controller
         $province = Province::all();
         $district = District::where('province_code',$doctor->province_id)->get();
         $commune = Commune::where('district_code',$doctor->district_id)->get();
-        $services = ServiceClinic::where('status', ServiceClinicStatus::ACTIVE)->get();
+        $services = ServiceClinic::where('status', ServiceClinicStatus::ACTIVE)->where('user_id', Auth::id())->get();
         $symptoms = Symptom::where('status', SymptomStatus::ACTIVE)->get();
         $doctorLists = User::where('member', TypeUser::DOCTORS)->get();
         $listDepartments = Department::where('status', DepartmentStatus::ACTIVE)->get();
