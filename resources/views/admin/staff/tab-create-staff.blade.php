@@ -40,6 +40,11 @@
                 <input type="email" class="form-control" id="email" name="email">
             </div>
             <div>
+                <label for="avt">{{ __('home.Ảnh đại diện') }} </label>
+                <input type="file" class="form-control" id="avt" name="avt"
+                       accept="image/*">
+            </div>
+            <div>
                 <label for="phone">{{ __('home.PhoneNumber') }}</label>
                 <input type="number" class="form-control" id="phone" name="phone">
             </div>
@@ -119,8 +124,9 @@
             const formData = new FormData();
 
             const arrField = ['username', 'member', 'email', 'phone', 'specialty', 'year_of_experience',
-                'identifier', 'password', 'password_confirm', 'manager_id'];
-
+                'identifier', 'password', 'password_confirm', 'manager_id','avt'];
+            const photo = $('#avt')[0].files[0];
+            formData.append('avt', photo);
             let isValid = true
             /* Tạo fn appendDataForm ở admin blade*/
             isValid = appendDataForm(arrField, formData, isValid);

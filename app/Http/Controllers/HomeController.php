@@ -229,13 +229,13 @@ class HomeController extends Controller
         }
 
         $serviceIds = explode(',', $clinicDetail->service_id);
-        $services = [];
-        foreach($serviceIds as $serviceId){
-            $service = ServiceClinic::where('id', $serviceId)->first();
-            if ($service){
-                $services[] = $service;
-            }
-        }
+        $services = ServiceClinic::where('user_id', $clinicDetail->user_id)->get();
+//        foreach($serviceIds as $serviceId){
+//            $service = ServiceClinic::where('id', $serviceId)->first();
+//            if ($service){
+//                $services[] = $service;
+//            }
+//        }
 
         $departmentIds = explode(',', $clinicDetail->department);
         $departments = [];
@@ -257,7 +257,7 @@ class HomeController extends Controller
     {
         $clinicDetail = Clinic::where('id', $id)->first();
         $arrayService = explode(',', $clinicDetail->service_id);
-        $services = ServiceClinic::whereIn('id', $arrayService)->get();
+        $services = ServiceClinic::where('user_id', $clinicDetail->user_id)->get();
         if (Auth::check()) {
             $userId = Auth::user()->id;
             $bookingsCheck = DB::table('bookings')

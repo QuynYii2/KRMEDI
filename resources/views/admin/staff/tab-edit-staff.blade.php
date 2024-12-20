@@ -57,6 +57,12 @@
             <input type="number" class="form-control" id="phone" name="phone" value="{{ $user->phone ?? '' }}">
         </div>
         <div>
+            <label for="avt">{{ __('home.Ảnh đại diện') }} </label>
+            <input type="file" class="form-control" id="avt" name="avt"
+                   accept="image/*">
+            <img loading="lazy" src="{{ asset($user->avt) }}" alt="" style="max-width: 100px">
+        </div>
+        <div>
             <label for="password">{{ __('home.Password') }}</label>
             <input type="password" class="form-control" id="password" name="password">
         </div>
@@ -150,7 +156,8 @@
 
             const arrField = ['username', 'member', 'email', 'specialty', 'year_of_experience',
                 'identifier', 'phone', 'status'];
-
+            const photo = $('#avt')[0].files[0];
+            formDataEdit.append('avt', photo);
             let isValid = true
             /* Tạo fn appendDataForm ở admin blade*/
             isValid = appendDataForm(arrField, formDataEdit, isValid);
