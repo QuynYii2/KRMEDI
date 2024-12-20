@@ -578,7 +578,13 @@
                     </ul>
                 </li>
                 <!-- End News/Events Nav -->
-
+                @if(Auth::user()->type == "BUSINESS" && Auth::user()->member == "HOSPITALS")
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="{{route('api.serviceHospital.index')}}">
+                            <i class="bi bi-robot"></i><span>Quản lý Dịch vụ</span>
+                        </a>
+                    </li>
+                @endif
                 <!-- Order Nav -->
                 <li class="nav-item">
                     <a class="nav-link collapsed" data-bs-target="#orders-nav" data-bs-toggle="collapse"
