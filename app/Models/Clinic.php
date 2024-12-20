@@ -36,6 +36,7 @@ class Clinic extends Model
         'representative_doctor',
         'latitude',
         'longitude',
+        'address'
     ];
     public function user()
     {

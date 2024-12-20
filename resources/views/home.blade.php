@@ -5,6 +5,12 @@
 @section('title', 'Home')
 @section('content')
     <style>
+        #banner-home-new{
+            img{
+                max-height: 265px;
+                border-radius: 24px;
+            }
+        }
         /*d none when size = sm*/
         @media (max-width: 480px) {
             .d-sm-block {
@@ -164,15 +170,15 @@
             </div>
         </div>
         <div class="col-lg-6 col-12 justify-content-center d-flex">
-            <div class="slide-container position-relative">
+            <div class="slide-container position-relative" id="banner-home-new">
                 <div class="slide">
-                    <img loading="lazy" src="{{asset('img/homeNew-img/Rectangle 23820.png')}}" alt="">
+                    <img loading="lazy" src="{{asset('img/homeNew-img/banner-home-1.webp')}}" alt="Banner 1">
                 </div>
                 <div class="slide">
-                    <img loading="lazy" src="{{asset('img/homeNew-img/Rectangle 23821.png')}}" alt="">
+                    <img loading="lazy" src="{{asset('img/homeNew-img/banner-home-2.webp')}}" alt="Banner 2">
                 </div>
                 <div class="slide">
-                    <img loading="lazy" src="{{asset('img/homeNew-img/Rectangle 23822.png')}}" alt="">
+                    <img loading="lazy" src="{{asset('img/homeNew-img/banner-home-3.webp')}}" alt="Banner 3">
                 </div>
 
                 <a href="#" class="prev position-absolute" id="prev" title="Previous">

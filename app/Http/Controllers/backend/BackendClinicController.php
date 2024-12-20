@@ -122,10 +122,11 @@ class BackendClinicController extends Controller
             $nation_id = $request->input('nation_id');
             $province_id = $request->input('province_id');
             $district_id = $request->input('district_id');
-            $longitude = $request->input('longitude');
-            $latitude = $request->input('latitude');
             $commune_id = $request->input('commune_id');
             $introduce = $request->input('introduce');
+            $newLatitude = $request->input('new_latitude');
+            $newLongitude = $request->input('new_longitude');
+            $address = ',' . $province_id . ',' . $district_id . ',' . $commune_id;
 
             if ($request->hasFile('gallery')) {
                 $galleryPaths = array_map(function ($image) {
@@ -183,6 +184,8 @@ class BackendClinicController extends Controller
             $user->district_id = $district_id;
             $user->commune_id = $commune_id;
             $user->detail_address = $address_detail;
+            $user->latitude = $newLatitude;
+            $user->longitude = $newLongitude;
             $user->year_of_experience = 0;
             $user->bac_si_dai_dien = $representativeDoctor;
             $user->name = $name;
@@ -202,8 +205,9 @@ class BackendClinicController extends Controller
             $clinic->email = $email;
             $clinic->name_en = $name_en ?? '';
             $clinic->name_laos = $name_laos ?? '';
-            $clinic->longitude = $longitude;
-            $clinic->latitude = $latitude;
+            $clinic->longitude = $newLongitude;
+            $clinic->latitude = $newLatitude;
+            $clinic->address = $address;
             $clinic->address_detail = $address_detail;
             $clinic->address_detail_en = $address_detail_en ?? '';
             $clinic->address_detail_laos = $address_detail_laos ?? '';
@@ -331,7 +335,8 @@ class BackendClinicController extends Controller
                 'district_id' => $district_id,
                 'commune_id' => $commune_id
             ];
-
+            $newLatitude = $request->input('new_latitude') ?? $clinic->latitude;
+            $newLongitude = $request->input('new_longitude') ?? $clinic->longitude;
             $clinic->department = $department;
             $clinic->symptom = $symptoms;
 
@@ -353,6 +358,8 @@ class BackendClinicController extends Controller
             $clinic->equipment = $equipment;
             $clinic->costs = $costs;
             $clinic->representative_doctor = $representativeDoctor;
+            $clinic->latitude = $newLatitude;
+            $clinic->longitude = $newLongitude;
 
             $user = User::where('id', $clinic->user_id)->first();
             $user->name = $name;
@@ -361,6 +368,8 @@ class BackendClinicController extends Controller
             $user->province_id = $province_id;
             $user->district_id = $district_id;
             $user->commune_id = $commune_id;
+            $user->latitude = $newLatitude;
+            $user->longitude = $newLongitude;
             $user->detail_address = $address_detail;
             $user->bac_si_dai_dien = $representativeDoctor;
             $user->save();

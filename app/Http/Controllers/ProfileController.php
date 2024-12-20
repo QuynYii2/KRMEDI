@@ -336,7 +336,7 @@ class ProfileController extends Controller
                 // If no new files are uploaded, use the existing gallery
                 $gallery = $clinic->gallery;
             }
-            $nation_id = $request->input('nation_id');
+            $nation_id = $request->input('nation_id') ?? '';
             $province_id = $request->input('province_id');
             $district_id = $request->input('district_id');
             $commune_id = $request->input('commune_id');
@@ -371,7 +371,7 @@ class ProfileController extends Controller
                     'equipment' => $request->input('hospital_equipment'),
                     'costs' => $request->input('costs'),
                     'representative_doctor' => $request->input('representative_doctor', ''),
-                    'address' => $address,
+                    'address' => ',' . $province_id . ',' . $district_id . ',' . $commune_id,
                     'latitude' => $newLatitude,
                     'longitude' => $newLongitude,
                 ]
