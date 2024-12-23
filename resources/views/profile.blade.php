@@ -1603,7 +1603,7 @@
 
             let listName = arrayNameDepartment.toString();
             if (listName) {
-                $('#department_list').val(listName);
+                $('#department').val(listName);
             }
 
             arrayDepartment.sort();
