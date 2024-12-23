@@ -23,8 +23,7 @@
                 <div>
 
                     @foreach($service as $item)
-                        <div>- {{$item->name}}</div>
-
+                        <div>- {{$item->name}} ({{ number_format($item->service_price, 0, ',', '.') }} VND)</div>
                     @endforeach</div>
 
             </div>
