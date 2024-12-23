@@ -47,10 +47,19 @@
                    value="{!! strip_tags(\Illuminate\Support\Facades\Auth::user()->medical_history)  !!}">
         </div>
         @endif
+        <div class="form-group">
+            <label for="medical_history">Dich vụ đăng ký</label>
+            <input disabled type="text" class="form-control" id="medical_history"
+                   value="{{$booking->name_service}}">
+        </div>
         <div class="row">
             <div class="form-group col-md-4">
                 <label for="status">Trạng thái</label>
                 <input disabled type="text" class="form-control" id="status" value="{{ $booking->status }}">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="status">Thành tiền khám</label>
+                <input disabled type="text" class="form-control" id="status" value="{{ $booking->total_service }}">
             </div>
             @if($booking->member_family_id)
                 @php
