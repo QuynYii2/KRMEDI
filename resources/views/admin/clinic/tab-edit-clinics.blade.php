@@ -237,7 +237,7 @@
             </div>
             <div class="mt-3">
                 <label>{{ __('home.gallery') }}</label>
-                <input type="file" class="form-control" id="gallery" name="gallery" multiple>
+                <input type="file" class="form-control" id="gallery" name="gallery[]" multiple>
                 @php
                     $galleryArray = explode(',', $clinic->gallery);
                 @endphp
