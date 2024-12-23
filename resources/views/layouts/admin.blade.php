@@ -578,7 +578,7 @@
                     </ul>
                 </li>
                 <!-- End News/Events Nav -->
-                @if(Auth::user()->type == "BUSINESS" && Auth::user()->member == "HOSPITALS")
+                @if(Auth::user()->type == "BUSINESS" && (Auth::user()->member == "HOSPITALS"||Auth::user()->member == "CLINICS"))
                     <li class="nav-item">
                         <a class="nav-link collapsed" href="{{route('api.serviceHospital.index')}}">
                             <i class="bi bi-robot"></i><span>Quản lý Dịch vụ</span>
