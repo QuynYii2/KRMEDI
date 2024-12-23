@@ -130,7 +130,9 @@
                 <th scope="col">#</th>
                 <th scope="col">{{ __('home.Người đăng ký') }}</th>
                 <th scope="col">{{ __('home.clinics') }}</th>
+                <th scope="col">Dịch vụ</th>
                 <th scope="col">{{ __('home.giờ vào') }}</th>
+                <th scope="col">Thành tiền</th>
 {{--                <th scope="col">{{ __('home.Department') }}</th>--}}
 {{--                <th scope="col">{{ __('home.Doctor Name') }}</th>--}}
 {{--                <th scope="col">{{ __('home.Trạng thái') }}</th>--}}
@@ -155,11 +157,13 @@
                         @endphp
                         {{$clinic}}
                     </td>
+                    <td>{{$item->name_service}}</td>
                     <td>{{$item->check_in}} </td>
                     @php
                         $doctor = \App\Models\User::find($item->doctor_id);
                         $department = \App\Models\Department::find($item->department_id);
                     @endphp
+                    <td>{{number_format($item->total_service)}} VND</td>
 {{--                    <td>{{$department ? $department->name : ''}}</td>--}}
 {{--                    <td>{{$doctor ? $doctor->username : ''}} - {{$doctor ? $doctor->email : ''}}</td>--}}
 {{--                    <td>{{$item->status}}</td>--}}

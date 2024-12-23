@@ -898,6 +898,19 @@ class HomeController extends Controller
         } else {
             $bookings = $query->paginate(20);
         }
+        foreach ($bookings as $item){
+            $serviceIds = explode(',', $item->service);
+
+            $services = DB::table('service_clinics')
+                ->whereIn('id', $serviceIds)
+                ->pluck('name');
+            $servicePrices = \DB::table('service_clinics')
+                ->whereIn('id', $serviceIds)
+                ->pluck('service_price');
+
+            $item->name_service = implode(', ', $services->toArray());
+            $item->total_service = $servicePrices->sum();
+        }
 
         $department = Department::all();
         $service = ServiceClinic::all();

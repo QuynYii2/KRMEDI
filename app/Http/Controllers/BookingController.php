@@ -147,6 +147,17 @@ class BookingController extends Controller
         }
 
         foreach ($bookings_edit as $value){
+            $serviceIds = explode(',', $value->service);
+
+            $services = DB::table('service_clinics')
+                ->whereIn('id', $serviceIds)
+                ->pluck('name');
+            $servicePrices = DB::table('service_clinics')
+                ->whereIn('id', $serviceIds)
+                ->pluck('service_price');
+
+            $value->name_service = implode(', ', $services->toArray());
+            $value->total_service = $servicePrices->sum();
             $value->services = ServiceClinic::where('status', ServiceClinicStatus::ACTIVE)->get();
             $value->repeaterItems = [];
 
@@ -234,6 +245,17 @@ class BookingController extends Controller
         }
 
         foreach ($bookings_edit as $value){
+            $serviceIds = explode(',', $value->service);
+
+            $services = DB::table('service_clinics')
+                ->whereIn('id', $serviceIds)
+                ->pluck('name');
+            $servicePrices = DB::table('service_clinics')
+                ->whereIn('id', $serviceIds)
+                ->pluck('service_price');
+
+            $value->name_service = implode(', ', $services->toArray());
+            $value->total_service = $servicePrices->sum();
             $value->services = ServiceClinic::where('status', ServiceClinicStatus::ACTIVE)->get();
             $value->repeaterItems = [];
 
