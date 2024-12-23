@@ -916,7 +916,7 @@
                                     </div>
                                 </div>
                                 @endif
-                                @if(Auth::user()->type == 'BUSINESS' && Auth::user()->member == 'HOSPITALS')
+                                @if(Auth::user()->type == 'BUSINESS' && (Auth::user()->member == 'HOSPITALS' || Auth::user()->member == 'CLINICS'))
                                     <div class="form-group mt-3">
                                         @php
                                             $currentService = [];
