@@ -156,6 +156,16 @@
                         </div>
                     </div>
                 </div>
+                <div class="row d-flex flex-wrap">
+                    <div class="col-6 form-group">
+                        <label for="service">Dịch vụ</label>
+                        <input type="text" class="form-control" id="service" value="{{ $value->name_service }}" disabled>
+                    </div>
+                    <div class="col-6 form-group">
+                        <label for="service">Thành tiền</label>
+                        <input type="text" class="form-control" id="service" value="{{ number_format($value->total_service) }} VND" disabled>
+                    </div>
+                </div>
                 <div class="row" id="showReasonCancel_{{$value->id}}">
                     @if($value->reason_cancel)
                         <label for="reason_text">Lí do hủy: </label>
