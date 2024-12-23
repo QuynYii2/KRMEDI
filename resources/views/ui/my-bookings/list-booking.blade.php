@@ -75,6 +75,7 @@
                 <th scope="col">{{ __('home.clinics') }}</th>
                 <th scope="col">{{ __('home.giờ vào') }}</th>
                 <th scope="col">{{ __('home.dịch vụ') }}</th>
+                <th scope="col">Thành tiền</th>
                 <th scope="col">{{ __('home.Trạng thái') }}</th>
                 <th scope="col">{{ __('home.Thao tác') }}</th>
             </tr>
@@ -95,6 +96,7 @@
                         $service_names = $services->pluck('name')->implode(', ');
                     @endphp
                     <td style="text-wrap: initial; min-width: 150px">{{$service_names}}</td>
+                    <td>{{number_format($item->total_service)}} VND</td>
                     <td>{{$item->status}}</td>
                     <td class="d-flex">
                         <form action="{{ route('web.users.my.bookings.detail', $item->id) }}" method="get">

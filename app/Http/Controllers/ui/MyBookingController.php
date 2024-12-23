@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use Maatwebsite\Excel\Facades\Excel;
@@ -118,6 +119,15 @@ class MyBookingController extends Controller
         } else {
             $bookings = $query->paginate(20);
         }
+        foreach ($bookings as $item){
+            $serviceIds = explode(',', $item->service);
+
+            $servicePrices = DB::table('service_clinics')
+                ->whereIn('id', $serviceIds)
+                ->pluck('service_price');
+
+            $item->total_service = $servicePrices->sum();
+        }
         $department_id = Booking::where('status', '!=', BookingStatus::DELETE)
             ->where('user_id', Auth::user()->id)->distinct('department_id')->pluck('department_id')->toArray();
         $department = Department::whereIn('id',$department_id)->get();
@@ -160,6 +170,18 @@ class MyBookingController extends Controller
         if (isset($prescription_result)){
             $data_product = json_decode($prescription_result->prescriptions, true);
         }
+        $serviceIds = explode(',', $booking->service);
+
+        $services = DB::table('service_clinics')
+            ->whereIn('id', $serviceIds)
+            ->pluck('name');
+        $servicePrices = DB::table('service_clinics')
+            ->whereIn('id', $serviceIds)
+            ->pluck('service_price');
+
+        $booking->name_service = implode(', ', $services->toArray());
+        $booking->total_service = $servicePrices->sum();
+
         return view('ui.my-bookings.detail-booking', compact('booking','data_product'));
     }
 
