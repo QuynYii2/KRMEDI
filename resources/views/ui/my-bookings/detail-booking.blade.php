@@ -59,7 +59,7 @@
             </div>
             <div class="form-group col-md-4">
                 <label for="status">Thành tiền khám</label>
-                <input disabled type="text" class="form-control" id="status" value="{{ $booking->total_service }}">
+                <input disabled type="text" class="form-control" id="status" value="{{ number_format($booking->total_service) }} VND">
             </div>
             @if($booking->member_family_id)
                 @php

@@ -33,6 +33,20 @@
                     </select>
                 </div>
             </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label for="name">Thời gian bắt đầu giảm giá</label>
+                    <input type="date" class="form-control" id="date_start" name="date_start">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="service_price">Thời gian kết thúc giảm giá</label>
+                    <input type="date" class="form-control" id="date_end" name="date_end">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="status">Giá dịch vụ giảm giá</label>
+                    <input type="number" class="form-control" id="service_price_promotion" name="service_price_promotion">
+                </div>
+            </div>
             <button type="submit" class="btn btn-primary float-right">{{ __('home.Save') }}</button>
         </form>
     </div>

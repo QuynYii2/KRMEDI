@@ -14,6 +14,7 @@ use App\Models\Clinic;
 use App\Models\Department;
 use App\Models\Notification;
 use App\Models\PrescriptionResults;
+use App\Models\ServiceClinic;
 use App\Models\SurveyAnswer;
 use App\Models\SurveyAnswerUser;
 use App\Models\SurveyQuestion;
@@ -47,6 +48,18 @@ class BookingApi extends Controller
             $validatedData = $validated->validated();
 
             if (isset($validatedData['service'])) {
+                $service_price = 0;
+                $services = ServiceClinic::whereIn('id', $validatedData['service'])->get();
+                foreach ($services as $item){
+                    $currentDate = date('Y-m-d');
+                    if (!empty($item->date_start) && !empty($item->date_end)
+                        && $currentDate >= $item->date_start && $currentDate <= $item->date_end
+                        && !empty($item->service_price_promotion)) {
+                        $service_price += $item->service_price_promotion;
+                    } else {
+                        $service_price += $item->service_price;
+                    }
+                }
                 $validatedData['service'] = implode(',', $validatedData['service']);
             }
 
@@ -74,6 +87,7 @@ class BookingApi extends Controller
             $booking->member_family_id = $request->input('member_family_child_id');
             $booking->insurance_use = $request->input('is_use_insurance');
             $booking->type = 0;
+            $booking->service_price = $service_price;
             $booking->save();
 
             $newBooking = Booking::with('user', 'clinic.users')->find($booking->id);

@@ -10,6 +10,6 @@ class ServiceClinic extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id', 'name', 'name_en', 'name_laos', 'user_id', 'service_price', 'status'
+        'id', 'name', 'name_en', 'name_laos', 'user_id', 'service_price', 'status','service_price_promotion','date_start','date_end'
     ];
 }

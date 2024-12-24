@@ -79,12 +79,20 @@ class ServiceClinicApi extends Controller
         $status = $request->input('status');
         $servicePrice = $request->input('service_price');
 
+        $date_start = $request->input('date_start');
+        $date_end = $request->input('date_end');
+        $service_price_promotion = $request->input('service_price_promotion');
+
         $service->name = $name;
         $service->name_en = $name_en;
         $service->name_laos = $name_laos;
         $service->user_id = $user_id;
         $service->status = $status;
         $service->service_price = $servicePrice;
+
+        $service->date_start = $date_start;
+        $service->date_end = $date_end;
+        $service->service_price_promotion = $service_price_promotion;
 
         return $service;
     }

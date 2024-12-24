@@ -343,7 +343,7 @@
                     @foreach ($services as $service)
                         <div class="d-flex justify-content-between mt-md-2 border-booking-sv align-items-center">
                             <div class="fs-14 font-weight-600">
-                                <label class="d-flex" for="myCheckbox{{ $service->id }}">{{ $service->name }}   (<span style="color: red">{{number_format($service->service_price)}} VND</span>)</label>
+                                <label class="d-flex" for="myCheckbox{{ $service->id }}">{{ $service->name }}   (<span style="color: red">{{number_format($service->price)}} VND</span>)</label>
                             </div>
                             <div class="checkbox-button">
                                 <input type="checkbox" id="myCheckbox{{ $service->id }}" value="{{ $service->id }}"

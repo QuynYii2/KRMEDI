@@ -47,6 +47,9 @@ class BackendServiceHospitalController extends Controller
                 'service_price' => $request->service_price,
                 'status' => $request->status,
                 'user_id' => Auth::id(),
+                'date_start' => $request->date_start,
+                'date_end' => $request->date_end,
+                'service_price_promotion' => $request->service_price_promotion,
             ]);
 
             return redirect()->route('api.serviceHospital.index')->with('success', 'Tạo dịch vụ thành công');
@@ -96,6 +99,9 @@ class BackendServiceHospitalController extends Controller
                 'name' => $request->name,
                 'service_price' => $request->service_price,
                 'status' => $request->status,
+                'date_start' => $request->date_start,
+                'date_end' => $request->date_end,
+                'service_price_promotion' => $request->service_price_promotion,
             ]);
 
             return redirect()->route('api.serviceHospital.index')->with('success', 'Cập nhật dịch vụ thành công');

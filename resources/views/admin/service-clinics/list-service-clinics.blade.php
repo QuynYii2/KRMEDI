@@ -6,7 +6,18 @@
     <div class="">
         <!-- Page Heading -->
         <h1 class="h3 mb-4 text-gray-800">{{ __('home.List Service Clinics') }}</h1>
-        <a href="{{route('user.service.clinics.create')}}" class="btn btn-primary mb-3">{{ __('home.Add') }}</a>
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <a href="{{route('user.service.clinics.create')}}" class="btn btn-primary mb-3">{{ __('home.Add') }}</a>
+            <form action="{{ route('service-clinics.import') }}" method="POST" enctype="multipart/form-data" class="d-flex align-items-center">
+                @csrf
+                <div>
+                    <label for="file">Chọn file Excel:</label>
+                    <input type="file" name="file" id="file" accept=".xlsx, .xls,.csv" required>
+                </div>
+                <button type="submit" class="form-control btn btn-success">Import</button>
+            </form>
+        </div>
+
         @if (session('success'))
             <div class="alert alert-success border-left-success alert-dismissible fade show" role="alert">
                 {{ session('success') }}
