@@ -96,7 +96,7 @@
                         $service_names = $services->pluck('name')->implode(', ');
                     @endphp
                     <td style="text-wrap: initial; min-width: 150px">{{$service_names}}</td>
-                    <td>{{number_format($item->total_service)}} VND</td>
+                    <td>{{number_format($item->service_price)}} VND</td>
                     <td>{{$item->status}}</td>
                     <td class="d-flex">
                         <form action="{{ route('web.users.my.bookings.detail', $item->id) }}" method="get">

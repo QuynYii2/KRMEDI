@@ -414,6 +414,9 @@ Route::middleware(['auth'])->group(function () {
         )->name('user.service.clinics.create');
     });
 
+    Route::post('/import-service-clinics', [ServiceClinicController::class, 'import'])->name('service-clinics.import');
+
+
     Route::group(['prefix' => 'topics-videos'], function () {
         Route::get('list', [TopicVideoController::class, 'getList'])->name('user.topic.videos.list');
         Route::get('detail/{id}', [TopicVideoController::class, 'detail'])->name('user.topic.videos.detail');

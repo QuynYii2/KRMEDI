@@ -33,6 +33,20 @@
                     </select>
                 </div>
             </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label for="name">Thời gian bắt đầu giảm giá</label>
+                    <input type="date" class="form-control" id="date_start" name="date_start" value="{{ $service->date_start }}">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="service_price">Thời gian kết thúc giảm giá</label>
+                    <input type="date" class="form-control" id="date_end" name="date_end" value="{{ $service->date_end }}">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="status">Giá dịch vụ giảm giá</label>
+                    <input type="number" class="form-control" id="service_price_promotion" name="service_price_promotion" value="{{ $service->service_price_promotion }}">
+                </div>
+            </div>
             <button type="button" onclick="updateService('{{ $service->id }}');" class="btn btn-primary float-right">
                 {{ __('home.Save') }}
             </button>
@@ -48,6 +62,9 @@
                 service_price: document.getElementById('service_price').value,
                 user_id: `{{ Auth::check() ? Auth::user()->id : '' }}`,
                 status: document.getElementById('status').value,
+                date_start: document.getElementById('date_start').value,
+                date_end: document.getElementById('date_end').value,
+                service_price_promotion: document.getElementById('service_price_promotion').value,
             };
 
             if (document.getElementById('name').value) {

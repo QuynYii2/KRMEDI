@@ -257,7 +257,17 @@ class HomeController extends Controller
     {
         $clinicDetail = Clinic::where('id', $id)->first();
         $arrayService = explode(',', $clinicDetail->service_id);
-        $services = ServiceClinic::where('user_id', $clinicDetail->user_id)->get();
+        $services = ServiceClinic::where('user_id', $clinicDetail->user_id)->where('status','ACTIVE')->get();
+        foreach ($services as $item){
+            $currentDate = date('Y-m-d');
+            if (!empty($item->date_start) && !empty($item->date_end)
+                && $currentDate >= $item->date_start && $currentDate <= $item->date_end
+                && !empty($item->service_price_promotion)) {
+                $item->price = $item->service_price_promotion;
+            } else {
+                $item->price = $item->service_price;
+            }
+        }
         if (Auth::check()) {
             $userId = Auth::user()->id;
             $bookingsCheck = DB::table('bookings')
@@ -904,12 +914,9 @@ class HomeController extends Controller
             $services = DB::table('service_clinics')
                 ->whereIn('id', $serviceIds)
                 ->pluck('name');
-            $servicePrices = \DB::table('service_clinics')
-                ->whereIn('id', $serviceIds)
-                ->pluck('service_price');
 
             $item->name_service = implode(', ', $services->toArray());
-            $item->total_service = $servicePrices->sum();
+            $item->total_service = $item->service_price;
         }
 
         $department = Department::all();
