@@ -18,10 +18,8 @@ class ServiceClinicController extends Controller
     {
         try {
             Excel::import(new ServiceClinicImport, $request->file('file'));
-            dd(123);
             return redirect()->back()->with('success', 'Dữ liệu đã được import thành công!');
         } catch (\Exception $e) {
-            dd($e->getMessage());
             return redirect()->back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
         }
     }
