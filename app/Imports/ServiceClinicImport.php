@@ -14,7 +14,6 @@ class ServiceClinicImport implements ToCollection
     */
     public function collection(Collection $collection)
     {
-        dd(123);
         $skippedRows = [];
         $insertedCount = 0;
 
@@ -33,7 +32,7 @@ class ServiceClinicImport implements ToCollection
                     'name' => $row[0],
                     'user_id' => Auth::id(),
                     'status' => 'ACTIVE',
-                    'service_price' => $row[5],
+                    'service_price' => $row[1],
                 ]);
 
                 $insertedCount++;
