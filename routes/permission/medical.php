@@ -5,6 +5,7 @@ use App\Http\Controllers\backend\BackendAccountRegisterController;
 use App\Http\Controllers\backend\BackendAnswerController;
 use App\Http\Controllers\backend\BackendCategoryProductController;
 use App\Http\Controllers\backend\BackendClinicController;
+use App\Http\Controllers\backend\BackendClinicLocationController;
 use App\Http\Controllers\backend\BackendNewEventController;
 use App\Http\Controllers\backend\BackendProductInfoController;
 use App\Http\Controllers\backend\BackendProductMedicineController;
@@ -76,6 +77,15 @@ Route::group(['prefix' => 'service-hospital'], function () {
     Route::get('edit/{id}', [BackendServiceHospitalController::class, 'edit'])->name('api.serviceHospital.edit');
     Route::post('update/{id}', [BackendServiceHospitalController::class, 'update'])->name('api.serviceHospital.update');
     Route::get('destroy/{id}', [BackendServiceHospitalController::class, 'destroy'])->name('api.serviceHospital.destroy');
+});
+
+Route::group(['prefix' => 'clinic-location'], function () {
+    Route::get('index/{user_id}', [BackendClinicLocationController::class, 'index'])->name('api.clinic-location.index');
+    Route::get('create/{user_id}', [BackendClinicLocationController::class, 'create'])->name('api.clinic-location.create');
+    Route::post('store', [BackendClinicLocationController::class, 'store'])->name('api.clinic-location.store');
+    Route::get('edit/{user_id}/{id}', [BackendClinicLocationController::class, 'edit'])->name('api.clinic-location.edit');
+    Route::post('update/{id}', [BackendClinicLocationController::class, 'update'])->name('api.clinic-location.update');
+    Route::get('destroy/{id}', [BackendClinicLocationController::class, 'destroy'])->name('api.clinic-location.destroy');
 });
 
 Route::get('/about', function () {

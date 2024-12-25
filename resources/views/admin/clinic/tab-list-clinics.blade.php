@@ -10,6 +10,7 @@
             <th scope="col">{{ __('home.open_date') }}</th>
             <th scope="col">{{ __('home.close_date') }}</th>
             <th scope="col">{{ __('home.Status') }}</th>
+            <th scope="col">Địa chỉ</th>
             <th scope="col">{{ __('home.Edit') }}</th>
         </tr>
         </thead>
@@ -72,6 +73,10 @@
         for (let i = 0; i < res.length; i++) {
             let urlEdit = `{{route('clinics.edit', ['id' => ':id'])}}`;
             urlEdit = urlEdit.replace(':id', res[i].id);
+
+            let urlUpdateAddress = `{{route('api.clinic-location.index', ['user_id' => ':id'])}}`;
+            urlUpdateAddress = urlUpdateAddress.replace(':id', res[i].user_id);
+
             let item = res[i];
             let rowNumber = i + 1;
 
@@ -95,7 +100,11 @@
             <td>${item.open_date}</td>
             <td>${item.close_date}</td>
             <td>${item.status}</td>
-            <td><a href="${urlEdit}"> {{ __('home.Edit') }}</a> | <a href="#" onclick="checkDelete(${item.id})">{{ __('home.Delete') }}</a></td>
+            <td><a href="${urlUpdateAddress}" class="btn btn-primary">Cập nhật</a></td>
+            <td>
+                <a href="${urlEdit}"> {{ __('home.Edit') }}</a> |
+                <a href="#" onclick="checkDelete(${item.id})">{{ __('home.Delete') }}</a>
+            </td>
         </tr>`;
         }
         await $('#ClinicsAdmin').empty().append(html);

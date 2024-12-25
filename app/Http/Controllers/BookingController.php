@@ -7,6 +7,7 @@ use App\Enums\CartStatus;
 use App\Enums\ClinicStatus;
 use App\Enums\Constants;
 use App\Enums\ReviewStatus;
+use App\Models\ClinicLocation;
 use App\Models\Commune;
 use App\Models\District;
 use App\Models\Province;
@@ -120,7 +121,21 @@ class BookingController extends Controller
             array_push($arraySurvey, $question);
         }
 
-        return view('bookings.detailBooking', compact('booking', 'clinic', 'user', 'memberFamily', 'service', 'isAdmin', 'arraySurvey'));
+        $clinicMultipleLocation = '';
+        if ($booking->clinic_location_id !== 0) {
+            $clinicLocation = ClinicLocation::find($booking->clinic_location_id);
+            if ($clinicLocation) {
+                $clinicLocation = ClinicLocation::where('clinic_locations.id', $booking->clinic_location_id)
+                    ->join('provinces', 'provinces.code', '=', DB::raw("'{$clinicLocation->province_id}'"))
+                    ->join('districts', 'districts.code', '=', DB::raw("'{$clinicLocation->district_id}'"))
+                    ->join('communes', 'communes.code', '=', DB::raw("'{$clinicLocation->commune_id}'"))
+                    ->select('clinic_locations.*', 'provinces.name as province_name', 'districts.name as district_name', 'communes.name as commune_name')
+                    ->first();
+                $clinicMultipleLocation = $clinicLocation->address_detail . ', ' . $clinicLocation->commune_name . ', ' . $clinicLocation->district_name . ', ' . $clinicLocation->province_name;
+            }
+        }
+
+        return view('bookings.detailBooking', compact('booking', 'clinic', 'user', 'memberFamily', 'service', 'isAdmin', 'arraySurvey', 'clinicMultipleLocation'));
     }
 
     public function edit($id)
@@ -209,6 +224,40 @@ class BookingController extends Controller
         $reasons = $reflector->getConstants();
 
         $departments = Department::where('status','ACTIVE')->get();
+
+        $bookings_edit = $bookings_edit->map(function ($booking) {
+            if ($booking->clinic_location_id == 0) {
+                $clinic = Clinic::find($booking->clinic_id);
+                $addressOnly = explode(',', $clinic->address);
+                $provinceId = $addressOnly[1];
+                $districtId = $addressOnly[2];
+                $communeId = $addressOnly[3];
+
+                $clinicOneLocation = Clinic::where('clinics.id', $clinic->id)
+                    ->join('provinces', function ($join) use ($provinceId) {
+                        $join->on('provinces.code', '=', DB::raw("'$provinceId'"));
+                    })
+                    ->join('districts', function ($join) use ($districtId) {
+                        $join->on('districts.code', '=', DB::raw("'$districtId'"));
+                    })
+                    ->join('communes', function ($join) use ($communeId) {
+                        $join->on('communes.code', '=', DB::raw("'$communeId'"));
+                    })
+                    ->select('clinics.address_detail', 'clinics.address', 'provinces.name as province_name', 'districts.name as district_name', 'communes.name as commune_name')
+                    ->first();
+                $booking->clinic_address_detail = $clinic->address_detail . ', ' . $clinicOneLocation->commune_name . ', ' . $clinicOneLocation->district_name . ', ' . $clinicOneLocation->province_name;
+            }else{
+                $clinicLocation = ClinicLocation::find($booking->clinic_location_id);
+                $clinicLocation = ClinicLocation::where('clinic_locations.id', $booking->clinic_location_id)
+                    ->join('provinces', 'provinces.code', '=', DB::raw("'{$clinicLocation->province_id}'"))
+                    ->join('districts', 'districts.code', '=', DB::raw("'{$clinicLocation->district_id}'"))
+                    ->join('communes', 'communes.code', '=', DB::raw("'{$clinicLocation->commune_id}'"))
+                    ->select('clinic_locations.*', 'provinces.name as province_name', 'districts.name as district_name', 'communes.name as commune_name')
+                    ->first();
+                $booking->clinic_address_detail = $clinicLocation->address_detail . ', ' . $clinicLocation->commune_name . ', ' . $clinicLocation->district_name . ', ' . $clinicLocation->province_name;
+            }
+            return $booking;
+        });
 
         if ($owner == Auth::id() || $isAdmin || $isDoctor) {
             return view('admin.booking.tab-edit-booking', compact('bookings_edit', 'isAdmin', 'reasons', 'user_zalo_id','isDoctor','departments','dataBooking'));

@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
     <link href="{{ asset('css/selectdate.css') }}" rel="stylesheet">
     <style>
+        .select-location{
+            color: #000;
+            font-size: 18px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+        }
         input[type=radio] {
             accent-color: #088180;
         }
@@ -278,6 +285,32 @@
                         </div>
                     </div>
                 </section>
+            </div>
+            <div class="mt-4">
+                <div class="time-kham text-time mb-2">Chọn cơ sở khám bệnh
+                    <span class="small text-danger">*</span>
+                </div>
+                @if($clinicLocations->isNotEmpty())
+                    @foreach($clinicLocations as $clinicLocation)
+                        <div>
+                            <input type="radio" id="clinic_location_{{ $clinicLocation->id }}" name="clinic_location_id" value="{{ $clinicLocation->id }}" required>
+                            <label for="clinic_location_{{ $clinicLocation->id }}" class="select-location">
+                                {{$clinicLocation->address_detail . ', ' . $clinicLocation->commune_name . ', ' . $clinicLocation->district_name . ', ' . $clinicLocation->province_name}}
+                            </label>
+                        </div>
+                    @endforeach
+                @elseif($clinicOneLocation !== null)
+                    <div>
+                        <input type="radio" id="clinic_location_0" name="clinic_location_id" value="0" required checked>
+                        <label for="clinic_location_0" class="select-location">
+                            {{$clinicOneLocation->address_detail . ', ' . $clinicOneLocation->commune_name . ', ' . $clinicOneLocation->district_name . ', ' . $clinicOneLocation->province_name}}
+                        </label>
+                    </div>
+                @else
+                    <div>
+                        <p>Không có địa chỉ .</p>
+                    </div>
+                @endif
             </div>
             <div class="mt-5">
                 <div class="d-flex align-items-center select-memberFamily">
