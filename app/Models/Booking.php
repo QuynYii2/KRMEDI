@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Booking extends Model
 {
     protected $fillable = ['user_id', 'clinic_id', 'check_in', 'check_out', 'consulting_form', 'member_family_id', 'department_id', 'service',
-        'doctor_id','status','extend','is_result','prescription_file','type','is_read','service_price'];
+        'doctor_id','status','extend','is_result','prescription_file','type','is_read','service_price', 'clinic_location_id'];
 
     protected $casts = [
         'extend' => 'array',

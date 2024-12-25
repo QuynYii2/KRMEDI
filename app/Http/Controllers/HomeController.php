@@ -22,6 +22,7 @@ use App\Models\Booking;
 use App\Models\Chat;
 use App\Models\CheckInBookingModel;
 use App\Models\Clinic;
+use App\Models\ClinicLocation;
 use App\Models\Commune;
 use App\Models\Coupon;
 use App\Models\CouponApply;
@@ -285,8 +286,35 @@ class HomeController extends Controller
             } else {
                 $memberFamilys = null;
             }
+            $clinic = Clinic::find($id);
+            $userClinicLocation_id = $clinic->user_id;
+            $clinicLocations = ClinicLocation::where('user_id', $userClinicLocation_id)->where('status', 'Active')
+                ->join('provinces', 'clinic_locations.province_id', '=', 'provinces.code')
+                ->join('districts', 'clinic_locations.district_id', '=', 'districts.code')
+                ->join('communes', 'clinic_locations.commune_id', '=', 'communes.code')
+                ->select('clinic_locations.*', 'provinces.name as province_name', 'districts.name as district_name', 'communes.name as commune_name')
+                ->get();
+
+            $address = explode(',', $clinic->address);
+            $provinceId = $address[1];
+            $districtId = $address[2];
+            $communeId = $address[3];
+
+            $clinicOneLocation = Clinic::where('clinics.id', $id)
+                ->join('provinces', function ($join) use ($provinceId) {
+                    $join->on('provinces.code', '=', DB::raw("'$provinceId'"));
+                })
+                ->join('districts', function ($join) use ($districtId) {
+                    $join->on('districts.code', '=', DB::raw("'$districtId'"));
+                })
+                ->join('communes', function ($join) use ($communeId) {
+                    $join->on('communes.code', '=', DB::raw("'$communeId'"));
+                })
+                ->select('clinics.address_detail', 'clinics.address', 'provinces.name as province_name', 'districts.name as district_name', 'communes.name as commune_name')
+                ->first();
+
             session(['previous_url' => url()->full()]);
-            return view('clinics.booking-clinic-page', compact('clinicDetail', 'id', 'services', 'memberFamilys', 'bookingsCheck'));
+            return view('clinics.booking-clinic-page', compact('clinicDetail', 'id', 'services', 'memberFamilys', 'bookingsCheck', 'clinicLocations', 'clinicOneLocation'));
         }
         alert('Bạn cần đăng nhập để đặt lịch khám');
         return redirect(route('home'));

@@ -332,9 +332,11 @@ class ProfileController extends Controller
 
                 // Convert the array of paths to a comma-separated string
                 $gallery = implode(',', $galleryPaths);
-            } else if ($clinic) {
+            } else if ($clinic->gallery !== null && $clinic->gallery !== '') {
                 // If no new files are uploaded, use the existing gallery
                 $gallery = $clinic->gallery;
+            } else if ($clinic->gallery === null || $clinic->gallery === '') {
+                $gallery = $user->avt;
             }
             $nation_id = $request->input('nation_id') ?? '';
             $province_id = $request->input('province_id');
@@ -374,6 +376,7 @@ class ProfileController extends Controller
                     'address' => ',' . $province_id . ',' . $district_id . ',' . $commune_id,
                     'latitude' => $newLatitude,
                     'longitude' => $newLongitude,
+                    'phone' => $request->input('phone'),
                 ]
             );
         }

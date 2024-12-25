@@ -18,8 +18,12 @@
                     $addressC = \App\Models\Commune::where('id', $array[3] ?? null)->first();
                 @endphp
                 <div>{{ __('home.clinics') }}: {{$clinic->name}}</div>
-                <div>{{ __('home.Addresses') }}: {{$clinic->address_detail}} - {{$addressC->name}} - {{$addressD->name}}
-                    - {{$addressP->name}}</div>
+                @if($booking->clinic_location_id == 0)
+                    <div>{{ __('home.Addresses') }}: {{$clinic->address_detail}} - {{$addressC->name}} - {{$addressD->name}}
+                        - {{$addressP->name}}</div>
+                @else
+                    <div>{{ __('home.Addresses') }}: {{$clinicMultipleLocation}}</div>
+                @endif
                 <div>
 
                     @foreach($service as $item)
