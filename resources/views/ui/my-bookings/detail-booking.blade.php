@@ -26,6 +26,17 @@
                        value="{{ \Carbon\Carbon::parse($booking->check_out)->format('s:i:H d-m-Y') }}">
             </div>
         </div>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <label for="check_in">Cơ sở khám bệnh</label>
+                @if($booking->clinic_address_detail)
+                    <input disabled type="text" class="form-control" id="clinic_address_detail"
+                           value="{{ $booking->clinic_address_detail }}">
+                @else
+                    <p>Không có địa chỉ</p>
+                @endif
+            </div>
+        </div>
         @php
             $department = \App\Models\Department::find($booking->department_id);
             $doctor = \App\Models\User::find($booking->doctor_id);
