@@ -205,7 +205,7 @@
         <div class="col-lg-6 col-12">
             <div class="mainServiceHomeNew row">
                 <div class="mb-md-3 col-6 col-md-4">
-                    <a href="#">
+                    <a href="{{route('pharmacy.index')}}">
                         <div class="border-HomeNew align-items-center justify-content-center">
                             <div class="">
                                 <div class="d-flex justify-content-center krm-select-bt">
@@ -307,7 +307,7 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <span class="justify-content-center d-flex">{{ __('home.Recruitment') }}</span>
+                                    <span class="justify-content-center d-flex">{{ __('home.Pharmacies') }}</span>
                                 </div>
                             </div>
                         </div>

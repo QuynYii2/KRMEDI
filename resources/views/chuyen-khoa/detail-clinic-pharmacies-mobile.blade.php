@@ -81,6 +81,8 @@
                                 <i class="fa-solid fa-clock"></i>
                                 {{$clinicDetail->time_work}} | {{ \Carbon\Carbon::parse($clinicDetail->open_date)->format('H:i') }} - {{ \Carbon\Carbon::parse($clinicDetail->close_date)->format('H:i') }}
                             </div>
+                            @if($clinicDetail->type == "PHARMACIES")
+                            @else
                             <div class="group-button d-flex mt-3 align-items-center flex-wrap">
 {{--                                <a href="" class="mr-2">--}}
 {{--                                    <div class="button-follow-specialList button-follow-specialList-zalo" style="padding-top: 7px!important;padding-left: 12px!important;">--}}
@@ -116,6 +118,7 @@
 {{--                                    </div>--}}
 {{--                                </a>--}}
                             </div>
+                            @endif
                         </div>
                     </div>
                 </div>

@@ -355,6 +355,8 @@ return [
     'New/Events' => 'New/Events',
     'Examination' => 'Examination',
     'Clinic/Pharmacies' => 'Clinic/Pharmacies',
+    'Clinic' => 'Clinic',
+    'Pharmacies' => 'Pharmacy',
     'Dashboard' => 'Dashboard',
     'Trang cá nhân' => 'Personal page',
     'Tìm kiếm cơ sở y tế, nhà thuốc, bác sĩ, thuốc' => 'Tìm kiếm cơ sở y tế, nhà thuốc, bác sĩ, thuốc',

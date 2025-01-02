@@ -349,6 +349,8 @@ return [
     'New/Events' => 'Sự kiện mới',
     'Examination' => 'Thăm khám',
     'Clinic/Pharmacies' => 'Phòng Khám/ Hiệu thuốc',
+    'Clinic' => 'Phòng khám',
+    'Pharmacies' => 'Hiệu thuốc',
     "What's free" => "Voucher",
     'Dashboar' => 'bảng điều khiển',
     'Examination history'=>'Lịch sử khám',
