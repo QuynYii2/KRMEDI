@@ -26,11 +26,11 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="short_description">Mô tả ngắn</label>
+                <label for="short_description">Mô tả ngắn (Vui lòng chỉ nhập ký tự) </label>
                 <textarea class="form-control" name="short_description" id="short_description" required></textarea>
             </div>
             <div class="form-group">
-                <label for="description">Nội dung</label>
+                <label for="description">Nội dung (Vui lòng chỉ nhập ký tự)</label>
                 <textarea class="form-control" name="description" id="description" required></textarea>
             </div>
             <div class="row">
@@ -170,23 +170,23 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="side_effects">Tác dụng phụ</label>
+                <label for="side_effects">Tác dụng phụ (Vui lòng chỉ nhập ký tự)</label>
                 <textarea class="form-control" name="side_effects" id="side_effects" required></textarea>
             </div>
             <div class="form-group">
-                <label for="uses">Công dụng</label>
+                <label for="uses">Công dụng (Vui lòng chỉ nhập ký tự)</label>
                 <textarea class="form-control" name="uses" id="uses" required></textarea>
             </div>
             <div class="form-group">
-                <label for="user_manual">Hướng dẫn sử dụng</label>
+                <label for="user_manual">Hướng dẫn sử dụng (Vui lòng chỉ nhập ký tự)</label>
                 <textarea class="form-control" name="user_manual" id="user_manual" required></textarea>
             </div>
             <div class="form-group">
-                <label for="notes">Ghi chú</label>
+                <label for="notes">Ghi chú (Vui lòng chỉ nhập ký tự)</label>
                 <textarea class="form-control" name="notes" id="notes"></textarea>
             </div>
             <div class="form-group">
-                <label for="preserve">Bảo quản </label>
+                <label for="preserve">Bảo quản (Vui lòng chỉ nhập ký tự)</label>
                 <textarea class="form-control" name="preserve" id="preserve" required></textarea>
             </div>
         </div>
