@@ -11,6 +11,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="zalo-platform-site-verification" content="RjwYAelHAo9i-9uSliWqHdtPltwHhsmbCZaq" />
+    <meta property="og:image" content="https://krmedi.vn/storage/license/Wh5fVkwTIsfTLlRv2Lbpyhlz5YQC5vLsAWLpsunT.png" data-next-head=""/>
+    <meta property="og:image:alt" content="Krmedi - Nền tảng y tế sức khỏe toàn diện" data-next-head=""/>
+    <meta property="og:image:width" content="1200" data-next-head=""/>
+    <meta property="og:image:height" content="628" data-next-head=""/>
     <title>@yield('title')</title>
 
     <link rel="icon" type="image/png" href="{{ asset('img/logo.png') }}">

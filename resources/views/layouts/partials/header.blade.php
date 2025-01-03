@@ -77,12 +77,12 @@
             <div class="header-left">
                 <a href="{{route('home')}}"><img class="w-100" src="{{asset('img/icons_logo/logo-new-header.png')}}" alt="logo"></a>
             </div>
-            <div class="header-center d-flex position-relative">
+            <form action="{{url('search-medical-pharmacy')}}" method="GET" class="header-center d-flex position-relative">
                 <label for="search-home" class="krm-label-search"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M14.8571 7.42857C14.8571 3.32588 11.5313 0 7.42857 0C3.32588 0 0 3.32588 0 7.42857C0 11.5313 3.32588 14.8571 7.42857 14.8571C9.26857 14.8571 10.96 14.1829 12.2629 13.0743L12.5714 13.3829V14.2857L18.2857 20L20 18.2857L14.2857 12.5714H13.3829L13.0743 12.2629C14.1829 10.96 14.8571 9.26857 14.8571 7.42857ZM2.28571 7.42857C2.28571 4.57143 4.57143 2.28571 7.42857 2.28571C10.2857 2.28571 12.5714 4.57143 12.5714 7.42857C12.5714 10.2857 10.2857 12.5714 7.42857 12.5714C4.57143 12.5714 2.28571 10.2857 2.28571 7.42857Z" fill="black"/>
                     </svg>
-                </label><input class="krm-search-home" name="search-home" id="search-home" placeholder="{{__('home.Tìm kiếm cơ sở y tế, nhà thuốc, bác sĩ, thuốc')}}">
-            </div>
+                </label><input class="krm-search-home" name="search-home" id="search-home" placeholder="Tìm kiếm cơ sở y tế, nhà thuốc">
+            </form>
             <div class="header-right d-flex align-items-center">
                 @if(Auth::check())
                     <div class="dropdown">

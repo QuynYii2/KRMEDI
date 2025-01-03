@@ -13,7 +13,10 @@ use App\Http\Controllers\restapi\BookingApi;
 use App\Http\Controllers\restapi\MainApi;
 use App\Models\Booking;
 use App\Models\Clinic;
+use App\Models\Commune;
 use App\Models\Department;
+use App\Models\District;
+use App\Models\Province;
 use App\Models\Review;
 use App\Models\ServiceClinic;
 use App\Models\SurveyAnswerUser;
@@ -22,6 +25,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ClinicController extends Controller
 {
@@ -34,6 +38,45 @@ class ClinicController extends Controller
         return response()->json($clinics, $id);
     }
 
+    public function searchMedicalPharmacy(Request $request)
+    {
+        $search_input = $request->get('search-home');
+
+        $clinics = DB::table('clinics')
+            ->join('users', 'users.id', '=', 'clinics.user_id')
+            ->where('clinics.status', ClinicStatus::ACTIVE)
+            ->where('clinics.name', 'LIKE', '%' . $search_input . '%');
+
+        $listData = $clinics->select('clinics.*', 'users.email')
+            ->cursor()
+            ->map(function ($item) {
+                $addressInfo = $this->getAddressInfo($item->address);
+                $clinic = (array)$item;
+                $clinic['addressInfo'] = $addressInfo;
+                /* Merge address */
+                $clinic['open_date'] = Carbon::parse($item->open_date)->format('Y-m-d H:i:s');
+                $clinic['close_date'] = Carbon::parse($item->close_date)->format('Y-m-d H:i:s');
+                $images = explode(',', $clinic['gallery']);
+                $clinic['image'] = $images[0] ?? null;
+                return $clinic;
+            });
+
+        return view('search',compact('listData','search_input'));
+    }
+
+    private function getAddressInfo($address)
+    {
+        $array = explode(',', $address);
+        $addressP = Province::where('code',$array[1] ?? null)->first();
+        $addressD = District::where('code',$array[2] ?? null)->first();
+        $addressC = Commune::where('code',$array[3] ?? null)->first();
+
+        if ($addressC == null || $addressD == null || $addressP == null) {
+            return '';
+        }
+
+        return $addressC['name'] . ',' . $addressD['name'] . ',' . $addressP['name'];
+    }
 
     public function showNear()
     {
