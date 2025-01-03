@@ -94,7 +94,8 @@
             <div class="col-md-4 item-end-footer">
                 <div class="krm-title-footer">{{__('home.Book an appointment')}}</div>
                 <div>
-                    <label for="input-email" class="krm-describe-footer">{{ __('home.It is a long established fact that a reader will be distracted') }}</label>
+{{--                    <label for="input-email" class="krm-describe-footer">{{ __('home.It is a long established fact that a reader will be distracted') }}</label>--}}
+                    <label for="input-email" class="krm-describe-footer">Liên hệ hotline  0877706999</label>
                     <form action="">
                         <input type="text" placeholder="{{ __('home.your email address') }}" name="input-email" id="input-email" class="krm-input-email">
                         <button type="submit" class="krm-button-submit">{{ __('home.Submit') }}</button>

@@ -242,9 +242,9 @@ class ClinicApi extends Controller
     private function getAddressInfo($address)
     {
         $array = explode(',', $address);
-        $addressP = Province::find($array[1] ?? null);
-        $addressD = District::find($array[2] ?? null);
-        $addressC = Commune::find($array[3] ?? null);
+        $addressP = Province::where('code',$array[1] ?? null)->first();
+        $addressD = District::where('code',$array[2] ?? null)->first();
+        $addressC = Commune::where('code',$array[3] ?? null)->first();
 
         if ($addressC == null || $addressD == null || $addressP == null) {
             return '';

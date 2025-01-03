@@ -297,6 +297,8 @@ Route::middleware(['user.active'])->group(function () {
     });
 });
 
+Route::get('/search-medical-pharmacy', [ClinicController::class, 'searchMedicalPharmacy']);
+
 Route::get('/policy', [AddressMapController::class, 'policy'])->name('policy.index');
 
 Route::post('/save-address', [AddressMapController::class, 'store']);
