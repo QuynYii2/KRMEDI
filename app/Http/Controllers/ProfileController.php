@@ -24,6 +24,7 @@ use App\Models\ServiceClinic;
 use App\Models\SocialUser;
 use App\Models\Symptom;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -332,9 +333,11 @@ class ProfileController extends Controller
 
                 // Convert the array of paths to a comma-separated string
                 $gallery = implode(',', $galleryPaths);
-            } else if ($clinic) {
+            } else if ($clinic->gallery !== null && $clinic->gallery !== '') {
                 // If no new files are uploaded, use the existing gallery
                 $gallery = $clinic->gallery;
+            } else if ($clinic->gallery === null || $clinic->gallery === '') {
+                $gallery = $user->avt;
             }
             $nation_id = $request->input('nation_id') ?? '';
             $province_id = $request->input('province_id');
@@ -358,8 +361,10 @@ class ProfileController extends Controller
                     'time_work' => $request->input('time_work'),
                     'status' => $request->input('status', 'ACTIVE'),
                     'type' =>$request->input('type'),
-                    'open_date' => $request->input('open_date'),
-                    'close_date' => $request->input('close_date'),
+                    'open_date' => Carbon::createFromFormat('Y-m-d\TH:i', $request->input('open_date'))->toDateTimeString(),
+                    'close_date' => $request->input('close_date')
+                        ? Carbon::createFromFormat('Y-m-d\TH:i', $request->input('close_date'))->toDateTimeString()
+                        : null,
                     'service_id' => $request->input('clinics_service'),
                     'department' => $request->input('departments'),
                     'symptom' => $request->input('symptoms'),
@@ -374,6 +379,7 @@ class ProfileController extends Controller
                     'address' => ',' . $province_id . ',' . $district_id . ',' . $commune_id,
                     'latitude' => $newLatitude,
                     'longitude' => $newLongitude,
+                    'phone' => $request->input('phone'),
                 ]
             );
         }

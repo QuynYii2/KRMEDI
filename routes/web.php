@@ -36,6 +36,7 @@ use App\Http\Controllers\MedicalResultController;
 use App\Http\Controllers\MedicineController;
 use App\Http\Controllers\NewEventController;
 use App\Http\Controllers\PharmaciesController;
+use App\Http\Controllers\PharmacyController;
 use App\Http\Controllers\ProductInfoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecruitmentController;
@@ -274,6 +275,10 @@ Route::middleware(['user.active'])->group(function () {
         Route::get('/detail/{id}', [ClinicController::class, 'detail'])->name('clinic.detail');
         Route::post('/create', [ClinicController::class, 'store'])->name('clinic.booking.store');
         Route::get('/showNear/{id}', [ClinicController::class, 'showNear'])->name('clinic.booking.showNear');
+    });
+    Route::group(['prefix' => 'pharmacy'], function () {
+        Route::get('/', [PharmacyController::class, 'index'])->name('pharmacy.index');
+        Route::get('/search', [PharmacyController::class, 'searchPharmacy'])->name('pharmacy.search');
     });
     Route::group(['prefix' => 'product'], function () {
         Route::get('/lists', [BackendProductInfoController::class, 'index'])->name('backend.products.list');

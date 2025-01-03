@@ -13,6 +13,7 @@ use App\Models\Booking;
 use App\Models\BookingResult;
 use App\Models\Cart;
 use App\Models\Clinic;
+use App\Models\ClinicLocation;
 use App\Models\Commune;
 use App\Models\Department;
 use App\Models\District;
@@ -170,6 +171,41 @@ class MyBookingController extends Controller
 
         $booking->name_service = implode(', ', $services->toArray());
         $booking->total_service = $booking->service_price;
+
+        if ($booking->clinic_location_id == 0) {
+            $clinic = Clinic::find($booking->clinic_id);
+            $addressOnly = explode(',', $clinic->address);
+            $provinceId = $addressOnly[1];
+            $districtId = $addressOnly[2];
+            $communeId = $addressOnly[3];
+
+            $clinicOneLocation = Clinic::where('clinics.id', $clinic->id)
+                ->join('provinces', function ($join) use ($provinceId) {
+                    $join->on('provinces.code', '=', DB::raw("'$provinceId'"));
+                })
+                ->join('districts', function ($join) use ($districtId) {
+                    $join->on('districts.code', '=', DB::raw("'$districtId'"));
+                })
+                ->join('communes', function ($join) use ($communeId) {
+                    $join->on('communes.code', '=', DB::raw("'$communeId'"));
+                })
+                ->select('clinics.address_detail', 'clinics.address', 'provinces.name as province_name', 'districts.name as district_name', 'communes.name as commune_name')
+                ->first();
+            if($clinicOneLocation){
+                $booking->clinic_address_detail = $clinic->address_detail . ', ' . $clinicOneLocation->commune_name . ', ' . $clinicOneLocation->district_name . ', ' . $clinicOneLocation->province_name;
+            }else{
+                $booking->clinic_address_detail = 'Không có địa chỉ';
+            }
+        }else{
+            $clinicLocation = ClinicLocation::find($booking->clinic_location_id);
+            $clinicLocation = ClinicLocation::where('clinic_locations.id', $booking->clinic_location_id)
+                ->join('provinces', 'provinces.code', '=', DB::raw("'{$clinicLocation->province_id}'"))
+                ->join('districts', 'districts.code', '=', DB::raw("'{$clinicLocation->district_id}'"))
+                ->join('communes', 'communes.code', '=', DB::raw("'{$clinicLocation->commune_id}'"))
+                ->select('clinic_locations.*', 'provinces.name as province_name', 'districts.name as district_name', 'communes.name as commune_name')
+                ->first();
+            $booking->clinic_address_detail = $clinicLocation->address_detail . ', ' . $clinicLocation->commune_name . ', ' . $clinicLocation->district_name . ', ' . $clinicLocation->province_name;
+        }
 
         return view('ui.my-bookings.detail-booking', compact('booking','data_product'));
     }

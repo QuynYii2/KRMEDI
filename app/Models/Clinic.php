@@ -36,8 +36,15 @@ class Clinic extends Model
         'representative_doctor',
         'latitude',
         'longitude',
-        'address'
+        'address',
+        'phone'
     ];
+
+    protected $casts = [
+        'open_date' => 'datetime',
+        'close_date' => 'datetime',
+    ];
+
     public function user()
     {
         return $this->hasMany(User::class);

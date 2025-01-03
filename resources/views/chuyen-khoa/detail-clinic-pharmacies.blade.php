@@ -65,9 +65,9 @@
                                 <i class="fas fa-map-marker-alt"></i>
                                 @php
                                     $array = explode(',', $clinicDetail->address);
-                                    $addressP = Province::where('id', $array[1] ?? null)->first();
-                                    $addressD = \App\Models\District::where('id', $array[2] ?? null)->first();
-                                    $addressC = \App\Models\Commune::where('id', $array[3] ?? null)->first();
+                                    $addressP = Province::where('code', $array[1] ?? null)->first();
+                                    $addressD = \App\Models\District::where('code', $array[2] ?? null)->first();
+                                    $addressC = \App\Models\Commune::where('code', $array[3] ?? null)->first();
                                 @endphp
                                 <div class="ml-1">{{$clinicDetail->address_detail}}
                                     , {{$addressC->name ?? ''}} , {{$addressD->name ?? ''}}
@@ -77,34 +77,37 @@
                                 <i class="fa-solid fa-clock"></i>
                                 {{$clinicDetail->time_work}} | {{ \Carbon\Carbon::parse($clinicDetail->open_date)->format('H:i') }} - {{ \Carbon\Carbon::parse($clinicDetail->close_date)->format('H:i') }}
                             </div>
-                            <div class="group-button d-flex mt-3 align-items-center">
-{{--                                <a href="" class="mr-2">--}}
-{{--                                    <div class="button-follow-specialList button-follow-specialList-zalo" style="padding-top: 7px!important;padding-left: 12px!important;">--}}
-{{--                                        <div style="margin-left: 8px; margin-top: 18px" class="zalo-follow-only-button"--}}
-{{--                                             data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>--}}
-{{--                                    </div>--}}
-{{--                                </a>--}}
-                                <a href="{{ route('home.specialist.booking.detail', $clinicDetail->id) }}" style="margin: 0 5px 0 0px">
-                                    <div class="button-booking-specialList line-dk-btn button-direct-specialList btn-detail-clinic" style="margin: 0;background-color: #00bc59">
-                                        {{ __('home.Đặt khám') }}
-                                    </div>
-                                </a>
-{{--                                <a href="https://www.google.com/maps?q={{$clinicDetail->latitude}},{{$clinicDetail->longitude}}" target="_blank">--}}
-{{--                                    <div class="button-direct-specialList">--}}
-{{--                                        {{ __('home.Chỉ đường') }}--}}
-{{--                                    </div>--}}
-{{--                                </a>--}}
-                                <button class="row p-2" id="showMapBtn" style="background-color: transparent; border:none;margin: 0 10px">
-                                    <div class="button-direct-specialList">
-                                        {{ __('home.Chỉ đường') }}
-                                    </div>
-                                </button>
-                                <a href="https://zalo.me/{{$clinicDetail->phone}}" class="">
-                                    <div class="button-direct-specialList" style="background-color: #369fef">
-                                        Tư vấn
-                                    </div>
-                                </a>
-                            </div>
+                            @if($clinicDetail->type == "PHARMACIES")
+                            @else
+                                <div class="group-button d-flex mt-3 align-items-center">
+                                    {{--                                <a href="" class="mr-2">--}}
+                                    {{--                                    <div class="button-follow-specialList button-follow-specialList-zalo" style="padding-top: 7px!important;padding-left: 12px!important;">--}}
+                                    {{--                                        <div style="margin-left: 8px; margin-top: 18px" class="zalo-follow-only-button"--}}
+                                    {{--                                             data-callback="userFollowZaloOA" data-oaid="4438562505337240484"></div>--}}
+                                    {{--                                    </div>--}}
+                                    {{--                                </a>--}}
+                                    <a href="{{ route('home.specialist.booking.detail', $clinicDetail->id) }}" style="margin: 0 5px 0 0px">
+                                        <div class="button-booking-specialList line-dk-btn button-direct-specialList btn-detail-clinic" style="margin: 0;background-color: #00bc59">
+                                            {{ __('home.Đặt khám') }}
+                                        </div>
+                                    </a>
+                                    {{--                                <a href="https://www.google.com/maps?q={{$clinicDetail->latitude}},{{$clinicDetail->longitude}}" target="_blank">--}}
+                                    {{--                                    <div class="button-direct-specialList">--}}
+                                    {{--                                        {{ __('home.Chỉ đường') }}--}}
+                                    {{--                                    </div>--}}
+                                    {{--                                </a>--}}
+                                    <button class="row p-2" id="showMapBtn" style="background-color: transparent; border:none;margin: 0 10px">
+                                        <div class="button-direct-specialList">
+                                            {{ __('home.Chỉ đường') }}
+                                        </div>
+                                    </button>
+                                    <a href="https://zalo.me/{{$clinicDetail->phone}}" class="">
+                                        <div class="button-direct-specialList" style="background-color: #369fef">
+                                            Tư vấn
+                                        </div>
+                                    </a>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>

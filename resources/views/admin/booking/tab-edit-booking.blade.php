@@ -166,6 +166,15 @@
                         <input type="text" class="form-control" id="service" value="{{ number_format($value->total_service) }} VND" disabled>
                     </div>
                 </div>
+                @if($value->clinic_address_detail)
+                    <div class="form-group">
+                        <div>Cơ sở khám bệnh: </div>
+                        <input type="text" class="form-control" id="clinic_address_detail" value="{{ $value->clinic_address_detail }}"
+                               disabled>
+                    </div>
+                @else
+                    <div>Không có cơ sở</div>
+                @endif
                 <div class="row" id="showReasonCancel_{{$value->id}}">
                     @if($value->reason_cancel)
                         <label for="reason_text">Lí do hủy: </label>

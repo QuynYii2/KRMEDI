@@ -69,9 +69,9 @@
                                 <i class="fas fa-map-marker-alt"></i>
                                 @php
                                     $array = explode(',', $clinicDetail->address);
-                                    $addressP = Province::where('id', $array[1] ?? null)->first();
-                                    $addressD = \App\Models\District::where('id', $array[2] ?? null)->first();
-                                    $addressC = \App\Models\Commune::where('id', $array[3] ?? null)->first();
+                                    $addressP = Province::where('code', $array[1] ?? null)->first();
+                                    $addressD = \App\Models\District::where('code', $array[2] ?? null)->first();
+                                    $addressC = \App\Models\Commune::where('code', $array[3] ?? null)->first();
                                 @endphp
                                 <div class="ml-1">{{$clinicDetail->address_detail}}
                                     , {{$addressC->name ?? ''}} , {{$addressD->name ?? ''}}
@@ -81,6 +81,8 @@
                                 <i class="fa-solid fa-clock"></i>
                                 {{$clinicDetail->time_work}} | {{ \Carbon\Carbon::parse($clinicDetail->open_date)->format('H:i') }} - {{ \Carbon\Carbon::parse($clinicDetail->close_date)->format('H:i') }}
                             </div>
+                            @if($clinicDetail->type == "PHARMACIES")
+                            @else
                             <div class="group-button d-flex mt-3 align-items-center flex-wrap">
 {{--                                <a href="" class="mr-2">--}}
 {{--                                    <div class="button-follow-specialList button-follow-specialList-zalo" style="padding-top: 7px!important;padding-left: 12px!important;">--}}
@@ -116,6 +118,7 @@
 {{--                                    </div>--}}
 {{--                                </a>--}}
                             </div>
+                            @endif
                         </div>
                     </div>
                 </div>

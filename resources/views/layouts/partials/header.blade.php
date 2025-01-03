@@ -289,8 +289,8 @@
                 <a href="{{route('examination.index')}}">{{ __('home.Examination') }}</a>
                 <a href="{{route('index.new')}}">{{ __('home.New/Events') }}</a>
                 <a href="{{route('medicine')}}">{{ __('home.Online Medicine') }}</a>
-                <a href="{{route('clinic')}}">{{ __('home.Clinic/Pharmacies') }}</a>
-                <a href="{{route('what.free')}}">{{ __("home.What's free") }}?</a>
+                <a href="{{route('clinic')}}">{{ __('home.Clinic') }}</a>
+                <a href="{{route('pharmacy.index')}}">{{ __('home.Pharmacies') }}</a>
             </div>
         </div>
     </div>
