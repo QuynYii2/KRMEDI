@@ -27,14 +27,14 @@
                            value="{{ $productMedicine->name ?? '' }}">
                 </div>
             </div>
+{{--            <div class="form-group">--}}
+{{--                <label for="short_description">{{__('home.Short Description')}}</label>--}}
+{{--                <textarea class="form-control" name="short_description" id="short_description">--}}
+{{--                    {{ $productMedicine->short_description ?? '' }}--}}
+{{--                </textarea>--}}
+{{--            </div>--}}
             <div class="form-group">
-                <label for="short_description">{{__('home.Short Description')}}</label>
-                <textarea class="form-control" name="short_description" id="short_description">
-                    {{ $productMedicine->short_description ?? '' }}
-                </textarea>
-            </div>
-            <div class="form-group">
-                <label for="description">Nội dung</label>
+                <label for="description">Mô tả sản phẩm (Vui lòng chỉ nhập ký tự)</label>
                 <textarea class="form-control" name="description" id="description">
                     {{ $productMedicine->description ?? '' }}
                 </textarea>
@@ -248,31 +248,31 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="side_effects">{{__('home.Side Effects')}}</label>
+                <label for="side_effects">{{__('home.Side Effects')}} (Vui lòng chỉ nhập ký tự)</label>
                 <textarea class="form-control" name="side_effects" id="side_effects">
                     {{ $productMedicine->side_effects }}
                 </textarea>
             </div>
             <div class="form-group">
-                <label for="uses">{{ __('home.Uses') }}</label>
+                <label for="uses">{{ __('home.Uses') }} (Vui lòng chỉ nhập ký tự)</label>
                 <textarea class="form-control" name="uses" id="uses">
                      {{ $productMedicine->uses }}
                 </textarea>
             </div>
             <div class="form-group">
-                <label for="user_manual">{{ __('home.User Manual') }}</label>
+                <label for="user_manual">{{ __('home.User Manual') }} (Vui lòng chỉ nhập ký tự)</label>
                 <textarea class="form-control" name="user_manual" id="user_manual">
                     {{ $productMedicine->user_manual }}
                 </textarea>
             </div>
             <div class="form-group">
-                <label for="notes">{{ __('home.Notes') }}</label>
+                <label for="notes">{{ __('home.Notes') }} (Vui lòng chỉ nhập ký tự)</label>
                 <textarea class="form-control" name="notes" id="notes">
                      {{ $productMedicine->notes }}
                 </textarea>
             </div>
             <div class="form-group">
-                <label for="preserve">{{ __('home.Preserve') }}</label>
+                <label for="preserve">{{ __('home.Preserve') }} (Vui lòng chỉ nhập ký tự)</label>
                 <textarea class="form-control" name="preserve" id="preserve">
                     {{ $productMedicine->preserve }}
                 </textarea>
@@ -341,7 +341,6 @@
 
             const fieldTextareaTiny = [
                 'description',
-                'short_description',
                 'side_effects',
                 'uses',
                 'user_manual',

@@ -25,12 +25,12 @@
                     <input type="text" class="form-control" id="name" name="name" value="" required>
                 </div>
             </div>
+{{--            <div class="form-group">--}}
+{{--                <label for="short_description">Mô tả ngắn (Vui lòng chỉ nhập ký tự) </label>--}}
+{{--                <textarea class="form-control" name="short_description" id="short_description" required></textarea>--}}
+{{--            </div>--}}
             <div class="form-group">
-                <label for="short_description">Mô tả ngắn (Vui lòng chỉ nhập ký tự) </label>
-                <textarea class="form-control" name="short_description" id="short_description" required></textarea>
-            </div>
-            <div class="form-group">
-                <label for="description">Nội dung (Vui lòng chỉ nhập ký tự)</label>
+                <label for="description">Mô tả sản phẩm (Vui lòng chỉ nhập ký tự)</label>
                 <textarea class="form-control" name="description" id="description" required></textarea>
             </div>
             <div class="row">
@@ -255,7 +255,6 @@
 
             const fieldTextareaTiny = [
                 'description',
-                'short_description',
                 'side_effects',
                 'uses',
                 'user_manual',

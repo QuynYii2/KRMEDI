@@ -69,9 +69,9 @@
                                 <i class="fas fa-map-marker-alt"></i>
                                 @php
                                     $array = explode(',', $clinicDetail->address);
-                                    $addressP = Province::where('id', $array[1] ?? null)->first();
-                                    $addressD = \App\Models\District::where('id', $array[2] ?? null)->first();
-                                    $addressC = \App\Models\Commune::where('id', $array[3] ?? null)->first();
+                                    $addressP = Province::where('code', $array[1] ?? null)->first();
+                                    $addressD = \App\Models\District::where('code', $array[2] ?? null)->first();
+                                    $addressC = \App\Models\Commune::where('code', $array[3] ?? null)->first();
                                 @endphp
                                 <div class="ml-1">{{$clinicDetail->address_detail}}
                                     , {{$addressC->name ?? ''}} , {{$addressD->name ?? ''}}

@@ -126,9 +126,9 @@ class BackendProductMedicineController extends Controller
             $params['name_en'] = $translate->translateText($params['name'], 'en');
             $params['name_laos'] = $translate->translateText($params['name'], 'lo');
             //check short_description
-            if (empty($params['short_description'])) {
-                return response('Mô tả sản phẩm không được để trống', 400);
-            }
+//            if (empty($params['short_description'])) {
+//                return response('Mô tả sản phẩm không được để trống', 400);
+//            }
 //            $params['short_description'] = $translate->translateText($params['short_description'], 'vi');
 //            $params['short_description_en'] = $translate->translateText($params['short_description'], 'en');
 //            $params['short_description_laos'] = $translate->translateText($params['short_description'], 'lo');
@@ -225,9 +225,9 @@ class BackendProductMedicineController extends Controller
             $params['name_en'] = $translate->translateText($params['name'], 'en');
             $params['name_laos'] = $translate->translateText($params['name'], 'lo');
             //check short_description
-            if (empty($params['short_description'])) {
-                return response('Mô tả sản phẩm không được để trống', 400);
-            }
+//            if (empty($params['short_description'])) {
+//                return response('Mô tả sản phẩm không được để trống', 400);
+//            }
 //            $params['short_description'] =
 //            $params['short_description'] = $translate->translateText($params['short_description'], 'vi');
 //            $params['short_description_en'] = $translate->translateText($params['short_description'], 'en');

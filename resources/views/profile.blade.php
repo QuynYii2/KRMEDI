@@ -872,29 +872,53 @@
                                     <div class="form-group col-md-4">
                                         <label for="time_work">{{ __('home.Time work') }}</label>
                                         <select class="form-select" id="time_work" name="time_work">
-                                            <option value="{{ \App\Enums\TypeTimeWork::ALL }}">
-                                                {{ \App\Enums\TypeTimeWork::ALL }}</option>
-                                            <option value="{{ \App\Enums\TypeTimeWork::NONE }}">
-                                                {{ \App\Enums\TypeTimeWork::NONE }}</option>
-                                            <option value="{{ \App\Enums\TypeTimeWork::OFFICE_HOURS }}">
-                                                {{ \App\Enums\TypeTimeWork::OFFICE_HOURS }}</option>
-                                            <option value="{{ \App\Enums\TypeTimeWork::ONLY_AFTERNOON }}">
-                                                {{ \App\Enums\TypeTimeWork::ONLY_MORNING }}</option>
-                                            <option value="{{ \App\Enums\TypeTimeWork::ONLY_AFTERNOON }}">
-                                                {{ \App\Enums\TypeTimeWork::ONLY_AFTERNOON }}</option>
-                                            <option value="{{ \App\Enums\TypeTimeWork::OTHER }}">
-                                                {{ \App\Enums\TypeTimeWork::OTHER }}</option>
+                                            <option value="{{ \App\Enums\TypeTimeWork::ALL }}"
+                                                {{ old('time_work', $clinic->time_work ?? '') === \App\Enums\TypeTimeWork::ALL ? 'selected' : '' }}>
+                                                {{ \App\Enums\TypeTimeWork::ALL }}
+                                            </option>
+                                            <option value="{{ \App\Enums\TypeTimeWork::NONE }}"
+                                                {{ old('time_work', $clinic->time_work ?? '') === \App\Enums\TypeTimeWork::NONE ? 'selected' : '' }}>
+                                                {{ \App\Enums\TypeTimeWork::NONE }}
+                                            </option>
+                                            <option value="{{ \App\Enums\TypeTimeWork::OFFICE_HOURS }}"
+                                                {{ old('time_work', $clinic->time_work ?? '') === \App\Enums\TypeTimeWork::OFFICE_HOURS ? 'selected' : '' }}>
+                                                {{ \App\Enums\TypeTimeWork::OFFICE_HOURS }}
+                                            </option>
+                                            <option value="{{ \App\Enums\TypeTimeWork::ONLY_MORNING }}"
+                                                {{ old('time_work', $clinic->time_work ?? '') === \App\Enums\TypeTimeWork::ONLY_MORNING ? 'selected' : '' }}>
+                                                {{ \App\Enums\TypeTimeWork::ONLY_MORNING }}
+                                            </option>
+                                            <option value="{{ \App\Enums\TypeTimeWork::ONLY_AFTERNOON }}"
+                                                {{ old('time_work', $clinic->time_work ?? '') === \App\Enums\TypeTimeWork::ONLY_AFTERNOON ? 'selected' : '' }}>
+                                                {{ \App\Enums\TypeTimeWork::ONLY_AFTERNOON }}
+                                            </option>
+                                            <option value="{{ \App\Enums\TypeTimeWork::OTHER }}"
+                                                {{ old('time_work', $clinic->time_work ?? '') === \App\Enums\TypeTimeWork::OTHER ? 'selected' : '' }}>
+                                                {{ \App\Enums\TypeTimeWork::OTHER }}
+                                            </option>
                                         </select>
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="open_date">{{ __('home.Thời gian bắt đầu') }}</label>
-                                        <input class="form-control" id="open_date" name="open_date" type="datetime-local"
-                                               placeholder="">
+                                        <input
+                                            class="form-control"
+                                            id="open_date"
+                                            name="open_date"
+                                            type="datetime-local"
+                                            value="{{ old('open_date', $clinic->open_date ? $clinic->open_date->format('Y-m-d\TH:i') : '') }}"
+                                            placeholder=""
+                                        >
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="close_date">{{ __('home.Thời gian kết thúc') }}</label>
-                                        <input class="form-control" id="close_date" name="close_date" type="datetime-local"
-                                               placeholder="">
+                                        <input
+                                            class="form-control"
+                                            id="close_date"
+                                            name="close_date"
+                                            type="datetime-local"
+                                            value="{{ old('close_date', $clinic->close_date ? $clinic->close_date->format('Y-m-d\TH:i') : '') }}"
+                                            placeholder=""
+                                        >
                                     </div>
                                 </div>
                             @if($roleItem->name != "NORMAL PEOPLE" || $roleItem->name != "PAITENTS")
