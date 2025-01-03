@@ -24,6 +24,7 @@ use App\Models\ServiceClinic;
 use App\Models\SocialUser;
 use App\Models\Symptom;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -360,8 +361,10 @@ class ProfileController extends Controller
                     'time_work' => $request->input('time_work'),
                     'status' => $request->input('status', 'ACTIVE'),
                     'type' =>$request->input('type'),
-                    'open_date' => $request->input('open_date'),
-                    'close_date' => $request->input('close_date'),
+                    'open_date' => Carbon::createFromFormat('Y-m-d\TH:i', $request->input('open_date'))->toDateTimeString(),
+                    'close_date' => $request->input('close_date')
+                        ? Carbon::createFromFormat('Y-m-d\TH:i', $request->input('close_date'))->toDateTimeString()
+                        : null,
                     'service_id' => $request->input('clinics_service'),
                     'department' => $request->input('departments'),
                     'symptom' => $request->input('symptoms'),
