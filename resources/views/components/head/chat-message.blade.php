@@ -900,7 +900,7 @@
             const user = current_user;
             const doctorChatListQuery = query(
                 collection(database, 'chats'),
-                where('channelTypes', 'array-contains-any', [`${user.uid}_DOCTORS`, `${user.uid}_PHAMACISTS`, `${user.uid}_HOSPITALS`])
+                where('channelTypes', 'array-contains-any', [`${user.uid}_DOCTORS`, `${user.uid}_PHAMACISTS`, `${user.uid}_HOSPITALS`, `${user.uid}_PAITENTS`])
             );
             try {
                 const querySnapshot = await getDocs(doctorChatListQuery);
@@ -968,8 +968,8 @@
         try {
             let querySnapshot = await getDocs(query(
                 usersCollection,
-                where('role', 'in', ['DOCTORS', 'PHAMACISTS', 'HOSPITALS']),
-                where('is_online', '==', true),
+                where('role', 'in', ['DOCTORS', 'PHAMACISTS', 'HOSPITALS','PAITENTS']),
+                // where('is_online', '==', true),
                 limit(10)
             ));
             list_user = [];
@@ -1019,7 +1019,7 @@
             for (let i = startIndex; i < endIndex && i < list_user.length; i++) {
                 let res = list_user[i];
                 let email = res.email;
-                if ((res.role == 'DOCTORS' || res.role == 'PHAMACISTS' || res.role == 'HOSPITALS') && res.id != current_user.uid) {
+                if ((res.role == 'DOCTORS' || res.role == 'PHAMACISTS' || res.role == 'HOSPITALS') || res.role == 'PAITENTS' && res.id != current_user.uid) {
                     batchPromises.push(getUserInfo(email).then((response) => {
                         const name_doctor = response.infoUser.name;
                         const hospital = response.infoUser.hospital ? response.infoUser.hospital : '';
@@ -1081,7 +1081,7 @@
             for (let i = startIndex; i < endIndex && i < data.length; i++) {
                 let res = data[i];
                 let email = res.email;
-                if ((res.role == 'DOCTORS' || res.role == 'PHAMACISTS' || res.role == 'HOSPITALS') && res.id != current_user.uid) {
+                if ((res.role == 'DOCTORS' || res.role == 'PHAMACISTS' || res.role == 'HOSPITALS' || res.role =='PAITENTS') && res.id != current_user.uid) {
                     batchPromises.push(getUserInfo(email).then((response) => {
                         const name_doctor = response.infoUser.name;
                         const hospital = response.infoUser.hospital ? response.infoUser.hospital : '';
