@@ -45,9 +45,9 @@
                 $count = \App\Models\ProductInfo::where('created_by', $id )->where('status', \App\Enums\ProductStatus::ACTIVE)->count();
             @endphp
             <div class="col-4 col-md-3 p-1 d-flex font-12-mobi">{{ __('home.Product') }}: <span class="font-weight-800">{{$count}}</span></div>
-            <div class="col-4 col-md-3 p-1 d-flex font-12-mobi">{{ __('home.Sold') }}: <span class="font-weight-800">1000</span></div>
-            <div class="col-4 col-md-3 p-1 d-flex font-12-mobi">{{ __('home.Sold Out') }}: <span class="font-weight-800">10</span></div>
-            <div class="col-4 col-md-3 p-1 d-flex font-12-mobi">{{ __('home.Following') }}: <span class="font-weight-800">50</span></div>
+{{--            <div class="col-4 col-md-3 p-1 d-flex font-12-mobi">{{ __('home.Sold') }}: <span class="font-weight-800">1000</span></div>--}}
+{{--            <div class="col-4 col-md-3 p-1 d-flex font-12-mobi">{{ __('home.Sold Out') }}: <span class="font-weight-800">10</span></div>--}}
+{{--            <div class="col-4 col-md-3 p-1 d-flex font-12-mobi">{{ __('home.Following') }}: <span class="font-weight-800">50</span></div>--}}
         </div>
     </div>
     <div class="col-lg-2 col-12 mobile-hidden">
@@ -55,8 +55,8 @@
         <div class="d-flex">
             @if(\Illuminate\Support\Facades\Auth::check())
                 @if( $id != Auth::user()->id)
-                    <a href="" class="flea-button flea-buttons">
-                        {{ __('home.FOLLOW') }}
+                    <a class="doctor_mess btn btn-success" data-mail="{{$info->email}}" data-id="{{$info->id}}" data-role="DOCTORS" data-img="{{$info->avt}}" data-name="{{$info->name}}" style="color: white">
+                        Chat
                     </a>
                 @else
                     <a href="{{route('flea.market.sell.product')}}" class="flea-button flea-buttons">
@@ -64,11 +64,12 @@
                     </a>
                 @endif
             @else
-                <a onclick="alertLogin();" class="flea-button flea-buttons">
+                <a onclick="alertLogin();" class="flea-button flea-buttons" style="color: white">
                     {{ __('home.FOLLOW') }}
                 </a>
             @endif
         </div>
     </div>
 </div>
+<script src="{{asset('js/send-mess.js')}}" type="module"></script>
 
