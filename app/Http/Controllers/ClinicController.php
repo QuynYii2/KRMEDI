@@ -13,6 +13,7 @@ use App\Http\Controllers\restapi\BookingApi;
 use App\Http\Controllers\restapi\MainApi;
 use App\Models\Booking;
 use App\Models\Clinic;
+use App\Models\ClinicLocation;
 use App\Models\Commune;
 use App\Models\Department;
 use App\Models\District;
@@ -35,7 +36,24 @@ class ClinicController extends Controller
         if (!$clinics || $clinics->status != ClinicStatus::ACTIVE) {
             return response("Product not found", 404);
         }
-        return response()->json($clinics, $id);
+        $services = ServiceClinic::where('user_id', $clinics->user_id)->where('status','ACTIVE')->get();
+        foreach ($services as $item){
+            $currentDate = date('Y-m-d');
+            if (!empty($item->date_start) && !empty($item->date_end)
+                && $currentDate >= $item->date_start && $currentDate <= $item->date_end
+                && !empty($item->service_price_promotion)) {
+                $item->price = $item->service_price_promotion;
+            } else {
+                $item->price = $item->service_price;
+            }
+        }
+        $clinicLocations = ClinicLocation::where('user_id', $clinics->user_id)->where('status', 'Active')
+            ->join('provinces', 'clinic_locations.province_id', '=', 'provinces.code')
+            ->join('districts', 'clinic_locations.district_id', '=', 'districts.code')
+            ->join('communes', 'clinic_locations.commune_id', '=', 'communes.code')
+            ->select('clinic_locations.*', 'provinces.name as province_name', 'districts.name as district_name', 'communes.name as commune_name')
+            ->get();
+        return response()->json($clinics, $id,$services,$clinicLocations);
     }
 
     public function searchMedicalPharmacy(Request $request)
