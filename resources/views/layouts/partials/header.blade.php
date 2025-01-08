@@ -1153,12 +1153,10 @@
             let html = ``;
             switch (value) {
                 case 'BUSINESS':
-                    html = `<option value="{{Role::PHARMACEUTICAL_COMPANIES}}">Công ty Dược phẩm</option>
+                    html = `
                                                 <option value="{{Role::HOSPITALS}}">Bệnh viện</option>
                                                 <option value="{{Role::CLINICS}}">Phòng khám</option>
-                                                <option value="{{Role::PHARMACIES}}">Hiệu thuốc</option>
-                                                <option value="{{Role::SPAS}}">Spa</option>
-                                                <option value="{{Role::OTHERS}}">Khác</option>`;
+                                                <option value="{{Role::SPAS}}">Spa</option>`;
                     break;
                 case 'MEDICAL':
                     html = `<option value="{{Role::DOCTORS}}">Bác sĩ</option>
