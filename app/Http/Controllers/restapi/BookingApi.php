@@ -48,6 +48,9 @@ class BookingApi extends Controller
             $validatedData = $validated->validated();
 
             if (isset($validatedData['service'])) {
+                $validatedData['service'] = is_string($validatedData['service'])
+                    ? json_decode($validatedData['service'], true)
+                    : $validatedData['service'];
                 $service_price = 0;
                 $services = ServiceClinic::whereIn('id', $validatedData['service'])->get();
                 foreach ($services as $item){
