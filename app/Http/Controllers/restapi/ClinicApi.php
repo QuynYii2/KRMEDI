@@ -8,6 +8,7 @@ use App\Enums\ReviewStatus;
 use App\Enums\TypeBusiness;
 use App\Http\Controllers\Controller;
 use App\Models\Clinic;
+use App\Models\ClinicLocation;
 use App\Models\Commune;
 use App\Models\Department;
 use App\Models\District;
@@ -270,6 +271,26 @@ class ClinicApi extends Controller
 
         $response['email'] = $user->email;
         $response['departments'] = $departments;
+        $services = ServiceClinic::where('user_id', $clinic->user_id)->where('status','ACTIVE')->get();
+        foreach ($services as $item){
+            $currentDate = date('Y-m-d');
+            if (!empty($item->date_start) && !empty($item->date_end)
+                && $currentDate >= $item->date_start && $currentDate <= $item->date_end
+                && !empty($item->service_price_promotion)) {
+                $item->price = $item->service_price_promotion;
+            } else {
+                $item->price = $item->service_price;
+            }
+        }
+        $clinicLocations = ClinicLocation::where('user_id', $clinic->user_id)->where('status', 'Active')
+            ->join('provinces', 'clinic_locations.province_id', '=', 'provinces.code')
+            ->join('districts', 'clinic_locations.district_id', '=', 'districts.code')
+            ->join('communes', 'clinic_locations.commune_id', '=', 'communes.code')
+            ->select('clinic_locations.*', 'provinces.name as province_name', 'districts.name as district_name', 'communes.name as commune_name')
+            ->get();
+        $response['services'] = $services??[];
+        $response['clinicLocations'] = $clinicLocations??[];
+
         return response()->json($response);
     }
 
