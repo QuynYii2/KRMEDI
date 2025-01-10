@@ -146,7 +146,7 @@ class BookingApi extends Controller
     public function getAllBookingByUserId($id, $status, Request $request)
     {
         $user = User::find($id);
-
+        $status = trim($status);
         if (!$user) {
             return response()->json(['error' => 'User not found'], 400);
         }
@@ -235,7 +235,9 @@ class BookingApi extends Controller
                 $arrayBooking['department_name'] = Department::find($booking->department_id)->name??'';
                 $arrayBooking['department_image'] = Department::find($booking->department_id)->thumbnail??'';
                 $arrayBooking['clinic_name'] = Clinic::find($booking->clinic_id)->name??'';
-
+                $arrayBooking['clinic_location_id'] = $booking->clinic_location_id;
+                $arrayBooking['service_price'] = $booking->service_price;
+                $arrayBooking['service_id'] = $booking->service;
                 $arrayBookings[] = $arrayBooking;
             }
         } else {
@@ -304,7 +306,9 @@ class BookingApi extends Controller
                 $arrayBooking['department_name'] = Department::find($booking->department_id)->name??'';
                 $arrayBooking['department_image'] = Department::find($booking->department_id)->thumbnail??'';
                 $arrayBooking['clinic_name'] = Clinic::find($booking->clinic_id)->name??'';
-
+                $arrayBooking['clinic_location_id'] = $booking->clinic_location_id;
+                $arrayBooking['service_price'] = $booking->service_price;
+                $arrayBooking['service_id'] = $booking->service;
                 $arrayBookings[] = $arrayBooking;
             }
         }
