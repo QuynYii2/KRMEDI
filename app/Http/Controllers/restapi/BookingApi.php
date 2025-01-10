@@ -320,8 +320,16 @@ class BookingApi extends Controller
                 $arrayBooking['service_price'] = $booking->service_price;
                 $arrayBooking['service_id'] = $booking->service;
                 $serviceIds = explode(',', $booking->service);
-                $services = ServiceClinic::whereIn('id', $serviceIds)->pluck('name')->toArray();
-                $arrayBooking['service_names'] = $services;
+                $services = ServiceClinic::whereIn('id', $serviceIds)
+                    ->get(['id', 'name', 'service_price'])
+                    ->map(function ($service) {
+                        return [
+                            'id' => $service->id,
+                            'service_name' => $service->name,
+                            'service_price' => $service->service_price,
+                        ];
+                    });
+                $arrayBooking['service_details'] = $services;
 
                 $arrayBookings[] = $arrayBooking;
             }
