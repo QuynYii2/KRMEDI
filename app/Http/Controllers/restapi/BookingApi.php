@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\booking\ProcessBooking;
 use App\Models\Booking;
 use App\Models\Clinic;
+use App\Models\ClinicLocation;
 use App\Models\Department;
 use App\Models\Notification;
 use App\Models\PrescriptionResults;
@@ -241,6 +242,7 @@ class BookingApi extends Controller
                 $arrayBookings[] = $arrayBooking;
             }
         } else {
+            $clinic = Clinic::where('user_id', $id)->first();
             $bookings = Booking::where('user_id', $id)
                 ->where('status', $status)
                 ->orderBy('id', 'desc')
@@ -306,9 +308,21 @@ class BookingApi extends Controller
                 $arrayBooking['department_name'] = Department::find($booking->department_id)->name??'';
                 $arrayBooking['department_image'] = Department::find($booking->department_id)->thumbnail??'';
                 $arrayBooking['clinic_name'] = Clinic::find($booking->clinic_id)->name??'';
+
+                $clinicLocation = ClinicLocation::with(['province', 'district', 'commune'])
+                    ->find($booking->clinic_location_id);
                 $arrayBooking['clinic_location_id'] = $booking->clinic_location_id;
+                if($booking->clinic_location_id !== 0){
+                    $arrayBooking['clinic_location_name'] = $clinicLocation->address_detail ?? '' . ', ' . $clinicLocation->commune->name ?? '' . ', ' . $clinicLocation->district->name ?? '' . ', ' . $clinicLocation->province->name ?? '';
+                }else{
+                    $arrayBooking['clinic_location_name'] = $clinic->address_detail ?? '';
+                }
                 $arrayBooking['service_price'] = $booking->service_price;
                 $arrayBooking['service_id'] = $booking->service;
+                $serviceIds = explode(',', $booking->service);
+                $services = ServiceClinic::whereIn('id', $serviceIds)->pluck('name')->toArray();
+                $arrayBooking['service_names'] = $services;
+
                 $arrayBookings[] = $arrayBooking;
             }
         }

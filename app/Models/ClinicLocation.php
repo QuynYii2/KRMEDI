@@ -20,4 +20,20 @@ class ClinicLocation extends Model
         'longitude',
         'status',
     ];
+
+    public function province()
+    {
+        return $this->belongsTo(Province::class, 'province_id', 'code');
+    }
+
+    public function district()
+    {
+        return $this->belongsTo(District::class, 'district_id', 'code');
+    }
+
+    public function commune()
+    {
+        return $this->belongsTo(Commune::class, 'commune_id', 'code');
+    }
+
 }
