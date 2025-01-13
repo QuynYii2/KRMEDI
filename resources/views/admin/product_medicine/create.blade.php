@@ -5,7 +5,7 @@
     {{ __('home.Create product medicine') }}
 @endsection
 @section('main-content')
-    <div id="loadingSpinner" style="display: flex;">
+    <div id="loadingSpinner" style="display: none;">
         <div class="spinner-overlay">
             <div class="spinner"></div>
         </div>
