@@ -10,6 +10,7 @@ final class UnitQuantityProduct extends Enum
     const BOX = 'Hộp';
     /* Vỉ */
     const PACK = 'Vỉ';
+    const BAG = 'Gói';
     /* Khác */
     const OTHER = 'Khác';
 }
