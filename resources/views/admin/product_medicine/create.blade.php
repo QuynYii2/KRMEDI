@@ -5,6 +5,39 @@
     {{ __('home.Create product medicine') }}
 @endsection
 @section('main-content')
+    <div id="loadingSpinner" style="display: flex;">
+        <div class="spinner-overlay">
+            <div class="spinner"></div>
+        </div>
+    </div>
+
+    <style>
+        .spinner-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+
     <!-- Page Heading -->
     <h1 class="h3 mb-4 text-gray-800">{{ __('home.create') }}</h1>
     @if (session('success'))
@@ -196,7 +229,6 @@
             class="btn btn-primary up-date-button mt-md-4">{{ __('home.Save') }}</button>
     <script>
         function submitForm() {
-            // loadingMasterPage();
             const headers = {
                 'Authorization': `Bearer ${token}`
             };
@@ -208,6 +240,16 @@
                 'unit_quantity', 'number_register', 'manufacturing_company',
                 'manufacturing_country', 'shape', 'specifications'
             ];
+
+            // Hiển thị loader
+            const showLoader = () => {
+                document.getElementById('loadingSpinner').style.display = 'flex';
+            };
+
+            // Ẩn loader
+            const hideLoader = () => {
+                document.getElementById('loadingSpinner').style.display = 'none';
+            };
 
             let checked = document.getElementById('is_prescription').checked;
             if (checked) {
@@ -224,7 +266,7 @@
                 let ingredient_quantity = ingredient_quantities[j].value;
 
                 if (!ingredient_name || !ingredient_quantity) {
-                    alert('Thành phần thuốc và số lượng không được trống')
+                    alert('Thành phần thuốc và số lượng không được trống');
                     return;
                 }
 
@@ -238,12 +280,11 @@
 
             formData.append('ingredient', ingredient);
 
-            let isValid = true
-            /* Tạo fn appendDataForm ở admin blade*/
+            let isValid = true;
             isValid = appendDataForm(arrField, formData, isValid);
 
             var filedata = document.getElementById("gallery");
-            var i = 0, len = filedata.files.length, img, reader, file;
+            var i = 0, len = filedata.files.length, file;
             if (len > 0) {
                 for (i; i < len; i++) {
                     file = filedata.files[i];
@@ -284,13 +325,9 @@
             formData.append('proved_by', '{{ Auth::user()->id }}');
             formData.append('type_product', active_type);
 
-            // if (!isValid) {
-            //     alert('Vui lòng kiểm tra lại thông tin đã nhập');
-            //     return;
-            // }
-
-            if (isValid){
+            if (isValid) {
                 try {
+                    showLoader(); // Hiển thị loader trước khi gửi dữ liệu
                     $.ajax({
                         url: `{{route('api.backend.product-medicine.store')}}`,
                         method: 'POST',
@@ -301,17 +338,18 @@
                         data: formData,
                         success: function (data) {
                             alert(data.message);
-                            loadingMasterPage();
                             window.location.href = `{{route('api.backend.product-medicine.index')}}`;
                         },
                         error: function (exception) {
                             alert(exception.responseText);
-                            loadingMasterPage();
+                        },
+                        complete: function () {
+                            hideLoader(); // Ẩn loader sau khi xử lý xong
                         }
                     });
                 } catch (error) {
-                    loadingMasterPage();
-                    throw error;
+                    hideLoader(); // Ẩn loader nếu xảy ra lỗi
+                    console.error(error);
                 }
             }
         }
