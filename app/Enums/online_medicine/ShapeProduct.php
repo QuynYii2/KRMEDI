@@ -18,6 +18,9 @@ final class ShapeProduct extends Enum
     const TABLET = 'Dạng Viên Nén';
     /* Dạng viên nang */
     const CAPSULE = 'Dạng Viên Nang';
+
+    const HARDCAPSULE = 'Dạng Viên Nang Cứng';
+    const SOFTCAPSULE = 'Dạng Viên Nang Mềm';
     /* Dạng khác */
     const OTHER = 'Dạng Khác';
 }
